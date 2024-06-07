@@ -19,6 +19,8 @@ from core.elements.diagnostic import Diagnostic
 from core.elements.drift import Drift
 from core.elements.element import Element
 from core.elements.field_maps.field_map import FieldMap
+from core.elements.field_maps.field_map_70 import FieldMap70
+from core.elements.field_maps.field_map_7700 import FieldMap7700
 from core.elements.quad import Quad
 from core.elements.solenoid import Solenoid
 
@@ -112,10 +114,15 @@ class ElementEnvelope3DParametersFactory(
         DriftEnvelope3DParameters
 
         """
+        element_class = type(elt)
+        if isinstance(elt, (FieldMap70, FieldMap7700)):
+            logging.error(
+                f"{elt = } of type {element_class} transverse dynamics not "
+                "implemented yet."
+            )
         if isinstance(elt, FieldMap) and not elt.is_accelerating:
             return default
 
-        element_class = type(elt)
         constructor = PARAMETERS_3D.get(element_class, None)
         if constructor is not None:
             return constructor
