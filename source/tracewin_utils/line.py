@@ -102,6 +102,10 @@ class DatLine:
         if name_colon_index != -1:
             self.personalized_name = elements.pop(0).strip(":")
 
+        if len(elements) <= 1:
+            self.splitted = elements
+            return
+
         if elements[1] == ":":
             del elements[1]
             self.personalized_name = elements.pop(0)
@@ -134,7 +138,7 @@ class DatLine:
 
 # Example usage
 if __name__ == "__main__":
-    line = "Michel : DRIFT 76"
+    line = "END"
     dat_line = DatLine(line, -1)
     print(f"name = {dat_line.personalized_name}")
     print(f"weight = {dat_line.weight}")
