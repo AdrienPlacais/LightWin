@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Define a class to easily create :class:`.FieldMap` objects.
 
 This element has its own factory as I expect that creating field maps will
@@ -13,6 +11,7 @@ become very complex in the future: 3D, superposed fields...
     etc
 
 """
+
 import logging
 from abc import ABCMeta
 from functools import lru_cache
@@ -23,11 +22,13 @@ from core.elements.field_maps.cavity_settings_factory import (
     CavitySettingsFactory,
 )
 from core.elements.field_maps.field_map import FieldMap
+from core.elements.field_maps.field_map_70 import FieldMap70
 from core.elements.field_maps.field_map_100 import FieldMap100
 from core.elements.field_maps.field_map_1100 import FieldMap1100
 from core.elements.field_maps.field_map_7700 import FieldMap7700
 
 IMPLEMENTED_FIELD_MAPS = {
+    70: FieldMap70,
     100: FieldMap100,
     1100: FieldMap1100,
     7700: FieldMap7700,
