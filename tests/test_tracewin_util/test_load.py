@@ -6,11 +6,7 @@ from pprint import pformat
 
 from core.commands.adjust import Adjust
 from tracewin_utils.line import DatLine
-from tracewin_utils.load import (
-    load_dat_file,
-    slice_dat_line,
-    split_named_elements,
-)
+from tracewin_utils.load import load_dat_file
 
 
 def are_equal(
@@ -144,6 +140,16 @@ class TestDatLine:
             "personalized_name": None,
             "weight": None,
             "splitted": line.split(),
+        }
+        return check(line, expected)
+
+    def test_end(self) -> None:
+        """Test that the end is ok."""
+        line = "END"
+        expected = {
+            "personalized_name": None,
+            "weight": None,
+            "splitted": [line],
         }
         return check(line, expected)
 
