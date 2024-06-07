@@ -5,6 +5,7 @@ from pathlib import Path
 from pprint import pformat
 
 from core.commands.adjust import Adjust
+from tracewin_utils.line import DatLine
 from tracewin_utils.load import (
     load_dat_file,
     slice_dat_line,
@@ -12,131 +13,139 @@ from tracewin_utils.load import (
 )
 
 
-class TestNameSplitter:
-    """Test that names are properly understood."""
-
-    def test_name1(self) -> None:
-        line = "Louise: DRIFT 76"
-        expected = ["Louise", "DRIFT", "76"]
-        returned = split_named_elements(line)
-        assert expected == returned, f"{returned = } but {expected = }"
-
-    def test_name2(self) -> None:
-        line = "Michel : DRIFT 76"
-        expected = ["Michel", "DRIFT", "76"]
-        returned = split_named_elements(line)
-        assert expected == returned, f"{returned = } but {expected = }"
-
-    def test_name3(self) -> None:
-        line = "Louise-Michel : DRIFT 76"
-        expected = ["Louise-Michel", "DRIFT", "76"]
-        returned = split_named_elements(line)
-        assert expected == returned, f"{returned = } but {expected = }"
-
-    def test_name4(self) -> None:
-        line = "Louise_Michel : DRIFT 76"
-        expected = ["Louise_Michel", "DRIFT", "76"]
-        returned = split_named_elements(line)
-        assert expected == returned, f"{returned = } but {expected = }"
-
-    def test_name5(self) -> None:
-        line = "Louise-Michel: DRIFT 76"
-        expected = ["Louise-Michel", "DRIFT", "76"]
-        returned = split_named_elements(line)
-        assert expected == returned, f"{returned = } but {expected = }"
-
-    def test_name6(self) -> None:
-        line = "Louise_Michel: DRIFT 76"
-        expected = ["Louise_Michel", "DRIFT", "76"]
-        returned = split_named_elements(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+def are_equal(
+    expected: dict[str, str | float | list[str]], returned: DatLine
+) -> None:
+    """Test that all arguments are the same."""
+    for key, val in expected.items():
+        assert val == (
+            got := getattr(returned, key)
+        ), f"{key} error: expected {val} but {got = }"
 
 
-class TestSlice:
+def check(line: str, expected: dict[str, str | float | list[str]]) -> None:
+    """Instantiate and check."""
+    dat_line = DatLine(line, -1)
+    return are_equal(expected, dat_line)
+
+
+class TestDatLine:
     """Test functions to convert a ``.dat`` line to list of arguments."""
 
     def test_basic_line(self) -> None:
         """Test that a basic line is properly sliced."""
         line = "DRIFT 76"
-        expected = ["DRIFT", "76"]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+        expected = {
+            "personalized_name": None,
+            "weight": None,
+            "splitted": line.split(),
+        }
+        return check(line, expected)
 
     def test_line_with_more_arguments(self) -> None:
         line = "FIELD_MAP 100 5 0.9 0.7 54e4 3 65.6e10"
-        expected = line.split()
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+        expected = {
+            "personalized_name": None,
+            "weight": None,
+            "splitted": line.split(),
+        }
+        return check(line, expected)
 
     def test_basic_comment(self) -> None:
         """Test that a basic comment is properly sliced."""
         line = ";DRIFT 76"
-        expected = [";", "DRIFT 76"]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+        expected = {
+            "personalized_name": None,
+            "weight": None,
+            "splitted": [";", "DRIFT 76"],
+        }
+        return check(line, expected)
 
     def test_basic_comment_with_space(self) -> None:
         """Test that a basic comment is properly sliced."""
         line = "; DRIFT 76"
-        expected = [";", "DRIFT 76"]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+        expected = {
+            "personalized_name": None,
+            "weight": None,
+            "splitted": [";", "DRIFT 76"],
+        }
+        return check(line, expected)
 
     def test_element_with_a_name(self) -> None:
         """Test that a named element is properly sliced."""
         line = "Louise: DRIFT 76"
-        expected = ["Louise", "DRIFT", "76"]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+        expected = {
+            "personalized_name": "Louise",
+            "weight": None,
+            "splitted": ["DRIFT", "76"],
+        }
+        return check(line, expected)
 
     def test_element_with_a_name_additional_space(self) -> None:
         """Test that a named element is properly sliced."""
         line = "Michel : DRIFT 76"
-        expected = ["Michel", "DRIFT", "76"]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+        expected = {
+            "personalized_name": "Michel",
+            "weight": None,
+            "splitted": ["DRIFT", "76"],
+        }
+        return check(line, expected)
 
     def test_diagnostic_with_a_weight_additional_space(self) -> None:
         """Test that a weighted element is properly sliced."""
         line = "DIAG_BONJOURE (1e3) 777 0 1 2"
-        expected = ["DIAG_BONJOURE", "(1e3)", "777", "0", "1", "2"]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+        expected = {
+            "personalized_name": None,
+            "weight": 1e3,
+            "splitted": ["DIAG_BONJOURE", "777", "0", "1", "2"],
+        }
+        return check(line, expected)
 
     def test_diagnostic_with_a_weight_different_fmt(self) -> None:
         """Test that a weighted element is properly sliced."""
         line = "DIAG_BONJOURE (4.5) 777 0 1 2"
-        expected = ["DIAG_BONJOURE", "(4.5)", "777", "0", "1", "2"]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+        expected = {
+            "personalized_name": None,
+            "weight": 4.5,
+            "splitted": ["DIAG_BONJOURE", "777", "0", "1", "2"],
+        }
+        return check(line, expected)
 
     def test_multiple_semicommas(self) -> None:
         """Check that when we have several ;, only the first is kept."""
         line = ";;;;;;;; Section1: ;;;;;;;"
-        expected = [line[0], line[1:]]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+        expected = {
+            "personalized_name": None,
+            "weight": None,
+            "splitted": [line[0], line[1:]],
+        }
+        return check(line, expected)
 
     def test_comment_at_end_of_line_is_removed(self) -> None:
         """Test that EOL comments are removed to avoid any clash."""
         line = "DRIFT 76 ; this drift is where we put the coffee machine"
-        expected = ["DRIFT", "76"]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+        expected = {
+            "personalized_name": None,
+            "weight": None,
+            "splitted": ["DRIFT", "76"],
+        }
+        return check(line, expected)
 
     def test_line_with_nothing_but_spaces(self) -> None:
         """Test that empty line is correctly understood."""
         line = "    "
-        expected = []
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+        expected = {"personalized_name": None, "weight": None, "splitted": []}
+        return check(line, expected)
 
     def test_windows_like_path(self) -> None:
         """Test that the : does not mess with the code."""
         line = "field_map_path C:\\path\\to\\field_maps\\"
-        expected = line.split()
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
+        expected = {
+            "personalized_name": None,
+            "weight": None,
+            "splitted": line.split(),
+        }
+        return check(line, expected)
 
 
 def md5(fname: Path | str) -> str:
