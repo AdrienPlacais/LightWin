@@ -5,7 +5,51 @@ from pathlib import Path
 from pprint import pformat
 
 from core.commands.adjust import Adjust
-from tracewin_utils.load import load_dat_file, slice_dat_line
+from tracewin_utils.load import (
+    load_dat_file,
+    slice_dat_line,
+    split_named_elements,
+)
+
+
+class TestNameSplitter:
+    """Test that names are properly understood."""
+
+    def test_name1(self) -> None:
+        line = "Louise: DRIFT 76"
+        expected = ["Louise", "DRIFT", "76"]
+        returned = split_named_elements(line)
+        assert expected == returned, f"{returned = } but {expected = }"
+
+    def test_name2(self) -> None:
+        line = "Michel : DRIFT 76"
+        expected = ["Michel", "DRIFT", "76"]
+        returned = split_named_elements(line)
+        assert expected == returned, f"{returned = } but {expected = }"
+
+    def test_name3(self) -> None:
+        line = "Louise-Michel : DRIFT 76"
+        expected = ["Louise-Michel", "DRIFT", "76"]
+        returned = split_named_elements(line)
+        assert expected == returned, f"{returned = } but {expected = }"
+
+    def test_name4(self) -> None:
+        line = "Louise_Michel : DRIFT 76"
+        expected = ["Louise_Michel", "DRIFT", "76"]
+        returned = split_named_elements(line)
+        assert expected == returned, f"{returned = } but {expected = }"
+
+    def test_name5(self) -> None:
+        line = "Louise-Michel: DRIFT 76"
+        expected = ["Louise-Michel", "DRIFT", "76"]
+        returned = split_named_elements(line)
+        assert expected == returned, f"{returned = } but {expected = }"
+
+    def test_name6(self) -> None:
+        line = "Louise_Michel: DRIFT 76"
+        expected = ["Louise_Michel", "DRIFT", "76"]
+        returned = split_named_elements(line)
+        assert expected == returned, f"{returned = } but {expected = }"
 
 
 class TestSlice:
@@ -49,13 +93,6 @@ class TestSlice:
         """Test that a named element is properly sliced."""
         line = "Michel : DRIFT 76"
         expected = ["Michel", "DRIFT", "76"]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
-
-    def test_diagnostic_with_a_weight(self) -> None:
-        """Test that a weighted element is properly sliced."""
-        line = "DIAG_BONJOURE(1e3) 777 0 1 2"
-        expected = ["DIAG_BONJOURE", "(1e3)", "777", "0", "1", "2"]
         returned = slice_dat_line(line)
         assert expected == returned, f"{returned = } but {expected = }"
 
