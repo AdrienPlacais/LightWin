@@ -121,7 +121,7 @@ class ElementFactory:
     def run(self, line: list[str], dat_idx: int, **kwargs) -> Element:
         """Call proper constructor."""
         name, line = self._personalized_name(line)
-        element_constructor = _get_constructor(line[0])
+        element_constructor = _get_constructor(line[0], dat_idx)
         element = element_constructor(line, dat_idx, name, **kwargs)
         return element
 
@@ -145,9 +145,9 @@ class ElementFactory:
         return None, line
 
 
-def _get_constructor(first_word: str) -> type:
+def _get_constructor(first_word: str, dat_idx: int) -> type:
     """Get the proper constructor."""
     key = first_word.upper()
     if key in implemented_elements:
         return implemented_elements[key]
-    raise IOError(f"No Element matching {key} was found.")
+    raise IOError(f"No Element matching {key} at line {dat_idx} was found.")
