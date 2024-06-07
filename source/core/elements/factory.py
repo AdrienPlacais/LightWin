@@ -150,4 +150,6 @@ def _get_constructor(first_word: str, dat_idx: int) -> type:
     key = first_word.upper()
     if key in implemented_elements:
         return implemented_elements[key]
-    raise IOError(f"No Element matching {key} at line {dat_idx} was found.")
+    raise IOError(
+        f"No Element matching {key} at line {dat_idx + 1} was found."
+    )
