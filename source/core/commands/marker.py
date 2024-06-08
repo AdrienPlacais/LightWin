@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Define a useless command to keep track of ``MARKER``."""
+
 import logging
 
 from core.commands.command import Command
 from core.instruction import Instruction
+from tracewin_utils.line import DatLine
 
 
 class Marker(Command):
@@ -14,13 +14,12 @@ class Marker(Command):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
-        name: str | None = None,
+        line: DatLine,
+        dat_idx: int | None = None,
         **kwargs: str,
     ) -> None:
         """Instantiate the dummy command."""
-        super().__init__(line, dat_idx, name=name)
+        super().__init__(line, dat_idx)
 
     def set_influenced_elements(
         self, instructions: list[Instruction], **kwargs: float

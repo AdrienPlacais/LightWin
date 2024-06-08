@@ -21,7 +21,7 @@ def save_cavity_settings(
 ) -> None:
     """Save all the settings in a single file."""
     path = (
-        fault_scenarios[0].ref_acc.elts.files["accelerator_path"].parent
+        fault_scenarios[0].ref_acc.elts.files_info["accelerator_path"].parent
         / filename
     )
     nominal_cavities = fault_scenarios[0].ref_acc.elts.l_cav
@@ -41,7 +41,7 @@ def _settings_as_df(
     cavities = elts.l_cav
 
     as_dict = {
-        "Scenario ID": elts.files["accelerator_path"].stem,
+        "Scenario ID": elts.files_info["accelerator_path"].stem,
         "Cavity name": [x.name for x in cavities],
         "Status": [x.status for x in cavities],
         "phi_0_rel nominal [deg]": _phases_in_deg(nominal_cavities),

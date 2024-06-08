@@ -7,7 +7,7 @@ Two objects can have a :class:`ListOfElements` as attribute:
       during optimisation process, so we recompute only the strict necessary.
 
 .. todo::
-    Delete ``dat_content``, which does the same thing as ``elts_n_cmds`` but
+    Delete ``dat_filecontent``, which does the same thing as ``elts_n_cmds`` but
     less good
 
 """
@@ -15,7 +15,7 @@ Two objects can have a :class:`ListOfElements` as attribute:
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Literal, Self, overload
+from typing import Any, Literal, Self, TypedDict, overload
 
 import numpy as np
 
@@ -23,6 +23,7 @@ from core.beam_parameters.initial_beam_parameters import InitialBeamParameters
 from core.elements.element import Element
 from core.elements.field_maps.cavity_settings import REFERENCE_T
 from core.elements.field_maps.field_map import FieldMap
+from core.instruction import Instruction
 from core.list_of_elements.helper import (
     first,
     group_elements_by_lattice,
@@ -32,12 +33,22 @@ from core.list_of_elements.helper import (
 from core.particle import ParticleInitialState
 from tracewin_utils.dat_files import export_dat_filecontent
 from tracewin_utils.interface import list_of_elements_to_command
+from tracewin_utils.line import DatLine
 from util.helper import recursive_getter, recursive_items
 from util.pickling import MyPickler
 
 element_id = int | str
 elements_id = Sequence[int] | Sequence[str]
 nested_elements_id = Sequence[Sequence[int]] | Sequence[Sequence[str]]
+
+
+class FilesInfo(TypedDict):
+    """Keep information on the loaded dat file."""
+
+    dat_file: Path
+    dat_filecontent: list[DatLine]
+    accelerator_path: Path
+    elts_n_cmds: list[Instruction]
 
 
 class ListOfElements(list):
@@ -49,7 +60,7 @@ class ListOfElements(list):
         input_particle: ParticleInitialState,
         input_beam: InitialBeamParameters,
         tm_cumul_in: np.ndarray,
-        files: dict[str, Path | str | list[list[str]]],
+        files_info: FilesInfo,
         first_init: bool = True,
     ) -> None:
         """Create the object, encompassing all the linac or only a fraction.
@@ -72,20 +83,20 @@ class ListOfElements(list):
         first_init : bool, optional
             To indicate if this a full linac or only a portion (fit process).
             The default is True.
-        files : dict[str, str | list[list[str]] | Path]
+        files_info : DatFileInfo
             A dictionary to hold information on the source and output
-            files/folders of the object. The keys are:
+            files/folders of the object.
                 - ``dat_file``: absolute path to the ``.dat`` file
                 - ``elts_n_cmds``: list of objects representing dat content
                 - ``accelerator_path``: where calculation results for each
                 :class:`.BeamCalculator` will be stored.
-                - ``dat_content``: list of list of str, holding content of the
+                - ``dat_filecontent``: list of list of str, holding content of the
                 ``.dat``.
 
         """
         self.input_particle = input_particle
         self.input_beam = input_beam
-        self.files = files
+        self.files_info = files_info
         assert tm_cumul_in.shape == (6, 6)
         self.tm_cumul_in = tm_cumul_in
 
@@ -131,7 +142,7 @@ class ListOfElements(list):
     @property
     def tracewin_command(self) -> list[str]:
         """Create the command to give proper initial parameters to TraceWin."""
-        dat_file = self.files["dat_file"]
+        dat_file = self.files_info["dat_file"]
         assert isinstance(dat_file, Path)
         _tracewin_command = [
             command_bit
@@ -290,13 +301,13 @@ class ListOfElements(list):
             )
         if which_phase in ("as_in_settings", "as_in_original_dat"):
             raise NotImplementedError
-        self.files["dat_file"] = dat_file
-        dat_content = [
+        self.files_info["dat_file"] = dat_file
+        dat_filecontent = [
             instruction.to_line(which_phase=which_phase, inplace=False)
-            for instruction in self.files["elts_n_cmds"]
+            for instruction in self.files_info["elts_n_cmds"]
         ]
         if save:
-            export_dat_filecontent(dat_content, dat_file)
+            export_dat_filecontent(dat_filecontent, dat_file)
 
     @overload
     def take(self, ids: int, id_nature: Literal["cavity"]) -> FieldMap: ...
@@ -370,7 +381,7 @@ class ListOfElements(list):
 
         """
         if path is None:
-            path = self.files["accelerator_path"] / "list_of_elements.pkl"
+            path = self.files_info["accelerator_path"] / "list_of_elements.pkl"
         assert isinstance(path, Path)
         pickler.pickle(self, path)
 

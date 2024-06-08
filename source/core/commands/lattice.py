@@ -6,6 +6,7 @@ from core.commands.command import Command
 from core.commands.superpose_map import SuperposeMap
 from core.elements.element import Element
 from core.instruction import Comment, Instruction
+from tracewin_utils.line import DatLine
 
 
 class Lattice(Command):
@@ -14,14 +15,16 @@ class Lattice(Command):
     is_implemented = True
     n_attributes = (1, 2)
 
-    def __init__(self, line: list[str], dat_idx: int, **kwargs: str) -> None:
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
+    ) -> None:
         """Save lattice structure."""
         super().__init__(line, dat_idx)
-        self.n_lattice = int(line[1])
+        self.n_lattice = int(line.splitted[1])
 
         self.n_macro_lattice = 1
-        if len(line) > 2:
-            self.n_macro_lattice = int(line[2])
+        if line.n_args >= 2:
+            self.n_macro_lattice = int(line.splitted[2])
 
             if self.n_macro_lattice > 1:
                 logging.warning(
@@ -122,7 +125,9 @@ class LatticeEnd(Command):
     is_implemented = True
     n_attributes = 0
 
-    def __init__(self, line: list[str], dat_idx: int, **kwargs: str) -> None:
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
+    ) -> None:
         """Call mother ``__init__`` method."""
         super().__init__(line, dat_idx)
 

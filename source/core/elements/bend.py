@@ -12,6 +12,7 @@ it=BEND#p1633
 import math
 
 from core.elements.element import Element
+from tracewin_utils.line import DatLine
 
 
 class Bend(Element):
@@ -27,22 +28,20 @@ class Bend(Element):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
-        name: str | None = None,
+        line: DatLine,
+        dat_idx: int | None = None,
         **kwargs: str,
     ) -> None:
         """Precompute the parameters used to compute transfer matrix."""
-        super().__init__(line, dat_idx, name)
+        super().__init__(line, dat_idx, **kwargs)
 
-        self.bend_angle = float(math.radians(float(line[1])))
-        self.curvature_radius = float(line[2]) * 1e-3
-        self.field_grad_index = float(line[3])
+        self.bend_angle = float(math.radians(float(line.splitted[1])))
+        self.curvature_radius = float(line.splitted[2]) * 1e-3
+        self.field_grad_index = float(line.splitted[3])
         self.length_m = self.curvature_radius * abs(self.bend_angle)
 
         self._h_squared: float
         self._k_x: float
-        self.reinsert_optional_commands_in_line()
 
     @property
     def h_parameter(self) -> float:

@@ -17,6 +17,7 @@ from beam_calculation.parameters.element_parameters import (
 from core.electric_field import NewRfField
 from core.elements.field_maps.cavity_settings import CavitySettings
 from core.instruction import Instruction
+from tracewin_utils.line import DatLine
 from util.helper import recursive_getter, recursive_items
 
 
@@ -47,9 +48,8 @@ class Element(Instruction):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
-        name: str | None = None,
+        line: DatLine,
+        dat_idx: int | None = None,
         **kwargs: str,
     ) -> None:
         """Init parameters common to all elements.
@@ -68,12 +68,12 @@ class Element(Instruction):
             later.
 
         """
-        super().__init__(line, dat_idx, name=name)
+        super().__init__(line, dat_idx, **kwargs)
 
         self.elt_info = {
-            "nature": line[0],
+            "nature": line.splitted[0],
         }
-        self.length_m = 1e-3 * float(line[1])
+        self.length_m = 1e-3 * float(line.splitted[1])
 
         # By default, an element is non accelerating and has a dummy
         # accelerating field.

@@ -6,7 +6,25 @@ from typing import Any
 
 
 class DatLine:
-    """Hold a single line of the ``.dat`` file."""
+    """Hold a single line of the ``.dat`` file.
+
+    Attributes
+    ----------
+    _original_line : str
+        Line in the ``.dat`` given as a user-input.
+    idx : int
+        Position in the ``.dat`` file.
+    personalized_name : str | None, optional
+        The name given by the user in the ``.dat``. The default is None.
+    weight : float | None, optional
+        The weight of the diagnostic. The default is None.
+    splitted : list[str]
+        The line divided into a list of arguments. It is used by LightWin to
+        instantiate the :class:`.Instruction`. Note that the name and the
+        weight of the object are not present to keep the position of other
+        arguments the same. To integrate them, call :attr:`splitted_full`.
+
+    """
 
     def __init__(self, line: str, idx: int) -> None:
         """Instantiate the object."""
@@ -15,7 +33,7 @@ class DatLine:
 
         self.personalized_name: str | None = None
         self.weight: float | None = None
-        self.splitted = []
+        self.splitted: list[str] = []
 
         self._parse_line(line)
 
@@ -78,7 +96,7 @@ class DatLine:
         """Give splitted line with name and weight."""
         base = self.splitted[:]
         if self.weight is not None:
-            base.insert(0, str(self.weight))
+            base.insert(1, f"({self.weight})")
         if self.personalized_name is not None:
             base.insert(0, f"{self.personalized_name}:")
         return base

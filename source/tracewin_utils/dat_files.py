@@ -6,18 +6,79 @@
 """
 
 import logging
-from collections.abc import Collection, Container, Iterable, Sequence
+from collections.abc import Callable, Collection, Container, Iterable, Sequence
 from pathlib import Path
+from pprint import pformat
+from typing import Literal
 
 from core.commands.command import Command
 from core.elements.element import Element
 from core.instruction import Dummy, Instruction
+from tracewin_utils.line import DatLine
+
+
+def dat_filecontent_from_file(
+    dat_path: Path,
+    *,
+    keep: Literal["none", "comments", "all"] = "none",
+    filter_func: Callable[[DatLine], bool] | None = None,
+    instructions_to_insert: Collection[Instruction | DatLine] = (),
+) -> list[DatLine]:
+    """Load the dat file and convert it into a list of lines.
+
+    Parameters
+    ----------
+    dat_path : Path
+        Filepath to the ``.dat`` file, as understood by TraceWin.
+    keep : {"none", "comments", "all"}, optional
+        To determine which un-necessary lines in the dat file should be kept.
+        The default is `'none'`.
+    filter_func : Callable
+        You can provide your own filters here. Takes precedence over ``keep``.
+    instructions_to_insert : Collection[Instruction], optional
+        Some elements or commands that are not present in the ``.dat`` file but
+        that you want to add. The default is an empty tuple.
+
+    Returns
+    -------
+    dat_filecontent : list[DatLine]
+        List containing all the lines of dat_path.
+
+    """
+    dat_filecontent = []
+
+    with open(dat_path, "r", encoding="utf-8") as file:
+        dat_filecontent = [DatLine(line, idx) for idx, line in enumerate(file)]
+
+    if filter_func is None:
+        filters = {
+            "none": lambda x: x.line and len(x.line[0] != ";"),
+            "comments": lambda x: x.line,
+            "all": lambda _: True,
+        }
+        filter_func = filters[keep]
+    dat_filecontent = list(filter(filter_func, dat_filecontent))
+
+    if not instructions_to_insert:
+        return dat_filecontent
+    logging.info(
+        "Will insert following instructions:\n"
+        f"{pformat(instructions_to_insert, width=120)}"
+    )
+    for i, instruction in enumerate(instructions_to_insert):
+        if isinstance(instruction, Instruction):
+            instruction.insert_dat_line(
+                dat_filecontent=dat_filecontent, previously_inserted=i
+            )
+            continue
+        dat_filecontent.insert(instruction.idx + i, instruction)
+    return dat_filecontent
 
 
 def dat_filecontent_from_smaller_list_of_elements(
     original_instructions: Sequence[Instruction],
     elts: Collection[Element],
-) -> tuple[list[list[str]], list[Instruction]]:
+) -> tuple[list[DatLine], list[Instruction]]:
     """
     Create a ``.dat`` with only elements of ``elts`` (and concerned commands).
 
@@ -27,7 +88,7 @@ def dat_filecontent_from_smaller_list_of_elements(
     indexes_to_keep = [elt.get("dat_idx", to_numpy=False) for elt in elts]
     last_index = indexes_to_keep[-1] + 1
 
-    new_dat_filecontent: list[list[str]] = []
+    new_dat_filecontent: list[DatLine] = []
     new_instructions: list[Instruction] = []
     for instruction in original_instructions[:last_index]:
         if not (
@@ -68,19 +129,23 @@ def _is_useful_command(
 
 
 def export_dat_filecontent(
-    dat_content: Collection[Collection[str]], dat_path: Path
+    dat_filecontent: Collection[Collection[str]] | Collection[DatLine],
+    dat_path: Path,
 ) -> None:
     """Save the content of the updated dat to a ``.dat``.
 
     Parameters
     ----------
-    dat_content : Collection[Collection[str]]
+    dat_filecontent : Collection[Collection[str]]
         Content of the ``.dat``, line per line, word per word.
     dat_path : Path
         Where to save the ``.dat``.
 
     """
     with open(dat_path, "w", encoding="utf-8") as file:
-        for line in dat_content:
+        for line in dat_filecontent:
+            if isinstance(line, DatLine):
+                file.write(line.line + "\n")
+                continue
             file.write(" ".join(line) + "\n")
     logging.info(f"New dat saved in {dat_path}.")

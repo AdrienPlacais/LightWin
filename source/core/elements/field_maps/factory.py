@@ -26,6 +26,7 @@ from core.elements.field_maps.field_map_70 import FieldMap70
 from core.elements.field_maps.field_map_100 import FieldMap100
 from core.elements.field_maps.field_map_1100 import FieldMap1100
 from core.elements.field_maps.field_map_7700 import FieldMap7700
+from tracewin_utils.line import DatLine
 
 IMPLEMENTED_FIELD_MAPS = {
     70: FieldMap70,
@@ -66,13 +67,18 @@ class FieldMapFactory:
         self.cavity_settings_factory = CavitySettingsFactory(freq_bunch_mhz)
 
     def run(
-        self, line: list[str], dat_idx: int, name: str | None = None, **kwargs
+        self,
+        line: DatLine,
+        dat_idx: int | None = None,
+        **kwargs,
     ) -> FieldMap:
         """Call proper constructor."""
-        if len(line) == 10:
+        if line.n_args == 9:
             self._append_absolute_phase_flag(line)
 
-        field_map_class = self._get_proper_field_map_subclass(int(line[1]))
+        field_map_class = self._get_proper_field_map_subclass(
+            int(line.splitted[1])
+        )
 
         cavity_settings = self.cavity_settings_factory.from_line_in_dat_file(
             line,
@@ -81,16 +87,16 @@ class FieldMapFactory:
 
         field_map = field_map_class(
             line,
-            dat_idx,
-            name=name,
+            dat_idx=dat_idx,
             default_field_map_folder=self.default_field_map_folder,
             cavity_settings=cavity_settings,
+            **kwargs,
         )
         return field_map
 
-    def _append_absolute_phase_flag(self, line: list[str]) -> None:
+    def _append_absolute_phase_flag(self, line: DatLine) -> None:
         """Add an explicit absolute phase flag."""
-        line.append(self.default_absolute_phase_flag)
+        line.splitted.append(self.default_absolute_phase_flag)
 
     def _get_proper_field_map_subclass(self, geometry: int) -> ABCMeta:
         """Determine the proper field map subclass.

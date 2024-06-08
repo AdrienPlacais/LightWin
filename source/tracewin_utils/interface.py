@@ -186,7 +186,7 @@ def set_of_cavity_settings_to_command(
     set_of_cavity_settings: SetOfCavitySettings,
     phi_bunch_first_element: float,
     idx_first_element: int,
-) -> Sequence[str]:
+) -> list[str]:
     """Return the ``ele`` commands for :class:`SetOfCavitySettings`.
 
     Parameters
@@ -218,12 +218,30 @@ def set_of_cavity_settings_to_command(
     return [x for x in flatten(command)]
 
 
+def failed_cavities_to_command(
+    cavities: Sequence[FieldMap],
+    idx_first_element: int,
+) -> list[str]:
+    """Return the ``ele`` commands to desactivate some cavities."""
+    command = [
+        _cavity_settings_to_command(
+            field_map,
+            field_map.cavity_settings,
+            delta_phi_bunch=0.0,
+            delta_index=idx_first_element,
+        )
+        for field_map in cavities
+        if field_map.status == "failed"
+    ]
+    return [x for x in flatten(command)]
+
+
 def _cavity_settings_to_command(
     field_map: FieldMap,
     cavity_settings: CavitySettings,
     delta_phi_bunch: float = 0.0,
     delta_index: int = 0,
-) -> Sequence[str]:
+) -> list[str]:
     """Convert ``cavity_settings`` into TraceWin CLI arguments.
 
     Parameters
@@ -244,7 +262,7 @@ def _cavity_settings_to_command(
 
     """
     if cavity_settings == field_map.cavity_settings:
-        return ()
+        return []
     if not hasattr(cavity_settings, "phi_bunch"):
         nominal_phi_bunch = field_map.cavity_settings.phi_bunch
         cavity_settings.phi_bunch = nominal_phi_bunch
@@ -259,7 +277,7 @@ def _cavity_settings_to_command(
     elt_idx = field_map.idx["elt_idx"]
     alter_kwargs = {"k_e": cavity_settings.k_e, "phi_0": phi_0}
     tracewin_command = _alter_element(elt_idx - delta_index, alter_kwargs)
-    return tracewin_command
+    return list(tracewin_command)
 
 
 ARGS_POSITIONS = {

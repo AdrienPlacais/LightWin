@@ -16,6 +16,7 @@ DIAGNOSTIC commands to perform a beauty pass.
 from core.commands.command import Command
 from core.elements.element import Element
 from core.instruction import Instruction
+from tracewin_utils.line import DatLine
 
 
 class Adjust(Command):
@@ -24,16 +25,20 @@ class Adjust(Command):
     is_implemented = False
     n_attributes = range(2, 8)
 
-    def __init__(self, line: list[str], dat_idx: int, **kwargs) -> None:
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs
+    ) -> None:
         """Instantiate the object."""
         super().__init__(line, dat_idx, **kwargs)
-        self.number = int(line[1])
-        self.vth_variable = int(line[2])
-        self.n_link = int(line[3]) if len(line) > 3 else 0
-        self.min = float(line[4]) if len(line) > 4 else None
-        self.max = float(line[5]) if len(line) > 5 else None
-        self.start_step = float(line[6]) if len(line) > 6 else None
-        self.k_n = float(line[7]) if len(line) > 7 else None
+        self.number = int(line.splitted[1])
+        self.vth_variable = int(line.splitted[2])
+        self.n_link = int(line.splitted[3]) if len(line.splitted) > 3 else 0
+        self.min = float(line.splitted[4]) if len(line.splitted) > 4 else None
+        self.max = float(line.splitted[5]) if len(line.splitted) > 5 else None
+        self.start_step = (
+            float(line.splitted[6]) if len(line.splitted) > 6 else None
+        )
+        self.k_n = float(line.splitted[7]) if len(line.splitted) > 7 else None
 
     def set_influenced_elements(
         self, instructions: list[Instruction], **kwargs: float

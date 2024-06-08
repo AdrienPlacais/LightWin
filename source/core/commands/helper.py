@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Define helper function applying on commands."""
+
 from core.commands.command import Command
 from core.instruction import Instruction
 

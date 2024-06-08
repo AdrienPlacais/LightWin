@@ -42,13 +42,13 @@ from core.elements.element import Element
 from core.elements.field_maps.field_map import FieldMap
 from core.instruction import Instruction
 from core.instructions_factory import InstructionsFactory
-from core.list_of_elements.list_of_elements import ListOfElements
+from core.list_of_elements.list_of_elements import FilesInfo, ListOfElements
 from core.particle import ParticleInitialState
 from tracewin_utils.dat_files import (
+    dat_filecontent_from_file,
     dat_filecontent_from_smaller_list_of_elements,
     export_dat_filecontent,
 )
-from tracewin_utils.load import load_dat_file
 
 
 class ListOfElementsFactory:
@@ -137,20 +137,20 @@ class ListOfElementsFactory:
             f"Created with {dat_file = }"
         )
 
-        dat_filecontent = load_dat_file(
-            dat_file, keep="all", instructions_to_insert=instructions_to_insert
+        if len(instructions_to_insert) > 0:
+            raise NotImplementedError
+        dat_filecontent = dat_filecontent_from_file(
+            dat_file, keep="all", instructions_to_insert=()
         )
-        files = {
-            "dat_file": dat_file,
-            "dat_content": dat_filecontent,
-            "accelerator_path": accelerator_path,
-            "elts_n_cmds": list[Instruction],
-        }
-
         instructions = self.instructions_factory.run(dat_filecontent)
         elts = [x for x in instructions if isinstance(x, Element)]
 
-        files["elts_n_cmds"] = instructions
+        files_info: FilesInfo = {
+            "dat_file": dat_file,
+            "dat_filecontent": dat_filecontent,
+            "accelerator_path": accelerator_path,
+            "elts_n_cmds": instructions,
+        }
 
         input_particle = self._whole_list_input_particle(**kwargs)
         input_beam = self.initial_beam_factory.factory_new(
@@ -163,7 +163,7 @@ class ListOfElementsFactory:
             input_particle=input_particle,
             input_beam=input_beam,
             tm_cumul_in=tm_cumul_in,
-            files=files,
+            files_info=files_info,
             first_init=True,
         )
         return list_of_elements
@@ -184,9 +184,7 @@ class ListOfElementsFactory:
         self,
         elts: list[Element],
         simulation_output: SimulationOutput,
-        files_from_full_list_of_elements: dict[
-            str, Path | str | list[list[str]]
-        ],
+        files_from_full_list_of_elements: FilesInfo,
     ) -> ListOfElements:
         """Create a :class:`.ListOfElements` as subset of a previous one.
 
@@ -208,8 +206,8 @@ class ListOfElementsFactory:
             contain.
         simulation_output : SimulationOutput
             Holds the results of the pre-existing list of elements.
-        files_from_full_list_of_elements : dict
-            The :attr:`.ListOfElements.files` from the full
+        files_from_full_list_of_elements : FilesInfo
+            The :attr:`.ListOfElements.files_info` from the full
             :class:`.ListOfElements`.
 
         Returns
@@ -254,7 +252,7 @@ class ListOfElementsFactory:
             input_particle=input_particle,
             input_beam=input_beam,
             tm_cumul_in=tm_cumul_in,
-            files=files,
+            files_info=files,
             first_init=False,
         )
 
@@ -274,33 +272,31 @@ class ListOfElementsFactory:
     def _subset_files_dictionary(
         self,
         elts: list[Element],
-        files_from_full_list_of_elements: dict[str, Any],
+        files_from_full_list_of_elements: FilesInfo,
         folder: Path | str = Path("tmp"),
         dat_name: Path | str = Path("tmp.dat"),
-    ) -> dict[str, Path | list[list[str]]]:
+    ) -> FilesInfo:
         """Set the new ``.dat`` file containing only elements of ``elts``."""
         accelerator_path = files_from_full_list_of_elements["accelerator_path"]
         out = accelerator_path / folder
         out.mkdir(exist_ok=True)
         dat_file = out / dat_name
 
-        original_instructions = files_from_full_list_of_elements["elts_n_cmds"]
-        assert isinstance(original_instructions, list)
-        dat_content, instructions = (
+        dat_filecontent, instructions = (
             dat_filecontent_from_smaller_list_of_elements(
                 files_from_full_list_of_elements["elts_n_cmds"],
                 elts,
             )
         )
 
-        files = {
+        files: FilesInfo = {
             "dat_file": dat_file,
-            "dat_content": dat_content,
-            "elts_n_cmds": instructions,
+            "dat_filecontent": dat_filecontent,
             "accelerator_path": accelerator_path / folder,
+            "elts_n_cmds": instructions,
         }
 
-        export_dat_filecontent(dat_content, dat_file)
+        export_dat_filecontent(dat_filecontent, dat_file)
         return files
 
     def _delta_phi_for_tracewin(
@@ -368,14 +364,14 @@ class ListOfElementsFactory:
         """
         logging.info("Creating ListOfElements from pre-existing.")
 
-        original_dat = elts.files["dat_file"]
+        original_dat = elts.files_info["dat_file"]
         assert isinstance(original_dat, Path)
         new_dat = original_dat
         if append_stem:
             new_dat = new_dat.with_stem(new_dat.stem + "_" + append_stem)
         shutil.copy(original_dat, new_dat)
 
-        accelerator_path = elts.files["accelerator_path"]
+        accelerator_path = elts.files_info["accelerator_path"]
         assert isinstance(accelerator_path, Path)
 
         kwargs = {
@@ -391,5 +387,5 @@ class ListOfElementsFactory:
             instructions_to_insert=instructions_to_insert,
             **kwargs,
         )
-        export_dat_filecontent(new_elts.files["dat_content"], new_dat)
+        export_dat_filecontent(new_elts.files_info["dat_filecontent"], new_dat)
         return new_elts

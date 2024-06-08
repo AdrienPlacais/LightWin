@@ -1,6 +1,7 @@
 """Define :class:`DummyElement`. It does nothing."""
 
 from core.elements.element import Element
+from tracewin_utils.line import DatLine
 
 
 class DummyElement(Element):
@@ -10,12 +11,10 @@ class DummyElement(Element):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
-        name: str | None = None,
+        line: DatLine,
+        dat_idx: int | None = None,
         **kwargs: str,
     ) -> None:
         """Force an element with null-length, with no index."""
-        super().__init__(line, dat_idx, name)
+        super().__init__(line, dat_idx, **kwargs)
         self.length_m = 0.0
-        self.reinsert_optional_commands_in_line()

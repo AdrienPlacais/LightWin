@@ -1,11 +1,10 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Define some helper functions to filter list of elements.
 
 .. todo::
     Filtering consistency.
 
 """
+
 import logging
 from collections.abc import Callable, Iterable
 from functools import partial

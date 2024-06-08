@@ -10,6 +10,7 @@
 """
 
 from core.elements.element import Element
+from tracewin_utils.line import DatLine
 
 
 class SuperposedFieldMap(Element):
@@ -20,12 +21,11 @@ class SuperposedFieldMap(Element):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
+        line: DatLine,
+        dat_idx: int | None = None,
         total_length: float | None = None,
-        name: str | None = None,
         **kwargs: str,
     ) -> None:
         """Save length of the superposed field maps."""
-        super().__init__(line, dat_idx, name)
+        super().__init__(line, dat_idx, **kwargs)
         self.length_m = total_length

@@ -11,6 +11,7 @@ from core.elements.element import Element
 from core.elements.field_maps.field_map import FieldMap
 from core.elements.superposed_field_map import SuperposedFieldMap
 from core.instruction import Instruction
+from tracewin_utils.line import DatLine
 
 
 class SuperposeMap(Command):
@@ -26,10 +27,12 @@ class SuperposeMap(Command):
     is_implemented = True
     n_attributes = (1, 6)
 
-    def __init__(self, line: list[str], dat_idx: int, **kwargs: str) -> None:
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
+    ) -> None:
         """Save position as attribute."""
         super().__init__(line, dat_idx)
-        self.z_0 = float(line[1]) * 1e-3
+        self.z_0 = float(line.splitted[1]) * 1e-3
 
     def set_influenced_elements(
         self, instructions: list[Instruction], **kwargs: float

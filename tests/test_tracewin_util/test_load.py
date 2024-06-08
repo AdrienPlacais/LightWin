@@ -5,8 +5,8 @@ from pathlib import Path
 from pprint import pformat
 
 from core.commands.adjust import Adjust
+from tracewin_utils.dat_files import dat_filecontent_from_file
 from tracewin_utils.line import DatLine
-from tracewin_utils.load import load_dat_file
 
 
 def are_equal(
@@ -228,7 +228,7 @@ class TestLoadDatFile:
 
     def test_some_lines_of_the_dat(self) -> None:
         """Check one some lines that the loading is correct."""
-        actual_dat_filecontent = load_dat_file(self.dat_path)
+        actual_dat_filecontent = dat_filecontent_from_file(self.dat_path)
         expected_dat_filecontent = self.expected_dat_filecontent
         assert expected_dat_filecontent == actual_dat_filecontent[:15], (
             f"Expected:\n{pformat(expected_dat_filecontent, width=120)}\nbut "
@@ -242,7 +242,7 @@ class TestLoadDatFile:
         expected_dat_filecontent = self.expected_dat_filecontent[:-1]
         expected_dat_filecontent.insert(self.idx_fm1, self.line_adj_phase)
 
-        actual_dat_filecontent = load_dat_file(
+        actual_dat_filecontent = dat_filecontent_from_file(
             self.dat_path, instructions_to_insert=(instruction_1,)
         )
         assert expected_dat_filecontent == actual_dat_filecontent[:15], (
@@ -264,7 +264,7 @@ class TestLoadDatFile:
         expected_dat_filecontent.insert(self.idx_fm2 + 2, self.line_adj_phase)
         expected_dat_filecontent.insert(self.idx_fm2 + 3, self.line_adj_ampl)
 
-        actual_dat_filecontent = load_dat_file(
+        actual_dat_filecontent = dat_filecontent_from_file(
             self.dat_path, instructions_to_insert=instructions
         )
         assert expected_dat_filecontent == actual_dat_filecontent[:15], (

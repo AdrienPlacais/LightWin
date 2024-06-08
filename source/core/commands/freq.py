@@ -5,6 +5,7 @@ import logging
 from core.commands.command import Command
 from core.elements.field_maps.field_map import FieldMap
 from core.instruction import Instruction
+from tracewin_utils.line import DatLine
 
 
 class Freq(Command):
@@ -13,10 +14,12 @@ class Freq(Command):
     is_implemented = True
     n_attributes = 1
 
-    def __init__(self, line: list[str], dat_idx: int, **kwargs: str) -> None:
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
+    ) -> None:
         """Save frequency as attribute."""
         super().__init__(line, dat_idx)
-        self.f_rf_mhz = float(line[1])
+        self.f_rf_mhz = float(line.splitted[1])
 
     def set_influenced_elements(
         self, instructions: list[Instruction], **kwargs: float

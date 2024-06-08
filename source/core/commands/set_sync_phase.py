@@ -12,6 +12,7 @@ from typing import Literal
 from core.commands.command import Command
 from core.elements.field_maps.field_map import FieldMap
 from core.instruction import Instruction
+from tracewin_utils.line import DatLine
 
 
 class SetSyncPhase(Command):
@@ -20,7 +21,9 @@ class SetSyncPhase(Command):
     is_implemented = True
     n_attributes = 0
 
-    def __init__(self, line: list[str], dat_idx: int, **kwargs: str) -> None:
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
+    ) -> None:
         """Instantiate command."""
         logging.warning(
             "The SET_SYNC_PHASE command is still under testing, be cautious."
