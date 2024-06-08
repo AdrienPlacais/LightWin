@@ -50,14 +50,7 @@ def dat_filecontent_from_file(
     with open(dat_path, "r", encoding="utf-8") as file:
         dat_filecontent = [DatLine(line, idx) for idx, line in enumerate(file)]
 
-    if filter_func is None:
-        filters = {
-            "none": lambda x: x.line and len(x.line[0] != ";"),
-            "comments": lambda x: x.line,
-            "all": lambda _: True,
-        }
-        filter_func = filters[keep]
-    dat_filecontent = list(filter(filter_func, dat_filecontent))
+    dat_filecontent = _remove_some_lines(dat_filecontent, keep, filter_func)
 
     if not instructions_to_insert:
         return dat_filecontent
@@ -72,6 +65,25 @@ def dat_filecontent_from_file(
             )
             continue
         dat_filecontent.insert(instruction.idx + i, instruction)
+    return dat_filecontent
+
+
+def _remove_some_lines(
+    dat_filecontent: Sequence[DatLine], keep, filter_func
+) -> list[DatLine]:
+    if keep == "all":
+        return list(dat_filecontent)
+    if filter_func is None:
+        filters = {
+            "none": lambda x: x.line and x.line[0] != ";",
+            "comments": lambda x: x.line,
+            "all": lambda _: True,
+        }
+        filter_func = filters[keep]
+
+    dat_filecontent = list(filter(filter_func, dat_filecontent))
+    for i, dat_line in enumerate(dat_filecontent):
+        dat_line.idx = i
     return dat_filecontent
 
 

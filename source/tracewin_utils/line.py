@@ -45,6 +45,11 @@ class DatLine:
         """Do the same thing as __repr__ for now."""
         return self.__repr__()
 
+    def __eq__(self, value: object, /) -> bool:
+        if not isinstance(value, DatLine):
+            return False
+        return self.line == value.line
+
     def _parse_line(self, line: str) -> None:
         """Parse the line into its components."""
         if _is_a_path_instruction(line):
