@@ -13,6 +13,8 @@ DIAGNOSTIC commands to perform a beauty pass.
 
 """
 
+from typing import override
+
 from core.commands.command import Command
 from core.elements.element import Element
 from core.instruction import Instruction
@@ -39,6 +41,25 @@ class Adjust(Command):
             float(line.splitted[6]) if len(line.splitted) > 6 else None
         )
         self.k_n = float(line.splitted[7]) if len(line.splitted) > 7 else None
+
+    @override
+    def _args_to_line(
+        self,
+        number: int,
+        vth_variable: int,
+        n_link: int = 0,
+        mini: float | None = None,
+        maxi: float | None = None,
+        start_step: float | None = None,
+        k_n: float | None = None,
+    ) -> str:
+        """Create the :class:`.DatLine` corresponding to ``self`` object."""
+        line = f"ADJUST {number} {vth_variable} {n_link}"
+        for optional_variable in (mini, maxi, start_step, k_n):
+            if optional_variable is None:
+                return line
+            line += " " + str(optional_variable)
+        return line
 
     def set_influenced_elements(
         self, instructions: list[Instruction], **kwargs: float
