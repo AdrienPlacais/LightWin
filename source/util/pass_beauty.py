@@ -123,15 +123,14 @@ def elements_to_diagnostics(
     assert isinstance(last_compensating, list)
     post_compensating = lattices[lattices.index(last_compensating) + 1 :]
 
-    dzise_elements = (
+    dsize_elements = (
         first_compensating[0],
         *[lattice[0] for lattice in post_compensating[:number_of_dsize]],
     )
-    dsize_args = (
-        (f"DIAG_DSIZE3 {number} 0 0".split(), elt.idx["dat_idx"])
-        for elt in dzise_elements
-    )
-    dsizes = [DiagDSize3(*args) for args in dsize_args]
+    dsizes = [
+        DiagDSize3.from_args(elt.idx["dat_idx"], number=number)
+        for elt in dsize_elements
+    ]
     return dsizes
 
 
