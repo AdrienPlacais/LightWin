@@ -49,6 +49,7 @@ from tracewin_utils.dat_files import (
     dat_filecontent_from_smaller_list_of_elements,
     export_dat_filecontent,
 )
+from tracewin_utils.line import DatLine
 
 
 class ListOfElementsFactory:
@@ -105,7 +106,7 @@ class ListOfElementsFactory:
         self,
         dat_file: Path,
         accelerator_path: Path,
-        instructions_to_insert: Collection[Instruction] = (),
+        instructions_to_insert: Collection[Instruction | DatLine] = (),
         **kwargs: Any,
     ) -> ListOfElements:
         """Create a new :class:`.ListOfElements`, encompassing a full linac.
@@ -137,8 +138,6 @@ class ListOfElementsFactory:
             f"Created with {dat_file = }"
         )
 
-        if len(instructions_to_insert) > 0:
-            raise NotImplementedError
         dat_filecontent = dat_filecontent_from_file(
             dat_file, keep="all", instructions_to_insert=()
         )
