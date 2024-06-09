@@ -132,6 +132,19 @@ class DiagDSize3(Diagnostic):
         if line.n_args == 4:
             self.low_pass_filter_frequency = float(line.splitted[4])
 
+    def _args_to_line(
+        self,
+        number: int,
+        rms_delta_phase_spread: float = 0.0,
+        accuracy: float = 0.0,
+        low_pass_filter_frequency: float | None = None,
+    ) -> str:
+        """Convert list of arguments to corresponding line of dat file."""
+        line = f"DIAG_DSIZE3 {number} {rms_delta_phase_spread} {accuracy}"
+        if low_pass_filter_frequency is not None:
+            line += " " + str(low_pass_filter_frequency)
+        return line
+
 
 class DiagDSize4(Diagnostic):
     """Measure something?"""
