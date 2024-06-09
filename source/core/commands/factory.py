@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from core.commands.adjust import Adjust
+from core.commands.chopper import Chopper
 from core.commands.command import Command
 from core.commands.dummy_command import DummyCommand
 from core.commands.end import End
@@ -48,6 +49,7 @@ IMPLEMENTED_COMMANDS = {
     "ADJUST": Adjust,
     "ADJUST_STEERER": DummyCommand,
     "DUMMY_COMMAND": DummyCommand,
+    "CHOPPER": Chopper,
     "END": End,
     "ERROR_BEAM_DYN": ErrorBeamDyn,
     "ERROR_BEAM_STAT": ErrorBeamStat,
