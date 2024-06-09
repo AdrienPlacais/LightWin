@@ -151,7 +151,8 @@ class Instruction(ABC):
         dat_line = DatLine(line, dat_idx)
         return cls(dat_line)
 
-    def _args_to_line(self, *args, **kwargs) -> str:
+    @classmethod
+    def _args_to_line(cls, *args, **kwargs) -> str:
         """Create the line of the dat file from arguments of the command."""
         raise NotImplementedError(
             "Must be overriden for specific instruction."

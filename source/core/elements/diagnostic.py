@@ -13,6 +13,8 @@ diagnostics (as well as ADJUST) to the final ``.dat`` in order to perform a
 
 """
 
+from typing import override
+
 from core.elements.element import Element
 from tracewin_utils.line import DatLine
 
@@ -132,8 +134,10 @@ class DiagDSize3(Diagnostic):
         if line.n_args == 4:
             self.low_pass_filter_frequency = float(line.splitted[4])
 
+    @classmethod
+    @override
     def _args_to_line(
-        self,
+        cls,
         number: int,
         rms_delta_phase_spread: float = 0.0,
         accuracy: float = 0.0,

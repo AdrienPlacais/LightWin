@@ -42,9 +42,10 @@ class Adjust(Command):
         )
         self.k_n = float(line.splitted[7]) if len(line.splitted) > 7 else None
 
+    @classmethod
     @override
     def _args_to_line(
-        self,
+        cls,
         number: int,
         vth_variable: int,
         n_link: int = 0,
