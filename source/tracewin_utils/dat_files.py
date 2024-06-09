@@ -1,4 +1,4 @@
-"""Define functions to load, modify and create .dat structure files.
+"""Define functions to load, modify and create ``.dat`` structure files.
 
 .. todo::
     Insert line skip at each section change in the output.dat
@@ -35,7 +35,7 @@ def dat_filecontent_from_file(
         The default is `'none'`.
     filter_func : Callable
         You can provide your own filters here. Takes precedence over ``keep``.
-    instructions_to_insert : Collection[Instruction], optional
+    instructions_to_insert : Collection[Instruction | DatLine], optional
         Some elements or commands that are not present in the ``.dat`` file but
         that you want to add. The default is an empty tuple.
 
@@ -45,34 +45,44 @@ def dat_filecontent_from_file(
         List containing all the lines of dat_path.
 
     """
-    dat_filecontent = []
-
     with open(dat_path, "r", encoding="utf-8") as file:
         dat_filecontent = [DatLine(line, idx) for idx, line in enumerate(file)]
 
-    dat_filecontent = _remove_some_lines(dat_filecontent, keep, filter_func)
+    dat_filecontent = _filter_lines(dat_filecontent, keep, filter_func)
 
-    if not instructions_to_insert:
-        return dat_filecontent
-    logging.info(
-        "Will insert following instructions:\n"
-        f"{pformat(instructions_to_insert, width=120)}"
-    )
-    for i, instruction in enumerate(instructions_to_insert):
-        if isinstance(instruction, Instruction):
-            instruction.insert_dat_line(
-                dat_filecontent=dat_filecontent, previously_inserted=i
-            )
-            continue
-        dat_filecontent.insert(instruction.idx + i, instruction)
+    if instructions_to_insert:
+        _insert_instructions(dat_filecontent, instructions_to_insert)
     return dat_filecontent
 
 
-def _remove_some_lines(
-    dat_filecontent: Sequence[DatLine], keep, filter_func
+def _filter_lines(
+    dat_filecontent: Sequence[DatLine],
+    keep: Literal["none", "comments", "all"] = "none",
+    filter_func: Callable[[DatLine], bool] | None = None,
 ) -> list[DatLine]:
+    """Remove some :class:`.DatLine` from ``dat_filecontent``.
+
+    [TODO:description]
+
+    Parameters
+    ----------
+    dat_filecontent : Sequence[DatLine]
+        Content loaded from the ``.dat`` file.
+    keep : {"none", "comments", "all"}, optional
+        To determine which un-necessary lines in the dat file should be kept.
+        The default is `'none'`.
+    filter_func : Callable[[DatLine], bool], optional
+        You can provide your own filters here. Takes precedence over ``keep``.
+
+    Returns
+    -------
+    list[DatLine]
+        Content of the ``.dat`` file without undesirable content.
+
+    """
     if keep == "all":
         return list(dat_filecontent)
+
     if filter_func is None:
         filters = {
             "none": lambda x: x.line and x.line[0] != ";",
@@ -82,9 +92,30 @@ def _remove_some_lines(
         filter_func = filters[keep]
 
     dat_filecontent = list(filter(filter_func, dat_filecontent))
+
+    # Update index to keep it consistent
     for i, dat_line in enumerate(dat_filecontent):
         dat_line.idx = i
     return dat_filecontent
+
+
+def _insert_instructions(
+    dat_filecontent: list[DatLine],
+    instructions_to_insert: Collection[Instruction | DatLine] = (),
+) -> None:
+    """Insert the desired instructions in the ``dat_filecontent``."""
+    logging.info(
+        "Will insert following instructions:\n"
+        f"{pformat(instructions_to_insert, width=120)}"
+    )
+    for i, instruction in enumerate(instructions_to_insert):
+        if isinstance(instruction, DatLine):
+            dat_filecontent.insert(instruction.idx + i, instruction)
+            continue
+
+        instruction.insert_dat_line(
+            dat_filecontent=dat_filecontent, previously_inserted=i
+        )
 
 
 def dat_filecontent_from_smaller_list_of_elements(
