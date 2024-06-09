@@ -139,7 +139,7 @@ class ListOfElementsFactory:
         )
 
         dat_filecontent = dat_filecontent_from_file(
-            dat_file, keep="all", instructions_to_insert=()
+            dat_file, keep="all", instructions_to_insert=instructions_to_insert
         )
         instructions = self.instructions_factory.run(dat_filecontent)
         elts = [x for x in instructions if isinstance(x, Element)]
