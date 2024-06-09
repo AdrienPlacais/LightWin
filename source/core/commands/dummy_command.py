@@ -16,7 +16,7 @@ class DummyCommand(Command):
         self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Instantiate the dummy command."""
-        super().__init__(line, dat_idx)
+        super().__init__(line, dat_idx, **kwargs)
 
     def set_influenced_elements(
         self, instructions: list[Instruction], **kwargs: float

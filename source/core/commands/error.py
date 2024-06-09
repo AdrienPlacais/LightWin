@@ -10,12 +10,13 @@ class Error(DummyCommand):
 
     def __init__(self, *args, **kwargs) -> None:
         """Raise an error."""
+        super().__init__(*args, **kwargs)
         logging.error(
             "The ERROR commands are not implemented in LightWin. As this "
             "commands will influence the design of the linac, you should set "
-            "the design and comment this commands out."
+            f"the design and comment this commands out.\n{self.line}"
         )
-        return super().__init__(*args, **kwargs)
+        return
 
 
 class ErrorBeamDyn(Error):
