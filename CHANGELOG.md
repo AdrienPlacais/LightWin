@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.??] 2024-??-?? -- branch under development
 
+## [0.6.22] 2024-??-??
+
+### Added
+- `FIELD_MAP 70` will not raise error (warning issued with `Envelope3D`).
+
+### Changed
+- Creation of `DatLine` object, holding a line of the ``.dat`` file. Solves several bugs, e.g. with hyphens in personalized names.
+
 ### Changed
 - `evaluator` objects are more robust and can be configured from the `.toml`.
 - Plotting is now performed thanks to the `plotter` library.
