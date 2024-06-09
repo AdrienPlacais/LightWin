@@ -7,6 +7,7 @@ from tracewin_utils.line import DatLine
 class ThinSteering(Element):
     """A dummy object."""
 
+    base_name = "TS"
     increment_lattice_idx = False
     is_implemented = False
 
