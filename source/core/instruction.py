@@ -144,6 +144,19 @@ class Instruction(ABC):
         for instruction in instructions[self.idx["dat_idx"] + 1 :]:
             instruction.increment_dat_position()
 
+    @classmethod
+    def from_args(cls, dat_idx: int, *args, **kwargs) -> Self:
+        """Instantiate instruction from its arguments directly."""
+        line = cls._args_to_line(*args, **kwargs)
+        dat_line = DatLine(line, dat_idx)
+        return cls(dat_line)
+
+    def _args_to_line(self, *args, **kwargs) -> str:
+        """Create the line of the dat file from arguments of the command."""
+        raise NotImplementedError(
+            "Must be overriden for specific instruction."
+        )
+
 
 class Dummy(Instruction):
     """An object corresponding to a non-implemented element or command."""
