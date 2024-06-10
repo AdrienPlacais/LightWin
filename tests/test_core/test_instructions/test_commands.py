@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,7 @@ from beam_calculation.simulation_output.simulation_output import (
 from core.accelerator.accelerator import Accelerator
 from core.accelerator.factory import NoFault
 
+# note: only r_zz matrix will be checked with envelope1d
 all_expected = {
     ("repeat_ele.dat", "generic_envelope3d"): np.array(
         # fmt: off
@@ -45,6 +47,17 @@ all_expected = {
             [+0.000000e+00, +0.000000e+00, -6.706392e-01, +6.573501e-01, +0.000000e+00, +0.000000e+00],
             [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, +2.474433e-01, +1.669207e+00],
             [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, -5.952788e-01, -5.059394e-02]
+        ]
+    ),
+    ("superpose_map.dat", "generic_envelope1d"): np.array(
+        # fmt: off
+        [
+            [-2.069032e+00, +5.428874e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00],
+            [-1.102989e+00, +2.419332e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00],
+            [+0.000000e+00, +0.000000e+00, -3.204445e-01, +1.797590e+00, +0.000000e+00, +0.000000e+00],
+            [+0.000000e+00, +0.000000e+00, -6.678054e-01, +6.807039e-01, +0.000000e+00, +0.000000e+00],
+            [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, +2.270358e-01, +1.620669e+00],
+            [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, -6.222453e-01, -1.151413e-01]
         ]
     ),
 }
@@ -123,6 +136,7 @@ def simulation_output(
         ("repeat_ele.dat", "generic_envelope3d"),
         ("bigger_repeat_ele.dat", "generic_envelope3d"),
         ("set_sync_phase.dat", "generic_envelope3d"),
+        ("superpose_map.dat", "generic_envelope1d"),
     ],
 )
 def test_transfer_matrix(
@@ -135,6 +149,10 @@ def test_transfer_matrix(
     transfer_matrix = simulation_output.transfer_matrix
     assert transfer_matrix is not None
     returned = transfer_matrix.cumulated[-1]
+
+    if "envelope1d" in beam_calculator_key:
+        returned = returned[4:, 4:]
+        expected = expected[4:, 4:]
 
     assert np.allclose(
         expected, returned, atol=1e-2
