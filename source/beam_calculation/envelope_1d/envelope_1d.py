@@ -36,7 +36,7 @@ class Envelope1D(BeamCalculator):
         flag_phi_abs: bool,
         flag_cython: bool,
         n_steps_per_cell: int,
-        method: Literal["RK4", "leaprog"],
+        method: Literal["RK4", "leapfrog"],
         out_folder: Path | str,
         default_field_map_folder: Path | str,
         phi_s_definition: Literal["historical"] = "historical",
