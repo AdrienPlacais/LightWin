@@ -115,6 +115,10 @@ class DatLine:
         """Change value of an argument."""
         self.splitted[position] = str(value)
 
+    def append_argument(self, value: Any) -> None:
+        """Append an argument to the line."""
+        self.splitted.append(str(value))
+
 
 def _split_named_elements(elements: Collection[str]) -> list[str]:
     """Split elements into named and unnamed components."""
