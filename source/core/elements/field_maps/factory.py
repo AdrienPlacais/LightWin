@@ -16,7 +16,7 @@ import logging
 from abc import ABCMeta
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from core.elements.field_maps.cavity_settings_factory import (
     CavitySettingsFactory,
@@ -57,7 +57,7 @@ class FieldMapFactory:
         self,
         default_field_map_folder: Path,
         freq_bunch_mhz: float,
-        default_absolute_phase_flag: str = "0",
+        default_absolute_phase_flag: Literal["0", "1"] = "0",
         **factory_kw: Any,
     ) -> None:
         """Save the default folder for field maps."""
@@ -67,14 +67,11 @@ class FieldMapFactory:
         self.cavity_settings_factory = CavitySettingsFactory(freq_bunch_mhz)
 
     def run(
-        self,
-        line: DatLine,
-        dat_idx: int | None = None,
-        **kwargs,
+        self, line: DatLine, dat_idx: int | None = None, **kwargs
     ) -> FieldMap:
         """Call proper constructor."""
         if line.n_args == 9:
-            self._append_absolute_phase_flag(line)
+            line.append_argument(self.default_absolute_phase_flag)
 
         field_map_class = self._get_proper_field_map_subclass(
             int(line.splitted[1])
@@ -93,10 +90,6 @@ class FieldMapFactory:
             **kwargs,
         )
         return field_map
-
-    def _append_absolute_phase_flag(self, line: DatLine) -> None:
-        """Add an explicit absolute phase flag."""
-        line.splitted.append(self.default_absolute_phase_flag)
 
     def _get_proper_field_map_subclass(self, geometry: int) -> ABCMeta:
         """Determine the proper field map subclass.
