@@ -156,4 +156,4 @@ def test_transfer_matrix(
 
     assert np.allclose(
         expected, returned, atol=1e-2
-    ), f"{expected = }, but {returned = }"
+    ), f"expected = \n{expected}\nbut returned =\n{returned}"
