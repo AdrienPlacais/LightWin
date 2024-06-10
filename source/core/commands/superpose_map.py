@@ -1,4 +1,10 @@
-"""Define a useless command to serve as place holder."""
+"""Define a command to superpose longitudinal field maps.
+
+.. note::
+    As for now, the transverse motion in field maps is not implemented, even
+    with :class:`.Envelope3D`.
+
+"""
 
 import logging
 from collections.abc import Sequence
@@ -9,7 +15,11 @@ from core.electric_field import NewRfField
 from core.elements.dummy import DummyElement
 from core.elements.element import Element
 from core.elements.field_maps.field_map import FieldMap
-from core.elements.superposed_field_map import SuperposedFieldMap
+from core.elements.field_maps.superposed_field_map import (
+    SuperposedFieldMap,
+    SuperposedPlaceHolderCmd,
+    SuperposedPlaceHolderElt,
+)
 from core.instruction import Instruction
 from tracewin_utils.line import DatLine
 
@@ -56,7 +66,7 @@ class SuperposeMap(Command):
         valid range of elements.
 
         """
-        start = self.idx["dat_idx"]
+        start = self.idx["dat_idx"] - 1
         next_element_but_not_field_map = list(
             filter(
                 lambda elt: (
@@ -80,12 +90,21 @@ class SuperposeMap(Command):
         is replaced by a SuperposedFieldMap.
 
         """
-        instructions_to_merge = instructions[self.influenced]
+        instructions_to_merge = list(
+            filter(
+                lambda x: isinstance(x, (Element, SuperposeMap)),
+                instructions[self.influenced],
+            )
+        )
         total_length = self._total_length(instructions_to_merge)
 
-        instructions[self.influenced], number_of_superposed = (
-            self._update_class(instructions_to_merge, total_length)
+        # instructions[self.influenced], number_of_superposed = (
+        #     self._update_class(instructions_to_merge, total_length)
+        # )
+        new_instructions = self._generate_new_instructions(
+            total_length, instructions_to_merge
         )
+        number_of_superposed = int(len(new_instructions) / 2)
 
         elts_after_self = list(
             filter(
@@ -110,7 +129,8 @@ class SuperposeMap(Command):
             if isinstance(instruction, FieldMap):
                 if z_0 is None:
                     logging.error(
-                        "There is no SUPERPOSE_MAP for current " "FIELD_MAP."
+                        "There is no SUPERPOSE_MAP for current FIELD_MAP.\n"
+                        f"{instruction.line}"
                     )
                     z_0 = 0.0
 
@@ -119,6 +139,28 @@ class SuperposeMap(Command):
                     z_max = z_1
                 z_0 = None
         return z_max
+
+    def _generate_new_instructions(
+        self, total_length: float, instructions_to_merge: list[Instruction]
+    ) -> list[Instruction]:
+        """Create the instructions replacing superpose and field maps."""
+        indexes = [x.idx["dat_idx"] for x in instructions_to_merge]
+
+        new_instructions: list[Instruction] = [
+            SuperposedFieldMap.from_field_maps(
+                instructions_to_merge,
+                dat_idx=indexes.pop(0),
+                total_length=total_length,
+            )
+        ]
+
+        for instruction, dat_idx in zip(instructions_to_merge[1:], indexes):
+            dat_line = DatLine("SUPERPOSE_PLACE_HOLDER 0", dat_idx)
+            if isinstance(instruction, Element):
+                new_instructions.append(SuperposedPlaceHolderElt(dat_line))
+                continue
+            new_instructions.append(SuperposedPlaceHolderCmd(dat_line))
+        return new_instructions
 
     def _update_class(
         self, instructions_to_merge: list[Instruction], total_length: float
