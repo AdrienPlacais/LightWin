@@ -8,6 +8,7 @@ from beam_calculation.envelope_1d.element_envelope1d_parameters import (
     DriftEnvelope1DParameters,
     ElementEnvelope1DParameters,
     FieldMapEnvelope1DParameters,
+    SuperposedFieldMapEnvelope1DParameters,
 )
 from beam_calculation.parameters.factory import (
     ElementBeamCalculatorParametersFactory,
@@ -19,18 +20,20 @@ from core.elements.drift import Drift
 from core.elements.edge import Edge
 from core.elements.element import Element
 from core.elements.field_maps.field_map import FieldMap
+from core.elements.field_maps.superposed_field_map import SuperposedFieldMap
 from core.elements.quad import Quad
 from core.elements.solenoid import Solenoid
 
 PARAMETERS_1D = {
     Aperture: DriftEnvelope1DParameters,
     Bend: BendEnvelope1DParameters,
-    Edge: DriftEnvelope1DParameters,
     Diagnostic: DriftEnvelope1DParameters,
     Drift: DriftEnvelope1DParameters,
+    Edge: DriftEnvelope1DParameters,
     FieldMap: FieldMapEnvelope1DParameters,
     Quad: DriftEnvelope1DParameters,
     Solenoid: DriftEnvelope1DParameters,
+    SuperposedFieldMap: SuperposedFieldMapEnvelope1DParameters,
 }  #:
 
 
@@ -71,8 +74,8 @@ class ElementEnvelope1DParametersFactory(
         """Create the proper subclass of solver parameters, instantiate it.
 
         .. note::
-            If an Element type is not found in ``PARAMETERS_1D``, we take
-            its mother type.
+            If an Element type is not found in :const:``PARAMETERS_1D``, we
+            take its mother type.
 
         Parameters
         ----------
