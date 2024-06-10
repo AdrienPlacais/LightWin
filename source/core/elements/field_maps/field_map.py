@@ -28,6 +28,7 @@ import numpy as np
 from core.electric_field import NewRfField
 from core.elements.element import Element
 from core.elements.field_maps.cavity_settings import CavitySettings
+from core.elements.field_maps.util import set_full_field_map_path
 from tracewin_utils.line import DatLine
 from util.helper import recursive_getter
 
@@ -137,13 +138,9 @@ class FieldMap(Element):
         :func:`tracewin_utils.electromagnetic_fields.file_map_extensions`
 
         """
-        self.field_map_file_name = [
-            Path(self.field_map_folder, self.field_map_file_name).with_suffix(
-                "." + ext
-            )
-            for extension in extensions.values()
-            for ext in extension
-        ]
+        self.field_map_file_name = set_full_field_map_path(
+            self.field_map_folder, self.field_map_file_name, extensions
+        )
 
     def keep_cavity_settings(self, cavity_settings: CavitySettings) -> None:
         """Keep the cavity settings that were found."""
