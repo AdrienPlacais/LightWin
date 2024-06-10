@@ -10,9 +10,17 @@ line is ``dp/p``.
 .. todo::
     send beta as argument to avoid recomputing it each time
 
+.. todo::
+    Use :func:`e_func_complex` in :func:`field_map_rk4`?
+
+.. todo::
+    electric field interpolated twice: a first time for acceleration, and a
+    second time to iterate itg_field. Maybe this could be done only once.
+
 """
 
 import math
+from collections.abc import Collection
 from typing import Callable
 
 import numpy as np
@@ -34,6 +42,68 @@ def e_func(
 
     """
     return e_spat(z) * math.cos(phi + phi_0)
+
+
+# Could be faster I think
+# Not used in field_map_rk4 for now
+def e_func_complex(
+    z: float, e_spat: Callable[[float], float], phi: float, phi_0: float
+) -> complex:
+    """Give the complex electric field at position z and phase phi.
+
+    The field is normalized and should be multiplied by k_e.
+
+    """
+    return (
+        e_spat(z) * math.cos(phi + phi_0) * (1.0 + 1j * math.tan(phi + phi_0))
+    )
+
+
+def e_funcs_scaled(
+    z: float,
+    e_spats: Collection[Callable[[float], float]],
+    phi: float,
+    phi_0s: Collection[float],
+    scaling_factors: Collection[float],
+) -> float:
+    """Give the electric field at position z and phase phi w/ several maps.
+
+    .. note::
+        In contrary to :func:`e_func`, it is mandatory to give the
+        field maps scaling factors here.
+
+    """
+    fields = [
+        scaling * e_func(z, e_spat, phi, phi_0)
+        for scaling, e_spat, phi_0 in zip(
+            scaling_factors, e_spats, phi_0s, strict=True
+        )
+    ]
+
+    return sum(fields)
+
+
+def e_funcs_scaled_complex(
+    z: float,
+    e_spats: Collection[Callable[[float], float]],
+    phi: float,
+    phi_0s: Collection[float],
+    scaling_factors: Collection[float],
+) -> complex:
+    """Give complex electric field at position z and phase phi w/ several maps.
+
+    .. note::
+        In contrary to :func:`e_func`, it is mandatory to give the
+        field maps scaling factors here.
+
+    """
+    fields = [
+        scaling * e_func_complex(z, e_spat, phi, phi_0)
+        for scaling, e_spat, phi_0 in zip(
+            scaling_factors, e_spats, phi_0s, strict=True
+        )
+    ]
+    return sum(fields)
 
 
 # =============================================================================
@@ -141,6 +211,103 @@ def z_field_map_rk4(
             half_dz,
             delta_gamma_middle_max,
             phi_0_rel,
+            omega0_rf,
+        )
+
+        z_rel += d_z
+
+    return r_zz, gamma_phi[1:, :], itg_field
+
+
+def z_superposed_field_maps_rk4(
+    gamma_in: float,
+    d_z: float,
+    n_steps: int,
+    omega0_rf: float,
+    k_es: Collection[float],
+    phi_0_rels: Collection[float],
+    e_spats: Collection[Callable[[float], float]],
+    **kwargs,
+) -> tuple[np.ndarray, np.ndarray, complex]:
+    """Calculate the transfer matrix of superposed FIELD_MAP using RK."""
+    z_rel = 0.0
+    itg_field = 0.0
+    half_dz = 0.5 * d_z
+
+    # Constants to speed up calculation
+    delta_phi_norm = omega0_rf * d_z / c
+    delta_gamma_norm = con.Q_ADIM * d_z * con.INV_E_REST_MEV
+    # k_k = delta_gamma_norm * k_e
+    k_ks = [delta_gamma_norm * k_e for k_e in k_es]
+
+    r_zz = np.empty((n_steps, 2, 2))
+    gamma_phi = np.empty((n_steps + 1, 2))
+    gamma_phi[0, 0] = gamma_in
+    gamma_phi[0, 1] = 0.0
+
+    # Define the motion function to integrate
+    def du(z: float, u: np.ndarray) -> np.ndarray:
+        r"""Compute variation of energy and phase.
+
+        Parameters
+        ----------
+        z : float
+            Position where variation is calculated.
+        u : np.ndarray
+            First component is gamma. Second is phase in rad.
+
+        Return
+        ------
+        v : np.ndarray
+            First component is :math:`\Delta \gamma / \Delta z` in
+            :math:`\mathrm{MeV / m}`.
+            Second is :math:`\Delta \phi / \Delta z` in
+            :math:`\mathrm{rad / m}`.
+
+        """
+        # v0 = k_k * e_func(z, e_spat, u[1], phi_0_rel)
+        v0 = e_funcs_scaled(z, e_spats, u[1], phi_0_rels, k_ks)
+        beta = np.sqrt(1.0 - u[0] ** -2)
+        v1 = delta_phi_norm / beta
+        return np.array([v0, v1])
+
+    for i in range(n_steps):
+        # Compute gamma and phase changes
+        delta_gamma_phi = rk4(u=gamma_phi[i, :], du=du, x=z_rel, dx=d_z)
+
+        gamma_phi[i + 1, :] = gamma_phi[i, :] + delta_gamma_phi
+
+        # itg_field += (
+        #     k_e
+        #     * e_func(z_rel, e_spat, gamma_phi[i, 1], phi_0_rel)
+        #     * (1.0 + 1j * math.tan(gamma_phi[i, 1] + phi_0_rel))
+        #     * d_z
+        # )
+        itg_field += (
+            e_funcs_scaled_complex(
+                z_rel, e_spats, gamma_phi[i, 1], phi_0_rels, k_es
+            )
+            * d_z
+        )
+
+        # Compute gamma and phi at the middle of the thin lense
+        gamma_phi_middle = gamma_phi[i, :] + 0.5 * delta_gamma_phi
+
+        # To speed up (corresponds to the gamma_variation at the middle of the
+        # thin lense at cos(phi + phi_0) = 1
+        # delta_gamma_middle_max = k_k * e_spat(z_rel + half_dz)
+        delta_gamma_middle_maxs = [
+            k_k * e_spat(z_rel + half_dz) for k_k, e_spat in zip(k_ks, e_spats)
+        ]
+
+        # Compute thin lense transfer matrix
+        r_zz[i, :, :] = z_thin_lense_superposed(
+            gamma_phi[i, 0],
+            gamma_phi[i + 1, 0],
+            gamma_phi_middle,
+            half_dz,
+            delta_gamma_middle_maxs,
+            phi_0_rels,
             omega0_rf,
         )
 
@@ -293,6 +460,79 @@ def z_thin_lense(
     )
     k_2 = 1.0 - (2.0 - beta_m**2) * k_speed2
     k_3 = (1.0 - k_speed2) / k_2
+
+    # Faster than matmul or matprod_22
+    r_zz_array = z_drift(gamma_out, half_dz)[0][0] @ (
+        np.array(([k_3, 0.0], [k_1, k_2])) @ z_drift(gamma_in, half_dz)[0][0]
+    )
+    return r_zz_array
+
+
+def z_thin_lense_superposed(
+    gamma_in: float,
+    gamma_out: float,
+    gamma_phi_m: np.ndarray,
+    half_dz: float,
+    delta_gamma_m_maxs: Collection[float],
+    phi_0s: Collection[float],
+    omega0_rf: float,
+) -> np.ndarray:
+    """
+    Compute trajectory with thin lense approximation: drift-acceleration-drift.
+
+    Parameters
+    ----------
+    gamma_in : float
+        gamma at entrance of first drift.
+    gamma_out : float
+        gamma at exit of first drift.
+    gamma_phi_m : np.ndarray
+        gamma and phase at the thin acceleration drift.
+    half_dz : float
+        Half a spatial step in m.
+    delta_gamma_m_maxs : float
+        Max gamma increase if the cos(phi + phi_0) of the acc. field is 1.
+    phi_0s : float
+        Input phases of the elements.
+    omega0_rf : float
+        Pulsation of the elements.
+
+    Return
+    ------
+    r_zz_array : np.ndarray
+        Transfer matrix of the thin lense.
+
+    """
+    # Used for tm components
+    beta_m = math.sqrt(1.0 - gamma_phi_m[0] ** -2)
+    # k_speed1 = delta_gamma_m_max / (gamma_phi_m[0] * beta_m**2)
+    # k_speed2 = k_speed1 * math.cos(gamma_phi_m[1] + phi_0)
+    k_speed1s = [
+        delta_gamma_m_max / (gamma_phi_m[0] * beta_m**2)
+        for delta_gamma_m_max in delta_gamma_m_maxs
+    ]
+    k_speed2s = [
+        k_speed1 * math.cos(gamma_phi_m[1] + phi_0)
+        for k_speed1, phi_0 in zip(k_speed1s, phi_0s)
+    ]
+
+    # Thin lense transfer matrices components
+    # k_1 = (
+    #     k_speed1 * omega0_rf / (beta_m * c) * math.sin(gamma_phi_m[1] + phi_0)
+    # )
+    # k_2 = 1.0 - (2.0 - beta_m**2) * k_speed2
+    # k_3 = (1.0 - k_speed2) / k_2
+    k_1 = sum(
+        [
+            k_speed1
+            * omega0_rf
+            / (beta_m * c)
+            * math.sin(gamma_phi_m[1] + phi_0)
+            for k_speed1, phi_0 in zip(k_speed1s, phi_0s)
+        ]
+    )
+    k_2 = sum([1.0 - (2.0 - beta_m**2) * k_speed2 for k_speed2 in k_speed2s])
+    k_3 = sum([(1.0 - k_speed2) / k_2 for k_speed2 in k_speed2s])
 
     # Faster than matmul or matprod_22
     r_zz_array = z_drift(gamma_out, half_dz)[0][0] @ (
