@@ -1,13 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""Define a class to store several :class:`.CavitySettings`.
+"""Define a class to store several :class:`.CavitySettings`."""
 
-.. todo::
-    I should create a :class:`.SetOfCavitySettings` with
-    :class:`.CavitySettings` for every cavity of the compensation zone.
-    Mandatory to recompute the synchronous phases.
-
-"""
 from collections.abc import Collection, Sequence
 from typing import Self, TypeVar
 
