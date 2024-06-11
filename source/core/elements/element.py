@@ -14,7 +14,7 @@ import numpy as np
 from beam_calculation.parameters.element_parameters import (
     ElementBeamCalculatorParameters,
 )
-from core.electric_field import NewRfField
+from core.electric_field import RfField
 from core.elements.field_maps.cavity_settings import CavitySettings
 from core.instruction import Instruction
 from tracewin_utils.line import DatLine
@@ -77,7 +77,7 @@ class Element(Instruction):
 
         # By default, an element is non accelerating and has a dummy
         # accelerating field.
-        self.new_rf_field = NewRfField()
+        self.new_rf_field = RfField()
 
         # TODO: init the indexes to -1 or something, to help type hinting
         # dict with pure type: int

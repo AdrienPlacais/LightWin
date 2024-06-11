@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Self, override
 
 from core.commands.dummy_command import DummyCommand
-from core.electric_field import NewRfField
+from core.electric_field import RfField
 from core.elements.dummy import DummyElement
 from core.elements.element import Element
 from core.elements.field_maps.cavity_settings import CavitySettings
@@ -52,7 +52,7 @@ class SuperposedFieldMap(Element):
 
         self.field_map_file_names = field_map_file_names
 
-        self.new_rf_fields: list[NewRfField]
+        self.new_rf_fields: list[RfField]
         self._can_be_retuned: bool = False
 
         self._is_accelerating = is_accelerating
@@ -116,7 +116,7 @@ class SuperposedFieldMap(Element):
     @classmethod
     def _extract_args_from_field_maps(
         cls, field_maps: Collection[FieldMap]
-    ) -> tuple[list[CavitySettings], list[Path], list[NewRfField], bool]:
+    ) -> tuple[list[CavitySettings], list[Path], list[RfField], bool]:
         """Go over the field maps to gather essential arguments."""
         cavity_settings = [
             field_map.cavity_settings for field_map in field_maps

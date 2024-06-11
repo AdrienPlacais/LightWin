@@ -25,7 +25,7 @@ from typing import Any
 
 import numpy as np
 
-from core.electric_field import NewRfField
+from core.electric_field import RfField
 from core.elements.element import Element
 from core.elements.field_maps.cavity_settings import CavitySettings
 from core.elements.field_maps.util import set_full_field_map_path
@@ -75,7 +75,7 @@ class FieldMap(Element):
         self.field_map_folder = default_field_map_folder
         self.field_map_file_name = Path(line.splitted[9])
 
-        self.new_rf_field: NewRfField
+        self.new_rf_field: RfField
         self._can_be_retuned: bool = True
 
     @property
