@@ -5,9 +5,9 @@ This solver is fast, but should not be used at low energies.
 """
 
 import logging
-from collections.abc import Callable, Collection
+from collections.abc import Callable, Collection, Sequence
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal, overload
 
 from beam_calculation.beam_calculator import BeamCalculator
 from beam_calculation.envelope_1d.element_envelope1d_parameters_factory import (
@@ -20,6 +20,7 @@ from beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from core.accelerator.accelerator import Accelerator
+from core.elements.element import Element
 from core.elements.field_maps.cavity_settings import CavitySettings
 from core.elements.field_maps.field_map import FieldMap
 from core.elements.field_maps.superposed_field_map import SuperposedFieldMap
@@ -137,12 +138,15 @@ class Envelope1D(BeamCalculator):
         )
 
         for elt in elts:
-            cavity_settings = set_of_cavity_settings.get(elt, None)
-            rf_field_kwargs = {}
-            if cavity_settings is not None:
-                rf_field_kwargs = self._adapt_cavity_settings(
-                    elt, cavity_settings, phi_abs, w_kin
-                )
+            # cavity_settings = set_of_cavity_settings.get(elt, None)
+            # rf_field_kwargs = {}
+            # if cavity_settings is not None:
+            #     rf_field_kwargs = self._adapt_cavity_settings(
+            #         elt, cavity_settings, phi_abs, w_kin
+            #     )
+            rf_field_kwargs, cavity_settings = self._transfer_matrix_kwargs(
+                elt, set_of_cavity_settings, phi_abs, w_kin
+            )
             # Technically: if we made a phi_s fit, following lines are useless
             # elt_results already calculated
             # v_cav, phi_s already calculated
@@ -226,9 +230,9 @@ class Envelope1D(BeamCalculator):
     def _adapt_cavity_settings(
         self,
         field_map: FieldMap,
-        cavity_settings: CavitySettings,
         phi_bunch_abs: float,
         w_kin_in: float,
+        cavity_settings: CavitySettings,
     ) -> dict[str, Callable | int | float]:
         """Format the given :class:`.CavitySettings` for current solver.
 
@@ -236,19 +240,16 @@ class Envelope1D(BeamCalculator):
         dictionary.
 
         """
-        cavity_settings.phi_bunch = phi_bunch_abs
-        rf_parameters_as_dict = _field_map_to_kwargs(
-            field_map, cavity_settings
-        )
+        _set_entry_phase(phi_bunch_abs, *cavity_settings)
+
+        fun1 = _field_map_kwargs
+        fun2 = _add_cavity_phase
+
+        rf_parameters_as_dict = fun1(field_map, cavity_settings)
         if not rf_parameters_as_dict:
             return rf_parameters_as_dict
 
-        _add_cavity_phase(
-            self.id,
-            w_kin_in,
-            cavity_settings,
-            rf_parameters_as_dict,
-        )
+        fun2(self.id, w_kin_in, cavity_settings, rf_parameters_as_dict)
         return rf_parameters_as_dict
 
     def _post_treat_cavity_settings(
@@ -278,8 +279,39 @@ class Envelope1D(BeamCalculator):
         v_cav_mv, phi_s = self._phi_s_func(**results)
         return v_cav_mv, phi_s
 
+    def _transfer_matrix_kwargs(
+        self,
+        element: Element,
+        set_of_cavity_settings: SetOfCavitySettings,
+        phi_bunch_abs: float,
+        w_kin_in: float,
+    ) -> tuple[dict[str, Any], CavitySettings | None]:
+        """Set the keyword arguments of the transfer matrix function."""
+        if element not in set_of_cavity_settings:
+            return {}, None
 
-def _field_map_to_kwargs(
+        cavity_settings = set_of_cavity_settings[element]
+        _set_entry_phase(phi_bunch_abs, cavity_settings)
+
+        if isinstance(element, SuperposedFieldMap):
+            assert isinstance(cavities_settings := cavity_settings, list)
+            kwargs = _superposed_field_map_kwargs(element, cavities_settings)
+            if not kwargs:
+                return {}, None
+            _add_cavities_phases(self.id, w_kin_in, cavities_settings, kwargs)
+            return kwargs, None
+
+        if isinstance(element, FieldMap):
+            kwargs = _field_map_kwargs(element, cavity_settings)
+            if not kwargs:
+                return {}, cavity_settings
+            _add_cavity_phase(self.id, w_kin_in, cavity_settings, kwargs)
+            return kwargs, cavity_settings
+
+        raise IOError
+
+
+def _field_map_kwargs(
     field_map: FieldMap, cavity_settings: CavitySettings
 ) -> dict[str, Callable | int | float]:
     """Format the cavity settings for the current solver transfer matrix func.
@@ -330,17 +362,11 @@ def _add_cavity_phase(
     )
 
 
-def _superposed_field_map_to_kwargs(
+def _superposed_field_map_kwargs(
     superposed: SuperposedFieldMap,
-    cavity_settings: CavitySettings | None = None,
+    cavities_settings: Sequence[CavitySettings],
 ) -> dict[str, list[Callable] | int | float | list[float]]:
     """Format cavity settings for superposed field map object."""
-    if cavity_settings is not None:
-        raise NotImplementedError(
-            "Not possible to edit the cavity settings for superposed field map"
-            " for now. But this error message should never be issued, right?"
-        )
-    cavities_settings = superposed.cavities_settings
     rf_fields = superposed.new_rf_fields
     rf_parameters_as_dict = {
         "bunch_to_rf": cavities_settings[0].bunch_phase_to_rf_phase,
@@ -356,7 +382,6 @@ def _superposed_field_map_to_kwargs(
 
 def _add_cavities_phases(
     solver_id: str,
-    phi_bunch_abs: float,
     w_kin_in: float,
     cavities_settings: Collection[CavitySettings],
     rf_parameters_as_dict: dict[
@@ -366,7 +391,6 @@ def _add_cavities_phases(
     r"""Set reference phase and function to compute :math:`\phi_s`."""
     assert isinstance(rf_parameters_as_dict["phi_0_rels"], list)
     for cavity_settings in cavities_settings:
-        cavity_settings.phi_bunch = phi_bunch_abs
         if cavity_settings.reference == "phi_s":
             cavity_settings.set_cavity_parameters_arguments(
                 solver_id, w_kin_in, **rf_parameters_as_dict
@@ -382,3 +406,17 @@ def _add_cavities_phases(
         cavity_settings.set_cavity_parameters_arguments(
             solver_id, w_kin_in, **rf_parameters_as_dict
         )
+
+
+def _set_entry_phase(
+    phi_bunch_abs: float,
+    cavity_settings: CavitySettings | Collection[CavitySettings],
+) -> None:
+    """Set entry phase."""
+    if isinstance(cavity_settings, CavitySettings):
+        cavity_settings.phi_bunch = phi_bunch_abs
+        return
+
+    for settings in cavity_settings:
+        _set_entry_phase(phi_bunch_abs, settings)
+    return
