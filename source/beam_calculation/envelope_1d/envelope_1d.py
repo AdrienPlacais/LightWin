@@ -329,9 +329,9 @@ def _field_map_kwargs(
 
     rf_parameters_as_dict = {
         "bunch_to_rf": field_map.cavity_settings.bunch_phase_to_rf_phase,
-        "e_spat": field_map.new_rf_field.e_spat,
+        "e_spat": field_map.rf_field.e_spat,
         "k_e": cavity_settings.k_e,
-        "n_cell": field_map.new_rf_field.n_cell,
+        "n_cell": field_map.rf_field.n_cell,
         "omega0_rf": field_map.cavity_settings.omega0_rf,
         "section_idx": field_map.idx["section"],
     }
@@ -367,7 +367,7 @@ def _superposed_field_map_kwargs(
     cavities_settings: Sequence[CavitySettings],
 ) -> dict[str, list[Callable] | int | float | list[float]]:
     """Format cavity settings for superposed field map object."""
-    rf_fields = superposed.new_rf_fields
+    rf_fields = superposed.rf_fields
     rf_parameters_as_dict = {
         "bunch_to_rf": cavities_settings[0].bunch_phase_to_rf_phase,
         "e_spats": [rf_field.e_spat for rf_field in rf_fields],

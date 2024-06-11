@@ -258,9 +258,9 @@ class Envelope3D(BeamCalculator):
 
         rf_parameters_as_dict = {
             "omega0_rf": field_map.cavity_settings.omega0_rf,
-            "e_spat": field_map.new_rf_field.e_spat,
+            "e_spat": field_map.rf_field.e_spat,
             "section_idx": field_map.idx["section"],
-            "n_cell": field_map.new_rf_field.n_cell,
+            "n_cell": field_map.rf_field.n_cell,
             "bunch_to_rf": field_map.cavity_settings.bunch_phase_to_rf_phase,
             # NOTE we prepend a _ to the phi_0 to avoid computing them if not
             # necessary

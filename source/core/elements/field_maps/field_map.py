@@ -75,7 +75,7 @@ class FieldMap(Element):
         self.field_map_folder = default_field_map_folder
         self.field_map_file_name = Path(line.splitted[9])
 
-        self.new_rf_field: RfField
+        self.rf_field: RfField
         self._can_be_retuned: bool = True
 
     @property

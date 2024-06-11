@@ -75,8 +75,8 @@ def load_electromagnetic_fields(
 
         args = _load_field_map_file(field_map, loadable)
         if args is not None:
-            field_map.new_rf_field.set_e_spat(args[0], args[2])
-            field_map.new_rf_field.n_z = args[1]
+            field_map.rf_field.set_e_spat(args[0], args[2])
+            field_map.rf_field.n_z = args[1]
 
     if cython:
         _load_electromagnetic_fields_for_cython(field_maps, loadable)
@@ -89,8 +89,8 @@ def _load_electromagnetic_fields_for_cython(
     files = [
         field_map.field_map_file_name
         for field_map in field_maps
-        if hasattr(field_map.new_rf_field, "e_spat")
-        and hasattr(field_map.new_rf_field, "n_z")
+        if hasattr(field_map.rf_field, "e_spat")
+        and hasattr(field_map.rf_field, "n_z")
     ]
     flattened_files = helper.flatten(files)
     unique_files = helper.remove_duplicates(flattened_files)

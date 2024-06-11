@@ -77,7 +77,7 @@ class Element(Instruction):
 
         # By default, an element is non accelerating and has a dummy
         # accelerating field.
-        self.new_rf_field = RfField()
+        self.rf_field = RfField()
 
         # TODO: init the indexes to -1 or something, to help type hinting
         # dict with pure type: int

@@ -52,7 +52,7 @@ class SuperposedFieldMap(Element):
 
         self.field_map_file_names = field_map_file_names
 
-        self.new_rf_fields: list[RfField]
+        self.rf_fields: list[RfField]
         self._can_be_retuned: bool = False
 
         self._is_accelerating = is_accelerating
@@ -124,7 +124,7 @@ class SuperposedFieldMap(Element):
         field_map_file_names = [
             field_map.field_map_file_name for field_map in field_maps
         ]
-        rf_fields = [field_map.new_rf_field for field_map in field_maps]
+        rf_fields = [field_map.rf_field for field_map in field_maps]
 
         are_accelerating = [x.is_accelerating for x in field_maps]
         is_accelerating = any(are_accelerating)

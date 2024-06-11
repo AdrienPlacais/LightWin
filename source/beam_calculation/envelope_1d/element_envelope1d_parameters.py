@@ -199,7 +199,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         ]
 
         self.solver_id = solver_id
-        self.n_cell = elt.new_rf_field.n_cell
+        self.n_cell = elt.rf_field.n_cell
         self._rf_to_bunch = elt.cavity_settings.rf_phase_to_bunch_phase
         n_steps = self.n_cell * n_steps_per_cell
         super().__init__(transf_mat_function, elt.length_m, n_steps, **kwargs)
@@ -312,7 +312,7 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         ]
 
         self.solver_id = solver_id
-        self.n_cell = superposed.new_rf_field.n_cell
+        self.n_cell = superposed.rf_field.n_cell
         self._rf_to_bunch = (
             superposed.cavities_settings.rf_phase_to_bunch_phase
         )
