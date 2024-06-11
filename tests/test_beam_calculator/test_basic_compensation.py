@@ -27,12 +27,12 @@ TEST_DIR = Path("tests")
 params = [
     pytest.param(
         ("generic_envelope1d", True),
-        marks=(pytest.mark.smoke),
+        marks=(pytest.mark.smoke, pytest.mark.envelope1d),
         id="Compensation with Envelope1D",
     ),
     pytest.param(
         ("generic_envelope3d", True),
-        marks=(pytest.mark.smoke),
+        marks=(pytest.mark.smoke, pytest.mark.envelope1d),
         id="Compensation with Envelope3D",
     ),
     pytest.param(

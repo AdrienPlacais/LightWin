@@ -117,6 +117,7 @@ def simulation_outputs(
     return ref_simulation_output, fix_simulation_output
 
 
+@pytest.mark.envelope1d
 class TestOptimisationAlgorithms:
 
     _w_kin_tol = 1e-3

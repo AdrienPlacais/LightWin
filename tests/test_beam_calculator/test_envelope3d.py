@@ -96,6 +96,7 @@ def simulation_output(
     return my_simulation_output
 
 
+@pytest.mark.envelope3d
 class TestSolver3D:
     """Gater all the tests in a single class."""
 

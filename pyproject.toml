@@ -25,6 +25,8 @@ addopts = ["--import-mode=importlib", "--strict-markers"]
 filterwarnings = ["ignore:.*cKDTree.*:DeprecationWarning"]
 markers = [
    "cython: mark tests that require a Cython compilation (deselect with '-m \"not cython\"')",
+   "envelope1d: mark tests using the Envelope1D solver",
+   "envelope3d: mark tests using the Envelope3D solver",
    "implementation: mark tests currently under implementation",
    "slow: mark a test as slow (deselect with '-m \"not slow\"')",
    "smoke: mark quick and critical tests (select with '-m smoke')",
