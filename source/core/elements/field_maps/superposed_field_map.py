@@ -12,11 +12,11 @@ from pathlib import Path
 from typing import Self, override
 
 from core.commands.dummy_command import DummyCommand
-from core.electric_field import RfField
 from core.elements.dummy import DummyElement
 from core.elements.element import Element
 from core.elements.field_maps.cavity_settings import CavitySettings
 from core.elements.field_maps.field_map import FieldMap
+from core.em_fields.rf_field import RfField
 from core.instruction import Instruction
 from tracewin_utils.line import DatLine
 

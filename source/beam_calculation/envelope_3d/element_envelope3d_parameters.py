@@ -22,12 +22,12 @@ import util.converters as convert
 from beam_calculation.envelope_1d.element_envelope1d_parameters import (
     ElementEnvelope1DParameters,
 )
-from core.electric_field import compute_param_cav
 from core.elements.bend import Bend
 from core.elements.drift import Drift
 from core.elements.field_maps.field_map import FieldMap
 from core.elements.quad import Quad
 from core.elements.solenoid import Solenoid
+from core.em_fields.rf_field import compute_param_cav
 from util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
 
 FIELD_MAP_INTEGRATION_METHOD_TO_FUNC = {

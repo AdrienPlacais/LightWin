@@ -36,13 +36,13 @@ class RfField:
     ----------
     e_spat : Callable[[float], float]
         Spatial component of the electric field. Needs to be multiplied by the
-        cos(omega t) to have the full electric field. Initialized to null
-        function.
+        :math:`\cos(\omega t)` to have the full electric field. Initialized to
+        null function.
     n_cell : int
         Number of cells in the cavity.
     n_z : int | None
-        Number of points in the file that gives `e_spat`, the spatial component
-        of the electric field.
+        Number of points in the file that gives ``e_spat``, the spatial
+        component of the electric field.
 
     """
 
