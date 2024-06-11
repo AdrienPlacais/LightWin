@@ -90,12 +90,13 @@ class SuperposeMap(Command):
         is replaced by a SuperposedFieldMap.
 
         """
-        instructions_to_merge = list(
-            filter(
-                lambda x: isinstance(x, (Element, SuperposeMap)),
-                instructions[self.influenced],
-            )
-        )
+        # instructions_to_merge = list(
+        #     filter(
+        #         lambda x: isinstance(x, (Element, SuperposeMap)),
+        #         instructions[self.influenced],
+        #     )
+        # )
+        instructions_to_merge = instructions[self.influenced]
         total_length = self._total_length(instructions_to_merge)
 
         # instructions[self.influenced], number_of_superposed = (
@@ -104,6 +105,8 @@ class SuperposeMap(Command):
         new_instructions = self._generate_new_instructions(
             total_length, instructions_to_merge
         )
+
+        instructions[self.influenced] = new_instructions
         number_of_superposed = int(len(new_instructions) / 2)
 
         elts_after_self = list(

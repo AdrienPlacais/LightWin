@@ -36,7 +36,7 @@ class SuperposedFieldMap(Element):
     def __init__(
         self,
         line: DatLine,
-        cavity_settings: Collection[CavitySettings],
+        cavities_settings: Collection[CavitySettings],
         field_map_file_names: Collection[Path],
         is_accelerating: bool,
         dat_idx: int | None = None,
@@ -48,7 +48,7 @@ class SuperposedFieldMap(Element):
         # self.geometry: int        # useless
         # self.length_m: float      # already set by super
         # self.aperture_flag: int   # useless
-        self.cavity_settings = list(cavity_settings)
+        self.cavities_settings = list(cavities_settings)
 
         self.field_map_file_names = field_map_file_names
 
