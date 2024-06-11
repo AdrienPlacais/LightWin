@@ -26,15 +26,21 @@ TEST_DIR = Path("tests")
 
 params = [
     pytest.param(
-        ("generic_envelope1d", True), marks=pytest.mark.smoke, id="Envelope1D"
+        ("generic_envelope1d", True),
+        marks=[
+            pytest.mark.smoke,
+        ],
+        id="Compensation with Envelope1D",
     ),
     pytest.param(
-        ("generic_envelope3d", True), marks=pytest.mark.smoke, id="Envelope3D"
+        ("generic_envelope3d", True),
+        marks=pytest.mark.smoke,
+        id="Compensation with Envelope3D",
     ),
     pytest.param(
         ("generic_tracewin", False),
         marks=(pytest.mark.smoke, pytest.mark.slow, pytest.mark.tracewin),
-        id="TraceWin",
+        id="Compensation with TraceWin",
     ),
 ]
 

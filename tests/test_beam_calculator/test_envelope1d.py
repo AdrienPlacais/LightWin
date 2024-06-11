@@ -29,13 +29,30 @@ leapfrog_marker = pytest.mark.xfail(
 )
 
 params = [
-    pytest.param(("RK4", False, False, 40), marks=pytest.mark.smoke),
-    pytest.param(("RK4", False, True, 40), marks=pytest.mark.smoke),
-    pytest.param(("RK4", True, False, 40), marks=pytest.mark.cython),
-    pytest.param(("leapfrog", False, False, 60), marks=leapfrog_marker),
+    pytest.param(
+        ("RK4", False, False, 40),
+        marks=pytest.mark.smoke,
+        id="1D RK4 relative phase",
+    ),
+    pytest.param(
+        ("RK4", False, True, 40),
+        marks=pytest.mark.smoke,
+        id="1D RK4 absolute phase",
+    ),
+    pytest.param(
+        ("RK4", True, False, 40),
+        marks=pytest.mark.cython,
+        id="1D RK4 relative phase Cython",
+    ),
+    pytest.param(
+        ("leapfrog", False, False, 60),
+        marks=leapfrog_marker,
+        id="1D leapfrog relative phase",
+    ),
     pytest.param(
         ("leapfrog", True, False, 60),
         marks=(leapfrog_marker, pytest.mark.cython),
+        id="1D leapfrog relative phase Cython",
     ),
 ]
 

@@ -29,8 +29,8 @@ TEST_DIR = Path("tests")
 
 
 params = [
-    pytest.param((0,)),
-    pytest.param((1,), marks=pytest.mark.slow),
+    pytest.param((0,), id="TraceWin envelope"),
+    pytest.param((1,), marks=pytest.mark.slow, id="TraceWin multiparticle"),
 ]
 
 

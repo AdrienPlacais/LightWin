@@ -24,8 +24,12 @@ DATA_DIR = Path("data", "example")
 TEST_DIR = Path("tests")
 
 params = [
-    pytest.param((False, 40), marks=pytest.mark.smoke),
-    pytest.param((True, 40), marks=pytest.mark.smoke),
+    pytest.param(
+        (False, 40), marks=pytest.mark.smoke, id="Envelope3D relative phase"
+    ),
+    pytest.param(
+        (True, 40), marks=pytest.mark.smoke, id="Envelope3D absolute phase"
+    ),
 ]
 
 
