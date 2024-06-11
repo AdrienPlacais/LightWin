@@ -7,7 +7,11 @@ CavitySettings
 """
 
 import cmath
-from typing import Any, Callable
+from functools import partial
+from typing import Any
+
+from core.em_fields.longitudial import longitudinal_e_spat_t
+from core.em_fields.longitudinal import shifted_e_spat
 
 
 def compute_param_cav(integrated_field: complex) -> dict[str, float]:
@@ -48,7 +52,8 @@ class RfField:
 
     def __init__(self) -> None:
         """Instantiate object."""
-        self.e_spat: Callable[[float], float]
+        self._original_e_spat: longitudinal_e_spat_t
+        self.e_spat: longitudinal_e_spat_t
         self.n_cell: int
         self.n_z: int
 
@@ -86,9 +91,21 @@ class RfField:
             return out[0]
         return tuple(out)
 
-    def set_e_spat(
-        self, e_spat: Callable[[float], float], n_cell: int
-    ) -> None:
+    def set_e_spat(self, e_spat: longitudinal_e_spat_t, n_cell: int) -> None:
         """Set the pos. component of electric field, set number of cells."""
         self.e_spat = e_spat
         self.n_cell = n_cell
+
+    def shift(self, z_shift: float) -> None:
+        """Shift the electric field map.
+
+        .. warning::
+            You must ensure that for ``z < 0`` and ``z > element.length_m`` the
+            electric field is null. Interpolation can lead to funny results!
+
+        """
+        if not hasattr(self, "_original_e_spat"):
+            self._original_e_spat = self.e_spat
+        self.e_spat = partial(
+            shifted_e_spat, e_spat=self.e_spat, z_shift=z_shift
+        )
