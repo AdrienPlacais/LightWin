@@ -5,7 +5,7 @@ This solver is fast, but should not be used at low energies.
 """
 
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Collection
 from pathlib import Path
 from typing import Literal
 
@@ -22,6 +22,7 @@ from beam_calculation.simulation_output.simulation_output import (
 from core.accelerator.accelerator import Accelerator
 from core.elements.field_maps.cavity_settings import CavitySettings
 from core.elements.field_maps.field_map import FieldMap
+from core.elements.field_maps.superposed_field_map import SuperposedFieldMap
 from core.list_of_elements.list_of_elements import ListOfElements
 from failures.set_of_cavity_settings import SetOfCavitySettings
 from util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
@@ -236,33 +237,17 @@ class Envelope1D(BeamCalculator):
 
         """
         cavity_settings.phi_bunch = phi_bunch_abs
-        if cavity_settings.status == "failed":
-            return {}
-
-        rf_parameters_as_dict = {
-            "omega0_rf": field_map.cavity_settings.omega0_rf,
-            "e_spat": field_map.new_rf_field.e_spat,
-            "section_idx": field_map.idx["section"],
-            "n_cell": field_map.new_rf_field.n_cell,
-            "bunch_to_rf": field_map.cavity_settings.bunch_phase_to_rf_phase,
-            # NOTE we prepend a _ to the phi_0 to avoid computing them if not
-            # necessary
-            # "phi_0_rel": cavity_settings._phi_0_rel,
-            # "phi_0_abs": cavity_settings._phi_0_abs,
-            "k_e": cavity_settings.k_e,
-        }
-        if cavity_settings.reference == "phi_s":
-            cavity_settings.set_cavity_parameters_arguments(
-                self.id, w_kin_in, **rf_parameters_as_dict
-            )
-            rf_parameters_as_dict["phi_0_rel"] = cavity_settings.phi_0_rel
-            rf_parameters_as_dict["phi_0_abs"] = cavity_settings.phi_0_abs
+        rf_parameters_as_dict = _field_map_to_kwargs(
+            field_map, cavity_settings
+        )
+        if not rf_parameters_as_dict:
             return rf_parameters_as_dict
 
-        rf_parameters_as_dict["phi_0_rel"] = cavity_settings.phi_0_rel
-        rf_parameters_as_dict["phi_0_abs"] = cavity_settings.phi_0_abs
-        cavity_settings.set_cavity_parameters_arguments(
-            self.id, w_kin_in, **rf_parameters_as_dict
+        _add_cavity_phase(
+            self.id,
+            w_kin_in,
+            cavity_settings,
+            rf_parameters_as_dict,
         )
         return rf_parameters_as_dict
 
@@ -292,3 +277,108 @@ class Envelope1D(BeamCalculator):
         """
         v_cav_mv, phi_s = self._phi_s_func(**results)
         return v_cav_mv, phi_s
+
+
+def _field_map_to_kwargs(
+    field_map: FieldMap, cavity_settings: CavitySettings
+) -> dict[str, Callable | int | float]:
+    """Format the cavity settings for the current solver transfer matrix func.
+
+    .. todo::
+        Seems a bit lengthy for what it does, no?
+
+    """
+    # alt implementation?
+    # if cavity_settings is None:
+    #     cavity_settings = field_map.cavity_settings
+
+    if cavity_settings.status == "failed":
+        return {}
+
+    rf_parameters_as_dict = {
+        "bunch_to_rf": field_map.cavity_settings.bunch_phase_to_rf_phase,
+        "e_spat": field_map.new_rf_field.e_spat,
+        "k_e": cavity_settings.k_e,
+        "n_cell": field_map.new_rf_field.n_cell,
+        "omega0_rf": field_map.cavity_settings.omega0_rf,
+        "section_idx": field_map.idx["section"],
+    }
+    return rf_parameters_as_dict
+
+
+def _add_cavity_phase(
+    solver_id: str,
+    w_kin_in: float,
+    cavity_settings: CavitySettings,
+    rf_parameters_as_dict: dict[str, Callable | int | float],
+) -> None:
+    r"""Set reference phase and function to compute :math:`\phi_s`."""
+    if cavity_settings.reference == "phi_s":
+        cavity_settings.set_cavity_parameters_arguments(
+            solver_id, w_kin_in, **rf_parameters_as_dict
+        )
+        phi_0_rel = cavity_settings.phi_0_rel
+        assert phi_0_rel is not None
+        rf_parameters_as_dict["phi_0_rel"] = phi_0_rel
+        return
+
+    phi_0_rel = cavity_settings.phi_0_rel
+    assert phi_0_rel is not None
+    rf_parameters_as_dict["phi_0_rel"] = phi_0_rel
+    cavity_settings.set_cavity_parameters_arguments(
+        solver_id, w_kin_in, **rf_parameters_as_dict
+    )
+
+
+def _superposed_field_map_to_kwargs(
+    superposed: SuperposedFieldMap,
+    cavity_settings: CavitySettings | None = None,
+) -> dict[str, list[Callable] | int | float | list[float]]:
+    """Format cavity settings for superposed field map object."""
+    if cavity_settings is not None:
+        raise NotImplementedError(
+            "Not possible to edit the cavity settings for superposed field map"
+            " for now. But this error message should never be issued, right?"
+        )
+    cavities_settings = superposed.cavities_settings
+    rf_fields = superposed.new_rf_fields
+    rf_parameters_as_dict = {
+        "bunch_to_rf": cavities_settings[0].bunch_phase_to_rf_phase,
+        "e_spats": [rf_field.e_spat for rf_field in rf_fields],
+        "k_es": [setting.k_e for setting in cavities_settings],
+        "n_cell": max([rf_field.n_cell for rf_field in rf_fields]),
+        "omega0_rf": cavities_settings[0].omega0_rf,
+        "phi_0_rels": [],
+        "section_idx": None,  # Cython only (not implemented)
+    }
+    return rf_parameters_as_dict
+
+
+def _add_cavities_phases(
+    solver_id: str,
+    phi_bunch_abs: float,
+    w_kin_in: float,
+    cavities_settings: Collection[CavitySettings],
+    rf_parameters_as_dict: dict[
+        str, list[Callable] | int | float | list[float]
+    ],
+) -> None:
+    r"""Set reference phase and function to compute :math:`\phi_s`."""
+    assert isinstance(rf_parameters_as_dict["phi_0_rels"], list)
+    for cavity_settings in cavities_settings:
+        cavity_settings.phi_bunch = phi_bunch_abs
+        if cavity_settings.reference == "phi_s":
+            cavity_settings.set_cavity_parameters_arguments(
+                solver_id, w_kin_in, **rf_parameters_as_dict
+            )
+            phi_0_rel = cavity_settings.phi_0_rel
+            assert phi_0_rel is not None
+            rf_parameters_as_dict["phi_0_rels"].append(phi_0_rel)
+            return
+
+        phi_0_rel = cavity_settings.phi_0_rel
+        assert phi_0_rel is not None
+        rf_parameters_as_dict["phi_0_rels"].append(phi_0_rel)
+        cavity_settings.set_cavity_parameters_arguments(
+            solver_id, w_kin_in, **rf_parameters_as_dict
+        )
