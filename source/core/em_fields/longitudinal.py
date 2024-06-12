@@ -4,13 +4,32 @@ import math
 from collections.abc import Callable, Collection
 from functools import partial
 
+import numpy as np
+
 # Spatial component of longitudinal E field, takes in z pos
 longitudinal_e_spat_t = Callable[[float], float]
 
 
-def default_longitudinal_e_spat(z_pos: float) -> float:
+def default_e_spat(z_pos: float) -> float:
     """Define a null electric field."""
     return 0.0
+
+
+def create_e_spat(
+    e_z: np.ndarray, z_positions: np.ndarray
+) -> longitudinal_e_spat_t:
+    """Create the function to get spatial component of electric field."""
+    e_spat = partial(
+        _interpolate_electric_field, e_z=e_z, z_positions=z_positions
+    )
+    return e_spat
+
+
+def _interpolate_electric_field(
+    z: float, e_z: np.ndarray, z_positions: np.ndarray
+) -> float:
+    """Interpolate an electric field file."""
+    return np.interp(x=z, xp=z_positions, fp=e_z, left=0.0, right=0.0)
 
 
 def normalized_longitudinal_e(
