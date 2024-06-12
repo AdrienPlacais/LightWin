@@ -7,7 +7,7 @@
 """
 
 import logging
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 
 from core.commands.command import Command
 from core.commands.dummy_command import DummyCommand
@@ -154,6 +154,7 @@ class SuperposeMap(Command):
                 instructions_to_merge,
                 dat_idx=indexes.pop(0),
                 total_length=total_length,
+                starting_positions=_starting_positions(instructions_to_merge),
             )
         ]
 
@@ -217,3 +218,13 @@ class SuperposeMap(Command):
                 elt.idx["idx_in_lattice"] = (
                     previous_elt.idx["idx_in_lattice"] + 1
                 )
+
+
+def _starting_positions(
+    instructions_to_merge: Collection[Instruction],
+) -> list[float]:
+    """Get the starting position of every field map."""
+    starting_positions = [
+        x.z_0 for x in instructions_to_merge if isinstance(x, SuperposeMap)
+    ]
+    return starting_positions

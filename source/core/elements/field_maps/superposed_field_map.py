@@ -37,7 +37,6 @@ class SuperposedFieldMap(Element):
         self,
         line: DatLine,
         cavities_settings: Collection[CavitySettings],
-        field_map_file_names: Collection[Path],
         is_accelerating: bool,
         dat_idx: int | None = None,
         **kwargs: str,
@@ -49,8 +48,6 @@ class SuperposedFieldMap(Element):
         # self.length_m: float      # already set by super
         # self.aperture_flag: int   # useless
         self.cavities_settings = list(cavities_settings)
-
-        self.field_map_file_names = field_map_file_names
 
         self.rf_fields: list[RfField]
         self._can_be_retuned: bool = False
@@ -73,6 +70,7 @@ class SuperposedFieldMap(Element):
         field_maps_n_superpose: Collection[Instruction],
         dat_idx: int,
         total_length: float,
+        starting_positions: Collection[float],
     ) -> Self:
         """Instantiate object from several field maps.
 
@@ -84,9 +82,11 @@ class SuperposedFieldMap(Element):
             x for x in field_maps_n_superpose if isinstance(x, FieldMap)
         ]
         args = cls._extract_args_from_field_maps(field_maps)
-        cavity_settings, field_map_file_names, rf_fields, is_accelerating = (
-            args
-        )
+        cavity_settings, rf_fields, is_accelerating = args
+        for rf_field, starting_position in zip(
+            rf_fields, starting_positions, strict=True
+        ):
+            rf_field.shift(starting_position)
 
         # original_lines = [x.line.line for x in field_maps_n_superpose]
 
@@ -94,7 +94,6 @@ class SuperposedFieldMap(Element):
             dat_idx,
             total_length,
             cavity_settings=cavity_settings,
-            field_map_file_names=field_map_file_names,
             rf_fields=rf_fields,
             is_accelerating=is_accelerating,
         )
@@ -116,13 +115,10 @@ class SuperposedFieldMap(Element):
     @classmethod
     def _extract_args_from_field_maps(
         cls, field_maps: Collection[FieldMap]
-    ) -> tuple[list[CavitySettings], list[Path], list[RfField], bool]:
+    ) -> tuple[list[CavitySettings], list[RfField], bool]:
         """Go over the field maps to gather essential arguments."""
         cavity_settings = [
             field_map.cavity_settings for field_map in field_maps
-        ]
-        field_map_file_names = [
-            field_map.field_map_file_name for field_map in field_maps
         ]
         rf_fields = [field_map.rf_field for field_map in field_maps]
 
@@ -130,7 +126,6 @@ class SuperposedFieldMap(Element):
         is_accelerating = any(are_accelerating)
         return (
             cavity_settings,
-            field_map_file_names,
             rf_fields,
             is_accelerating,
         )
