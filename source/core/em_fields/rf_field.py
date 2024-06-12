@@ -10,8 +10,7 @@ import cmath
 from functools import partial
 from typing import Any
 
-from core.em_fields.longitudial import longitudinal_e_spat_t
-from core.em_fields.longitudinal import shifted_e_spat
+from core.em_fields.longitudinal import longitudinal_e_spat_t, shifted_e_spat
 
 
 def compute_param_cav(integrated_field: complex) -> dict[str, float]:
