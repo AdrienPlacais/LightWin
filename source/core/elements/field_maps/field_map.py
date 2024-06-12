@@ -20,6 +20,7 @@
 """
 
 import math
+from collections.abc import Collection
 from pathlib import Path
 from typing import Any
 
@@ -55,6 +56,7 @@ class FieldMap(Element):
 
     base_name = "FM"
     n_attributes = 10
+    files_extensions: tuple[str, ...]
 
     def __init__(
         self,
@@ -75,8 +77,8 @@ class FieldMap(Element):
         self.field_map_folder = default_field_map_folder
         self.field_map_file_name = Path(line.splitted[9])
 
-        self.rf_field: RfField
         self._can_be_retuned: bool = True
+        self.rf_field = RfField()
 
     @property
     def status(self) -> str:
