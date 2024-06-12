@@ -50,7 +50,10 @@ class Element(Instruction):
         self,
         line: DatLine,
         dat_idx: int | None = None,
-        **kwargs: str,
+        idx_in_lattice: int = -1,
+        lattice: int = -1,
+        section: int = -1,
+        **kwargs,
     ) -> None:
         """Init parameters common to all elements.
 
@@ -83,9 +86,9 @@ class Element(Instruction):
         # dict with pure type: int
         new_idx = {
             "elt_idx": -1,
-            "lattice": -1,
-            "idx_in_lattice": -1,
-            "section": -1,
+            "lattice": lattice,
+            "idx_in_lattice": idx_in_lattice,
+            "section": section,
         }
         self.idx = self.idx | new_idx
         self.beam_calc_param: dict[str, ElementBeamCalculatorParameters] = {}

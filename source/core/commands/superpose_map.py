@@ -20,7 +20,7 @@ from core.elements.field_maps.superposed_field_map import (
     SuperposedPlaceHolderElt,
 )
 from core.em_fields.rf_field import RfField
-from core.instruction import Instruction
+from core.instruction import Comment, Instruction
 from tracewin_utils.line import DatLine
 
 
@@ -66,7 +66,7 @@ class SuperposeMap(Command):
         valid range of elements.
 
         """
-        start = self.idx["dat_idx"] - 1
+        start = self.idx["dat_idx"]
         next_element_but_not_field_map = list(
             filter(
                 lambda elt: (
@@ -90,18 +90,9 @@ class SuperposeMap(Command):
         is replaced by a SuperposedFieldMap.
 
         """
-        # instructions_to_merge = list(
-        #     filter(
-        #         lambda x: isinstance(x, (Element, SuperposeMap)),
-        #         instructions[self.influenced],
-        #     )
-        # )
         instructions_to_merge = instructions[self.influenced]
         total_length = self._total_length(instructions_to_merge)
 
-        # instructions[self.influenced], number_of_superposed = (
-        #     self._update_class(instructions_to_merge, total_length)
-        # )
         new_instructions = self._generate_new_instructions(
             total_length, instructions_to_merge
         )
@@ -112,12 +103,13 @@ class SuperposeMap(Command):
         elts_after_self = list(
             filter(
                 lambda elt: isinstance(elt, Element),
-                instructions[self.idx["dat_idx"] + 1 :],
+                # instructions[self.idx["dat_idx"] + 1 :],
+                instructions[new_instructions[-1].idx["dat_idx"] + 1 :],
             )
         )
-        self._decrement_lattice_indexes(elts_after_self, number_of_superposed)
+        self._re_set_indexes(elts_after_self, number_of_superposed)
 
-        instructions[self.influenced] = instructions_to_merge
+        # instructions[self.influenced] = instructions_to_merge
         return instructions
 
     def _total_length(self, instructions_to_merge: list[Instruction]) -> float:
@@ -149,61 +141,48 @@ class SuperposeMap(Command):
         """Create the instructions replacing superpose and field maps."""
         indexes = [x.idx["dat_idx"] for x in instructions_to_merge]
 
-        new_instructions: list[Instruction] = [
-            SuperposedFieldMap.from_field_maps(
-                instructions_to_merge,
-                dat_idx=indexes.pop(0),
-                total_length=total_length,
-                starting_positions=_starting_positions(instructions_to_merge),
-            )
-        ]
+        superposed = SuperposedFieldMap.from_field_maps(
+            instructions_to_merge,
+            dat_idx=indexes.pop(0),
+            total_length=total_length,
+            starting_positions=_starting_positions(instructions_to_merge),
+        )
+        idx_in_lattice = superposed.idx["idx_in_lattice"]
+        lattice = superposed.idx["lattice"]
+        section = superposed.idx["section"]
 
+        new_instructions: list[Instruction] = [superposed]
         for instruction, dat_idx in zip(instructions_to_merge[1:], indexes):
-            dat_line = DatLine("SUPERPOSE_PLACE_HOLDER 0", dat_idx)
+            if isinstance(instruction, Comment):
+                new_instructions.append(instruction)
+                continue
+
+            dat_line = DatLine("SUPERPOSED_MAP_PLACE_HOLDER 0", dat_idx)
             if isinstance(instruction, Element):
-                new_instructions.append(SuperposedPlaceHolderElt(dat_line))
+                new_instructions.append(
+                    SuperposedPlaceHolderElt(
+                        dat_line,
+                        idx_in_lattice=idx_in_lattice,
+                        lattice=lattice,
+                        section=section,
+                    )
+                )
                 continue
             new_instructions.append(SuperposedPlaceHolderCmd(dat_line))
         return new_instructions
 
-    def _update_class(
-        self, instructions_to_merge: list[Instruction], total_length: float
-    ) -> tuple[list[Instruction], int]:
-        """Replace elements and commands by dummies, except first field map."""
-        number_of_superposed = 0
-        superposed_field_map_is_already_inserted = False
-        for i, instruction in enumerate(instructions_to_merge):
-            args = (instruction.line, instruction.idx["dat_idx"])
-
-            if isinstance(instruction, Command):
-                instructions_to_merge[i] = DummyCommand(*args)
-                continue
-
-            if superposed_field_map_is_already_inserted:
-                instructions_to_merge[i] = DummyElement(*args)
-                instructions_to_merge[i].nature = "SUPERPOSED_FIELD_MAP"
-                instructions_to_merge[i].rf_field = RfField()
-                number_of_superposed += 1
-                continue
-
-            instructions_to_merge[i] = SuperposedFieldMap(
-                *args, total_length=total_length
-            )
-            instructions_to_merge[i].nature = "SUPERPOSED_FIELD_MAP"
-            instructions_to_merge[i].rf_field = RfField()
-            superposed_field_map_is_already_inserted = True
-        return instructions_to_merge, number_of_superposed
-
-    def _decrement_lattice_indexes(
-        self, elts_after_self: Sequence[Element], number_of_superposed: int
+    def _re_set_indexes(
+        self,
+        elts_after_self: Sequence[Element],
+        number_of_superposed: int,
     ) -> None:
-        """Decrement some lattice numbers to take removed elts into account.
+        """Decrement lattice numbers to take merged elements into account.
 
-        .. todo::
-            Check if this still works, as lattice and idx_in_lattice are now
-            initialized with -1 instead of None.
+        ..todo::
+            Not robust...
 
         """
+        elements_reduced = number_of_superposed - 1
         for i, elt in enumerate(elts_after_self):
             if elt.idx["lattice"] < 0:
                 continue
@@ -211,13 +190,34 @@ class SuperposeMap(Command):
             if not elt.increment_lattice_idx:
                 continue
 
-            elt.idx["idx_in_lattice"] -= number_of_superposed - 1
+            elt.idx["idx_in_lattice"] -= elements_reduced
 
             if elt.idx["idx_in_lattice"] < 0:
-                previous_elt = elts_after_self[i - 1]
-                elt.idx["idx_in_lattice"] = (
-                    previous_elt.idx["idx_in_lattice"] + 1
-                )
+                if i == 0:
+                    raise IOError(
+                        "Detected a SUPERPOSE_MAP at the end of a lattice. Not"
+                        "supported for now."
+                    )
+
+                # Recompute the number of elements per lattice
+                previous_element = elts_after_self[i - 1]
+
+                current_section = elt.idx["section"]
+                previous_section = previous_element.idx["section"]
+                if current_section != previous_section:
+                    raise NotImplementedError(
+                        "Detected a Section change around a SUPERPOSE_MAP."
+                        " Not supported for now."
+                    )
+
+                # This will work only if previous element is the last of its
+                # lattice. Which may not always be true...
+                number_of_elements_in_lattice = previous_element.idx[
+                    "idx_in_lattice"
+                ]
+
+                elt.idx["idx_in_lattice"] += number_of_elements_in_lattice
+                elt.idx["lattice"] -= 1
 
 
 def _starting_positions(

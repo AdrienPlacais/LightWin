@@ -8,7 +8,6 @@
 
 import logging
 from collections.abc import Collection
-from pathlib import Path
 from typing import Self, override
 
 from core.commands.dummy_command import DummyCommand
@@ -38,11 +37,21 @@ class SuperposedFieldMap(Element):
         line: DatLine,
         cavities_settings: Collection[CavitySettings],
         is_accelerating: bool,
-        dat_idx: int | None = None,
-        **kwargs: str,
+        dat_idx: int,
+        idx_in_lattice: int,
+        lattice: int,
+        section: int,
+        **kwargs,
     ) -> None:
         """Save length of the superposed field maps."""
-        super().__init__(line, dat_idx=dat_idx, **kwargs)
+        super().__init__(
+            line,
+            dat_idx=dat_idx,
+            idx_in_lattice=idx_in_lattice,
+            lattice=lattice,
+            section=section,
+            **kwargs,
+        )
 
         # self.geometry: int        # useless
         # self.length_m: float      # already set by super
@@ -82,20 +91,26 @@ class SuperposedFieldMap(Element):
             x for x in field_maps_n_superpose if isinstance(x, FieldMap)
         ]
         args = cls._extract_args_from_field_maps(field_maps)
-        cavity_settings, rf_fields, is_accelerating = args
+        cavities_settings, rf_fields, is_accelerating = args
         for rf_field, starting_position in zip(
             rf_fields, starting_positions, strict=True
         ):
             rf_field.shift(starting_position)
 
         # original_lines = [x.line.line for x in field_maps_n_superpose]
+        idx_in_lattice = field_maps[0].idx["idx_in_lattice"]
+        lattice = field_maps[0].idx["lattice"]
+        section = field_maps[0].idx["section"]
 
         return cls.from_args(
-            dat_idx,
-            total_length,
-            cavity_settings=cavity_settings,
+            dat_idx=dat_idx,
+            total_length=total_length,
+            cavities_settings=cavities_settings,
             rf_fields=rf_fields,
             is_accelerating=is_accelerating,
+            idx_in_lattice=idx_in_lattice,
+            lattice=lattice,
+            section=section,
         )
 
     @classmethod
@@ -105,12 +120,18 @@ class SuperposedFieldMap(Element):
         """Insantiate object from his properties."""
         line = cls._args_to_line(total_length)
         dat_line = DatLine(line, dat_idx)
-        return cls(dat_line, *args, **kwargs)
+        return cls(
+            dat_line,
+            dat_idx=dat_idx,
+            total_length=total_length,
+            *args,
+            **kwargs,
+        )
 
     @classmethod
     def _args_to_line(cls, total_length: float, *args, **kwargs) -> str:
         """Generate hypothetical line."""
-        return f"SUPERPOSED_PLACEHOLDER {total_length}"
+        return f"SUPERPOSED_FIELD_MAP {total_length}"
 
     @classmethod
     def _extract_args_from_field_maps(
@@ -169,6 +190,25 @@ class SuperposedFieldMap(Element):
 
 class SuperposedPlaceHolderElt(DummyElement):
     """Inserted in place of field maps and superpose map commands."""
+
+    increment_lattice_idx = False
+
+    def __init__(
+        self,
+        line: DatLine,
+        idx_in_lattice: int,
+        lattice: int,
+        dat_idx: int | None = None,
+        **kwargs,
+    ) -> None:
+        """Instantiate object, with lattice information."""
+        super().__init__(
+            line,
+            dat_idx,
+            idx_in_lattice=idx_in_lattice,
+            lattice=lattice,
+            **kwargs,
+        )
 
 
 class SuperposedPlaceHolderCmd(DummyCommand):
