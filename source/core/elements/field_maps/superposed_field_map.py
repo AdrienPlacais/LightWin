@@ -4,6 +4,9 @@
     The initialisation of this class is particular, as it does not correspond
     to a specific line of the ``.dat`` file.
 
+.. todo::
+    Could be cleaned and simplified.
+
 """
 
 import logging
@@ -27,6 +30,10 @@ class SuperposedFieldMap(Element):
     while is is just an :class:`.Element`. So take care of keeping their
     methods consistent!
 
+    .. todo::
+        Remove idx in lattice, lattice, section arguments. can take this from
+        new attribute: ``field_maps``.
+
     """
 
     is_implemented = True
@@ -41,6 +48,7 @@ class SuperposedFieldMap(Element):
         idx_in_lattice: int,
         lattice: int,
         section: int,
+        field_maps: Collection[FieldMap],
         **kwargs,
     ) -> None:
         """Save length of the superposed field maps."""
@@ -52,6 +60,7 @@ class SuperposedFieldMap(Element):
             section=section,
             **kwargs,
         )
+        self.field_maps = list(field_maps)
 
         # self.geometry: int        # useless
         # self.length_m: float      # already set by super
@@ -92,10 +101,11 @@ class SuperposedFieldMap(Element):
         ]
         args = cls._extract_args_from_field_maps(field_maps)
         cavities_settings, rf_fields, is_accelerating = args
+
         for rf_field, starting_position in zip(
             rf_fields, starting_positions, strict=True
         ):
-            rf_field.shift(starting_position)
+            rf_field.starting_position = starting_position
 
         # original_lines = [x.line.line for x in field_maps_n_superpose]
         idx_in_lattice = field_maps[0].idx["idx_in_lattice"]
@@ -111,6 +121,7 @@ class SuperposedFieldMap(Element):
             idx_in_lattice=idx_in_lattice,
             lattice=lattice,
             section=section,
+            field_maps=field_maps,
         )
 
     @classmethod

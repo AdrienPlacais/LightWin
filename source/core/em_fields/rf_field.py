@@ -60,6 +60,7 @@ class RfField:
         self.n_cell: int
         self.n_z: int
         self.is_loaded = False
+        self.starting_position: float
 
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class."""
@@ -101,7 +102,7 @@ class RfField:
         self.n_cell = n_cell
         self.is_loaded = True
 
-    def shift(self, z_shift: float) -> None:
+    def shift(self) -> None:
         """Shift the electric field map.
 
         .. warning::
@@ -109,8 +110,11 @@ class RfField:
             electric field is null. Interpolation can lead to funny results!
 
         """
+        assert hasattr(
+            self, "starting_position"
+        ), "You need to set the starting_position attribute of the RfField."
         if not hasattr(self, "_original_e_spat"):
             self._original_e_spat = self.e_spat
         self.e_spat = partial(
-            shifted_e_spat, e_spat=self.e_spat, z_shift=z_shift
+            shifted_e_spat, e_spat=self.e_spat, z_shift=self.starting_position
         )
