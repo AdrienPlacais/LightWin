@@ -7,9 +7,12 @@ from typing import Any
 import config_manager
 from beam_calculation.beam_calculator import BeamCalculator
 from beam_calculation.factory import BeamCalculatorsFactory
+from beam_calculation.simulation_output.simulation_output import (
+    SimulationOutput,
+)
 from core.accelerator.accelerator import Accelerator
 from core.accelerator.factory import NoFault
-from beam_calculation.simulation_output.simulation_output import SimulationOutput
+
 
 def _set_up_solvers(
     config: dict[str, Any]
@@ -45,11 +48,11 @@ def set_up(
 
 def main(
     config: dict[str, dict[str, Any]],
-) -> SimulationOutput:
+) -> tuple[SimulationOutput, Accelerator]:
     """Set up the various faults and fix it."""
     beam_calculator, accelerator = set_up(config)
     simulation_output = beam_calculator.compute(accelerator)
-    return simulation_output
+    return simulation_output, accelerator
 
 
 if __name__ == "__main__":
@@ -57,18 +60,18 @@ if __name__ == "__main__":
     toml_keys = {
         "files": "files",
         # "plots": "plots_minimal",
-        "beam_calculator": "generic_envelope3d",
+        "beam_calculator": "generic_envelope1d",
         "beam": "beam",
     }
     override = {
         "files": {
-            "dat_file": "set_sync_phase.dat",
+            "dat_file": "superpose_map.dat",
         },
-        "beam_calculator": {"n_steps_per_cell": 40},
+        # "beam_calculator": {"n_steps_per_cell": 40},
     }
     config = config_manager.process_config(
         toml_filepath, toml_keys, override=override
     )
-    simulation_output = main(config)
+    simulation_output, accelerator = main(config)
     x = simulation_output.transfer_matrix.individual
     y = simulation_output.transfer_matrix.cumulated

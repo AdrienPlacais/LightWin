@@ -75,16 +75,18 @@ def load_electromagnetic_fields(
         field_map.set_full_path(extensions)
 
         args = _load_field_map_file(field_map, loadable)
-        if args is not None:
-            field_map.rf_field.set_e_spat(args[0], args[2])
-            field_map.rf_field.n_z = args[1]
+        if args is None:
+            continue
+
+        field_map.rf_field.set_e_spat(args[0], args[2])
+        field_map.rf_field.n_z = args[1]
 
     if cython:
         _load_electromagnetic_fields_for_cython(field_maps, loadable)
 
 
 def _load_electromagnetic_fields_for_cython(
-    field_maps: list[FieldMap], loadable: Sequence[str]
+    field_maps: Collection[FieldMap], loadable: Collection[Path]
 ) -> None:
     """Load one electric field per section."""
     files = [
@@ -285,11 +287,7 @@ def _get_field_components(first_words_field_geometry: str) -> list[str]:
 
 def _load_field_map_file(
     field_map: FieldMap, loadable: Collection[str]
-) -> tuple[
-    longitudinal_e_spat_t | None,
-    int | None,
-    int | None,
-]:
+) -> tuple[longitudinal_e_spat_t, int, int] | None:
     """Go across the field map file names and load the first recognized.
 
     For now, only ``.edz`` files (1D electric RF) are implemented. This will be
@@ -302,7 +300,7 @@ def _load_field_map_file(
     loadable_files = list(filter(lambda x: x.suffix in loadable, files))
     if len(loadable_files) > 1:
         logging.info("Loading of several field_maps not handled")
-        return None, None, None
+        return None
 
     for file_name in loadable_files:
         _, extension = os.path.splitext(file_name)
@@ -333,7 +331,7 @@ def _load_field_map_file(
     logging.error(
         "Reached end of _load_field_map_file without loading anything."
     )
-    return None, None, None
+    return None
 
 
 def _is_a_valid_electric_field(
