@@ -10,7 +10,11 @@ import cmath
 from functools import partial
 from typing import Any
 
-from core.em_fields.longitudinal import longitudinal_e_spat_t, shifted_e_spat
+from core.em_fields.longitudinal import (
+    default_e_spat,
+    longitudinal_e_spat_t,
+    shifted_e_spat,
+)
 
 
 def compute_param_cav(integrated_field: complex) -> dict[str, float]:
@@ -52,9 +56,10 @@ class RfField:
     def __init__(self) -> None:
         """Instantiate object."""
         self._original_e_spat: longitudinal_e_spat_t
-        self.e_spat: longitudinal_e_spat_t
+        self.e_spat: longitudinal_e_spat_t = default_e_spat
         self.n_cell: int
         self.n_z: int
+        self.is_loaded = False
 
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class."""
@@ -94,6 +99,7 @@ class RfField:
         """Set the pos. component of electric field, set number of cells."""
         self.e_spat = e_spat
         self.n_cell = n_cell
+        self.is_loaded = True
 
     def shift(self, z_shift: float) -> None:
         """Shift the electric field map.
