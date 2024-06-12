@@ -13,7 +13,7 @@
 
 import logging
 import os.path
-from collections.abc import Callable, Collection, Sequence
+from collections.abc import Collection, Sequence
 from pathlib import Path
 
 import numpy as np
@@ -21,6 +21,7 @@ import pandas as pd
 
 import tracewin_utils.load
 from core.elements.field_maps.field_map import FieldMap
+from core.em_fields.longitudinal import create_e_spat, longitudinal_e_spat_t
 from util import helper
 
 try:
@@ -285,7 +286,7 @@ def _get_field_components(first_words_field_geometry: str) -> list[str]:
 def _load_field_map_file(
     field_map: FieldMap, loadable: Collection[str]
 ) -> tuple[
-    Callable[[float | np.ndarray], float | np.ndarray] | None,
+    longitudinal_e_spat_t | None,
     int | None,
     int | None,
 ]:
@@ -322,16 +323,17 @@ def _load_field_map_file(
         f_z = _rescale(f_z, norm)
         z_cavity_array = np.linspace(0.0, zmax, n_z + 1)
 
-        def e_spat(pos: float | np.ndarray) -> float | np.ndarray:
-            return np.interp(
-                x=pos, xp=z_cavity_array, fp=f_z, left=0.0, right=0.0
-            )
+        e_spat = create_e_spat(e_z=f_z, z_positions=z_cavity_array)
 
         # Patch to keep one filepath per FieldMap. Will require an update in
         # the future...
         field_map.field_map_file_name = file_name
 
         return e_spat, n_z, n_cell
+    logging.error(
+        "Reached end of _load_field_map_file without loading anything."
+    )
+    return None, None, None
 
 
 def _is_a_valid_electric_field(
