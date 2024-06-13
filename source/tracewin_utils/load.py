@@ -82,8 +82,8 @@ def results(path: Path, prop: str) -> np.ndarray:
     return data_ref
 
 
-def electric_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
-    """Load a 1D electric field (``.edz`` extension).
+def load_1d_field(path: Path) -> tuple[int, float, float, np.ndarray, int]:
+    """Load a 1D field (``.edz`` extension).
 
     Parameters
     ----------
@@ -187,4 +187,4 @@ def _transfer_matrix(lines: list[str]) -> np.ndarray:
     return transfer_matrix
 
 
-FIELD_MAP_LOADERS = {".edz": electric_field_1d}  #:
+FIELD_MAP_LOADERS = {".edz": load_1d_field}  #:

@@ -20,7 +20,6 @@
 """
 
 import math
-from collections.abc import Collection
 from pathlib import Path
 from typing import Any
 
