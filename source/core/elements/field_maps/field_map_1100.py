@@ -11,6 +11,8 @@ class FieldMap1100(FieldMap):
 
     """
 
+    files_extensions = (".edx", ".edy", ".edz")
+
     def __init__(self, *args, **kwargs) -> None:
         """Init the same object as :class:`.FieldMap100`."""
         return super().__init__(*args, **kwargs)

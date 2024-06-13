@@ -15,6 +15,8 @@ class FieldMap7700(FieldMap):
 
     """
 
+    files_extensions = (".edx", ".edy", ".edz", ".ebx", ".eby", ".ebz")
+
     def __init__(self, *args, **kwargs) -> None:
         """Raise an error because it is not implemented."""
         raise NotImplementedError("3D rf field maps not supported yet.")

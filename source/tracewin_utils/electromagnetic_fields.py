@@ -21,6 +21,7 @@ import pandas as pd
 
 import tracewin_utils.load
 from core.elements.field_maps.field_map import FieldMap
+from core.elements.field_maps.superposed_field_map import SuperposedFieldMap
 from core.em_fields.longitudinal import create_e_spat, longitudinal_e_spat_t
 from util import helper
 
@@ -69,6 +70,14 @@ def load_electromagnetic_fields(
 
     """
     for field_map in field_maps:
+        if isinstance(superposed := field_map, SuperposedFieldMap):
+            load_electromagnetic_fields(
+                superposed.field_maps, cython, loadable
+            )
+            for rf_field in superposed.rf_fields:
+                rf_field.shift()
+            continue
+
         field_map_types = _geom_to_field_map_type(field_map.geometry)
         extensions = _get_filemaps_extensions(field_map_types)
 

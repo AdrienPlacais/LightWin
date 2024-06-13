@@ -17,6 +17,8 @@ class FieldMap70(FieldMap):
 
     """
 
+    files_extensions = (".bsx", ".bsy", ".bsz")
+
     def __init__(self, *args, **kwargs) -> None:
         """Instantiate super class."""
         super().__init__(*args, **kwargs)
