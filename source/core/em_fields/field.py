@@ -7,6 +7,10 @@ CavitySettings
 
 Not that for now, we expect that coordinates are always cartesian.
 
+.. todo::
+    Define a FieldMapLoader function to choose esaily between binary/ascii file
+    format.
+
 """
 
 import functools
@@ -104,26 +108,20 @@ class Field(ABC):
     @abstractmethod
     def _load_fieldmap(
         self, path: Path
-    ) -> tuple[AnyDimInt, AnyDimFloat, float, np.ndarray, int]:
-        """Load a single file.
+    ) -> tuple[FieldFuncComponent, AnyDimInt]:
+        """Generate field function corresponding to a single field file.
 
         Parameters
         ----------
         path : Path
-            Path to a file.
+            Path to a field map file.
 
         Returns
         -------
-        n_points: AnyDimInt
-            Number of points in any of the 1/2/3 directions.
-        pos_max : AnyDimFloat
-            Maximum position in any of the 1/2/3 directions.
-        norm : float
-            Norm of the field.
-        field_vals : np.ndarray
-            Value of the field.
-        n_cell : int
-            Number of cells in the cavity (if relatable).
+        func : FieldFuncComponent
+            Give field at a given position.
+        n_points : AnyDimInt
+            Number of interpolation points in the various directions.
 
         """
         pass
