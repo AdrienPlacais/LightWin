@@ -323,10 +323,10 @@ def load_field_map_file(
         # extensions
         n_z, zmax, norm, f_z, n_cell = import_function(file_name)
 
-        assert _is_a_valid_electric_field(
+        assert is_a_valid_1d_electric_field(
             n_z, zmax, f_z, field_map.length_m
         ), f"Error loading {field_map}'s field map."
-        f_z = _rescale(f_z, norm)
+        f_z = rescale(f_z, norm)
         z_cavity_array = np.linspace(0.0, zmax, n_z + 1)
 
         e_spat = create_1d_field_func(
@@ -344,12 +344,13 @@ def load_field_map_file(
     return None
 
 
-def _is_a_valid_electric_field(
+def is_a_valid_1d_electric_field(
     n_z: int,
     zmax: float,
     f_z: np.ndarray,
     cavity_length: float,
     tol: float = 1e-6,
+    **validity_check_kwargs,
 ) -> bool:
     """Assert that the electric field that we loaded is valid."""
     if f_z.shape[0] != n_z + 1:
@@ -369,7 +370,7 @@ def _is_a_valid_electric_field(
     return True
 
 
-def _rescale(f_z: np.ndarray, norm: float, tol: float = 1e-6) -> np.ndarray:
+def rescale(f_z: np.ndarray, norm: float, tol: float = 1e-6) -> np.ndarray:
     """Rescale the array if it was given scaled."""
     if abs(norm - 1.0) < tol:
         return f_z

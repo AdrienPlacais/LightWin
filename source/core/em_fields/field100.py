@@ -5,13 +5,18 @@ implemented for now.
 
 """
 
-from collections.abc import Callable
+import functools
 from pathlib import Path
-from typing import override
 
 import numpy as np
 
-from core.em_fields.field import Field, FieldFuncComponent
+from core.em_fields.field import Field
+from core.em_fields.helper import create_1d_field_func, shifted_e_spat
+from core.em_fields.types import FieldFuncComponent1D
+from tracewin_utils.electromagnetic_fields import (
+    is_a_valid_1d_electric_field,
+    rescale,
+)
 from tracewin_utils.load import load_1d_field
 
 
@@ -20,8 +25,9 @@ class Field100(Field):
 
     extensions = (".edz",)
 
-    @override
-    def _load_fieldmap(self, path: Path) -> tuple[FieldFuncComponent1D, int]:
+    def _load_fieldmap(
+        self, path: Path, **validity_check_kwargs
+    ) -> tuple[FieldFuncComponent1D, int, int]:
         r"""Load a 1D field (``.edz`` extension).
 
         Parameters
@@ -36,15 +42,20 @@ class Field100(Field):
             field, at null phase, for amplitude of :math:`1\,\mathrm{MV/m}`.
         n_z : int
             Number of interpolation points.
+        n_cell : int
+            Number of cell for cavities.
 
         """
         n_z, zmax, norm, f_z, n_cell = load_1d_field(path)
-        e_z: Callable
 
-        return e_z, n_z
+        assert is_a_valid_1d_electric_field(
+            n_z, zmax, f_z, self._length_m
+        ), f"Error loading {path}'s field map."
 
-    def _data_to_function(self, data: np.ndarray) -> FieldFuncComponent1D:
-        """Give the function to compute field."""
+        f_z = rescale(f_z, norm)
+        z_positions = np.linspace(0.0, zmax, n_z + 1)
+        e_z = create_1d_field_func(f_z, z_positions)
+        return e_z, n_z, n_cell
 
     def shift(self) -> None:
         """Shift the electric field map.
@@ -55,10 +66,9 @@ class Field100(Field):
 
         """
         assert hasattr(
-            self, "starting_position"
-        ), "You need to set the starting_position attribute of the RfField."
-        if not hasattr(self, "_original_e_spat"):
-            self._original_e_spat = self.e_spat
-        self.e_spat = partial(
-            shifted_e_spat, e_spat=self.e_spat, z_shift=self.starting_position
+            self, "z_0"
+        ), "You need to set the starting_position attribute of the Field."
+        shifted = functools.partial(
+            shifted_e_spat, e_spat=self._e_z_spat_rf, z_shift=self.z_0
         )
+        self._e_z_spat_rf = shifted

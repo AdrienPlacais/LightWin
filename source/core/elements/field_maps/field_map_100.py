@@ -14,5 +14,3 @@ class FieldMap100(FieldMap):
     anything new.
 
     """
-
-    files_extensions = (".edz",)

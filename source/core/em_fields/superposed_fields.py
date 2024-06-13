@@ -12,7 +12,6 @@ class SuperposedFields(tuple[Field, ...]):
     def __new__(cls, fields: Collection[Field]) -> None:
         """Create the new instance."""
         super().__new__(cls, tuple(fields))
-        cls.is_loaded = False
 
     def __init__(self, fields: Collection[Field]) -> None:
         """Instantiate object.
@@ -22,11 +21,6 @@ class SuperposedFields(tuple[Field, ...]):
 
         """
         pass
-
-    def shift(self) -> None:
-        """Shift the contained field maps."""
-        for field in self:
-            field.shift()
 
     def e_z(
         self,
@@ -51,9 +45,3 @@ class SuperposedFields(tuple[Field, ...]):
         return functools.partial(
             self.e_z, amplitudes=amplitudes, phi_0_rels=phi_0_rels
         )
-
-    def load_fieldmaps(self) -> None:
-        """Load all field components for class :attr:`extensions`."""
-        for field in self:
-            field.load_fieldmaps()
-        self.is_loaded = True

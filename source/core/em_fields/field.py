@@ -18,8 +18,6 @@ import math
 from abc import ABC, abstractmethod
 from pathlib import Path
 
-import numpy as np
-
 from core.em_fields.helper import null_field_1d
 from core.em_fields.types import (
     AnyDimFloat,
@@ -49,15 +47,18 @@ class Field(ABC):
 
     extensions: tuple[str, ...]
 
-    def __init__(self, field_map_path: Path) -> None:
+    def __init__(
+        self, field_map_path: Path, length_m: float, z_0: float = 0.0
+    ) -> None:
         """Instantiate object."""
         self.field_map_path = field_map_path
+        self._length_m = length_m
         self.n_cell: int
         self.n_z: int
         self.is_loaded = False
 
         # Used in SUPERPOSED_MAP to shift a field
-        self.z_0: float = 0.0
+        self.z_0: float = z_0
 
         # Where we store interpolated field maps (to multiply by cos phi)
         self._e_x_spat_rf: FieldFuncComponent = null_field_1d
@@ -74,6 +75,10 @@ class Field(ABC):
         self._b_x_dc: FieldFuncComponent = null_field_1d
         self._b_y_dc: FieldFuncComponent = null_field_1d
         self._b_z_dc: FieldFuncComponent = null_field_1d
+
+        self.load_fieldmaps()
+        if self.z_0:
+            self.shift()
 
     def shift(self) -> None:
         """Shift the field maps."""
@@ -100,7 +105,7 @@ class Field(ABC):
         """Load all field components for class :attr:`extensions`."""
         for ext in self.extensions:
             path = self.field_map_path.with_suffix(ext)
-            func = self._load_fieldmap(path)
+            func, n_interp, n_cell = self._load_fieldmap(path)
             attribute_name = EXTENSION_TO_COMPONENT[ext]
             setattr(self, attribute_name, func)
         self.is_loaded = True

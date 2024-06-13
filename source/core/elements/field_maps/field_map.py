@@ -28,6 +28,7 @@ import numpy as np
 from core.elements.element import Element
 from core.elements.field_maps.cavity_settings import CavitySettings
 from core.elements.field_maps.util import set_full_field_map_path
+from core.em_fields.field import Field
 from core.em_fields.rf_field import RfField
 from tracewin_utils.line import DatLine
 from util.helper import recursive_getter
@@ -55,7 +56,6 @@ class FieldMap(Element):
 
     base_name = "FM"
     n_attributes = 10
-    files_extensions: tuple[str, ...]
 
     def __init__(
         self,
@@ -78,6 +78,7 @@ class FieldMap(Element):
 
         self._can_be_retuned: bool = True
         self.rf_field = RfField()
+        self.field: Field
 
     @property
     def status(self) -> str:
