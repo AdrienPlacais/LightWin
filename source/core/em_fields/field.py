@@ -108,12 +108,23 @@ class Field(ABC):
             func, n_interp, n_cell = self._load_fieldmap(path)
             attribute_name = EXTENSION_TO_COMPONENT[ext]
             setattr(self, attribute_name, func)
+
+            if ext == ".edz":
+                self._patch_to_keep_consistency(n_interp, n_cell)
         self.is_loaded = True
+
+    def _patch_to_keep_consistency(
+        self, n_interp: AnyDimInt, n_cell: int
+    ) -> None:
+        """Save ``n_cell`` and ``n_z``. Temporary solution."""
+        assert isinstance(n_interp, int)
+        self.n_cell = n_cell
+        self.n_z = n_interp
 
     @abstractmethod
     def _load_fieldmap(
         self, path: Path
-    ) -> tuple[FieldFuncComponent, AnyDimInt]:
+    ) -> tuple[FieldFuncComponent, AnyDimInt, int]:
         """Generate field function corresponding to a single field file.
 
         Parameters
@@ -125,8 +136,10 @@ class Field(ABC):
         -------
         func : FieldFuncComponent
             Give field at a given position.
-        n_points : AnyDimInt
+        n_interp : AnyDimInt
             Number of interpolation points in the various directions.
+        n_cell : int
+            Number of cells (makes sense only for .edz as for now).
 
         """
         pass
