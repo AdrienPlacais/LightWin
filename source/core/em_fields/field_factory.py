@@ -12,11 +12,12 @@ from core.elements.field_maps.field_map_1100 import FieldMap1100
 from core.elements.field_maps.field_map_7700 import FieldMap7700
 from core.elements.field_maps.superposed_field_map import SuperposedFieldMap
 from core.em_fields.field import AnyDimFloat, Field
+from core.em_fields.field70 import Field70
 from core.em_fields.field100 import Field100
 
 FIELDS = {
     FieldMap: Field100,  # default, should not be used
-    FieldMap70: Field100,
+    FieldMap70: Field70,
     FieldMap100: Field100,
     FieldMap1100: Field100,
     FieldMap7700: Field100,
@@ -24,11 +25,11 @@ FIELDS = {
 
 
 class FieldFactory:
+    """Create the :class:`.Field` and load the field maps."""
 
-    def __init__(self, default_field_map_folder: Path, n_steps: int) -> None:
+    def __init__(self, default_field_map_folder: Path) -> None:
         """Instantiate factory."""
         self.default_field_map_folder = default_field_map_folder
-        self.n_steps = n_steps
 
     def _gather_files_to_load(
         self, field_maps: Collection[FieldMap]
@@ -73,7 +74,6 @@ class FieldFactory:
         """Create a single :class:`.Field`."""
         return constructor(
             field_map_path=field_map_path,
-            n_steps=self.n_steps,
             length_m=length_m,
             z_0=z_0,
         )
@@ -99,3 +99,4 @@ class FieldFactory:
 
             for field_map in field_maps:
                 field_map.field = field
+        return

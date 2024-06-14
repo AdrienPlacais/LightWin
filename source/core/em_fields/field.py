@@ -46,6 +46,7 @@ class Field(ABC):
     r"""Generic electro-magnetic field."""
 
     extensions: tuple[str, ...]
+    is_implemented: bool
 
     def __init__(
         self, field_map_path: Path, length_m: float, z_0: float = 0.0
@@ -76,6 +77,8 @@ class Field(ABC):
         self._b_y_dc: FieldFuncComponent = null_field_1d
         self._b_z_dc: FieldFuncComponent = null_field_1d
 
+        if not self.is_implemented:
+            return
         self.load_fieldmaps()
         if self.z_0:
             self.shift()
@@ -84,13 +87,41 @@ class Field(ABC):
         """Shift the field maps."""
         raise NotImplementedError
 
-    # in reality, override this
-    @abstractmethod
+    def e_x(
+        self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
+    ) -> float:
+        """Give transverse x electric field value."""
+        return amplitude * self._e_x_spat_rf(pos) * math.cos(phi + phi_0_rel)
+
+    def e_y(
+        self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
+    ) -> float:
+        """Give transverse x electric field value."""
+        return amplitude * self._e_y_spat_rf(pos) * math.cos(phi + phi_0_rel)
+
     def e_z(
         self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
     ) -> float:
         """Give longitudinal electric field value."""
         return amplitude * self._e_z_spat_rf(pos) * math.cos(phi + phi_0_rel)
+
+    def b_x(
+        self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
+    ) -> float:
+        """Give transverse x electric field value."""
+        return amplitude * self._b_x_spat_rf(pos) * math.cos(phi + phi_0_rel)
+
+    def b_y(
+        self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
+    ) -> float:
+        """Give transverse x electric field value."""
+        return amplitude * self._b_y_spat_rf(pos) * math.cos(phi + phi_0_rel)
+
+    def b_z(
+        self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
+    ) -> float:
+        """Give longitudinal electric field value."""
+        return amplitude * self._b_z_spat_rf(pos) * math.cos(phi + phi_0_rel)
 
     # in reality, override this
     def generate_e_z_with_settings(

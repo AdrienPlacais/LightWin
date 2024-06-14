@@ -33,6 +33,7 @@ from core.elements.helper import (
     force_a_section_for_every_element,
     give_name_to_elements,
 )
+from core.em_fields.field_factory import FieldFactory
 from core.instruction import Comment, Dummy, Instruction, LineJump
 from core.list_of_elements.helper import (
     group_elements_by_section,
@@ -113,6 +114,8 @@ class InstructionsFactory:
         self._cython: bool = con.FLAG_CYTHON
         # would be better without config dependency
 
+        self._field_factory = FieldFactory(default_field_map_folder)
+
     def run(self, dat_filecontent: Collection[DatLine]) -> list[Instruction]:
         """Create all the elements and commands.
 
@@ -140,6 +143,7 @@ class InstructionsFactory:
 
         if self._load_field_maps:
             field_maps = [elt for elt in elts if isinstance(elt, FieldMap)]
+            self._field_factory.run_all(field_maps)
             load_electromagnetic_fields(field_maps, True)
 
         return instructions

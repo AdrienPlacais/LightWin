@@ -6,6 +6,7 @@ implemented for now.
 """
 
 import functools
+import math
 from pathlib import Path
 
 import numpy as np
@@ -72,3 +73,9 @@ class Field100(Field):
             shifted_e_spat, e_spat=self._e_z_spat_rf, z_shift=self.z_0
         )
         self._e_z_spat_rf = shifted
+
+    def e_z(
+        self, pos: float, phi: float, amplitude: float, phi_0_rel: float
+    ) -> float:
+        """Give longitudinal electric field value."""
+        return amplitude * self._e_z_spat_rf(pos) * math.cos(phi + phi_0_rel)
