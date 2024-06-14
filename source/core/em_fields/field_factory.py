@@ -30,7 +30,7 @@ class FieldFactory:
         self.default_field_map_folder = default_field_map_folder
         self.n_steps = n_steps
 
-    def gather_files_to_load(
+    def _gather_files_to_load(
         self, field_maps: Collection[FieldMap]
     ) -> dict[Path, tuple[FieldMap, ...]]:
         """Associate :class:`.FieldMap` objects using the same fields."""
@@ -62,7 +62,7 @@ class FieldFactory:
                 f"{filename}, which is not supported for now."
             )
 
-    def run(
+    def _run(
         self,
         constructor: ABCMeta,
         field_map_path: Path,
@@ -78,7 +78,7 @@ class FieldFactory:
             z_0=z_0,
         )
 
-    def get_run_kwargs(self, field_map: FieldMap) -> dict[str, Any]:
+    def _get_run_kwargs(self, field_map: FieldMap) -> dict[str, Any]:
         """Get the kwargs necessary for :meth:`run`."""
         kwargs = {
             "z_0": 0.0,
@@ -86,15 +86,16 @@ class FieldFactory:
         }
         return kwargs
 
-    def run_all(self, to_load: dict[Path, tuple[FieldMap, ...]]) -> None:
+    def run_all(self, field_maps: Collection[FieldMap]) -> None:
         """Generate the :class:`.Field` objects and store it in field maps."""
+        to_load = self._gather_files_to_load(field_maps)
         for path, field_maps in to_load.items():
             field = field_maps[0]
             class_name = field.__class__
             constructor = FIELDS[class_name]
 
-            kwargs = self.get_run_kwargs(field)
-            field = self.run(constructor, field_map_path=path, **kwargs)
+            kwargs = self._get_run_kwargs(field)
+            field = self._run(constructor, field_map_path=path, **kwargs)
 
             for field_map in field_maps:
                 field_map.field = field
