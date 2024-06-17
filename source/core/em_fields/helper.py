@@ -48,6 +48,13 @@ def normalized_e_1d(
     return e_func(pos) * math.cos(phi + phi_0)
 
 
+def normalized_e_1d_complex(
+    pos: float, e_func: FieldFuncComponent1D, phi: float, phi_0: float
+) -> complex:
+    """Compute electric field, normalized."""
+    return e_func(pos) * (math.cos(phi + phi_0) + 1j * math.sin(phi + phi_0))
+
+
 def e_1d(
     pos: float,
     e_func: FieldFuncComponent1D,
@@ -56,7 +63,18 @@ def e_1d(
     phi_0: float,
 ) -> float:
     """Compute normed 1D electric field."""
-    return amplitude * e_func(pos) * math.cos(phi + phi_0)
+    return amplitude * normalized_e_1d(pos, e_func, phi, phi_0)
+
+
+def e_1d_complex(
+    pos: float,
+    e_func: FieldFuncComponent1D,
+    phi: float,
+    amplitude: float,
+    phi_0: float,
+) -> complex:
+    """Compute normed 1D electric field."""
+    return amplitude * normalized_e_1d_complex(pos, e_func, phi, phi_0)
 
 
 def superpose_longitudinal_e_spats(

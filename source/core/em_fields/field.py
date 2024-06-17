@@ -22,8 +22,8 @@ from core.em_fields.helper import null_field_1d
 from core.em_fields.types import (
     AnyDimFloat,
     AnyDimInt,
+    FieldFuncComplexTimedComponent,
     FieldFuncComponent,
-    FieldFuncTimedComponent,
 )
 
 EXTENSION_TO_COMPONENT = {
@@ -89,44 +89,52 @@ class Field(ABC):
 
     def e_x(
         self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
+    ) -> complex:
         """Give transverse x electric field value."""
+        raise ValueError
         return amplitude * self._e_x_spat_rf(pos) * math.cos(phi + phi_0_rel)
 
     def e_y(
         self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
+    ) -> complex:
         """Give transverse x electric field value."""
+        raise ValueError
         return amplitude * self._e_y_spat_rf(pos) * math.cos(phi + phi_0_rel)
 
     def e_z(
         self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
+    ) -> complex:
         """Give longitudinal electric field value."""
-        return amplitude * self._e_z_spat_rf(pos) * math.cos(phi + phi_0_rel)
+        return (
+            amplitude
+            * self._e_z_spat_rf(pos)
+            * (math.cos(phi + phi_0_rel) + 1j * math.sin(phi + phi_0_rel))
+        )
 
     def b_x(
         self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
+    ) -> complex:
         """Give transverse x electric field value."""
+        raise ValueError
         return amplitude * self._b_x_spat_rf(pos) * math.cos(phi + phi_0_rel)
 
     def b_y(
         self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
+    ) -> complex:
         """Give transverse x electric field value."""
+        raise ValueError
         return amplitude * self._b_y_spat_rf(pos) * math.cos(phi + phi_0_rel)
 
     def b_z(
         self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
+    ) -> complex:
         """Give longitudinal electric field value."""
+        raise ValueError
         return amplitude * self._b_z_spat_rf(pos) * math.cos(phi + phi_0_rel)
 
-    # in reality, override this
-    def generate_e_z_with_settings(
+    def e_z_with_settings(
         self, amplitude: float, phi_0_rel: float
-    ) -> FieldFuncTimedComponent:
+    ) -> FieldFuncComplexTimedComponent:
         """Generate a function for a transfer matrix calculation."""
         return functools.partial(
             self.e_z, amplitude=amplitude, phi_0_rel=phi_0_rel

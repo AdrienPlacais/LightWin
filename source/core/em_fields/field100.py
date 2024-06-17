@@ -25,6 +25,7 @@ class Field100(Field):
     """Define a RF field, 1D longitudinal."""
 
     extensions = (".edz",)
+    is_implemented = True
 
     def _load_fieldmap(
         self, path: Path, **validity_check_kwargs
@@ -76,6 +77,10 @@ class Field100(Field):
 
     def e_z(
         self, pos: float, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
+    ) -> complex:
         """Give longitudinal electric field value."""
-        return amplitude * self._e_z_spat_rf(pos) * math.cos(phi + phi_0_rel)
+        return (
+            amplitude
+            * self._e_z_spat_rf(pos)
+            * (math.cos(phi + phi_0_rel) + 1j * math.sin(phi + phi_0_rel))
+        )
