@@ -7,8 +7,8 @@ from pathlib import Path
 import pandas as pd
 
 
-def _to_df(
-    simulation_id: str, evaluation_path: Path, evaluation_namecol: str
+def concatenate_evaluation_files(
+    simulation_id: str, evaluation_folder: Path, evaluation_namecol: str
 ) -> pd.DataFrame:
     """Load the file and rename column header.
 
@@ -16,8 +16,8 @@ def _to_df(
     ----------
     simulation_id : str
         Name that will be given to the simulation in the plot.
-    evaluation_path : Path
-        Where the ``evaluations.csv`` file is.
+    evaluation_folder : Path
+        Folder where the ``evaluations.csv`` file is.
     evaluation_namecol : str
         Name of the column in the ``evaluations.csv`` file.
 
@@ -29,7 +29,7 @@ def _to_df(
 
     """
     df = pd.read_csv(
-        evaluation_path / "evaluations.csv", usecols=(evaluation_namecol,)  # type: ignore
+        evaluation_folder / "evaluations.csv", usecols=(evaluation_namecol,)  # type: ignore
     )
     new_name = f"{simulation_id}: (mean {df.mean().iloc[0]:.2f} std {df.std().iloc[0]:.2f})"
     df.rename(columns={evaluation_namecol: new_name}, inplace=True)
@@ -55,7 +55,7 @@ def _compare_one_quantity_all_simulations(
 
     """
     all_df = [
-        _to_df(study_case, path, evaluation_namecol)
+        concatenate_evaluation_files(study_case, path, evaluation_namecol)
         for study_case, path in simulation_ids_and_paths.items()
     ]
     df = pd.concat(all_df, axis=1)
