@@ -1,7 +1,11 @@
 Download
 --------
-The preferred way to download the code is to use `git`.
-Go to where you want to store LightWin and run `git clone git@github.com:AdrienPlacais/LightWin.git`.
+The reommended way to obtain the LightWin code is by using `git`.
+Navigate to the directory where you want to store LightWin and run:
 
-Alternatively, you can go to the `repository <https://github.com/AdrienPlacais/LightWin>`_ and download it in `.zip`.
-With this method, you will have to download the code again after every update.
+.. codeblock:: bash
+
+   git clone git@github.com:AdrienPlacais/LightWin.git
+
+Alternatively, you download the code as a `.zip` file from the repository's page.
+However, please note that using this method requires manually downloading updates whenever changes are made to the repository.

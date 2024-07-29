@@ -1,13 +1,13 @@
 TraceWin (facultative)
 ----------------------
 
-Pre-requisite: TraceWin must be installed on your computer or server with a working license.
+**Pre-requisite**: TraceWin must be installed on your computer or server, and you must have a valid license.
 
-The `machine_configuration.toml` file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Configuring the `machine_configuration.toml` file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You must tell LightWin where TraceWin is installed.
-This is done thanks to a `machine_configuration.toml` file, which looks like:
+To specify the location of the TraceWin installation, you need to create `machine_configuration.toml` file.
+This file should include entries like the following:
 
 .. code-block:: toml
 
@@ -25,9 +25,8 @@ This is done thanks to a `machine_configuration.toml` file, which looks like:
    X11_full = "D:/tw/TraceWin_old.exe"
    noX11_full = "D:/tw/TraceWin_old.exe"
 
-
-Between the brackets, type the name of your machine.
-Execute following lines of Python code if you do not know the name of your machine:
+Replace the bracketed names with your machine's name.
+If you're unsure of your machine's name, use the following Python code to find it:
 
 .. code-block:: python
 
@@ -35,19 +34,22 @@ Execute following lines of Python code if you do not know the name of your machi
    machine_name = socket.gethostname()
    print(f"Entry in the machine_configuration.toml file should be:\n[{machine_name}]")
 
-Link with the `lightwin.toml` main configuration file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Linking with the `lightwin.toml` main configuration file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+After setting up `machine_configuration.toml`, you need to link it with the `lightwin.toml` file.
+Include the following configuration:
 
 .. code-block:: toml
 
    [my_tracewin_configuration]
-   # Can be relative w.r.t `lightwin.toml`, or absolute:
+   # Can be relative to `lightwin.toml`, or absolute:
    machine_config_file = "/path/to/machine_configuration.toml"
-   # Corresponding path must be defined in the machne_configuration.toml
+   # The corresponding path must be defined in `machine_configuration.toml`
    simulation_type = "X11_full"                                
-   # Facultative! Will override your actual machine name if provided:
+   # Optional: override the actual machine name if provided:
    machine_name = "a_name_to_override_default_machine_name"
-   # note that additional entries will be mandatory
+   # Note that additional entries will be required
 
 See `dedicated documentation`_ for `lightwin.toml`.
 
