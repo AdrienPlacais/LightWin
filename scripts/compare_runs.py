@@ -1,9 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""Define functions to compare several runs using ``evaluations.csv`` files.
-
-.. todo::
-    Set up an example.
+"""Define functions to compare several runs based on their ``evaluations.csv``.
 
 """
 
@@ -15,8 +10,7 @@ import pandas as pd
 def _to_df(
     simulation_id: str, evaluation_path: Path, evaluation_namecol: str
 ) -> pd.DataFrame:
-    """
-    Load the file and rename column header.
+    """Load the file and rename column header.
 
     Parameters
     ----------
@@ -35,7 +29,7 @@ def _to_df(
 
     """
     df = pd.read_csv(
-        evaluation_path / "evaluations.csv", usecols=(evaluation_namecol,)
+        evaluation_path / "evaluations.csv", usecols=(evaluation_namecol,)  # type: ignore
     )
     new_name = f"{simulation_id}: (mean {df.mean().iloc[0]:.2f} std {df.std().iloc[0]:.2f})"
     df.rename(columns={evaluation_namecol: new_name}, inplace=True)
@@ -47,8 +41,7 @@ def _compare_one_quantity_all_simulations(
     evaluation_namecol: str,
     y_label: str,
 ) -> None:
-    """
-    Load and plot all the given files.
+    """Load and plot all the given files.
 
     Parameters
     ----------
