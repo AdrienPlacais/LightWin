@@ -19,6 +19,7 @@ Hold the transfer matrix along the linac.
 """
 import logging
 from typing import Any, Callable
+
 import numpy as np
 
 from core.elements.element import Element
@@ -30,7 +31,7 @@ class TransferMatrix:
 
     .. note::
         When the simulation is in 1D only, the values corresponding to the
-        transverse planes are filled with np.NaN.
+        transverse planes are filled with np.nan.
 
     Attributes
     ----------
@@ -42,14 +43,14 @@ class TransferMatrix:
 
     """
 
-    def __init__(self,
-                 is_3d: bool,
-                 first_cumulated_transfer_matrix: np.ndarray,
-                 element_to_index: Callable[[str | Element, str | None],
-                                            int | slice],
-                 individual: np.ndarray | None = None,
-                 cumulated: np.ndarray | None = None,
-                 ) -> None:
+    def __init__(
+        self,
+        is_3d: bool,
+        first_cumulated_transfer_matrix: np.ndarray,
+        element_to_index: Callable[[str | Element, str | None], int | slice],
+        individual: np.ndarray | None = None,
+        cumulated: np.ndarray | None = None,
+    ) -> None:
         """Create the object and compute the cumulated transfer matrix.
 
         Parameters
@@ -74,13 +75,13 @@ class TransferMatrix:
         if individual is not None:
             self.individual = individual
             n_points, cumulated = self._init_from_individual(
-                individual,
-                first_cumulated_transfer_matrix)
+                individual, first_cumulated_transfer_matrix
+            )
 
         else:
             n_points, cumulated = self._init_from_cumulated(
-                cumulated,
-                first_cumulated_transfer_matrix)
+                cumulated, first_cumulated_transfer_matrix
+            )
 
         self.n_points = n_points
 
@@ -91,11 +92,13 @@ class TransferMatrix:
         """Check if object has attribute named ``key``."""
         return hasattr(self, key)
 
-    def get(self,
-            *keys: str,
-            elt: Element | None = None,
-            pos: str | None = None,
-            **kwargs: Any) -> tuple[np.ndarray | float, ...]:
+    def get(
+        self,
+        *keys: str,
+        elt: Element | None = None,
+        pos: str | None = None,
+        **kwargs: Any,
+    ) -> tuple[np.ndarray | float, ...]:
         """
         Shorthand to get attributes from this class or its attributes.
 
@@ -107,7 +110,7 @@ class TransferMatrix:
             If you want the list output to be converted to a np.ndarray. The
             default is True.
         none_to_nan : bool, optional
-            To convert None to np.NaN. The default is True.
+            To convert None to np.nan. The default is True.
         elt : Element | None, optional
             If provided, return the attributes only at the considered Element.
         pos : 'in' | 'out' | None
@@ -143,9 +146,9 @@ class TransferMatrix:
         return tuple(out)
 
     def _init_from_individual(
-            self,
-            individual: np.ndarray,
-            first_cumulated_transfer_matrix: np.ndarray | None,
+        self,
+        individual: np.ndarray,
+        first_cumulated_transfer_matrix: np.ndarray | None,
     ) -> tuple[int, np.ndarray]:
         """Compute cumulated transfer matrix from individual.
 
@@ -175,17 +178,16 @@ class TransferMatrix:
         if first_cumulated_transfer_matrix is None:
             first_cumulated_transfer_matrix = np.eye(shape[1])
 
-        cumulated = self._compute_cumulated(first_cumulated_transfer_matrix,
-                                            shape,
-                                            self.is_3d,
-                                            n_points)
+        cumulated = self._compute_cumulated(
+            first_cumulated_transfer_matrix, shape, self.is_3d, n_points
+        )
         return n_points, cumulated
 
     def _init_from_cumulated(
-            self,
-            cumulated: np.ndarray | None,
-            first_cumulated_transfer_matrix: np.ndarray,
-            tol: float = 1e-8
+        self,
+        cumulated: np.ndarray | None,
+        first_cumulated_transfer_matrix: np.ndarray,
+        tol: float = 1e-8,
     ) -> tuple[int, np.ndarray]:
         """Check that the given cumulated matrix is valid.
 
@@ -209,25 +211,31 @@ class TransferMatrix:
 
         """
         if cumulated is None:
-            logging.error("You must provide at least one of the two "
-                          "arrays: individual transfer matrices or "
-                          "cumulated transfer matrices.")
+            logging.error(
+                "You must provide at least one of the two "
+                "arrays: individual transfer matrices or "
+                "cumulated transfer matrices."
+            )
             raise IOError("Wrong input")
         n_points = cumulated.shape[0]
 
-        if (np.abs(cumulated[0]
-                   - first_cumulated_transfer_matrix)).any() > tol:
+        if (
+            np.abs(cumulated[0] - first_cumulated_transfer_matrix)
+        ).any() > tol:
             n_points += 1
-            cumulated = np.vstack((first_cumulated_transfer_matrix[np.newaxis],
-                                   cumulated))
+            cumulated = np.vstack(
+                (first_cumulated_transfer_matrix[np.newaxis], cumulated)
+            )
 
         return n_points, cumulated
 
-    def _compute_cumulated(self,
-                           first_cumulated_transfer_matrix: np.ndarray,
-                           shape: tuple[int, int, int],
-                           is_3d: bool,
-                           n_points: int) -> np.ndarray:
+    def _compute_cumulated(
+        self,
+        first_cumulated_transfer_matrix: np.ndarray,
+        shape: tuple[int, int, int],
+        is_3d: bool,
+        n_points: int,
+    ) -> np.ndarray:
         """Compute cumulated transfer matrix from individual.
 
         Parameters
@@ -252,7 +260,7 @@ class TransferMatrix:
             I think the 3D/1D handling may be smarter?
 
         """
-        cumulated = np.full(shape, np.NaN)
+        cumulated = np.full(shape, np.nan)
         cumulated[0] = first_cumulated_transfer_matrix
 
         for i in range(n_points - 1):
@@ -262,7 +270,7 @@ class TransferMatrix:
             return cumulated
 
         cumulated_1d = cumulated
-        cumulated = np.full((n_points, 6, 6), np.NaN)
+        cumulated = np.full((n_points, 6, 6), np.nan)
         cumulated[:, 4:, 4:] = cumulated_1d
         return cumulated
 

@@ -24,7 +24,7 @@ class DesignSpaceParameter(ABC):
     element_name : str
         Name of the element concerned by the parameter.
     limits : tuple[float, float]
-        Lower and upper bound for the variable. ``np.NaN`` deactivates a bound.
+        Lower and upper bound for the variable. ``np.nan`` deactivates a bound.
 
     """
 
@@ -39,7 +39,7 @@ class DesignSpaceParameter(ABC):
         element_name: str,
         x_min: float,
         x_max: float,
-        x_0: float = np.NaN,
+        x_0: float = np.nan,
     ) -> Self:
         """Initialize object with ``x_min``, ``x_max`` instead of ``limits``.
 
@@ -52,9 +52,9 @@ class DesignSpaceParameter(ABC):
         element_name : str
             Name of the element concerned by the parameter.
         x_min : float
-            Lower limit. ``np.NaN`` to deactivate lower bound.
+            Lower limit. ``np.nan`` to deactivate lower bound.
         x_max : float
-            Upper limit. ``np.NaN`` to deactivate lower bound.
+            Upper limit. ``np.nan`` to deactivate lower bound.
 
         Returns
         -------

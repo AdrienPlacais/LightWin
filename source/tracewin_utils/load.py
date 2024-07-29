@@ -184,7 +184,7 @@ def results(path: Path, prop: str) -> np.ndarray:
             splitted_line = line.split("\t")
             new_data = splitted_line[idx]
             if new_data == "-":
-                new_data = np.NaN
+                new_data = np.nan
             data_ref.append(new_data)
     data_ref = np.array(data_ref).astype(float)
     return data_ref

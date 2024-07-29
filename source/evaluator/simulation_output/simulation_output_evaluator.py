@@ -79,7 +79,7 @@ def _limits_given_in_functoolspartial_args(
     """Extract the limits given to a test function."""
     if not isinstance(partial_function, partial):
         logging.error("Given function must be a functools.partial func.")
-        return (np.NaN, np.NaN)
+        return (np.nan, np.nan)
 
     keywords = partial_function.keywords
     if "limits" in keywords:
@@ -192,7 +192,7 @@ class SimulationOutputEvaluator(ABC):
         if y_data is None:
             if self.raise_error_if_value_getter_returns_none:
                 logging.error(f"A value misses in test: {self}. Skipping...")
-            return np.NaN
+            return np.nan
 
         y_ref_data = self._get_ref_data(simulation_output)
         if y_ref_data is None:

@@ -108,7 +108,7 @@ class Accelerator:
             If you want the list output to be converted to a np.ndarray. The
             default is True.
         none_to_nan : bool, optional
-            To convert None to np.NaN. The default is False.
+            To convert None to np.nan. The default is False.
         elt : str | Element | None, optional
             If provided, and if the desired keys are in SimulationOutput, the
             attributes will be given over the Element only. You can provide an

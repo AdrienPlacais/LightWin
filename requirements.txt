@@ -3,10 +3,11 @@ cython
 matplotlib
 myst-parser
 nbsphinx
-numpy
+numpy>=2.0.0
 pandas
 palettable
 pymoo
 pytest
+setuptools
 scipy
 sphinx_rtd_theme

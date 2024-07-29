@@ -231,7 +231,7 @@ def indiv_to_cumul_transf_mat(
         Cumulated transfer matrices.
 
     """
-    cumulated_transfer_matrices = np.full((n_steps, 2, 2), np.NaN)
+    cumulated_transfer_matrices = np.full((n_steps, 2, 2), np.nan)
     cumulated_transfer_matrices[0] = tm_cumul_in
     for i in range(1, n_steps):
         cumulated_transfer_matrices[i] = (

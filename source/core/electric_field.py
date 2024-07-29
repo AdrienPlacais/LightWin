@@ -7,25 +7,24 @@ See Also
 CavitySettings
 
 """
+import cmath
 import logging
 from typing import Any, Callable
 
-import cmath
 import numpy as np
 
 import config_manager as con
-from util.helper import recursive_items, recursive_getter
+from util.helper import recursive_getter, recursive_items
 
 
 def compute_param_cav(integrated_field: complex) -> dict[str, float]:
     """Compute synchronous phase and accelerating field."""
     polar_itg = cmath.polar(integrated_field)
-    cav_params = {'v_cav_mv': polar_itg[0],
-                  'phi_s': polar_itg[1]}
+    cav_params = {"v_cav_mv": polar_itg[0], "phi_s": polar_itg[1]}
     return cav_params
 
 
-class RfField():
+class RfField:
     r"""Cos-like RF field.
 
     .. deprecated:: 0.6.16
@@ -82,33 +81,36 @@ class RfField():
 
     """
 
-    def __init__(self,
-                 k_e: float = np.NaN,
-                 absolute_phase_flag: bool = False,
-                 phi_0: float | None = None) -> None:
+    def __init__(
+        self,
+        k_e: float = np.nan,
+        absolute_phase_flag: bool = False,
+        phi_0: float | None = None,
+    ) -> None:
         """Instantiate object."""
         self.e_spat: Callable[[float], float]
         self.n_cell: int
-        self.set_e_spat(lambda _: 0., n_cell=2)
+        self.set_e_spat(lambda _: 0.0, n_cell=2)
 
         self.k_e = k_e
 
-        self.phi_0 = {'phi_0_rel': None,
-                      'phi_0_abs': None,
-                      'nominal_rel': None,
-                      'abs_phase_flag': absolute_phase_flag,
-                      'phi_0_abs_but_reference_phase_is_different': None,
-                      'new_reference_phase': None,
-                      }
+        self.phi_0 = {
+            "phi_0_rel": None,
+            "phi_0_abs": None,
+            "nominal_rel": None,
+            "abs_phase_flag": absolute_phase_flag,
+            "phi_0_abs_but_reference_phase_is_different": None,
+            "new_reference_phase": None,
+        }
 
         if absolute_phase_flag:
-            self.phi_0['phi_0_abs'] = phi_0
+            self.phi_0["phi_0_abs"] = phi_0
         else:
-            self.phi_0['phi_0_rel'] = phi_0
-            self.phi_0['nominal_rel'] = phi_0
+            self.phi_0["phi_0_rel"] = phi_0
+            self.phi_0["nominal_rel"] = phi_0
 
-        self.v_cav_mv = np.NaN
-        self.phi_s = np.NaN
+        self.v_cav_mv = np.nan
+        self.phi_s = np.nan
 
         # Default values, overwritten by the FREQ command
         self.omega0_rf: float
@@ -122,8 +124,9 @@ class RfField():
         """Tell if the required attribute is in this class."""
         return key in recursive_items(vars(self))
 
-    def get(self, *keys: str, to_deg: bool = False, **kwargs: bool | str
-            ) -> list | np.ndarray | float | None:
+    def get(
+        self, *keys: str, to_deg: bool = False, **kwargs: bool | str
+    ) -> list | np.ndarray | float | None:
         """
         Shorthand to get attributes from this class.
 
@@ -152,7 +155,7 @@ class RfField():
 
             val[key] = recursive_getter(key, vars(self), **kwargs)
 
-            if val[key] is not None and to_deg and 'phi' in key:
+            if val[key] is not None and to_deg and "phi" in key:
                 val[key] = np.rad2deg(val[key])
 
         out = [val[key] for key in keys]
@@ -161,33 +164,36 @@ class RfField():
             return out[0]
         return tuple(out)
 
-    def set_rf_freq(self,
-                    f_mhz: float,
-                    ) -> None:
+    def set_rf_freq(
+        self,
+        f_mhz: float,
+    ) -> None:
         """Initialize the pulsation and the rf / bunch fraction."""
         self.omega0_rf = 2e6 * np.pi * f_mhz
         self.bunch_to_rf = f_mhz / con.F_BUNCH_MHZ
 
-    def set_e_spat(self,
-                   e_spat: Callable[[float], float],
-                   n_cell: int) -> None:
+    def set_e_spat(
+        self, e_spat: Callable[[float], float], n_cell: int
+    ) -> None:
         """Set the pos. component of electric field, set number of cells."""
         self.e_spat = e_spat
         self.n_cell = n_cell
 
     def update_phi_0_abs_to_adapt_to_new_ref_phase(
-            self,
-            old_phi_in: float,
-            new_phi_in: float,
-            phases_are_bunch: bool = True,
+        self,
+        old_phi_in: float,
+        new_phi_in: float,
+        phases_are_bunch: bool = True,
     ) -> float:
         """Calculate the new `phi_0_abs`, with a new reference phase."""
-        if not self.phi_0['abs_phase_flag']:
-            logging.error("For this cavity we use the relative phi_0. Why do "
-                          "you want to change the absolute phase of the cav? "
-                          "Returning the relative phi_0, which should allow "
-                          "LightWin to continue its execution...")
-            return self.phi_0['phi_0_rel']
+        if not self.phi_0["abs_phase_flag"]:
+            logging.error(
+                "For this cavity we use the relative phi_0. Why do "
+                "you want to change the absolute phase of the cav? "
+                "Returning the relative phi_0, which should allow "
+                "LightWin to continue its execution..."
+            )
+            return self.phi_0["phi_0_rel"]
 
         delta_phi_rf = new_phi_in - old_phi_in
 
@@ -196,17 +202,17 @@ class RfField():
             new_phi_in *= self.bunch_to_rf
 
         new_phi_0_abs = phi_0_abs_with_new_phase_reference(
-            self.phi_0['phi_0_abs'],
-            delta_phi_rf
+            self.phi_0["phi_0_abs"], delta_phi_rf
         )
 
-        self.phi_0['new_reference_phase'] = new_phi_in
-        self.phi_0['phi_0_abs_but_reference_phase_is_different'] = \
+        self.phi_0["new_reference_phase"] = new_phi_in
+        self.phi_0["phi_0_abs_but_reference_phase_is_different"] = (
             new_phi_0_abs
+        )
         return new_phi_0_abs
 
 
-class NewRfField():
+class NewRfField:
     r"""Cos-like RF field.
 
     Warning, all phases are defined as:
@@ -245,10 +251,7 @@ class NewRfField():
         """Tell if the required attribute is in this class."""
         return hasattr(self, key)
 
-    def get(self,
-            *keys: str,
-            **kwargs: bool | str | None
-            ) -> Any:
+    def get(self, *keys: str, **kwargs: bool | str | None) -> Any:
         """Shorthand to get attributes from this class or its attributes.
 
         Parameters
@@ -278,9 +281,9 @@ class NewRfField():
             return out[0]
         return tuple(out)
 
-    def set_e_spat(self,
-                   e_spat: Callable[[float], float],
-                   n_cell: int) -> None:
+    def set_e_spat(
+        self, e_spat: Callable[[float], float], n_cell: int
+    ) -> None:
         """Set the pos. component of electric field, set number of cells."""
         self.e_spat = e_spat
         self.n_cell = n_cell

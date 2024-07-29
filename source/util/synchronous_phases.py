@@ -22,15 +22,15 @@ def phi_s_legacy(
     Returns
     -------
     v_cav_mv : float
-        Accelerating voltage in MV. It is ``np.NaN`` if ``integrated_field`` is
+        Accelerating voltage in MV. It is ``np.nan`` if ``integrated_field`` is
         None.
     phi_s : float
-        Synchronous phase of the cavity in rad. It is ``np.NaN`` if
+        Synchronous phase of the cavity in rad. It is ``np.nan`` if
         ``integrated_field`` is None.
 
     """
     if integrated_field is None:
-        return np.NaN, np.NaN
+        return np.nan, np.nan
     polar_itg = cmath.polar(integrated_field)
     return polar_itg[0], polar_itg[1]
 

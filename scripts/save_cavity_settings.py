@@ -60,7 +60,7 @@ def _phases_in_deg(cavities: Iterable[FieldMap]) -> np.ndarray:
             (
                 x.cavity_settings.phi_0_rel
                 if x.cavity_settings.phi_0_rel is not None
-                else np.NaN
+                else np.nan
             )
             for x in cavities
         ]

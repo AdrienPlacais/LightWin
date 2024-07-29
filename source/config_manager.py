@@ -46,7 +46,7 @@ E_MEV, E_REST_MEV, INV_E_REST_MEV = float(), float(), float()
 GAMMA_INIT = float()
 F_BUNCH_MHZ, OMEGA_0_BUNCH, LAMBDA_BUNCH = float(), float(), float()
 Q_ADIM, Q_OVER_M, M_OVER_Q = float(), float(), float()
-SIGMA = np.full((6, 6), np.NaN)
+SIGMA = np.full((6, 6), np.nan)
 
 
 MANDATORY_CONFIG_ENTRIES = ("files", "beam_calculator", "beam")  #:

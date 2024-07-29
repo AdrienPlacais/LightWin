@@ -233,7 +233,7 @@ def _single_simulation_data(
     kwargs = {"to_numpy": False, "to_deg": True}
 
     # patch to avoid envelopes being converted again to degrees
-    if 'envelope_pos' in axis:
+    if "envelope_pos" in axis:
         kwargs["to_deg"] = False
     data = simulation_output.get(axis, **kwargs)
     return data
@@ -247,8 +247,8 @@ def _single_simulation_all_data(
     y_data = _single_simulation_data(y_axis, simulation_output)
 
     if None in (x_data, y_data):
-        x_data = np.full((10, 1), np.NaN)
-        y_data = np.full((10, 1), np.NaN)
+        x_data = np.full((10, 1), np.nan)
+        y_data = np.full((10, 1), np.nan)
         logging.warning(
             f"{x_axis} or {y_axis} not found in {simulation_output}"
         )
@@ -372,13 +372,13 @@ def _compute_error(
                 "simulation is performed."
             )
 
-            return np.full((10, 1), np.NaN), np.full((10, 1), np.NaN)
+            return np.full((10, 1), np.nan), np.full((10, 1), np.nan)
     else:
         logging.error(
             f"{ERROR_REFERENCE = }, which is not allowed. Check "
             "allowed values in _compute_error."
         )
-        return np.full((10, 1), np.NaN), np.full((10, 1), np.NaN)
+        return np.full((10, 1), np.nan), np.full((10, 1), np.nan)
 
     i_err = [i for i in simulation_indexes if i not in i_ref]
     indexes_ref_with_err = itertools.zip_longest(
@@ -668,7 +668,7 @@ def _plot_quad(quad: Quad, x_0: float, width: float) -> pat.Polygon:
             [x_0, y_0 + height],
             [x_0, y_0],
             [x_0 + width, y_0 + height],
-            [np.NaN, np.NaN],
+            [np.nan, np.nan],
             [x_0, y_0 + height],
             [x_0 + width, y_0],
         )

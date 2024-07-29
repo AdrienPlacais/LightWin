@@ -381,7 +381,7 @@ def output_data_in_tw_fashion(linac) -> pd.DataFrame:
         "Grad/Field/Amp": lambda lin, elt: (
             elt.grad
             if (elt.get("nature", to_numpy=False) == "QUAD")
-            else np.NaN
+            else np.nan
         ),
         "EoT (MV/m)": lambda lin, elt: None,
         "EoTLc (MV)": lambda lin, elt: elt.get("v_cav_mv"),
@@ -407,19 +407,19 @@ def output_data_in_tw_fashion(linac) -> pd.DataFrame:
         lattice_n = "--------M" + str(n_latt)
         data.append(
             [
-                np.NaN,
+                np.nan,
                 lattice_n,
                 "",
-                np.NaN,
-                np.NaN,
-                np.NaN,
-                np.NaN,
-                np.NaN,
-                np.NaN,
-                np.NaN,
-                np.NaN,
-                np.NaN,
-                np.NaN,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
+                np.nan,
             ]
         )
         n_latt += 1

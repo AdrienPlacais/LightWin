@@ -36,7 +36,7 @@ def compute_error_transfer_matrix(
 
     if n_z < n_z_ref:
         z_err = t_m[:, 0]
-        err = np.full((n_z, 4), np.NaN)
+        err = np.full((n_z, 4), np.nan)
         for i in range(4):
             f_interp = interp1d(
                 x=t_m_ref[:, 0],
@@ -49,7 +49,7 @@ def compute_error_transfer_matrix(
 
     else:
         z_err = t_m_ref[:, 0]
-        err = np.full((n_z_ref, 4), np.NaN)
+        err = np.full((n_z_ref, 4), np.nan)
         for i in range(4):
             f_interp = interp1d(
                 x=t_m[:, 0],

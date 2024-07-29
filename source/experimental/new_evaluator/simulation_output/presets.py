@@ -80,7 +80,7 @@ class PowerLoss(ISimulationOutputEvaluator):
         for data in used_for_eval:
             test = self._evaluate_single(
                 data,
-                lower_limit=np.NaN,
+                lower_limit=np.nan,
                 upper_limit=self._max_loss,
                 **kwargs,
             )
@@ -159,7 +159,7 @@ class LongitudinalEmittance(ISimulationOutputEvaluator):
         for post_treated in all_post_treated.T:
             test = self._evaluate_single(
                 post_treated,
-                lower_limit=np.NaN,
+                lower_limit=np.nan,
                 upper_limit=self._max_percentage_rel_increase,
                 **kwargs,
             )
@@ -225,7 +225,7 @@ class TransverseMismatchFactor(ISimulationOutputEvaluator):
         if data.ndim == 0 or data is None:
             if simulation_output.out_path.parent.stem == "000000_ref":
                 self._dump_no_numerical_data_to_plot = True
-                return np.full_like(self._ref_xdata, np.NaN)
+                return np.full_like(self._ref_xdata, np.nan)
             return self._default_dummy(quantity)
         return data
 
@@ -255,7 +255,7 @@ class TransverseMismatchFactor(ISimulationOutputEvaluator):
         for data in used_for_eval:
             test = self._evaluate_single(
                 data,
-                lower_limit=np.NaN,
+                lower_limit=np.nan,
                 upper_limit=self._max_mismatch,
                 **kwargs,
             )
@@ -325,7 +325,7 @@ class LongitudinalMismatchFactor(ISimulationOutputEvaluator):
         if data.ndim == 0 or data is None:
             if simulation_output.out_path.parent.stem == "000000_ref":
                 self._dump_no_numerical_data_to_plot = True
-                return np.full_like(self._ref_xdata, np.NaN)
+                return np.full_like(self._ref_xdata, np.nan)
             return self._default_dummy(quantity)
         return data
 
@@ -349,7 +349,7 @@ class LongitudinalMismatchFactor(ISimulationOutputEvaluator):
         for data in used_for_eval:
             test = self._evaluate_single(
                 data,
-                lower_limit=np.NaN,
+                lower_limit=np.nan,
                 upper_limit=self._max_mismatch,
                 **kwargs,
             )
@@ -403,7 +403,7 @@ class SynchronousPhases(ISimulationOutputEvaluator):
         if quantity != "phi_s":
             return data
 
-        data = [phi_s if phi_s is not None else np.NaN for phi_s in data]
+        data = [phi_s if phi_s is not None else np.nan for phi_s in data]
         return np.array(data)
 
     @override
@@ -449,7 +449,7 @@ class SynchronousPhases(ISimulationOutputEvaluator):
             **plot_kwargs,
             **kwargs,
         )
-        return tests, np.array([np.NaN for _ in simulation_outputs])
+        return tests, np.array([np.nan for _ in simulation_outputs])
 
 
 SIMULATION_OUTPUT_EVALUATORS = {

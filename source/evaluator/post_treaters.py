@@ -113,7 +113,7 @@ def relative_difference(
 
         assert isinstance(reference_value, np.ndarray)
         reference_value = reference_value.copy()
-        reference_value[reference_value == 0.0] = np.NaN
+        reference_value[reference_value == 0.0] = np.nan
 
     delta_rel = (value - reference_value) / np.abs(reference_value)
     return delta_rel

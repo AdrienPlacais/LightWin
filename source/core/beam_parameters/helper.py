@@ -49,7 +49,7 @@ def reconstruct_sigma(
         ``(n, )`` un-normalized emittance array, in units consistent with
         ``sigma_00`` and ``sigma_01``.
     tol : float, optional
-        ``sigma_00`` is set to np.NaN where it is under ``tol`` to avoid
+        ``sigma_00`` is set to np.nan where it is under ``tol`` to avoid
         ``RuntimeWarning``. The default is ``1e-8``.
     eps_is_normalized : bool, optional
         To tell if the given emittance is already normalized. The default is
@@ -82,7 +82,7 @@ def reconstruct_sigma(
         eps /= beta_kin * gamma_kin
 
     sigma = np.zeros((sigma_00.shape[0], 2, 2))
-    sigma_00[np.where(np.abs(sigma_00) < tol)] = np.NaN
+    sigma_00[np.where(np.abs(sigma_00) < tol)] = np.nan
     sigma[:, 0, 0] = sigma_00
     sigma[:, 0, 1] = sigma_01
     sigma[:, 1, 0] = sigma_01
@@ -157,7 +157,7 @@ def eps_from_sigma(
 
     dets = np.linalg.det(sigma)
     invalid_idx = np.where(dets < 0.0)
-    dets[invalid_idx] = np.NaN
+    dets[invalid_idx] = np.nan
     eps_no_normalisation = np.sqrt(dets)
 
     if phase_space_name in ("zdelta",):
@@ -208,7 +208,7 @@ def twiss_from_sigma(
     eps_no_normalisation : np.ndarray | float
         ``(n, )`` array (or float) of unnormalized emittance.
     tol : float, optional
-        ``eps_no_normalisation`` is set to np.NaN where it is under ``tol``
+        ``eps_no_normalisation`` is set to np.nan where it is under ``tol``
         to avoid ``RuntimeWarning``. The default is ``1e-8``.
 
     Returns
@@ -225,12 +225,12 @@ def twiss_from_sigma(
         sigma = sigma[np.newaxis, :, :]
 
     n_points = sigma.shape[0]
-    twiss = np.full((n_points, 3), np.NaN)
+    twiss = np.full((n_points, 3), np.nan)
 
     for i in range(n_points):
         divisor = np.atleast_1d(eps_no_normalisation)[i]
         if np.abs(divisor) < tol:
-            divisor = np.NaN
+            divisor = np.nan
 
         twiss[i, :] = (
             np.array([-sigma[i, 1, 0], sigma[i, 0, 0], sigma[i, 1, 1]])
@@ -491,7 +491,7 @@ def mismatch_from_arrays(
         fix = fix.transpose()
 
     if ref.shape != fix.shape:
-        return fix[0] * np.NaN
+        return fix[0] * np.nan
 
     # R in TW doc
     __r = ref[1] * fix[2] + ref[2] * fix[1]
@@ -519,5 +519,5 @@ def resample_twiss_on_fix(
             logging.critical(
                 "Interpolation error, setting twiss ref == fix (FIXME)"
             )
-            out[:, axis] = np.NaN
+            out[:, axis] = np.nan
     return out

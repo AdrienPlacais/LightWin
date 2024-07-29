@@ -105,7 +105,7 @@ class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
         results = {
             "transfer_matrix": transfer_matrix,
             "r_zz": transfer_matrix[:, 4:, 4:],
-            "cav_params": {"v_cav_mv": np.NaN, "phi_s": np.NaN},
+            "cav_params": {"v_cav_mv": np.nan, "phi_s": np.nan},
             "w_kin": w_kin,
             "phi_rel": gamma_phi[:, 1],
         }
@@ -257,7 +257,7 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
             """
             assert integrated_field is None
             w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
-            cav_params = compute_param_cav(np.NaN)
+            cav_params = compute_param_cav(np.nan)
             results = {
                 "transfer_matrix": transfer_matrix,
                 "r_zz": transfer_matrix[:, 4:, 4:],

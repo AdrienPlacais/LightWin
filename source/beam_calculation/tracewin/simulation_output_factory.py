@@ -211,8 +211,8 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
 # Main `results` dictionary
 # =============================================================================
 def _0_to_NaN(data: np.ndarray) -> np.ndarray:
-    """Replace 0 by np.NaN in given array."""
-    data[np.where(data == 0.0)] = np.NaN
+    """Replace 0 by np.nan in given array."""
+    data[np.where(data == 0.0)] = np.nan
     return data
 
 

@@ -417,8 +417,8 @@ class CavitySettings:
         self._status = value
         if value == "failed":
             self.k_e = 0.0
-            self.phi_s = np.NaN
-            self.v_cav_mv = np.NaN
+            self.phi_s = np.nan
+            self.v_cav_mv = np.nan
 
         self._check_consistency_of_status_and_reference()
 
@@ -567,7 +567,7 @@ class CavitySettings:
     @phi_s.deleter
     def phi_s(self) -> None:
         """Delete attribute."""
-        self._phi_s = np.NaN
+        self._phi_s = np.nan
 
     def set_cavity_parameters_methods(
         self,

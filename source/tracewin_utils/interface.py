@@ -87,7 +87,7 @@ def variables_to_command(
     If the `value` of the `dict` is None, only corresponding `key` is added
     (behavior for `hide` command).
 
-    If `value` is `np.NaN`, it is ignored.
+    If `value` is `np.nan`, it is ignored.
 
     Else, the pair `key`-`value` is added as `key=value` string.
 
@@ -100,7 +100,7 @@ def variables_to_command(
         if isinstance(val, float) and np.isnan(val):
             if warn_skipped:
                 logging.warning(
-                    f"For {key=}, I had a np.NaN value. I ignore this key."
+                    f"For {key=}, I had a np.nan value. I ignore this key."
                 )
             continue
 
@@ -252,7 +252,7 @@ def _cavity_settings_to_command(
 
     phi_0 = cavity_settings.phi_ref
     if phi_0 is None:
-        phi_0 = np.NaN
+        phi_0 = np.nan
     if ~np.isnan(phi_0):
         phi_0 = math.degrees(phi_0)
 
@@ -281,7 +281,7 @@ def _alter_element(
     alter_kwargs
         Key-pair values, where key is the LightWin name of the parameter to
         update, and value the new value to set. Key-pair value is skipped if
-        value is np.NaN. Key must be in :var:`ARGS_POSITIONS`.
+        value is np.nan. Key must be in :var:`ARGS_POSITIONS`.
 
     Returns
     -------
@@ -290,7 +290,7 @@ def _alter_element(
 
     """
     for val in alter_kwargs:
-        assert val is not None, "Prefer np.NaN for values to skip."
+        assert val is not None, "Prefer np.nan for values to skip."
     kwargs = {
         f"ele[{index + 1}][{ARGS_POSITIONS[arg]}]": value
         for arg, value in alter_kwargs.items()
@@ -314,7 +314,7 @@ def _proper_type(
                 f"The {key = } is not understood by TraceWin, or it is not "
                 "implemented yet."
             )
-        return np.NaN
+        return np.nan
 
     my_type = TYPES[key]
     if my_type is None:
@@ -334,7 +334,7 @@ def _proper_type(
 
     except ValueError:
         logging.error(
-            "Unsuccessful type conversion. Returning np.NaN to completely "
+            "Unsuccessful type conversion. Returning np.nan to completely "
             "ignore key."
         )
-        return np.NaN
+        return np.nan

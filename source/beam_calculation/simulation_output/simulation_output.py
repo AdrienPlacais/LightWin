@@ -171,7 +171,7 @@ class SimulationOutput:
             If you want the attribute at the entry, exit, or in the whole
             element.
         none_to_nan : bool, optional
-            To convert None to np.NaN. The default is False.
+            To convert None to np.nan. The default is False.
         **kwargs : str | bool | None
             Other arguments passed to recursive getter.
 

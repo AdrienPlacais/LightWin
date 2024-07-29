@@ -205,7 +205,7 @@ class FieldMap(Element):
             for key in keys
         ]
         if none_to_nan:
-            out = [x if x is not None else np.NaN for x in out]
+            out = [x if x is not None else np.nan for x in out]
 
         if len(out) == 1:
             return out[0]

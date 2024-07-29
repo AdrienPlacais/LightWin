@@ -120,7 +120,7 @@ class BeamParameters(InitialBeamParameters):
             If you want the list output to be converted to a np.ndarray. The
             default is True.
         none_to_nan : bool, optional
-            To convert None to np.NaN. The default is True.
+            To convert None to np.nan. The default is True.
         elt : Element | None, optional
             If provided, return the attributes only at the considered Element.
         pos : 'in' | 'out' | None
@@ -252,14 +252,14 @@ class BeamParameters(InitialBeamParameters):
         """
         Turn emittance, alpha, beta from the proper phase-spaces into command.
 
-        When phase-spaces were not created, we return np.NaN which will
+        When phase-spaces were not created, we return np.nan which will
         ultimately lead TraceWin to take this data from its ``.ini`` file.
 
         """
         args = []
         for phase_space_name in ("x", "y", "z"):
             if phase_space_name not in self.__dir__():
-                eps, alpha, beta = np.NaN, np.NaN, np.NaN
+                eps, alpha, beta = np.nan, np.nan, np.nan
 
                 phase_spaces_are_needed = (
                     isinstance(self.z_abs, np.ndarray)

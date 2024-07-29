@@ -130,7 +130,7 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
         results = {
             "r_zz": r_zz,
-            "cav_params": {"v_cav_mv": np.NaN, "phi_s": np.NaN},
+            "cav_params": {"v_cav_mv": np.nan, "phi_s": np.nan},
             "w_kin": w_kin,
             "phi_rel": gamma_phi[:, 1],
         }
@@ -254,7 +254,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
             """
             assert integrated_field is None
             w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
-            cav_params = self.compute_cavity_parameters(np.NaN)
+            cav_params = self.compute_cavity_parameters(np.nan)
             results = {
                 "r_zz": r_zz,
                 "cav_params": cav_params,

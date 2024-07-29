@@ -134,7 +134,7 @@ def _plot_quad(quad: Quad, x_0: float, width: float) -> pat.Polygon:
             [x_0, y_0 + height],
             [x_0, y_0],
             [x_0 + width, y_0 + height],
-            [np.NaN, np.NaN],
+            [np.nan, np.nan],
             [x_0, y_0 + height],
             [x_0 + width, y_0],
         )

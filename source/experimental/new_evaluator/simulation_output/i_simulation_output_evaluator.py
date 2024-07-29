@@ -54,7 +54,7 @@ class ISimulationOutputEvaluator(IEvaluator):
                 f"{quantity = } was not found in the simulation output. "
                 "Maybe the simulation was interrupted? Returning dummy data."
             )
-            return np.full_like(self._ref_ydata, np.NaN)
+            return np.full_like(self._ref_ydata, np.nan)
         if hasattr(self, "_ref_xdata"):
             logging.error(
                 f"Reference {quantity = } was not found in the simulation"
@@ -62,13 +62,13 @@ class ISimulationOutputEvaluator(IEvaluator):
                 "the BeamCalculator does not produce this data? Returning "
                 "dummy data."
             )
-            return np.full_like(self._ref_xdata, np.NaN)
+            return np.full_like(self._ref_xdata, np.nan)
         logging.critical(
             f"Reference {quantity = } data was not found and I could not "
             "find fallback array ({self._x_quantity}). Returning a very dummy "
             "array."
         )
-        return np.full((10,), np.NaN)
+        return np.full((10,), np.nan)
 
     def _getter(
         self, simulation_output: SimulationOutput, quantity: str
@@ -133,10 +133,10 @@ class ISimulationOutputEvaluator(IEvaluator):
             data_as_dict = {
                 "Data": data,
                 "Lower limit": (
-                    lower_limits[i] if lower_limits is not None else np.NaN
+                    lower_limits[i] if lower_limits is not None else np.nan
                 ),
                 "Upper limit": (
-                    upper_limits[i] if upper_limits is not None else np.NaN
+                    upper_limits[i] if upper_limits is not None else np.nan
                 ),
             }
             data_as_pd = pd.DataFrame(data_as_dict, index=self._ref_xdata)
@@ -158,8 +158,8 @@ class ISimulationOutputEvaluator(IEvaluator):
     def _evaluate_single(
         self,
         post_treated: npt.NDArray[np.float64],
-        lower_limit: npt.NDArray[np.float64] | float = np.NaN,
-        upper_limit: npt.NDArray[np.float64] | float = np.NaN,
+        lower_limit: npt.NDArray[np.float64] | float = np.nan,
+        upper_limit: npt.NDArray[np.float64] | float = np.nan,
         nan_in_data_is_allowed: bool = False,
         **kwargs,
     ) -> bool:
@@ -168,10 +168,10 @@ class ISimulationOutputEvaluator(IEvaluator):
         Parameters
         ----------
         post_treated: npt.NDArray[np.float64]
-            Data, already post-treated. If there is ``np.NaN`` in this array,
+            Data, already post-treated. If there is ``np.nan`` in this array,
             we consider that the test if failed.
         lower_limit, upper_limit : npt.NDArray[np.float64] | float, optional
-            Min/max value for data. Where it is ``np.NaN``, the test is passed.
+            Min/max value for data. Where it is ``np.nan``, the test is passed.
         nan_in_data_is_allowed : boolean, optional
             If the test is valid where ``post_treated`` is NaN. Use for example
             with synchronous phases, which is Nan when not in a cavity.

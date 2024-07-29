@@ -255,7 +255,7 @@ def presets_for_fault_scenario_rms_over_full_linac(
     }
 
     if "mismatch" in quantity:
-        base_dict["value_getter"] = lambda _: np.NaN
+        base_dict["value_getter"] = lambda _: np.nan
         base_dict["ref_value_getter"] = None
         base_dict["post_treaters"] = (post_treaters.do_nothing,)
 

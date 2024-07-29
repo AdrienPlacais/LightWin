@@ -296,7 +296,7 @@ class Envelope3D(BeamCalculator):
         -------
         tuple[float, float]
             Accelerating voltage in MV and synchronous phase in radians. If the
-            cavity is failed, two ``np.NaN`` are returned.
+            cavity is failed, two ``np.nan`` are returned.
 
         """
         v_cav_mv, phi_s = self._phi_s_func(**results)
