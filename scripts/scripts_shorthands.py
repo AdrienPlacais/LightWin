@@ -1,7 +1,7 @@
 """Define several helper functions.
 
 .. todo::
-    Should they be in a class somewhere?
+    Should they be in a module somewhere?
 
 """
 
