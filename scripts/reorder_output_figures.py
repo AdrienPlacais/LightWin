@@ -7,9 +7,9 @@ import shutil
 from pathlib import Path
 
 
-def _create_output_folder(simulation_folder: Path,
-                          out_folder_name: str = "images"
-                          ) -> Path:
+def _create_output_folder(
+    simulation_folder: Path, out_folder_name: str = "images"
+) -> Path:
     """Create the output folder."""
     out_images = simulation_folder / out_folder_name
     if out_images.exists():
@@ -20,9 +20,10 @@ def _create_output_folder(simulation_folder: Path,
     out_images.mkdir(exist_ok=False)
     return out_images
 
-def _move_single_simulation_output_figures(simulation_folder: Path,
-                                           out_images: Path,
-                                           verbose: bool = False) -> None:
+
+def _move_single_simulation_output_figures(
+    simulation_folder: Path, out_images: Path, verbose: bool = False
+) -> None:
     """Mpve the figures of a single simulation to ``out_images``."""
     simulation_name = simulation_folder.stem
     new_filename = simulation_name
@@ -41,9 +42,9 @@ def _move_single_simulation_output_figures(simulation_folder: Path,
         shutil.copy(image, out_path)
 
 
-def reorder_output_figures(simulation_folder: Path | str,
-                           verbose: bool = False
-                           ) -> None:
+def reorder_output_figures(
+    simulation_folder: Path | str, verbose: bool = False
+) -> None:
     """Move all the output figures in a single folder."""
     if isinstance(simulation_folder, str):
         simulation_folder = Path(simulation_folder)
@@ -54,9 +55,9 @@ def reorder_output_figures(simulation_folder: Path | str,
     out_images = _create_output_folder(simulation_folder)
 
     for simulation_folder in simulation_folders:
-        _move_single_simulation_output_figures(simulation_folder,
-                                               out_images,
-                                               verbose=verbose)
+        _move_single_simulation_output_figures(
+            simulation_folder, out_images, verbose=verbose
+        )
 
 
 if __name__ == "__main__":

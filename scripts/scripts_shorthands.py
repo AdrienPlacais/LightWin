@@ -4,11 +4,14 @@
     Should they be in a class somewhere?
 
 """
+
 from collections.abc import Collection
 from typing import Any
 
 from beam_calculation.beam_calculator import BeamCalculator
-from beam_calculation.simulation_output.simulation_output import SimulationOutput
+from beam_calculation.simulation_output.simulation_output import (
+    SimulationOutput,
+)
 from core.accelerator.accelerator import Accelerator
 from core.accelerator.factory import NoFault
 

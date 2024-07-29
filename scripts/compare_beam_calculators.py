@@ -15,7 +15,9 @@ from scripts_shorthands import compute_beams
 
 import config_manager
 from beam_calculation.factory import BeamCalculatorsFactory
-from beam_calculation.simulation_output.simulation_output import SimulationOutput
+from beam_calculation.simulation_output.simulation_output import (
+    SimulationOutput,
+)
 from core.elements.element import Element
 from visualization import plot
 
@@ -95,7 +97,9 @@ def compare_beam_calculators(
     _ = plot.factory(accelerators, configuration["plots"], **kwargs)
 
     for test in tests:
-        msg = output_comparison(simulation_outputs[0],simulation_outputs[1], **test)
+        msg = output_comparison(
+            simulation_outputs[0], simulation_outputs[1], **test
+        )
         logging.info(msg)
 
 

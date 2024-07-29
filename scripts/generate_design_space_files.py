@@ -17,7 +17,9 @@ from beam_calculation.factory import BeamCalculatorsFactory
 from optimisation.design_space.factory import get_design_space_factory
 
 
-def generate_design_space_files(toml_filepath: Path, toml_keys: dict[str, str]) -> None:
+def generate_design_space_files(
+    toml_filepath: Path, toml_keys: dict[str, str]
+) -> None:
     """Generate the ``variables.csv`` and ``constraints.csv`` files.
 
     Parameters
@@ -47,8 +49,8 @@ def generate_design_space_files(toml_filepath: Path, toml_keys: dict[str, str]) 
         **configuration["design_space"]
     )
     design_space = design_space_factory.run(
-            compensating_elements=cavities,
-            reference_elements=cavities,
+        compensating_elements=cavities,
+        reference_elements=cavities,
     )
 
     project_folder = toml_filepath.parent
@@ -58,6 +60,7 @@ def generate_design_space_files(toml_filepath: Path, toml_keys: dict[str, str]) 
         constraints_filename=Path("constraints"),
         overwrite=True,
     )
+
 
 if __name__ == "__main__":
     this_file_path = Path(__file__)
