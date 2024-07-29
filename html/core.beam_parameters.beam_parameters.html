@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core.beam_parameters.beam_parameters module &mdash; LightWin 0.6.21-1-gbdc8ea80 documentation</title>
+  <title>core.beam_parameters.beam_parameters module &mdash; LightWin 0.6.21-3-g41faf77a documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=509cd2d4"></script>
+        <script src="_static/documentation_options.js?v=ef138202"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -40,7 +40,7 @@
             LightWin
           </a>
               <div class="version">
-                0.6.21-1-gbdc8ea80
+                0.6.21-3-g41faf77a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -232,7 +232,7 @@ proper position.</p>
 <dt class="sig sig-object py" id="core.beam_parameters.beam_parameters.BeamParameters._create_tracewin_command">
 <span class="sig-name descname"><span class="pre">_create_tracewin_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">warn_missing_phase_space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#core.beam_parameters.beam_parameters.BeamParameters._create_tracewin_command" title="Link to this definition"></a></dt>
 <dd><p>Turn emittance, alpha, beta from the proper phase-spaces into command.</p>
-<p>When phase-spaces were not created, we return np.NaN which will
+<p>When phase-spaces were not created, we return np.nan which will
 ultimately lead TraceWin to take this data from its <code class="docutils literal notranslate"><span class="pre">.ini</span></code> file.</p>
 </dd></dl>
 
@@ -286,7 +286,7 @@ underscore.</p>
 <li><p><strong>*keys</strong> (<em>str</em>) – Name of the desired attributes.</p></li>
 <li><p><strong>to_numpy</strong> (<em>bool</em><em>, </em><em>optional</em>) – If you want the list output to be converted to a np.ndarray. The
 default is True.</p></li>
-<li><p><strong>none_to_nan</strong> (<em>bool</em><em>, </em><em>optional</em>) – To convert None to np.NaN. The default is True.</p></li>
+<li><p><strong>none_to_nan</strong> (<em>bool</em><em>, </em><em>optional</em>) – To convert None to np.nan. The default is True.</p></li>
 <li><p><strong>elt</strong> (<a class="reference internal" href="core.elements.element.html#core.elements.element.Element" title="core.elements.element.Element"><em>Element</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – If provided, return the attributes only at the considered Element.</p></li>
 <li><p><strong>pos</strong> (<em>'in'</em><em> | </em><em>'out'</em><em> | </em><em>None</em>) – If you want the attribute at the entry, exit, or in the whole
 Element.</p></li>

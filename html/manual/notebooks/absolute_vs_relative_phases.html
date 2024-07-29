@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Absolute and relative cavity entry phases &mdash; LightWin 0.6.21-1-gbdc8ea80 documentation</title>
+  <title>Absolute and relative cavity entry phases &mdash; LightWin 0.6.21-3-g41faf77a documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
@@ -16,7 +16,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=509cd2d4"></script>
+        <script src="../../_static/documentation_options.js?v=ef138202"></script>
         <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -40,7 +40,7 @@
             LightWin
           </a>
               <div class="version">
-                0.6.21-1-gbdc8ea80
+                0.6.21-3-g41faf77a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -103,20 +103,20 @@ E_0\cos{\phi_{0,\,\mathrm{abs}}} = E_0\cos{(\phi_{0,\,\mathrm{rel}} + \phi_\math
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from pathlib import Path
 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+import matplotlib.pyplot as plt
 
-<span class="kn">import</span> <span class="nn">config_manager</span>
-<span class="kn">from</span> <span class="nn">beam_calculation.beam_calculator</span> <span class="kn">import</span> <span class="n">BeamCalculator</span>
-<span class="kn">from</span> <span class="nn">beam_calculation.factory</span> <span class="kn">import</span> <span class="n">BeamCalculatorsFactory</span>
-<span class="kn">from</span> <span class="nn">beam_calculation.simulation_output.simulation_output</span> <span class="kn">import</span> <span class="n">SimulationOutput</span>
-<span class="kn">from</span> <span class="nn">core.accelerator.accelerator</span> <span class="kn">import</span> <span class="n">Accelerator</span>
-<span class="kn">from</span> <span class="nn">core.accelerator.factory</span> <span class="kn">import</span> <span class="n">NoFault</span><span class="p">,</span> <span class="n">WithFaults</span>
-<span class="kn">from</span> <span class="nn">failures.fault_scenario</span> <span class="kn">import</span> <span class="n">FaultScenario</span><span class="p">,</span> <span class="n">fault_scenario_factory</span>
-<span class="kn">from</span> <span class="nn">visualization</span> <span class="kn">import</span> <span class="n">plot</span>
+import config_manager
+from beam_calculation.beam_calculator import BeamCalculator
+from beam_calculation.factory import BeamCalculatorsFactory
+from beam_calculation.simulation_output.simulation_output import SimulationOutput
+from core.accelerator.accelerator import Accelerator
+from core.accelerator.factory import NoFault, WithFaults
+from failures.fault_scenario import FaultScenario, fault_scenario_factory
+from visualization import plot
 
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+plt.rcParams[&quot;figure.figsize&quot;] = (15, 5)
 </pre></div>
 </div>
 </div>
@@ -127,22 +127,22 @@ E_0\cos{\phi_{0,\,\mathrm{abs}}} = E_0\cos{(\phi_{0,\,\mathrm{rel}} + \phi_\math
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LW_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-<span class="n">DATA_DIR</span> <span class="o">=</span> <span class="n">LW_DIR</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span> <span class="o">/</span> <span class="s2">&quot;example&quot;</span>
-<span class="n">OUT_DIR</span> <span class="o">=</span> <span class="n">DATA_DIR</span> <span class="o">/</span> <span class="s2">&quot;results&quot;</span>
-<span class="n">CONFIG_PATH</span> <span class="o">=</span> <span class="n">DATA_DIR</span> <span class="o">/</span> <span class="s2">&quot;lightwin.toml&quot;</span>
-<span class="n">CONFIG_KEYS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;files&#39;</span><span class="p">:</span> <span class="s1">&#39;files&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;beam_calculator&#39;</span><span class="p">:</span> <span class="s1">&#39;generic_envelope1d&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;beam&#39;</span><span class="p">:</span> <span class="s1">&#39;beam&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;plots&#39;</span><span class="p">:</span> <span class="s1">&#39;plots_minimal&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;wtf&#39;</span><span class="p">:</span> <span class="s1">&#39;generic_wtf&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;design_space&#39;</span><span class="p">:</span> <span class="s1">&#39;generic_design_space&#39;</span><span class="p">,</span>
-<span class="p">}</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>LW_DIR = Path(&quot;..&quot;, &quot;..&quot;, &quot;..&quot;, &quot;..&quot;).absolute().resolve()
+DATA_DIR = LW_DIR / &quot;data&quot; / &quot;example&quot;
+OUT_DIR = DATA_DIR / &quot;results&quot;
+CONFIG_PATH = DATA_DIR / &quot;lightwin.toml&quot;
+CONFIG_KEYS = {
+    &#39;files&#39;: &#39;files&#39;,
+    &#39;beam_calculator&#39;: &#39;generic_envelope1d&#39;,
+    &#39;beam&#39;: &#39;beam&#39;,
+    &#39;plots&#39;: &#39;plots_minimal&#39;,
+    &#39;wtf&#39;: &#39;generic_wtf&#39;,
+    &#39;design_space&#39;: &#39;generic_design_space&#39;,
+}
 
-<span class="n">override</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;beam_calculator&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;flag_phi_abs&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="s1">&#39;plots&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;energy&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}}</span>
-<span class="n">config_abs</span> <span class="o">=</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">process_config</span><span class="p">(</span><span class="n">CONFIG_PATH</span><span class="p">,</span> <span class="n">CONFIG_KEYS</span><span class="p">,</span> <span class="n">warn_mismatch</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="n">override</span><span class="p">)</span>
-<span class="n">plots_phase</span> <span class="o">=</span> <span class="n">config_abs</span><span class="p">[</span><span class="s1">&#39;plots&#39;</span><span class="p">]</span>
+override = {&#39;beam_calculator&#39;: {&#39;flag_phi_abs&#39;: True}, &#39;plots&#39;: {&#39;energy&#39;: False}}
+config_abs = config_manager.process_config(CONFIG_PATH, CONFIG_KEYS, warn_mismatch=True, override=override)
+plots_phase = config_abs[&#39;plots&#39;]
 </pre></div>
 </div>
 </div>
@@ -219,20 +219,20 @@ maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = True
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">override</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;beam_calculator&#39;</span><span class="p">:</span>
-        <span class="p">{</span>
-            <span class="s1">&#39;flag_phi_abs&#39;</span><span class="p">:</span> <span class="kc">False</span>
-        <span class="p">},</span>
-    <span class="s1">&#39;plots&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;cav&#39;</span><span class="p">:</span> <span class="kc">True</span>
-    <span class="p">},</span>
-    <span class="s1">&#39;wtf&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;objective_preset&#39;</span><span class="p">:</span> <span class="s1">&#39;rephased_ADS&#39;</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-<span class="n">config_rel</span> <span class="o">=</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">process_config</span><span class="p">(</span><span class="n">CONFIG_PATH</span><span class="p">,</span> <span class="n">CONFIG_KEYS</span><span class="p">,</span> <span class="n">warn_mismatch</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="n">override</span><span class="p">)</span>
-<span class="n">plots_complete</span> <span class="o">=</span> <span class="n">config_rel</span><span class="p">[</span><span class="s1">&#39;plots&#39;</span><span class="p">]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>override = {
+    &#39;beam_calculator&#39;:
+        {
+            &#39;flag_phi_abs&#39;: False
+        },
+    &#39;plots&#39;: {
+        &#39;cav&#39;: True
+    },
+    &#39;wtf&#39;: {
+        &#39;objective_preset&#39;: &#39;rephased_ADS&#39;,
+    }
+}
+config_rel = config_manager.process_config(CONFIG_PATH, CONFIG_KEYS, warn_mismatch=True, override=override)
+plots_complete = config_rel[&#39;plots&#39;]
 </pre></div>
 </div>
 </div>
@@ -312,13 +312,13 @@ maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = True
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">factory</span> <span class="o">=</span> <span class="n">BeamCalculatorsFactory</span><span class="p">(</span><span class="n">beam_calculator</span><span class="o">=</span><span class="n">config_abs</span><span class="p">[</span><span class="s1">&#39;beam_calculator&#39;</span><span class="p">],</span>
-                                 <span class="n">files</span><span class="o">=</span><span class="n">config_abs</span><span class="p">[</span><span class="s1">&#39;files&#39;</span><span class="p">])</span>
-<span class="n">solver_abs</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">run_all</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>factory = BeamCalculatorsFactory(beam_calculator=config_abs[&#39;beam_calculator&#39;],
+                                 files=config_abs[&#39;files&#39;])
+solver_abs = factory.run_all()[0]
 
-<span class="n">factory</span> <span class="o">=</span> <span class="n">BeamCalculatorsFactory</span><span class="p">(</span><span class="n">beam_calculator</span><span class="o">=</span><span class="n">config_rel</span><span class="p">[</span><span class="s1">&#39;beam_calculator&#39;</span><span class="p">],</span>
-                                 <span class="n">files</span><span class="o">=</span><span class="n">config_rel</span><span class="p">[</span><span class="s1">&#39;files&#39;</span><span class="p">])</span>
-<span class="n">solver_rel</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">run_all</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+factory = BeamCalculatorsFactory(beam_calculator=config_rel[&#39;beam_calculator&#39;],
+                                 files=config_rel[&#39;files&#39;])
+solver_rel = factory.run_all()[0]
 </pre></div>
 </div>
 </div>
@@ -329,22 +329,22 @@ maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = True
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">factory</span> <span class="o">=</span> <span class="n">WithFaults</span><span class="p">(</span><span class="n">beam_calculators</span><span class="o">=</span><span class="n">solver_abs</span><span class="p">,</span> <span class="o">**</span><span class="n">config_abs</span><span class="p">[</span><span class="s1">&#39;files&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">config_abs</span><span class="p">[</span><span class="s1">&#39;wtf&#39;</span><span class="p">])</span>
-<span class="n">accelerators_abs</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">run_all</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="n">accelerators_abs</span><span class="p">:</span>
-    <span class="n">acc</span><span class="o">.</span><span class="n">name</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39; (absolute $\phi_0$)&#39;</span>
-<span class="n">working_abs</span> <span class="o">=</span> <span class="n">accelerators_abs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">broken_abs</span> <span class="o">=</span> <span class="n">accelerators_abs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>factory = WithFaults(beam_calculators=solver_abs, **config_abs[&#39;files&#39;], **config_abs[&#39;wtf&#39;])
+accelerators_abs = factory.run_all()
+for acc in accelerators_abs:
+    acc.name += r&#39; (absolute $\phi_0$)&#39;
+working_abs = accelerators_abs[0]
+broken_abs = accelerators_abs[1]
 
-<span class="n">factory</span> <span class="o">=</span> <span class="n">WithFaults</span><span class="p">(</span><span class="n">beam_calculators</span><span class="o">=</span><span class="n">solver_rel</span><span class="p">,</span> <span class="o">**</span><span class="n">config_rel</span><span class="p">[</span><span class="s1">&#39;files&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">config_rel</span><span class="p">[</span><span class="s1">&#39;wtf&#39;</span><span class="p">])</span>
-<span class="n">accelerators_rel</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">run_all</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="n">accelerators_rel</span><span class="p">:</span>
-    <span class="n">acc</span><span class="o">.</span><span class="n">name</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39; (relative $\phi_0$)&#39;</span>
-<span class="n">working_rel</span> <span class="o">=</span> <span class="n">accelerators_rel</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">broken_rel</span> <span class="o">=</span> <span class="n">accelerators_rel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+factory = WithFaults(beam_calculators=solver_rel, **config_rel[&#39;files&#39;], **config_rel[&#39;wtf&#39;])
+accelerators_rel = factory.run_all()
+for acc in accelerators_rel:
+    acc.name += r&#39; (relative $\phi_0$)&#39;
+working_rel = accelerators_rel[0]
+broken_rel = accelerators_rel[1]
 
-<span class="n">working</span> <span class="o">=</span> <span class="p">(</span><span class="n">working_abs</span><span class="p">,</span> <span class="n">working_rel</span><span class="p">)</span>
-<span class="n">broken</span> <span class="o">=</span> <span class="p">(</span><span class="n">broken_abs</span><span class="p">,</span> <span class="n">broken_rel</span><span class="p">)</span>
+working = (working_abs, working_rel)
+broken = (broken_abs, broken_rel)
 </pre></div>
 </div>
 </div>
@@ -375,9 +375,9 @@ maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = True
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">solver_abs</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">working_abs</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">solver_rel</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">working_rel</span><span class="p">)</span>
-<span class="n">figs</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">working</span><span class="p">,</span> <span class="n">plots_phase</span><span class="p">,</span> <span class="n">save_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clean_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>_ = solver_abs.compute(working_abs)
+_ = solver_rel.compute(working_rel)
+figs = plot.factory(working, plots_phase, save_fig=False, clean_fig=False)
 </pre></div>
 </div>
 </div>
@@ -412,7 +412,7 @@ maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = True
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fault_scenarios_abs</span> <span class="o">=</span> <span class="n">fault_scenario_factory</span><span class="p">(</span><span class="n">accelerators_abs</span><span class="p">,</span> <span class="n">solver_abs</span><span class="p">,</span> <span class="n">config_abs</span><span class="p">[</span><span class="s1">&#39;wtf&#39;</span><span class="p">],</span> <span class="n">config_abs</span><span class="p">[</span><span class="s1">&#39;design_space&#39;</span><span class="p">])</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fault_scenarios_abs = fault_scenario_factory(accelerators_abs, solver_abs, config_abs[&#39;wtf&#39;], config_abs[&#39;design_space&#39;])
 </pre></div>
 </div>
 </div>
@@ -456,7 +456,7 @@ Constraint                | Element         | x_0      | Lower lim | Upper lim
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fault_scenarios_rel</span> <span class="o">=</span> <span class="n">fault_scenario_factory</span><span class="p">(</span><span class="n">accelerators_rel</span><span class="p">,</span> <span class="n">solver_rel</span><span class="p">,</span> <span class="n">config_rel</span><span class="p">[</span><span class="s1">&#39;wtf&#39;</span><span class="p">],</span> <span class="n">config_rel</span><span class="p">[</span><span class="s1">&#39;design_space&#39;</span><span class="p">])</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fault_scenarios_rel = fault_scenario_factory(accelerators_rel, solver_rel, config_rel[&#39;wtf&#39;], config_rel[&#39;design_space&#39;])
 </pre></div>
 </div>
 </div>
@@ -500,8 +500,8 @@ Constraint                | Element         | x_0      | Lower lim | Upper lim
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">solver_abs</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">broken_abs</span><span class="p">)</span>
-<span class="n">figs</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">accelerators_abs</span><span class="p">,</span> <span class="n">plots_phase</span><span class="p">,</span> <span class="n">save_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clean_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>_ = solver_abs.compute(broken_abs)
+figs = plot.factory(accelerators_abs, plots_phase, save_fig=False, clean_fig=False)
 </pre></div>
 </div>
 </div>
@@ -526,8 +526,8 @@ Constraint                | Element         | x_0      | Lower lim | Upper lim
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">solver_rel</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">broken_rel</span><span class="p">)</span>
-<span class="n">figs</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">accelerators_rel</span><span class="p">,</span> <span class="n">plots_phase</span><span class="p">,</span> <span class="n">save_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clean_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>_ = solver_rel.compute(broken_rel)
+figs = plot.factory(accelerators_rel, plots_phase, save_fig=False, clean_fig=False)
 </pre></div>
 </div>
 </div>
@@ -559,9 +559,9 @@ Constraint                | Element         | x_0      | Lower lim | Upper lim
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">fault_scenarios_abs</span><span class="p">:</span>
-    <span class="n">scenario</span><span class="o">.</span><span class="n">fix_all</span><span class="p">()</span>
-<span class="n">figs</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">accelerators_abs</span><span class="p">,</span> <span class="n">plots_complete</span><span class="p">,</span> <span class="n">save_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clean_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for scenario in fault_scenarios_abs:
+    scenario.fix_all()
+figs = plot.factory(accelerators_abs, plots_complete, save_fig=False, clean_fig=False)
 </pre></div>
 </div>
 </div>
@@ -627,9 +627,9 @@ $M_{z\delta}$                                        0.000     0.000            
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">fault_scenarios_rel</span><span class="p">:</span>
-    <span class="n">scenario</span><span class="o">.</span><span class="n">fix_all</span><span class="p">()</span>
-<span class="n">figs</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">accelerators_rel</span><span class="p">,</span> <span class="n">plots_complete</span><span class="p">,</span> <span class="n">save_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clean_fig</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for scenario in fault_scenarios_rel:
+    scenario.fix_all()
+figs = plot.factory(accelerators_rel, plots_complete, save_fig=False, clean_fig=False)
 </pre></div>
 </div>
 </div>

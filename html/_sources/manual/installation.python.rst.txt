@@ -1,6 +1,10 @@
 Python (mandatory)
 ------------------
-Note that you will need Python 3.12 or higher.
+LightWin requires Python 3.12 or higher.
+Ensure that you have an appropriate version of Python installed on your system.
+If not, you can download the latest version from the `official Python website`_.
+
+.. _official Python website: https://www.python.org/downloads/
 
 Packages
 ^^^^^^^^
@@ -8,39 +12,34 @@ Packages
 Mandatory
 """""""""
 
+The following packages are mandatory for LightWin to execute:
+
 * `matplotlib`
 * `numpy`
 * `palettable`
 * `pandas`
 * `scipy`
-
-.. todo::
-   `tkinter` also necessary? Maybe dependency of another package? Check this out.
-
-Mandatory third-party packages
-""""""""""""""""""""""""""""""
-
-* `pymoo` for genetic optimization algorithms. Remove related imports in `fault.py` and `fault_scenario.py` to run LightWin without it.
+* `tkinter`
+* `pymoo` - This package is used for genetic optimization algorithms. If you prefer not to use `pymoo`, you can remove the related imports in `fault.py` and `fault_scenario.py`.
 
 Optional
 """"""""
 
-* `cython` to speed up calculations. Check `cython integration documentation`_.
- * It can also be used to compile some `pymoo` functions to speed them up. Just install `cython` prior to `pymoo`, and the compilation should be done automatically when installing `pymoo`.
-* `pytest` to ensure that everything is working as expected.
-* `cloudpickle` to pickle/unpickle some objects (see `util.pickling` documentation).
+* `cython` - Used to speed up calculations. Check `cython integration documentation`_.
+ * Note: Installing `cython` prior to `pymoo` enable compilation of some `pymoo` functions for improved performance.
+* `pytest` - To run tests and ensure everything is working as expected.
+* `cloudpickle` - To pickle/unpickle some objects (see the `util.pickling` documentation).
 
-.. _cython integration documentation: https://adrienplacais.github.io/LightWin/html/manual/cython.html
+.. _cython integration documentation: https://adrienplacais.github.io/LightWin/html/manual/installation.cython.html
 
 For developers
 """"""""""""""
 
-Those packages are necessary to compile the documentation.
+To compile the documentation, the following packages are necessary:
 
 * `sphinx_rtd_theme`
 * `myst-parser`
 * `nbsphinx`
-
 
 Reminders
 ^^^^^^^^^
@@ -48,35 +47,43 @@ Reminders
 Installation of a package
 """""""""""""""""""""""""
 
-If you manage your installation with `pip`: `pip install package`
+To install a package, use the appropriate method based on your environment:
 
-If you manage it with `conda`, do not use `pip` as it may break your installation!
-The generic procedure is: `conda install package`
+* If using `pip`:
 
-As `pymoo` package is currently not on anaconda, create an conda environment and take your packages from `conda-forge`:
+  .. code-block:: bash
 
-.. code-block:: bash
+     pip install <package>
 
-   conda create -n <env-name> -c conda-forge python=3.12
-   conda activate <env_name>
-   conda install cython matplotlib numpy palettable pandas scipy pymoo pytest -c conda-forge
+* If using `conda`, avoid mixing with `pip` to prevent potential conflicts. Instead, use:
 
-Precise `-c conda-forge` each time you want to update or install packages.
+  .. code-block:: bash
 
-On Windows, you may want to run these commands from the Anaconda Prompt.
+     conda install <package>
 
-.. warning::
-   `pip` and `anaconda` are not compatible!
-   Never mix them!
-   Or create a dedicated environment.
-   If you use Spyder, this `video`_ can provide you with more information.
+.. note::
+   Since `pymoo` is not available on the default Anaconda channels, you should create a `conda` environment and use `conda-forge`:
 
-.. _video: https://www.youtube.com/watch?v=Ul79ihg41Rs
+   .. code-block:: bash
 
-Set up the Python path
+      conda create -n <env-name> -c conda-forge python=3.12
+      conda activate <env-name>
+      conda install cython matplotlib numpy palettable pandas scipy tkinter pymoo pytest -c conda-forge
+
+   Always specify `-c conda-forge` when installing or updating packages.
+
+   .. warning::
+      `pip` and `conda` are not fully compatible.
+      Avoid using them together, or create a dedicated environment to prevent conflicts.
+      For more details, you may refer to this `video`_.
+
+   .. _video: https://www.youtube.com/watch?v=Ul79ihg41Rs
+
+Set up the Python Path
 """"""""""""""""""""""
 
-You must add the `/path/to/lightwin/source` path to your `PYTHONPATH`.
+You must add the `/path/to/lightwin/source` directory to your `PYTHONPATH` environment variable.
 
 .. todo::
-   More detailed instructions? As for now, check "PYTHONPATH" or "ModuleNotFoundError" on your favorite search engine.
+   Consider providing more detailed instructions for setting the `PYTHONPATH`.
+   For now, you can search for "PYTHONPATH" or "ModuleNotFoundError" online for additional guidance.

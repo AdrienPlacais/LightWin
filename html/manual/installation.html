@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; LightWin 0.6.21-1-gbdc8ea80 documentation</title>
+  <title>Installation &mdash; LightWin 0.6.21-3-g41faf77a documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=509cd2d4"></script>
+        <script src="../_static/documentation_options.js?v=ef138202"></script>
         <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.6.21-1-gbdc8ea80
+                0.6.21-3-g41faf77a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -53,7 +53,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation.download.html">Download</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.python.html">Python (mandatory)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.cython.html">Cython (mandatory)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.cython.html">Cython setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.tracewin.html">TraceWin (facultative)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.testing.html">Testing</a></li>
 </ul>
@@ -96,54 +96,49 @@
 </div>
 <section id="download">
 <h2>Download<a class="headerlink" href="#download" title="Link to this heading"></a></h2>
-<p>The preferred way to download the code is to use <code class="docutils literal notranslate"><span class="pre">git</span></code>.
-Go to where you want to store LightWin and run <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">git&#64;github.com:AdrienPlacais/LightWin.git</span></code>.</p>
-<p>Alternatively, you can go to the <a class="reference external" href="https://github.com/AdrienPlacais/LightWin">repository</a> and download it in <code class="docutils literal notranslate"><span class="pre">.zip</span></code>.
-With this method, you will have to download the code again after every update.</p>
+<p>The reommended way to obtain the LightWin code is by using <code class="docutils literal notranslate"><span class="pre">git</span></code>.
+Navigate to the directory where you want to store LightWin and run:</p>
+<p>Alternatively, you download the code as a <code class="docutils literal notranslate"><span class="pre">.zip</span></code> file from the repository’s page.
+However, please note that using this method requires manually downloading updates whenever changes are made to the repository.</p>
 </section>
 <section id="python-mandatory">
 <h2>Python (mandatory)<a class="headerlink" href="#python-mandatory" title="Link to this heading"></a></h2>
-<p>Note that you will need Python 3.12 or higher.</p>
+<p>LightWin requires Python 3.12 or higher.
+Ensure that you have an appropriate version of Python installed on your system.
+If not, you can download the latest version from the <a class="reference external" href="https://www.python.org/downloads/">official Python website</a>.</p>
 <section id="packages">
 <h3>Packages<a class="headerlink" href="#packages" title="Link to this heading"></a></h3>
 <section id="mandatory">
 <h4>Mandatory<a class="headerlink" href="#mandatory" title="Link to this heading"></a></h4>
+<p>The following packages are mandatory for LightWin to execute:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">palettable</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pandas</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">scipy</span></code></p></li>
-</ul>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p><code class="docutils literal notranslate"><span class="pre">tkinter</span></code> also necessary? Maybe dependency of another package? Check this out.</p>
-</div>
-</section>
-<section id="mandatory-third-party-packages">
-<h4>Mandatory third-party packages<a class="headerlink" href="#mandatory-third-party-packages" title="Link to this heading"></a></h4>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">pymoo</span></code> for genetic optimization algorithms. Remove related imports in <code class="docutils literal notranslate"><span class="pre">fault.py</span></code> and <code class="docutils literal notranslate"><span class="pre">fault_scenario.py</span></code> to run LightWin without it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tkinter</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pymoo</span></code> - This package is used for genetic optimization algorithms. If you prefer not to use <code class="docutils literal notranslate"><span class="pre">pymoo</span></code>, you can remove the related imports in <code class="docutils literal notranslate"><span class="pre">fault.py</span></code> and <code class="docutils literal notranslate"><span class="pre">fault_scenario.py</span></code>.</p></li>
 </ul>
 </section>
 <section id="optional">
 <h4>Optional<a class="headerlink" href="#optional" title="Link to this heading"></a></h4>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">cython</span></code> to speed up calculations. Check <a class="reference external" href="https://adrienplacais.github.io/LightWin/html/manual/cython.html">cython integration documentation</a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cython</span></code> - Used to speed up calculations. Check <a class="reference external" href="https://adrienplacais.github.io/LightWin/html/manual/installation.cython.html">cython integration documentation</a>.</p></li>
 </ul>
 <blockquote>
 <div><ul class="simple">
-<li><p>It can also be used to compile some <code class="docutils literal notranslate"><span class="pre">pymoo</span></code> functions to speed them up. Just install <code class="docutils literal notranslate"><span class="pre">cython</span></code> prior to <code class="docutils literal notranslate"><span class="pre">pymoo</span></code>, and the compilation should be done automatically when installing <code class="docutils literal notranslate"><span class="pre">pymoo</span></code>.</p></li>
+<li><p>Note: Installing <code class="docutils literal notranslate"><span class="pre">cython</span></code> prior to <code class="docutils literal notranslate"><span class="pre">pymoo</span></code> enable compilation of some <code class="docutils literal notranslate"><span class="pre">pymoo</span></code> functions for improved performance.</p></li>
 </ul>
 </div></blockquote>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> to ensure that everything is working as expected.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cloudpickle</span></code> to pickle/unpickle some objects (see <code class="docutils literal notranslate"><span class="pre">util.pickling</span></code> documentation).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> - To run tests and ensure everything is working as expected.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cloudpickle</span></code> - To pickle/unpickle some objects (see the <code class="docutils literal notranslate"><span class="pre">util.pickling</span></code> documentation).</p></li>
 </ul>
 </section>
 <section id="for-developers">
 <h4>For developers<a class="headerlink" href="#for-developers" title="Link to this heading"></a></h4>
-<p>Those packages are necessary to compile the documentation.</p>
+<p>To compile the documentation, the following packages are necessary:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">sphinx_rtd_theme</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">myst-parser</span></code></p></li>
@@ -155,76 +150,154 @@ With this method, you will have to download the code again after every update.</
 <h3>Reminders<a class="headerlink" href="#reminders" title="Link to this heading"></a></h3>
 <section id="installation-of-a-package">
 <h4>Installation of a package<a class="headerlink" href="#installation-of-a-package" title="Link to this heading"></a></h4>
-<p>If you manage your installation with <code class="docutils literal notranslate"><span class="pre">pip</span></code>: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">package</span></code></p>
-<p>If you manage it with <code class="docutils literal notranslate"><span class="pre">conda</span></code>, do not use <code class="docutils literal notranslate"><span class="pre">pip</span></code> as it may break your installation!
-The generic procedure is: <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">package</span></code></p>
-<p>As <code class="docutils literal notranslate"><span class="pre">pymoo</span></code> package is currently not on anaconda, create an conda environment and take your packages from <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>&lt;env-name&gt;<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.12
-conda<span class="w"> </span>activate<span class="w"> </span>&lt;env_name&gt;
-conda<span class="w"> </span>install<span class="w"> </span>cython<span class="w"> </span>matplotlib<span class="w"> </span>numpy<span class="w"> </span>palettable<span class="w"> </span>pandas<span class="w"> </span>scipy<span class="w"> </span>pymoo<span class="w"> </span>pytest<span class="w"> </span>-c<span class="w"> </span>conda-forge
+<p>To install a package, use the appropriate method based on your environment:</p>
+<ul>
+<li><p>If using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>&lt;package&gt;
 </pre></div>
 </div>
-<p>Precise <code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">conda-forge</span></code> each time you want to update or install packages.</p>
-<p>On Windows, you may want to run these commands from the Anaconda Prompt.</p>
+</li>
+<li><p>If using <code class="docutils literal notranslate"><span class="pre">conda</span></code>, avoid mixing with <code class="docutils literal notranslate"><span class="pre">pip</span></code> to prevent potential conflicts. Instead, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>&lt;package&gt;
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since <code class="docutils literal notranslate"><span class="pre">pymoo</span></code> is not available on the default Anaconda channels, you should create a <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment and use <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>&lt;env-name&gt;<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.12
+conda<span class="w"> </span>activate<span class="w"> </span>&lt;env-name&gt;
+conda<span class="w"> </span>install<span class="w"> </span>cython<span class="w"> </span>matplotlib<span class="w"> </span>numpy<span class="w"> </span>palettable<span class="w"> </span>pandas<span class="w"> </span>scipy<span class="w"> </span>tkinter<span class="w"> </span>pymoo<span class="w"> </span>pytest<span class="w"> </span>-c<span class="w"> </span>conda-forge
+</pre></div>
+</div>
+<p>Always specify <code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">conda-forge</span></code> when installing or updating packages.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p><code class="docutils literal notranslate"><span class="pre">pip</span></code> and <code class="docutils literal notranslate"><span class="pre">anaconda</span></code> are not compatible!
-Never mix them!
-Or create a dedicated environment.
-If you use Spyder, this <a class="reference external" href="https://www.youtube.com/watch?v=Ul79ihg41Rs">video</a> can provide you with more information.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span></code> and <code class="docutils literal notranslate"><span class="pre">conda</span></code> are not fully compatible.
+Avoid using them together, or create a dedicated environment to prevent conflicts.
+For more details, you may refer to this <a class="reference external" href="https://www.youtube.com/watch?v=Ul79ihg41Rs">video</a>.</p>
+</div>
 </div>
 </section>
 <section id="set-up-the-python-path">
-<h4>Set up the Python path<a class="headerlink" href="#set-up-the-python-path" title="Link to this heading"></a></h4>
-<p>You must add the <code class="docutils literal notranslate"><span class="pre">/path/to/lightwin/source</span></code> path to your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.</p>
-<div class="admonition-todo admonition" id="id2">
+<h4>Set up the Python Path<a class="headerlink" href="#set-up-the-python-path" title="Link to this heading"></a></h4>
+<p>You must add the <code class="docutils literal notranslate"><span class="pre">/path/to/lightwin/source</span></code> directory to your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> environment variable.</p>
+<div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
-<p>More detailed instructions? As for now, check “PYTHONPATH” or “ModuleNotFoundError” on your favorite search engine.</p>
+<p>Consider providing more detailed instructions for setting the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.
+For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online for additional guidance.</p>
 </div>
 </section>
 </section>
 </section>
-<section id="cython-mandatory">
-<h2>Cython (mandatory)<a class="headerlink" href="#cython-mandatory" title="Link to this heading"></a></h2>
-<div class="admonition-todo admonition" id="id3">
-<p class="admonition-title">Todo</p>
-<p>Revise integration so that a missing Cython does not lead to import errors.</p>
+<section id="cython-setup">
+<h2>Cython setup<a class="headerlink" href="#cython-setup" title="Link to this heading"></a></h2>
+<p>Cython is an optional but highly recommended tool to speed up beam dynamics calculations.
+Here’s how to properly install and use Cython with the project:</p>
+<section id="installing-cython">
+<h3>1. Installing Cython<a class="headerlink" href="#installing-cython" title="Link to this heading"></a></h3>
+<p>Ensure Cython is installed before installing other packages like <code class="docutils literal notranslate"><span class="pre">pymoo</span></code> to take full advantage of its capabilities:</p>
+<blockquote>
+<div><ul>
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>cython
+</pre></div>
 </div>
-<p>To speed things up, Envelope1D has a Cython version that must be compiled.
-You can do so by going to <code class="docutils literal notranslate"><span class="pre">lightwin/source</span></code> and run:</p>
+</div></blockquote>
+</li>
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">conda</span></code>:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>cython<span class="w"> </span>-c<span class="w"> </span>conda-forge
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="compiling-cython-modules">
+<h3>2. Compiling Cython modules<a class="headerlink" href="#compiling-cython-modules" title="Link to this heading"></a></h3>
+<p>Some parts of LightWin, in particular the <code class="docutils literal notranslate"><span class="pre">Envelope1D</span></code> module, have Cython-optimized code that need to be optimized.
+Follow this steps to compile the modules:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Navigate to the <code class="docutils literal notranslate"><span class="pre">source</span></code> directory:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/path/to/lightwin/source
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">setup</span></code> script:</p></li>
+</ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>util/setup.py<span class="w"> </span>build_ext<span class="w"> </span>--inplace
 </pre></div>
 </div>
-<p>A <code class="docutils literal notranslate"><span class="pre">.so</span></code> (Linux) or <code class="docutils literal notranslate"><span class="pre">.pyd</span></code> (Windows) file will be created.
-If it is not done automatically, move the created file in <code class="docutils literal notranslate"><span class="pre">beam_calculation/envelope_1d/</span></code>:</p>
-<ul class="simple">
-<li><p>Unix: <code class="docutils literal notranslate"><span class="pre">build/lib.linux-XXX-cpython=3XX/beam_calculation/envelope_1d/transfer_matrices_c.cpython-3XX-XXXX-linux-gnu.so</span></code></p></li>
+</div></blockquote>
+<p>This command compiles the Cython files and places the compiled modules (<code class="docutils literal notranslate"><span class="pre">.pyd</span></code> or <code class="docutils literal notranslate"><span class="pre">.so</span></code> extensions) in the appropriate directories.</p>
+</section>
+<section id="handling-compiled-files">
+<h3>3. Handling compiled files<a class="headerlink" href="#handling-compiled-files" title="Link to this heading"></a></h3>
+<p>After compilation, the compiled files should be automatically places in the correct locations.
+If not, manually move the created files:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Unix (Linux/macOS): <code class="docutils literal notranslate"><span class="pre">build/lib.linux-XXX-cpython=3XX/beam_calculation/envelope_1d/transfer_matrices_c.cpython-3XX-XXXX-linux-gnu.so</span></code></p></li>
 <li><p>Windows: <code class="docutils literal notranslate"><span class="pre">build/lib.win-XXXX-cpython-3XX/beam_calculation/envelope_1d/transfer_matrices_c.cp3XX-win_XXXX.pyd</span></code></p></li>
 </ul>
-<p>Note that if you use an interpreter such as Spyder, you should restart the kernel to correctly load the file.
-If you change your Python version or use another machine, you must recompile.</p>
-<div class="admonition-todo admonition" id="id4">
-<p class="admonition-title">Todo</p>
-<p>Cython pytests</p>
-</div>
-<section id="on-windows">
-<h3>On Windows<a class="headerlink" href="#on-windows" title="Link to this heading"></a></h3>
-<p>If you have a <code class="docutils literal notranslate"><span class="pre">Microsoft</span> <span class="pre">Visual</span> <span class="pre">C++</span> <span class="pre">14.0</span> <span class="pre">or</span> <span class="pre">greater</span> <span class="pre">is</span> <span class="pre">required</span></code> error,
-go to <a class="reference external" href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">visual studio website</a> and download Build Tools:</p>
+</div></blockquote>
+<p>To:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/path/to/lightwin/source/beam_calculation/envelope_1d/</span></code>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="troubleshooting-compilation-issues">
+<h3>4. Troubleshooting compilation issues<a class="headerlink" href="#troubleshooting-compilation-issues" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>On Windows, if you encounter a <code class="docutils literal notranslate"><span class="pre">Microsoft</span> <span class="pre">Visual</span> <span class="pre">C++</span> <span class="pre">14.0</span> <span class="pre">or</span> <span class="pre">greater</span> <span class="pre">is</span> <span class="pre">required</span></code> error:</p>
 <ol class="arabic simple">
+<li><p>Go to <a class="reference external" href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">visual studio website</a> and download Build Tools.</p></li>
 <li><p>Download and execute <code class="docutils literal notranslate"><span class="pre">vs_BuildTools.exe</span></code>.</p></li>
-<li><p>Check “C++ Development Desktop”.</p></li>
+<li><p>Check “C++ Development Desktop” checkbox.</p></li>
 <li><p>Install.</p></li>
 </ol>
+</li>
+</ul>
+</section>
+<section id="restarting-your-interpreter">
+<h3>5. Restarting Your Interpreter<a class="headerlink" href="#restarting-your-interpreter" title="Link to this heading"></a></h3>
+<p>If you are using an IDE like Spyder or VSCode, remember to restart the kernel after compiling the Cython modules to ensure they are correctly loaded.</p>
+</section>
+<section id="testing-cython-compilation">
+<h3>6. Testing Cython Compilation<a class="headerlink" href="#testing-cython-compilation" title="Link to this heading"></a></h3>
+<p>To verify that everything is set up correctly, run the test suite using <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.
+This will check if the Cython modules are properly integrated:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-m<span class="w"> </span>cython
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://cython.readthedocs.io/">Cython documentation</a>.</p>
+</div>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<ul class="simple">
+<li><p>Revise integration so that a missing Cython does not lead to import errors.</p></li>
+<li><p>Specific Cython tests</p></li>
+</ul>
+</div>
 </section>
 </section>
 <section id="tracewin-facultative">
 <h2>TraceWin (facultative)<a class="headerlink" href="#tracewin-facultative" title="Link to this heading"></a></h2>
-<p>Pre-requisite: TraceWin must be installed on your computer or server with a working license.</p>
-<section id="the-machine-configuration-toml-file">
-<h3>The <code class="docutils literal notranslate"><span class="pre">machine_configuration.toml</span></code> file<a class="headerlink" href="#the-machine-configuration-toml-file" title="Link to this heading"></a></h3>
-<p>You must tell LightWin where TraceWin is installed.
-This is done thanks to a <code class="docutils literal notranslate"><span class="pre">machine_configuration.toml</span></code> file, which looks like:</p>
+<p><strong>Pre-requisite</strong>: TraceWin must be installed on your computer or server, and you must have a valid license.</p>
+<section id="configuring-the-machine-configuration-toml-file">
+<h3>Configuring the <code class="docutils literal notranslate"><span class="pre">machine_configuration.toml</span></code> file<a class="headerlink" href="#configuring-the-machine-configuration-toml-file" title="Link to this heading"></a></h3>
+<p>To specify the location of the TraceWin installation, you need to create <code class="docutils literal notranslate"><span class="pre">machine_configuration.toml</span></code> file.
+This file should include entries like the following:</p>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[lpsc5057x]</span>
 <span class="n">noX11_full</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/usr/local/bin/TraceWin/./TraceWin_noX11&quot;</span>
 <span class="n">noX11_minimal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/home/placais/TraceWin/exe/./tracelx64&quot;</span>
@@ -240,24 +313,26 @@ This is done thanks to a <code class="docutils literal notranslate"><span class=
 <span class="n">noX11_full</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;D:/tw/TraceWin_old.exe&quot;</span>
 </pre></div>
 </div>
-<p>Between the brackets, type the name of your machine.
-Execute following lines of Python code if you do not know the name of your machine:</p>
+<p>Replace the bracketed names with your machine’s name.
+If you’re unsure of your machine’s name, use the following Python code to find it:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
 <span class="n">machine_name</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entry in the machine_configuration.toml file should be:</span><span class="se">\n</span><span class="s2">[</span><span class="si">{</span><span class="n">machine_name</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="link-with-the-lightwin-toml-main-configuration-file">
-<h3>Link with the <code class="docutils literal notranslate"><span class="pre">lightwin.toml</span></code> main configuration file<a class="headerlink" href="#link-with-the-lightwin-toml-main-configuration-file" title="Link to this heading"></a></h3>
+<section id="linking-with-the-lightwin-toml-main-configuration-file">
+<h3>Linking with the <code class="docutils literal notranslate"><span class="pre">lightwin.toml</span></code> main configuration file<a class="headerlink" href="#linking-with-the-lightwin-toml-main-configuration-file" title="Link to this heading"></a></h3>
+<p>After setting up <code class="docutils literal notranslate"><span class="pre">machine_configuration.toml</span></code>, you need to link it with the <code class="docutils literal notranslate"><span class="pre">lightwin.toml</span></code> file.
+Include the following configuration:</p>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[my_tracewin_configuration]</span>
-<span class="c1"># Can be relative w.r.t `lightwin.toml`, or absolute:</span>
+<span class="c1"># Can be relative to `lightwin.toml`, or absolute:</span>
 <span class="n">machine_config_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/path/to/machine_configuration.toml&quot;</span>
-<span class="c1"># Corresponding path must be defined in the machne_configuration.toml</span>
+<span class="c1"># The corresponding path must be defined in `machine_configuration.toml`</span>
 <span class="n">simulation_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;X11_full&quot;</span>
-<span class="c1"># Facultative! Will override your actual machine name if provided:</span>
+<span class="c1"># Optional: override the actual machine name if provided:</span>
 <span class="n">machine_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;a_name_to_override_default_machine_name&quot;</span>
-<span class="c1"># note that additional entries will be mandatory</span>
+<span class="c1"># Note that additional entries will be required</span>
 </pre></div>
 </div>
 <p>See <a class="reference external" href="https://adrienplacais.github.io/LightWin/html/configuration/beam_calculator.html">dedicated documentation</a> for <code class="docutils literal notranslate"><span class="pre">lightwin.toml</span></code>.</p>
@@ -267,10 +342,22 @@ Execute following lines of Python code if you do not know the name of your machi
 <h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
 <section id="pytest">
 <h3>Pytest<a class="headerlink" href="#pytest" title="Link to this heading"></a></h3>
-<p>To test your installation, go to the base directory of LightWin (where the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file is located).
-From here, run: <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.
-If TraceWin is not installed, run: <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">-m</span> <span class="pre">not</span> <span class="pre">tracewin</span></code>.
-You can combine the marks defined in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, for example <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">-m</span> <span class="pre">(smoke</span> <span class="pre">and</span> <span class="pre">not</span> <span class="pre">slow)</span></code> for fast smoke tests.</p>
+<p>To test your installation, navigate to the base directory (where the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file is located) and run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
+</pre></div>
+</div>
+<p>If TraceWin is not installed, you can skip tests requiring it by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-m<span class="w"> </span>not<span class="w"> </span>tracewin
+</pre></div>
+</div>
+<p>If Cython is not installed or Cython modules not compiled, you can skip corresponding tests with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-m<span class="w"> </span>not<span class="w"> </span>cython
+</pre></div>
+</div>
+<p>You can also combine test markers as defined in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>. For example, to run only fast smoke tests, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;(smoke and not slow)&quot;</span>
+</pre></div>
+</div>
 </section>
 <section id="frequent-errors">
 <h3>Frequent errors<a class="headerlink" href="#frequent-errors" title="Link to this heading"></a></h3>
@@ -279,7 +366,8 @@ You can combine the marks defined in <code class="docutils literal notranslate">
 </ul>
 <blockquote>
 <div><ul class="simple">
-<li><p>Your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> is not properly set.</p></li>
+<li><p>Your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> is not properly set.
+Ensure that the directory containing the LightWin source code is included in your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.</p></li>
 </ul>
 </div></blockquote>
 <ul class="simple">
@@ -287,7 +375,8 @@ You can combine the marks defined in <code class="docutils literal notranslate">
 </ul>
 <blockquote>
 <div><ul class="simple">
-<li><p>eXpected to fail errors are “normal” and should only worry developers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xfailed</span></code> stands for “expected to fail” and these errors are usually intended for developers to track issues.
+They are not necessarily problematic for users.</p></li>
 </ul>
 </div></blockquote>
 </section>

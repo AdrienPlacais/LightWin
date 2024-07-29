@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core.beam_parameters.helper module &mdash; LightWin 0.6.21-1-gbdc8ea80 documentation</title>
+  <title>core.beam_parameters.helper module &mdash; LightWin 0.6.21-3-g41faf77a documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=509cd2d4"></script>
+        <script src="_static/documentation_options.js?v=ef138202"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -40,7 +40,7 @@
             LightWin
           </a>
               <div class="version">
-                0.6.21-1-gbdc8ea80
+                0.6.21-3-g41faf77a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -260,7 +260,7 @@ In the transverse phase spaces, emittance is in
 <li><p><strong>sigma_01</strong> (<em>np.ndarray</em>) – <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">)</span></code> array of top-right (bottom-left) sigma matrix components.</p></li>
 <li><p><strong>eps</strong> (<em>np.ndarray</em>) – <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">)</span></code> un-normalized emittance array, in units consistent with
 <code class="docutils literal notranslate"><span class="pre">sigma_00</span></code> and <code class="docutils literal notranslate"><span class="pre">sigma_01</span></code>.</p></li>
-<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – <code class="docutils literal notranslate"><span class="pre">sigma_00</span></code> is set to np.NaN where it is under <code class="docutils literal notranslate"><span class="pre">tol</span></code> to avoid
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – <code class="docutils literal notranslate"><span class="pre">sigma_00</span></code> is set to np.nan where it is under <code class="docutils literal notranslate"><span class="pre">tol</span></code> to avoid
 <code class="docutils literal notranslate"><span class="pre">RuntimeWarning</span></code>. The default is <code class="docutils literal notranslate"><span class="pre">1e-8</span></code>.</p></li>
 <li><p><strong>eps_is_normalized</strong> (<em>bool</em><em>, </em><em>optional</em>) – To tell if the given emittance is already normalized. The default is
 True. In this case, it is de-normalized and <code class="docutils literal notranslate"><span class="pre">gamma_kin</span></code> must be
@@ -355,7 +355,7 @@ consistency with rest of the code…</p>
 <li><p><strong>phase_space_name</strong> (<em>str</em>) – Name of the phase space, used to set the proper normalization.</p></li>
 <li><p><strong>sigma</strong> (<em>np.ndarray</em>) – <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">2,</span> <span class="pre">2)</span></code> array (or <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">2)</span></code>) holding <span class="math notranslate nohighlight">\(\sigma\)</span> beam matrix.</p></li>
 <li><p><strong>eps_no_normalisation</strong> (<em>np.ndarray</em><em> | </em><em>float</em>) – <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">)</span></code> array (or float) of unnormalized emittance.</p></li>
-<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – <code class="docutils literal notranslate"><span class="pre">eps_no_normalisation</span></code> is set to np.NaN where it is under <code class="docutils literal notranslate"><span class="pre">tol</span></code>
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>optional</em>) – <code class="docutils literal notranslate"><span class="pre">eps_no_normalisation</span></code> is set to np.nan where it is under <code class="docutils literal notranslate"><span class="pre">tol</span></code>
 to avoid <code class="docutils literal notranslate"><span class="pre">RuntimeWarning</span></code>. The default is <code class="docutils literal notranslate"><span class="pre">1e-8</span></code>.</p></li>
 </ul>
 </dd>

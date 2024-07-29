@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TraceWin (facultative) &mdash; LightWin 0.6.21-1-gbdc8ea80 documentation</title>
+  <title>TraceWin (facultative) &mdash; LightWin 0.6.21-3-g41faf77a documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=509cd2d4"></script>
+        <script src="../_static/documentation_options.js?v=ef138202"></script>
         <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Testing" href="installation.testing.html" />
-    <link rel="prev" title="Cython (mandatory)" href="installation.cython.html" /> 
+    <link rel="prev" title="Cython setup" href="installation.cython.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.6.21-1-gbdc8ea80
+                0.6.21-3-g41faf77a
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -53,7 +53,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="installation.html">Installation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="installation.download.html">Download</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.python.html">Python (mandatory)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.cython.html">Cython (mandatory)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.cython.html">Cython setup</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">TraceWin (facultative)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.testing.html">Testing</a></li>
 </ul>
@@ -93,11 +93,11 @@
              
   <section id="tracewin-facultative">
 <h1>TraceWin (facultative)<a class="headerlink" href="#tracewin-facultative" title="Link to this heading"></a></h1>
-<p>Pre-requisite: TraceWin must be installed on your computer or server with a working license.</p>
-<section id="the-machine-configuration-toml-file">
-<h2>The <code class="docutils literal notranslate"><span class="pre">machine_configuration.toml</span></code> file<a class="headerlink" href="#the-machine-configuration-toml-file" title="Link to this heading"></a></h2>
-<p>You must tell LightWin where TraceWin is installed.
-This is done thanks to a <code class="docutils literal notranslate"><span class="pre">machine_configuration.toml</span></code> file, which looks like:</p>
+<p><strong>Pre-requisite</strong>: TraceWin must be installed on your computer or server, and you must have a valid license.</p>
+<section id="configuring-the-machine-configuration-toml-file">
+<h2>Configuring the <code class="docutils literal notranslate"><span class="pre">machine_configuration.toml</span></code> file<a class="headerlink" href="#configuring-the-machine-configuration-toml-file" title="Link to this heading"></a></h2>
+<p>To specify the location of the TraceWin installation, you need to create <code class="docutils literal notranslate"><span class="pre">machine_configuration.toml</span></code> file.
+This file should include entries like the following:</p>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[lpsc5057x]</span>
 <span class="n">noX11_full</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/usr/local/bin/TraceWin/./TraceWin_noX11&quot;</span>
 <span class="n">noX11_minimal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/home/placais/TraceWin/exe/./tracelx64&quot;</span>
@@ -113,24 +113,26 @@ This is done thanks to a <code class="docutils literal notranslate"><span class=
 <span class="n">noX11_full</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;D:/tw/TraceWin_old.exe&quot;</span>
 </pre></div>
 </div>
-<p>Between the brackets, type the name of your machine.
-Execute following lines of Python code if you do not know the name of your machine:</p>
+<p>Replace the bracketed names with your machine’s name.
+If you’re unsure of your machine’s name, use the following Python code to find it:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
 <span class="n">machine_name</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entry in the machine_configuration.toml file should be:</span><span class="se">\n</span><span class="s2">[</span><span class="si">{</span><span class="n">machine_name</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="link-with-the-lightwin-toml-main-configuration-file">
-<h2>Link with the <code class="docutils literal notranslate"><span class="pre">lightwin.toml</span></code> main configuration file<a class="headerlink" href="#link-with-the-lightwin-toml-main-configuration-file" title="Link to this heading"></a></h2>
+<section id="linking-with-the-lightwin-toml-main-configuration-file">
+<h2>Linking with the <code class="docutils literal notranslate"><span class="pre">lightwin.toml</span></code> main configuration file<a class="headerlink" href="#linking-with-the-lightwin-toml-main-configuration-file" title="Link to this heading"></a></h2>
+<p>After setting up <code class="docutils literal notranslate"><span class="pre">machine_configuration.toml</span></code>, you need to link it with the <code class="docutils literal notranslate"><span class="pre">lightwin.toml</span></code> file.
+Include the following configuration:</p>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[my_tracewin_configuration]</span>
-<span class="c1"># Can be relative w.r.t `lightwin.toml`, or absolute:</span>
+<span class="c1"># Can be relative to `lightwin.toml`, or absolute:</span>
 <span class="n">machine_config_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/path/to/machine_configuration.toml&quot;</span>
-<span class="c1"># Corresponding path must be defined in the machne_configuration.toml</span>
+<span class="c1"># The corresponding path must be defined in `machine_configuration.toml`</span>
 <span class="n">simulation_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;X11_full&quot;</span>
-<span class="c1"># Facultative! Will override your actual machine name if provided:</span>
+<span class="c1"># Optional: override the actual machine name if provided:</span>
 <span class="n">machine_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;a_name_to_override_default_machine_name&quot;</span>
-<span class="c1"># note that additional entries will be mandatory</span>
+<span class="c1"># Note that additional entries will be required</span>
 </pre></div>
 </div>
 <p>See <a class="reference external" href="https://adrienplacais.github.io/LightWin/html/configuration/beam_calculator.html">dedicated documentation</a> for <code class="docutils literal notranslate"><span class="pre">lightwin.toml</span></code>.</p>
@@ -141,7 +143,7 @@ Execute following lines of Python code if you do not know the name of your machi
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="installation.cython.html" class="btn btn-neutral float-left" title="Cython (mandatory)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.cython.html" class="btn btn-neutral float-left" title="Cython setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="installation.testing.html" class="btn btn-neutral float-right" title="Testing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
