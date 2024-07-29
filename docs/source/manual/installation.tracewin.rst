@@ -46,7 +46,7 @@ Include the following configuration:
    # Can be relative to `lightwin.toml`, or absolute:
    machine_config_file = "/path/to/machine_configuration.toml"
    # The corresponding path must be defined in `machine_configuration.toml`
-   simulation_type = "X11_full"                                
+   simulation_type = "X11_full"
    # Optional: override the actual machine name if provided:
    machine_name = "a_name_to_override_default_machine_name"
    # Note that additional entries will be required
