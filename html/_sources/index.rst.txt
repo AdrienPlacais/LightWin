@@ -20,6 +20,7 @@ Welcome to LightWin's documentation!
    manual/get_method
    manual/configuration
    manual/units
+   Utility scripts <manual/scripts>
    API Reference <modules>
    manual/examples
 

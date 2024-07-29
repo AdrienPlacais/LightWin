@@ -41,6 +41,8 @@ To compile the documentation, the following packages are necessary:
 * `myst-parser`
 * `nbsphinx`
 
+The files are formatted with `black`.
+
 Reminders
 ^^^^^^^^^
 
