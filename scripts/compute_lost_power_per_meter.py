@@ -7,7 +7,8 @@ Convert lost power of one or several ``patran1.out`` into lost power per meter.
     when I see it appear again.
 
 .. todo::
-    definition in argparse: only allow for allowed values.
+    May be included to post-processing from within LightWin directly
+
 """
 import argparse
 import re
