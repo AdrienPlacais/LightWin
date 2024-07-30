@@ -10,21 +10,24 @@ They are scripts that I developed for my own usage, but did not directly belong 
 
 List of scripts
 ---------------
-* **combine_solutions**: 
+* `combine_solutions`: 
   This script merges the best compensation settings from various project folders.
   It is useful for testing different methods across multiple cavities and compiling the optimal settings in a single directory.
 
-* **compare_beam_calculators**: 
+* `compute_lost_power_per_meter`:
+  Takes one or several ``patran1.out`` produced by TraceWin and compute the lost power per meter from the lost power in W.
+
+* `compare_beam_calculators`: 
   Compares results from two different :class:`.BeamCalculator` classes, such as :class:`.TraceWin` and :class:`.Envelope1D`, to determine if the latter is sufficiently accurate for your needs.
 
-* **generate_design_space_files**: 
+* `generate_design_space_files`: 
   Generates `variables.csv` and `constraints.csv` files, which specify the limits and initial values for phase, synchronous phase, and amplitude for each cavity.
   This is particularly useful for customizing the design space, *e.g.* updating the maximum amplitude in a cavity producing field emission.
 
-* **reorder_output_figures**: 
+* `reorder_output_figures`: 
   Gathers figures produced by LightWin from the simulation folders into a single `images` directory for easier access and review.
 
-* **save_cavity_settings**: 
+* `save_cavity_settings`: 
   Provides examples for saving compensation settings in a specified format, which can be helpful for standardizing outputs across different projects.
 
 Scripts without a CLI
@@ -43,9 +46,25 @@ Scripts with a CLI
 The following scripts are equipped with a CLI, allowing them to be executed directly from the command line:
 
 * `combine_solutions`
+* `compute_lost_power_per_meter`
 * `reorder_output_figures`
 
-1. **Set execution permissions** (if the script does not already have execution permission):
+1. **View available options**:
+   Each script comes with its own set of options.
+   To view them, use the `--help` flag:
+    
+   .. code-block:: bash
+
+      python /path/to/lightwin/scripts/my_script.py --help
+
+2. **Execute the script**:
+   Run it with the desired arguments:
+
+   .. code-block:: bash
+   
+      python /path/to/lightwin/scripts/my_script.py --arg1 <val1> --arg2 <val2>
+
+3. **Set execution permissions** (if the script does not already have execution permission):
 
    * Unix (Linux/macOS): use the following command:
 
@@ -54,21 +73,8 @@ The following scripts are equipped with a CLI, allowing them to be executed dire
       chmod +x /path/to/the/script.py
 
    * Windows: Set the execution rights via the "Properties" menu of the script file.
+
+   This allows you to run the script with `./my_script.py` instead of `python my_script.py`.
       
-2. **Execute the script**:
-   Navigate to the directory containing the script and run it with the desired arguments:
-
-   .. code-block:: bash
-   
-      ./script.py --arg1 <val1> --arg2 <val2>
-
-3. **View available options**:
-   Each script comes with its own set of options.
-   To view them, use the `--help` flag:
-    
-   .. code-block:: bash
-   
-      ./script.py --help
-
 4. **Adding Scripts to PATH**:
    To run the scripts from any location on your system, add the `/path/to/lightwin/scripts/` directory to your system `PATH`.

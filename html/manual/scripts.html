@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Utility scripts &mdash; LightWin 0.6.21-11-g86b6ed67 documentation</title>
+  <title>Utility scripts &mdash; LightWin 0.6.21-14-g8e911936 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=4704d76a"></script>
+        <script src="../_static/documentation_options.js?v=c91aba87"></script>
         <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.6.21-11-g86b6ed67
+                0.6.21-14-g8e911936
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -95,17 +95,19 @@ They are scripts that I developed for my own usage, but did not directly belong 
 <section id="list-of-scripts">
 <h2>List of scripts<a class="headerlink" href="#list-of-scripts" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><strong>combine_solutions</strong>:
+<li><p><code class="docutils literal notranslate"><span class="pre">combine_solutions</span></code>:
 This script merges the best compensation settings from various project folders.
 It is useful for testing different methods across multiple cavities and compiling the optimal settings in a single directory.</p></li>
-<li><p><strong>compare_beam_calculators</strong>:
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_lost_power_per_meter</span></code>:
+Takes one or several <code class="docutils literal notranslate"><span class="pre">patran1.out</span></code> produced by TraceWin and compute the lost power per meter from the lost power in W.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compare_beam_calculators</span></code>:
 Compares results from two different <a class="reference internal" href="../beam_calculation.beam_calculator.html#beam_calculation.beam_calculator.BeamCalculator" title="beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a> classes, such as <a class="reference internal" href="../beam_calculation.tracewin.tracewin.html#beam_calculation.tracewin.tracewin.TraceWin" title="beam_calculation.tracewin.tracewin.TraceWin"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraceWin</span></code></a> and <a class="reference internal" href="../beam_calculation.envelope_1d.envelope_1d.html#beam_calculation.envelope_1d.envelope_1d.Envelope1D" title="beam_calculation.envelope_1d.envelope_1d.Envelope1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope1D</span></code></a>, to determine if the latter is sufficiently accurate for your needs.</p></li>
-<li><p><strong>generate_design_space_files</strong>:
+<li><p><code class="docutils literal notranslate"><span class="pre">generate_design_space_files</span></code>:
 Generates <code class="docutils literal notranslate"><span class="pre">variables.csv</span></code> and <code class="docutils literal notranslate"><span class="pre">constraints.csv</span></code> files, which specify the limits and initial values for phase, synchronous phase, and amplitude for each cavity.
 This is particularly useful for customizing the design space, <em>e.g.</em> updating the maximum amplitude in a cavity producing field emission.</p></li>
-<li><p><strong>reorder_output_figures</strong>:
+<li><p><code class="docutils literal notranslate"><span class="pre">reorder_output_figures</span></code>:
 Gathers figures produced by LightWin from the simulation folders into a single <code class="docutils literal notranslate"><span class="pre">images</span></code> directory for easier access and review.</p></li>
-<li><p><strong>save_cavity_settings</strong>:
+<li><p><code class="docutils literal notranslate"><span class="pre">save_cavity_settings</span></code>:
 Provides examples for saving compensation settings in a specified format, which can be helpful for standardizing outputs across different projects.</p></li>
 </ul>
 </section>
@@ -125,9 +127,23 @@ Future versions aim to provide CLI functionality for all scripts.</p>
 <p>The following scripts are equipped with a CLI, allowing them to be executed directly from the command line:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">combine_solutions</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute_lost_power_per_meter</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">reorder_output_figures</span></code></p></li>
 </ul>
 <ol class="arabic">
+<li><p><strong>View available options</strong>:
+Each script comes with its own set of options.
+To view them, use the <code class="docutils literal notranslate"><span class="pre">--help</span></code> flag:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>/path/to/lightwin/scripts/my_script.py<span class="w"> </span>--help
+</pre></div>
+</div>
+</li>
+<li><p><strong>Execute the script</strong>:
+Run it with the desired arguments:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>/path/to/lightwin/scripts/my_script.py<span class="w"> </span>--arg1<span class="w"> </span>&lt;val1&gt;<span class="w"> </span>--arg2<span class="w"> </span>&lt;val2&gt;
+</pre></div>
+</div>
+</li>
 <li><p><strong>Set execution permissions</strong> (if the script does not already have execution permission):</p>
 <ul class="simple">
 <li><p>Unix (Linux/macOS): use the following command:</p></li>
@@ -138,19 +154,7 @@ Future versions aim to provide CLI functionality for all scripts.</p>
 <ul class="simple">
 <li><p>Windows: Set the execution rights via the “Properties” menu of the script file.</p></li>
 </ul>
-</li>
-<li><p><strong>Execute the script</strong>:
-Navigate to the directory containing the script and run it with the desired arguments:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./script.py<span class="w"> </span>--arg1<span class="w"> </span>&lt;val1&gt;<span class="w"> </span>--arg2<span class="w"> </span>&lt;val2&gt;
-</pre></div>
-</div>
-</li>
-<li><p><strong>View available options</strong>:
-Each script comes with its own set of options.
-To view them, use the <code class="docutils literal notranslate"><span class="pre">--help</span></code> flag:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./script.py<span class="w"> </span>--help
-</pre></div>
-</div>
+<p>This allows you to run the script with <code class="docutils literal notranslate"><span class="pre">./my_script.py</span></code> instead of <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">my_script.py</span></code>.</p>
 </li>
 <li><p><strong>Adding Scripts to PATH</strong>:
 To run the scripts from any location on your system, add the <code class="docutils literal notranslate"><span class="pre">/path/to/lightwin/scripts/</span></code> directory to your system <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p></li>
