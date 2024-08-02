@@ -126,7 +126,7 @@ def _add_linear_losses(
             df[COL_LIN] = _meter_per_meter(df[COL_Z], df[COL_P])  # type: ignore
 
         case _:
-            raise ValueError
+            raise ValueError(f"{definition = } not in {DEFINITIONS.keys()}.")
 
 
 def _remove_doublons(df: pd.DataFrame, file: Path | str | None = None) -> None:
@@ -382,7 +382,7 @@ if __name__ == "__main__":
         help=f"How the power should be averaged.\nAllowed values are:\n{str_defs}",
         type=str,
         choices=DEFINITIONS.keys(),
-        required=False,
+        required=True,
     )
     parser.add_argument(
             "-v","--verbose",help="To print out more information.",action="store_true",required=False,
