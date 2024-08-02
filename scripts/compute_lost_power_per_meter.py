@@ -71,7 +71,7 @@ def main(
         folderpath = Path(folderpath)
     folderpath = folderpath.resolve()
 
-    partran_path = get_partran1_paths(folderpath, full_project)  # type: ignore
+    partran_path = get_partran1_paths(folderpath, full_project, **kwargs)  # type: ignore
 
     if not full_project:
         _ = _treat_single(
@@ -223,6 +223,7 @@ def _treat_full_project(
         name: _treat_single(path, z_min=z_min, z_max=z_max, **kwargs)
         for name, path in paths.items()
     }
+    assert len(series) > 1, "There is not enough objects to concatenate."
     df_info = pd.concat(series, axis=1).T
 
     if save_folder is not None:
@@ -250,34 +251,49 @@ def _get_partran1_filepath(folderpath: Path) -> Path:
 
 @overload
 def get_partran1_paths(
-    folderpath: Path, full_project: Literal[True]
+        folderpath: Path, full_project: Literal[True], verbose: bool=False,**kwargs: Any
 ) -> dict[str, Path]: ...
 
 
 @overload
 def get_partran1_paths(
-    folderpath: Path, full_project: Literal[False]
+        folderpath: Path, full_project: Literal[False],verbose:bool=False, **kwargs: Any
 ) -> Path: ...
 
 
 def get_partran1_paths(
-    folderpath: Path, full_project: bool
+        folderpath: Path, full_project: bool, verbose:bool=False,**kwargs: Any
 ) -> Path | dict[str, Path]:
     """Gather the file(s) to treat."""
+    if verbose:
+        print(f"Looking for files in {folderpath}...")
+
     if not full_project:
-        return _get_partran1_filepath(folderpath)
+        filepath = _get_partran1_filepath(folderpath)
+        if verbose:
+            print(f"Study only one file: {filepath}")
+        return filepath
 
     folders: dict[str, Path] = {}
     reg_compile = re.compile(r"\d{6}")
     for folder in folderpath.iterdir():
+        if verbose:
+            print(f"Inspecting {folder}...")
         if folder.is_file():
             continue
 
         folder_name = folder.name
         if not reg_compile.match(folder_name):
+            if verbose:
+                print(f"\tSkipping it as it does not matches pattern.")
             continue
 
-        folders[folder_name] = _get_partran1_filepath(folder)
+        if verbose:
+            print(f"\tGot one matching pattern!")
+        filepath =  _get_partran1_filepath(folder)
+        folders[folder_name] = filepath
+        if verbose:
+            print(f"\tFound {filepath = }")
 
     return folders
 
@@ -368,6 +384,9 @@ if __name__ == "__main__":
         choices=DEFINITIONS.keys(),
         required=False,
     )
+    parser.add_argument(
+            "-v","--verbose",help="To print out more information.",action="store_true",required=False,
+            )
     args = parser.parse_args()
     main(
         args.folder,
@@ -375,4 +394,5 @@ if __name__ == "__main__":
         z_min=args.zmin,
         z_max=args.zmax,
         definition=args.definition,
+        verbose=args.verbose,
     )
