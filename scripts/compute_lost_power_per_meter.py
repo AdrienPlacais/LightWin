@@ -39,7 +39,7 @@ DEFINITIONS = {
 }
 
 
-def main(
+def compute(
     folderpath: Path | str,
     full_project: bool = False,
     z_min: float | None = None,
@@ -340,8 +340,7 @@ def _plot_several(df: pd.DataFrame, path: Path | None = None) -> Figure:
     print(f"Figure saved in {fig_path}")
     return fig
 
-
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser("compute_lost_power_per_meter", formatter_class=argparse.RawTextHelpFormatter,
                                      description="Take one or several ``patran1.out`` file(s) and convert lost power [W] to lost power per meter [W/m].")
     parser.add_argument(
@@ -388,7 +387,7 @@ if __name__ == "__main__":
             "-v","--verbose",help="To print out more information.",action="store_true",required=False,
             )
     args = parser.parse_args()
-    main(
+    compute(
         args.folder,
         full_project=args.severalfiles,
         z_min=args.zmin,
@@ -396,3 +395,6 @@ if __name__ == "__main__":
         definition=args.definition,
         verbose=args.verbose,
     )
+
+if __name__ == "__main__":
+    main()

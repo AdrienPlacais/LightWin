@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Define an utility function to compare two :class:`.BeamCalculator`.
 
 .. todo::
@@ -13,13 +12,13 @@ from pathlib import Path
 
 from scripts_shorthands import compute_beams
 
-import config_manager
-from beam_calculation.factory import BeamCalculatorsFactory
-from beam_calculation.simulation_output.simulation_output import (
+import lightwin.config_manager as con
+from lightwin.beam_calculation.factory import BeamCalculatorsFactory
+from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from core.elements.element import Element
-from visualization import plot
+from lightwin.core.elements.element import Element
+from lightwin.visualization import plot
 
 
 def output_comparison(
@@ -84,7 +83,7 @@ def compare_beam_calculators(
         kwargs for the :func:`output_comparison`.
 
     """
-    configuration = config_manager.process_config(toml_filepath, toml_keys)
+    configuration = con.process_config(toml_filepath, toml_keys)
 
     beam_calculator_factory = BeamCalculatorsFactory(**configuration)
     beam_calculators = beam_calculator_factory.run_all()

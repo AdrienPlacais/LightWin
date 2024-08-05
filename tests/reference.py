@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from beam_calculation.simulation_output.simulation_output import (
+from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 

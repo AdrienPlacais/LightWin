@@ -9,9 +9,9 @@ from functools import partial
 
 import pytest
 
-from failures.helper import gather
-from failures.strategy import k_out_of_n, l_neighboring_lattices
-from util.helper import chunks
+from lightwin.failures.helper import gather
+from lightwin.failures.strategy import k_out_of_n, l_neighboring_lattices
+from lightwin.util.helper import chunks
 
 
 @pytest.mark.smoke

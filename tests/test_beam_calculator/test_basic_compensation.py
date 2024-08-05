@@ -11,15 +11,18 @@ from typing import Any
 import pytest
 from tests.reference import compare_with_other
 
-import config_manager
-from beam_calculation.beam_calculator import BeamCalculator
-from beam_calculation.factory import BeamCalculatorsFactory
-from beam_calculation.simulation_output.simulation_output import (
+import lightwin.config_manager
+from lightwin.beam_calculation.beam_calculator import BeamCalculator
+from lightwin.beam_calculation.factory import BeamCalculatorsFactory
+from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from core.accelerator.accelerator import Accelerator
-from core.accelerator.factory import WithFaults
-from failures.fault_scenario import FaultScenario, fault_scenario_factory
+from lightwin.core.accelerator.accelerator import Accelerator
+from lightwin.core.accelerator.factory import WithFaults
+from lightwin.failures.fault_scenario import (
+    FaultScenario,
+    fault_scenario_factory,
+)
 
 DATA_DIR = Path("data", "example")
 TEST_DIR = Path("tests")
@@ -64,7 +67,7 @@ def config(
             "flag_phi_abs": flag_phi_abs,
         },
     }
-    my_config = config_manager.process_config(
+    my_config = lightwin.config_manager.process_config(
         config_path,
         config_keys,
         warn_mismatch=True,

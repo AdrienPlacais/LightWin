@@ -6,18 +6,21 @@ from typing import Any
 
 import pytest
 
-import config_manager
-from beam_calculation.beam_calculator import BeamCalculator
-from beam_calculation.factory import BeamCalculatorsFactory
-from beam_calculation.simulation_output.simulation_output import (
+import lightwin.config_manager
+from lightwin.beam_calculation.beam_calculator import BeamCalculator
+from lightwin.beam_calculation.factory import BeamCalculatorsFactory
+from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from core.accelerator.accelerator import Accelerator
-from core.accelerator.factory import WithFaults
-from core.list_of_elements.list_of_elements import ListOfElements
-from failures.fault import Fault
-from failures.fault_scenario import FaultScenario, fault_scenario_factory
-from util.pickling import MyCloudPickler, MyPickler
+from lightwin.core.accelerator.accelerator import Accelerator
+from lightwin.core.accelerator.factory import WithFaults
+from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.failures.fault import Fault
+from lightwin.failures.fault_scenario import (
+    FaultScenario,
+    fault_scenario_factory,
+)
+from lightwin.util.pickling import MyCloudPickler, MyPickler
 
 DATA_DIR = Path("data", "example")
 TEST_DIR = Path("tests")
@@ -52,7 +55,7 @@ def config(
             "project_folder": out_folder,
         },
     }
-    my_config = config_manager.process_config(
+    my_config = lightwin.config_manager.process_config(
         config_path, config_keys, warn_mismatch=True, override=override
     )
     return my_config

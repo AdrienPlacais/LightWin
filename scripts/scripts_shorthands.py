@@ -8,12 +8,12 @@
 from collections.abc import Collection
 from typing import Any
 
-from beam_calculation.beam_calculator import BeamCalculator
-from beam_calculation.simulation_output.simulation_output import (
+from lightwin.beam_calculation.beam_calculator import BeamCalculator
+from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from core.accelerator.accelerator import Accelerator
-from core.accelerator.factory import NoFault
+from lightwin.core.accelerator.accelerator import Accelerator
+from lightwin.core.accelerator.factory import NoFault
 
 
 def compute_beam(

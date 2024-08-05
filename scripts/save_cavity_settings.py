@@ -10,10 +10,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from core.elements.field_maps.field_map import FieldMap
-from core.list_of_elements.list_of_elements import ListOfElements
-from failures.fault_scenario import FaultScenario
-from util.pandas_helper import to_csv
+from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.failures.fault_scenario import FaultScenario
+from lightwin.util.pandas_helper import to_csv
 
 
 def save_cavity_settings(

@@ -4,14 +4,14 @@ from typing import Any
 import numpy as np
 import pytest
 
-import config_manager
-from beam_calculation.beam_calculator import BeamCalculator
-from beam_calculation.factory import BeamCalculatorsFactory
-from beam_calculation.simulation_output.simulation_output import (
+import lightwin.config_manager
+from lightwin.beam_calculation.beam_calculator import BeamCalculator
+from lightwin.beam_calculation.factory import BeamCalculatorsFactory
+from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from core.accelerator.accelerator import Accelerator
-from core.accelerator.factory import NoFault
+from lightwin.core.accelerator.accelerator import Accelerator
+from lightwin.core.accelerator.factory import NoFault
 
 all_expected = {
     ("repeat_ele.dat", "generic_envelope3d"): np.array(
@@ -80,7 +80,7 @@ def config(
             "dat_file": dat_file,
         },
     }
-    my_config = config_manager.process_config(
+    my_config = lightwin.config_manager.process_config(
         config_path, config_keys, warn_mismatch=True, override=override
     )
     return my_config

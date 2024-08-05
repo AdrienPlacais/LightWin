@@ -34,9 +34,12 @@ keywords = ["failure compensation", "linac", "linear accelerator", "reliability"
 name = "LightWin"
 readme = "README.md"
 requires-python = ">=3.12"
-version = "0.7.0"
+version = "0.7.0b"
 
 [project.scripts]
+lw-combine-solutions = "scripts.combine_solutions:main"
+lw-compute-lost-power-per-meter = "scripts.compute_lost_power_per_meter:main"
+lw-reorder-output-figures = "scripts.reorder_output_figures:main"
 
 [project.urls]
 Documentation = "https://adrienplacais.github.io/LightWin/html"
@@ -48,7 +51,7 @@ target-version = ["py312"]
 
 [tool.isort]
 profile = "black"
-src_paths = ["./source"]
+src_paths = ["./src"]
 
 [tool.pytest.ini_options]
 addopts = ["--import-mode=importlib", "--strict-markers"]
@@ -65,10 +68,10 @@ minversion = "6.0"
 testpaths = ["tests"]
 
 [tool.setuptools]
-package-dir = { "" = "source" }
+package-dir = { "" = "src" }
 
 [tool.setuptools.packages]
-find = { where = ["source"] }
+find = { where = ["src"] }
 
 [build-system]
 build-backend = "setuptools.build_meta"

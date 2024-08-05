@@ -4,8 +4,8 @@ import hashlib
 from pathlib import Path
 from pprint import pformat
 
-from core.commands.adjust import Adjust
-from tracewin_utils.load import load_dat_file, slice_dat_line
+from lightwin.core.commands.adjust import Adjust
+from lightwin.tracewin_utils.load import load_dat_file, slice_dat_line
 
 
 class TestSlice:

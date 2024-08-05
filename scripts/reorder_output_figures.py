@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Move all images in the same folder."""
 
 import argparse
@@ -60,7 +59,7 @@ def reorder_output_figures(
         )
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser("reorder_output_figures")
     parser.add_argument(
         "-f",
@@ -78,3 +77,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     reorder_output_figures(args.folder, args.verbose)
+
+
+if __name__ == "__main__":
+    main()

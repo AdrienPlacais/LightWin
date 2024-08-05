@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 r"""Generate ``variables.csv`` and ``constraints.csv``.
 
 These files hold the initial value and bounds for every cavity :math:`k_e`,
@@ -12,9 +11,9 @@ from pathlib import Path
 
 from scripts.scripts_shorthands import compute_beam
 
-import config_manager
-from beam_calculation.factory import BeamCalculatorsFactory
-from optimisation.design_space.factory import get_design_space_factory
+import lightwin.config_manager as con
+from lightwin.beam_calculation.factory import BeamCalculatorsFactory
+from lightwin.optimisation.design_space.factory import get_design_space_factory
 
 
 def generate_design_space_files(
@@ -30,7 +29,7 @@ def generate_design_space_files(
         Keys of the configuration file.
 
     """
-    configuration = config_manager.process_config(toml_filepath, toml_keys)
+    configuration = con.process_config(toml_filepath, toml_keys)
     if configuration["design_space"]["design_space_preset"] != "everything":
         logging.warning(
             "Modifying the design_space_preset entry to have all the possible "

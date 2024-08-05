@@ -11,14 +11,14 @@ from typing import Any
 import pytest
 from tests.reference import compare_with_reference
 
-import config_manager
-from beam_calculation.beam_calculator import BeamCalculator
-from beam_calculation.factory import BeamCalculatorsFactory
-from beam_calculation.simulation_output.simulation_output import (
+import lightwin.config_manager
+from lightwin.beam_calculation.beam_calculator import BeamCalculator
+from lightwin.beam_calculation.factory import BeamCalculatorsFactory
+from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from core.accelerator.accelerator import Accelerator
-from core.accelerator.factory import NoFault
+from lightwin.core.accelerator.accelerator import Accelerator
+from lightwin.core.accelerator.factory import NoFault
 
 DATA_DIR = Path("data", "example")
 TEST_DIR = Path("tests")
@@ -54,7 +54,7 @@ def config(
             "n_steps_per_cell": n_steps_per_cell,
         },
     }
-    my_config = config_manager.process_config(
+    my_config = lightwin.config_manager.process_config(
         config_path, config_keys, warn_mismatch=True, override=override
     )
     return my_config

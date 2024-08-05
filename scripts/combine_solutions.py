@@ -283,7 +283,7 @@ def _load_evaluation(
     return df
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser("combine_solutions")
 
     parser.add_argument(
@@ -330,3 +330,7 @@ if __name__ == "__main__":
         out_folder=args.outfolder,
         copy=args.copy,
     )
+
+
+if __name__ == "__main__":
+    main()
