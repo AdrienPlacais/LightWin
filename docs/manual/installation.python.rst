@@ -17,6 +17,10 @@ Installation with pip (recommended)
 
 The mandatory packages with their dependencies should be automatically downloaded.
 
+.. note::
+   The `-e` flag means that the installation is editable.
+   In other words, you can edit the source files and the changes will be taken into account when calling lightwin.
+
 Installation with conda
 ^^^^^^^^^^^^^^^^^^^^^^^
 1. In a dedicated environment, install all the packages according to your needs (recommended: Mandatory + Optional).
