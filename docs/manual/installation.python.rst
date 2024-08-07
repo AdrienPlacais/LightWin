@@ -6,8 +6,25 @@ If not, you can download the latest version from the `official Python website`_.
 
 .. _official Python website: https://www.python.org/downloads/
 
-Packages
-^^^^^^^^
+Installation with pip (recommended)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1. Navigate to the LightWin base folder (i.e., where the `pyproject.py` file is located).
+2. In a dedicated Python environment, run the following command:
+
+  .. code-block:: bash
+
+     pip install -e .
+
+The mandatory packages with their dependencies should be automatically downloaded.
+
+Installation with conda
+^^^^^^^^^^^^^^^^^^^^^^^
+1. In a dedicated environment, install all the packages according to your needs (recommended: Mandatory + Optional).
+2. Add the `/path/to/LightWin/src` to your `PYTHONPATH` environment variable. This is the folder containing the `lightwin` folder.
+
+.. todo::
+   Consider providing more detailed instructions for setting the `PYTHONPATH`.
+   For now, you can search for "PYTHONPATH" or "ModuleNotFoundError" online for additional guidance.
 
 Mandatory
 """""""""
@@ -81,11 +98,3 @@ To install a package, use the appropriate method based on your environment:
 
    .. _video: https://www.youtube.com/watch?v=Ul79ihg41Rs
 
-Set up the Python Path
-""""""""""""""""""""""
-
-You must add the `/path/to/lightwin/source` directory to your `PYTHONPATH` environment variable.
-
-.. todo::
-   Consider providing more detailed instructions for setting the `PYTHONPATH`.
-   For now, you can search for "PYTHONPATH" or "ModuleNotFoundError" online for additional guidance.
