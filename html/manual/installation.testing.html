@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Testing &mdash; LightWin 0.6.21-14-g8e911936 documentation</title>
+  <title>Testing &mdash; LightWin 0.7.0b documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=c91aba87"></script>
+        <script src="../_static/documentation_options.js?v=a3ef707c"></script>
         <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.6.21-14-g8e911936
+                0.7.0b
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -53,7 +53,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="installation.html">Installation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="installation.download.html">Download</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.python.html">Python (mandatory)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.cython.html">Cython setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.cython.html">Cython setup (should be automatic)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.tracewin.html">TraceWin (facultative)</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Testing</a></li>
 </ul>
@@ -63,7 +63,6 @@
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Utility scripts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
@@ -115,24 +114,22 @@
 </section>
 <section id="frequent-errors">
 <h2>Frequent errors<a class="headerlink" href="#frequent-errors" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">E</span>&#160;&#160; <span class="pre">ModuleNotFoundError:</span> <span class="pre">No</span> <span class="pre">module</span> <span class="pre">named</span> <span class="pre">'beam_calculation'</span></code>.</p></li>
-</ul>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">E</span>&#160;&#160; <span class="pre">ModuleNotFoundError:</span> <span class="pre">No</span> <span class="pre">module</span> <span class="pre">named</span> <span class="pre">'beam_calculation'</span></code>.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>Your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> is not properly set.
-Ensure that the directory containing the LightWin source code is included in your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.</p></li>
+<li><p>Your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> is not properly set. Ensure that the directory containing the LightWin source code is included in your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.</p></li>
 </ul>
 </div></blockquote>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">xfailed</span></code> errors.</p></li>
-</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xfailed</span></code> errors.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">xfailed</span></code> stands for “expected to fail” and these errors are usually intended for developers to track issues.
-They are not necessarily problematic for users.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xfailed</span></code> stands for “expected to fail” and these errors are usually intended for developers to track issues. They are not necessarily problematic for users.</p></li>
 </ul>
 </div></blockquote>
+</li>
+</ul>
 </section>
 </section>
 
@@ -147,7 +144,7 @@ They are not necessarily problematic for users.</p></li>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

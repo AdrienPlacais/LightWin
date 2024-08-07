@@ -32,8 +32,10 @@ Frequent errors
 ^^^^^^^^^^^^^^^
 
 * `E   ModuleNotFoundError: No module named 'beam_calculation'`.
- * Your `PYTHONPATH` is not properly set.
-   Ensure that the directory containing the LightWin source code is included in your `PYTHONPATH`.
+
+   * Your `PYTHONPATH` is not properly set. Ensure that the directory containing the LightWin source code is included in your `PYTHONPATH`.
+
 * `xfailed` errors.
- * `xfailed` stands for "expected to fail" and these errors are usually intended for developers to track issues.
-   They are not necessarily problematic for users.
+
+   * `xfailed` stands for "expected to fail" and these errors are usually intended for developers to track issues. They are not necessarily problematic for users.
+

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>optimisation.design_space section &mdash; LightWin 0.6.21-14-g8e911936 documentation</title>
+  <title>optimisation.design_space section &mdash; LightWin 0.7.0b documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=c91aba87"></script>
+        <script src="../_static/documentation_options.js?v=a3ef707c"></script>
         <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -40,7 +40,7 @@
             LightWin
           </a>
               <div class="version">
-                0.6.21-14-g8e911936
+                0.7.0b
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -69,7 +69,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Utility scripts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
@@ -103,7 +102,7 @@
 <div class="toctree-wrapper compound">
 </div>
 <p>This section parametrizes how the design space will be set, i.e. what are the variables, their limits and initial values, and what are the constraints and their limits.
-If you have any doubt, know that all these settings are passed down to <a class="reference internal" href="../optimisation.design_space.factory.html#optimisation.design_space.factory.DesignSpaceFactory.__init__" title="optimisation.design_space.factory.DesignSpaceFactory.__init__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DesignSpaceFactory.__init__()</span></code></a> as <code class="docutils literal notranslate"><span class="pre">design_space_kw</span></code>.</p>
+If you have any doubt, know that all these settings are passed down to <a class="reference internal" href="../lightwin/lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory.__init__" title="lightwin.optimisation.design_space.factory.DesignSpaceFactory.__init__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DesignSpaceFactory.__init__()</span></code></a> as <code class="docutils literal notranslate"><span class="pre">design_space_kw</span></code>.</p>
 <p>There are two ways to define the design space limits and initial values; the first is to let LightWin calculate it from the nominal settings of the linac.
 This approach is easier to use for the first runs.</p>
 <table class="docutils align-default">
@@ -132,7 +131,7 @@ This approach is easier to use for the first runs.</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">design_space_preset</span></code></p></td>
 <td><p>str</p></td>
 <td><p>What variables/constraints should be used</p></td>
-<td><p><a class="reference internal" href="../optimisation.design_space.factory.html#optimisation.design_space.factory.DESIGN_SPACE_FACTORY_PRESETS" title="optimisation.design_space.factory.DESIGN_SPACE_FACTORY_PRESETS"><code class="xref py py-data docutils literal notranslate"><span class="pre">DESIGN_SPACE_FACTORY_PRESETS</span></code></a></p></td>
+<td><p><code class="xref py py-data docutils literal notranslate"><span class="pre">DESIGN_SPACE_FACTORY_PRESETS</span></code></p></td>
 <td><p>✅</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">max_increase_sync_phase_in_percent</span></code></p></td>
@@ -203,7 +202,7 @@ To generate the <code class="docutils literal notranslate"><span class="pre">.cs
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">design_space_preset</span></code></p></td>
 <td><p>str</p></td>
 <td><p>What variables/constraints should be used</p></td>
-<td><p><a class="reference internal" href="../optimisation.design_space.factory.html#optimisation.design_space.factory.DESIGN_SPACE_FACTORY_PRESETS" title="optimisation.design_space.factory.DESIGN_SPACE_FACTORY_PRESETS"><code class="xref py py-data docutils literal notranslate"><span class="pre">DESIGN_SPACE_FACTORY_PRESETS</span></code></a></p></td>
+<td><p><code class="xref py py-data docutils literal notranslate"><span class="pre">DESIGN_SPACE_FACTORY_PRESETS</span></code></p></td>
 <td><p>✅</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">variables_filepath</span></code></p></td>
@@ -220,7 +219,7 @@ To generate the <code class="docutils literal notranslate"><span class="pre">.cs
 </tr>
 </tbody>
 </table>
-<p>Ultimately, these settings will be passed down to <a class="reference internal" href="../optimisation.design_space.factory.html#optimisation.design_space.factory.DesignSpaceFactory" title="optimisation.design_space.factory.DesignSpaceFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">DesignSpaceFactory</span></code></a>.</p>
+<p>Ultimately, these settings will be passed down to <a class="reference internal" href="../lightwin/lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory" title="lightwin.optimisation.design_space.factory.DesignSpaceFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">DesignSpaceFactory</span></code></a>.</p>
 </section>
 
 
@@ -234,7 +233,7 @@ To generate the <code class="docutils literal notranslate"><span class="pre">.cs
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

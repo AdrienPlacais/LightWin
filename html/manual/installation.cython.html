@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cython setup &mdash; LightWin 0.6.21-14-g8e911936 documentation</title>
+  <title>Cython setup (should be automatic) &mdash; LightWin 0.7.0b documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=c91aba87"></script>
+        <script src="../_static/documentation_options.js?v=a3ef707c"></script>
         <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.6.21-14-g8e911936
+                0.7.0b
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -53,7 +53,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="installation.html">Installation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="installation.download.html">Download</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.python.html">Python (mandatory)</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Cython setup</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Cython setup (should be automatic)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.tracewin.html">TraceWin (facultative)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.testing.html">Testing</a></li>
 </ul>
@@ -63,7 +63,6 @@
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Utility scripts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
@@ -82,7 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="installation.html">Installation</a></li>
-      <li class="breadcrumb-item active">Cython setup</li>
+      <li class="breadcrumb-item active">Cython setup (should be automatic)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/manual/installation.cython.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -92,8 +91,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="cython-setup">
-<h1>Cython setup<a class="headerlink" href="#cython-setup" title="Link to this heading"></a></h1>
+  <section id="cython-setup-should-be-automatic">
+<h1>Cython setup (should be automatic)<a class="headerlink" href="#cython-setup-should-be-automatic" title="Link to this heading"></a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you installed LightWin with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code> and there was no error, you do not need to read this section.
+You can check that everything works as expected by running <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">-m</span> <span class="pre">cython</span></code>.</p>
+</div>
 <p>Cython is an optional but highly recommended tool to speed up beam dynamics calculations.
 Here’s how to properly install and use Cython with the project:</p>
 <section id="installing-cython">
@@ -124,15 +128,15 @@ Here’s how to properly install and use Cython with the project:</p>
 Follow this steps to compile the modules:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p>Navigate to the <code class="docutils literal notranslate"><span class="pre">source</span></code> directory:</p></li>
+<li><p>Navigate to the <code class="docutils literal notranslate"><span class="pre">LightWin</span></code> base directory:</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/path/to/lightwin/source
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/path/to/LightWin/
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
 <li><p>Run the <code class="docutils literal notranslate"><span class="pre">setup</span></code> script:</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>util/setup.py<span class="w"> </span>build_ext<span class="w"> </span>--inplace
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>setup.py<span class="w"> </span>build_ext<span class="w"> </span>--inplace
 </pre></div>
 </div>
 </div></blockquote>
@@ -151,7 +155,7 @@ If not, manually move the created files:</p>
 <p>To:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">/path/to/lightwin/source/beam_calculation/envelope_1d/</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/path/to/LightWin/src/lightwin/beam_calculation/envelope_1d/</span></code>.</p></li>
 </ul>
 </div></blockquote>
 </section>
@@ -204,7 +208,7 @@ This will check if the Cython modules are properly integrated:</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

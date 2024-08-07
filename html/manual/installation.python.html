@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Python (mandatory) &mdash; LightWin 0.6.21-14-g8e911936 documentation</title>
+  <title>Python (mandatory) &mdash; LightWin 0.7.0b documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,14 +15,14 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=c91aba87"></script>
+        <script src="../_static/documentation_options.js?v=a3ef707c"></script>
         <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Cython setup" href="installation.cython.html" />
+    <link rel="next" title="Cython setup (should be automatic)" href="installation.cython.html" />
     <link rel="prev" title="Download" href="installation.download.html" /> 
 </head>
 
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.6.21-14-g8e911936
+                0.7.0b
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -53,7 +53,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="installation.html">Installation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="installation.download.html">Download</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Python (mandatory)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.cython.html">Cython setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.cython.html">Cython setup (should be automatic)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.tracewin.html">TraceWin (facultative)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.testing.html">Testing</a></li>
 </ul>
@@ -63,7 +63,6 @@
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Utility scripts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
@@ -97,32 +96,48 @@
 <p>LightWin requires Python 3.12 or higher.
 Ensure that you have an appropriate version of Python installed on your system.
 If not, you can download the latest version from the <a class="reference external" href="https://www.python.org/downloads/">official Python website</a>.</p>
-<section id="packages">
-<h2>Packages<a class="headerlink" href="#packages" title="Link to this heading"></a></h2>
-<section id="mandatory">
-<h3>Mandatory<a class="headerlink" href="#mandatory" title="Link to this heading"></a></h3>
-<p>The following packages are mandatory for LightWin to execute:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">palettable</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pandas</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">scipy</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tkinter</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pymoo</span></code> - This package is used for genetic optimization algorithms. If you prefer not to use <code class="docutils literal notranslate"><span class="pre">pymoo</span></code>, you can remove the related imports in <code class="docutils literal notranslate"><span class="pre">fault.py</span></code> and <code class="docutils literal notranslate"><span class="pre">fault_scenario.py</span></code>.</p></li>
-</ul>
+<section id="installation-with-pip-recommended">
+<h2>Installation with pip (recommended)<a class="headerlink" href="#installation-with-pip-recommended" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Navigate to the LightWin base folder (i.e., where the <code class="docutils literal notranslate"><span class="pre">pyproject.py</span></code> file is located).</p></li>
+<li><p><strong>In a dedicated Python environment</strong>, run the following command:</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+</div></blockquote>
+<p>The mandatory packages with their dependencies should be automatically downloaded.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-e</span></code> flag means that the installation is editable.
+In other words, you can edit the source files and the changes will be taken into account when calling lightwin.</p>
+</div>
 </section>
-<section id="optional">
-<h3>Optional<a class="headerlink" href="#optional" title="Link to this heading"></a></h3>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">cython</span></code> - Used to speed up calculations. Check <a class="reference external" href="https://adrienplacais.github.io/LightWin/html/manual/installation.cython.html">cython integration documentation</a>.</p></li>
-</ul>
+<section id="installation-with-conda-not-recommended">
+<h2>Installation with conda (not recommended)<a class="headerlink" href="#installation-with-conda-not-recommended" title="Link to this heading"></a></h2>
+<p>The package dependencies are listed in a single compact <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file.
+This is <a class="reference external" href="https://github.com/conda/conda/issues/12462">not yet</a> supported by <code class="docutils literal notranslate"><span class="pre">conda</span></code>.
+So the installation will require more work from your side.</p>
+<ol class="arabic simple">
+<li><p>In a dedicated environment, install all the dependencies defined in the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> (some can be removed, see following sections).</p></li>
+<li><p>Add the <code class="docutils literal notranslate"><span class="pre">/path/to/LightWin/src</span></code> to your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> environment variable. This is the folder containing the <code class="docutils literal notranslate"><span class="pre">lightwin</span></code> folder.</p></li>
+</ol>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Consider providing more detailed instructions for setting the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.
+For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online for additional guidance.</p>
+</div>
+<section id="following-packages-are-optional">
+<h3>Following packages are optional<a class="headerlink" href="#following-packages-are-optional" title="Link to this heading"></a></h3>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">cython</span></code> - Used to speed up calculations. Check <a class="reference external" href="https://adrienplacais.github.io/LightWin/html/manual/installation.cython.html">cython integration documentation</a>.</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Note: Installing <code class="docutils literal notranslate"><span class="pre">cython</span></code> prior to <code class="docutils literal notranslate"><span class="pre">pymoo</span></code> enable compilation of some <code class="docutils literal notranslate"><span class="pre">pymoo</span></code> functions for improved performance.</p></li>
 </ul>
 </div></blockquote>
-<ul class="simple">
+</li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> - To run tests and ensure everything is working as expected.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cloudpickle</span></code> - To pickle/unpickle some objects (see the <code class="docutils literal notranslate"><span class="pre">util.pickling</span></code> documentation).</p></li>
 </ul>
@@ -172,15 +187,6 @@ For more details, you may refer to this <a class="reference external" href="http
 </div>
 </div>
 </section>
-<section id="set-up-the-python-path">
-<h3>Set up the Python Path<a class="headerlink" href="#set-up-the-python-path" title="Link to this heading"></a></h3>
-<p>You must add the <code class="docutils literal notranslate"><span class="pre">/path/to/lightwin/source</span></code> directory to your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> environment variable.</p>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>Consider providing more detailed instructions for setting the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.
-For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online for additional guidance.</p>
-</div>
-</section>
 </section>
 </section>
 
@@ -189,13 +195,13 @@ For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="installation.download.html" class="btn btn-neutral float-left" title="Download" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="installation.cython.html" class="btn btn-neutral float-right" title="Cython setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="installation.cython.html" class="btn btn-neutral float-right" title="Cython setup (should be automatic)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

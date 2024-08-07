@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>beam_calculator section (mandatory) &mdash; LightWin 0.6.21-14-g8e911936 documentation</title>
+  <title>beam_calculator section (mandatory) &mdash; LightWin 0.7.0b documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=c91aba87"></script>
+        <script src="../_static/documentation_options.js?v=a3ef707c"></script>
         <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.6.21-14-g8e911936
+                0.7.0b
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -67,7 +67,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Utility scripts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
@@ -125,7 +124,7 @@
 </tr>
 </tbody>
 </table>
-<p>If the desired <a class="reference internal" href="../beam_calculation.beam_calculator.html#beam_calculation.beam_calculator.BeamCalculator" title="beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a> is <a class="reference internal" href="../beam_calculation.envelope_1d.envelope_1d.html#beam_calculation.envelope_1d.envelope_1d.Envelope1D" title="beam_calculation.envelope_1d.envelope_1d.Envelope1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope1D</span></code></a>:</p>
+<p>If the desired <a class="reference internal" href="../lightwin/lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a> is <a class="reference internal" href="../lightwin/lightwin.beam_calculation.envelope_1d.envelope_1d.html#lightwin.beam_calculation.envelope_1d.envelope_1d.Envelope1D" title="lightwin.beam_calculation.envelope_1d.envelope_1d.Envelope1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope1D</span></code></a>:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 30.0%" />
@@ -170,7 +169,7 @@
 </tbody>
 </table>
 <p>Note that <code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope3D</span></code> takes the same configuration entries, except <code class="docutils literal notranslate"><span class="pre">flag_cython</span></code> (not implemented yet) and <code class="docutils literal notranslate"><span class="pre">method</span></code> that must be <code class="docutils literal notranslate"><span class="pre">'RK4'</span></code> (<code class="docutils literal notranslate"><span class="pre">'leapgrog'</span></code> not implemented yet).</p>
-<p>If the desired <a class="reference internal" href="../beam_calculation.beam_calculator.html#beam_calculation.beam_calculator.BeamCalculator" title="beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a> is <a class="reference internal" href="../beam_calculation.tracewin.tracewin.html#beam_calculation.tracewin.tracewin.TraceWin" title="beam_calculation.tracewin.tracewin.TraceWin"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraceWin</span></code></a>:</p>
+<p>If the desired <a class="reference internal" href="../lightwin/lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a> is <a class="reference internal" href="../lightwin/lightwin.beam_calculation.tracewin.tracewin.html#lightwin.beam_calculation.tracewin.tracewin.TraceWin" title="lightwin.beam_calculation.tracewin.tracewin.TraceWin"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraceWin</span></code></a>:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 30.0%" />
@@ -241,10 +240,10 @@ See <code class="docutils literal notranslate"><span class="pre">data/examples/m
 </div>
 <div class="admonition-todo admonition" id="id2">
 <p class="admonition-title">Todo</p>
-<p>There are doublons between doc in <a class="reference internal" href="../config.beam_calculator.html#module-config.beam_calculator" title="config.beam_calculator"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config.beam_calculator</span></code></a> and here. Maybe keep in module, but make the format better.</p>
+<p>There are doublons between doc in <a class="reference internal" href="../lightwin/lightwin.config.beam_calculator.html#module-lightwin.config.beam_calculator" title="lightwin.config.beam_calculator"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config.beam_calculator</span></code></a> and here. Maybe keep in module, but make the format better.</p>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">[beam_calculator_post]</span></code> follows the same format.
-It is used to store a second <a class="reference internal" href="../beam_calculation.beam_calculator.html#beam_calculation.beam_calculator.BeamCalculator" title="beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a>.
+It is used to store a second <a class="reference internal" href="../lightwin/lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a>.
 This is mainly useful for defining a more precise – but more time-consuming – beam dynamics tool, for example to check your compensation settings.</p>
 </section>
 
@@ -259,7 +258,7 @@ This is mainly useful for defining a more precise – but more time-consuming �
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
