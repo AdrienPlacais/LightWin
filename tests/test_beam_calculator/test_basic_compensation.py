@@ -29,13 +29,22 @@ TEST_DIR = Path("tests")
 
 params = [
     pytest.param(
-        ("generic_envelope1d", True), marks=pytest.mark.smoke, id="Envelope1D"
+        ("generic_envelope1d", True, False),
+        marks=pytest.mark.smoke,
+        id="Envelope1D",
     ),
     pytest.param(
-        ("generic_envelope3d", True), marks=pytest.mark.smoke, id="Envelope3D"
+        ("generic_envelope1d", True, True),
+        marks=pytest.mark.cython,
+        id="Envelope1D (Cython)",
     ),
     pytest.param(
-        ("generic_tracewin", False),
+        ("generic_envelope3d", True, False),
+        marks=pytest.mark.smoke,
+        id="Envelope3D",
+    ),
+    pytest.param(
+        ("generic_tracewin", False, False),
         marks=(pytest.mark.smoke, pytest.mark.slow, pytest.mark.tracewin),
         id="TraceWin",
     ),
@@ -49,7 +58,7 @@ def config(
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration."""
     out_folder = tmp_path_factory.mktemp("tmp")
-    (solver_key, flag_phi_abs) = request.param
+    (solver_key, flag_phi_abs, flag_cython) = request.param
 
     config_path = DATA_DIR / "lightwin.toml"
     config_keys = {
@@ -65,6 +74,7 @@ def config(
         },
         "beam_calculator": {
             "flag_phi_abs": flag_phi_abs,
+            "flag_cython": flag_cython,
         },
     }
     my_config = lightwin.config_manager.process_config(
