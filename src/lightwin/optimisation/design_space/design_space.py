@@ -135,8 +135,8 @@ class DesignSpace:
     def to_files(
         self,
         basepath: Path,
-        variables_filename: Path = Path("variables"),
-        constraints_filename: Path = Path("constraints"),
+        variables_filename: str | Path = Path("variables"),
+        constraints_filename: str | Path = Path("constraints"),
         overwrite: bool = False,
         **to_csv_kw: Any,
     ) -> None:
@@ -146,7 +146,7 @@ class DesignSpace:
         ----------
         basepath : Path
             Folder where the files will be stored.
-        variables_filename, constraints_filename : Path
+        variables_filename, constraints_filename : Path | str, optional
             Name of the output files without extension.
         overwrite : bool, optional
             To overwrite an existing file with the same name or not. The
@@ -155,6 +155,10 @@ class DesignSpace:
             Keyword arguments given to the pandas ``to_csv`` method.
 
         """
+        if isinstance(variables_filename, str):
+            variables_filename = Path(variables_filename)
+        if isinstance(constraints_filename, str):
+            constraints_filename = Path(constraints_filename)
         zipper = zip(
             ("variables", "constraints"),
             (variables_filename, constraints_filename),
