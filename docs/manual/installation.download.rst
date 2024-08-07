@@ -3,7 +3,7 @@ Download
 The recommended way to obtain the LightWin code is by using `git`.
 Navigate to the directory where you want to store LightWin and run:
 
-.. codeblock:: bash
+.. code-block:: bash
 
    git clone git@github.com:AdrienPlacais/LightWin.git
 

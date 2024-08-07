@@ -24,8 +24,10 @@ The mandatory packages with their dependencies should be automatically downloade
 Installation with conda (not recommended)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The package dependencies are listed in a single compact `pyproject.toml` file.
-This is [not yet](https://github.com/conda/conda/issues/12462) supported by `conda`.
+This is `not yet`_ supported by `conda`.
 So the installation will require more work from your side.
+
+.. _not yet: https://github.com/conda/conda/issues/12462
 
 1. In a dedicated environment, install all the dependencies defined in the `pyproject.toml` (some can be removed, see following sections).
 2. Add the `/path/to/LightWin/src` to your `PYTHONPATH` environment variable. This is the folder containing the `lightwin` folder.
@@ -38,7 +40,9 @@ Following packages are optional
 """""""""""""""""""""""""""""""
 
 * `cython` - Used to speed up calculations. Check `cython integration documentation`_.
- * Note: Installing `cython` prior to `pymoo` enable compilation of some `pymoo` functions for improved performance.
+
+   * Note: Installing `cython` prior to `pymoo` enable compilation of some `pymoo` functions for improved performance.
+
 * `pytest` - To run tests and ensure everything is working as expected.
 * `cloudpickle` - To pickle/unpickle some objects (see the `util.pickling` documentation).
 

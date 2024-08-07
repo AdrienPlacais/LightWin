@@ -21,5 +21,4 @@ Submodules
    lightwin.util.pass_beauty
    lightwin.util.phases
    lightwin.util.pickling
-   lightwin.util.setup
    lightwin.util.synchronous_phases

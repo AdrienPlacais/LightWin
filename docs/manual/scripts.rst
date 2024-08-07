@@ -81,4 +81,5 @@ They can be called from everywhere in your system:
       This allows you to run the script with `./my_script.py` instead of `python my_script.py`.
          
    ii. **Adding Scripts to PATH**:
-      To run the scripts from any location on your system, add the `/path/to/lightwin/scripts/` directory to your system `PATH`.
+   To run the scripts from any location on your system, add the `/path/to/lightwin/scripts/` directory to your system `PATH`.
+
