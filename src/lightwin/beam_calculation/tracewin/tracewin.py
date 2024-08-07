@@ -20,6 +20,7 @@ import shutil
 import subprocess
 from collections.abc import Sequence
 from pathlib import Path
+from typing import Any
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.simulation_output.simulation_output import (
@@ -80,6 +81,7 @@ class TraceWin(BeamCalculator):
         default_field_map_folder: Path | str,
         flag_phi_abs: bool = False,
         cal_file: Path | None = None,
+        **kwargs: Any,
     ) -> None:
         """Define some other useful methods, init variables."""
         self.executable = executable
