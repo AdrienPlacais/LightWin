@@ -9,7 +9,7 @@ If not, you can download the latest version from the `official Python website`_.
 Installation with pip (recommended)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 1. Navigate to the LightWin base folder (i.e., where the `pyproject.py` file is located).
-2. In a dedicated Python environment, run the following command:
+2. **In a dedicated Python environment**, run the following command:
 
   .. code-block:: bash
 
@@ -21,30 +21,21 @@ The mandatory packages with their dependencies should be automatically downloade
    The `-e` flag means that the installation is editable.
    In other words, you can edit the source files and the changes will be taken into account when calling lightwin.
 
-Installation with conda
-^^^^^^^^^^^^^^^^^^^^^^^
-1. In a dedicated environment, install all the packages according to your needs (recommended: Mandatory + Optional).
+Installation with conda (not recommended)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The package dependencies are listed in a single compact `pyproject.toml` file.
+This is [not yet](https://github.com/conda/conda/issues/12462) supported by `conda`.
+So the installation will require more work from your side.
+
+1. In a dedicated environment, install all the dependencies defined in the `pyproject.toml` (some can be removed, see following sections).
 2. Add the `/path/to/LightWin/src` to your `PYTHONPATH` environment variable. This is the folder containing the `lightwin` folder.
 
 .. todo::
    Consider providing more detailed instructions for setting the `PYTHONPATH`.
    For now, you can search for "PYTHONPATH" or "ModuleNotFoundError" online for additional guidance.
 
-Mandatory
-"""""""""
-
-The following packages are mandatory for LightWin to execute:
-
-* `matplotlib`
-* `numpy`
-* `palettable`
-* `pandas`
-* `scipy`
-* `tkinter`
-* `pymoo` - This package is used for genetic optimization algorithms. If you prefer not to use `pymoo`, you can remove the related imports in `fault.py` and `fault_scenario.py`.
-
-Optional
-""""""""
+Following packages are optional
+"""""""""""""""""""""""""""""""
 
 * `cython` - Used to speed up calculations. Check `cython integration documentation`_.
  * Note: Installing `cython` prior to `pymoo` enable compilation of some `pymoo` functions for improved performance.
