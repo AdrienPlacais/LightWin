@@ -1,5 +1,9 @@
-Cython setup
-------------
+Cython setup (should be automatic)
+----------------------------------
+
+.. note::
+   If you installed LightWin with `pip install -e .` and there was no error, you do not need to read this section.
+   You can check that everything works as expected by running `pytest -m cython`.
 
 Cython is an optional but highly recommended tool to speed up beam dynamics calculations.
 Here's how to properly install and use Cython with the project:
@@ -26,17 +30,17 @@ Ensure Cython is installed before installing other packages like `pymoo` to take
 Some parts of LightWin, in particular the `Envelope1D` module, have Cython-optimized code that need to be optimized.
 Follow this steps to compile the modules:
 
- 1. Navigate to the `source` directory:
+ 1. Navigate to the `LightWin` base directory:
  
  .. code-block:: bash
  
-    cd /path/to/lightwin/source
+    cd /path/to/LightWin/
  
  2. Run the `setup` script:
  
  .. code-block:: bash
  
-    python util/setup.py build_ext --inplace
+    python setup.py build_ext --inplace
    
 This command compiles the Cython files and places the compiled modules (`.pyd` or `.so` extensions) in the appropriate directories.
 
@@ -51,7 +55,7 @@ If not, manually move the created files:
 
 To:
 
-   * `/path/to/lightwin/source/beam_calculation/envelope_1d/`.
+   * `/path/to/LightWin/src/lightwin/beam_calculation/envelope_1d/`.
 
 
 4. Troubleshooting compilation issues
