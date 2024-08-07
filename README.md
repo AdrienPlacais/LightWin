@@ -7,7 +7,11 @@ The steps are straightforward and can be summarized as follows:
 1. Clone the repository:
 `git clone git@github.com:AdrienPlacais/LightWin.git`
 2. Navigate to the `LightWin` and install it with all dependencies: `pip install -e .`
-3. Compile the Cython packages using the `source/util/setup.py` script.
+3. Test that everything is working with `pytest -m "not tracewin"`
+
+Note that the TraceWin module will not work out of the box.
+You will need to tell LightWin were to find your TraceWin executables.
+See [dedicated instructions](https://adrienplacais.github.io/LightWin/html/manual/installation.tracewin.html).
 
 ## Documentation
 Documentation is available [here](https://adrienplacais.github.io/LightWin/html/index.html).

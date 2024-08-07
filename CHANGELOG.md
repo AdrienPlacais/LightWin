@@ -12,13 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `evaluator` objects are more robust and can be configured from the `.toml`.
 - Plotting is now performed thanks to the `plotter` library.
 
-## [0.7.0b] 2024-08-??
+## [0.7.0b] 2024-08-07
 
 ### Changed
 - The code is packaged.
  - Installation instructions were updated.
  - It is not necessary to add LightWin to your `PATH`.
  - Imports of LightWin modules and functions must be imported from `lightwin`: `from lightwin.<foo> import <fee>`.
+ - Cython compilation is automatic.
 
 ## [0.6.21] 2024-06-07
 
