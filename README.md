@@ -6,18 +6,7 @@ The full installation instructions are detailed [here](https://adrienplacais.git
 The steps are straightforward and can be summarized as follows:
 1. Clone the repository:
 `git clone git@github.com:AdrienPlacais/LightWin.git`
-2. Ensure your `PYTHONPATH` is set and that you have the required packages installed:
-
- * `cython`
- * `matplotlib`
- * `numpy`
- * `palettable`
- * `pandas`
- * `scipy`
- * `pymoo`
- * `pytest`
- * `setuptools`
- * `tkinter`
+2. Navigate to the `LightWin` and install it with all dependencies: `pip install -e .`
 3. Compile the Cython packages using the `source/util/setup.py` script.
 
 ## Documentation
