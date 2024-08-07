@@ -5,7 +5,7 @@ Utility scripts
    :maxdepth: 4
    :hidden:
 
-LightWin includes several utility scripts located in the `lightwin/scripts/` folder.
+LightWin includes several utility scripts located in the `LightWin/scripts/` folder.
 They are scripts that I developed for my own usage, but did not directly belong to the LightWin library.
 
 List of scripts
@@ -43,11 +43,12 @@ Future versions aim to provide CLI functionality for all scripts.
 
 Scripts with a CLI
 ------------------
-The following scripts are equipped with a CLI, allowing them to be executed directly from the command line:
+The following scripts are equipped with a CLI, allowing them to be executed directly from the command line.
+They can be called from everywhere in your system:
 
-* `combine_solutions`
-* `compute_lost_power_per_meter`
-* `reorder_output_figures`
+* `lw-combine-solutions`
+* `lw-compute-lost-power-per-meter`
+* `lw-reorder-output-figures`
 
 1. **View available options**:
    Each script comes with its own set of options.
@@ -55,26 +56,29 @@ The following scripts are equipped with a CLI, allowing them to be executed dire
     
    .. code-block:: bash
 
-      python /path/to/lightwin/scripts/my_script.py --help
+      ./lw-script-name --help
 
 2. **Execute the script**:
    Run it with the desired arguments:
 
    .. code-block:: bash
    
-      python /path/to/lightwin/scripts/my_script.py --arg1 <val1> --arg2 <val2>
+      ./lw-script-name --arg1 <val1> --arg2 <val2>
 
-3. **Set execution permissions** (if the script does not already have execution permission):
+.. note::
+   Preliminary steps are mandatory if you installed LightWin with conda:
 
-   * Unix (Linux/macOS): use the following command:
+   i. **Set execution permissions** (if the script does not already have execution permission):
 
-   .. code-block:: bash
+      * Unix (Linux/macOS): use the following command:
 
-      chmod +x /path/to/the/script.py
+      .. code-block:: bash
 
-   * Windows: Set the execution rights via the "Properties" menu of the script file.
+         chmod +x /path/to/the/script.py
 
-   This allows you to run the script with `./my_script.py` instead of `python my_script.py`.
-      
-4. **Adding Scripts to PATH**:
-   To run the scripts from any location on your system, add the `/path/to/lightwin/scripts/` directory to your system `PATH`.
+      * Windows: Set the execution rights via the "Properties" menu of the script file.
+
+      This allows you to run the script with `./my_script.py` instead of `python my_script.py`.
+         
+   ii. **Adding Scripts to PATH**:
+      To run the scripts from any location on your system, add the `/path/to/lightwin/scripts/` directory to your system `PATH`.
