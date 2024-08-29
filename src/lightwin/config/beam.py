@@ -40,9 +40,13 @@ def test(
         sigma[4],
         sigma[5],
     )
-    assert len(sigma) == 6
-    for col in sigma:
-        assert len(col) == 6
+    n_lines = len(sigma)
+    assert n_lines == 6, f"sigma entry should have 6 lines but has {n_lines}"
+    for i, col in enumerate(sigma):
+        len_col = len(col)
+        assert (
+            len_col == 6
+        ), f"sigma {i}th line should have 6 columns but has {len_col}"
 
 
 def edit_configuration_dict_in_place(

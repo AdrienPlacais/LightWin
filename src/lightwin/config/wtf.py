@@ -49,10 +49,14 @@ def test(
     **wtf_kw,
 ) -> None:
     """Test the ``wtf`` ``.toml`` entries."""
-    assert id_nature in ("cavity", "element", "name")
+    allowed = ("cavity", "element", "name")
+    assert id_nature in allowed, f"{id_nature = } should be in {allowed}"
+
     if idx:
         logging.error("Deprecated, use 'id_nature' instead.")
-    assert strategy in IMPLEMENTED_STRATEGIES
+    assert (
+        strategy in IMPLEMENTED_STRATEGIES
+    ), f"{strategy = } should be in {IMPLEMENTED_STRATEGIES = }"
     strategy_testers = {
         "k out of n": _test_k_out_of_n,
         "manual": _test_manual,
@@ -62,8 +66,13 @@ def test(
     }
     strategy_testers[strategy](**wtf_kw)
 
-    assert objective_preset in IMPLEMENTED_OBJECTIVE_PRESETS
-    assert optimisation_algorithm in IMPLEMENTED_OPTIMISATION_ALGORITHMS
+    assert (
+        objective_preset in IMPLEMENTED_OBJECTIVE_PRESETS
+    ), f"{objective_preset = } should be in {IMPLEMENTED_OBJECTIVE_PRESETS = }"
+    assert optimisation_algorithm in IMPLEMENTED_OPTIMISATION_ALGORITHMS, (
+        f"{optimisation_algorithm = } should be in "
+        + f"{IMPLEMENTED_OPTIMISATION_ALGORITHMS = }"
+    )
     _test_cavity_selection(tie_politics, shift)
 
 
