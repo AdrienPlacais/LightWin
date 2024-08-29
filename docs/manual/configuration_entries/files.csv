@@ -1,2 +1,3 @@
 Entry,Type,Description,Allowed values,Mandatory?
 ``dat_file``,path,Path to the ``.dat`` file,,✅
+``project_folder``,path,Path output results will be stored file,,❌
