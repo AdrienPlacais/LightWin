@@ -1,4 +1,4 @@
-"""Define how LightWin should be configured."""
+"""Define the base objects constraining values/types of config parameters."""
 
 import logging
 from collections.abc import Collection
