@@ -61,7 +61,6 @@ class KeyValConfSpec:
         """Check that the given path exists."""
         if not self.is_a_path_that_must_exists:
             return True
-        assert toml_folder is not None
         _ = find_file(toml_folder, toml_value)
         return True
 
@@ -143,3 +142,14 @@ class TableConfSpec:
             logging.error(f"The key {key} should be given but was not found.")
 
         return they_are_all_present
+
+    def generate_dummy_dict(
+        self, only_mandatory: bool = True
+    ) -> dict[str, Any]:
+        """Generate a default dummy dict that should let LightWin work."""
+        dummy_conf = {
+            spec.key: spec.default_value
+            for spec in self.specs.values()
+            if spec.is_mandatory or not only_mandatory
+        }
+        return dummy_conf

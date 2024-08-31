@@ -75,3 +75,14 @@ class FullConfSpec:
             )
 
         return they_are_all_present
+
+    def generate_dummy_dict(
+        self, only_mandatory: bool = True
+    ) -> dict[str, dict[str, Any]]:
+        """Generate a default dummy dict that should let LightWin work."""
+        dummy_conf = {
+            spec.name: spec.generate_dummy_dict(only_mandatory=only_mandatory)
+            for spec in self.specs.values()
+            if spec.is_mandatory or not only_mandatory
+        }
+        return dummy_conf
