@@ -38,7 +38,7 @@ def process_config(
 
     """
     assert config_path.is_file(), f"{config_path = } does not exist."
-    toml_fulldict = _load_toml(
+    toml_fulldict = load_toml(
         config_path, config_keys, warn_mismatch, override
     )
 
@@ -47,7 +47,7 @@ def process_config(
     return toml_fulldict
 
 
-def _load_toml(
+def load_toml(
     config_path: Path,
     config_keys: dict[str, str],
     warn_mismatch: bool,
