@@ -1,11 +1,16 @@
 """Ensure that loading and validating ``.toml`` works as expected."""
 
+import logging
 from pathlib import Path
 from typing import Any
 
 import pytest
 
-from lightwin.new_config.config_manager import load_toml
+from lightwin.new_config.config_manager import (
+    dict_to_toml,
+    load_toml,
+    process_config,
+)
 from lightwin.new_config.full_specs import FullConfSpec
 
 DATA_DIR = Path("data", "example")
@@ -112,3 +117,15 @@ class TestConfigManager:
         assert full_conf_specs.validate(
             generated_toml_dict,
         ), "Error validating default configuration dict."
+
+    def test_config_can_be_saved_to_file(
+        self,
+        full_conf_specs: FullConfSpec,
+        dummy_toml_dict: dict[str, dict[str, Any]],
+        tmp_path_factory: pytest.TempPathFactory,
+    ):
+        """Check if saving the given conf dict as toml works."""
+        toml_path = tmp_path_factory.mktemp("test_toml") / "test.toml"
+        dict_to_toml(dummy_toml_dict, toml_path, full_conf_specs)
+        process_config(toml_path, CONFIG_KEYS, full_conf_specs=full_conf_specs)
+        assert True

@@ -74,7 +74,9 @@ class KeyValConfSpec:
 
         formatted = value
         if str in self.types:
-            formatted = '"' + value + '"'
+            if isinstance(formatted, Path):
+                formatted = str(formatted)
+            formatted = '"' + formatted + '"'
 
         return f"{self.key} = {formatted}"
 
@@ -105,14 +107,14 @@ class TableConfSpec:
             f"The table {self.name} has no specs for property {spec_name}"
         )
 
-    def to_toml_string(self, toml_subdict: dict[str, Any]) -> str:
+    def to_toml_strings(self, toml_subdict: dict[str, Any]) -> list[str]:
         """Convert the given dict in string that can be put in a ``.toml``."""
-        strings = [f"[self.name]"]
+        strings = [f"[{self.name}]"]
         for key, val in toml_subdict.items():
             spec = self._get_proper_spec(key)
             strings.append(spec.to_toml_string(val))
 
-        return "\n".join(strings)
+        return strings
 
     def validate(self, toml_subdict: dict[str, Any], **kwargs) -> bool:
         """Check that all the key-values in ``toml_subdict`` are valid."""

@@ -13,6 +13,7 @@ def process_config(
     config_keys: dict[str, str],
     warn_mismatch: bool = False,
     override: dict[str, dict[str, Any]] | None = None,
+    full_conf_specs: FullConfSpec | None = None,
 ) -> dict[str, dict[str, Any]]:
     """Load and test the configuration file.
 
@@ -28,6 +29,9 @@ def process_config(
     override : dict[str, dict[str, Any]] | None, optional
         To override entries in the ``.toml``. If not provided, we keep
         defaults.
+    full_conf_specs : FullConfSpec | None, optional
+        The specifications that the ``.toml`` must match to be accepted. If not
+        provided, we take a default.
 
     Returns
     -------
@@ -42,7 +46,8 @@ def process_config(
         config_path, config_keys, warn_mismatch, override
     )
 
-    full_conf_specs = FullConfSpec()
+    if full_conf_specs is None:
+        full_conf_specs = FullConfSpec()
     full_conf_specs.validate(toml_fulldict, toml_folder=config_path.parent)
     return toml_fulldict
 
@@ -89,3 +94,44 @@ def _override_some_toml_entries(
                     f"not found in {conf_subdict.keys() = }"
                 )
             conf_subdict[key] = val
+
+
+def dict_to_toml(
+    toml_fulldict: dict[str, dict[str, Any]],
+    toml_path: Path,
+    full_conf_specs: FullConfSpec,
+    allow_overwrite: bool = False,
+) -> None:
+    """Write the provided configuration dict to a ``.toml`` file."""
+    if _indue_overwritting(toml_path, allow_overwrite):
+        return
+
+    strings = full_conf_specs.to_toml_strings(toml_fulldict)
+    with open(toml_path, "w") as f:
+        for dict_entry_string in strings:
+            f.write(dict_entry_string)
+            f.write("\n")
+
+    logging.info(f"New ``.toml`` written in {toml_path}")
+    return
+
+
+def _indue_overwritting(
+    toml_path: Path,
+    allow_overwrite: bool = False,
+) -> bool:
+    """Ensure that ``.toml`` will not be overwritten if not wanted."""
+    if not toml_path.exists():
+        return False
+
+    logging.info(
+        f"A .toml already exists at {toml_path = } and may be overwritten."
+    )
+    if not allow_overwrite:
+        logging.error("Overwritting not permitted. Skipping action...")
+        return True
+
+    old = toml_path.with_suffix(".toml.old")
+    logging.info(f"Copying the old one to {old}, just in case...")
+    shutil.copy(toml_path, old)
+    return False

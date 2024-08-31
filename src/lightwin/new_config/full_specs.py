@@ -32,14 +32,16 @@ class FullConfSpec:
         logging.error(f"There is no specs for table {spec_name}")
         raise IOError(f"There is no specs for table {spec_name}")
 
-    def to_toml_string(self, toml_fulldict: dict[str, dict[str, Any]]) -> str:
+    def to_toml_strings(
+        self, toml_fulldict: dict[str, dict[str, Any]]
+    ) -> list[str]:
         """Convert the given dict in string that can be put in a ``.toml``."""
         strings = []
         for key, val in toml_fulldict.items():
             spec = self._get_proper_spec(key)
-            strings.append(spec.to_toml_string(val))
+            strings += spec.to_toml_strings(val)
 
-        return "\n".join(strings)
+        return strings
 
     def validate(
         self, toml_fulldict: dict[str, dict[str, Any]], **kwargs
