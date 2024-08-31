@@ -27,7 +27,7 @@ def dict_for_pretty_output(some_kw: dict) -> str:
     return "\n".join(nice)
 
 
-def find_file(toml_folder: Path, file: str | Path) -> Path:
+def find_file(toml_folder: Path | None, file: str | Path) -> Path:
     """Look for the given filepath in all possible places, make it absolute.
 
     We sequentially check and return the first valid path:
@@ -38,7 +38,7 @@ def find_file(toml_folder: Path, file: str | Path) -> Path:
 
     Parameters
     ----------
-    toml_folder : Path
+    toml_folder : Path | None
         Folder where the ``.toml`` configuration file is.
     file : str | Path
         Filepath to look for.
@@ -53,6 +53,13 @@ def find_file(toml_folder: Path, file: str | Path) -> Path:
         path = file.resolve().absolute()
         if path.is_file():
             return path
+    if toml_folder is None:
+        msg = (
+            "You must provide the location of the toml file to allow for a "
+            "more complete file research."
+        )
+        logging.critical(msg)
+        raise FileNotFoundError(msg)
 
     path = (toml_folder / file).resolve().absolute()
     if path.is_file():
