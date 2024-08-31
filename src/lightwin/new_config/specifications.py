@@ -21,7 +21,8 @@ class KeyValConfSpec:
         Name of the attribute.
     types : tuple[type, ...]
         Allowed types for the value. Used to check validity of input, but also
-        for proper formatting when creating a config ``.toml`` file.
+        for proper formatting when creating a config ``.toml`` file. Prefer
+        giving a tuple of types, even if there is only one possible type.
     description : str
         A markdown string to describe the property. Will be displayed in the
         documentation.
