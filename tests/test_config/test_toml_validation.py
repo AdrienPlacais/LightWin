@@ -15,6 +15,18 @@ CONFIG_KEYS = {"beam": "beam", "files": "files"}
 
 
 @pytest.fixture(scope="class")
+def full_conf_specs() -> FullConfSpec:
+    """Give the specifications to validate.
+
+    Putting this in a fixture does not make much sense for now, but I may have
+    different :class:`.FullConfSpec` in the future and parametrization will
+    then be easier.
+
+    """
+    return FullConfSpec()
+
+
+@pytest.fixture(scope="class")
 def toml_fulldict_unaltered() -> dict[str, dict[str, Any]]:
     """Load the configuration file without editing or testing it."""
     toml_fulldict = load_toml(
@@ -24,8 +36,8 @@ def toml_fulldict_unaltered() -> dict[str, dict[str, Any]]:
 
 
 @pytest.fixture(scope="class")
-def dummy_toml_dict() -> dict[str, dict[str, Any]]:
-    """Generate a dummy config dict that should work."""
+def dummy_beam() -> dict[str, Any]:
+    """Generate a default dummy beam conf dict."""
     dummy_beam = {
         "e_rest_mev": 0.0,
         "q_adim": 1.0,
@@ -34,9 +46,31 @@ def dummy_toml_dict() -> dict[str, dict[str, Any]]:
         "i_milli_a": 0.0,
         "sigma": [[0.0 for _ in range(6)] for _ in range(6)],
     }
+    return dummy_beam
+
+
+@pytest.fixture(scope="class")
+def dummy_files() -> dict[str, Any]:
+    """Generate a default dummy files conf dict."""
     dummy_files = {"dat_file": DAT_PATH}
+    return dummy_files
+
+
+@pytest.fixture(scope="class")
+def dummy_toml_dict(
+    dummy_beam: dict[str, Any], dummy_files: dict[str, Any]
+) -> dict[str, dict[str, Any]]:
+    """Generate a dummy config dict that should work."""
     dummy_conf = {"beam": dummy_beam, "files": dummy_files}
     return dummy_conf
+
+
+@pytest.fixture(scope="class")
+def generated_toml_dict(
+    full_conf_specs: FullConfSpec,
+) -> dict[str, dict[str, Any]]:
+    """Generate a configuration dict with default values."""
+    return full_conf_specs.generate_dummy_dict()
 
 
 @pytest.mark.smoke
@@ -52,10 +86,29 @@ class TestConfigManager:
         assert isinstance(toml_fulldict, dict), f"Error loading {CONFIG_PATH}"
 
     def test_validate(
-        self, dummy_toml_dict: dict[str, dict[str, Any]]
+        self,
+        full_conf_specs: FullConfSpec,
+        dummy_toml_dict: dict[str, dict[str, Any]],
     ) -> None:
         """Check if loaded toml is valid."""
-        full_conf_specs = FullConfSpec()
         assert full_conf_specs.validate(
             dummy_toml_dict, toml_folder=DATA_DIR
         ), f"Error validating {CONFIG_PATH}"
+
+    def test_generate_works(
+        self, generated_toml_dict: dict[str, dict[str, Any]]
+    ) -> None:
+        """Check that generating a default toml leads to a valid dict."""
+        assert isinstance(
+            generated_toml_dict, dict
+        ), "Error generating default configuration dict."
+
+    def test_generate_is_valid(
+        self,
+        full_conf_specs: FullConfSpec,
+        generated_toml_dict: dict[str, dict[str, Any]],
+    ) -> None:
+        """Check that generating a default toml leads to a valid dict."""
+        assert full_conf_specs.validate(
+            generated_toml_dict,
+        ), "Error validating default configuration dict."
