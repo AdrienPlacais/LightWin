@@ -1,4 +1,10 @@
-"""Define parameters necessary to define files."""
+"""Define parameters necessary to define files.
+
+.. todo::
+    Replace hard written filepath, prefer inferring it from the location of
+    current file
+
+"""
 
 from pathlib import Path
 
