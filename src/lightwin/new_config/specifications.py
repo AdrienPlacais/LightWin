@@ -1,10 +1,4 @@
-"""Define how LightWin should be configured.
-
-.. todo::
-    Make giving a default value mandatory. Define ``generate`` methods to
-    create the specifications from nothing.
-
-"""
+"""Define how LightWin should be configured."""
 
 import logging
 from collections.abc import Collection
@@ -23,9 +17,9 @@ class KeyValConfSpec:
 
     key: str
     types: tuple[type, ...]
-    description: str = ""
+    description: str
+    default_value: Any
     allowed_values: Collection[Any] | None = None
-    default_value: Any | None = None
     is_mandatory: bool = True
     is_a_path_that_must_exists: bool = False
 
