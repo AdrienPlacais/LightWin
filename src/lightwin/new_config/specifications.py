@@ -13,7 +13,32 @@ CONFIGURATION_SPECIFICATIONS = {}
 
 @dataclass
 class KeyValConfSpec:
-    """Set specifications for a single key-value pair."""
+    """Set specifications for a single key-value pair.
+
+    Attributes
+    ----------
+    key : str
+        Name of the attribute.
+    types : tuple[type, ...]
+        Allowed types for the value. Used to check validity of input, but also
+        for proper formatting when creating a config ``.toml`` file.
+    description : str
+        A markdown string to describe the property. Will be displayed in the
+        documentation.
+    default_value : Any
+        A default value for the property. Used when generating dummy
+        configurations; also used if the property is not mandatory and was not
+        provided.
+    allowed_values : Collection[Any] | None, optional
+        A set of allowed values, or range of allowed values. The default is
+        None, in which case no checking is performed.
+    is_mandatory : bool, optional
+        If the property must be given. The default is True.
+    is_a_path_that_must_exists : bool, optional
+        If the property is a string/path and its existence must be checked
+        before running the code.
+
+    """
 
     key: str
     types: tuple[type, ...]
@@ -89,17 +114,21 @@ class TableConfSpec:
         name: str,
         specs: Collection[KeyValConfSpec],
         is_mandatory: bool = True,
+        can_have_untested_keys: bool = False,
     ) -> None:
         """Set the thing."""
         self.name = name
         self.specs = {spec.key: spec for spec in specs}
         self.is_mandatory = is_mandatory
+        self.can_have_untested_keys = can_have_untested_keys
 
-    def _get_proper_spec(self, spec_name: str) -> KeyValConfSpec:
+    def _get_proper_spec(self, spec_name: str) -> KeyValConfSpec | None:
         """Get the specification for the property named ``spec_name``."""
         spec = self.specs.get(spec_name, None)
         if spec is not None:
             return spec
+        if self.can_have_untested_keys:
+            return
         logging.error(
             f"The table {self.name} has no specs for property {spec_name}"
         )
@@ -112,6 +141,8 @@ class TableConfSpec:
         strings = [f"[{self.name}]"]
         for key, val in toml_subdict.items():
             spec = self._get_proper_spec(key)
+            if spec is None:
+                continue
             strings.append(spec.to_toml_string(val))
 
         return strings
@@ -121,6 +152,8 @@ class TableConfSpec:
         validations = [self._mandatory_keys_are_present(toml_subdict.keys())]
         for key, val in toml_subdict.items():
             spec = self._get_proper_spec(key)
+            if spec is None:
+                continue
             validations.append(spec.validate(val, **kwargs))
 
         all_is_validated = all(validations)
