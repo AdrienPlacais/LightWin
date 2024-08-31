@@ -8,8 +8,6 @@ from typing import Any
 
 from lightwin.config.helper import find_file
 
-CONFIGURATION_SPECIFICATIONS = {}
-
 
 @dataclass
 class KeyValConfSpec:
@@ -117,7 +115,22 @@ class TableConfSpec:
         is_mandatory: bool = True,
         can_have_untested_keys: bool = False,
     ) -> None:
-        """Set the thing."""
+        """Set a table of properties. Correspond to a [table] in the ``.toml``.
+
+        Parameters
+        ----------
+        name : str
+            Name of the table.
+        specs : Collection[KeyValConfSpec]
+            The :class:`KeyValConfSpec` in the current table.
+        is_mandatory : bool, optional
+            If the current table must be provided. The default is True.
+        can_have_untested_keys : bool, optional
+            If LightWin should remain calm when some keys are provided in the
+            ``.toml`` but do not correspond to any :class:`KeyValConfSpec`. The
+            default is False.
+
+        """
         self.name = name
         self.specs = {spec.key: spec for spec in specs}
         self.is_mandatory = is_mandatory
