@@ -4,15 +4,28 @@ import logging
 from collections.abc import Collection
 from typing import Any
 
+from lightwin.new_config.beam_calculator_tracewin_specs import TRACEWIN_CONFIG
 from lightwin.new_config.beam_specs import BEAM_CONFIG
 from lightwin.new_config.config_specs import TableConfSpec
 from lightwin.new_config.files_specs import FILES_CONFIG
 
 
 class FullConfSpec:
-    """Define all the LightWin inputs, their types, allowed values, etc."""
+    """Define all the LightWin inputs, their types, allowed values, etc.
 
-    def __init__(self) -> None:
+    Attributes
+    ----------
+    specs : dict[str, TableConfSpec]
+        Holds the different tables required by LightWin to run.
+
+    """
+
+    def __init__(
+        self,
+        beam_table: str = "beam",
+        files_table: str = "files",
+        beam_calculator_table: str = "generic_tracewin",
+    ) -> None:
         """Define static specifications.
 
         In the future, may add different mandatory specs, for example if
@@ -20,9 +33,28 @@ class FullConfSpec:
 
         """
         self.specs = {
-            "beam": TableConfSpec("beam", BEAM_CONFIG),
-            "files": TableConfSpec("files", FILES_CONFIG),
+            "beam": TableConfSpec(beam_table, BEAM_CONFIG),
+            "files": TableConfSpec(files_table, FILES_CONFIG),
+            "beam_calculator": TableConfSpec(
+                beam_calculator_table, TRACEWIN_CONFIG
+            ),  # temporary
         }
+        self._beam_table = beam_table
+        self._files_table = files_table
+        self._beam_calculator_table = beam_calculator_table
+
+    def __repr__(self) -> str:
+        """Print info on how object was instantiated."""
+        repr_ = "\n".join(
+            (
+                "FullConfSpec(",
+                f"\tbeam_table={self._beam_table},",
+                f"\tfiles_table={self._files_table},",
+                f"\tbeam_calculator_table={self._beam_calculator_table},",
+                ")",
+            )
+        )
+        return repr_
 
     def _get_proper_spec(self, spec_name: str) -> TableConfSpec:
         """Get the specifications for the table named ``spec_name``."""
@@ -83,7 +115,9 @@ class FullConfSpec:
     ) -> dict[str, dict[str, Any]]:
         """Generate a default dummy dict that should let LightWin work."""
         dummy_conf = {
-            spec.name: spec.generate_dummy_dict(only_mandatory=only_mandatory)
+            spec.name_in_file: spec.generate_dummy_dict(
+                only_mandatory=only_mandatory
+            )
             for spec in self.specs.values()
             if spec.is_mandatory or not only_mandatory
         }
