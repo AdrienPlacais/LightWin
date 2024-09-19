@@ -16,7 +16,7 @@ class FullConfSpec:
     ----------
     MANDATORY_CONFIG_ENTRIES : tuple[str, ...]
         Entries that you should provide for this config to work.
-    specs : dict[str, TableConfSpec]
+    specs : tuple[TableConfSpec, ...]
         Holds the different tables required by LightWin to run.
 
     """
@@ -35,19 +35,19 @@ class FullConfSpec:
         failures are to be fixed or not.
 
         """
-        self.specs = {
-            "beam": TableConfSpec("beam", beam_table_name, BEAM_CONFIG),
-            "files": TableConfSpec("files", files_table_name, FILES_CONFIG),
-            "beam_calculator": TableConfSpec(
+        self.tables_of_specs = (
+            TableConfSpec("beam", beam_table_name, BEAM_CONFIG),
+            TableConfSpec("files", files_table_name, FILES_CONFIG),
+            TableConfSpec(
                 "beam_calculator", beam_calculator_table_name, TRACEWIN_CONFIG
-            ),  # temporary
-        }
+            ),  # temporary )
+        )
 
     def __repr__(self) -> str:
         """Print info on how object was instantiated."""
         tables_info = (
             ["FullConfSpec("]
-            + ["\t" + table.__repr__() for table in self.specs.values()]
+            + ["\t" + table.__repr__() for table in self.tables_of_specs]
             + [")"]
         )
         return "\n".join(tables_info)
@@ -76,7 +76,7 @@ class FullConfSpec:
             The desired object.
 
         """
-        for table in self.specs.values():
+        for table in self.tables_of_specs:
             if table_id != getattr(table, id_type):
                 continue
             return table
@@ -160,7 +160,7 @@ class FullConfSpec:
         """Ensure that all the mandatory parameters are defined."""
         they_are_all_present = True
 
-        for table in self.specs.values():
+        for table in self.tables_of_specs:
             if not table.is_mandatory:
                 continue
             if table.configured_object in self.MANDATORY_CONFIG_ENTRIES:
@@ -180,7 +180,7 @@ class FullConfSpec:
             spec.table_entry: spec.generate_dummy_dict(
                 only_mandatory=only_mandatory
             )
-            for spec in self.specs.values()
+            for spec in self.tables_of_specs
             if spec.is_mandatory or not only_mandatory
         }
         return dummy_conf
