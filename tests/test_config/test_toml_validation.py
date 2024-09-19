@@ -31,7 +31,11 @@ def full_conf_specs() -> FullConfSpec:
     then be easier.
 
     """
-    return FullConfSpec()
+    return FullConfSpec(
+        beam_table_name="beam",
+        files_table_name="files",
+        beam_calculator_table_name="generic_tracewin",
+    )
 
 
 @pytest.fixture(scope="class")

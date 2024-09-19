@@ -25,9 +25,10 @@ class FullConfSpec:
 
     def __init__(
         self,
-        beam_table_name: str = "beam",
-        files_table_name: str = "files",
-        beam_calculator_table_name: str = "generic_tracewin",
+        *,
+        beam_table_name: str,
+        files_table_name: str,
+        beam_calculator_table_name: str,
     ) -> None:
         """Define static specifications.
 
