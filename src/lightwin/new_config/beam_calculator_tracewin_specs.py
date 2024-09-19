@@ -23,7 +23,7 @@ TRACEWIN_CONFIG = (
         types=(str,),
         description="Name of the tool.",
         default_value="TraceWin",
-        allowed_values="TraceWin",
+        allowed_values=("TraceWin", "tracewin"),
     ),
     KeyValConfSpec(
         key="ini_path",
