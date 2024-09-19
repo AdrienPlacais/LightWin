@@ -105,9 +105,10 @@ class KeyValConfSpec:
     def to_toml_string(self, value: Any | None = None) -> str:
         """Convert the value into a line that can be put in a ``.toml``."""
         if value is None:
-            assert (
-                self.default_value is not None
-            ), f"Provide a value for the {self.key}"
+            logging.error(
+                f"You must provide a value for {self.key = }. Trying to "
+                f"continue with {self.default_value = }..."
+            )
             value = self.default_value
 
         formatted = value
