@@ -1,6 +1,6 @@
 """Define parameters necessary to define a beam."""
 
-from lightwin.new_config.specifications import KeyValConfSpec
+from lightwin.new_config.config_specs import KeyValConfSpec
 
 BEAM_CONFIG = (
     KeyValConfSpec(

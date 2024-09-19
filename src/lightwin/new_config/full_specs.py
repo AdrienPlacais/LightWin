@@ -5,8 +5,8 @@ from collections.abc import Collection
 from typing import Any
 
 from lightwin.new_config.beam_specs import BEAM_CONFIG
+from lightwin.new_config.config_specs import TableConfSpec
 from lightwin.new_config.files_specs import FILES_CONFIG
-from lightwin.new_config.specifications import TableConfSpec
 
 
 class FullConfSpec:

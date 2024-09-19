@@ -8,7 +8,7 @@
 
 from pathlib import Path
 
-from lightwin.new_config.specifications import KeyValConfSpec
+from lightwin.new_config.config_specs import KeyValConfSpec
 
 example_folder = Path("/home/placais/LightWin/data/example/")
 
