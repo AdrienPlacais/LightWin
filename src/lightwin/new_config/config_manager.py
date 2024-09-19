@@ -1,6 +1,7 @@
 """Load, validate and post-process the configuration."""
 
 import logging
+import shutil
 import tomllib
 from pathlib import Path
 from typing import Any
