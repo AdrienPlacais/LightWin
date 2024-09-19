@@ -4,7 +4,7 @@ import logging
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from lightwin.config.helper import find_file
 
@@ -36,6 +36,12 @@ class KeyValConfSpec:
     is_a_path_that_must_exists : bool, optional
         If the property is a string/path and its existence must be checked
         before running the code.
+    action : Literal["store_true", "store_false"] | None = None
+        on/off flag, also check the ``argparse`` documentation. Will skip
+        testing over type and allowed values.
+    error_message : str | None, optional
+        If provided, using current key will raise an IOError with this error
+        message. The default is None.
 
     """
 
@@ -46,6 +52,8 @@ class KeyValConfSpec:
     allowed_values: Collection[Any] | None = None
     is_mandatory: bool = True
     is_a_path_that_must_exists: bool = False
+    action: Literal["store_true", "store_false"] | None = None
+    error_message: str | None = None
 
     def __post_init__(self) -> None:
         """Force ``self.types`` to be a tuple of types."""
@@ -54,6 +62,12 @@ class KeyValConfSpec:
 
     def validate(self, toml_value: Any, **kwargs) -> bool:
         """Check that the given ``toml`` line is valid."""
+        if self.error_message:
+            logging.critical(self.error_message)
+            raise IOError(self.error_message)
+        if self.action is not None:
+            return True
+
         valid = (
             self.is_valid_type(toml_value, **kwargs)
             and self.is_valid_value(toml_value, **kwargs)
@@ -100,6 +114,10 @@ class KeyValConfSpec:
         if str in self.types:
             if isinstance(formatted, Path):
                 formatted = str(formatted)
+            assert isinstance(formatted, str), (
+                "The provided value should be a string but is "
+                f"{type(formatted)}"
+            )
             formatted = '"' + formatted + '"'
 
         return f"{self.key} = {formatted}"
