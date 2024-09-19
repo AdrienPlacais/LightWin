@@ -1,6 +1,5 @@
 """Ensure that loading and validating ``.toml`` works as expected."""
 
-import logging
 from pathlib import Path
 from typing import Any
 
@@ -16,7 +15,11 @@ from lightwin.new_config.full_specs import FullConfSpec
 DATA_DIR = Path("data", "example")
 CONFIG_PATH = DATA_DIR / "lightwin.toml"
 DAT_PATH = DATA_DIR / "example.dat"
-CONFIG_KEYS = {"beam": "beam", "files": "files"}
+CONFIG_KEYS = {
+    "beam": "beam",
+    "files": "files",
+    "beam_calculator": "generic_tracewin",
+}
 
 
 @pytest.fixture(scope="class")
@@ -62,11 +65,31 @@ def dummy_files() -> dict[str, Any]:
 
 
 @pytest.fixture(scope="class")
+def dummy_beam_calculator_tracewin() -> dict[str, Any]:
+    """Generate a default dummy :class:`.TraceWin` conf dict."""
+    dummy_tracewin = {
+        "tool": "TraceWin",
+        "ini_path": DATA_DIR / "example.ini",
+        "machine_config_file": DATA_DIR / "machine_config.toml",
+        "partran": 0,
+        "simulation_type": "noX11_full",
+        "hide": True,
+    }
+    return dummy_tracewin
+
+
+@pytest.fixture(scope="class")
 def dummy_toml_dict(
-    dummy_beam: dict[str, Any], dummy_files: dict[str, Any]
+    dummy_beam: dict[str, Any],
+    dummy_files: dict[str, Any],
+    dummy_beam_calculator_tracewin: dict[str, Any],
 ) -> dict[str, dict[str, Any]]:
     """Generate a dummy config dict that should work."""
-    dummy_conf = {"beam": dummy_beam, "files": dummy_files}
+    dummy_conf = {
+        "beam": dummy_beam,
+        "files": dummy_files,
+        "beam_calculator": dummy_beam_calculator_tracewin,
+    }
     return dummy_conf
 
 
@@ -97,7 +120,7 @@ class TestConfigManager:
     ) -> None:
         """Check if loaded toml is valid."""
         assert full_conf_specs.validate(
-            dummy_toml_dict, toml_folder=DATA_DIR
+            dummy_toml_dict, id_type="configured_object", toml_folder=DATA_DIR
         ), f"Error validating {CONFIG_PATH}"
 
     def test_generate_works(
@@ -115,7 +138,7 @@ class TestConfigManager:
     ) -> None:
         """Check that generating a default toml leads to a valid dict."""
         assert full_conf_specs.validate(
-            generated_toml_dict,
+            generated_toml_dict, id_type="table_entry"
         ), "Error validating default configuration dict."
 
     def test_config_can_be_saved_to_file(
