@@ -1,8 +1,7 @@
 """Gather in a single object all the parameters for LW to run."""
 
 import logging
-from collections.abc import Collection
-from typing import Any
+from typing import Any, Literal
 
 from lightwin.new_config.beam_calculator_tracewin_specs import TRACEWIN_CONFIG
 from lightwin.new_config.beam_specs import BEAM_CONFIG
@@ -15,16 +14,20 @@ class FullConfSpec:
 
     Attributes
     ----------
+    MANDATORY_CONFIG_ENTRIES : tuple[str, ...]
+        Entries that you should provide for this config to work.
     specs : dict[str, TableConfSpec]
         Holds the different tables required by LightWin to run.
 
     """
 
+    MANDATORY_CONFIG_ENTRIES = ("files", "beam_calculator", "beam")  #:
+
     def __init__(
         self,
-        beam_table: str = "beam",
-        files_table: str = "files",
-        beam_calculator_table: str = "generic_tracewin",
+        beam_table_name: str = "beam",
+        files_table_name: str = "files",
+        beam_calculator_table_name: str = "generic_tracewin",
     ) -> None:
         """Define static specifications.
 
@@ -33,55 +36,115 @@ class FullConfSpec:
 
         """
         self.specs = {
-            "beam": TableConfSpec(beam_table, BEAM_CONFIG),
-            "files": TableConfSpec(files_table, FILES_CONFIG),
+            "beam": TableConfSpec("beam", beam_table_name, BEAM_CONFIG),
+            "files": TableConfSpec("files", files_table_name, FILES_CONFIG),
             "beam_calculator": TableConfSpec(
-                beam_calculator_table, TRACEWIN_CONFIG
+                "beam_calculator", beam_calculator_table_name, TRACEWIN_CONFIG
             ),  # temporary
         }
-        self._beam_table = beam_table
-        self._files_table = files_table
-        self._beam_calculator_table = beam_calculator_table
 
     def __repr__(self) -> str:
         """Print info on how object was instantiated."""
-        repr_ = "\n".join(
-            (
-                "FullConfSpec(",
-                f"\tbeam_table={self._beam_table},",
-                f"\tfiles_table={self._files_table},",
-                f"\tbeam_calculator_table={self._beam_calculator_table},",
-                ")",
-            )
+        tables_info = (
+            ["FullConfSpec("]
+            + ["\t" + table.__repr__() for table in self.specs.values()]
+            + [")"]
         )
-        return repr_
+        return "\n".join(tables_info)
 
-    def _get_proper_spec(self, spec_name: str) -> TableConfSpec:
-        """Get the specifications for the table named ``spec_name``."""
-        spec = self.specs.get(spec_name, None)
-        if spec is not None:
-            return spec
-        logging.error(f"There is no specs for table {spec_name}")
-        raise IOError(f"There is no specs for table {spec_name}")
+    def _get_proper_table(
+        self,
+        table_id: str,
+        id_type: Literal[
+            "configured_object", "table_entry"
+        ] = "configured_object",
+    ) -> TableConfSpec:
+        """Get the specifications for the table named ``table_id``.
+
+        Parameters
+        ----------
+        table_id : str
+            Name of the desired table.
+        id_type : Literal["configured_object", "table_entry"], optional
+            If ``table_id`` is the name of the object (eg ``'beam'``) or of the
+            table entry in the ``.toml`` (eg ``'my_proton_beam'``, without
+            brackets).
+
+        Returns
+        -------
+        TableConfSpec
+            The desired object.
+
+        """
+        for table in self.specs.values():
+            if table_id != getattr(table, id_type):
+                continue
+            return table
+
+        raise ValueError(
+            f"No table with {id_type} attribute = {table_id} found in "
+            f"{self.__repr__()}."
+        )
 
     def to_toml_strings(
-        self, toml_fulldict: dict[str, dict[str, Any]]
+        self,
+        toml_fulldict: dict[str, dict[str, Any]],
+        id_type: Literal[
+            "configured_object", "table_entry"
+        ] = "configured_object",
     ) -> list[str]:
-        """Convert the given dict in string that can be put in a ``.toml``."""
+        """Convert the given dict in string that can be put in a ``.toml``.
+
+        Parameters
+        ----------
+        toml_fulldict : dict[str, dict[str, Any]]
+            Holds the full configuration.
+        id_type : Literal["configured_object", "table_entry"], optional
+            If ``toml_fulldict`` keys are name of the object (eg ``'beam'``) or
+            of the table entry in the ``.toml`` (eg ``'my_proton_beam'``,
+            without brackets).
+
+        Returns
+        -------
+        list[str]
+            The ``.toml`` content that can be directly written to a ``.toml``
+            file.
+
+        """
         strings = []
         for key, val in toml_fulldict.items():
-            spec = self._get_proper_spec(key)
+            spec = self._get_proper_table(key, id_type=id_type)
             strings += spec.to_toml_strings(val)
 
         return strings
 
     def validate(
-        self, toml_fulldict: dict[str, dict[str, Any]], **kwargs
+        self,
+        toml_fulldict: dict[str, dict[str, Any]],
+        id_type: Literal[
+            "configured_object", "table_entry"
+        ] = "configured_object",
+        **kwargs,
     ) -> bool:
-        """Check that all the tables in ``toml_fulldict`` are valid."""
-        validations = [self._mandatory_keys_are_present(toml_fulldict.keys())]
+        """Check that all the tables in ``toml_fulldict`` are valid.
+
+        Parameters
+        ----------
+        toml_fulldict : dict[str, dict[str, Any]]
+            Holds the full configuration.
+        id_type : Literal["configured_object", "table_entry"], optional
+            If ``toml_fulldict`` keys are name of the object (eg ``'beam'``) or
+            of the table entry in the ``.toml`` (eg ``'my_proton_beam'``,
+            without brackets).
+
+        Returns
+        -------
+        bool
+            If the dict is valid or not.
+        """
+        validations = [self._mandatory_keys_are_present]
         for table_name, toml_subdict in toml_fulldict.items():
-            spec = self._get_proper_spec(table_name)
+            spec = self._get_proper_table(table_name, id_type=id_type)
             validations.append(spec.validate(toml_subdict, **kwargs))
 
         all_is_validated = all(validations)
@@ -92,16 +155,15 @@ class FullConfSpec:
 
         return all_is_validated
 
-    def _mandatory_keys_are_present(
-        self, toml_tables: Collection[str]
-    ) -> bool:
+    @property
+    def _mandatory_keys_are_present(self) -> bool:
         """Ensure that all the mandatory parameters are defined."""
         they_are_all_present = True
 
-        for table, spec in self.specs.items():
-            if not spec.is_mandatory:
+        for table in self.specs.values():
+            if not table.is_mandatory:
                 continue
-            if table in toml_tables:
+            if table.configured_object in self.MANDATORY_CONFIG_ENTRIES:
                 continue
             they_are_all_present = False
             logging.error(
@@ -115,7 +177,7 @@ class FullConfSpec:
     ) -> dict[str, dict[str, Any]]:
         """Generate a default dummy dict that should let LightWin work."""
         dummy_conf = {
-            spec.name_in_file: spec.generate_dummy_dict(
+            spec.table_entry: spec.generate_dummy_dict(
                 only_mandatory=only_mandatory
             )
             for spec in self.specs.values()

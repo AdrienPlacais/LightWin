@@ -7,6 +7,17 @@ from pathlib import Path
 from typing import Any, Literal
 
 from lightwin.config.helper import find_file
+from lightwin.new_config.toml_formatter import format_for_toml
+
+CONFIGURABLE_OBJECTS = (
+    "beam",
+    "beam_calculator",
+    "design_space",
+    "evaluators",
+    "files",
+    "plots",
+    "wtf",
+)
 
 
 @dataclass
@@ -18,9 +29,10 @@ class KeyValConfSpec:
     key : str
         Name of the attribute.
     types : tuple[type, ...]
-        Allowed types for the value. Used to check validity of input, but also
-        for proper formatting when creating a config ``.toml`` file. Prefer
-        giving a tuple of types, even if there is only one possible type.
+        Allowed types for the value. Used to check validity of input. When
+        creating a config ``.toml`` file, the first type of the tuple is used
+        for proper formatting. Prefer giving a tuple of types, even if there is
+        only one possible type.
     description : str
         A markdown string to describe the property. Will be displayed in the
         documentation.
@@ -111,16 +123,9 @@ class KeyValConfSpec:
             )
             value = self.default_value
 
-        formatted = value
-        if str in self.types:
-            if isinstance(formatted, Path):
-                formatted = str(formatted)
-            assert isinstance(formatted, str), (
-                "The provided value should be a string but is "
-                f"{type(formatted)}"
-            )
-            formatted = '"' + formatted + '"'
-
+        formatted = format_for_toml(
+            self.key, value, preferred_type=self.types[0]
+        )
         return f"{self.key} = {formatted}"
 
 
@@ -129,7 +134,16 @@ class TableConfSpec:
 
     def __init__(
         self,
-        name: str,
+        configured_object: Literal[
+            "beam",
+            "beam_calculator",
+            "design_space",
+            "evaluators",
+            "files",
+            "plots",
+            "wtf",
+        ],
+        table_entry: str,
         specs: Collection[KeyValConfSpec],
         is_mandatory: bool = True,
         can_have_untested_keys: bool = False,
@@ -138,10 +152,12 @@ class TableConfSpec:
 
         Parameters
         ----------
-        name : str
-            Name of the table.
+        configured_object : str
+            Name of the object that will receive associated parameters.
+        table_entry : str
+            Name of the table in the ``.toml`` file, without brackets.
         specs : Collection[KeyValConfSpec]
-            The :class:`KeyValConfSpec` in the current table.
+            The :class:`KeyValConfSpec` objects in the current table.
         is_mandatory : bool, optional
             If the current table must be provided. The default is True.
         can_have_untested_keys : bool, optional
@@ -150,10 +166,20 @@ class TableConfSpec:
             default is False.
 
         """
-        self.name = name
+        self.configured_object = configured_object
+        self.table_entry = table_entry
         self.specs = {spec.key: spec for spec in specs}
         self.is_mandatory = is_mandatory
         self.can_have_untested_keys = can_have_untested_keys
+        logging.info(f".toml table [{table_entry}] loaded!")
+
+    def __repr__(self) -> str:
+        """Print how the object was created."""
+        info = (
+            "TableConfSpec:",
+            f"{self.configured_object:>16s} -> [{self.table_entry}]",
+        )
+        return " ".join(info)
 
     def _get_proper_spec(self, spec_name: str) -> KeyValConfSpec | None:
         """Get the specification for the property named ``spec_name``."""
@@ -163,15 +189,15 @@ class TableConfSpec:
         if self.can_have_untested_keys:
             return
         logging.error(
-            f"The table {self.name} has no specs for property {spec_name}"
+            f"The table {self.table_entry} has no specs for property {spec_name}"
         )
         raise IOError(
-            f"The table {self.name} has no specs for property {spec_name}"
+            f"The table {self.table_entry} has no specs for property {spec_name}"
         )
 
     def to_toml_strings(self, toml_subdict: dict[str, Any]) -> list[str]:
         """Convert the given dict in string that can be put in a ``.toml``."""
-        strings = [f"[{self.name}]"]
+        strings = [f"[{self.table_entry}]"]
         for key, val in toml_subdict.items():
             spec = self._get_proper_spec(key)
             if spec is None:

@@ -103,7 +103,23 @@ def dict_to_toml(
     full_conf_specs: FullConfSpec,
     allow_overwrite: bool = False,
 ) -> None:
-    """Write the provided configuration dict to a ``.toml`` file."""
+    """Write the provided configuration dict to a ``.toml`` file.
+
+    Parameters
+    ----------
+    toml_fulldict : dict[str, dict[str, Any]]
+        The configuration as a nested dictionary. The keys will be used as
+        table entries.
+    toml_path : Path
+        Where to save the ``.toml``.
+    full_conf_specs : FullConfSpec
+        Holds the template to be respected. In particular, the type of the
+        values in the different tables.
+    allow_overwrite : bool, optional
+        If a pre-existing ``.toml`` can be overwritten. The default is False,
+        in which case an error will be raised.
+
+    """
     if _indue_overwritting(toml_path, allow_overwrite):
         return
 
