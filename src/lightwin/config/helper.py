@@ -72,7 +72,8 @@ def find_file(toml_folder: Path | None, file: str | Path) -> Path:
     msg = (
         f"{file = } was not found. It can be defined relative to the "
         ".toml (recommended), absolute, or relative to the execution dir"
-        "of the script (not recommended)."
+        " of the script (not recommended). "
+        f"Provided {toml_folder = }"
     )
     logging.critical(msg)
     raise FileNotFoundError(msg)
