@@ -4,11 +4,11 @@ import logging
 from typing import Any
 
 
-def format_for_toml(input_type: type, key: str, value: Any) -> str:
+def format_for_toml(key: str, value: Any, preferred_type: type) -> str:
     """Format the value so that it matches ``toml`` standard."""
-    if input_type is str:
+    if preferred_type is str:
         return _str_toml(key, value)
-    if input_type is bool:
+    if preferred_type is bool:
         return _bool_toml(key, value)
     return f"{value}"
 
