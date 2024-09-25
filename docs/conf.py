@@ -33,6 +33,7 @@ extensions = [
     "sphinx.ext.todo",  # allow use of TODO
     # "sphinx.ext.viewcode",
     "nbsphinx",
+    "sphinx_multiversion",
 ]
 
 autodoc_default_options = {
@@ -63,8 +64,22 @@ html_theme_options = {
     "display_version": True,
 }
 html_static_path = ["_static"]
-
+html_sidebars = {
+    "**": [
+        "versions.html",
+    ],
+}
 
 # -- Options for LaTeX output ------------------------------------------------
 # https://stackoverflow.com/questions/28454217/how-to-avoid-the-too-deeply-nested-error-when-creating-pdfs-with-sphinx
 latex_elements = {"preamble": r"\usepackage{enumitem}\setlistdepth{99}"}
+
+# -- Options for multiversion in doc -----------------------------------------
+smv_tag_whitelist = (
+    # r"^v\d+\.\d+.*$|latest"  # would keep all the versions (unnecessary)
+    r"v0.7.0b|v0.6.5|latest"  # keep only major tags
+)
+smv_branch_whitelist = "main"
+smv_remote_whitelist = None
+smv_released_pattern = r"v.*"
+smv_latest_version = release
