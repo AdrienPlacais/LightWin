@@ -17,7 +17,7 @@ classifiers = [
 dependencies = [
    "cloudpickle==3.0.0",
    "Cython==3.0.10",
-   "matplotlib==3.9.1",
+   "matplotlib>=3.9.1",
    "myst-parser==3.0.1",
    "nbsphinx==0.9.4",
    "numpy==2.0.1",
