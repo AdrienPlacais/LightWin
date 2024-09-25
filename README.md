@@ -2,7 +2,7 @@
 LightWin is a tool to automatically find compensation settings for cavity failures in linacs.
 
 ## Installation
-The full installation instructions are detailed [here](https://adrienplacais.github.io/LightWin/html/manual/installation.html).
+The full installation instructions are detailed [here](https://adrienplacais.github.io/LightWin/html/main/manual/installation.html).
 The steps are straightforward and can be summarized as follows:
 1. Clone the repository:
 `git clone git@github.com:AdrienPlacais/LightWin.git`
@@ -11,13 +11,13 @@ The steps are straightforward and can be summarized as follows:
 
 Note that the TraceWin module will not work out of the box.
 You will need to tell LightWin were to find your TraceWin executables.
-See [dedicated instructions](https://adrienplacais.github.io/LightWin/html/manual/installation.tracewin.html).
+See [dedicated instructions](https://adrienplacais.github.io/LightWin/html/main/manual/installation.tracewin.html).
 
 ## Documentation
-Documentation is available [here](https://adrienplacais.github.io/LightWin/html/index.html).
+Documentation is available [here](https://adrienplacais.github.io/LightWin/html/main/index.html).
 
 ## How to run
-See [here](https://adrienplacais.github.io/LightWin/html/manual/usage.html).
+See [here](https://adrienplacais.github.io/LightWin/html/main/manual/usage.html).
 
 ## Example
 See the `data/example` folder.
@@ -33,7 +33,7 @@ See the `data/example` folder.
 
 - [ ] `Plotter` object.
 - [ ] Friendlier `Evaluator`.
-- [x] Support for `SET_SYNC_PHASE` (see [note](https://adrienplacais.github.io/LightWin/html/manual/usage.html#compatibility-with-tracewin-dat-files)).
+- [x] Support for `SET_SYNC_PHASE` (see [note](https://adrienplacais.github.io/LightWin/html/main/manual/usage.html#compatibility-with-tracewin-dat-files)).
 - [ ] Better handling of TraceWin errors (currently: a single error and whole run is lost).
 
 ### Optimization
