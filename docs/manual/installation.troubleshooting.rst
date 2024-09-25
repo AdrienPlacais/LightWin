@@ -3,6 +3,13 @@
 Troubleshooting
 ---------------
 
+`Module not found`
+^^^^^^^^^^^^^^^^^^
+
+   #. Ensure that the Python environment where LightWin was installed is activated.
+         * In a Python interpreter, the `import lightwin` command should not raise error.
+   #. If you installed LightWin using `conda`, check that the `src/lighwin/` folder is in your `PYTHONPATH` environment variable.
+
 (Windows) `Microsoft Visual C++ 14.0 or greater is required` error
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
