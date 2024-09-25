@@ -1,3 +1,5 @@
+.. _BeamCalculator-configuration-help-page:
+
 ``beam_calculator`` section (mandatory)
 ***************************************
 .. toctree::
@@ -38,4 +40,3 @@ See `data/examples/machine_config_file.toml` for an example.
 The ``[beam_calculator_post]`` follows the same format.
 It is used to store a second :class:`.BeamCalculator`.
 This is mainly useful for defining a more precise -- but more time-consuming -- beam dynamics tool, for example to check your compensation settings.
-
