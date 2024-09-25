@@ -121,10 +121,17 @@ If not, you can download the latest version from the <a class="reference externa
 </div>
 </div></blockquote>
 <p>The mandatory packages with their dependencies should be automatically downloaded.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">-e</span></code> flag means that the installation is editable.
 In other words, you can edit the source files and the changes will be taken into account when calling lightwin.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If there is a problem during the installation, file an <a class="reference external" href="https://github.com/AdrienPlacais/LightWin/issues">issue</a>.
+Give me your OS, development environment, and the full log error.
+You can probably fix the issue yourself by manually installing the packages listed in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, taking a more recent version of the offending package(s).
+In any case, I’ll be happy to have the information.</p>
 </div>
 </section>
 <section id="installation-with-conda-not-recommended">
@@ -235,7 +242,7 @@ Here’s how to properly install and use Cython with the project:</p>
 </section>
 <section id="compiling-cython-modules">
 <h3>2. Compiling Cython modules<a class="headerlink" href="#compiling-cython-modules" title="Link to this heading"></a></h3>
-<p>Some parts of LightWin, in particular the <code class="docutils literal notranslate"><span class="pre">Envelope1D</span></code> module, have Cython-optimized code that need to be optimized.
+<p>Some parts of LightWin, in particular the <a class="reference internal" href="../lightwin/lightwin.beam_calculation.envelope_1d.envelope_1d.html#lightwin.beam_calculation.envelope_1d.envelope_1d.Envelope1D" title="lightwin.beam_calculation.envelope_1d.envelope_1d.Envelope1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope1D</span></code></a> beam calculator, have Cython-optimized code that need to be optimized.
 Follow this steps to compile the modules:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -370,6 +377,28 @@ Include the following configuration:</p>
 </section>
 <section id="troubleshooting">
 <span id="id3"></span><h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do not hesitate to reach me by filling an <a class="reference external" href="https://github.com/AdrienPlacais/LightWin/issues">issue</a> on GitHub.
+I will do my best to help you.
+Please give me as much detail as possible, so I can reproduce the problem: OS, development environment, Python version…</p>
+</div>
+<section id="windows-microsoft-visual-c-14-0-or-greater-is-required-error">
+<h3>(Windows) <code class="docutils literal notranslate"><span class="pre">Microsoft</span> <span class="pre">Visual</span> <span class="pre">C++</span> <span class="pre">14.0</span> <span class="pre">or</span> <span class="pre">greater</span> <span class="pre">is</span> <span class="pre">required</span></code> error<a class="headerlink" href="#windows-microsoft-visual-c-14-0-or-greater-is-required-error" title="Link to this heading"></a></h3>
+<p>Usually happens when compiling the Cython modules.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Go to <a class="reference external" href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">visual studio website</a> and download Build Tools.</p></li>
+<li><p>Download and execute <code class="docutils literal notranslate"><span class="pre">vs_BuildTools.exe</span></code>.</p></li>
+<li><p>Check “C++ Development Desktop” checkbox.</p></li>
+<li><p>Install.</p></li>
+</ol>
+</div></blockquote>
+<div class="admonition-todo admonition" id="id5">
+<p class="admonition-title">Todo</p>
+<p>Allow for an easy way to skip Cython compilation.</p>
+</div>
+</section>
 <section id="module-not-found">
 <h3><code class="docutils literal notranslate"><span class="pre">Module</span> <span class="pre">not</span> <span class="pre">found</span></code><a class="headerlink" href="#module-not-found" title="Link to this heading"></a></h3>
 <blockquote>
@@ -384,22 +413,6 @@ Include the following configuration:</p>
 <li><p>If you installed LightWin using <code class="docutils literal notranslate"><span class="pre">conda</span></code>, check that the <code class="docutils literal notranslate"><span class="pre">src/lighwin/</span></code> folder is in your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> environment variable.</p></li>
 </ol>
 </div></blockquote>
-</section>
-<section id="windows-microsoft-visual-c-14-0-or-greater-is-required-error">
-<h3>(Windows) <code class="docutils literal notranslate"><span class="pre">Microsoft</span> <span class="pre">Visual</span> <span class="pre">C++</span> <span class="pre">14.0</span> <span class="pre">or</span> <span class="pre">greater</span> <span class="pre">is</span> <span class="pre">required</span></code> error<a class="headerlink" href="#windows-microsoft-visual-c-14-0-or-greater-is-required-error" title="Link to this heading"></a></h3>
-<p>Usually happens when compiling the Cython modules.</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>Go to <a class="reference external" href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">visual studio website</a> and download Build Tools.</p></li>
-<li><p>Download and execute <code class="docutils literal notranslate"><span class="pre">vs_BuildTools.exe</span></code>.</p></li>
-<li><p>Check “C++ Development Desktop” checkbox.</p></li>
-<li><p>Install.</p></li>
-</ol>
-</div></blockquote>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Do not hesitate to reach me by filling an <a class="reference external" href="https://github.com/AdrienPlacais/LightWin/issues">issue</a> on GitHub. I will do my best to help you.</p>
-</div>
 </section>
 </section>
 </section>
