@@ -1,7 +1,0 @@
-lightwin.scripts.change\_field\_maps\_phase\_definition module
-==============================================================
-
-.. automodule:: lightwin.scripts.change_field_maps_phase_definition
-   :members:
-   :undoc-members:
-   :show-inheritance:
