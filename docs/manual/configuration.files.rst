@@ -1,5 +1,6 @@
 ``files`` section (mandatory)
 *****************************
+
 .. toctree::
    :maxdepth: 4
 
@@ -11,7 +12,4 @@ It must contain the key ``dat_file``, which is the path to the linac structure f
    :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
-See also: :mod:`config.files` and the `TraceWin compatibility note`_.
-
-.. `TraceWin compatibility note`: https://adrienplacais.github.io/LightWin/html/manual/usage.html#compatibility-with-tracewin-dat-files
-
+See also: :mod:`config.files` and the :ref:`TraceWin compatibility note<TraceWin compatibility note>`.

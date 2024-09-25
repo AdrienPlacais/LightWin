@@ -9,6 +9,7 @@ Usage
 
 General structure of the code
 -----------------------------
+
 The highest-level object is an :class:`.Accelerator`.
 It is initialized thanks to a ``.dat`` file (the same format as TraceWin).
 Its main purpose is to store a :class:`.ListOfElements`, which is a ``list`` containing all the :class:`.Element`\s of the ``.dat`` file.
@@ -24,6 +25,7 @@ This last object contains all the useful information, such as kinetic energy alo
 
 Breaking and fixing a linac
 ---------------------------
+
 The methods to break -- and then fix -- a linac are stored in the :class:`.Fault` objects, gathered in :class:`.FaultScenario`.
 A :class:`.Fault` is composed of one or several failed cavities that are fixed together.
 A :class:`.FaultScenario` is composed of one or several :class:`.Fault` happening at the same time.
@@ -37,16 +39,19 @@ The latter is given as argument to the :meth:`.BeamCalculator.run_with_this` whi
 
 Compatibility with TraceWin `.dat` files
 ----------------------------------------
+
 LightWin uses the same format as TraceWin for the linac structure.
 As TraceWin developers implemented a significant number of elements and commands, those will be progressively implemented in LightWin too.
 
 "Useless" commands and elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 Some instructions will raise a warning, even if they will not influence the results.
 As an example, if you use :class:`.Envelope1D`, transverse dynamics are not considered and the fact that transverse field maps are not implemented should not be a problem.
 
 "Useful" commands and elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 You should clean the `.dat` to remove any command that influences the design of the linac.
 In particular: `SET_ADV`, `SET_SYNC_PHASE`, `ADJUST` commands.
 Warnings may not always appear, so be careful that :class:`.Envelope1D` or :class:`.Envelope3D` match with TraceWin.
@@ -61,6 +66,7 @@ If you choose :class:`.TraceWin` solver for the optimization, both LightWin and 
 
 How to implement commands or elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 You can implement the desired elements and `git push` them, file an issue on GitHub or send me an `email`_ and I will try to add the desired element(s) as soon as possible.
 
 .. note::
@@ -70,3 +76,4 @@ You can implement the desired elements and `git push` them, file an issue on Git
    Field maps file formats must be ascii, binary files to handled yet
 
 .. _email: mailto:placais@lpsc.in2p3.fr
+
