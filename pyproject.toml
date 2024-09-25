@@ -28,6 +28,7 @@ dependencies = [
    "scipy==1.14.0",
    "setuptools==72.0.0",
    "sphinx-rtd-theme==2.0.0",
+   "sphinx-multiversion==0.2.4",
 ]
 description = "Automatically compensate cavity failures in linacs"
 keywords = ["failure compensation", "linac", "linear accelerator", "reliability"]
