@@ -17,9 +17,15 @@ Installation with pip (recommended)
 
 The mandatory packages with their dependencies should be automatically downloaded.
 
-.. note::
+.. hint::
    The `-e` flag means that the installation is editable.
    In other words, you can edit the source files and the changes will be taken into account when calling lightwin.
+
+.. note::
+   If there is a problem during the installation, file an `issue`_.
+   Give me your OS, development environment, and the full log error.
+   You can probably fix the issue yourself by manually installing the packages listed in `pyproject.toml`, taking a more recent version of the offending package(s).
+   In any case, I'll be happy to have the information.
 
 Installation with conda (not recommended)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

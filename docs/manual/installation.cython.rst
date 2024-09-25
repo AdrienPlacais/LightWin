@@ -27,7 +27,7 @@ Ensure Cython is installed before installing other packages like `pymoo` to take
 
 2. Compiling Cython modules
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Some parts of LightWin, in particular the `Envelope1D` module, have Cython-optimized code that need to be optimized.
+Some parts of LightWin, in particular the :class:`.Envelope1D` beam calculator, have Cython-optimized code that need to be optimized.
 Follow this steps to compile the modules:
 
  1. Navigate to the `LightWin` base directory:
