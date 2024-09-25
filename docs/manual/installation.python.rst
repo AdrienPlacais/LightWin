@@ -27,6 +27,8 @@ The mandatory packages with their dependencies should be automatically downloade
    You can probably fix the issue yourself by manually installing the packages listed in `pyproject.toml`, taking a more recent version of the offending package(s).
    In any case, I'll be happy to have the information.
 
+.. _issue: https://github.com/AdrienPlacais/LightWin/issues
+
 Installation with conda (not recommended)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The package dependencies are listed in a single compact `pyproject.toml` file.
