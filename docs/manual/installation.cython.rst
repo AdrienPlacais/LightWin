@@ -57,24 +57,15 @@ To:
 
    * `/path/to/LightWin/src/lightwin/beam_calculation/envelope_1d/`.
 
+`Microsoft Visual C++ 14.0 or greater is required` error is covered in the :ref:`troubleshooting section<troubleshooting>`.
 
-4. Troubleshooting compilation issues
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-* On Windows, if you encounter a `Microsoft Visual C++ 14.0 or greater is required` error:
 
-  #. Go to `visual studio website`_ and download Build Tools.
-  #. Download and execute `vs_BuildTools.exe`.
-  #. Check "C++ Development Desktop" checkbox.
-  #. Install.
-
-.. _visual studio website: https://visualstudio.microsoft.com/visual-cpp-build-tools/
-
-5. Restarting Your Interpreter
+4. Restarting Your Interpreter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you are using an IDE like Spyder or VSCode, remember to restart the kernel after compiling the Cython modules to ensure they are correctly loaded.
 
-6. Testing Cython Compilation
+5. Testing Cython Compilation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To verify that everything is set up correctly, run the test suite using `pytest`.
@@ -83,7 +74,6 @@ This will check if the Cython modules are properly integrated:
 .. code-block:: bash
 
    pytest -m cython
-
 
 .. seealso::
 
