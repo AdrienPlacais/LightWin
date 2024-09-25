@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="next" title="Troubleshooting" href="installation.troubleshooting.html" />
     <link rel="prev" title="TraceWin (facultative)" href="installation.tracewin.html" /> 
 </head>
 
@@ -53,6 +53,7 @@
 <li class="toctree-l2"><a class="reference internal" href="installation.cython.html">Cython setup (should be automatic)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.tracewin.html">TraceWin (facultative)</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.troubleshooting.html">Troubleshooting</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
@@ -110,25 +111,10 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;(smoke and not slow)&quot;</span>
 </pre></div>
 </div>
-</section>
-<section id="frequent-errors">
-<h2>Frequent errors<a class="headerlink" href="#frequent-errors" title="Link to this heading"></a></h2>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">E</span>&#160;&#160; <span class="pre">ModuleNotFoundError:</span> <span class="pre">No</span> <span class="pre">module</span> <span class="pre">named</span> <span class="pre">'beam_calculation'</span></code>.</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> is not properly set. Ensure that the directory containing the LightWin source code is included in your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.</p></li>
-</ul>
-</div></blockquote>
-</li>
-<li><p><code class="docutils literal notranslate"><span class="pre">xfailed</span></code> errors.</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">xfailed</span></code> stands for “expected to fail” and these errors are usually intended for developers to track issues. They are not necessarily problematic for users.</p></li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">xfailed</span></code> errors: <code class="docutils literal notranslate"><span class="pre">xfailed</span></code> stands for “expected to fail” and these errors are usually intended for developers to track issues. They are not necessarily problematic for users.</p>
+</div>
 </section>
 </section>
 
@@ -138,7 +124,7 @@
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="installation.tracewin.html" class="btn btn-neutral float-left" title="TraceWin (facultative)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="installation.troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

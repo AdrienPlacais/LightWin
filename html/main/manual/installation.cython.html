@@ -53,6 +53,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Cython setup (should be automatic)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.tracewin.html">TraceWin (facultative)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.testing.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.troubleshooting.html">Troubleshooting</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
@@ -157,26 +158,14 @@ If not, manually move the created files:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">/path/to/LightWin/src/lightwin/beam_calculation/envelope_1d/</span></code>.</p></li>
 </ul>
 </div></blockquote>
-</section>
-<section id="troubleshooting-compilation-issues">
-<h2>4. Troubleshooting compilation issues<a class="headerlink" href="#troubleshooting-compilation-issues" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p>On Windows, if you encounter a <code class="docutils literal notranslate"><span class="pre">Microsoft</span> <span class="pre">Visual</span> <span class="pre">C++</span> <span class="pre">14.0</span> <span class="pre">or</span> <span class="pre">greater</span> <span class="pre">is</span> <span class="pre">required</span></code> error:</p>
-<ol class="arabic simple">
-<li><p>Go to <a class="reference external" href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">visual studio website</a> and download Build Tools.</p></li>
-<li><p>Download and execute <code class="docutils literal notranslate"><span class="pre">vs_BuildTools.exe</span></code>.</p></li>
-<li><p>Check “C++ Development Desktop” checkbox.</p></li>
-<li><p>Install.</p></li>
-</ol>
-</li>
-</ul>
+<p><code class="docutils literal notranslate"><span class="pre">Microsoft</span> <span class="pre">Visual</span> <span class="pre">C++</span> <span class="pre">14.0</span> <span class="pre">or</span> <span class="pre">greater</span> <span class="pre">is</span> <span class="pre">required</span></code> error is covered in the <a class="reference internal" href="installation.troubleshooting.html#troubleshooting"><span class="std std-ref">troubleshooting section</span></a>.</p>
 </section>
 <section id="restarting-your-interpreter">
-<h2>5. Restarting Your Interpreter<a class="headerlink" href="#restarting-your-interpreter" title="Link to this heading"></a></h2>
+<h2>4. Restarting Your Interpreter<a class="headerlink" href="#restarting-your-interpreter" title="Link to this heading"></a></h2>
 <p>If you are using an IDE like Spyder or VSCode, remember to restart the kernel after compiling the Cython modules to ensure they are correctly loaded.</p>
 </section>
 <section id="testing-cython-compilation">
-<h2>6. Testing Cython Compilation<a class="headerlink" href="#testing-cython-compilation" title="Link to this heading"></a></h2>
+<h2>5. Testing Cython Compilation<a class="headerlink" href="#testing-cython-compilation" title="Link to this heading"></a></h2>
 <p>To verify that everything is set up correctly, run the test suite using <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.
 This will check if the Cython modules are properly integrated:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-m<span class="w"> </span>cython

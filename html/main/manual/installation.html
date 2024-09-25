@@ -53,6 +53,7 @@
 <li class="toctree-l2"><a class="reference internal" href="installation.cython.html">Cython setup (should be automatic)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.tracewin.html">TraceWin (facultative)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.testing.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.troubleshooting.html">Troubleshooting</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
@@ -268,26 +269,14 @@ If not, manually move the created files:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">/path/to/LightWin/src/lightwin/beam_calculation/envelope_1d/</span></code>.</p></li>
 </ul>
 </div></blockquote>
-</section>
-<section id="troubleshooting-compilation-issues">
-<h3>4. Troubleshooting compilation issues<a class="headerlink" href="#troubleshooting-compilation-issues" title="Link to this heading"></a></h3>
-<ul class="simple">
-<li><p>On Windows, if you encounter a <code class="docutils literal notranslate"><span class="pre">Microsoft</span> <span class="pre">Visual</span> <span class="pre">C++</span> <span class="pre">14.0</span> <span class="pre">or</span> <span class="pre">greater</span> <span class="pre">is</span> <span class="pre">required</span></code> error:</p>
-<ol class="arabic simple">
-<li><p>Go to <a class="reference external" href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">visual studio website</a> and download Build Tools.</p></li>
-<li><p>Download and execute <code class="docutils literal notranslate"><span class="pre">vs_BuildTools.exe</span></code>.</p></li>
-<li><p>Check “C++ Development Desktop” checkbox.</p></li>
-<li><p>Install.</p></li>
-</ol>
-</li>
-</ul>
+<p><code class="docutils literal notranslate"><span class="pre">Microsoft</span> <span class="pre">Visual</span> <span class="pre">C++</span> <span class="pre">14.0</span> <span class="pre">or</span> <span class="pre">greater</span> <span class="pre">is</span> <span class="pre">required</span></code> error is covered in the <a class="reference internal" href="installation.troubleshooting.html#troubleshooting"><span class="std std-ref">troubleshooting section</span></a>.</p>
 </section>
 <section id="restarting-your-interpreter">
-<h3>5. Restarting Your Interpreter<a class="headerlink" href="#restarting-your-interpreter" title="Link to this heading"></a></h3>
+<h3>4. Restarting Your Interpreter<a class="headerlink" href="#restarting-your-interpreter" title="Link to this heading"></a></h3>
 <p>If you are using an IDE like Spyder or VSCode, remember to restart the kernel after compiling the Cython modules to ensure they are correctly loaded.</p>
 </section>
 <section id="testing-cython-compilation">
-<h3>6. Testing Cython Compilation<a class="headerlink" href="#testing-cython-compilation" title="Link to this heading"></a></h3>
+<h3>5. Testing Cython Compilation<a class="headerlink" href="#testing-cython-compilation" title="Link to this heading"></a></h3>
 <p>To verify that everything is set up correctly, run the test suite using <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.
 This will check if the Cython modules are properly integrated:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-m<span class="w"> </span>cython
@@ -350,7 +339,7 @@ Include the following configuration:</p>
 <span class="c1"># Note that additional entries will be required</span>
 </pre></div>
 </div>
-<p>See <a class="reference external" href="https://adrienplacais.github.io/LightWin/html/configuration/beam_calculator.html">dedicated documentation</a> for <code class="docutils literal notranslate"><span class="pre">lightwin.toml</span></code>.</p>
+<p>For the full configuration of <code class="docutils literal notranslate"><span class="pre">lightwin.toml</span></code>, look at the <a class="reference internal" href="configuration.beam_calculator.html#beamcalculator-configuration-help-page"><span class="std std-ref">dedicated documentation</span></a>.</p>
 </section>
 </section>
 <section id="testing">
@@ -373,25 +362,44 @@ Include the following configuration:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;(smoke and not slow)&quot;</span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">xfailed</span></code> errors: <code class="docutils literal notranslate"><span class="pre">xfailed</span></code> stands for “expected to fail” and these errors are usually intended for developers to track issues. They are not necessarily problematic for users.</p>
+</div>
 </section>
-<section id="frequent-errors">
-<h3>Frequent errors<a class="headerlink" href="#frequent-errors" title="Link to this heading"></a></h3>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">E</span>&#160;&#160; <span class="pre">ModuleNotFoundError:</span> <span class="pre">No</span> <span class="pre">module</span> <span class="pre">named</span> <span class="pre">'beam_calculation'</span></code>.</p>
+</section>
+<section id="troubleshooting">
+<span id="id3"></span><h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="module-not-found">
+<h3><code class="docutils literal notranslate"><span class="pre">Module</span> <span class="pre">not</span> <span class="pre">found</span></code><a class="headerlink" href="#module-not-found" title="Link to this heading"></a></h3>
 <blockquote>
-<div><ul class="simple">
-<li><p>Your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> is not properly set. Ensure that the directory containing the LightWin source code is included in your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.</p></li>
+<div><ol class="arabic simple">
+<li><dl class="simple">
+<dt>Ensure that the Python environment where LightWin was installed is activated.</dt><dd><ul class="simple">
+<li><p>In a Python interpreter, the <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">lightwin</span></code> command should not raise error.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">xfailed</span></code> errors.</p>
+<li><p>If you installed LightWin using <code class="docutils literal notranslate"><span class="pre">conda</span></code>, check that the <code class="docutils literal notranslate"><span class="pre">src/lighwin/</span></code> folder is in your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> environment variable.</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="windows-microsoft-visual-c-14-0-or-greater-is-required-error">
+<h3>(Windows) <code class="docutils literal notranslate"><span class="pre">Microsoft</span> <span class="pre">Visual</span> <span class="pre">C++</span> <span class="pre">14.0</span> <span class="pre">or</span> <span class="pre">greater</span> <span class="pre">is</span> <span class="pre">required</span></code> error<a class="headerlink" href="#windows-microsoft-visual-c-14-0-or-greater-is-required-error" title="Link to this heading"></a></h3>
+<p>Usually happens when compiling the Cython modules.</p>
 <blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">xfailed</span></code> stands for “expected to fail” and these errors are usually intended for developers to track issues. They are not necessarily problematic for users.</p></li>
-</ul>
+<div><ol class="arabic simple">
+<li><p>Go to <a class="reference external" href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">visual studio website</a> and download Build Tools.</p></li>
+<li><p>Download and execute <code class="docutils literal notranslate"><span class="pre">vs_BuildTools.exe</span></code>.</p></li>
+<li><p>Check “C++ Development Desktop” checkbox.</p></li>
+<li><p>Install.</p></li>
+</ol>
 </div></blockquote>
-</li>
-</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do not hesitate to reach me by filling an <a class="reference external" href="https://github.com/AdrienPlacais/LightWin/issues">issue</a> on GitHub. I will do my best to help you.</p>
+</div>
 </section>
 </section>
 </section>

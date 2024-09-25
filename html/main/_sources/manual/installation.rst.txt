@@ -1,5 +1,6 @@
 Installation
 ============
+
 .. toctree::
    :maxdepth: 4
    :hidden:
@@ -9,6 +10,7 @@ Installation
    installation.cython
    installation.tracewin
    installation.testing
+   installation.troubleshooting
 
 
 .. include:: installation.download.rst
@@ -16,3 +18,4 @@ Installation
 .. include:: installation.cython.rst
 .. include:: installation.tracewin.rst
 .. include:: installation.testing.rst
+.. include:: installation.troubleshooting.rst

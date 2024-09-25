@@ -28,14 +28,6 @@ You can also combine test markers as defined in `pyproject.toml`. For example, t
 
    pytest -m "(smoke and not slow)"
 
-Frequent errors
-^^^^^^^^^^^^^^^
-
-* `E   ModuleNotFoundError: No module named 'beam_calculation'`.
-
-   * Your `PYTHONPATH` is not properly set. Ensure that the directory containing the LightWin source code is included in your `PYTHONPATH`.
-
-* `xfailed` errors.
-
-   * `xfailed` stands for "expected to fail" and these errors are usually intended for developers to track issues. They are not necessarily problematic for users.
+.. note::
+   `xfailed` errors: `xfailed` stands for "expected to fail" and these errors are usually intended for developers to track issues. They are not necessarily problematic for users.
 
