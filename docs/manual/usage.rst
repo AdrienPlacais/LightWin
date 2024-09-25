@@ -35,7 +35,7 @@ It will try to find the *best* :class:`.Variable`\s that match the :class:`.Obje
 Under the hood, it converts at each iteration the list of :class:`.Variable`\s into a :class:`.SetOfCavitySettings`.
 The latter is given as argument to the :meth:`.BeamCalculator.run_with_this` which gives a :class:`.SimulationOutput` from which the :class:`.Objective`\s are evaluated.
 
-.. _TraceWin compatibility note:
+.. _TraceWin-compatibility-note:
 
 Compatibility with TraceWin `.dat` files
 ----------------------------------------

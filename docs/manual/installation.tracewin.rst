@@ -51,4 +51,4 @@ Include the following configuration:
    machine_name = "a_name_to_override_default_machine_name"
    # Note that additional entries will be required
 
-For the full configuration of `lightwin.toml`, look at the :ref:`dedicated documentation<BeamCalculator-configuration-help-page>`
+For the full configuration of `lightwin.toml`, look at the :ref:`dedicated documentation<BeamCalculator-configuration-help-page>`.
