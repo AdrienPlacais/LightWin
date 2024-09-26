@@ -6,21 +6,18 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-import os
-import re
-import sys
-
-sys.path.insert(0, os.path.abspath("/home/placais/LightWin/src/"))
+import lightwin
 
 project = "LightWin"
 copyright = "2024, A. Plaçais, F. Bouly, B. Yee-Rendon"
-author = "A. Plaçais, F. Bouly, B. Yee-Rendond"
+author = "A. Plaçais, F. Bouly, B. Yee-Rendon"
 
 # See https://protips.readthedocs.io/git-tag-version.html
 # The full version, including alpha/beta/rc tags.
-release = re.sub("^v", "", os.popen("git describe").read().strip())
+# release = re.sub("^v", "", os.popen("git describe").read().strip())
 # The short X.Y version.
-version = release
+# version = release
+version = lightwin.__version__
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -77,9 +74,9 @@ latex_elements = {"preamble": r"\usepackage{enumitem}\setlistdepth{99}"}
 # -- Options for multiversion in doc -----------------------------------------
 smv_tag_whitelist = (
     # r"^v\d+\.\d+.*$|latest"  # would keep all the versions (unnecessary)
-    r"v0.7.0b|latest"  # keep only major tags
+    r"v0.7.0b0|latest"  # keep only major tags
 )
 smv_branch_whitelist = "main"
 smv_remote_whitelist = None
 smv_released_pattern = r"v.*"
-smv_latest_version = release
+smv_latest_version = version
