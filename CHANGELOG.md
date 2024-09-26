@@ -13,11 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `evaluator` objects are more robust and can be configured from the `.toml`.
 - Plotting is now performed thanks to the `plotter` library.
 
-## [0.7.0b1] 2024-09-26
+## [0.7.0b0] 2024-09-26
 
 ### Fixed
 
-- `matplotlib` is not necessarily `3.9.1`, a higher version number is allowed.
+- Released constraints on the versions of installed packages.
 
 ## [0.7.0b] 2024-08-07
 
