@@ -6,15 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [0.6.??] 2024-??-?? -- branch under development
+## [0.?.??] 2024-??-?? -- branch under development
 
 ### Changed
+
 - `evaluator` objects are more robust and can be configured from the `.toml`.
 - Plotting is now performed thanks to the `plotter` library.
+
+## [0.7.0b1] 2024-09-26
+
+### Fixed
+
+- `matplotlib` is not necessarily `3.9.1`, a higher version number is allowed.
 
 ## [0.7.0b] 2024-08-07
 
 ### Changed
+
 - The code is packaged.
  - Installation instructions were updated.
  - It is not necessary to add LightWin to your `PATH`.
@@ -24,15 +32,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.6.21] 2024-06-07
 
 ### Added
+
 - Support for `REPEAT_ELE` command.
 - Basic support for `SET_SYNC_PHASE`. This command can be kept in the input `.dat`, but output `.dat` will hold relative or absolute phase (determined by the `BeamCalculator.reference_phase`).
 
 ### Changed
+
 - When creating the `BeamCalculator`, prefer `method="RK4"` over `method="RK"` for 4th order Runge-Kutta method.
 
 ## [0.6.20] 2024-05-31
 
 ### Added
+
 - Basic support for `ADJUST` commands
 - New functionality: pass beauty.
  - After a `FaultScenario` is fixed, use `insert_beauty_pass_instructions` from `util.beauty_pass` to add diagnostics and adjust and let TraceWin refine the settings.
@@ -41,12 +52,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Compensating, rephased and failed cavities will be incorrectly displayed as nominal (green) cavities in the output figures (FIXME).
 
 ### Fixed
+
 - Personalized name of field maps 1100, 100 and of quadrupoles are now exported in output dat file.
  - Note that this is a temporary patch, a more robust solution will be implemented in future updates.
 
 ## [0.6.19] 2024-05-27
 
 ### Added
+
 - Support for the TraceWin command line arguments: `algo`, `cancel_matching` and `cancel_matchingP`
 - You can provide a `shift` key in `wtf` to shift the window of compensating cavities.
   - Example with 4 compensating lattices:
@@ -59,19 +72,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - In other words: some objects such as `Accelerator` or `SimulationOutput` can be saved in binary format, so they can be reloaded and reused in a later Python instance without the hassle of recreating and recomputing everything.
 
 ### Changed
+
 - A configuration file is mandatory to select the TraceWin executables.
 
 ### Fixed
+
 - SimulationOutput created by TraceWin have a `is_multiparticle` attribute that matches reality.
 - Position envelopes are now plotted in deg instead of degdeg (1degdeg = 180 / pi deg).
 
 ## [0.6.18] 2024-04-23
 
 ### Added
+
 - You can forbid a cavity from being retuned (ex: a rebuncher which is here to rebunch, not to try funny beamy things). Just set `my_cavity.can_be_retuned = False`.
 - By default, a lattice without any retunable cavity is skipped when selecting the compensating cavities; this behavior can be modified by setting a `min_number_of_cavities_in_lattice` with `l neighboring lattices` method in the configuration.
 
 ### Changed
+
 - New typing features impose the use of Python 3.12.
 - The `idx` key in the `wtf` dictionary is now called `id_nature`, which can be one of the following:
     - `cavity`: we consider that `failed = [[10]]` means "the 10th cavity is down".
@@ -86,19 +103,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.6.17] 2024-04-19
 
 ### Added
+
 - Switch between different phases at `.dat` save.
 
 ### Fixed
+
 - With the `"sync_phase_amplitude"` design space, the synchronous phases were saved in the `.dat` and labelled as relative phase (no `SET_SYNC_PHASE`).
 
 ## [0.6.16] 2024-04-17
 
 ### Added
+
 - New design space `"rel_phase_amplitude_with_constrained_sync_phase"`
 - Pytest for basic compensation with all `BeamCalculator`
 - Pytest for every `Design Space`
 
 ### Deprecated
+
 - Some design space names are not to be used.
  - `"unconstrained"` -> `"abs_phase_amplitude"`
  - `"unconstrained_rel"` -> `"rel_phase_amplitude"`
@@ -106,10 +127,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - `"sync_phase_as_variable"` -> `"sync_phase_amplitude"`
 
 ### Removed
+
 - Support for `.ini` configuration files.
 - `"phi_s_fit"` entry in configuration (use the proper design space config entry instead)
 
 ### Fixed
+
 - Lattices and their indexes correctly set.
 - Synchronous phases correctly calculated and updated; can be used as a variable again.
 
