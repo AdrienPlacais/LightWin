@@ -1,2 +1,3 @@
 Entry,Type,Description,Allowed values,Mandatory?
 ``dat_file``,path,Path to the ``.dat`` file,,✅
+``out_folder``,path,Name of the output folder,,❌
