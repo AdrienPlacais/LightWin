@@ -210,7 +210,7 @@ class FaultScenario(list):
     def _break_cavities(self) -> None:
         """Break the cavities.
 
-        ..todo ::
+        .. todo ::
             At this step I do not save the ``.dat`` anymore. Was it useful for
             something?
 
