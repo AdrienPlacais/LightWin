@@ -15,7 +15,7 @@ Configuration
 
 Most of the configuration of LightWin is performed through a ``.toml`` configuration file, which should be given as argument to several objects initialisation.
 The configuration file is treated with the help of the `tomllib <https://docs.python.org/3/library/tomllib.html>`_ module.
-It is processed by the :func:`process_config` function, which checks it's validity and converts it to a dictionary.
+It is processed by the :func:`process_config` function, which checks its validity and converts it to a dictionary.
 
 .. note::
    Configuration was previously set up thanks to a ``.ini`` file. This is now deprecated.
@@ -43,7 +43,6 @@ It is however recommended to use explicit names.
    ]
 
    [beam_proton_no_space_charge]   # or [sdaflghsh] but it would be less explicit in my humble opinion
-   linac = my_ads
    e_rest_mev = 938.27203
    q_adim = 1.0
    e_mev = 20.0

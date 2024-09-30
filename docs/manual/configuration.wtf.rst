@@ -22,7 +22,7 @@ You can type the index of failed cavities on several lines if you want to study 
 .. code-block:: toml
 
    # Indexes are cavity indexes
-   idx = cavity
+   idx = "cavity"
    failed = [
       [0, 1],       # First simulation first cryomodule is down
       [0],          # Second simulation only first cavity is down
