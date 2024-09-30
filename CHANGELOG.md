@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Scripts moved to the `lightwin` module so that they can actually be imported.
 - `outfolder` argument in `combine-solutions` script is automatically created if it does not exist.
 - Documentation includes the API reference again.
+- Most of the errors raised during documentation compilation were fixed.
 
 
 ## [0.7.0b0] 2024-09-26
