@@ -78,10 +78,13 @@ class ListOfElements(list):
         files : dict[str, str | list[list[str]] | Path]
             A dictionary to hold information on the source and output
             files/folders of the object. The keys are:
-                - ``dat_file``: absolute path to the ``.dat`` file
-                - ``elts_n_cmds``: list of objects representing dat content
-                - ``accelerator_path``: where calculation results for each :class:`.BeamCalculator` will be stored.
-                - ``dat_content``: list of list of str, holding content of the ``.dat``.
+
+            * ``dat_file``: absolute path to the ``.dat`` file
+            * ``elts_n_cmds``: list of objects representing dat content
+            * ``accelerator_path``: where calculation results for each
+              :class:`.BeamCalculator` will be stored.
+            * ``dat_content``: list of list of str, holding content of the
+              ``.dat``.
 
         """
         self.input_particle = input_particle
