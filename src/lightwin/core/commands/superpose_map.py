@@ -16,7 +16,7 @@ from lightwin.core.instruction import Instruction
 class SuperposeMap(Command):
     """Command to merge several field maps.
 
-    Attributes
+    Parameters
     ----------
     z_0 : float
         Position at which the next field map should be inserted.

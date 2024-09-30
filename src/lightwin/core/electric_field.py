@@ -43,7 +43,7 @@ class RfField:
 
     All phases are stored in radian.
 
-    Attributes
+    Parameters
     ----------
     e_spat : Callable[[float], float]
         Spatial component of the electric field. Needs to be multiplied by the
@@ -226,7 +226,7 @@ class NewRfField:
 
     All phases are stored in radian.
 
-    Attributes
+    Parameters
     ----------
     e_spat : Callable[[float], float]
         Spatial component of the electric field. Needs to be multiplied by the

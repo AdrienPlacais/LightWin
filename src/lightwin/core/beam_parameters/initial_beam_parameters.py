@@ -25,7 +25,7 @@ class InitialBeamParameters:
     r"""
     Hold all emittances, envelopes, etc in various planes @ single position.
 
-    Attributes
+    Parameters
     ----------
     z_abs : float
         Absolute position in the linac in m.

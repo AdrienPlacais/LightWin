@@ -40,7 +40,7 @@ class SimulationOutput:
 
     Used for fitting, post-processing, plotting.
 
-    Attributes
+    Parameters
     ----------
     out_folder : Path
         Results folder used by the :class:`.BeamCalculator` that created this.

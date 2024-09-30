@@ -28,7 +28,7 @@ class DesignSpaceFactory(ABC):
     """
     Base class to handle :class:`.Variable` and :class:`.Constraint` creation.
 
-    Attributes
+    Parameters
     ----------
     reference_elements : list[Element]
        All the elements with the reference setting.

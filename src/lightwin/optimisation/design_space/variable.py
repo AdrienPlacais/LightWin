@@ -25,7 +25,7 @@ class Variable(DesignSpaceParameter):
     It can be a cavity amplitude, absolute phase, relative phase or synchronous
     phase with an initial value and limits.
 
-    Attributes
+    Parameters
     ----------
     name : str
         Name of the parameter. Must be compatible with the

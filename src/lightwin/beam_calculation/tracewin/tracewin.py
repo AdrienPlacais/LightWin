@@ -45,7 +45,7 @@ from lightwin.tracewin_utils.interface import (
 class TraceWin(BeamCalculator):
     """Hold a TraceWin beam calculator.
 
-    Attributes
+    Parameters
     ----------
     executable : str
         Path to the TraceWin executable.

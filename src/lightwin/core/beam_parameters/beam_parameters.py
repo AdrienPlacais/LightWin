@@ -29,7 +29,7 @@ class BeamParameters(InitialBeamParameters):
     r"""
     Hold all emittances, envelopes, etc in various planes.
 
-    Attributes
+    Parameters
     ----------
     z_abs : np.ndarray
         Absolute position in the linac in m.

@@ -34,7 +34,7 @@ from lightwin.util.pickling import MyPickler
 class Fault:
     """Handle and fix a single failure.
 
-    Attributes
+    Parameters
     ----------
     failed_elements : list[Element]
         Holds the failed elements.

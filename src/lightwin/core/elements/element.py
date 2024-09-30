@@ -23,7 +23,7 @@ from lightwin.util.helper import recursive_getter, recursive_items
 class Element(Instruction):
     """Generic element.
 
-    Attributes
+    Parameters
     ----------
     base_name : str, optional
         Short name for the element according to TraceWin. Should be overriden.

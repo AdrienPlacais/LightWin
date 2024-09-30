@@ -31,7 +31,7 @@ class TransferMatrix:
         When the simulation is in 1D only, the values corresponding to the
         transverse planes are filled with np.nan.
 
-    Attributes
+    Parameters
     ----------
     individual : np.ndarray
         Individual transfer matrices along the linac. Not defined if not
