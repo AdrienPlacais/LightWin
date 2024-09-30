@@ -199,13 +199,13 @@ class OptimisationAlgorithm(ABC):
         """
 
     def _format_variables(self) -> Any:
-        """Transform all :class:`Variable`s for this optimisation algorithm."""
+        """Adapt all :class:`.Variable` to this optimisation algorithm."""
 
     def _format_objectives(self) -> Any:
-        """Transform all :class:`Objective`s for this optimisation algorithm."""
+        """Adapt all :class:`.Objective` to this optimisation algorithm."""
 
     def _format_constraints(self) -> Any:
-        """Transform all :class:`Constraint`s for this optimisation algorithm."""
+        """Adapt all :class:`.Constraint` to this optimisation algorithm."""
 
     def _wrapper_residuals(self, var: np.ndarray) -> np.ndarray:
         """Compute residuals from an array of variable values."""
