@@ -43,5 +43,5 @@ def value_is(
     tol: float = 1e-10,
     **kwargs: bool,
 ) -> bool:
-    """Test if the value equals ``objective_value`."""
+    """Test if the value equals `objective_value`."""
     return np.all(np.abs(treated_value - objective_value) < tol)
