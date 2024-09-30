@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Scripts moved to the `lightwin` module so that they can actually be imported.
+- `outfolder` argument in `combine-solutions` script is automatically created if it does not exist.
 - Documentation includes the API reference again.
 
 
