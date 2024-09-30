@@ -171,7 +171,7 @@ class Envelope1D(BeamCalculator):
         full_elts: ListOfElements,
         **specific_kwargs,
     ) -> SimulationOutput:
-        """Run :class:`Envelope1D. with optimized cavity settings.
+        """Run :class:`Envelope1D` with optimized cavity settings.
 
         With this solver, we have nothing to do, nothing to update. Just call
         the regular :meth:`run_with_this` method.
