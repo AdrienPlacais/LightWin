@@ -76,7 +76,7 @@ smv_tag_whitelist = (
     # r"^v\d+\.\d+.*$|latest"  # would keep all the versions (unnecessary)
     r"v0.7.0b0|latest"  # keep only major tags
 )
-smv_branch_whitelist = "main"
+smv_branch_whitelist = "main,docs"
 smv_remote_whitelist = None
 smv_released_pattern = r"v.*"
 smv_latest_version = version
