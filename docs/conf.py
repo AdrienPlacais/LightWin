@@ -50,6 +50,7 @@ exclude_patterns = [
     "Thumbs.db",
     ".DS_Store",
     "experimental",
+    "lightwin/modules.rst",
 ]
 
 
