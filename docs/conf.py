@@ -36,9 +36,9 @@ extensions = [
 autodoc_default_options = {
     "members": True,
     "member-order": "bysource",  # Keep original members order
-    "undoc-members": True,  # Document members without doc
     "private-members": True,  # Document _private members
     "special-members": "__init__, __post_init__",  # Document those special members
+    "undoc-members": True,  # Document members without doc
 }
 
 add_module_names = False
