@@ -23,7 +23,9 @@
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.core.electric_field module" href="lightwin.core.electric_field.html" />
+    <link rel="prev" title="lightwin.core.transfer_matrix.factory module" href="lightwin.core.transfer_matrix.factory.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,13 +51,46 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.accelerator.html">lightwin.core.accelerator package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">lightwin.core.beam_parameters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.html">lightwin.core.commands package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.html">lightwin.core.elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">lightwin.core.list_of_elements package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="lightwin.core.transfer_matrix.html">lightwin.core.transfer_matrix package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.transfer_matrix.factory.html">lightwin.core.transfer_matrix.factory module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">lightwin.core.transfer_matrix.transfer_matrix module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">lightwin.core.electric_field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">lightwin.core.instruction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">lightwin.core.instructions_factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">lightwin.core.particle module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -73,6 +108,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.core.html">lightwin.core package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.core.transfer_matrix.html">lightwin.core.transfer_matrix package</a></li>
       <li class="breadcrumb-item active">lightwin.core.transfer_matrix.transfer_matrix module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.core.transfer_matrix.transfer_matrix.rst.txt" rel="nofollow"> View page source</a>
@@ -115,29 +153,15 @@
 <p>When the simulation is in 1D only, the values corresponding to the
 transverse planes are filled with np.nan.</p>
 </div>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.individual">
-<span class="sig-name descname"><span class="pre">individual</span></span><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.individual" title="Link to this definition"></a></dt>
-<dd><p>Individual transfer matrices along the linac. Not defined if not
-provided at initialisation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>individual</strong> (<em>np.ndarray</em>) – Individual transfer matrices along the linac. Not defined if not
+provided at initialisation.</p></li>
+<li><p><strong>cumulated</strong> (<em>np.ndarray</em>) – Cumulated transfer matrices along the linac.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.cumulated">
-<span class="sig-name descname"><span class="pre">cumulated</span></span><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.cumulated" title="Link to this definition"></a></dt>
-<dd><p>Cumulated transfer matrices along the linac.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_cumulated_transfer_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_to_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">slice</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">individual</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.__init__" title="Link to this definition"></a></dt>
@@ -158,24 +182,55 @@ the <code class="docutils literal notranslate"><span class="pre">cumulated</span
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix._compute_cumulated">
-<span class="sig-name descname"><span class="pre">_compute_cumulated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_cumulated_transfer_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix._compute_cumulated" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.has">
+<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.has" title="Link to this definition"></a></dt>
+<dd><p>Check if object has attribute named <code class="docutils literal notranslate"><span class="pre">key</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.get" title="Link to this definition"></a></dt>
+<dd><p>Shorthand to get attributes from this class or its attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*keys</strong> (<em>str</em>) – Name of the desired attributes.</p></li>
+<li><p><strong>to_numpy</strong> (<em>bool</em><em>, </em><em>optional</em>) – If you want the list output to be converted to a np.ndarray. The
+default is True.</p></li>
+<li><p><strong>none_to_nan</strong> (<em>bool</em><em>, </em><em>optional</em>) – To convert None to np.nan. The default is True.</p></li>
+<li><p><strong>elt</strong> (<a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><em>Element</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – If provided, return the attributes only at the considered Element.</p></li>
+<li><p><strong>pos</strong> (<em>'in'</em><em> | </em><em>'out'</em><em> | </em><em>None</em>) – If you want the attribute at the entry, exit, or in the whole
+Element.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Any</em>) – Other arguments passed to recursive getter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Attribute(s) value(s). Will be floats if only one value is returned
+(<code class="docutils literal notranslate"><span class="pre">elt</span></code> is given, <code class="docutils literal notranslate"><span class="pre">pos</span></code> is in <code class="docutils literal notranslate"><span class="pre">('in',</span> <span class="pre">'out')</span></code>).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[np.ndarray | float, …]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix._init_from_individual">
+<span class="sig-name descname"><span class="pre">_init_from_individual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individual</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_cumulated_transfer_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix._init_from_individual" title="Link to this definition"></a></dt>
 <dd><p>Compute cumulated transfer matrix from individual.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>first_cumulated_transfer_matrix</strong> (<em>np.ndarray</em>) – First transfer matrix. It should be eye matrix if we study a linac
+<li><p><strong>individual</strong> (<em>np.ndarray</em>) – Individual transfer matrices along the linac.</p></li>
+<li><p><strong>first_cumulated_transfer_matrix</strong> (<em>np.ndarray</em><em> | </em><em>None</em>) – First transfer matrix. It should be None if we study a linac
 from the start (<code class="docutils literal notranslate"><span class="pre">z_pos</span> <span class="pre">==</span> <span class="pre">0.</span></code>), and should be the cumulated
 transfer matrix of the previous linac portion otherwise.</p></li>
-<li><p><strong>shape</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – Shape of the output <code class="docutils literal notranslate"><span class="pre">cumulated</span></code> array.</p></li>
-<li><p><strong>is_3d</strong> (<em>bool</em>) – If the simulation is in 3D or not.</p></li>
-<li><p><strong>n_points</strong> (<em>int</em>) – Number of mesh points along the linac.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>cumulated</strong> (<em>np.ndarray</em>) – Cumulated transfer matrix.</p></li>
-<li><p><em>.. todo::</em> – I think the 3D/1D handling may be smarter?</p></li>
+<li><p><strong>n_points</strong> (<em>int</em>) – Number of mesh points along the linac.</p></li>
+<li><p><strong>cumulated</strong> (<em>np.ndarray</em>) – Cumulated transfer matrices.</p></li>
 </ul>
 </p>
 </dd>
@@ -207,59 +262,28 @@ the same or not.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix._init_from_individual">
-<span class="sig-name descname"><span class="pre">_init_from_individual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individual</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_cumulated_transfer_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix._init_from_individual" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix._compute_cumulated">
+<span class="sig-name descname"><span class="pre">_compute_cumulated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_cumulated_transfer_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix._compute_cumulated" title="Link to this definition"></a></dt>
 <dd><p>Compute cumulated transfer matrix from individual.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>individual</strong> (<em>np.ndarray</em>) – Individual transfer matrices along the linac.</p></li>
-<li><p><strong>first_cumulated_transfer_matrix</strong> (<em>np.ndarray</em><em> | </em><em>None</em>) – First transfer matrix. It should be None if we study a linac
+<li><p><strong>first_cumulated_transfer_matrix</strong> (<em>np.ndarray</em>) – First transfer matrix. It should be eye matrix if we study a linac
 from the start (<code class="docutils literal notranslate"><span class="pre">z_pos</span> <span class="pre">==</span> <span class="pre">0.</span></code>), and should be the cumulated
 transfer matrix of the previous linac portion otherwise.</p></li>
+<li><p><strong>shape</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – Shape of the output <code class="docutils literal notranslate"><span class="pre">cumulated</span></code> array.</p></li>
+<li><p><strong>is_3d</strong> (<em>bool</em>) – If the simulation is in 3D or not.</p></li>
+<li><p><strong>n_points</strong> (<em>int</em>) – Number of mesh points along the linac.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>n_points</strong> (<em>int</em>) – Number of mesh points along the linac.</p></li>
-<li><p><strong>cumulated</strong> (<em>np.ndarray</em>) – Cumulated transfer matrices.</p></li>
+<li><p><strong>cumulated</strong> (<em>np.ndarray</em>) – Cumulated transfer matrix.</p></li>
+<li><p><em>.. todo::</em> – I think the 3D/1D handling may be smarter?</p></li>
 </ul>
 </p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.get" title="Link to this definition"></a></dt>
-<dd><p>Shorthand to get attributes from this class or its attributes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>*keys</strong> (<em>str</em>) – Name of the desired attributes.</p></li>
-<li><p><strong>to_numpy</strong> (<em>bool</em><em>, </em><em>optional</em>) – If you want the list output to be converted to a np.ndarray. The
-default is True.</p></li>
-<li><p><strong>none_to_nan</strong> (<em>bool</em><em>, </em><em>optional</em>) – To convert None to np.nan. The default is True.</p></li>
-<li><p><strong>elt</strong> (<a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><em>Element</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – If provided, return the attributes only at the considered Element.</p></li>
-<li><p><strong>pos</strong> (<em>'in'</em><em> | </em><em>'out'</em><em> | </em><em>None</em>) – If you want the attribute at the entry, exit, or in the whole
-Element.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Any</em>) – Other arguments passed to recursive getter.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>out</strong> – Attribute(s) value(s). Will be floats if only one value is returned
-(<code class="docutils literal notranslate"><span class="pre">elt</span></code> is given, <code class="docutils literal notranslate"><span class="pre">pos</span></code> is in <code class="docutils literal notranslate"><span class="pre">('in',</span> <span class="pre">'out')</span></code>).</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple[np.ndarray | float, …]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.has">
-<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.has" title="Link to this definition"></a></dt>
-<dd><p>Check if object has attribute named <code class="docutils literal notranslate"><span class="pre">key</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -275,12 +299,6 @@ Element.</p></li>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.r_zdelta">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_zdelta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.r_zdelta" title="Link to this definition"></a></dt>
-<dd><p>Return the transfer matrix of <span class="math notranslate nohighlight">\([z-\delta]\)</span> plane.</p>
-</dd></dl>
-
-<dl class="py property">
 <dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.r_zz">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_zz</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.r_zz" title="Link to this definition"></a></dt>
 <dd><p>Return the transfer matrix of <span class="math notranslate nohighlight">\([z-\delta]\)</span> plane.</p>
@@ -291,6 +309,12 @@ plane.</p>
 </div>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.r_zdelta">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_zdelta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.r_zdelta" title="Link to this definition"></a></dt>
+<dd><p>Return the transfer matrix of <span class="math notranslate nohighlight">\([z-\delta]\)</span> plane.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -299,7 +323,10 @@ plane.</p>
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.core.transfer_matrix.factory.html" class="btn btn-neutral float-left" title="lightwin.core.transfer_matrix.factory module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.core.electric_field.html" class="btn btn-neutral float-right" title="lightwin.core.electric_field module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -327,7 +354,7 @@ plane.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.core.transfer_matrix.transfer_matrix.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.core.transfer_matrix.transfer_matrix.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

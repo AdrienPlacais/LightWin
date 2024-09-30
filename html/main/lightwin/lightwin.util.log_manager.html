@@ -21,7 +21,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.util.pandas_helper module" href="lightwin.util.pandas_helper.html" />
+    <link rel="prev" title="lightwin.util.helper module" href="lightwin.util.helper.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,13 +49,42 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.converters.html">lightwin.util.converters module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.debug.html">lightwin.util.debug module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.dicts_output.html">lightwin.util.dicts_output module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.helper.html">lightwin.util.helper module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lightwin.util.log_manager module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pandas_helper.html">lightwin.util.pandas_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pass_beauty.html">lightwin.util.pass_beauty module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.phases.html">lightwin.util.phases module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html">lightwin.util.pickling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.synchronous_phases.html">lightwin.util.synchronous_phases module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -71,6 +102,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.util.html">lightwin.util package</a></li>
       <li class="breadcrumb-item active">lightwin.util.log_manager module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.util.log_manager.rst.txt" rel="nofollow"> View page source</a>
@@ -145,15 +178,15 @@ it is formatted using formatException() and appended to the message.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="lightwin.util.log_manager.main">
-<span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lightwin.util.log_manager.main" title="Link to this definition"></a></dt>
-<dd><p>Main function.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="lightwin.util.log_manager.set_up_logging">
 <span class="sig-name descname"><span class="pre">set_up_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">console_log_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'stdout'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">console_log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'INFO'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">console_log_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">console_log_line_template</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%(color_on)s[%(levelname)-8s]</span> <span class="pre">[%(filename)-20s]%(color_off)s</span> <span class="pre">%(message)s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('lightwin.log')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile_log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'INFO'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile_log_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile_line_template</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%(color_on)s[%(asctime)s]</span> <span class="pre">[%(levelname)-8s]</span> <span class="pre">[%(filename)-20s]%(color_off)s</span> <span class="pre">%(message)s'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lightwin.util.log_manager.set_up_logging" title="Link to this definition"></a></dt>
 <dd><p>Set up logging.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.util.log_manager.main">
+<span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lightwin.util.log_manager.main" title="Link to this definition"></a></dt>
+<dd><p>Main function.</p>
 </dd></dl>
 
 </section>
@@ -162,7 +195,10 @@ it is formatted using formatException() and appended to the message.</p>
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.util.helper.html" class="btn btn-neutral float-left" title="lightwin.util.helper module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.util.pandas_helper.html" class="btn btn-neutral float-right" title="lightwin.util.pandas_helper module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -190,7 +226,7 @@ it is formatted using formatException() and appended to the message.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.util.log_manager.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.util.log_manager.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

@@ -21,7 +21,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.optimisation.design_space.design_space module" href="lightwin.optimisation.design_space.design_space.html" />
+    <link rel="prev" title="lightwin.optimisation.design_space package" href="lightwin.optimisation.design_space.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,13 +49,43 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.algorithms.html">lightwin.optimisation.algorithms package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="lightwin.optimisation.design_space.html">lightwin.optimisation.design_space package</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">lightwin.optimisation.design_space.constraint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html">lightwin.optimisation.design_space.design_space module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html">lightwin.optimisation.design_space.design_space_parameter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html">lightwin.optimisation.design_space.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.helper.html">lightwin.optimisation.design_space.helper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.variable.html">lightwin.optimisation.design_space.variable module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.objective.html">lightwin.optimisation.objective package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -71,6 +103,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.optimisation.design_space.html">lightwin.optimisation.design_space package</a></li>
       <li class="breadcrumb-item active">lightwin.optimisation.design_space.constraint module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.optimisation.design_space.constraint.rst.txt" rel="nofollow"> View page source</a>
@@ -87,6 +122,11 @@
 <span id="lightwin-optimisation-design-space-constraint-module"></span><h1>lightwin.optimisation.design_space.constraint module<a class="headerlink" href="#module-lightwin.optimisation.design_space.constraint" title="Link to this heading"></a></h1>
 <p>Define <a class="reference internal" href="#lightwin.optimisation.design_space.constraint.Constraint" title="lightwin.optimisation.design_space.constraint.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Constraint</span></code></a>, which stores a constraint.</p>
 <p>It saves it’s name, limits, and methods to evaluate if it is violated or not.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="lightwin.optimisation.design_space.constraint.IMPLEMENTED_CONSTRAINTS">
+<span class="sig-name descname"><span class="pre">IMPLEMENTED_CONSTRAINTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('phi_s',)</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.constraint.IMPLEMENTED_CONSTRAINTS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.constraint.Constraint">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Constraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lightwin.optimisation.design_space.constraint.Constraint" title="Link to this definition"></a></dt>
@@ -94,31 +134,9 @@
 <p>A single constraint.</p>
 <p>For now, it can only be a synchronous phase limits.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="lightwin.optimisation.design_space.constraint.Constraint.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.optimisation.design_space.constraint.Constraint.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.constraint.Constraint.__post_init__">
 <span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lightwin.optimisation.design_space.constraint.Constraint.__post_init__" title="Link to this definition"></a></dt>
 <dd><p>Convert values in deg for output if it is angle.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.optimisation.design_space.constraint.Constraint._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.constraint.Constraint._abc_impl" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.optimisation.design_space.constraint.Constraint.evaluate">
-<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><span class="pre">SimulationOutput</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.optimisation.design_space.constraint.Constraint.evaluate" title="Link to this definition"></a></dt>
-<dd><p>Check if constraint is respected. They should be &lt; 0.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.optimisation.design_space.constraint.Constraint.get_value">
-<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><span class="pre">SimulationOutput</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#lightwin.optimisation.design_space.constraint.Constraint.get_value" title="Link to this definition"></a></dt>
-<dd><p>Get from the <code class="docutils literal notranslate"><span class="pre">SimulationOutput</span></code> the quantity called <code class="docutils literal notranslate"><span class="pre">self.name</span></code>.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -134,12 +152,29 @@
 <p>A lower + and upper bound count as two constraints.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.optimisation.design_space.constraint.Constraint.get_value">
+<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><span class="pre">SimulationOutput</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#lightwin.optimisation.design_space.constraint.Constraint.get_value" title="Link to this definition"></a></dt>
+<dd><p>Get from the <code class="docutils literal notranslate"><span class="pre">SimulationOutput</span></code> the quantity called <code class="docutils literal notranslate"><span class="pre">self.name</span></code>.</p>
 </dd></dl>
 
-<dl class="py data">
-<dt class="sig sig-object py" id="lightwin.optimisation.design_space.constraint.IMPLEMENTED_CONSTRAINTS">
-<span class="sig-name descname"><span class="pre">IMPLEMENTED_CONSTRAINTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('phi_s',)</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.constraint.IMPLEMENTED_CONSTRAINTS" title="Link to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.optimisation.design_space.constraint.Constraint.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><span class="pre">SimulationOutput</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.optimisation.design_space.constraint.Constraint.evaluate" title="Link to this definition"></a></dt>
+<dd><p>Check if constraint is respected. They should be &lt; 0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.optimisation.design_space.constraint.Constraint.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.optimisation.design_space.constraint.Constraint.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lightwin.optimisation.design_space.constraint.Constraint._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.constraint.Constraint._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
 
 </section>
 
@@ -147,7 +182,10 @@
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.optimisation.design_space.html" class="btn btn-neutral float-left" title="lightwin.optimisation.design_space package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.optimisation.design_space.design_space.html" class="btn btn-neutral float-right" title="lightwin.optimisation.design_space.design_space module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -175,7 +213,7 @@
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.optimisation.design_space.constraint.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.optimisation.design_space.constraint.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

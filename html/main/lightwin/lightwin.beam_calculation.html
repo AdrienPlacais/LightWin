@@ -23,7 +23,9 @@
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.beam_calculation.envelope_1d package" href="lightwin.beam_calculation.envelope_1d.html" />
+    <link rel="prev" title="lightwin package" href="lightwin.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,13 +51,40 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">lightwin.beam_calculation package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.html">lightwin.beam_calculation.envelope_1d package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.html">lightwin.beam_calculation.envelope_3d package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.integrators.html">lightwin.beam_calculation.integrators package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.parameters.html">lightwin.beam_calculation.parameters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.html">lightwin.beam_calculation.simulation_output package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.tracewin.html">lightwin.beam_calculation.tracewin package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html">lightwin.beam_calculation.beam_calculator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html">lightwin.beam_calculation.factory module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -73,6 +102,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
       <li class="breadcrumb-item active">lightwin.beam_calculation package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.beam_calculation.rst.txt" rel="nofollow"> View page source</a>
@@ -107,15 +137,15 @@ to hold the meshing, etc.</p>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.html">lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.html#lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.BendEnvelope1DParameters"><code class="docutils literal notranslate"><span class="pre">BendEnvelope1DParameters</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.html#lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.DriftEnvelope1DParameters"><code class="docutils literal notranslate"><span class="pre">DriftEnvelope1DParameters</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.html#lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.ElementEnvelope1DParameters"><code class="docutils literal notranslate"><span class="pre">ElementEnvelope1DParameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.html#lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.DriftEnvelope1DParameters"><code class="docutils literal notranslate"><span class="pre">DriftEnvelope1DParameters</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.html#lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.FieldMapEnvelope1DParameters"><code class="docutils literal notranslate"><span class="pre">FieldMapEnvelope1DParameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.html#lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.BendEnvelope1DParameters"><code class="docutils literal notranslate"><span class="pre">BendEnvelope1DParameters</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory.html">lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory.html#lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory.ElementEnvelope1DParametersFactory"><code class="docutils literal notranslate"><span class="pre">ElementEnvelope1DParametersFactory</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory.html#lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory.PARAMETERS_1D"><code class="docutils literal notranslate"><span class="pre">PARAMETERS_1D</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory.html#lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory.ElementEnvelope1DParametersFactory"><code class="docutils literal notranslate"><span class="pre">ElementEnvelope1DParametersFactory</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.envelope_1d.html">lightwin.beam_calculation.envelope_1d.envelope_1d module</a><ul>
@@ -136,11 +166,11 @@ to hold the meshing, etc.</p>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.transfer_matrices_p.html">lightwin.beam_calculation.envelope_1d.transfer_matrices_p module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_1d.transfer_matrices_p.e_func"><code class="docutils literal notranslate"><span class="pre">e_func()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_1d.transfer_matrices_p.z_bend"><code class="docutils literal notranslate"><span class="pre">z_bend()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_1d.transfer_matrices_p.z_drift"><code class="docutils literal notranslate"><span class="pre">z_drift()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_1d.transfer_matrices_p.z_field_map_leapfrog"><code class="docutils literal notranslate"><span class="pre">z_field_map_leapfrog()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_1d.transfer_matrices_p.z_field_map_rk4"><code class="docutils literal notranslate"><span class="pre">z_field_map_rk4()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_1d.transfer_matrices_p.z_field_map_leapfrog"><code class="docutils literal notranslate"><span class="pre">z_field_map_leapfrog()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_1d.transfer_matrices_p.z_thin_lense"><code class="docutils literal notranslate"><span class="pre">z_thin_lense()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_1d.transfer_matrices_p.z_bend"><code class="docutils literal notranslate"><span class="pre">z_bend()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.transfer_matrix_factory.html">lightwin.beam_calculation.envelope_1d.transfer_matrix_factory module</a><ul>
@@ -158,17 +188,17 @@ to hold the meshing, etc.</p>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html">lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.BendEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">BendEnvelope3DParameters</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.DriftEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">DriftEnvelope3DParameters</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.ElementEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">ElementEnvelope3DParameters</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.FieldMapEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">FieldMapEnvelope3DParameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.DriftEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">DriftEnvelope3DParameters</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.QuadEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">QuadEnvelope3DParameters</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.SolenoidEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">SolenoidEnvelope3DParameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.FieldMapEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">FieldMapEnvelope3DParameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.BendEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">BendEnvelope3DParameters</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.html">lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.ElementEnvelope3DParametersFactory"><code class="docutils literal notranslate"><span class="pre">ElementEnvelope3DParametersFactory</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.PARAMETERS_3D"><code class="docutils literal notranslate"><span class="pre">PARAMETERS_3D</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.ElementEnvelope3DParametersFactory"><code class="docutils literal notranslate"><span class="pre">ElementEnvelope3DParametersFactory</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.envelope_3d.html">lightwin.beam_calculation.envelope_3d.envelope_3d module</a><ul>
@@ -180,16 +210,16 @@ to hold the meshing, etc.</p>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html">lightwin.beam_calculation.envelope_3d.transfer_matrices_p module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p._focusing_strength"><code class="docutils literal notranslate"><span class="pre">_focusing_strength()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p._horizontal_defocusing_quadrupole"><code class="docutils literal notranslate"><span class="pre">_horizontal_defocusing_quadrupole()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p._horizontal_focusing_quadrupole"><code class="docutils literal notranslate"><span class="pre">_horizontal_focusing_quadrupole()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p._magnetic_rigidity"><code class="docutils literal notranslate"><span class="pre">_magnetic_rigidity()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p._quadrupole_trigo_hyperbolic"><code class="docutils literal notranslate"><span class="pre">_quadrupole_trigo_hyperbolic()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p.drift"><code class="docutils literal notranslate"><span class="pre">drift()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p.e_func"><code class="docutils literal notranslate"><span class="pre">e_func()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p.field_map_rk4"><code class="docutils literal notranslate"><span class="pre">field_map_rk4()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p.drift"><code class="docutils literal notranslate"><span class="pre">drift()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p.quad"><code class="docutils literal notranslate"><span class="pre">quad()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p._horizontal_focusing_quadrupole"><code class="docutils literal notranslate"><span class="pre">_horizontal_focusing_quadrupole()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p._horizontal_defocusing_quadrupole"><code class="docutils literal notranslate"><span class="pre">_horizontal_defocusing_quadrupole()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p.field_map_rk4"><code class="docutils literal notranslate"><span class="pre">field_map_rk4()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p.thin_lense"><code class="docutils literal notranslate"><span class="pre">thin_lense()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p._magnetic_rigidity"><code class="docutils literal notranslate"><span class="pre">_magnetic_rigidity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p._focusing_strength"><code class="docutils literal notranslate"><span class="pre">_focusing_strength()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p._quadrupole_trigo_hyperbolic"><code class="docutils literal notranslate"><span class="pre">_quadrupole_trigo_hyperbolic()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrix_factory.html">lightwin.beam_calculation.envelope_3d.transfer_matrix_factory module</a><ul>
@@ -257,14 +287,14 @@ to hold the meshing, etc.</p>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html">lightwin.beam_calculation.tracewin.simulation_output_factory module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory.SimulationOutputFactoryTraceWin"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactoryTraceWin</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._0_to_NaN"><code class="docutils literal notranslate"><span class="pre">_0_to_NaN()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._add_dummy_data"><code class="docutils literal notranslate"><span class="pre">_add_dummy_data()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._cavity_parameters_uniform_with_envelope1d"><code class="docutils literal notranslate"><span class="pre">_cavity_parameters_uniform_with_envelope1d()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._load_cavity_parameters"><code class="docutils literal notranslate"><span class="pre">_load_cavity_parameters()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._load_results_generic"><code class="docutils literal notranslate"><span class="pre">_load_results_generic()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._remove_incomplete_line"><code class="docutils literal notranslate"><span class="pre">_remove_incomplete_line()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._remove_invalid_values"><code class="docutils literal notranslate"><span class="pre">_remove_invalid_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._load_results_generic"><code class="docutils literal notranslate"><span class="pre">_load_results_generic()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._set_energy_related_results"><code class="docutils literal notranslate"><span class="pre">_set_energy_related_results()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._set_phase_related_results"><code class="docutils literal notranslate"><span class="pre">_set_phase_related_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._remove_incomplete_line"><code class="docutils literal notranslate"><span class="pre">_remove_incomplete_line()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._add_dummy_data"><code class="docutils literal notranslate"><span class="pre">_add_dummy_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._load_cavity_parameters"><code class="docutils literal notranslate"><span class="pre">_load_cavity_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._cavity_parameters_uniform_with_envelope1d"><code class="docutils literal notranslate"><span class="pre">_cavity_parameters_uniform_with_envelope1d()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.tracewin.tracewin.html">lightwin.beam_calculation.tracewin.tracewin module</a><ul>
@@ -289,36 +319,36 @@ to hold the meshing, etc.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html">lightwin.beam_calculation.beam_calculator module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator"><code class="docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.__init__"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator._abc_impl"><code class="docutils literal notranslate"><span class="pre">BeamCalculator._abc_impl</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator._generate_simulation_output"><code class="docutils literal notranslate"><span class="pre">BeamCalculator._generate_simulation_output()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator._ids"><code class="docutils literal notranslate"><span class="pre">BeamCalculator._ids</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.__init__"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator._set_up_common_factories"><code class="docutils literal notranslate"><span class="pre">BeamCalculator._set_up_common_factories()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator._set_up_specific_factories"><code class="docutils literal notranslate"><span class="pre">BeamCalculator._set_up_specific_factories()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.cavity_settings_factory"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.cavity_settings_factory</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.compute"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.compute()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.init_solver_parameters"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.init_solver_parameters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.is_a_3d_simulation"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.is_a_3d_simulation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.is_a_multiparticle_simulation"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.is_a_multiparticle_simulation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.post_optimisation_run_with_this"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.post_optimisation_run_with_this()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.reference_phase"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.reference_phase</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.run"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.run()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.run_with_this"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.run_with_this()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.post_optimisation_run_with_this"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.post_optimisation_run_with_this()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.init_solver_parameters"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.init_solver_parameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator._generate_simulation_output"><code class="docutils literal notranslate"><span class="pre">BeamCalculator._generate_simulation_output()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.reference_phase"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.reference_phase</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.is_a_multiparticle_simulation"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.is_a_multiparticle_simulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.is_a_3d_simulation"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.is_a_3d_simulation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.compute"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.compute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.cavity_settings_factory"><code class="docutils literal notranslate"><span class="pre">BeamCalculator.cavity_settings_factory</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator._abc_impl"><code class="docutils literal notranslate"><span class="pre">BeamCalculator._abc_impl</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.beam_calculation.factory.html">lightwin.beam_calculation.factory module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.IMPLEMENTED_BEAM_CALCULATORS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_BEAM_CALCULATORS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory"><code class="docutils literal notranslate"><span class="pre">BeamCalculatorsFactory</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory.__init__"><code class="docutils literal notranslate"><span class="pre">BeamCalculatorsFactory.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory._check_consistency_absolute_phases"><code class="docutils literal notranslate"><span class="pre">BeamCalculatorsFactory._check_consistency_absolute_phases()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory._patch_to_remove_misunderstood_key"><code class="docutils literal notranslate"><span class="pre">BeamCalculatorsFactory._patch_to_remove_misunderstood_key()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory._set_out_folders"><code class="docutils literal notranslate"><span class="pre">BeamCalculatorsFactory._set_out_folders()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory._patch_to_remove_misunderstood_key"><code class="docutils literal notranslate"><span class="pre">BeamCalculatorsFactory._patch_to_remove_misunderstood_key()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory.run"><code class="docutils literal notranslate"><span class="pre">BeamCalculatorsFactory.run()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory.run_all"><code class="docutils literal notranslate"><span class="pre">BeamCalculatorsFactory.run_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory._check_consistency_absolute_phases"><code class="docutils literal notranslate"><span class="pre">BeamCalculatorsFactory._check_consistency_absolute_phases()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.IMPLEMENTED_BEAM_CALCULATORS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_BEAM_CALCULATORS</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -330,7 +360,10 @@ to hold the meshing, etc.</p>
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.html" class="btn btn-neutral float-left" title="lightwin package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.beam_calculation.envelope_1d.html" class="btn btn-neutral float-right" title="lightwin.beam_calculation.envelope_1d package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -358,7 +391,7 @@ to hold the meshing, etc.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.beam_calculation.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.beam_calculation.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

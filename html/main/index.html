@@ -57,6 +57,8 @@
 <li class="toctree-l1"><a class="reference internal" href="manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin/lightwin.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="manual/examples.html">Examples</a></li>
 </ul>
 
@@ -91,16 +93,293 @@
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="manual/installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="manual/usage.html">Usage</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="manual/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="manual/installation.download.html">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/installation.python.html">Python (mandatory)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/installation.cython.html">Cython setup (should be automatic)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/installation.tracewin.html">TraceWin (facultative)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/installation.testing.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/installation.troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="manual/usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="manual/usage.general_structure.html">General structure of the code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/usage.breaking_and_fixing.html">Breaking and fixing a linac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/usage.compatibility_with_tracewin.html">Compatibility with TraceWin <code class="docutils literal notranslate"><span class="pre">.dat</span></code> files</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
-<li class="toctree-l1"><a class="reference internal" href="manual/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manual/configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="manual/configuration.files.html"><code class="docutils literal notranslate"><span class="pre">files</span></code> section (mandatory)</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manual/configuration.beam.html"><code class="docutils literal notranslate"><span class="pre">beam</span></code> section (mandatory)</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manual/configuration.beam_calculator.html"><code class="docutils literal notranslate"><span class="pre">beam_calculator</span></code> section (mandatory)</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manual/configuration.plots.html"><code class="docutils literal notranslate"><span class="pre">plots</span></code> section (mandatory)</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manual/configuration.wtf.html"><code class="docutils literal notranslate"><span class="pre">wtf</span></code> section</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manual/configuration.optimisation.design_space.html"><code class="docutils literal notranslate"><span class="pre">optimisation.design_space</span></code> section</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manual/configuration.evaluators.html"><code class="docutils literal notranslate"><span class="pre">evaluators</span></code> section</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="manual/units.html">Units and conventions</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="manual/scripts.html">Utility scripts</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin/lightwin.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.beam_calculation.html">lightwin.beam_calculation package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.html">lightwin.beam_calculation.envelope_1d package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.beam_parameters_factory.html">lightwin.beam_calculation.envelope_1d.beam_parameters_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.html">lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory.html">lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.envelope_1d.html">lightwin.beam_calculation.envelope_1d.envelope_1d module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.simulation_output_factory.html">lightwin.beam_calculation.envelope_1d.simulation_output_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.transfer_matrices_c.html">lightwin.beam_calculation.envelope_1d.transfer_matrices_c module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.transfer_matrices_p.html">lightwin.beam_calculation.envelope_1d.transfer_matrices_p module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.transfer_matrix_factory.html">lightwin.beam_calculation.envelope_1d.transfer_matrix_factory module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_3d.html">lightwin.beam_calculation.envelope_3d package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_3d.beam_parameters_factory.html">lightwin.beam_calculation.envelope_3d.beam_parameters_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html">lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.html">lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_3d.envelope_3d.html">lightwin.beam_calculation.envelope_3d.envelope_3d module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_3d.simulation_output_factory.html">lightwin.beam_calculation.envelope_3d.simulation_output_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html">lightwin.beam_calculation.envelope_3d.transfer_matrices_p module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_3d.transfer_matrix_factory.html">lightwin.beam_calculation.envelope_3d.transfer_matrix_factory module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.beam_calculation.integrators.html">lightwin.beam_calculation.integrators package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.integrators.rk4.html">lightwin.beam_calculation.integrators.rk4 module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.beam_calculation.parameters.html">lightwin.beam_calculation.parameters package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.parameters.element_parameters.html">lightwin.beam_calculation.parameters.element_parameters module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.parameters.factory.html">lightwin.beam_calculation.parameters.factory module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.beam_calculation.simulation_output.html">lightwin.beam_calculation.simulation_output package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.simulation_output.factory.html">lightwin.beam_calculation.simulation_output.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.simulation_output.simulation_output.html">lightwin.beam_calculation.simulation_output.simulation_output module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.html">lightwin.beam_calculation.tracewin package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.beam_parameters_factory.html">lightwin.beam_calculation.tracewin.beam_parameters_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.element_tracewin_parameters.html">lightwin.beam_calculation.tracewin.element_tracewin_parameters module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.element_tracewin_parameters_factory.html">lightwin.beam_calculation.tracewin.element_tracewin_parameters_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.simulation_output_factory.html">lightwin.beam_calculation.tracewin.simulation_output_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.tracewin.html">lightwin.beam_calculation.tracewin.tracewin module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.transfer_matrix_factory.html">lightwin.beam_calculation.tracewin.transfer_matrix_factory module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.beam_calculation.beam_calculator.html">lightwin.beam_calculation.beam_calculator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.beam_calculation.factory.html">lightwin.beam_calculation.factory module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.config.html">lightwin.config package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.config.beam.html">lightwin.config.beam module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.config.beam_calculator.html">lightwin.config.beam_calculator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.config.design_space.html">lightwin.config.design_space module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.config.evaluators.html">lightwin.config.evaluators module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.config.files.html">lightwin.config.files module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.config.helper.html">lightwin.config.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.config.plots.html">lightwin.config.plots module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.config.wtf.html">lightwin.config.wtf module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.core.html">lightwin.core package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.core.accelerator.html">lightwin.core.accelerator package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.accelerator.accelerator.html">lightwin.core.accelerator.accelerator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.accelerator.factory.html">lightwin.core.accelerator.factory module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.core.beam_parameters.html">lightwin.core.beam_parameters package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.beam_parameters.phase_space.html">lightwin.core.beam_parameters.phase_space package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.beam_parameters.beam_parameters.html">lightwin.core.beam_parameters.beam_parameters module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.beam_parameters.factory.html">lightwin.core.beam_parameters.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.beam_parameters.helper.html">lightwin.core.beam_parameters.helper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.beam_parameters.initial_beam_parameters.html">lightwin.core.beam_parameters.initial_beam_parameters module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.core.commands.html">lightwin.core.commands package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.adjust.html">lightwin.core.commands.adjust module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.command.html">lightwin.core.commands.command module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.dummy_command.html">lightwin.core.commands.dummy_command module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.end.html">lightwin.core.commands.end module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.error.html">lightwin.core.commands.error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.factory.html">lightwin.core.commands.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.field_map_path.html">lightwin.core.commands.field_map_path module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.freq.html">lightwin.core.commands.freq module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.helper.html">lightwin.core.commands.helper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.lattice.html">lightwin.core.commands.lattice module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.marker.html">lightwin.core.commands.marker module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.repeat_ele.html">lightwin.core.commands.repeat_ele module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.set_adv.html">lightwin.core.commands.set_adv module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.set_sync_phase.html">lightwin.core.commands.set_sync_phase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.shift.html">lightwin.core.commands.shift module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.steerer.html">lightwin.core.commands.steerer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.superpose_map.html">lightwin.core.commands.superpose_map module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.core.elements.html">lightwin.core.elements package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.field_maps.html">lightwin.core.elements.field_maps package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.aperture.html">lightwin.core.elements.aperture module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.bend.html">lightwin.core.elements.bend module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.diagnostic.html">lightwin.core.elements.diagnostic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.drift.html">lightwin.core.elements.drift module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.dummy.html">lightwin.core.elements.dummy module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.edge.html">lightwin.core.elements.edge module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.element.html">lightwin.core.elements.element module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.factory.html">lightwin.core.elements.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.helper.html">lightwin.core.elements.helper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.quad.html">lightwin.core.elements.quad module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.solenoid.html">lightwin.core.elements.solenoid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.superposed_field_map.html">lightwin.core.elements.superposed_field_map module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.elements.thin_steering.html">lightwin.core.elements.thin_steering module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.core.list_of_elements.html">lightwin.core.list_of_elements package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.list_of_elements.factory.html">lightwin.core.list_of_elements.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.list_of_elements.helper.html">lightwin.core.list_of_elements.helper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.list_of_elements.list_of_elements.html">lightwin.core.list_of_elements.list_of_elements module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.core.transfer_matrix.html">lightwin.core.transfer_matrix package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.transfer_matrix.factory.html">lightwin.core.transfer_matrix.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.transfer_matrix.transfer_matrix.html">lightwin.core.transfer_matrix.transfer_matrix module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.core.electric_field.html">lightwin.core.electric_field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.core.instruction.html">lightwin.core.instruction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.core.instructions_factory.html">lightwin.core.instructions_factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.core.particle.html">lightwin.core.particle module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.evaluator.html">lightwin.evaluator package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.evaluator.simulation_output.html">lightwin.evaluator.simulation_output package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.evaluator.simulation_output.factory.html">lightwin.evaluator.simulation_output.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.evaluator.simulation_output.presets.html">lightwin.evaluator.simulation_output.presets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.evaluator.simulation_output.simulation_output_evaluator.html">lightwin.evaluator.simulation_output.simulation_output_evaluator module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.evaluator.list_of_simulation_output_evaluators.html">lightwin.evaluator.list_of_simulation_output_evaluators module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.evaluator.post_treaters.html">lightwin.evaluator.post_treaters module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.evaluator.testers.html">lightwin.evaluator.testers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.evaluator.types.html">lightwin.evaluator.types module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.experimental.html">lightwin.experimental package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.experimental.new_evaluator.html">lightwin.experimental.new_evaluator package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.experimental.new_evaluator.simulation_output.html">lightwin.experimental.new_evaluator.simulation_output package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.experimental.new_evaluator.i_evaluator.html">lightwin.experimental.new_evaluator.i_evaluator module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.experimental.plotter.html">lightwin.experimental.plotter package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.experimental.plotter.i_plotter.html">lightwin.experimental.plotter.i_plotter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.experimental.plotter.matplotlib_helper.html">lightwin.experimental.plotter.matplotlib_helper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.experimental.plotter.matplotlib_plotter.html">lightwin.experimental.plotter.matplotlib_plotter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.experimental.plotter.pd_plotter.html">lightwin.experimental.plotter.pd_plotter module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.experimental.test.html">lightwin.experimental.test module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.failures.html">lightwin.failures package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.failures.fault.html">lightwin.failures.fault module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.failures.fault_scenario.html">lightwin.failures.fault_scenario module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.failures.helper.html">lightwin.failures.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.failures.set_of_cavity_settings.html">lightwin.failures.set_of_cavity_settings module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.failures.strategy.html">lightwin.failures.strategy module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.optimisation.html">lightwin.optimisation package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.optimisation.algorithms.html">lightwin.optimisation.algorithms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.algorithms.algorithm.html">lightwin.optimisation.algorithms.algorithm module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.algorithms.differential_evolution.html">lightwin.optimisation.algorithms.differential_evolution module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.algorithms.downhill_simplex.html">lightwin.optimisation.algorithms.downhill_simplex module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.algorithms.downhill_simplex_penalty.html">lightwin.optimisation.algorithms.downhill_simplex_penalty module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.algorithms.explorator.html">lightwin.optimisation.algorithms.explorator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.algorithms.factory.html">lightwin.optimisation.algorithms.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.algorithms.least_squares.html">lightwin.optimisation.algorithms.least_squares module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.algorithms.least_squares_penalty.html">lightwin.optimisation.algorithms.least_squares_penalty module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.algorithms.nsga.html">lightwin.optimisation.algorithms.nsga module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.algorithms.pso.html">lightwin.optimisation.algorithms.pso module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.optimisation.design_space.html">lightwin.optimisation.design_space package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.design_space.constraint.html">lightwin.optimisation.design_space.constraint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.design_space.design_space.html">lightwin.optimisation.design_space.design_space module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.design_space.design_space_parameter.html">lightwin.optimisation.design_space.design_space_parameter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.design_space.factory.html">lightwin.optimisation.design_space.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.design_space.helper.html">lightwin.optimisation.design_space.helper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.design_space.variable.html">lightwin.optimisation.design_space.variable module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.html">lightwin.optimisation.objective package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.factory.html">lightwin.optimisation.objective.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.minimize_difference_with_ref.html">lightwin.optimisation.objective.minimize_difference_with_ref module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.minimize_mismatch.html">lightwin.optimisation.objective.minimize_mismatch module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.objective.html">lightwin.optimisation.objective.objective module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.position.html">lightwin.optimisation.objective.position module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.quantity_is_between.html">lightwin.optimisation.objective.quantity_is_between module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.scripts.html">lightwin.scripts package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.scripts.combine_solutions.html">lightwin.scripts.combine_solutions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.scripts.compare_beam_calculators.html">lightwin.scripts.compare_beam_calculators module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.scripts.compare_runs.html">lightwin.scripts.compare_runs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.scripts.compute_lost_power_per_meter.html">lightwin.scripts.compute_lost_power_per_meter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.scripts.generate_design_space_files.html">lightwin.scripts.generate_design_space_files module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.scripts.reorder_output_figures.html">lightwin.scripts.reorder_output_figures module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.scripts.save_cavity_settings.html">lightwin.scripts.save_cavity_settings module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.scripts.scripts_shorthands.html">lightwin.scripts.scripts_shorthands module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.tracewin_utils.dat_files.html">lightwin.tracewin_utils.dat_files module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.tracewin_utils.electromagnetic_fields.html">lightwin.tracewin_utils.electromagnetic_fields module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.tracewin_utils.interface.html">lightwin.tracewin_utils.interface module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.tracewin_utils.load.html">lightwin.tracewin_utils.load module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.util.html">lightwin.util package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.util.converters.html">lightwin.util.converters module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.util.debug.html">lightwin.util.debug module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.util.dicts_output.html">lightwin.util.dicts_output module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.util.helper.html">lightwin.util.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.util.log_manager.html">lightwin.util.log_manager module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.util.pandas_helper.html">lightwin.util.pandas_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.util.pass_beauty.html">lightwin.util.pass_beauty module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.util.phases.html">lightwin.util.phases module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.util.pickling.html">lightwin.util.pickling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.util.synchronous_phases.html">lightwin.util.synchronous_phases module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.visualization.html">lightwin.visualization package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.visualization.anim.html">lightwin.visualization.anim module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.visualization.plot.html">lightwin.visualization.plot module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="manual/examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="manual/notebooks/absolute_vs_relative_phases.html">Absolute and relative cavity entry phases</a></li>
 </ul>
@@ -122,18 +401,18 @@ whatever.</p>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.beam_calculator.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/beam_calculator.py:docstring of lightwin.beam_calculation.beam_calculator.BeamCalculator._set_up_common_factories, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
-<p>Handle reference synchronous phase.</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.beam_calculator.html#id3"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/beam_calculator.py:docstring of lightwin.beam_calculation.beam_calculator.BeamCalculator.reference_phase, line 3.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
 <p><code class="docutils literal notranslate"><span class="pre">update_reference_phase</span></code> is currently unused, because it is not
 useful once the propagation has been calculated. So… should I
 keep it? Maybe it can be useful in post_optimisation_run_with_this,
 or in scripts to convert the phase between the different
 references, or when I want to save the .dat?</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.beam_calculator.html#id4"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/beam_calculator.py:docstring of lightwin.beam_calculation.beam_calculator.BeamCalculator.run, line 3.)</p>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.beam_calculator.html#id3"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/beam_calculator.py:docstring of lightwin.beam_calculation.beam_calculator.BeamCalculator.run, line 3.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
+<p>Handle reference synchronous phase.</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.beam_calculator.html#id4"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/beam_calculator.py:docstring of lightwin.beam_calculation.beam_calculator.BeamCalculator.reference_phase, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Patch in transfer matrix to get proper input transfer matrix. In
@@ -251,19 +530,24 @@ function for when the index element is desired.</p>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.beam_parameters_factory.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/tracewin/beam_parameters_factory.py:docstring of lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin._extract_emittance_for_99percent, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
-<p>another possibly unbound error to handle</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.simulation_output_factory.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/tracewin/simulation_output_factory.py:docstring of lightwin.beam_calculation.tracewin.simulation_output_factory._add_dummy_data, line 6.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
 <p>fix possible unbound error for <code class="docutils literal notranslate"><span class="pre">n_columns</span></code>.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.simulation_output_factory.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/tracewin/simulation_output_factory.py:docstring of lightwin.beam_calculation.tracewin.simulation_output_factory._remove_incomplete_line, line 3.)</p>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.simulation_output_factory.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/tracewin/simulation_output_factory.py:docstring of lightwin.beam_calculation.tracewin.simulation_output_factory._remove_incomplete_line, line 3.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
+<p>another possibly unbound error to handle</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.simulation_output_factory.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/tracewin/simulation_output_factory.py:docstring of lightwin.beam_calculation.tracewin.simulation_output_factory._add_dummy_data, line 6.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
+<p>This absolute phase thing should be fixed now. Check this.</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.tracewin.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/tracewin/tracewin.py:docstring of lightwin.beam_calculation.tracewin.tracewin, line 16.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Maybe I should also store the synchronous phase?</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.tracewin.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/tracewin/tracewin.py:docstring of lightwin.beam_calculation.tracewin.tracewin.TraceWin._save_cavities_entry_phases, line 8.)</p>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.tracewin.tracewin.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/tracewin/tracewin.py:docstring of lightwin.beam_calculation.tracewin.tracewin.TraceWin._save_cavities_entry_phases, line 8.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Handling of arguments for TW could be cleaner</p>
@@ -351,14 +635,9 @@ consistency with rest of the code…</p>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.beam_parameters.helper.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/beam_parameters/helper.py:docstring of lightwin.core.beam_parameters.helper.twiss_from_sigma, line 9.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
-<p>Check if property setter work with the <a href="#id2"><span class="problematic" id="id3">*</span></a>= thingy</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.beam_parameters.helper.html#id4"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/beam_parameters/helper.py:docstring of lightwin.core.beam_parameters.helper.twiss_from_sigma, line 13.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
 <p>Could be cleaner.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.beam_parameters.initial_beam_parameters.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/beam_parameters/initial_beam_parameters.py:docstring of lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters.sigma, line 3.)</p>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.beam_parameters.initial_beam_parameters.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/beam_parameters/initial_beam_parameters.py:docstring of lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters.sigma, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Implement SET_SYNC_PHASE</p>
@@ -445,7 +724,7 @@ appear here, appart for when I debug.</p>
 <p class="admonition-title">Todo</p>
 <p>Maybe not necessary to raise an error when there is a mismatch.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.elements.field_maps.cavity_settings.html#id7"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/elements/field_maps/cavity_settings.py:docstring of lightwin.core.elements.field_maps.cavity_settings.CavitySettings._check_consistency_of_status_and_reference, line 3.)</p>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.elements.field_maps.cavity_settings.html#id5"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/elements/field_maps/cavity_settings.py:docstring of lightwin.core.elements.field_maps.cavity_settings.CavitySettings._check_consistency_of_status_and_reference, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>This will be subclassed, as the different solvers do not have the same
@@ -462,7 +741,7 @@ etc</p>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.elements.field_maps.field_map.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/elements/field_maps/field_map.py:docstring of lightwin.core.elements.field_maps.field_map, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
-<p>Handle the SET_SYNCH_PHASE command</p>
+<p>Completely handle the SET_SYNCH_PHASE command</p>
 </div>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.elements.field_maps.field_map.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/elements/field_maps/field_map.py:docstring of lightwin.core.elements.field_maps.field_map, line 6.)</p>
 <div class="admonition-todo admonition">
@@ -470,16 +749,6 @@ etc</p>
 <p>Hande phi_s fitting with <code class="xref py py-class docutils literal notranslate"><span class="pre">beam_calculation.tracewin.Tracewin</span></code></p>
 </div>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.elements.field_maps.field_map.html#id3"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/elements/field_maps/field_map.py:docstring of lightwin.core.elements.field_maps.field_map, line 9.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
-<p>when subclassing field_maps, do not forget to update the transfer matrix
-selector in:
-- <a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_3d.envelope_3d.html#lightwin.beam_calculation.envelope_3d.envelope_3d.Envelope3D" title="lightwin.beam_calculation.envelope_3d.envelope_3d.Envelope3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope3D</span></code></a>
-- <code class="xref py py-class docutils literal notranslate"><span class="pre">SingleElementEnvelope3DParameters</span></code>
-- <a class="reference internal" href="lightwin/lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings" title="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">SetOfCavitySettings</span></code></a>
-- the <code class="docutils literal notranslate"><span class="pre">run_with_this</span></code> methods</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.elements.field_maps.field_map.html#id4"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/elements/field_maps/field_map.py:docstring of lightwin.core.elements.field_maps.field_map, line 12.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Maybe move this to the field_map package once it is implemented</p>
@@ -542,7 +811,7 @@ the <a class="reference internal" href="lightwin/lightwin.beam_calculation.beam_
 <p class="admonition-title">Todo</p>
 <p>Maybe gather some things with the subset?</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.list_of_elements.factory.html#id7"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/list_of_elements/factory.py:docstring of lightwin.core.list_of_elements.factory.ListOfElementsFactory.from_existing_list, line 7.)</p>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.list_of_elements.factory.html#id5"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/list_of_elements/factory.py:docstring of lightwin.core.list_of_elements.factory.ListOfElementsFactory.from_existing_list, line 7.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Filtering consistency.</p>
@@ -553,7 +822,7 @@ the <a class="reference internal" href="lightwin/lightwin.beam_calculation.beam_
 <p>Delete <code class="docutils literal notranslate"><span class="pre">dat_content</span></code>, which does the same thing as <code class="docutils literal notranslate"><span class="pre">elts_n_cmds</span></code> but
 less good</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.list_of_elements.list_of_elements.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/list_of_elements/list_of_elements.py:docstring of lightwin.core.list_of_elements.list_of_elements, line 9.)</p>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.list_of_elements.list_of_elements.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/list_of_elements/list_of_elements.py:docstring of lightwin.core.list_of_elements.list_of_elements, line 10.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Check if it can be more efficient. Maybe store R_xx, R_yy, R_zz separately?</p>
@@ -618,9 +887,15 @@ compute_constraints</p>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.failures.fault_scenario.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/failures/fault_scenario.py:docstring of lightwin.failures.fault_scenario.FaultScenario.__init__, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
+<p>At this step I do not save the <code class="docutils literal notranslate"><span class="pre">.dat</span></code> anymore. Was it useful for
+something?</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.failures.fault_scenario.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/failures/fault_scenario.py:docstring of lightwin.failures.fault_scenario.FaultScenario._break_cavities, line 3.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
 <p>make this more readable</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.failures.fault_scenario.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/failures/fault_scenario.py:docstring of lightwin.failures.fault_scenario.FaultScenario.fix_all, line 3.)</p>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.failures.fault_scenario.html#id3"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/failures/fault_scenario.py:docstring of lightwin.failures.fault_scenario.FaultScenario.fix_all, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>I should create a <a class="reference internal" href="lightwin/lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings" title="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">SetOfCavitySettings</span></code></a> with
@@ -681,11 +956,6 @@ variables/constraints.</p>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.optimisation.design_space.design_space.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/optimisation/design_space/design_space.py:docstring of lightwin.optimisation.design_space.design_space._from_file, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
-<p>check docstrings ref [1]</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.optimisation.design_space.helper.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/optimisation/design_space/helper.py:docstring of lightwin.optimisation.design_space.helper, line 3.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
 <p>decorator to auto output the variables and constraints?</p>
 </div>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.optimisation.objective.factory.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/optimisation/objective/factory.py:docstring of lightwin.optimisation.objective.factory, line 6.)</p>
@@ -716,6 +986,33 @@ setting. Would need to edit the <a class="reference internal" href="lightwin/lig
 <p>Implement loss functions.</p>
 </div>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.optimisation.objective.quantity_is_between.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/optimisation/objective/quantity_is_between.py:docstring of lightwin.optimisation.objective.quantity_is_between, line 3.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
+<p>Set up default arguments on example.</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.scripts.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/scripts/__init__.py:docstring of lightwin.scripts, line 3.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
+<p>Allow for undetermined number of BeamCalculator in the config, and update
+here.</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.scripts.compare_beam_calculators.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/scripts/compare_beam_calculators.py:docstring of lightwin.scripts.compare_beam_calculators, line 3.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
+<p>Sometimes the lost power in first row is 1e-10 or something? Check this out
+when I see it appear again.</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.scripts.compute_lost_power_per_meter.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/scripts/compute_lost_power_per_meter.py:docstring of lightwin.scripts.compute_lost_power_per_meter, line 3.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
+<p>May be included to post-processing from within LightWin directly</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.scripts.compute_lost_power_per_meter.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/scripts/compute_lost_power_per_meter.py:docstring of lightwin.scripts.compute_lost_power_per_meter, line 7.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
+<p>Should they be in a module somewhere?</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.scripts.scripts_shorthands.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/scripts/scripts_shorthands.py:docstring of lightwin.scripts.scripts_shorthands, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Insert line skip at each section change in the output.dat</p>
@@ -795,33 +1092,17 @@ accelerates or not (ex when quadrupole defined by a field map)</p>
 <p class="admonition-title">Todo</p>
 <p>List of allowed tracewin arguments in doc</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/configuration.html#id1"><em>original entry</em></a> is located in docs/manual/configuration.beam_calculator.rst, line 34.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/configuration.beam_calculator.html#id1"><em>original entry</em></a> is located in /tmp/tmp6rayk7n8/0c7efb94da001854c29a8b5f0f85b4de9dbe3133/docs/manual/configuration.beam_calculator.rst, line 34.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>There are doublons between doc in <a class="reference internal" href="lightwin/lightwin.config.beam_calculator.html#module-lightwin.config.beam_calculator" title="lightwin.config.beam_calculator"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config.beam_calculator</span></code></a> and here. Maybe keep in module, but make the format better.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/configuration.html#id2"><em>original entry</em></a> is located in docs/manual/configuration.beam_calculator.rst, line 37.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
-<p>List of allowed tracewin arguments in doc</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="manual/configuration.beam_calculator.html#id1"><em>original entry</em></a> is located in /tmp/tmp91aetf4j/69908d501170aa80e80e1f673342a92713b0e38f/docs/manual/configuration.beam_calculator.rst, line 34.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
-<p>There are doublons between doc in <a class="reference internal" href="lightwin/lightwin.config.beam_calculator.html#module-lightwin.config.beam_calculator" title="lightwin.config.beam_calculator"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config.beam_calculator</span></code></a> and here. Maybe keep in module, but make the format better.</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="manual/configuration.beam_calculator.html#id2"><em>original entry</em></a> is located in /tmp/tmp91aetf4j/69908d501170aa80e80e1f673342a92713b0e38f/docs/manual/configuration.beam_calculator.rst, line 37.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/configuration.beam_calculator.html#id2"><em>original entry</em></a> is located in /tmp/tmp6rayk7n8/0c7efb94da001854c29a8b5f0f85b4de9dbe3133/docs/manual/configuration.beam_calculator.rst, line 37.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>A Jupyter Notebook would be better to show with examples.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/get_method.html#id1"><em>original entry</em></a> is located in /tmp/tmp91aetf4j/69908d501170aa80e80e1f673342a92713b0e38f/docs/manual/get_method.rst, line 6.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
-<p>Consider providing more detailed instructions for setting the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.
-For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online for additional guidance.</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.html#id1"><em>original entry</em></a> is located in docs/manual/installation.python.rst, line 43.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/get_method.html#id1"><em>original entry</em></a> is located in /tmp/tmp6rayk7n8/0c7efb94da001854c29a8b5f0f85b4de9dbe3133/docs/manual/get_method.rst, line 6.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <ul class="simple">
@@ -829,46 +1110,33 @@ For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online
 <li><p>Specific Cython tests</p></li>
 </ul>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.html#id2"><em>original entry</em></a> is located in docs/manual/installation.cython.rst, line 82.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
-<p>Allow for an easy way to skip Cython compilation.</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.html#id5"><em>original entry</em></a> is located in docs/manual/installation.troubleshooting.rst, line 25.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
-<ul class="simple">
-<li><p>Revise integration so that a missing Cython does not lead to import errors.</p></li>
-<li><p>Specific Cython tests</p></li>
-</ul>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.cython.html#id1"><em>original entry</em></a> is located in /tmp/tmp91aetf4j/69908d501170aa80e80e1f673342a92713b0e38f/docs/manual/installation.cython.rst, line 82.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/installation.cython.html#id1"><em>original entry</em></a> is located in /tmp/tmp6rayk7n8/0c7efb94da001854c29a8b5f0f85b4de9dbe3133/docs/manual/installation.cython.rst, line 82.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Consider providing more detailed instructions for setting the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.
 For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online for additional guidance.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.python.html#id1"><em>original entry</em></a> is located in /tmp/tmp91aetf4j/69908d501170aa80e80e1f673342a92713b0e38f/docs/manual/installation.python.rst, line 43.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/installation.python.html#id1"><em>original entry</em></a> is located in /tmp/tmp6rayk7n8/0c7efb94da001854c29a8b5f0f85b4de9dbe3133/docs/manual/installation.python.rst, line 43.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Allow for an easy way to skip Cython compilation.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.troubleshooting.html#id2"><em>original entry</em></a> is located in /tmp/tmp91aetf4j/69908d501170aa80e80e1f673342a92713b0e38f/docs/manual/installation.troubleshooting.rst, line 25.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/installation.troubleshooting.html#id2"><em>original entry</em></a> is located in /tmp/tmp6rayk7n8/0c7efb94da001854c29a8b5f0f85b4de9dbe3133/docs/manual/installation.troubleshooting.rst, line 25.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Consistency between font size of normal text and math text. Not aesthetic when I have text and units side to side.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id1"><em>original entry</em></a> is located in /tmp/tmp91aetf4j/69908d501170aa80e80e1f673342a92713b0e38f/docs/manual/units.rst, line 8.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id1"><em>original entry</em></a> is located in /tmp/tmp6rayk7n8/0c7efb94da001854c29a8b5f0f85b4de9dbe3133/docs/manual/units.rst, line 8.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>General units: MeV etc</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id2"><em>original entry</em></a> is located in /tmp/tmp91aetf4j/69908d501170aa80e80e1f673342a92713b0e38f/docs/manual/units.rst, line 11.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id2"><em>original entry</em></a> is located in /tmp/tmp6rayk7n8/0c7efb94da001854c29a8b5f0f85b4de9dbe3133/docs/manual/units.rst, line 11.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Ease re-usage of old simulations. Very easy to implement, just use the <code class="docutils literal notranslate"><span class="pre">recompute</span></code> flag, override the <code class="docutils literal notranslate"><span class="pre">run_with_this</span></code> method, and user must provide a <code class="docutils literal notranslate"><span class="pre">results</span></code> directory.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/usage.html#id1"><em>original entry</em></a> is located in /tmp/tmp91aetf4j/69908d501170aa80e80e1f673342a92713b0e38f/docs/manual/usage.rst, line 7.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/usage.html#id1"><em>original entry</em></a> is located in /tmp/tmp6rayk7n8/0c7efb94da001854c29a8b5f0f85b4de9dbe3133/docs/manual/usage.rst, line 11.)</p>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
@@ -913,7 +1181,7 @@ For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../v0.7.0b0/index.html">v0.7.0b0</a></dd>
+         <dd><a href="../v0.7.0b1/index.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

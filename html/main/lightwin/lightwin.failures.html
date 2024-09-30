@@ -21,7 +21,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.failures.fault module" href="lightwin.failures.fault.html" />
+    <link rel="prev" title="lightwin.experimental.test module" href="lightwin.experimental.test.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,13 +49,37 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">lightwin.failures package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html">lightwin.failures.fault module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html">lightwin.failures.fault_scenario module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.helper.html">lightwin.failures.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html">lightwin.failures.set_of_cavity_settings module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.strategy.html">lightwin.failures.strategy module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -71,6 +97,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
       <li class="breadcrumb-item active">lightwin.failures package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.failures.rst.txt" rel="nofollow"> View page source</a>
@@ -93,16 +120,11 @@ compensation scheme.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.failures.fault.html">lightwin.failures.fault module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault"><code class="docutils literal notranslate"><span class="pre">Fault</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault.failed_elements"><code class="docutils literal notranslate"><span class="pre">Fault.failed_elements</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault.compensating_elements"><code class="docutils literal notranslate"><span class="pre">Fault.compensating_elements</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault.elts"><code class="docutils literal notranslate"><span class="pre">Fault.elts</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault.variables"><code class="docutils literal notranslate"><span class="pre">Fault.variables</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault.constraints"><code class="docutils literal notranslate"><span class="pre">Fault.constraints</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault.__init__"><code class="docutils literal notranslate"><span class="pre">Fault.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault.fix"><code class="docutils literal notranslate"><span class="pre">Fault.fix()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault.from_pickle"><code class="docutils literal notranslate"><span class="pre">Fault.from_pickle()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault.pickle"><code class="docutils literal notranslate"><span class="pre">Fault.pickle()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault.update_elements_status"><code class="docutils literal notranslate"><span class="pre">Fault.update_elements_status()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault.pickle"><code class="docutils literal notranslate"><span class="pre">Fault.pickle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html#lightwin.failures.fault.Fault.from_pickle"><code class="docutils literal notranslate"><span class="pre">Fault.from_pickle()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -110,43 +132,43 @@ compensation scheme.</p>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.failures.fault_scenario.html">lightwin.failures.fault_scenario module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario"><code class="docutils literal notranslate"><span class="pre">FaultScenario</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario.__init__"><code class="docutils literal notranslate"><span class="pre">FaultScenario.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._break_cavities"><code class="docutils literal notranslate"><span class="pre">FaultScenario._break_cavities()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._evaluate_fit_quality"><code class="docutils literal notranslate"><span class="pre">FaultScenario._evaluate_fit_quality()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._get_reference"><code class="docutils literal notranslate"><span class="pre">FaultScenario._get_reference()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._reference_phase"><code class="docutils literal notranslate"><span class="pre">FaultScenario._reference_phase</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._set_cavities_to_rephase"><code class="docutils literal notranslate"><span class="pre">FaultScenario._set_cavities_to_rephase()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._set_evaluation_elements"><code class="docutils literal notranslate"><span class="pre">FaultScenario._set_evaluation_elements()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._set_faults"><code class="docutils literal notranslate"><span class="pre">FaultScenario._set_faults()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._get_reference"><code class="docutils literal notranslate"><span class="pre">FaultScenario._get_reference()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._set_cavities_to_rephase"><code class="docutils literal notranslate"><span class="pre">FaultScenario._set_cavities_to_rephase()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._set_optimisation_algorithms"><code class="docutils literal notranslate"><span class="pre">FaultScenario._set_optimisation_algorithms()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._simulations_that_should_be_compared"><code class="docutils literal notranslate"><span class="pre">FaultScenario._simulations_that_should_be_compared()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._transfer_phi0_from_ref_to_broken"><code class="docutils literal notranslate"><span class="pre">FaultScenario._transfer_phi0_from_ref_to_broken()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._update_rephased_cavities_status"><code class="docutils literal notranslate"><span class="pre">FaultScenario._update_rephased_cavities_status()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._wrap_single_fix"><code class="docutils literal notranslate"><span class="pre">FaultScenario._wrap_single_fix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._break_cavities"><code class="docutils literal notranslate"><span class="pre">FaultScenario._break_cavities()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario.fix_all"><code class="docutils literal notranslate"><span class="pre">FaultScenario.fix_all()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario.from_pickle"><code class="docutils literal notranslate"><span class="pre">FaultScenario.from_pickle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._wrap_single_fix"><code class="docutils literal notranslate"><span class="pre">FaultScenario._wrap_single_fix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._update_rephased_cavities_status"><code class="docutils literal notranslate"><span class="pre">FaultScenario._update_rephased_cavities_status()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._transfer_phi0_from_ref_to_broken"><code class="docutils literal notranslate"><span class="pre">FaultScenario._transfer_phi0_from_ref_to_broken()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._reference_phase"><code class="docutils literal notranslate"><span class="pre">FaultScenario._reference_phase</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._evaluate_fit_quality"><code class="docutils literal notranslate"><span class="pre">FaultScenario._evaluate_fit_quality()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._set_evaluation_elements"><code class="docutils literal notranslate"><span class="pre">FaultScenario._set_evaluation_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario._simulations_that_should_be_compared"><code class="docutils literal notranslate"><span class="pre">FaultScenario._simulations_that_should_be_compared()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario.pickle"><code class="docutils literal notranslate"><span class="pre">FaultScenario.pickle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario.from_pickle"><code class="docutils literal notranslate"><span class="pre">FaultScenario.from_pickle()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario._force_element_to_index_method_creation"><code class="docutils literal notranslate"><span class="pre">_force_element_to_index_method_creation()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.fault_scenario_factory"><code class="docutils literal notranslate"><span class="pre">fault_scenario_factory()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario._force_element_to_index_method_creation"><code class="docutils literal notranslate"><span class="pre">_force_element_to_index_method_creation()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.failures.helper.html">lightwin.failures.helper module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.helper.html#lightwin.failures.helper._distance_to_ref"><code class="docutils literal notranslate"><span class="pre">_distance_to_ref()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.helper.html#lightwin.failures.helper._penalty"><code class="docutils literal notranslate"><span class="pre">_penalty()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.helper.html#lightwin.failures.helper.sort_by_position"><code class="docutils literal notranslate"><span class="pre">sort_by_position()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.helper.html#lightwin.failures.helper.remove_lists_with_less_than_n_elements"><code class="docutils literal notranslate"><span class="pre">remove_lists_with_less_than_n_elements()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.helper.html#lightwin.failures.helper.gather"><code class="docutils literal notranslate"><span class="pre">gather()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.helper.html#lightwin.failures.helper.nested_containing_desired"><code class="docutils literal notranslate"><span class="pre">nested_containing_desired()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.helper.html#lightwin.failures.helper.remove_lists_with_less_than_n_elements"><code class="docutils literal notranslate"><span class="pre">remove_lists_with_less_than_n_elements()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.helper.html#lightwin.failures.helper.sort_by_position"><code class="docutils literal notranslate"><span class="pre">sort_by_position()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html">lightwin.failures.set_of_cavity_settings module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings"><code class="docutils literal notranslate"><span class="pre">SetOfCavitySettings</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings.__init__"><code class="docutils literal notranslate"><span class="pre">SetOfCavitySettings.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings._order"><code class="docutils literal notranslate"><span class="pre">SetOfCavitySettings._order()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings.from_cavity_settings"><code class="docutils literal notranslate"><span class="pre">SetOfCavitySettings.from_cavity_settings()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings.from_incomplete_set"><code class="docutils literal notranslate"><span class="pre">SetOfCavitySettings.from_incomplete_set()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings.re_set_elements_index_to_absolute_value"><code class="docutils literal notranslate"><span class="pre">SetOfCavitySettings.re_set_elements_index_to_absolute_value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings._order"><code class="docutils literal notranslate"><span class="pre">SetOfCavitySettings._order()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings._settings_getter"><code class="docutils literal notranslate"><span class="pre">_settings_getter()</span></code></a></li>
@@ -154,11 +176,12 @@ compensation scheme.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.failures.strategy.html">lightwin.failures.strategy module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.strategy.html#lightwin.failures.strategy.failed_and_compensating"><code class="docutils literal notranslate"><span class="pre">failed_and_compensating()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.strategy.html#lightwin.failures.strategy.global_compensation"><code class="docutils literal notranslate"><span class="pre">global_compensation()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.strategy.html#lightwin.failures.strategy.global_downstream"><code class="docutils literal notranslate"><span class="pre">global_downstream()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.strategy.html#lightwin.failures.strategy.k_out_of_n"><code class="docutils literal notranslate"><span class="pre">k_out_of_n()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.strategy.html#lightwin.failures.strategy.l_neighboring_lattices"><code class="docutils literal notranslate"><span class="pre">l_neighboring_lattices()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.failures.strategy.html#lightwin.failures.strategy.manual"><code class="docutils literal notranslate"><span class="pre">manual()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.strategy.html#lightwin.failures.strategy.global_compensation"><code class="docutils literal notranslate"><span class="pre">global_compensation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.strategy.html#lightwin.failures.strategy.global_downstream"><code class="docutils literal notranslate"><span class="pre">global_downstream()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.strategy.html#lightwin.failures.strategy.COMPENSATING_SELECTOR"><code class="docutils literal notranslate"><span class="pre">COMPENSATING_SELECTOR</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -170,7 +193,10 @@ compensation scheme.</p>
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.experimental.test.html" class="btn btn-neutral float-left" title="lightwin.experimental.test module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.failures.fault.html" class="btn btn-neutral float-right" title="lightwin.failures.fault module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -198,7 +224,7 @@ compensation scheme.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.failures.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.failures.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

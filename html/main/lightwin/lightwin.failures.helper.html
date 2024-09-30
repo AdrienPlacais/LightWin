@@ -21,7 +21,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.failures.set_of_cavity_settings module" href="lightwin.failures.set_of_cavity_settings.html" />
+    <link rel="prev" title="lightwin.failures.fault_scenario module" href="lightwin.failures.fault_scenario.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,13 +49,37 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html">lightwin.failures.fault module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html">lightwin.failures.fault_scenario module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lightwin.failures.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html">lightwin.failures.set_of_cavity_settings module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.strategy.html">lightwin.failures.strategy module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -71,6 +97,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.failures.html">lightwin.failures package</a></li>
       <li class="breadcrumb-item active">lightwin.failures.helper module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.failures.helper.rst.txt" rel="nofollow"> View page source</a>
@@ -135,6 +163,39 @@ If <code class="docutils literal notranslate"><span class="pre">shift</span> <sp
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="lightwin.failures.helper.sort_by_position">
+<span class="sig-name descname"><span class="pre">sort_by_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_politics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'upstream</span> <span class="pre">first'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Sequence</span></span></span><a class="headerlink" href="#lightwin.failures.helper.sort_by_position" title="Link to this definition"></a></dt>
+<dd><p>Sort given list by how far its elements are from <code class="docutils literal notranslate"><span class="pre">elements[idx]</span></code>.</p>
+<p>We go across every element in <code class="docutils literal notranslate"><span class="pre">all_elements</span></code> and get their index-distance
+to the closest element of <code class="docutils literal notranslate"><span class="pre">failed</span></code>. We sort <code class="docutils literal notranslate"><span class="pre">all_elements</span></code> by this
+distance. When there is a tie, we put the more upstream or the more
+downstream cavity first according to <code class="docutils literal notranslate"><span class="pre">tie_politics</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>failed</strong> (<em>Sequence</em><em>[</em><em>T</em><em>]</em>) – Second object or list of object from which you want distance. Often, a
+list of failed <a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a> or a list of lattices with a fault.</p></li>
+<li><p><strong>all_elements</strong> (<em>Sequence</em><em>[</em><em>T</em><em>]</em>) – All the elements/lattices/sections.</p></li>
+<li><p><strong>tie_politics</strong> (<em>{'upstream first'</em><em>, </em><em>'downstream first'}</em>) – When two elements have the same position, will you want to have the
+upstream or the downstream first?</p></li>
+<li><p><strong>shift</strong> (<em>int</em><em>, </em><em>optional</em>) – Distance increase for downstream elements (<code class="docutils literal notranslate"><span class="pre">shift</span> <span class="pre">&lt;</span> <span class="pre">0</span></code>) or upstream
+elements (<code class="docutils literal notranslate"><span class="pre">shift</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>). Used to have a window of compensating
+cavities which is not centered around the failed elements. Useful when
+upstream cavities have more important power margins, or when you want
+more downstream cavities because a full cryomodule is down. The default
+is 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.failures.helper.remove_lists_with_less_than_n_elements">
+<span class="sig-name descname"><span class="pre">remove_lists_with_less_than_n_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.failures.helper.remove_lists_with_less_than_n_elements" title="Link to this definition"></a></dt>
+<dd><p>Return a list where objects have a minimum length of <code class="docutils literal notranslate"><span class="pre">minimum_size</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="lightwin.failures.helper.gather">
 <span class="sig-name descname"><span class="pre">gather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failed_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fun_sort</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.failures.helper.gather" title="Link to this definition"></a></dt>
 <dd><p>Gather faults to be fixed together and associated compensating cav.</p>
@@ -169,46 +230,16 @@ cavities.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="lightwin.failures.helper.remove_lists_with_less_than_n_elements">
-<span class="sig-name descname"><span class="pre">remove_lists_with_less_than_n_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.failures.helper.remove_lists_with_less_than_n_elements" title="Link to this definition"></a></dt>
-<dd><p>Return a list where objects have a minimum length of <code class="docutils literal notranslate"><span class="pre">minimum_size</span></code>.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="lightwin.failures.helper.sort_by_position">
-<span class="sig-name descname"><span class="pre">sort_by_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_elements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">failed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie_politics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'upstream</span> <span class="pre">first'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Sequence</span></span></span><a class="headerlink" href="#lightwin.failures.helper.sort_by_position" title="Link to this definition"></a></dt>
-<dd><p>Sort given list by how far its elements are from <code class="docutils literal notranslate"><span class="pre">elements[idx]</span></code>.</p>
-<p>We go across every element in <code class="docutils literal notranslate"><span class="pre">all_elements</span></code> and get their index-distance
-to the closest element of <code class="docutils literal notranslate"><span class="pre">failed</span></code>. We sort <code class="docutils literal notranslate"><span class="pre">all_elements</span></code> by this
-distance. When there is a tie, we put the more upstream or the more
-downstream cavity first according to <code class="docutils literal notranslate"><span class="pre">tie_politics</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>failed</strong> (<em>Sequence</em><em>[</em><em>T</em><em>]</em>) – Second object or list of object from which you want distance. Often, a
-list of failed <a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a> or a list of lattices with a fault.</p></li>
-<li><p><strong>all_elements</strong> (<em>Sequence</em><em>[</em><em>T</em><em>]</em>) – All the elements/lattices/sections.</p></li>
-<li><p><strong>tie_politics</strong> (<em>{'upstream first'</em><em>, </em><em>'downstream first'}</em>) – When two elements have the same position, will you want to have the
-upstream or the downstream first?</p></li>
-<li><p><strong>shift</strong> (<em>int</em><em>, </em><em>optional</em>) – Distance increase for downstream elements (<code class="docutils literal notranslate"><span class="pre">shift</span> <span class="pre">&lt;</span> <span class="pre">0</span></code>) or upstream
-elements (<code class="docutils literal notranslate"><span class="pre">shift</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>). Used to have a window of compensating
-cavities which is not centered around the failed elements. Useful when
-upstream cavities have more important power margins, or when you want
-more downstream cavities because a full cryomodule is down. The default
-is 0.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 
 
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.failures.fault_scenario.html" class="btn btn-neutral float-left" title="lightwin.failures.fault_scenario module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.failures.set_of_cavity_settings.html" class="btn btn-neutral float-right" title="lightwin.failures.set_of_cavity_settings module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -236,7 +267,7 @@ is 0.</p></li>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.failures.helper.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.failures.helper.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

@@ -23,7 +23,9 @@
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.core.instruction module" href="lightwin.core.instruction.html" />
+    <link rel="prev" title="lightwin.core.transfer_matrix.transfer_matrix module" href="lightwin.core.transfer_matrix.transfer_matrix.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,13 +51,42 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.accelerator.html">lightwin.core.accelerator package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">lightwin.core.beam_parameters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.html">lightwin.core.commands package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.html">lightwin.core.elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">lightwin.core.list_of_elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.html">lightwin.core.transfer_matrix package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lightwin.core.electric_field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">lightwin.core.instruction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">lightwin.core.instructions_factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">lightwin.core.particle module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -73,6 +104,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.core.html">lightwin.core package</a></li>
       <li class="breadcrumb-item active">lightwin.core.electric_field module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.core.electric_field.rst.txt" rel="nofollow"> View page source</a>
@@ -92,92 +125,10 @@
 <p class="admonition-title">See also</p>
 <p><code class="xref py py-obj docutils literal notranslate"><span class="pre">CavitySettings</span></code></p>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NewRfField</span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Cos-like RF field.</p>
-<p>Warning, all phases are defined as:</p>
-<div class="math notranslate nohighlight">
-\[\phi = \omega_0^{rf} t\]</div>
-<p>While in the rest of the code it is defined as:</p>
-<div class="math notranslate nohighlight">
-\[\phi = \omega_0_^{bunch} t\]</div>
-<p>All phases are stored in radian.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField.e_spat">
-<span class="sig-name descname"><span class="pre">e_spat</span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField.e_spat" title="Link to this definition"></a></dt>
-<dd><p>Spatial component of the electric field. Needs to be multiplied by the
-cos(omega t) to have the full electric field. Initialized to null
-function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Callable[[float], float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField.n_cell">
-<span class="sig-name descname"><span class="pre">n_cell</span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField.n_cell" title="Link to this definition"></a></dt>
-<dd><p>Number of cells in the cavity.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField.n_z">
-<span class="sig-name descname"><span class="pre">n_z</span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField.n_z" title="Link to this definition"></a></dt>
-<dd><p>Number of points in the file that gives <code class="docutils literal notranslate"><span class="pre">e_spat</span></code>, the spatial component
-of the electric field.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField.__init__" title="Link to this definition"></a></dt>
-<dd><p>Instantiate object.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField.get" title="Link to this definition"></a></dt>
-<dd><p>Shorthand to get attributes from this class or its attributes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>*keys</strong> (<em>str</em>) – Name of the desired attributes.</p></li>
-<li><p><strong>**kwargs</strong> (<em>bool</em><em> | </em><em>str</em><em> | </em><em>None</em>) – Other arguments passed to recursive getter.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>out</strong> – Attribute(s) value(s).</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField.has">
-<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField.has" title="Link to this definition"></a></dt>
-<dd><p>Tell if the required attribute is in this class.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField.set_e_spat">
-<span class="sig-name descname"><span class="pre">set_e_spat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e_spat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField.set_e_spat" title="Link to this definition"></a></dt>
-<dd><p>Set the pos. component of electric field, set number of cells.</p>
-</dd></dl>
-
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.core.electric_field.compute_param_cav">
+<span class="sig-name descname"><span class="pre">compute_param_cav</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">integrated_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">complex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.electric_field.compute_param_cav" title="Link to this definition"></a></dt>
+<dd><p>Compute synchronous phase and accelerating field.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -197,34 +148,14 @@ the cavity under study.</p>
 <div class="math notranslate nohighlight">
 \[\phi = \omega_0_^{bunch} t\]</div>
 <p>All phases are stored in radian.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.e_spat">
-<span class="sig-name descname"><span class="pre">e_spat</span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.e_spat" title="Link to this definition"></a></dt>
-<dd><p>Spatial component of the electric field. Needs to be multiplied by the
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>e_spat</strong> (<em>Callable</em><em>[</em><em>[</em><em>float</em><em>]</em><em>, </em><em>float</em><em>]</em>) – Spatial component of the electric field. Needs to be multiplied by the
 cos(omega t) to have the full electric field. Initialized to null
-function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Callable[[float], float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.k_e">
-<span class="sig-name descname"><span class="pre">k_e</span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.k_e" title="Link to this definition"></a></dt>
-<dd><p>Norm of the electric field.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.phi_0">
-<span class="sig-name descname"><span class="pre">phi_0</span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.phi_0" title="Link to this definition"></a></dt>
-<dd><dl class="simple">
+function.</p></li>
+<li><p><strong>k_e</strong> (<em>float</em>) – Norm of the electric field.</p></li>
+<li><p><strong>phi_0</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>None</em><em> | </em><em>float</em><em> | </em><em>bool</em><em>]</em>) – <dl class="simple">
 <dt>Holds the electric field phase. The keys are:</dt><dd><p>phi_0_rel : relative phi_0 in rad
 phi_0_abs : absolute phi_0 in rad
 nominal_rel : relative phi_0 in rad in the nominal (ref) linac
@@ -236,86 +167,29 @@ new_reference_phase : phase at the entrance of this
 <code class="docutils literal notranslate"><span class="pre">ListOfElements</span></code>.</p>
 </dd>
 </dl>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, None | float | bool]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.v_cav_mv">
-<span class="sig-name descname"><span class="pre">v_cav_mv</span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.v_cav_mv" title="Link to this definition"></a></dt>
-<dd><p>Cavity accelerating field in MV.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.phi_s">
-<span class="sig-name descname"><span class="pre">phi_s</span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.phi_s" title="Link to this definition"></a></dt>
-<dd><p>Cavity synchronous phase in rad.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.omega0_rf">
-<span class="sig-name descname"><span class="pre">omega0_rf</span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.omega0_rf" title="Link to this definition"></a></dt>
-<dd><p>RF pulsation of the cavity in rad/s.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.bunch_to_rf">
-<span class="sig-name descname"><span class="pre">bunch_to_rf</span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.bunch_to_rf" title="Link to this definition"></a></dt>
-<dd><p><span class="math notranslate nohighlight">\(f_{rf} / f_{bunch}\)</span>. In particular, it is used to convert the rf
+</p></li>
+<li><p><strong>v_cav_mv</strong> (<em>float</em>) – Cavity accelerating field in MV.</p></li>
+<li><p><strong>phi_s</strong> (<em>float</em>) – Cavity synchronous phase in rad.</p></li>
+<li><p><strong>omega0_rf</strong> (<em>float</em>) – RF pulsation of the cavity in rad/s.</p></li>
+<li><p><strong>bunch_to_rf</strong> (<em>float</em>) – <span class="math notranslate nohighlight">\(f_{rf} / f_{bunch}\)</span>. In particular, it is used to convert the rf
 absolute phase given by the transfer matrix function of
-<a class="reference internal" href="lightwin.beam_calculation.envelope_1d.envelope_1d.html#lightwin.beam_calculation.envelope_1d.envelope_1d.Envelope1D" title="lightwin.beam_calculation.envelope_1d.envelope_1d.Envelope1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope1D</span></code></a> and <a class="reference internal" href="lightwin.beam_calculation.envelope_3d.envelope_3d.html#lightwin.beam_calculation.envelope_3d.envelope_3d.Envelope3D" title="lightwin.beam_calculation.envelope_3d.envelope_3d.Envelope3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope3D</span></code></a> to bunch absolute phase.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<a class="reference internal" href="lightwin.beam_calculation.envelope_1d.envelope_1d.html#lightwin.beam_calculation.envelope_1d.envelope_1d.Envelope1D" title="lightwin.beam_calculation.envelope_1d.envelope_1d.Envelope1D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope1D</span></code></a> and <a class="reference internal" href="lightwin.beam_calculation.envelope_3d.envelope_3d.html#lightwin.beam_calculation.envelope_3d.envelope_3d.Envelope3D" title="lightwin.beam_calculation.envelope_3d.envelope_3d.Envelope3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope3D</span></code></a> to bunch absolute phase.</p></li>
+<li><p><strong>n_cell</strong> (<em>int</em>) – Number of cells in the cavity.</p></li>
+<li><p><strong>n_z</strong> (<em>int</em><em> | </em><em>None</em>) – Number of points in the file that gives <code class="docutils literal notranslate"><span class="pre">e_spat</span></code>, the spatial component
+of the electric field.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.n_cell">
-<span class="sig-name descname"><span class="pre">n_cell</span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.n_cell" title="Link to this definition"></a></dt>
-<dd><p>Number of cells in the cavity.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.n_z">
-<span class="sig-name descname"><span class="pre">n_z</span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.n_z" title="Link to this definition"></a></dt>
-<dd><p>Number of points in the file that gives <code class="docutils literal notranslate"><span class="pre">e_spat</span></code>, the spatial component
-of the electric field.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int | None</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_e</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute_phase_flag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi_0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.__init__" title="Link to this definition"></a></dt>
 <dd><p>Instantiate object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.has">
+<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.has" title="Link to this definition"></a></dt>
+<dd><p>Tell if the required attribute is in this class.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -341,21 +215,15 @@ of the electric field.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.has">
-<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.has" title="Link to this definition"></a></dt>
-<dd><p>Tell if the required attribute is in this class.</p>
+<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.set_rf_freq">
+<span class="sig-name descname"><span class="pre">set_rf_freq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_mhz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.set_rf_freq" title="Link to this definition"></a></dt>
+<dd><p>Initialize the pulsation and the rf / bunch fraction.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.set_e_spat">
 <span class="sig-name descname"><span class="pre">set_e_spat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e_spat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.set_e_spat" title="Link to this definition"></a></dt>
 <dd><p>Set the pos. component of electric field, set number of cells.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.RfField.set_rf_freq">
-<span class="sig-name descname"><span class="pre">set_rf_freq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_mhz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.RfField.set_rf_freq" title="Link to this definition"></a></dt>
-<dd><p>Initialize the pulsation and the rf / bunch fraction.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -366,10 +234,68 @@ of the electric field.</p>
 
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="lightwin.core.electric_field.compute_param_cav">
-<span class="sig-name descname"><span class="pre">compute_param_cav</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">integrated_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">complex</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.electric_field.compute_param_cav" title="Link to this definition"></a></dt>
-<dd><p>Compute synchronous phase and accelerating field.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NewRfField</span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Cos-like RF field.</p>
+<p>Warning, all phases are defined as:</p>
+<div class="math notranslate nohighlight">
+\[\phi = \omega_0^{rf} t\]</div>
+<p>While in the rest of the code it is defined as:</p>
+<div class="math notranslate nohighlight">
+\[\phi = \omega_0_^{bunch} t\]</div>
+<p>All phases are stored in radian.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>e_spat</strong> (<em>Callable</em><em>[</em><em>[</em><em>float</em><em>]</em><em>, </em><em>float</em><em>]</em>) – Spatial component of the electric field. Needs to be multiplied by the
+cos(omega t) to have the full electric field. Initialized to null
+function.</p></li>
+<li><p><strong>n_cell</strong> (<em>int</em>) – Number of cells in the cavity.</p></li>
+<li><p><strong>n_z</strong> (<em>int</em><em> | </em><em>None</em>) – Number of points in the file that gives <code class="docutils literal notranslate"><span class="pre">e_spat</span></code>, the spatial component
+of the electric field.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField.__init__" title="Link to this definition"></a></dt>
+<dd><p>Instantiate object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField.has">
+<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField.has" title="Link to this definition"></a></dt>
+<dd><p>Tell if the required attribute is in this class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField.get" title="Link to this definition"></a></dt>
+<dd><p>Shorthand to get attributes from this class or its attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*keys</strong> (<em>str</em>) – Name of the desired attributes.</p></li>
+<li><p><strong>**kwargs</strong> (<em>bool</em><em> | </em><em>str</em><em> | </em><em>None</em>) – Other arguments passed to recursive getter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Attribute(s) value(s).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.electric_field.NewRfField.set_e_spat">
+<span class="sig-name descname"><span class="pre">set_e_spat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e_spat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.electric_field.NewRfField.set_e_spat" title="Link to this definition"></a></dt>
+<dd><p>Set the pos. component of electric field, set number of cells.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -378,7 +304,10 @@ of the electric field.</p>
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.core.transfer_matrix.transfer_matrix.html" class="btn btn-neutral float-left" title="lightwin.core.transfer_matrix.transfer_matrix module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.core.instruction.html" class="btn btn-neutral float-right" title="lightwin.core.instruction module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -406,7 +335,7 @@ of the electric field.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.core.electric_field.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.core.electric_field.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

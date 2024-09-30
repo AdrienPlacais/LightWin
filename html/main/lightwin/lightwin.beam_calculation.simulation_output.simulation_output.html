@@ -21,7 +21,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.beam_calculation.tracewin package" href="lightwin.beam_calculation.tracewin.html" />
+    <link rel="prev" title="lightwin.beam_calculation.simulation_output.factory module" href="lightwin.beam_calculation.simulation_output.factory.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,13 +49,44 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.html">lightwin.beam_calculation.envelope_1d package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.html">lightwin.beam_calculation.envelope_3d package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.integrators.html">lightwin.beam_calculation.integrators package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.parameters.html">lightwin.beam_calculation.parameters package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.html">lightwin.beam_calculation.simulation_output package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html">lightwin.beam_calculation.simulation_output.factory module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">lightwin.beam_calculation.simulation_output.simulation_output module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.tracewin.html">lightwin.beam_calculation.tracewin package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html">lightwin.beam_calculation.beam_calculator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html">lightwin.beam_calculation.factory module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -71,6 +104,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.beam_calculation.simulation_output.html">lightwin.beam_calculation.simulation_output package</a></li>
       <li class="breadcrumb-item active">lightwin.beam_calculation.simulation_output.simulation_output module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.beam_calculation.simulation_output.simulation_output.rst.txt" rel="nofollow"> View page source</a>
@@ -109,149 +145,90 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Stores the information produced by a <a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a>.</p>
 <p>Used for fitting, post-processing, plotting.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.out_folder">
-<span class="sig-name descname"><span class="pre">out_folder</span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.out_folder" title="Link to this definition"></a></dt>
-<dd><p>Results folder used by the <a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a> that created this.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Path</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.is_multiparticle">
-<span class="sig-name descname"><span class="pre">is_multiparticle</span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.is_multiparticle" title="Link to this definition"></a></dt>
-<dd><p>Tells if the simulation is a multiparticle simulation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.is_3d">
-<span class="sig-name descname"><span class="pre">is_3d</span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.is_3d" title="Link to this definition"></a></dt>
-<dd><p>Tells if the simulation is in 3D.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.synch_trajectory">
-<span class="sig-name descname"><span class="pre">synch_trajectory</span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.synch_trajectory" title="Link to this definition"></a></dt>
-<dd><p>Holds energy, phase of the synchronous particle.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory" title="lightwin.core.particle.ParticleFullTrajectory">ParticleFullTrajectory</a> | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.cav_params">
-<span class="sig-name descname"><span class="pre">cav_params</span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.cav_params" title="Link to this definition"></a></dt>
-<dd><p>Holds amplitude, synchronous phase, absolute phase, relative phase of
-cavities.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, float | None] | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.beam_parameters">
-<span class="sig-name descname"><span class="pre">beam_parameters</span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.beam_parameters" title="Link to this definition"></a></dt>
-<dd><p>Holds emittance, Twiss parameters, envelopes in the various phase
-spaces.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters">BeamParameters</a> | None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.element_to_index">
-<span class="sig-name descname"><span class="pre">element_to_index</span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.element_to_index" title="Link to this definition"></a></dt>
-<dd><p>Takes an <a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a>, its name, ‘first’ or ‘last’ as argument,
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>out_folder</strong> (<em>Path</em>) – Results folder used by the <a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a> that created this.</p></li>
+<li><p><strong>is_multiparticle</strong> (<em>bool</em>) – Tells if the simulation is a multiparticle simulation.</p></li>
+<li><p><strong>is_3d</strong> (<em>bool</em>) – Tells if the simulation is in 3D.</p></li>
+<li><p><strong>synch_trajectory</strong> (<a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory" title="lightwin.core.particle.ParticleFullTrajectory"><em>ParticleFullTrajectory</em></a><em> | </em><em>None</em>) – Holds energy, phase of the synchronous particle.</p></li>
+<li><p><strong>cav_params</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>float</em><em> | </em><em>None</em><em>] </em><em>| </em><em>None</em>) – Holds amplitude, synchronous phase, absolute phase, relative phase of
+cavities.</p></li>
+<li><p><strong>beam_parameters</strong> (<a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><em>BeamParameters</em></a><em> | </em><em>None</em>) – Holds emittance, Twiss parameters, envelopes in the various phase
+spaces.</p></li>
+<li><p><strong>element_to_index</strong> (<em>Callable</em><em>[</em><em>[</em><em>str</em><em> | </em><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><em>Element</em></a><em>, </em><em>str</em><em> | </em><em>None</em><em>]</em><em>, </em><em>int</em><em> | </em><em>slice</em><em>] </em><em>|    </em><em>None</em>) – Takes an <a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a>, its name, ‘first’ or ‘last’ as argument,
 and returns corresponding index. Index should be the same in all the
 arrays attributes of this class: <code class="docutils literal notranslate"><span class="pre">z_abs</span></code>, <code class="docutils literal notranslate"><span class="pre">beam_parameters</span></code>
 attributes, etc.  Used to easily <code class="docutils literal notranslate"><span class="pre">get</span></code> the desired properties at the
-proper position.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Callable[[str | <a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element">Element</a>, str | None], int | slice] |    None</p>
+proper position.</p></li>
+<li><p><strong>set_of_cavity_settings</strong> (<a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings" title="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings"><em>SetOfCavitySettings</em></a>) – The cavity parameters used for the simulation.</p></li>
+<li><p><strong>transfer_matrix</strong> (<a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix" title="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix"><em>TransferMatrix</em></a>) – Holds absolute and relative transfer matrices in all planes.</p></li>
+<li><p><strong>z_abs</strong> (<em>np.ndarray</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Absolute position in the linac in m. The default is None.</p></li>
+<li><p><strong>in_tw_fashion</strong> (<em>pd.DataFrame</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – A way to output the <a class="reference internal" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulationOutput</span></code></a> in the same way as the
+<code class="docutils literal notranslate"><span class="pre">Data</span></code> tab of TraceWin. The default is None.</p></li>
+<li><p><strong>r_zz_elt</strong> (<em>list</em><em>[</em><em>np.ndarray</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Cumulated transfer matrices in the [z-delta] plane. The default is
+None.</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.out_folder">
+<span class="sig-name descname"><span class="pre">out_folder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></em><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.out_folder" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.is_multiparticle">
+<span class="sig-name descname"><span class="pre">is_multiparticle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.is_multiparticle" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.is_3d">
+<span class="sig-name descname"><span class="pre">is_3d</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.is_3d" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.synch_trajectory">
+<span class="sig-name descname"><span class="pre">synch_trajectory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory" title="lightwin.core.particle.ParticleFullTrajectory"><span class="pre">ParticleFullTrajectory</span></a></em><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.synch_trajectory" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.cav_params">
+<span class="sig-name descname"><span class="pre">cav_params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.cav_params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.beam_parameters">
+<span class="sig-name descname"><span class="pre">beam_parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></em><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.beam_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.element_to_index">
+<span class="sig-name descname"><span class="pre">element_to_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">slice</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.element_to_index" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.set_of_cavity_settings">
-<span class="sig-name descname"><span class="pre">set_of_cavity_settings</span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.set_of_cavity_settings" title="Link to this definition"></a></dt>
-<dd><p>The cavity parameters used for the simulation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings" title="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings">SetOfCavitySettings</a></p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">set_of_cavity_settings</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings" title="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings"><span class="pre">SetOfCavitySettings</span></a></em><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.set_of_cavity_settings" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.transfer_matrix">
-<span class="sig-name descname"><span class="pre">transfer_matrix</span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.transfer_matrix" title="Link to this definition"></a></dt>
-<dd><p>Holds absolute and relative transfer matrices in all planes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix" title="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix">TransferMatrix</a></p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">transfer_matrix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix" title="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix"><span class="pre">TransferMatrix</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.transfer_matrix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.z_abs">
-<span class="sig-name descname"><span class="pre">z_abs</span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.z_abs" title="Link to this definition"></a></dt>
-<dd><p>Absolute position in the linac in m. The default is None.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray | None, optional</p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">z_abs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.z_abs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.in_tw_fashion">
-<span class="sig-name descname"><span class="pre">in_tw_fashion</span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.in_tw_fashion" title="Link to this definition"></a></dt>
-<dd><p>A way to output the <a class="reference internal" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulationOutput</span></code></a> in the same way as the
-<code class="docutils literal notranslate"><span class="pre">Data</span></code> tab of TraceWin. The default is None.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame | None, optional</p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">in_tw_fashion</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.in_tw_fashion" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.r_zz_elt">
-<span class="sig-name descname"><span class="pre">r_zz_elt</span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.r_zz_elt" title="Link to this definition"></a></dt>
-<dd><p>Cumulated transfer matrices in the [z-delta] plane. The default is
-None.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[np.ndarray] | None, optional</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_multiparticle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">synch_trajectory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory" title="lightwin.core.particle.ParticleFullTrajectory"><span class="pre">ParticleFullTrajectory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cav_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_to_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">slice</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_of_cavity_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings" title="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings"><span class="pre">SetOfCavitySettings</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix" title="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix"><span class="pre">TransferMatrix</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_tw_fashion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_zz_elt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">r_zz_elt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.r_zz_elt" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -266,41 +243,12 @@ None.</p>
 <dd><p>Use <code class="docutils literal notranslate"><span class="pre">out_path</span></code> to retrieve info on <code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code>.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">beam_parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></em><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">cav_params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
-<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.compute_complementary_data">
-<span class="sig-name descname"><span class="pre">compute_complementary_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements" title="lightwin.core.list_of_elements.list_of_elements.ListOfElements"><span class="pre">ListOfElements</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_simulation_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Self</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.compute_complementary_data" title="Link to this definition"></a></dt>
-<dd><p>Compute some other indirect quantities.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>elts</strong> (<a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements" title="lightwin.core.list_of_elements.list_of_elements.ListOfElements"><em>ListOfElements</em></a>) – Must be a full <a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements" title="lightwin.core.list_of_elements.list_of_elements.ListOfElements"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListOfElements</span></code></a>, containing all the
-elements of the linac.</p></li>
-<li><p><strong>ref_simulation_output</strong> (<a class="reference internal" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><em>SimulationOutput</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – For calculation of mismatch factors. The default is None, in which
-case the calculation is simply skipped.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">element_to_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">slice</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.from_pickle">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyPickler" title="lightwin.util.pickling.MyPickler"><span class="pre">MyPickler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.from_pickle" title="Link to this definition"></a></dt>
-<dd><p>Instantiate object from previously pickled file.</p>
+<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.has">
+<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.has" title="Link to this definition"></a></dt>
+<dd><p>Tell if the required attribute is in this class.</p>
+<p>We also call the <code class="xref py py-meth docutils literal notranslate"><span class="pre">BeamParameters.has()</span></code>, as it is designed to
+handle the alias (such as <code class="docutils literal notranslate"><span class="pre">twiss_zdelta</span></code> &lt;=&gt; <code class="docutils literal notranslate"><span class="pre">zdelta.twiss</span></code>).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -332,32 +280,20 @@ element.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.has">
-<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.has" title="Link to this definition"></a></dt>
-<dd><p>Tell if the required attribute is in this class.</p>
-<p>We also call the <code class="xref py py-meth docutils literal notranslate"><span class="pre">BeamParameters.has()</span></code>, as it is designed to
-handle the alias (such as <code class="docutils literal notranslate"><span class="pre">twiss_zdelta</span></code> &lt;=&gt; <code class="docutils literal notranslate"><span class="pre">zdelta.twiss</span></code>).</p>
+<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.compute_complementary_data">
+<span class="sig-name descname"><span class="pre">compute_complementary_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements" title="lightwin.core.list_of_elements.list_of_elements.ListOfElements"><span class="pre">ListOfElements</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_simulation_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Self</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.compute_complementary_data" title="Link to this definition"></a></dt>
+<dd><p>Compute some other indirect quantities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elts</strong> (<a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements" title="lightwin.core.list_of_elements.list_of_elements.ListOfElements"><em>ListOfElements</em></a>) – Must be a full <a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements" title="lightwin.core.list_of_elements.list_of_elements.ListOfElements"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListOfElements</span></code></a>, containing all the
+elements of the linac.</p></li>
+<li><p><strong>ref_simulation_output</strong> (<a class="reference internal" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><em>SimulationOutput</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – For calculation of mismatch factors. The default is None, in which
+case the calculation is simply skipped.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">in_tw_fashion</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id8">
-<span class="sig-name descname"><span class="pre">is_3d</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#id8" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id9">
-<span class="sig-name descname"><span class="pre">is_multiparticle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id10">
-<span class="sig-name descname"><span class="pre">out_folder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></em><a class="headerlink" href="#id10" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.pickle">
@@ -367,29 +303,15 @@ handle the alias (such as <code class="docutils literal notranslate"><span class
 time saving.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id11">
-<span class="sig-name descname"><span class="pre">r_zz_elt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id11" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.from_pickle">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyPickler" title="lightwin.util.pickling.MyPickler"><span class="pre">MyPickler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.from_pickle" title="Link to this definition"></a></dt>
+<dd><p>Instantiate object from previously pickled file.</p>
+</dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id12">
-<span class="sig-name descname"><span class="pre">set_of_cavity_settings</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings" title="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings"><span class="pre">SetOfCavitySettings</span></a></em><a class="headerlink" href="#id12" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id13">
-<span class="sig-name descname"><span class="pre">synch_trajectory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory" title="lightwin.core.particle.ParticleFullTrajectory"><span class="pre">ParticleFullTrajectory</span></a></em><a class="headerlink" href="#id13" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id14">
-<span class="sig-name descname"><span class="pre">transfer_matrix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix" title="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix"><span class="pre">TransferMatrix</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id14" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id15">
-<span class="sig-name descname"><span class="pre">z_abs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id15" title="Link to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_multiparticle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">synch_trajectory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory" title="lightwin.core.particle.ParticleFullTrajectory"><span class="pre">ParticleFullTrajectory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cav_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_to_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">slice</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_of_cavity_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings" title="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings"><span class="pre">SetOfCavitySettings</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">transfer_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix" title="lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix"><span class="pre">TransferMatrix</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_tw_fashion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_zz_elt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -406,7 +328,10 @@ time saving.</p>
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.beam_calculation.simulation_output.factory.html" class="btn btn-neutral float-left" title="lightwin.beam_calculation.simulation_output.factory module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.beam_calculation.tracewin.html" class="btn btn-neutral float-right" title="lightwin.beam_calculation.tracewin package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -434,7 +359,7 @@ time saving.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.beam_calculation.simulation_output.simulation_output.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.beam_calculation.simulation_output.simulation_output.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

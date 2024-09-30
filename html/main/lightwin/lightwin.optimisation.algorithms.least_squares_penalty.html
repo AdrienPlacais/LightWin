@@ -21,7 +21,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.optimisation.algorithms.nsga module" href="lightwin.optimisation.algorithms.nsga.html" />
+    <link rel="prev" title="lightwin.optimisation.algorithms.least_squares module" href="lightwin.optimisation.algorithms.least_squares.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,13 +49,47 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lightwin.optimisation.algorithms.html">lightwin.optimisation.algorithms package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html">lightwin.optimisation.algorithms.algorithm module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.differential_evolution.html">lightwin.optimisation.algorithms.differential_evolution module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex.html">lightwin.optimisation.algorithms.downhill_simplex module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex_penalty.html">lightwin.optimisation.algorithms.downhill_simplex_penalty module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.explorator.html">lightwin.optimisation.algorithms.explorator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.factory.html">lightwin.optimisation.algorithms.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares.html">lightwin.optimisation.algorithms.least_squares module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">lightwin.optimisation.algorithms.least_squares_penalty module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html">lightwin.optimisation.algorithms.nsga module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.pso.html">lightwin.optimisation.algorithms.pso module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.design_space.html">lightwin.optimisation.design_space package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.objective.html">lightwin.optimisation.objective package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -71,6 +107,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.optimisation.algorithms.html">lightwin.optimisation.algorithms package</a></li>
       <li class="breadcrumb-item active">lightwin.optimisation.algorithms.least_squares_penalty module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.optimisation.algorithms.least_squares_penalty.rst.txt" rel="nofollow"> View page source</a>
@@ -94,16 +133,16 @@ residues grow when the constraints are not respected.</p>
 <dd><p>Bases: <a class="reference internal" href="lightwin.optimisation.algorithms.least_squares.html#lightwin.optimisation.algorithms.least_squares.LeastSquares" title="lightwin.optimisation.algorithms.least_squares.LeastSquares"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeastSquares</span></code></a></p>
 <p>A least-squares method, with a penalty function to consider constraints.</p>
 <p>Everything is inherited from <code class="xref py py-class docutils literal notranslate"><span class="pre">LeastSquares</span></code>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty.supports_constraints">
+<span class="sig-name descname"><span class="pre">supports_constraints</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty.supports_constraints" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty.__init__" title="Link to this definition"></a></dt>
 <dd><p>Set additional information.</p>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty._abc_impl" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty._norm_wrapper_residuals">
@@ -118,8 +157,8 @@ residues grow when the constraints are not respected.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty.supports_constraints">
-<span class="sig-name descname"><span class="pre">supports_constraints</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty.supports_constraints" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -130,7 +169,10 @@ residues grow when the constraints are not respected.</p>
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.optimisation.algorithms.least_squares.html" class="btn btn-neutral float-left" title="lightwin.optimisation.algorithms.least_squares module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.optimisation.algorithms.nsga.html" class="btn btn-neutral float-right" title="lightwin.optimisation.algorithms.nsga module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -158,7 +200,7 @@ residues grow when the constraints are not respected.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.optimisation.algorithms.least_squares_penalty.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.optimisation.algorithms.least_squares_penalty.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

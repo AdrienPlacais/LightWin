@@ -21,7 +21,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.tracewin_utils.load module" href="lightwin.tracewin_utils.load.html" />
+    <link rel="prev" title="lightwin.tracewin_utils.electromagnetic_fields module" href="lightwin.tracewin_utils.electromagnetic_fields.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,13 +49,36 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.dat_files.html">lightwin.tracewin_utils.dat_files module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html">lightwin.tracewin_utils.electromagnetic_fields module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lightwin.tracewin_utils.interface module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.load.html">lightwin.tracewin_utils.load module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -71,6 +96,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
       <li class="breadcrumb-item active">lightwin.tracewin_utils.interface module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.tracewin_utils.interface.rst.txt" rel="nofollow"> View page source</a>
@@ -86,60 +113,14 @@
   <section id="module-lightwin.tracewin_utils.interface">
 <span id="lightwin-tracewin-utils-interface-module"></span><h1>lightwin.tracewin_utils.interface module<a class="headerlink" href="#module-lightwin.tracewin_utils.interface" title="Link to this heading"></a></h1>
 <p>Define functions for TraceWin command-line interface.</p>
-<dl class="py data">
-<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface.ARGS_POSITIONS">
-<span class="sig-name descname"><span class="pre">ARGS_POSITIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'k_e':</span> <span class="pre">6,</span> <span class="pre">'phi_0':</span> <span class="pre">3}</span></em><a class="headerlink" href="#lightwin.tracewin_utils.interface.ARGS_POSITIONS" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="py function">
-<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface._alter_element">
-<span class="sig-name descname"><span class="pre">_alter_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alter_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface._alter_element" title="Link to this definition"></a></dt>
-<dd><p>Create the command piece to modify the element at <code class="docutils literal notranslate"><span class="pre">index</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>index</strong> – Position of the element to modify in LightWin referential (first
-element has index 0).</p></li>
-<li><p><strong>alter_kwargs</strong> – Key-pair values, where key is the LightWin name of the parameter to
-update, and value the new value to set. Key-pair value is skipped if
-value is np.nan. Key must be in <a href="#id1"><span class="problematic" id="id2">:var:`ARGS_POSITIONS`</span></a>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The <code class="docutils literal notranslate"><span class="pre">ele[i][j]=val</span></code> command altering the given element.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Sequence[str]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface._cavity_settings_to_command">
-<span class="sig-name descname"><span class="pre">_cavity_settings_to_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap" title="lightwin.core.elements.field_maps.field_map.FieldMap"><span class="pre">FieldMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cavity_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings" title="lightwin.core.elements.field_maps.cavity_settings.CavitySettings"><span class="pre">CavitySettings</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_phi_bunch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface._cavity_settings_to_command" title="Link to this definition"></a></dt>
-<dd><p>Convert <code class="docutils literal notranslate"><span class="pre">cavity_settings</span></code> into TraceWin CLI arguments.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>field_map</strong> (<a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap" title="lightwin.core.elements.field_maps.field_map.FieldMap"><em>FieldMap</em></a>) – Cavity under study.</p></li>
-<li><p><strong>cavity_settings</strong> (<a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings" title="lightwin.core.elements.field_maps.cavity_settings.CavitySettings"><em>CavitySettings</em></a>) – Settings to try.</p></li>
-<li><p><strong>delta_phi_bunch</strong> (<em>float</em><em>, </em><em>optional</em>) – Phase at entry of first element of <a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements" title="lightwin.core.list_of_elements.list_of_elements.ListOfElements"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListOfElements</span></code></a> under study. The default is 0.</p></li>
-<li><p><strong>delta_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of the first element of <a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements" title="lightwin.core.list_of_elements.list_of_elements.ListOfElements"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListOfElements</span></code></a> under study. The default is 0.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>command</strong> – Piece of command to alter <code class="docutils literal notranslate"><span class="pre">field_map</span></code> with <code class="docutils literal notranslate"><span class="pre">cavity_settings</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Sequence[str]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface._proper_type">
-<span class="sig-name descname"><span class="pre">_proper_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">not_in_dict_warning</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface._proper_type" title="Link to this definition"></a></dt>
-<dd><p>Check if type of <code class="docutils literal notranslate"><span class="pre">value</span></code> is consistent and try to correct otherwise.</p>
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface.variables_to_command">
+<span class="sig-name descname"><span class="pre">variables_to_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">warn_skipped</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface.variables_to_command" title="Link to this definition"></a></dt>
+<dd><p>Generate a TraceWin command from the input dictionary.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">value</span></code> of the <code class="docutils literal notranslate"><span class="pre">dict</span></code> is None, only corresponding <code class="docutils literal notranslate"><span class="pre">key</span></code> is added
+(behavior for <code class="docutils literal notranslate"><span class="pre">hide</span></code> command).</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">value</span></code> is <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>, it is ignored.</p>
+<p>Else, the pair <code class="docutils literal notranslate"><span class="pre">key</span></code>-<code class="docutils literal notranslate"><span class="pre">value</span></code> is added as <code class="docutils literal notranslate"><span class="pre">key=value</span></code> string.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -149,17 +130,17 @@ value is np.nan. Key must be in <a href="#id1"><span class="problematic" id="id2
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface.beam_parameters_to_command">
-<span class="sig-name descname"><span class="pre">beam_parameters_to_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface.beam_parameters_to_command" title="Link to this definition"></a></dt>
-<dd><p>Return a TraceWin command from the attributes of a <code class="docutils literal notranslate"><span class="pre">BeamParameters</span></code>.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="lightwin.tracewin_utils.interface.list_of_elements_to_command">
 <span class="sig-name descname"><span class="pre">list_of_elements_to_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dat_filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface.list_of_elements_to_command" title="Link to this definition"></a></dt>
 <dd><p>Return a command from <code class="docutils literal notranslate"><span class="pre">ListOfElements</span></code> attributes.</p>
 <p><code class="docutils literal notranslate"><span class="pre">ParticleInitialState</span></code> and <code class="docutils literal notranslate"><span class="pre">BeamParameters</span></code> have their own function, they
 are not called from here.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface.beam_parameters_to_command">
+<span class="sig-name descname"><span class="pre">beam_parameters_to_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface.beam_parameters_to_command" title="Link to this definition"></a></dt>
+<dd><p>Return a TraceWin command from the attributes of a <code class="docutils literal notranslate"><span class="pre">BeamParameters</span></code>.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -197,13 +178,59 @@ desired <code class="docutils literal notranslate"><span class="pre">set_of_cavi
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface.variables_to_command">
-<span class="sig-name descname"><span class="pre">variables_to_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">warn_skipped</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface.variables_to_command" title="Link to this definition"></a></dt>
-<dd><p>Generate a TraceWin command from the input dictionary.</p>
-<p>If the <code class="docutils literal notranslate"><span class="pre">value</span></code> of the <code class="docutils literal notranslate"><span class="pre">dict</span></code> is None, only corresponding <code class="docutils literal notranslate"><span class="pre">key</span></code> is added
-(behavior for <code class="docutils literal notranslate"><span class="pre">hide</span></code> command).</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">value</span></code> is <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>, it is ignored.</p>
-<p>Else, the pair <code class="docutils literal notranslate"><span class="pre">key</span></code>-<code class="docutils literal notranslate"><span class="pre">value</span></code> is added as <code class="docutils literal notranslate"><span class="pre">key=value</span></code> string.</p>
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface._cavity_settings_to_command">
+<span class="sig-name descname"><span class="pre">_cavity_settings_to_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap" title="lightwin.core.elements.field_maps.field_map.FieldMap"><span class="pre">FieldMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cavity_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings" title="lightwin.core.elements.field_maps.cavity_settings.CavitySettings"><span class="pre">CavitySettings</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_phi_bunch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface._cavity_settings_to_command" title="Link to this definition"></a></dt>
+<dd><p>Convert <code class="docutils literal notranslate"><span class="pre">cavity_settings</span></code> into TraceWin CLI arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>field_map</strong> (<a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap" title="lightwin.core.elements.field_maps.field_map.FieldMap"><em>FieldMap</em></a>) – Cavity under study.</p></li>
+<li><p><strong>cavity_settings</strong> (<a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings" title="lightwin.core.elements.field_maps.cavity_settings.CavitySettings"><em>CavitySettings</em></a>) – Settings to try.</p></li>
+<li><p><strong>delta_phi_bunch</strong> (<em>float</em><em>, </em><em>optional</em>) – Phase at entry of first element of <a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements" title="lightwin.core.list_of_elements.list_of_elements.ListOfElements"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListOfElements</span></code></a> under study. The default is 0.</p></li>
+<li><p><strong>delta_index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of the first element of <a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements" title="lightwin.core.list_of_elements.list_of_elements.ListOfElements"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListOfElements</span></code></a> under study. The default is 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>command</strong> – Piece of command to alter <code class="docutils literal notranslate"><span class="pre">field_map</span></code> with <code class="docutils literal notranslate"><span class="pre">cavity_settings</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Sequence[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface.ARGS_POSITIONS">
+<span class="sig-name descname"><span class="pre">ARGS_POSITIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'k_e':</span> <span class="pre">6,</span> <span class="pre">'phi_0':</span> <span class="pre">3}</span></em><a class="headerlink" href="#lightwin.tracewin_utils.interface.ARGS_POSITIONS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface._alter_element">
+<span class="sig-name descname"><span class="pre">_alter_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alter_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface._alter_element" title="Link to this definition"></a></dt>
+<dd><p>Create the command piece to modify the element at <code class="docutils literal notranslate"><span class="pre">index</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> – Position of the element to modify in LightWin referential (first
+element has index 0).</p></li>
+<li><p><strong>alter_kwargs</strong> – Key-pair values, where key is the LightWin name of the parameter to
+update, and value the new value to set. Key-pair value is skipped if
+value is np.nan. Key must be in <a class="reference internal" href="#lightwin.tracewin_utils.interface.ARGS_POSITIONS" title="lightwin.tracewin_utils.interface.ARGS_POSITIONS"><code class="xref py py-data docutils literal notranslate"><span class="pre">ARGS_POSITIONS</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The <code class="docutils literal notranslate"><span class="pre">ele[i][j]=val</span></code> command altering the given element.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Sequence[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface._proper_type">
+<span class="sig-name descname"><span class="pre">_proper_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">not_in_dict_warning</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface._proper_type" title="Link to this definition"></a></dt>
+<dd><p>Check if type of <code class="docutils literal notranslate"><span class="pre">value</span></code> is consistent and try to correct otherwise.</p>
 </dd></dl>
 
 </section>
@@ -212,7 +239,10 @@ desired <code class="docutils literal notranslate"><span class="pre">set_of_cavi
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.tracewin_utils.electromagnetic_fields.html" class="btn btn-neutral float-left" title="lightwin.tracewin_utils.electromagnetic_fields module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.tracewin_utils.load.html" class="btn btn-neutral float-right" title="lightwin.tracewin_utils.load module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -240,7 +270,7 @@ desired <code class="docutils literal notranslate"><span class="pre">set_of_cavi
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.tracewin_utils.interface.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.tracewin_utils.interface.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

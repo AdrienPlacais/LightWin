@@ -21,7 +21,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.core.particle module" href="lightwin.core.particle.html" />
+    <link rel="prev" title="lightwin.core.instruction module" href="lightwin.core.instruction.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,13 +49,42 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.accelerator.html">lightwin.core.accelerator package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">lightwin.core.beam_parameters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.html">lightwin.core.commands package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.html">lightwin.core.elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">lightwin.core.list_of_elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.html">lightwin.core.transfer_matrix package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">lightwin.core.electric_field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">lightwin.core.instruction module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lightwin.core.instructions_factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">lightwin.core.particle module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -71,6 +102,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.core.html">lightwin.core package</a></li>
       <li class="breadcrumb-item active">lightwin.core.instructions_factory module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.core.instructions_factory.rst.txt" rel="nofollow"> View page source</a>
@@ -134,6 +167,21 @@ Element because it is not implemented, prefer assigning it to a
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.instructions_factory.InstructionsFactory.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dat_content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Collection</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction" title="lightwin.core.instruction.Instruction"><span class="pre">Instruction</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.instructions_factory.InstructionsFactory.run" title="Link to this definition"></a></dt>
+<dd><p>Create all the elements and commands.</p>
+<div class="admonition-todo admonition" id="id4">
+<p class="admonition-title">Todo</p>
+<p>Check if the return value from <code class="docutils literal notranslate"><span class="pre">apply_commands</span></code> is necessary.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dat_content</strong> (<em>Collection</em><em>[</em><em>list</em><em>[</em><em>str</em><em>]</em><em>]</em>) – List containing all the lines of <code class="docutils literal notranslate"><span class="pre">dat_filepath</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="lightwin.core.instructions_factory.InstructionsFactory._call_proper_factory">
 <span class="sig-name descname"><span class="pre">_call_proper_factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">instruction_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction" title="lightwin.core.instruction.Instruction"><span class="pre">Instruction</span></a></span></span><a class="headerlink" href="#lightwin.core.instructions_factory.InstructionsFactory._call_proper_factory" title="Link to this definition"></a></dt>
 <dd><p>Create proper <a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction" title="lightwin.core.instruction.Instruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Instruction</span></code></a>, or <a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Dummy" title="lightwin.core.instruction.Dummy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dummy</span></code></a>.</p>
@@ -161,6 +209,12 @@ or <a class="reference internal" href="lightwin.core.instruction.html#lightwin.c
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.instructions_factory.InstructionsFactory._handle_lattice_and_section">
+<span class="sig-name descname"><span class="pre">_handle_lattice_and_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.instructions_factory.InstructionsFactory._handle_lattice_and_section" title="Link to this definition"></a></dt>
+<dd><p>Ensure that every element has proper lattice, section indexes.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="lightwin.core.instructions_factory.InstructionsFactory._check_every_elt_has_lattice_and_section">
 <span class="sig-name descname"><span class="pre">_check_every_elt_has_lattice_and_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.instructions_factory.InstructionsFactory._check_every_elt_has_lattice_and_section" title="Link to this definition"></a></dt>
 <dd><p>Check that every element has a lattice and section index.</p>
@@ -178,27 +232,6 @@ or <a class="reference internal" href="lightwin.core.instruction.html#lightwin.c
 <dd><p>Remove the desired elements.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.instructions_factory.InstructionsFactory._handle_lattice_and_section">
-<span class="sig-name descname"><span class="pre">_handle_lattice_and_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.instructions_factory.InstructionsFactory._handle_lattice_and_section" title="Link to this definition"></a></dt>
-<dd><p>Ensure that every element has proper lattice, section indexes.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.instructions_factory.InstructionsFactory.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dat_content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Collection</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction" title="lightwin.core.instruction.Instruction"><span class="pre">Instruction</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.instructions_factory.InstructionsFactory.run" title="Link to this definition"></a></dt>
-<dd><p>Create all the elements and commands.</p>
-<div class="admonition-todo admonition" id="id4">
-<p class="admonition-title">Todo</p>
-<p>Check if the return value from <code class="docutils literal notranslate"><span class="pre">apply_commands</span></code> is necessary.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dat_content</strong> (<em>Collection</em><em>[</em><em>list</em><em>[</em><em>str</em><em>]</em><em>]</em>) – List containing all the lines of <code class="docutils literal notranslate"><span class="pre">dat_filepath</span></code>.</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -207,7 +240,10 @@ or <a class="reference internal" href="lightwin.core.instruction.html#lightwin.c
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.core.instruction.html" class="btn btn-neutral float-left" title="lightwin.core.instruction module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.core.particle.html" class="btn btn-neutral float-right" title="lightwin.core.particle module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -235,7 +271,7 @@ or <a class="reference internal" href="lightwin.core.instruction.html#lightwin.c
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.core.instructions_factory.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.core.instructions_factory.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

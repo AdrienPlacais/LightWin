@@ -21,7 +21,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.core.accelerator.factory module" href="lightwin.core.accelerator.factory.html" />
+    <link rel="prev" title="lightwin.core.accelerator package" href="lightwin.core.accelerator.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,13 +49,46 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lightwin.core.accelerator.html">lightwin.core.accelerator package</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">lightwin.core.accelerator.accelerator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.accelerator.factory.html">lightwin.core.accelerator.factory module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">lightwin.core.beam_parameters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.html">lightwin.core.commands package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.html">lightwin.core.elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">lightwin.core.list_of_elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.html">lightwin.core.transfer_matrix package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">lightwin.core.electric_field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">lightwin.core.instruction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">lightwin.core.instructions_factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">lightwin.core.particle module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -71,6 +106,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.core.html">lightwin.core package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.core.accelerator.html">lightwin.core.accelerator package</a></li>
       <li class="breadcrumb-item active">lightwin.core.accelerator.accelerator module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.core.accelerator.accelerator.rst.txt" rel="nofollow"> View page source</a>
@@ -122,28 +160,16 @@ be stored.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.accelerator.accelerator.Accelerator._create_special_getters">
-<span class="sig-name descname"><span class="pre">_create_special_getters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#lightwin.core.accelerator.accelerator.Accelerator._create_special_getters" title="Link to this definition"></a></dt>
-<dd><p>Create a dict of aliases that can be accessed w/ the get method.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="lightwin.core.accelerator.accelerator.Accelerator.l_cav">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">l_cav</span></span><a class="headerlink" href="#lightwin.core.accelerator.accelerator.Accelerator.l_cav" title="Link to this definition"></a></dt>
+<dd><p>Shortcut to easily get list of cavities.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.accelerator.accelerator.Accelerator.elt_at_this_s_idx">
-<span class="sig-name descname"><span class="pre">elt_at_this_s_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.accelerator.accelerator.Accelerator.elt_at_this_s_idx" title="Link to this definition"></a></dt>
-<dd><p>Give the element where the given index is.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.accelerator.accelerator.Accelerator.equivalent_elt">
-<span class="sig-name descname"><span class="pre">equivalent_elt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a></span></span><a class="headerlink" href="#lightwin.core.accelerator.accelerator.Accelerator.equivalent_elt" title="Link to this definition"></a></dt>
-<dd><p>Return element from <code class="docutils literal notranslate"><span class="pre">self.elts</span></code> with the same name as <code class="docutils literal notranslate"><span class="pre">elt</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.accelerator.accelerator.Accelerator.from_pickle">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyPickler" title="lightwin.util.pickling.MyPickler"><span class="pre">MyPickler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lightwin.core.accelerator.accelerator.Accelerator.from_pickle" title="Link to this definition"></a></dt>
-<dd><p>Instantiate object from previously pickled file.</p>
+<dt class="sig sig-object py" id="lightwin.core.accelerator.accelerator.Accelerator.has">
+<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lightwin.core.accelerator.accelerator.Accelerator.has" title="Link to this definition"></a></dt>
+<dd><p>Tell if the required attribute is in this class.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -175,9 +201,9 @@ present in this list will be used.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.accelerator.accelerator.Accelerator.has">
-<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#lightwin.core.accelerator.accelerator.Accelerator.has" title="Link to this definition"></a></dt>
-<dd><p>Tell if the required attribute is in this class.</p>
+<dt class="sig sig-object py" id="lightwin.core.accelerator.accelerator.Accelerator._create_special_getters">
+<span class="sig-name descname"><span class="pre">_create_special_getters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#lightwin.core.accelerator.accelerator.Accelerator._create_special_getters" title="Link to this definition"></a></dt>
+<dd><p>Create a dict of aliases that can be accessed w/ the get method.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -198,10 +224,16 @@ present in this list will be used.</p></li>
 so we can study it and save Figures/study results in the proper folder.</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="lightwin.core.accelerator.accelerator.Accelerator.l_cav">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">l_cav</span></span><a class="headerlink" href="#lightwin.core.accelerator.accelerator.Accelerator.l_cav" title="Link to this definition"></a></dt>
-<dd><p>Shortcut to easily get list of cavities.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.accelerator.accelerator.Accelerator.elt_at_this_s_idx">
+<span class="sig-name descname"><span class="pre">elt_at_this_s_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.accelerator.accelerator.Accelerator.elt_at_this_s_idx" title="Link to this definition"></a></dt>
+<dd><p>Give the element where the given index is.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.accelerator.accelerator.Accelerator.equivalent_elt">
+<span class="sig-name descname"><span class="pre">equivalent_elt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a></span></span><a class="headerlink" href="#lightwin.core.accelerator.accelerator.Accelerator.equivalent_elt" title="Link to this definition"></a></dt>
+<dd><p>Return element from <code class="docutils literal notranslate"><span class="pre">self.elts</span></code> with the same name as <code class="docutils literal notranslate"><span class="pre">elt</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -212,6 +244,12 @@ so we can study it and save Figures/study results in the proper folder.</p>
 time saving.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.accelerator.accelerator.Accelerator.from_pickle">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pickler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyPickler" title="lightwin.util.pickling.MyPickler"><span class="pre">MyPickler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#lightwin.core.accelerator.accelerator.Accelerator.from_pickle" title="Link to this definition"></a></dt>
+<dd><p>Instantiate object from previously pickled file.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -220,7 +258,10 @@ time saving.</p>
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.core.accelerator.html" class="btn btn-neutral float-left" title="lightwin.core.accelerator package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.core.accelerator.factory.html" class="btn btn-neutral float-right" title="lightwin.core.accelerator.factory module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -248,7 +289,7 @@ time saving.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.core.accelerator.accelerator.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.core.accelerator.accelerator.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

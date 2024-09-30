@@ -21,7 +21,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.util.converters module" href="lightwin.util.converters.html" />
+    <link rel="prev" title="lightwin.tracewin_utils.load module" href="lightwin.tracewin_utils.load.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,13 +49,42 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">lightwin.util package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.converters.html">lightwin.util.converters module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.debug.html">lightwin.util.debug module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.dicts_output.html">lightwin.util.dicts_output module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.helper.html">lightwin.util.helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.log_manager.html">lightwin.util.log_manager module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pandas_helper.html">lightwin.util.pandas_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pass_beauty.html">lightwin.util.pass_beauty module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.phases.html">lightwin.util.phases module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html">lightwin.util.pickling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.synchronous_phases.html">lightwin.util.synchronous_phases module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -71,6 +102,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
       <li class="breadcrumb-item active">lightwin.util package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.util.rst.txt" rel="nofollow"> View page source</a>
@@ -91,37 +123,37 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.util.converters.html">lightwin.util.converters module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.converters.html#lightwin.util.converters.emittance"><code class="docutils literal notranslate"><span class="pre">emittance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.converters.html#lightwin.util.converters.position"><code class="docutils literal notranslate"><span class="pre">position()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.converters.html#lightwin.util.converters.energy"><code class="docutils literal notranslate"><span class="pre">energy()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.converters.html#lightwin.util.converters.longitudinal"><code class="docutils literal notranslate"><span class="pre">longitudinal()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.converters.html#lightwin.util.converters.position"><code class="docutils literal notranslate"><span class="pre">position()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.converters.html#lightwin.util.converters.emittance"><code class="docutils literal notranslate"><span class="pre">emittance()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.converters.html#lightwin.util.converters.twiss"><code class="docutils literal notranslate"><span class="pre">twiss()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.util.debug.html">lightwin.util.debug module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.debug.html#lightwin.util.debug._create_output_fit_dicts"><code class="docutils literal notranslate"><span class="pre">_create_output_fit_dicts()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.debug.html#lightwin.util.debug.compute_error_transfer_matrix"><code class="docutils literal notranslate"><span class="pre">compute_error_transfer_matrix()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.debug.html#lightwin.util.debug.load_phase_space"><code class="docutils literal notranslate"><span class="pre">load_phase_space()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.debug.html#lightwin.util.debug.output_cavities"><code class="docutils literal notranslate"><span class="pre">output_cavities()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.debug.html#lightwin.util.debug._create_output_fit_dicts"><code class="docutils literal notranslate"><span class="pre">_create_output_fit_dicts()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.debug.html#lightwin.util.debug.output_fit"><code class="docutils literal notranslate"><span class="pre">output_fit()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.debug.html#lightwin.util.debug.output_fit_progress"><code class="docutils literal notranslate"><span class="pre">output_fit_progress()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.util.dicts_output.html">lightwin.util.dicts_output module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.util.helper.html">lightwin.util.helper module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.chunks"><code class="docutils literal notranslate"><span class="pre">chunks()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.recursive_items"><code class="docutils literal notranslate"><span class="pre">recursive_items()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.recursive_getter"><code class="docutils literal notranslate"><span class="pre">recursive_getter()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.flatten"><code class="docutils literal notranslate"><span class="pre">flatten()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.chunks"><code class="docutils literal notranslate"><span class="pre">chunks()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.remove_duplicates"><code class="docutils literal notranslate"><span class="pre">remove_duplicates()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.printc"><code class="docutils literal notranslate"><span class="pre">printc()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.pd_output"><code class="docutils literal notranslate"><span class="pre">pd_output()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.pascal_case"><code class="docutils literal notranslate"><span class="pre">pascal_case()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.get_constructor"><code class="docutils literal notranslate"><span class="pre">get_constructor()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.get_constructors"><code class="docutils literal notranslate"><span class="pre">get_constructors()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.pascal_case"><code class="docutils literal notranslate"><span class="pre">pascal_case()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.pd_output"><code class="docutils literal notranslate"><span class="pre">pd_output()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.printc"><code class="docutils literal notranslate"><span class="pre">printc()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.resample"><code class="docutils literal notranslate"><span class="pre">resample()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.range_vals"><code class="docutils literal notranslate"><span class="pre">range_vals()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.range_vals_object"><code class="docutils literal notranslate"><span class="pre">range_vals_object()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.recursive_getter"><code class="docutils literal notranslate"><span class="pre">recursive_getter()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.recursive_items"><code class="docutils literal notranslate"><span class="pre">recursive_items()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.remove_duplicates"><code class="docutils literal notranslate"><span class="pre">remove_duplicates()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.resample"><code class="docutils literal notranslate"><span class="pre">resample()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.save_energy_phase_tm"><code class="docutils literal notranslate"><span class="pre">save_energy_phase_tm()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.helper.html#lightwin.util.helper.save_vcav_and_phis"><code class="docutils literal notranslate"><span class="pre">save_vcav_and_phis()</span></code></a></li>
 </ul>
@@ -134,8 +166,8 @@
 <li class="toctree-l3"><a class="reference internal" href="lightwin.util.log_manager.html#lightwin.util.log_manager.LogFormatter.format"><code class="docutils literal notranslate"><span class="pre">LogFormatter.format()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.log_manager.html#lightwin.util.log_manager.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.log_manager.html#lightwin.util.log_manager.set_up_logging"><code class="docutils literal notranslate"><span class="pre">set_up_logging()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.log_manager.html#lightwin.util.log_manager.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.util.pandas_helper.html">lightwin.util.pandas_helper module</a><ul>
@@ -144,11 +176,11 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.util.pass_beauty.html">lightwin.util.pass_beauty module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.pass_beauty.html#lightwin.util.pass_beauty._cavity_settings_to_adjust"><code class="docutils literal notranslate"><span class="pre">_cavity_settings_to_adjust()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.pass_beauty.html#lightwin.util.pass_beauty._is_adapted_to_pass_beauty"><code class="docutils literal notranslate"><span class="pre">_is_adapted_to_pass_beauty()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.pass_beauty.html#lightwin.util.pass_beauty._pass_beauty_instructions"><code class="docutils literal notranslate"><span class="pre">_pass_beauty_instructions()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.pass_beauty.html#lightwin.util.pass_beauty.elements_to_diagnostics"><code class="docutils literal notranslate"><span class="pre">elements_to_diagnostics()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.pass_beauty.html#lightwin.util.pass_beauty.insert_pass_beauty_instructions"><code class="docutils literal notranslate"><span class="pre">insert_pass_beauty_instructions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.pass_beauty.html#lightwin.util.pass_beauty.set_of_cavity_settings_to_adjust"><code class="docutils literal notranslate"><span class="pre">set_of_cavity_settings_to_adjust()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.pass_beauty.html#lightwin.util.pass_beauty.elements_to_diagnostics"><code class="docutils literal notranslate"><span class="pre">elements_to_diagnostics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.pass_beauty.html#lightwin.util.pass_beauty._pass_beauty_instructions"><code class="docutils literal notranslate"><span class="pre">_pass_beauty_instructions()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.pass_beauty.html#lightwin.util.pass_beauty.insert_pass_beauty_instructions"><code class="docutils literal notranslate"><span class="pre">insert_pass_beauty_instructions()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.pass_beauty.html#lightwin.util.pass_beauty._is_adapted_to_pass_beauty"><code class="docutils literal notranslate"><span class="pre">_is_adapted_to_pass_beauty()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.util.phases.html">lightwin.util.phases module</a><ul>
@@ -160,26 +192,26 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.util.pickling.html">lightwin.util.pickling module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyCloudPickler"><code class="docutils literal notranslate"><span class="pre">MyCloudPickler</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyCloudPickler.__init__"><code class="docutils literal notranslate"><span class="pre">MyCloudPickler.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyCloudPickler._abc_impl"><code class="docutils literal notranslate"><span class="pre">MyCloudPickler._abc_impl</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyCloudPickler.pickle"><code class="docutils literal notranslate"><span class="pre">MyCloudPickler.pickle()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyCloudPickler.unpickle"><code class="docutils literal notranslate"><span class="pre">MyCloudPickler.unpickle()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyPickler"><code class="docutils literal notranslate"><span class="pre">MyPickler</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyPickler._abc_impl"><code class="docutils literal notranslate"><span class="pre">MyPickler._abc_impl</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyPickler.pickle"><code class="docutils literal notranslate"><span class="pre">MyPickler.pickle()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyPickler.unpickle"><code class="docutils literal notranslate"><span class="pre">MyPickler.unpickle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyPickler._abc_impl"><code class="docutils literal notranslate"><span class="pre">MyPickler._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyCloudPickler"><code class="docutils literal notranslate"><span class="pre">MyCloudPickler</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyCloudPickler.__init__"><code class="docutils literal notranslate"><span class="pre">MyCloudPickler.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyCloudPickler.pickle"><code class="docutils literal notranslate"><span class="pre">MyCloudPickler.pickle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyCloudPickler.unpickle"><code class="docutils literal notranslate"><span class="pre">MyCloudPickler.unpickle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html#lightwin.util.pickling.MyCloudPickler._abc_impl"><code class="docutils literal notranslate"><span class="pre">MyCloudPickler._abc_impl</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.util.synchronous_phases.html">lightwin.util.synchronous_phases module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.synchronous_phases.html#lightwin.util.synchronous_phases.SYNCHRONOUS_PHASE_FUNCTIONS"><code class="docutils literal notranslate"><span class="pre">SYNCHRONOUS_PHASE_FUNCTIONS</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.synchronous_phases.html#lightwin.util.synchronous_phases.phi_s_from_tracewin_file"><code class="docutils literal notranslate"><span class="pre">phi_s_from_tracewin_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.synchronous_phases.html#lightwin.util.synchronous_phases.phi_s_lagniel"><code class="docutils literal notranslate"><span class="pre">phi_s_lagniel()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.synchronous_phases.html#lightwin.util.synchronous_phases.phi_s_legacy"><code class="docutils literal notranslate"><span class="pre">phi_s_legacy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.synchronous_phases.html#lightwin.util.synchronous_phases.phi_s_lagniel"><code class="docutils literal notranslate"><span class="pre">phi_s_lagniel()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.synchronous_phases.html#lightwin.util.synchronous_phases.phi_s_from_tracewin_file"><code class="docutils literal notranslate"><span class="pre">phi_s_from_tracewin_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.synchronous_phases.html#lightwin.util.synchronous_phases.SYNCHRONOUS_PHASE_FUNCTIONS"><code class="docutils literal notranslate"><span class="pre">SYNCHRONOUS_PHASE_FUNCTIONS</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -191,7 +223,10 @@
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.tracewin_utils.load.html" class="btn btn-neutral float-left" title="lightwin.tracewin_utils.load module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.util.converters.html" class="btn btn-neutral float-right" title="lightwin.util.converters module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -219,7 +254,7 @@
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.util.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.util.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

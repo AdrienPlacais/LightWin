@@ -23,7 +23,9 @@
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.core.beam_parameters.helper module" href="lightwin.core.beam_parameters.helper.html" />
+    <link rel="prev" title="lightwin.core.beam_parameters.beam_parameters module" href="lightwin.core.beam_parameters.beam_parameters.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,13 +51,49 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.accelerator.html">lightwin.core.accelerator package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="lightwin.core.beam_parameters.html">lightwin.core.beam_parameters package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.beam_parameters.phase_space.html">lightwin.core.beam_parameters.phase_space package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html">lightwin.core.beam_parameters.beam_parameters module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">lightwin.core.beam_parameters.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.beam_parameters.helper.html">lightwin.core.beam_parameters.helper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.beam_parameters.initial_beam_parameters.html">lightwin.core.beam_parameters.initial_beam_parameters module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.html">lightwin.core.commands package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.html">lightwin.core.elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">lightwin.core.list_of_elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.html">lightwin.core.transfer_matrix package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">lightwin.core.electric_field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">lightwin.core.instruction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">lightwin.core.instructions_factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">lightwin.core.particle module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -73,6 +111,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.core.html">lightwin.core package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.core.beam_parameters.html">lightwin.core.beam_parameters package</a></li>
       <li class="breadcrumb-item active">lightwin.core.beam_parameters.factory module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.core.beam_parameters.factory.rst.txt" rel="nofollow"> View page source</a>
@@ -100,10 +141,16 @@
 <dd><p>Initialize the class.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#lightwin.core.beam_parameters.factory.BeamParametersFactory._abc_impl" title="Link to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory._determine_phase_spaces">
+<span class="sig-name descname"><span class="pre">_determine_phase_spaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_multipart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.BeamParametersFactory._determine_phase_spaces" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory.factory_method">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">factory_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.BeamParametersFactory.factory_method" title="Link to this definition"></a></dt>
+<dd><p>Create the <a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamParameters</span></code></a> object.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory._check_and_set_arrays">
@@ -116,11 +163,6 @@
 <span class="sig-name descname"><span class="pre">_check_sigma_in</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sigma_in</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.BeamParametersFactory._check_sigma_in" title="Link to this definition"></a></dt>
 <dd><p>Change shape of <code class="docutils literal notranslate"><span class="pre">sigma_in</span></code> if necessary.</p>
 </dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory._determine_phase_spaces">
-<span class="sig-name descname"><span class="pre">_determine_phase_spaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_multipart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.BeamParametersFactory._determine_phase_spaces" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory._set_from_other_phase_space">
@@ -141,9 +183,9 @@ initialized.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory._set_from_sigma">
-<span class="sig-name descname"><span class="pre">_set_from_sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_space_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigmas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma_kin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_kin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.BeamParametersFactory._set_from_sigma" title="Link to this definition"></a></dt>
-<dd><p>Initialize transfer matrices from <span class="math notranslate nohighlight">\(\sigma\)</span> beam matrix.</p>
+<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory._set_only_emittance">
+<span class="sig-name descname"><span class="pre">_set_only_emittance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_space_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emittances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.BeamParametersFactory._set_only_emittance" title="Link to this definition"></a></dt>
+<dd><p>Set only the emittance.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -164,12 +206,6 @@ initialized.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory._set_only_emittance">
-<span class="sig-name descname"><span class="pre">_set_only_emittance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_space_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emittances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.BeamParametersFactory._set_only_emittance" title="Link to this definition"></a></dt>
-<dd><p>Set only the emittance.</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory._set_transverse_from_x_and_y">
 <span class="sig-name descname"><span class="pre">_set_transverse_from_x_and_y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_phase_space_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_space_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.BeamParametersFactory._set_transverse_from_x_and_y" title="Link to this definition"></a></dt>
 <dd><p>Initialize <code class="docutils literal notranslate"><span class="pre">t</span></code> (transverse) phase space.</p>
@@ -182,10 +218,15 @@ phase spaces.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory.factory_method">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">factory_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.BeamParametersFactory.factory_method" title="Link to this definition"></a></dt>
-<dd><p>Create the <a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamParameters</span></code></a> object.</p>
+<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory._set_from_sigma">
+<span class="sig-name descname"><span class="pre">_set_from_sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_space_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigmas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma_kin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_kin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.BeamParametersFactory._set_from_sigma" title="Link to this definition"></a></dt>
+<dd><p>Initialize transfer matrices from <span class="math notranslate nohighlight">\(\sigma\)</span> beam matrix.</p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.BeamParametersFactory._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#lightwin.core.beam_parameters.factory.BeamParametersFactory._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -213,83 +254,6 @@ Also <code class="xref py py-meth docutils literal notranslate"><span class="pre
 </ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._abc_impl" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._initial_beam_parameters_kw">
-<span class="sig-name descname"><span class="pre">_initial_beam_parameters_kw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><span class="pre">SimulationOutput</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._initial_beam_parameters_kw" title="Link to this definition"></a></dt>
-<dd><p>Generate the kw to instantiate the <a class="reference internal" href="lightwin.core.beam_parameters.initial_beam_parameters.html#lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters" title="lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InitialBeamParameters</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>simulation_output</strong> (<a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><em>SimulationOutput</em></a>) – Object from which the initial beam will be taken.</p></li>
-<li><p><strong>get_kw</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><em>Element</em></a><em> | </em><em>str</em><em> | </em><em>bool</em><em> | </em><em>None</em><em>]</em>) – Keyword argument to <code class="docutils literal notranslate"><span class="pre">get</span></code> <code class="docutils literal notranslate"><span class="pre">args</span></code> at proper position.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dictionary of keyword arguments for
-<a class="reference internal" href="lightwin.core.beam_parameters.initial_beam_parameters.html#lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters" title="lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InitialBeamParameters</span></code></a>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._initial_phase_space_beam_parameters_kw">
-<span class="sig-name descname"><span class="pre">_initial_phase_space_beam_parameters_kw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_space_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_missing_phase_spaces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._initial_phase_space_beam_parameters_kw" title="Link to this definition"></a></dt>
-<dd><p>Get all beam data at proper position and store it in a dict.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>original_beam_parameters</strong> (<a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><em>BeamParameters</em></a>) – Object holding original beam parameters.</p></li>
-<li><p><strong>get_kw</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><em>Element</em></a><em> | </em><em>str</em><em> | </em><em>bool</em><em> | </em><em>None</em><em>]</em>) – dict that can be passed to the <code class="docutils literal notranslate"><span class="pre">get</span></code> method and that will return
-the data at the beginning of the linac portion.</p></li>
-<li><p><strong>skip_missing_phase_spaces</strong> (<em>bool</em>) – To handle when a phase space from <a href="#id2"><span class="problematic" id="id3">:var:`self.phase_spaces`</span></a> is not
-defined in <code class="docutils literal notranslate"><span class="pre">original_beam_parameters</span></code>, and is therefore not
-initializable. If True, we just skip it. If False and such a case
-happens, an <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code> will be raised.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>initial_phase_spaces_kw</strong> – Keys are the name of the phase spaces.
-The values are other dictionaries, which keys-values are
-<code class="xref py py-class docutils literal notranslate"><span class="pre">PhaseSpaceInitialBeamParameters</span></code> attributes.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict[str, dict[str, float | np.ndarray]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._set_from_other_phase_space">
-<span class="sig-name descname"><span class="pre">_set_from_other_phase_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.initial_beam_parameters.html#lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters" title="lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters"><span class="pre">InitialBeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_phase_space_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_space_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._set_from_other_phase_space" title="Link to this definition"></a></dt>
-<dd><p>Instantiate a phase space from another one.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>initial_beam_parameters</strong> (<a class="reference internal" href="lightwin.core.beam_parameters.initial_beam_parameters.html#lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters" title="lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters"><em>InitialBeamParameters</em></a>) – Object holding the beam parameters in different phase spaces.</p></li>
-<li><p><strong>other_phase_space_name</strong> (<em>{'zdelta'}</em>) – Name of the phase space from which the new phase space will be
-initialized.</p></li>
-<li><p><strong>phase_space_names</strong> (<em>Sequence</em><em>[</em><em>{'phiw'</em><em>, </em><em>'z'}</em><em>]</em>) – Name of the phase spaces that will be created.</p></li>
-<li><p><strong>gamma_kin</strong> (<em>float</em>) – Lorentz gamma factor.</p></li>
-<li><p><strong>beta_kin</strong> (<em>float</em>) – Lorentz beta factor.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._set_from_sigma">
-<span class="sig-name descname"><span class="pre">_set_from_sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.initial_beam_parameters.html#lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters" title="lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters"><span class="pre">InitialBeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_space_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigmas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._set_from_sigma" title="Link to this definition"></a></dt>
-<dd><p>Initialize transfer matrices from <span class="math notranslate nohighlight">\(\sigma\)</span> beam matrix.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -336,6 +300,83 @@ portion.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._initial_beam_parameters_kw">
+<span class="sig-name descname"><span class="pre">_initial_beam_parameters_kw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><span class="pre">SimulationOutput</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._initial_beam_parameters_kw" title="Link to this definition"></a></dt>
+<dd><p>Generate the kw to instantiate the <a class="reference internal" href="lightwin.core.beam_parameters.initial_beam_parameters.html#lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters" title="lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InitialBeamParameters</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>simulation_output</strong> (<a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><em>SimulationOutput</em></a>) – Object from which the initial beam will be taken.</p></li>
+<li><p><strong>get_kw</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><em>Element</em></a><em> | </em><em>str</em><em> | </em><em>bool</em><em> | </em><em>None</em><em>]</em>) – Keyword argument to <code class="docutils literal notranslate"><span class="pre">get</span></code> <code class="docutils literal notranslate"><span class="pre">args</span></code> at proper position.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of keyword arguments for
+<a class="reference internal" href="lightwin.core.beam_parameters.initial_beam_parameters.html#lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters" title="lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InitialBeamParameters</span></code></a>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._initial_phase_space_beam_parameters_kw">
+<span class="sig-name descname"><span class="pre">_initial_phase_space_beam_parameters_kw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_space_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_kw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_missing_phase_spaces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._initial_phase_space_beam_parameters_kw" title="Link to this definition"></a></dt>
+<dd><p>Get all beam data at proper position and store it in a dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_beam_parameters</strong> (<a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><em>BeamParameters</em></a>) – Object holding original beam parameters.</p></li>
+<li><p><strong>get_kw</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><em>Element</em></a><em> | </em><em>str</em><em> | </em><em>bool</em><em> | </em><em>None</em><em>]</em>) – dict that can be passed to the <code class="docutils literal notranslate"><span class="pre">get</span></code> method and that will return
+the data at the beginning of the linac portion.</p></li>
+<li><p><strong>skip_missing_phase_spaces</strong> (<em>bool</em>) – To handle when a phase space from <code class="xref py py-attr docutils literal notranslate"><span class="pre">self.phase_spaces</span></code> is not
+defined in <code class="docutils literal notranslate"><span class="pre">original_beam_parameters</span></code>, and is therefore not
+initializable. If True, we just skip it. If False and such a case
+happens, an <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code> will be raised.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>initial_phase_spaces_kw</strong> – Keys are the name of the phase spaces.
+The values are other dictionaries, which keys-values are
+<code class="xref py py-class docutils literal notranslate"><span class="pre">PhaseSpaceInitialBeamParameters</span></code> attributes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, dict[str, float | np.ndarray]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._set_from_sigma">
+<span class="sig-name descname"><span class="pre">_set_from_sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.initial_beam_parameters.html#lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters" title="lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters"><span class="pre">InitialBeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_space_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigmas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._set_from_sigma" title="Link to this definition"></a></dt>
+<dd><p>Initialize transfer matrices from <span class="math notranslate nohighlight">\(\sigma\)</span> beam matrix.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._set_from_other_phase_space">
+<span class="sig-name descname"><span class="pre">_set_from_other_phase_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_beam_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.beam_parameters.initial_beam_parameters.html#lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters" title="lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters"><span class="pre">InitialBeamParameters</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_phase_space_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_space_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._set_from_other_phase_space" title="Link to this definition"></a></dt>
+<dd><p>Instantiate a phase space from another one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_beam_parameters</strong> (<a class="reference internal" href="lightwin.core.beam_parameters.initial_beam_parameters.html#lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters" title="lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters"><em>InitialBeamParameters</em></a>) – Object holding the beam parameters in different phase spaces.</p></li>
+<li><p><strong>other_phase_space_name</strong> (<em>{'zdelta'}</em>) – Name of the phase space from which the new phase space will be
+initialized.</p></li>
+<li><p><strong>phase_space_names</strong> (<em>Sequence</em><em>[</em><em>{'phiw'</em><em>, </em><em>'z'}</em><em>]</em>) – Name of the phase spaces that will be created.</p></li>
+<li><p><strong>gamma_kin</strong> (<em>float</em>) – Lorentz gamma factor.</p></li>
+<li><p><strong>beta_kin</strong> (<em>float</em>) – Lorentz beta factor.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#lightwin.core.beam_parameters.factory.InitialBeamParametersFactory._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -344,7 +385,10 @@ portion.</p>
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.core.beam_parameters.beam_parameters.html" class="btn btn-neutral float-left" title="lightwin.core.beam_parameters.beam_parameters module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.core.beam_parameters.helper.html" class="btn btn-neutral float-right" title="lightwin.core.beam_parameters.helper module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -372,7 +416,7 @@ portion.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.core.beam_parameters.factory.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.core.beam_parameters.factory.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

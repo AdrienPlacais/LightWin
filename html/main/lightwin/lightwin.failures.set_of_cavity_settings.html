@@ -21,7 +21,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.failures.strategy module" href="lightwin.failures.strategy.html" />
+    <link rel="prev" title="lightwin.failures.helper module" href="lightwin.failures.helper.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,13 +49,37 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault.html">lightwin.failures.fault module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.fault_scenario.html">lightwin.failures.fault_scenario module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.helper.html">lightwin.failures.helper module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lightwin.failures.set_of_cavity_settings module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.failures.strategy.html">lightwin.failures.strategy module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -71,6 +97,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.failures.html">lightwin.failures package</a></li>
       <li class="breadcrumb-item active">lightwin.failures.set_of_cavity_settings module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.failures.set_of_cavity_settings.rst.txt" rel="nofollow"> View page source</a>
@@ -101,12 +129,6 @@ Mandatory to recompute the synchronous phases.</p>
 <dt class="sig sig-object py" id="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">several_cavity_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">FieldMap</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings" title="lightwin.core.elements.field_maps.cavity_settings.CavitySettings"><span class="pre">CavitySettings</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings.__init__" title="Link to this definition"></a></dt>
 <dd><p>Create the proper dictionary.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings._order">
-<span class="sig-name descname"><span class="pre">_order</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">FieldMap</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings" title="lightwin.core.elements.field_maps.cavity_settings.CavitySettings"><span class="pre">CavitySettings</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings._order" title="Link to this definition"></a></dt>
-<dd><p>Return all the <code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code> in <code class="docutils literal notranslate"><span class="pre">self</span></code> in good order.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -174,6 +196,12 @@ optimisation process to the full <code class="xref py py-class docutils literal 
 optimisation, we must update index <code class="docutils literal notranslate"><span class="pre">n</span></code> in the <code class="docutils literal notranslate"><span class="pre">ele[n][v]]</span></code> command.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings._order">
+<span class="sig-name descname"><span class="pre">_order</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">FieldMap</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings" title="lightwin.core.elements.field_maps.cavity_settings.CavitySettings"><span class="pre">CavitySettings</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings._order" title="Link to this definition"></a></dt>
+<dd><p>Return all the <code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code> in <code class="docutils literal notranslate"><span class="pre">self</span></code> in good order.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -209,7 +237,10 @@ settings.</p>
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.failures.helper.html" class="btn btn-neutral float-left" title="lightwin.failures.helper module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.failures.strategy.html" class="btn btn-neutral float-right" title="lightwin.failures.strategy module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -237,7 +268,7 @@ settings.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.failures.set_of_cavity_settings.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.failures.set_of_cavity_settings.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

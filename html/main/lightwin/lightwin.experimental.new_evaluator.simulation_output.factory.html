@@ -21,7 +21,9 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator module" href="lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.html" />
+    <link rel="prev" title="lightwin.experimental.new_evaluator.simulation_output package" href="lightwin.experimental.new_evaluator.simulation_output.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,13 +49,39 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="lightwin.experimental.new_evaluator.html">lightwin.experimental.new_evaluator package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="lightwin.experimental.new_evaluator.simulation_output.html">lightwin.experimental.new_evaluator.simulation_output package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.experimental.new_evaluator.i_evaluator.html">lightwin.experimental.new_evaluator.i_evaluator module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.experimental.plotter.html">lightwin.experimental.plotter package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.experimental.test.html">lightwin.experimental.test module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
 </ul>
 
@@ -71,6 +99,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.experimental.html">lightwin.experimental package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.experimental.new_evaluator.html">lightwin.experimental.new_evaluator package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.experimental.new_evaluator.simulation_output.html">lightwin.experimental.new_evaluator.simulation_output package</a></li>
       <li class="breadcrumb-item active">lightwin.experimental.new_evaluator.simulation_output.factory module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.experimental.new_evaluator.simulation_output.factory.rst.txt" rel="nofollow"> View page source</a>
@@ -115,6 +147,12 @@ values <a class="reference internal" href="lightwin.experimental.new_evaluator.s
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="lightwin.experimental.new_evaluator.simulation_output.factory.SimulationOutputEvaluatorsFactory.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accelerators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.accelerator.accelerator.html#lightwin.core.accelerator.accelerator.Accelerator" title="lightwin.core.accelerator.accelerator.Accelerator"><span class="pre">Accelerator</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_solver_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.html#lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.ISimulationOutputEvaluator" title="lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.ISimulationOutputEvaluator"><span class="pre">ISimulationOutputEvaluator</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.experimental.new_evaluator.simulation_output.factory.SimulationOutputEvaluatorsFactory.run" title="Link to this definition"></a></dt>
+<dd><p>Instantiate all the evaluators.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="lightwin.experimental.new_evaluator.simulation_output.factory.SimulationOutputEvaluatorsFactory._instantiate_evaluators">
 <span class="sig-name descname"><span class="pre">_instantiate_evaluators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><span class="pre">SimulationOutput</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.html#lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.ISimulationOutputEvaluator" title="lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.ISimulationOutputEvaluator"><span class="pre">ISimulationOutputEvaluator</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.experimental.new_evaluator.simulation_output.factory.SimulationOutputEvaluatorsFactory._instantiate_evaluators" title="Link to this definition"></a></dt>
 <dd><p>Create all the evaluators.</p>
@@ -135,12 +173,6 @@ values <a class="reference internal" href="lightwin.experimental.new_evaluator.s
 <dt class="sig sig-object py" id="lightwin.experimental.new_evaluator.simulation_output.factory.SimulationOutputEvaluatorsFactory.batch_evaluate">
 <span class="sig-name descname"><span class="pre">batch_evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Collection</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.html#lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.ISimulationOutputEvaluator" title="lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.ISimulationOutputEvaluator"><span class="pre">ISimulationOutputEvaluator</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accelerators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.accelerator.accelerator.html#lightwin.core.accelerator.accelerator.Accelerator" title="lightwin.core.accelerator.accelerator.Accelerator"><span class="pre">Accelerator</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_solver_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#lightwin.experimental.new_evaluator.simulation_output.factory.SimulationOutputEvaluatorsFactory.batch_evaluate" title="Link to this definition"></a></dt>
 <dd><p>Evaluate several evaluators.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.experimental.new_evaluator.simulation_output.factory.SimulationOutputEvaluatorsFactory.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">accelerators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.accelerator.accelerator.html#lightwin.core.accelerator.accelerator.Accelerator" title="lightwin.core.accelerator.accelerator.Accelerator"><span class="pre">Accelerator</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_solver_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.html#lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.ISimulationOutputEvaluator" title="lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.ISimulationOutputEvaluator"><span class="pre">ISimulationOutputEvaluator</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.experimental.new_evaluator.simulation_output.factory.SimulationOutputEvaluatorsFactory.run" title="Link to this definition"></a></dt>
-<dd><p>Instantiate all the evaluators.</p>
 </dd></dl>
 
 </dd></dl>
@@ -180,7 +212,10 @@ values <a class="reference internal" href="lightwin.experimental.new_evaluator.s
            </div>
           </div>
 
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.experimental.new_evaluator.simulation_output.html" class="btn btn-neutral float-left" title="lightwin.experimental.new_evaluator.simulation_output package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator.html" class="btn btn-neutral float-right" title="lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_evaluator module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -208,7 +243,7 @@ values <a class="reference internal" href="lightwin.experimental.new_evaluator.s
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b0/lightwin/lightwin.experimental.new_evaluator.simulation_output.factory.html">v0.7.0b0</a></dd>
+         <dd><a href="../../v0.7.0b1/lightwin/lightwin.experimental.new_evaluator.simulation_output.factory.html">v0.7.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>
