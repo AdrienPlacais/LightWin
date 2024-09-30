@@ -281,7 +281,7 @@ def _alter_element(
     alter_kwargs
         Key-pair values, where key is the LightWin name of the parameter to
         update, and value the new value to set. Key-pair value is skipped if
-        value is np.nan. Key must be in :var:`ARGS_POSITIONS`.
+        value is np.nan. Key must be in :data:`ARGS_POSITIONS`.
 
     Returns
     -------
