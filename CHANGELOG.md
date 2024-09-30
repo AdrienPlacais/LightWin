@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `evaluator` objects are more robust and can be configured from the `.toml`.
 - Plotting is now performed thanks to the `plotter` library.
 
+## [0.7.0b1] 2024-09-30
+
+### Fixed
+
+- Scripts moved to the `lightwin` module so that they can actually be imported.
+- Documentation includes the API reference again.
+
+
 ## [0.7.0b0] 2024-09-26
 
 ### Fixed
