@@ -97,7 +97,7 @@ class CavitySettings:
             Name of the phase used for reference. When a particle enters the
             cavity, this is the phase that is not recomputed.
         status : STATUS_T
-            A value in :var:`ALLOWED_STATUS`.
+            A value in :data:`ALLOWED_STATUS`.
         freq_bunch_mhz : float
             Bunch frequency in MHz.
         freq_cavity_mhz : float | None, optional

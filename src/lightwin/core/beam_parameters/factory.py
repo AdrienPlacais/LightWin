@@ -394,7 +394,7 @@ class InitialBeamParametersFactory(ABC):
             dict that can be passed to the `get` method and that will return
             the data at the beginning of the linac portion.
         skip_missing_phase_spaces : bool
-            To handle when a phase space from :var:`self.phase_spaces` is not
+            To handle when a phase space from :attr:`self.phase_spaces` is not
             defined in ``original_beam_parameters``, and is therefore not
             initializable. If True, we just skip it. If False and such a case
             happens, an ``AttributeError`` will be raised.

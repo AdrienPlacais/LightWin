@@ -81,7 +81,7 @@ class ListOfElementsFactory:
         phi_s_definition : str, optional
             Definition for the synchronous phases that will be used. Allowed
             values are in
-            :var:`util.synchronous_phases.SYNCHRONOUS_PHASE_FUNCTIONS`. The
+            :data:`.SYNCHRONOUS_PHASE_FUNCTIONS`. The
             default is ``'historical'``.
 
         """
