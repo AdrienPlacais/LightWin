@@ -10,8 +10,11 @@ the particles in envelope or multipart, in 3D. In contrary to
     You should ensure that you are working with *absolute* phases, i.e. that
     last argument of ``FIELD_MAP`` commands is ``1``.
     You can run a simulation with :class:`.Envelope1D` solver and
-    ``flag_phi_abs= True``. The ``.dat`` file created in the ``000001_ref``
+    ``flag_phi_abs=True``. The ``.dat`` file created in the ``000001_ref``
     folder should be the original ``.dat`` but converted to absolute phases.
+
+.. todo::
+    This absolute phase thing should be fixed now. Check this.
 
 """
 
@@ -122,15 +125,13 @@ class TraceWin(BeamCalculator):
     ) -> tuple[list[str], Path]:
         """Define the 'base' command for TraceWin.
 
-        This part of the command is the same for every :class:`ListOfElements`
-        and every :class:`Fault`. It sets the TraceWin executable, the ``.ini``
-        file.  It also defines ``base_kwargs``, which should be the same for
-        every calculation.
-        Finally, it sets ``path_cal``.
-        But this path is more :class:`ListOfElements`
-        dependent...
+        This part of the command is the same for every :class:`.ListOfElements`
+        and every :class:`.Fault`. It sets the TraceWin executable, the
+        ``.ini`` file.  It also defines ``base_kwargs``, which should be the
+        same for every calculation. Finally, it sets ``path_cal``.
+        But this path is more :class:`.ListOfElements` dependent...
         ``Accelerator.accelerator_path`` + ``out_folder``
-            (+ ``fault_optimisation_tmp_folder``)
+        (+ ``fault_optimisation_tmp_folder``)
 
         """
         kwargs = kwargs.copy()
@@ -292,9 +293,10 @@ class TraceWin(BeamCalculator):
         After the optimisation, we want to re-run TraceWin with the new
         settings. However, we need to tell it that the linac is bigger than
         during the optimisation. Concretely, it means:
-            * rephasing the cavities in the compensation zone
-            * updating the ``index`` ``n`` of the cavities in the ``ele[n][v]``
-              command.
+
+        * Rephasing the cavities in the compensation zone.
+        * Updating the ``index`` ``n`` of the cavities in the ``ele[n][v]``
+          command.
 
         Note that at this point, the ``.dat`` has not been updated yet.
 
@@ -323,8 +325,7 @@ class TraceWin(BeamCalculator):
         return simulation_output
 
     def init_solver_parameters(self, accelerator: Accelerator) -> None:
-        """
-        Set the ``path_cal`` variable.
+        """Set the ``path_cal`` variable.
 
         We also set the ``_tracewin_command`` attribute to None, as it must be
         updated when ``path_cal`` changes.
