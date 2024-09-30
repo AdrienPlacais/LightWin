@@ -10,14 +10,13 @@ import logging
 from collections.abc import Collection
 from pathlib import Path
 
-from scripts_shorthands import compute_beams
-
 import lightwin.config_manager as con
 from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.elements.element import Element
+from lightwin.scripts.scripts_shorthands import compute_beams
 from lightwin.visualization import plot
 
 
