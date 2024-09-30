@@ -74,6 +74,8 @@ def combine_bests(
         out_folder = _infer_an_output_folder(paths)
     if isinstance(out_folder, str):
         out_folder = Path(out_folder)
+    if not out_folder.is_dir():
+        os.mkdir(out_folder)
 
     combined.to_csv(out_folder / "evaluations.csv", sep=",")
 
