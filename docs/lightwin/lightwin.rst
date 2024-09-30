@@ -19,6 +19,7 @@ Subpackages
    lightwin.experimental
    lightwin.failures
    lightwin.optimisation
+   lightwin.scripts
    lightwin.tracewin_utils
    lightwin.util
    lightwin.visualization
