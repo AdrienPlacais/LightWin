@@ -22,6 +22,7 @@ Welcome to LightWin's documentation!
    manual/units
    Utility scripts <manual/scripts>
    API Reference <lightwin/lightwin>
+   API Reference lala <lightwin/modules>
    manual/examples
 
 .. todolist::
