@@ -196,9 +196,6 @@ def twiss_from_sigma(
         Would be better if all emittances had the same units? Check
         consistency with rest of the code...
 
-    .. todo::
-        Check if property setter work with the *= thingy
-
     Parameters
     ----------
     phase_space_name : str
@@ -253,13 +250,12 @@ def envelopes_from_sigma(
     phase_space_name: str,
     sigma: np.ndarray,
 ) -> np.ndarray:
-    r"""
-    Compute the envelopes.
+    r"""Compute the envelopes.
 
-    Units are :math:`mm` for the position envelope in :math:`[z-\delta]`,
-    :math:`[x-x']`, :math:`[y-y']`.
-    Units are :math:`%` for the energy envelope in :math:`[z-\delta]`, and
-    :math:`mrad` for  :math:`[x-x']` and :math:`[y-y']`.
+    Units are :math:`\mathrm{mm}` for the position envelope in
+    :math:`[z-\delta]`, :math:`[x-x']`, :math:`[y-y']`.
+    Units are :math:`\mathrm{\%}` for the energy envelope in :math:`[z-\delta]`,
+    and :math:`\mathrm{mrad}` for :math:`[x-x']` and :math:`[y-y']`.
 
     Parameters
     ----------
