@@ -14,6 +14,7 @@ Welcome to LightWin's documentation!
    :caption: LightWin
    :titlesonly:
    :glob:
+   :includehidden:
 
    manual/installation
    manual/usage

@@ -3,7 +3,6 @@ Configuration
 
 .. toctree::
    :maxdepth: 4
-   :hidden:
 
    configuration.files
    configuration.beam
@@ -16,9 +15,6 @@ Configuration
 Most of the configuration of LightWin is performed through a ``.toml`` configuration file, which should be given as argument to several objects initialisation.
 The configuration file is treated with the help of the `tomllib <https://docs.python.org/3/library/tomllib.html>`_ module.
 It is processed by the :func:`process_config` function, which checks its validity and converts it to a dictionary.
-
-.. note::
-   Configuration was previously set up thanks to a ``.ini`` file. This is now deprecated.
 
 The name of every section is not important, as long as every section is correctly passed to :func:`process_config`.
 It is however recommended to use explicit names.
@@ -60,12 +56,3 @@ It is however recommended to use explicit names.
 
 .. note::
    In order to dynamically keep track of the options that are implemented, the *Allowed values* column of following tables contains a link to the variable storing the possible values, when relevant.
-
-.. include:: configuration.files.rst
-.. include:: configuration.beam.rst
-.. include:: configuration.beam_calculator.rst
-.. include:: configuration.plots.rst
-.. include:: configuration.wtf.rst
-.. include:: configuration.optimisation.design_space.rst
-.. include:: configuration.evaluators.rst
-

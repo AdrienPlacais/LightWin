@@ -26,7 +26,7 @@ extensions = [
     "sphinx.ext.napoleon",  # handle numpy style
     "sphinx.ext.autodoc",
     "sphinx_rtd_theme",  # ReadTheDocs theme
-    "myst_parser",  # still useful?
+    "myst_parser",
     "sphinx.ext.todo",  # allow use of TODO
     # "sphinx.ext.viewcode",
     "nbsphinx",
@@ -51,6 +51,7 @@ exclude_patterns = [
     ".DS_Store",
     "experimental",
     "lightwin/modules.rst",
+    "**/*.inc.rst",
 ]
 
 
