@@ -4,13 +4,13 @@
     Handle the different kind of field_maps...
 
 .. todo::
-    Handle the SET_SYNCH_PHASE command
+    Completely handle the SET_SYNCH_PHASE command
 
 .. todo::
     Hande phi_s fitting with :class:`beam_calculation.tracewin.Tracewin`
 
-.. todo::
-    when subclassing field_maps, do not forget to update the transfer matrix
+.. note::
+    When subclassing field_maps, do not forget to update the transfer matrix
     selector in:
     - :class:`.Envelope3D`
     - :class:`.SingleElementEnvelope3DParameters`
@@ -251,7 +251,7 @@ class FieldMap(Element):
 
     @property
     def _indexes_in_line(self) -> dict[str, int]:
-        """Give the position of the arguments in the ``FIELD_MAP ``command."""
+        """Give the position of the arguments in the ``FIELD_MAP`` command."""
         indexes = {"phase": 3, "k_e": 6, "abs_phase_flag": 10}
 
         if not self._personalized_name:
