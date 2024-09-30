@@ -37,9 +37,7 @@ from lightwin.optimisation.objective.minimize_difference_with_ref import (
 from lightwin.optimisation.objective.minimize_mismatch import MinimizeMismatch
 from lightwin.optimisation.objective.objective import Objective
 from lightwin.optimisation.objective.position import zone_to_recompute
-from lightwin.optimisation.objective.quantity_is_between import (
-    QuantityIsBetween,
-)
+from lightwin.optimisation.objective.quantity_is_between import QuantityIsBetween
 from lightwin.util.dicts_output import markdown
 
 
@@ -54,7 +52,7 @@ class ObjectiveFactory(ABC):
     :class:`EnergyPhaseMismatch` or :class:`EnergySyncPhaseMismatch` for
     examples.
 
-    Attributes
+    Parameters
     ----------
     reference_elts : ListOfElements
         All the reference elements.
