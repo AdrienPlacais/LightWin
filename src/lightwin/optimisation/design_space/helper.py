@@ -1,9 +1,4 @@
-"""Set initial values/limits in DesignSpaceFactory.
-
-.. todo::
-    check docstrings ref [1]
-
-"""
+"""Set initial values/limits in :class:`.DesignSpaceFactory`."""
 
 import math
 
@@ -100,7 +95,8 @@ def k_e_limits(
     maximum_k_e_is_calculated_wrt_maximum_k_e_of_section : bool, optional
         Use this flag to compute allowed increase of ``k_e`` with respect to
         the maximum ``k_e`` of the section, instead of the ``k_e`` of the
-        nominal cavity. This is what we used in `[1]`_. The default is False.
+        nominal cavity. This is what we used in :cite:`Placais2022a`. The
+        default is False.
     reference_elements : list[Element] | None
         List of the nominal elements. Must be provided if
         ``maximum_k_e_is_calculated_wrt_maximum_k_e_of_section`` is True.
@@ -109,10 +105,6 @@ def k_e_limits(
     -------
     tuple[float, float]
         Lower and upper bounds for ``k_e``.
-
-    # .. _[1]: doi.org/10.18429/JACoW-LINAC2022-TUPORI04
-    # A. Plaçais and F. Bouly, "Cavity Failure Compensation Strategies in
-    # Superconducting Linacs," in Proceedings of LINAC2022, 2022, pp. 552–555.
 
     """
     reference_k_e = same_value_as_nominal("k_e", reference_element)
