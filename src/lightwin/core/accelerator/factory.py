@@ -61,18 +61,28 @@ class AcceleratorFactory(ABC):
 
         The default structure is:
 
-        where_original_dat_is/
-            YYYY.MM.DD_HHhMM_SSs_MILLIms/         <- project_folder (abs)
-                000000_ref/                       <- accelerator_path (abs)
-                    0_FirstBeamCalculatorName/    <- out_folder (rel)
-                    (1_SecondBeamCalculatorName/) <- out_folder (rel)
-                000001/
-                    0_FirstBeamCalculatorName/
-                    (1_SecondBeamCalculatorName/)
-                000002/
-                    0_FirstBeamCalculatorName/
-                    (1_SecondBeamCalculatorName/)
-                etc
+        - ``where_original_dat_is/``
+
+          - ``YYYY.MM.DD_HHhMM_SSs_MILLIms/``     <- ``project_folder``
+            (absolute)
+
+            - ``000000_ref/``                     <- ``accelerator_path``
+              (absolute)
+
+              - ``0_FirstBeamCalculatorName/``    <- ``out_folder`` (relative)
+              - (``1_SecondBeamCalculatorName/``) <- ``out_folder`` (relative)
+
+            - ``000001/``
+
+              - ``0_FirstBeamCalculatorName/``
+              - (``1_SecondBeamCalculatorName/``)
+
+            - ``000002/``
+
+              - ``0_FirstBeamCalculatorName/``
+              - (``1_SecondBeamCalculatorName/``)
+
+            - etc
 
         Parameters
         ----------
