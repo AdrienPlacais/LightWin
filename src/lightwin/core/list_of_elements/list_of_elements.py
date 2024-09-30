@@ -1,8 +1,9 @@
 """Define a ``list`` of :class:`.Element`, with some additional methods.
 
 Two objects can have a :class:`ListOfElements` as attribute:
-    - :class:`.Accelerator`: holds all the :class:`.Element` of the linac.
-    - :class:`.Fault`: it holds only a fraction of the linac
+
+    * :class:`.Accelerator`: holds all the :class:`.Element` of the linac.
+    * :class:`.Fault`: it holds only a fraction of the linac
       :class:`.Element`. Beam will be propagated a huge number of times
       during optimisation process, so we recompute only the strict necessary.
 
@@ -19,7 +20,9 @@ from typing import Any, Literal, Self, overload
 
 import numpy as np
 
-from lightwin.core.beam_parameters.initial_beam_parameters import InitialBeamParameters
+from lightwin.core.beam_parameters.initial_beam_parameters import (
+    InitialBeamParameters,
+)
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import REFERENCE_T
 from lightwin.core.elements.field_maps.field_map import FieldMap
@@ -77,10 +80,8 @@ class ListOfElements(list):
             files/folders of the object. The keys are:
                 - ``dat_file``: absolute path to the ``.dat`` file
                 - ``elts_n_cmds``: list of objects representing dat content
-                - ``accelerator_path``: where calculation results for each
-                :class:`.BeamCalculator` will be stored.
-                - ``dat_content``: list of list of str, holding content of the
-                ``.dat``.
+                - ``accelerator_path``: where calculation results for each :class:`.BeamCalculator` will be stored.
+                - ``dat_content``: list of list of str, holding content of the ``.dat``.
 
         """
         self.input_particle = input_particle
