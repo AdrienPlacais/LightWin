@@ -23,6 +23,7 @@ version = lightwin.__version__
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
+    "sphinxcontrib.bibtex",  # Integrate citations
     "sphinx.ext.napoleon",  # handle numpy style
     "sphinx.ext.autodoc",
     "sphinx_rtd_theme",  # ReadTheDocs theme
@@ -55,6 +56,7 @@ exclude_patterns = [
     "**/*.inc.rst",
 ]
 
+bibtex_bibfiles = ["references.bib"]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

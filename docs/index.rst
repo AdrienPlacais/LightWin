@@ -22,6 +22,7 @@ Welcome to LightWin's documentation!
    manual/configuration
    manual/units
    Utility scripts <manual/scripts>
+   manual/bibliography
    API Reference <lightwin/lightwin>
    manual/examples
 
