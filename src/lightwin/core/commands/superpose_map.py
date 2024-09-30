@@ -49,8 +49,8 @@ class SuperposeMap(Command):
         ```
 
         .. warning::
-        Only the first of the ``SUPERPOSE_MAP`` command will have the entire
-        valid range of elements.
+            Only the first of the ``SUPERPOSE_MAP`` command will have the
+            entire valid range of elements.
 
         """
         start = self.idx["dat_idx"]
