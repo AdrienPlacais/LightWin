@@ -1,6 +1,6 @@
 """Regroup the functions dedicated to testing data.
 
-They are used by :class:`.SimulationOutputEvaluator'. They all take a value and
+They are used by :class:`.SimulationOutputEvaluator`. They all take a value and
 limits/upper or lower or objective value as arguments, and return a boolean.
 
 """
