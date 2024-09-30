@@ -1,8 +1,8 @@
 """Store cavity settings that can change during an optimisation.
 
 .. note::
-    As for now, :class:`.FieldMap` is the only object to have its properties in
-    a dedicated object.
+    As for now, :class:`.FieldMap` is the only :class:`.Element` to have its
+    properties in a dedicated object.
 
 .. todo::
     Similar to synchronous phase, allow for V_cav to be "master" instead of
@@ -578,12 +578,13 @@ class CavitySettings:
         """Set the generic methods to compute beam propagation, cavity params.
 
         This function is called within two contexts:
-            - When initializing the :class:`.BeamCalculator` specific
-            parameters (:class:`.ElementBeamCalculatorParameters`).
-            - When re-initalizing the :class:`.ElementBeamCalculatorParameters`
-            because the ``status`` of the cavity changed, and in particular
-            when it switches to ``'failed'``. In this case, the ``phi_s_func``
-            is not altered.
+
+        - When initializing the :class:`.BeamCalculator` specific parameters
+          (:class:`.ElementBeamCalculatorParameters`).
+        - When re-initalizing the :class:`.ElementBeamCalculatorParameters`
+          because the ``status`` of the cavity changed, and in particular when
+          it switches to ``'failed'``. In this case, the ``phi_s_func`` is not
+          altered.
 
         Parameters
         ----------
