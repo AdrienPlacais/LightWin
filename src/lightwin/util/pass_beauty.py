@@ -8,7 +8,7 @@ for now, the implementation is kept very simple:
  - The amplitude of compensating cavities can be retuned at +/- ``tol_k_e``
    around their compensated value.
  - We try to keep the phase dispersion between start of compensation zone, and
- ``number_of_dsize`` lattices after.
+   ``number_of_dsize`` lattices after.
 
 .. warning::
     Performing a pass beauty will break the colors of the cavities in the
