@@ -8,7 +8,7 @@ implemented presets in :mod:`config.optimisation.objective`.
 
 .. todo::
     Clarify that ``objective_position_preset`` should be understandable by
-    :mod:`failures.position`.
+    :mod:`.failures.position`.
 
 """
 

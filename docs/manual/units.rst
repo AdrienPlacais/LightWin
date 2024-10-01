@@ -15,7 +15,7 @@ Units and conventions
 
 Beam parameters
 ***************
-The beam parameters are defined in :mod:`core.beam_parameters` and stored in the :class:`.BeamParameters` object.
+The beam parameters are defined in :mod:`beam_parameters<lightwin.core.beam_parameters.beam_parameters>` and stored in the :class:`.BeamParameters` object.
 We use the same units and conventions as TraceWin.
 
 RMS emittances

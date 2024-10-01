@@ -236,7 +236,6 @@ class InitialBeamParametersFactory(ABC):
     .. todo::
         Remove the ``is_3d``, ``is_multipart`` as I always create the same
         object with ``True``, ``True``.
-        Also :meth:`self._determine_phase_spaces` is useless.
 
     """
 
