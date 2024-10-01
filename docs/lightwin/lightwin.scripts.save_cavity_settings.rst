@@ -1,4 +1,4 @@
-lightwin.scripts.save\_cavity\_settings module
+save\_cavity\_settings module
 ==============================================
 
 .. automodule:: lightwin.scripts.save_cavity_settings

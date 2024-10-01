@@ -1,4 +1,4 @@
-lightwin.experimental.new\_evaluator.simulation\_output.factory module
+factory module
 ======================================================================
 
 .. automodule:: lightwin.experimental.new_evaluator.simulation_output.factory

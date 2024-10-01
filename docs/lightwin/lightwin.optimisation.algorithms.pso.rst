@@ -1,4 +1,4 @@
-lightwin.optimisation.algorithms.pso module
+pso module
 ===========================================
 
 .. automodule:: lightwin.optimisation.algorithms.pso

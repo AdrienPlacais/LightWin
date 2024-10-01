@@ -1,4 +1,4 @@
-lightwin.experimental.new\_evaluator.simulation\_output.presets module
+presets module
 ======================================================================
 
 .. automodule:: lightwin.experimental.new_evaluator.simulation_output.presets

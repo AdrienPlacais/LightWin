@@ -1,4 +1,4 @@
-lightwin.config\_manager module
+config\_manager module
 ===============================
 
 .. automodule:: lightwin.config_manager

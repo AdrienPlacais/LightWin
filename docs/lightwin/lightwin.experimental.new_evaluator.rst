@@ -1,4 +1,4 @@
-lightwin.experimental.new\_evaluator package
+new\_evaluator package
 ============================================
 
 .. automodule:: lightwin.experimental.new_evaluator

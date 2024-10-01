@@ -1,4 +1,4 @@
-lightwin.core.elements.field\_maps.field\_map\_7700 module
+field\_map\_7700 module
 ==========================================================
 
 .. automodule:: lightwin.core.elements.field_maps.field_map_7700

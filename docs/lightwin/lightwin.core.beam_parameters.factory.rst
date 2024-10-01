@@ -1,4 +1,4 @@
-lightwin.core.beam\_parameters.factory module
+factory module
 =============================================
 
 .. automodule:: lightwin.core.beam_parameters.factory

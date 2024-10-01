@@ -1,4 +1,4 @@
-lightwin.experimental.plotter.i\_plotter module
+i\_plotter module
 ===============================================
 
 .. automodule:: lightwin.experimental.plotter.i_plotter

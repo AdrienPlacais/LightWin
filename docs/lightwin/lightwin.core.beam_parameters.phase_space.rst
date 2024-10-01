@@ -1,4 +1,4 @@
-lightwin.core.beam\_parameters.phase\_space package
+phase\_space package
 ===================================================
 
 .. automodule:: lightwin.core.beam_parameters.phase_space

@@ -1,4 +1,4 @@
-lightwin.core.commands.adjust module
+adjust module
 ====================================
 
 .. automodule:: lightwin.core.commands.adjust

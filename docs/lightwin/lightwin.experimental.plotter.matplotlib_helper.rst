@@ -1,4 +1,4 @@
-lightwin.experimental.plotter.matplotlib\_helper module
+matplotlib\_helper module
 =======================================================
 
 .. automodule:: lightwin.experimental.plotter.matplotlib_helper

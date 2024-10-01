@@ -1,4 +1,4 @@
-lightwin.config.evaluators module
+evaluators module
 =================================
 
 .. automodule:: lightwin.config.evaluators

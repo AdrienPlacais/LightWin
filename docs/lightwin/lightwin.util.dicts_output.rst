@@ -1,4 +1,4 @@
-lightwin.util.dicts\_output module
+dicts\_output module
 ==================================
 
 .. automodule:: lightwin.util.dicts_output

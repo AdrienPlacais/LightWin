@@ -1,4 +1,4 @@
-lightwin.experimental.plotter.pd\_plotter module
+pd\_plotter module
 ================================================
 
 .. automodule:: lightwin.experimental.plotter.pd_plotter

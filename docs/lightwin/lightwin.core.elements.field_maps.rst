@@ -1,4 +1,4 @@
-lightwin.core.elements.field\_maps package
+field\_maps package
 ==========================================
 
 .. automodule:: lightwin.core.elements.field_maps

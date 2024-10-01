@@ -1,4 +1,4 @@
-lightwin.config package
+config package
 =======================
 
 .. automodule:: lightwin.config

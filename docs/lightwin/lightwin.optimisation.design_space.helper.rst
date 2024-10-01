@@ -1,4 +1,4 @@
-lightwin.optimisation.design\_space.helper module
+helper module
 =================================================
 
 .. automodule:: lightwin.optimisation.design_space.helper

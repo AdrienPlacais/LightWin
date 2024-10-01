@@ -1,4 +1,4 @@
-lightwin.core.elements.field\_maps.factory module
+factory module
 =================================================
 
 .. automodule:: lightwin.core.elements.field_maps.factory

@@ -1,4 +1,4 @@
-lightwin.util.pandas\_helper module
+pandas\_helper module
 ===================================
 
 .. automodule:: lightwin.util.pandas_helper

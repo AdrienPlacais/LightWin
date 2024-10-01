@@ -1,4 +1,4 @@
-lightwin.util.converters module
+converters module
 ===============================
 
 .. automodule:: lightwin.util.converters

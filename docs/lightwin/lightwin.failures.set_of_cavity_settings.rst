@@ -1,4 +1,4 @@
-lightwin.failures.set\_of\_cavity\_settings module
+set\_of\_cavity\_settings module
 ==================================================
 
 .. automodule:: lightwin.failures.set_of_cavity_settings

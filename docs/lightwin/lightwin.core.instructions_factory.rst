@@ -1,4 +1,4 @@
-lightwin.core.instructions\_factory module
+instructions\_factory module
 ==========================================
 
 .. automodule:: lightwin.core.instructions_factory

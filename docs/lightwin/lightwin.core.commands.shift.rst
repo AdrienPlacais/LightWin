@@ -1,4 +1,4 @@
-lightwin.core.commands.shift module
+shift module
 ===================================
 
 .. automodule:: lightwin.core.commands.shift

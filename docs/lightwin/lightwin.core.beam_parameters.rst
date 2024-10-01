@@ -1,4 +1,4 @@
-lightwin.core.beam\_parameters package
+beam\_parameters package
 ======================================
 
 .. automodule:: lightwin.core.beam_parameters

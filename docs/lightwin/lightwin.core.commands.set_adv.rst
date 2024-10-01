@@ -1,4 +1,4 @@
-lightwin.core.commands.set\_adv module
+set\_adv module
 ======================================
 
 .. automodule:: lightwin.core.commands.set_adv

@@ -1,4 +1,4 @@
-lightwin.core.transfer\_matrix.factory module
+factory module
 =============================================
 
 .. automodule:: lightwin.core.transfer_matrix.factory

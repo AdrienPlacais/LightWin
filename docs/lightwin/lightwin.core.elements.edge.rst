@@ -1,4 +1,4 @@
-lightwin.core.elements.edge module
+edge module
 ==================================
 
 .. automodule:: lightwin.core.elements.edge

@@ -1,4 +1,4 @@
-lightwin.optimisation.objective.factory module
+factory module
 ==============================================
 
 .. automodule:: lightwin.optimisation.objective.factory

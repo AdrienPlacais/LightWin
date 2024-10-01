@@ -1,4 +1,4 @@
-lightwin.scripts.compare\_runs module
+compare\_runs module
 =====================================
 
 .. automodule:: lightwin.scripts.compare_runs

@@ -1,4 +1,4 @@
-lightwin.visualization.plot module
+plot module
 ==================================
 
 .. automodule:: lightwin.visualization.plot

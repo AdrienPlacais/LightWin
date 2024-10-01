@@ -1,4 +1,4 @@
-lightwin.experimental package
+experimental package
 =============================
 
 .. automodule:: lightwin.experimental

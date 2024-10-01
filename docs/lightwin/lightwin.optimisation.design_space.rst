@@ -1,4 +1,4 @@
-lightwin.optimisation.design\_space package
+design\_space package
 ===========================================
 
 .. automodule:: lightwin.optimisation.design_space

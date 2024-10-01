@@ -1,4 +1,4 @@
-lightwin.failures.helper module
+helper module
 ===============================
 
 .. automodule:: lightwin.failures.helper

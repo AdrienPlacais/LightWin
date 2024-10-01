@@ -1,4 +1,4 @@
-lightwin.optimisation.algorithms package
+algorithms package
 ========================================
 
 .. automodule:: lightwin.optimisation.algorithms

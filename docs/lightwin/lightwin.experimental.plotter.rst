@@ -1,4 +1,4 @@
-lightwin.experimental.plotter package
+plotter package
 =====================================
 
 .. automodule:: lightwin.experimental.plotter

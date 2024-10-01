@@ -1,4 +1,4 @@
-lightwin.experimental.test module
+test module
 =================================
 
 .. automodule:: lightwin.experimental.test

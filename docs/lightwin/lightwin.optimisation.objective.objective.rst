@@ -1,4 +1,4 @@
-lightwin.optimisation.objective.objective module
+objective module
 ================================================
 
 .. automodule:: lightwin.optimisation.objective.objective
