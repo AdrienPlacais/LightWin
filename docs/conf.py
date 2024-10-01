@@ -63,6 +63,7 @@ autodoc_default_options = {
 add_module_names = False
 default_role = "literal"
 todo_include_todos = True
+nitpicky = True
 
 templates_path = ["_templates"]
 exclude_patterns = [
