@@ -7,7 +7,7 @@
     Completely handle the SET_SYNCH_PHASE command
 
 .. todo::
-    Hande phi_s fitting with :class:`.Tracewin`
+    Hande phi_s fitting with :class:`.TraceWin`.
 
 .. note::
     When subclassing field_maps, do not forget to update the transfer matrix

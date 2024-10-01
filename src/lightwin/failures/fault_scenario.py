@@ -86,7 +86,8 @@ class FaultScenario(list):
             default is None.
 
         """
-        self.ref_acc, self.fix_acc = ref_acc, fix_acc
+        self.ref_acc = ref_acc
+        self.fix_acc = fix_acc
         self.beam_calculator = beam_calculator
         self._transfer_phi0_from_ref_to_broken()
 
@@ -416,7 +417,7 @@ class FaultScenario(list):
     def _simulations_that_should_be_compared(
         self, id_solver_ref: str | None, id_solver_fix: str | None
     ) -> tuple[SimulationOutput, SimulationOutput]:
-        """Get proper :class:`SimulationOutput` for comparison."""
+        """Get proper :class:`.SimulationOutput` for comparison."""
         if id_solver_ref is None:
             id_solver_ref = list(self.ref_acc.simulation_outputs.keys())[0]
 
@@ -425,10 +426,9 @@ class FaultScenario(list):
 
         if id_solver_ref != id_solver_fix:
             logging.warning(
-                "You are trying to compare two SimulationOutputs "
-                "created by two different solvers. This may lead "
-                "to errors, as interpolations in this case are not"
-                " implemented yet."
+                "You are trying to compare two SimulationOutputs created by "
+                "two different solvers. This may lead to errors, as "
+                "interpolations in this case are not implemented yet."
             )
 
         ref_simu = self.ref_acc.simulation_outputs[id_solver_ref]

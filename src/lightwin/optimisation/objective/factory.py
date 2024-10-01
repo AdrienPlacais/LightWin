@@ -6,10 +6,6 @@ implemented presets in :mod:`config.optimisation.objective`.
 .. todo::
     decorator to auto output the variables and constraints?
 
-.. todo::
-    Clarify that ``objective_position_preset`` should be understandable by
-    :mod:`.failures.position`.
-
 """
 
 import logging
