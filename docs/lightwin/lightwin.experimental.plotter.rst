@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.experimental.plotter.i_plotter
    lightwin.experimental.plotter.matplotlib_helper

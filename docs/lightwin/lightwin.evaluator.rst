@@ -10,7 +10,7 @@ Subpackages
 -----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.evaluator.simulation_output
 
@@ -18,7 +18,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.evaluator.list_of_simulation_output_evaluators
    lightwin.evaluator.post_treaters

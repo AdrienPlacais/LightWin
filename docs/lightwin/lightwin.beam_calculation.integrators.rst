@@ -10,6 +10,6 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.beam_calculation.integrators.rk4

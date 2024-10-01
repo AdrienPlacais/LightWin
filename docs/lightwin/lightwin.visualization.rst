@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.visualization.anim
    lightwin.visualization.plot

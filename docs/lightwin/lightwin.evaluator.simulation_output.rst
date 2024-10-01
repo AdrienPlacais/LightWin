@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.evaluator.simulation_output.factory
    lightwin.evaluator.simulation_output.presets

@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.beam_calculation.envelope_1d.beam_parameters_factory
    lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters

@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.beam_calculation.simulation_output.factory
    lightwin.beam_calculation.simulation_output.simulation_output

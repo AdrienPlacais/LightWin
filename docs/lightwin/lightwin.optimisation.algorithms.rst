@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.optimisation.algorithms.algorithm
    lightwin.optimisation.algorithms.differential_evolution

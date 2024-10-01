@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.core.transfer_matrix.factory
    lightwin.core.transfer_matrix.transfer_matrix

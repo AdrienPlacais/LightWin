@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.optimisation.design_space.constraint
    lightwin.optimisation.design_space.design_space

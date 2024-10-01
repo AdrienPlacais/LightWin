@@ -10,7 +10,7 @@ Subpackages
 -----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.beam_calculation.envelope_1d
    lightwin.beam_calculation.envelope_3d
@@ -23,7 +23,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.beam_calculation.beam_calculator
    lightwin.beam_calculation.factory

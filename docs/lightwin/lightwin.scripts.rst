@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.scripts.combine_solutions
    lightwin.scripts.compare_beam_calculators
