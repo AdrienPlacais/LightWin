@@ -3,12 +3,16 @@
 After a LightWin optimisation, perform a second optimisation with TraceWin. As
 for now, the implementation is kept very simple:
 
-    - The phase of compensating cavities can be retuned at +/- ``tol_phi_deg``
-      around their compensated value.
-    - The amplitude of compensating cavities can be retuned at +/- ``tol_k_e``
-      around their compensated value.
-    - We try to keep the phase dispersion between start of compensation zone,
-      and ``number_of_dsize`` lattices after.
+ - The phase of compensating cavities can be retuned at +/- ``tol_phi_deg``
+   around their compensated value.
+ - The amplitude of compensating cavities can be retuned at +/- ``tol_k_e``
+   around their compensated value.
+ - We try to keep the phase dispersion between start of compensation zone, and
+ ``number_of_dsize`` lattices after.
+
+.. warning::
+    Performing a pass beauty will break the colors of the cavities in the
+    output plots. They will all appear in green, as if they were nominal.
 
 .. todo::
     fix colors in plots after pass beauty
