@@ -484,7 +484,7 @@ def fault_scenario_factory(
     -------
     fault_scenarios : list[FaultScenario]
         Holds all the initialized :class:`FaultScenario` objects, holding their
-        already initialied :class:`Fault` objects.
+        already initialied :class:`.Fault` objects.
 
     """
     # TODO may be better to move this to beam_calculator.init_solver_parameters

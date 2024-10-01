@@ -137,9 +137,12 @@ def _check_common_keys(
         :meth:`.FaultScenario._set_optimisation_algorithms` (they have
         precedence).
     default_kwargs : [str, Any]
-        kwargs as defined in the :func:`_optimisation_algorithm_kwargs` (they
+        kwargs as defined in the `_optimisation_algorithm_kwargs` (they
         will be overriden as they are considered as "default" or "fallback"
         values).
+
+    .. todo::
+        Redocument ``default_kwargs``.
 
     """
     user_keys = set(user_kwargs.keys())
