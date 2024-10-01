@@ -3,6 +3,18 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+# -- Build info --------------------------------------------------------------
+# From project base, generate the rst files with:
+# sphinx-apidoc -o docs/lightwin -f -e -M src/
+# cd docs/lightwin
+# nvim *.rst
+# :bufdo %s/^\(\S*\.\)\(\S*\) \(package\|module\)/\2 \3 | update
+# cd ../..
+# sphinx-multiversion docs ../LightWin-docs/html
+
+# If you want unversioned doc:
+# make html
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
@@ -81,7 +93,7 @@ smv_tag_whitelist = (
     # r"^v\d+\.\d+.*$|latest"  # would keep all the versions (unnecessary)
     r"v0.7.0b1|latest"  # keep only major tags
 )
-smv_branch_whitelist = "main"
+smv_branch_whitelist = "main|doc"
 smv_remote_whitelist = None
 smv_released_pattern = r"v.*"
 smv_latest_version = version
