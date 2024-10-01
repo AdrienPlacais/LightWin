@@ -23,12 +23,13 @@ import logging
 from pathlib import Path
 from typing import Any, Callable, Sequence
 
-import matplotlib
 import matplotlib.patches as pat
 import matplotlib.pyplot as plt
 import matplotlib.transforms as mtransforms
 import numpy as np
 from cycler import cycler
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 from palettable.colorbrewer.qualitative import Dark2_8
 
 import lightwin.util.dicts_output as dic
@@ -47,9 +48,6 @@ from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
 from lightwin.core.elements.quad import Quad
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.util import helper
-
-figure_type = matplotlib.figure.Figure
-ax_type = matplotlib.axes._axes.Axes
 
 font = {"family": "serif"}  # , 'size': 25}
 plt.rc("font", **font)
@@ -125,7 +123,7 @@ ERROR_REFERENCE = "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)"
 # =============================================================================
 def factory(
     accelerators: Sequence[Accelerator], plots: dict[str, bool], **kwargs: bool
-) -> list[figure_type]:
+) -> list[Figure]:
     """Create all the desired plots."""
     if (
         kwargs["clean_fig"]
@@ -208,7 +206,7 @@ def _proper_kwargs(
     return FALLBACK_PRESETS | PLOT_PRESETS[preset] | kwargs
 
 
-def _keep_colors(axe: ax_type) -> dict[str, str]:
+def _keep_colors(axe: Axes) -> dict[str, str]:
     """Keep track of the color associated with each SimulationOutput."""
     lines = axe.get_lines()
     colors = {line.get_label(): line.get_color() for line in lines}
@@ -401,7 +399,7 @@ def _compute_error(
 
 # Actual interface with matplotlib
 def _make_a_subplot(
-    axe: ax_type,
+    axe: Axes,
     x_axis: str,
     y_axis: str,
     colors: dict[str, str] | None,
@@ -450,7 +448,7 @@ def create_fig_if_not_exists(
     num: int = 1,
     clean_fig: bool = False,
     **kwargs: bool | str | int,
-) -> tuple[figure_type, list[ax_type]]:
+) -> tuple[Figure, list[Axes]]:
     """
     Check if figures were already created, create it if not.
 
@@ -487,27 +485,27 @@ def create_fig_if_not_exists(
     return fig, axlist
 
 
-def clean_figure(fignumlist: Sequence[figure_type]) -> None:
+def clean_figure(fignumlist: Sequence[Figure]) -> None:
     """Clean axis of Figs in fignumlist."""
     for fignum in fignumlist:
         fig = plt.figure(fignum)
         clean_axes(fig.get_axes())
 
 
-def clean_axes(axlist: Sequence[ax_type]) -> None:
+def clean_axes(axlist: Sequence[Axes]) -> None:
     """Clean given axis."""
     for axx in axlist:
         axx.cla()
 
 
-def remove_artists(axe: ax_type) -> None:
+def remove_artists(axe: Axes) -> None:
     """Remove lines and plots, but keep labels and grids."""
     for artist in axe.lines:
         artist.remove()
     axe.set_prop_cycle(None)
 
 
-def _autoscale_based_on(axx: ax_type, to_ignore: str) -> None:
+def _autoscale_based_on(axx: Axes, to_ignore: str) -> None:
     """Rescale axis, ignoring Lines with to_ignore in their label."""
     lines = [
         line for line in axx.get_lines() if to_ignore not in line.get_label()
@@ -519,7 +517,7 @@ def _autoscale_based_on(axx: ax_type, to_ignore: str) -> None:
     axx.autoscale_view()
 
 
-def _savefig(fig: figure_type, filepath: Path) -> None:
+def _savefig(fig: Figure, filepath: Path) -> None:
     """Save the figure."""
     fig.set_size_inches(25.6, 13.64)
     fig.tight_layout()
@@ -554,7 +552,7 @@ def plot_pty_with_data_tags(ax, x, y, idx_list, tags=True):
 # Specific plots: structure
 # =============================================================================
 def _plot_structure(
-    elts: ListOfElements, ax: ax_type, x_axis: str = "z_abs"
+    elts: ListOfElements, ax: Axes, x_axis: str = "z_abs"
 ) -> None:
     """Plot structure of the linac under study."""
     type_to_plot_func = {
