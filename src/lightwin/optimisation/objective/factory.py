@@ -555,7 +555,7 @@ OBJECTIVE_PRESETS = {
     "EnergySyncPhaseMismatch": EnergySyncPhaseMismatch,
     "sync_phase_as_objective_ADS": EnergySyncPhaseMismatch,
     "experimental": EnergySeveralMismatches,
-}
+}  #:
 
 
 def get_objectives_and_residuals_function(

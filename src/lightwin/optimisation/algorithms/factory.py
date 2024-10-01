@@ -41,8 +41,7 @@ ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
     "differential_evolution": DifferentialEvolution,
     "explorator": Explorator,
     "experimental": Explorator,
-}
-algorithms = tuple(ALGORITHM_SELECTOR.keys())  #:
+}  #:
 
 
 def optimisation_algorithm_factory(
