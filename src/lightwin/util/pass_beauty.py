@@ -173,7 +173,7 @@ def insert_pass_beauty_instructions(
     """
     Overwrite :class:`.ListOfElements` to include pass beauty instructions.
 
-    The :attr:`.FaultScenario.fix_acc.elts` (a :class:`.ListOfElements`) will
+    The ``fault_scenario.fix_acc.elts`` (a :class:`.ListOfElements`) will
     be overwritten.
 
     """
