@@ -4,7 +4,7 @@
 .. toctree::
    :maxdepth: 5
 
-This section is mandatory to initialize an :class:`.Accelerator` through the :func:`.accelerator_factory` function.
+This section is mandatory to initialize an :class:`.Accelerator`.
 It must contain the key ``dat_file``, which is the path to the linac structure file (same format as TraceWin).
 
 .. csv-table::
@@ -12,4 +12,4 @@ It must contain the key ``dat_file``, which is the path to the linac structure f
    :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
-See also: :mod:`config.files` and the :ref:`TraceWin compatibility note<TraceWin-compatibility-note>`.
+See also: :mod:`lightwin.config.files` and the :ref:`TraceWin compatibility note<TraceWin-compatibility-note>`.
