@@ -21,8 +21,10 @@
 import lightwin
 
 project = "LightWin"
-copyright = "2024, A. Plaçais, F. Bouly, B. Yee-Rendon"
-author = "A. Plaçais, F. Bouly, B. Yee-Rendon"
+copyright = (
+    "2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
+)
+author = "A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
 
 # See https://protips.readthedocs.io/git-tag-version.html
 # The full version, including alpha/beta/rc tags.
