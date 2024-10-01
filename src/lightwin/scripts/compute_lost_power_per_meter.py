@@ -251,18 +251,24 @@ def _get_partran1_filepath(folderpath: Path) -> Path:
 
 @overload
 def get_partran1_paths(
-        folderpath: Path, full_project: Literal[True], verbose: bool=False,**kwargs: Any
+    folderpath: Path,
+    full_project: Literal[True],
+    verbose: bool = False,
+    **kwargs: Any,
 ) -> dict[str, Path]: ...
 
 
 @overload
 def get_partran1_paths(
-        folderpath: Path, full_project: Literal[False],verbose:bool=False, **kwargs: Any
+    folderpath: Path,
+    full_project: Literal[False],
+    verbose: bool = False,
+    **kwargs: Any,
 ) -> Path: ...
 
 
 def get_partran1_paths(
-        folderpath: Path, full_project: bool, verbose:bool=False,**kwargs: Any
+    folderpath: Path, full_project: bool, verbose: bool = False, **kwargs: Any
 ) -> Path | dict[str, Path]:
     """Gather the file(s) to treat."""
     if verbose:
@@ -290,7 +296,7 @@ def get_partran1_paths(
 
         if verbose:
             print(f"\tGot one matching pattern!")
-        filepath =  _get_partran1_filepath(folder)
+        filepath = _get_partran1_filepath(folder)
         folders[folder_name] = filepath
         if verbose:
             print(f"\tFound {filepath = }")
@@ -340,9 +346,13 @@ def _plot_several(df: pd.DataFrame, path: Path | None = None) -> Figure:
     print(f"Figure saved in {fig_path}")
     return fig
 
+
 def main():
-    parser = argparse.ArgumentParser("compute_lost_power_per_meter", formatter_class=argparse.RawTextHelpFormatter,
-                                     description="Take one or several ``patran1.out`` file(s) and convert lost power [W] to lost power per meter [W/m].")
+    parser = argparse.ArgumentParser(
+        "compute_lost_power_per_meter",
+        formatter_class=argparse.RawTextHelpFormatter,
+        description="Take one or several ``patran1.out`` file(s) and convert lost power [W] to lost power per meter [W/m].",
+    )
     parser.add_argument(
         "-f",
         "--folder",
@@ -374,7 +384,9 @@ def main():
         required=False,
     )
 
-    str_defs = "\n".join((f"\t{key}: {value}" for key, value in DEFINITIONS.items()))
+    str_defs = "\n".join(
+        (f"\t{key}: {value}" for key, value in DEFINITIONS.items())
+    )
     parser.add_argument(
         "-d",
         "--definition",
@@ -384,8 +396,12 @@ def main():
         required=True,
     )
     parser.add_argument(
-            "-v","--verbose",help="To print out more information.",action="store_true",required=False,
-            )
+        "-v",
+        "--verbose",
+        help="To print out more information.",
+        action="store_true",
+        required=False,
+    )
     args = parser.parse_args()
     compute(
         args.folder,
@@ -395,6 +411,7 @@ def main():
         definition=args.definition,
         verbose=args.verbose,
     )
+
 
 if __name__ == "__main__":
     main()
