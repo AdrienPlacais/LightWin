@@ -1,6 +1,6 @@
-The :func:`get` method
-======================
-Most of the objects defined in LightWin have a *magic* :func:`get` method.
+The `get` method
+================
+Most of the objects defined in LightWin have a *magic* `get` method.
 It is a very convenient way to get the data you are interested in without having to type a very cumbersome path.
 
 .. todo::
