@@ -55,7 +55,7 @@ class MyPickler(ABC):
 
 
 class MyCloudPickler(MyPickler):
-    """Define a :class:`.Pickler` that can handle modules and lambda functions.
+    """Define a :class:`.MyPickler` that can handle modules and lambda functions.
 
     This pickler should not raise errors, but all attributes may not be
     properly re-created.

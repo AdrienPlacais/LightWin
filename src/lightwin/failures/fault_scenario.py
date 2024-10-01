@@ -224,7 +224,7 @@ class FaultScenario(list):
         # )
 
     def fix_all(self) -> None:
-        """Fix all the :class:`Fault` objects in self.
+        """Fix all the :class:`.Fault` objects in self.
 
         .. todo::
             make this more readable
@@ -356,7 +356,7 @@ class FaultScenario(list):
 
     @property
     def _reference_phase(self) -> REFERENCE_T:
-        """Give the reference phase: `phi_0_rel` or 'phi_0_abs'."""
+        """Give the reference phase ``"phi_0_rel"`` or ``"phi_0_abs"``."""
         return self.beam_calculator.reference_phase
 
     def _evaluate_fit_quality(

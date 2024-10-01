@@ -1,7 +1,7 @@
 """Define a library to produce all these nice plots.
 
 When adding you own presets, do not forget to add them to the list of
-implemented plots in :mod:`config.plots`.
+implemented plots :data:`.IMPLEMENTED_PLOTS`.
 
 .. todo::
     better detection of what is a multiparticle simulation and what is not.

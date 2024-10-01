@@ -143,7 +143,7 @@ class Fault:
     def fix(
         self, optimisation_algorithm: OptimisationAlgorithm
     ) -> tuple[bool, dict]:
-        """Fix the :class:`Fault`. Set :attr:`optimized_cavity_settings`.
+        """Fix the :class:`Fault`. Set ``self.optimized_cavity_settings``.
 
         Parameters
         ----------
@@ -153,7 +153,7 @@ class Fault:
         Returns
         -------
         success : bool
-            Indicates convergence of the :class:`OptimisationAlgorithm`.
+            Indicates convergence of the :class:`.OptimisationAlgorithm`.
         self.info : dict
             Useful information, such as the best solution.
 
