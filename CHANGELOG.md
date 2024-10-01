@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated path to scripts in `pyproject.toml`; they should work again!
 
+### Changed
+
+- Table of Contents does not show the full path to every module/package anymore. The API section should be much clearer now!
+- Better display of the constants in the doc
+
 ## [0.7.0b1] 2024-09-30
 
 ### Fixed
