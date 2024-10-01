@@ -3,7 +3,7 @@
 Units and conventions
 =====================
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
 .. todo::
    Consistency between font size of normal text and math text. Not aesthetic when I have text and units side to side.

@@ -2,7 +2,7 @@
 *****************************
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
 This section is mandatory to initialize an :class:`.Accelerator` through the :func:`.accelerator_factory` function.
 It must contain the key ``dat_file``, which is the path to the linac structure file (same format as TraceWin).

@@ -3,7 +3,7 @@
 ``beam_calculator`` section (mandatory)
 ***************************************
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
 
 .. csv-table::

@@ -2,7 +2,7 @@ Utility scripts
 ===============
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
    :hidden:
 
 LightWin includes several utility scripts located in the `LightWin/scripts/` folder.

@@ -4,6 +4,6 @@ Examples
 ========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
 
    notebooks/absolute_vs_relative_phases.ipynb

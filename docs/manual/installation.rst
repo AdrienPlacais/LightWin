@@ -2,7 +2,7 @@ Installation
 ============
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    installation.download
    installation.python

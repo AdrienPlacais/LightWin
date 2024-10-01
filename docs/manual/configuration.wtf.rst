@@ -1,7 +1,7 @@
 ``wtf`` section
 ***************
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
 ``wtf`` stands for *what to fit*.
 This section parametrizes the failed cavities, as well as how they are fixed.

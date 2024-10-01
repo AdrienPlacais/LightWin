@@ -2,7 +2,7 @@ Usage
 =====
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    usage.general_structure
    usage.breaking_and_fixing

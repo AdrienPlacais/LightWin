@@ -1,7 +1,7 @@
 ``evaluators`` section
 **********************
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
 This section is used to defined :class:`.FaultScenarioSimulationOutputEvaluator` objects.
 They are used to evaluate the absolute or relative *quality* of compensation settings.
