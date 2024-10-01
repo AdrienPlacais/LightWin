@@ -5,7 +5,7 @@
 
 # -- Build info --------------------------------------------------------------
 # From project base, generate the rst files with:
-# sphinx-apidoc -o docs/lightwin -f -e -M src/
+# sphinx-apidoc -o docs/lightwin -f -e -M src/ -d 5
 # cd docs/lightwin
 # nvim *.rst
 # :bufdo %s/^\(\S*\.\)\(\S*\) \(package\|module\)/\2 \3 | update
@@ -17,6 +17,10 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+
+from pprint import pformat
+
+from sphinx.util import inspect
 
 import lightwin
 
@@ -99,3 +103,13 @@ smv_branch_whitelist = "main|doc"
 smv_remote_whitelist = None
 smv_released_pattern = r"v.*"
 smv_latest_version = version
+
+
+# -- Constants display fix ---------------------------------------------------
+# https://stackoverflow.com/a/65195854
+def object_description(obj: object) -> str:
+    """Format the given object for a clearer printing."""
+    return pformat(obj, indent=4)
+
+
+inspect.object_description = object_description
