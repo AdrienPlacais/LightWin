@@ -62,6 +62,15 @@ class BeamParameters(InitialBeamParameters):
     gamma_kin: np.ndarray
     beta_kin: np.ndarray
     sigma_in: np.ndarray | None = None
+    zdelta: PhaseSpaceBeamParameters
+    z: PhaseSpaceBeamParameters
+    phiw: PhaseSpaceBeamParameters
+    x: PhaseSpaceBeamParameters
+    y: PhaseSpaceBeamParameters
+    t: PhaseSpaceBeamParameters
+    phiw99: PhaseSpaceBeamParameters
+    x99: PhaseSpaceBeamParameters
+    y99: PhaseSpaceBeamParameters
 
     element_to_index: Callable[[str | Element, str | None], int | slice] = (
         lambda _elt, _pos: slice(0, -1)
@@ -70,17 +79,6 @@ class BeamParameters(InitialBeamParameters):
     def __post_init__(self) -> None:
         """Declare the phase spaces."""
         self.n_points = np.atleast_1d(self.z_abs).shape[0]
-
-        # Override types from mother class
-        self.zdelta: PhaseSpaceBeamParameters
-        self.z: PhaseSpaceBeamParameters
-        self.phiw: PhaseSpaceBeamParameters
-        self.x: PhaseSpaceBeamParameters
-        self.y: PhaseSpaceBeamParameters
-        self.t: PhaseSpaceBeamParameters
-        self.phiw99: PhaseSpaceBeamParameters
-        self.x99: PhaseSpaceBeamParameters
-        self.y99: PhaseSpaceBeamParameters
 
     def get(
         self,
