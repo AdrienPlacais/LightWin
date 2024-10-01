@@ -39,9 +39,9 @@ requires-python = ">=3.12"
 version = "0.7.0b1"
 
 [project.scripts]
-lw-combine-solutions = "scripts.combine_solutions:main"
-lw-compute-lost-power-per-meter = "scripts.compute_lost_power_per_meter:main"
-lw-reorder-output-figures = "scripts.reorder_output_figures:main"
+lw-combine-solutions = "lightwin.scripts.combine_solutions:main"
+lw-compute-lost-power-per-meter = "lightwin.scripts.compute_lost_power_per_meter:main"
+lw-reorder-output-figures = "lightwin.scripts.reorder_output_figures:main"
 
 [project.urls]
 Documentation = "https://adrienplacais.github.io/LightWin/html"
