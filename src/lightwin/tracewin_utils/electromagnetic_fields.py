@@ -295,7 +295,7 @@ def _load_field_map_file(
     """Go across the field map file names and load the first recognized.
 
     For now, only ``.edz`` files (1D electric RF) are implemented. This will be
-    a problem with :class:`Envelope1D`, but :class:`TraceWin` does not care.
+    a problem with :class:`.Envelope1D`, but :class:`.TraceWin` does not care.
 
     """
     files = field_map.field_map_file_name
