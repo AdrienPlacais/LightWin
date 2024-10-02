@@ -106,14 +106,14 @@ class LeastSquares(OptimisationAlgorithm):
         return kwargs
 
     def _format_variables(self) -> tuple[np.ndarray, Bounds]:
-        """Convert the :class:`Variable`s to an array and :class:`Bounds`."""
+        """Convert the :class:`.Variable` to an array and ``Bounds``."""
         x_0 = np.array([var.x_0 for var in self.variables])
         _bounds = np.array([var.limits for var in self.variables])
         bounds = Bounds(_bounds[:, 0], _bounds[:, 1])
         return x_0, bounds
 
     def _output_some_info(self, objectives_values: dict[str, float]) -> None:
-        """Show the most useful data from :func:`least_squares`."""
+        """Show the most useful data from scipy's `least_squares`."""
         sol = self.solution
         info_string = "Objective functions results:\n"
         for i, fun in enumerate(objectives_values.values()):

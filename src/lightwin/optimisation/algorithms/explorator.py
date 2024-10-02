@@ -43,7 +43,7 @@ class Explorator(OptimisationAlgorithm):
     case.
 
     All the attributes but ``solution`` are inherited from the Abstract Base
-    Class :class:`OptimisationAlgorithm`.
+    Class :class:`.OptimisationAlgorithm`.
 
     """
 

@@ -4,11 +4,11 @@ Abstract methods are mandatory and a ``TypeError`` will be raised if you try to
 create your own algorithm and omit them.
 
 When you add you own optimisation algorithm, do not forget to add it to the
-list of implemented algorithms in the :mod:`config.optimisation.algorithm`.
+list of implemented algorithms in the :mod:`.algorithm`.
 
 .. todo::
     Check if it is necessary to pass out the whole ``elts`` to
-    ``OptimisationAlgorithm``?
+    :class:`.OptimisationAlgorithm`?
 
 .. todo::
     Methods and flags to keep the optimisation history or not, and also to save
@@ -81,10 +81,10 @@ class OptimisationAlgorithm(ABC):
         If the method handles constraints or not.
     compute_beam_propagation: ComputeBeamPropagationT
         Method to compute propagation of the beam with the given settings.
-        Defined by a :func:`BeamCalculator.run_with_this` method, the
-        positional argument ``elts`` being set by a :func:`functools.partial`.
+        Defined by a :meth:`.BeamCalculator.run_with_this` method, the
+        positional argument ``elts`` being set by a ``functools`.partial`.
     compute_residuals : ComputeResidualsT
-        Method to compute residuals from a :class:`SimulationOutput`.
+        Method to compute residuals from a :class:`.SimulationOutput`.
     compute_constraints : ComputeConstraintsT | None, \
     optional
         Method to compute constraint violation. The default is None.

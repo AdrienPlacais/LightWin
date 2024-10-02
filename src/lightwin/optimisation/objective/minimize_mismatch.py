@@ -29,7 +29,7 @@ class MinimizeMismatch(Objective):
         descriptor: str | None = None,
     ) -> None:
         """
-        Set complementary :func:`get` flags, reference value.
+        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
 
         Parameters
         ----------
@@ -37,10 +37,10 @@ class MinimizeMismatch(Objective):
             Must contain 'twiss' plus the name of a phase-space, or simply
             'twiss' and the phase-space is defined in ``get_kwargs``.
         get_kwargs : dict[str, Element | str | bool]
-            Keyword arguments for the :func:`get` method. We do not check its
-            validity, but in general you will want to define the keys ``elt``
-            and ``pos``. You should also define the ``phase_space_name`` key if
-            it is not defined in the ``get_key``.
+            Keyword arguments for the :meth:`.SimulationOutput.get` method. We
+            do not check its validity, but in general you will want to define
+            the keys ``elt`` and ``pos``. You should also define the
+            ``phase_space_name`` key if it is not defined in the ``get_key``.
         reference : SimulationOutput
             The reference simulation output from which the Twiss parameters
             will be taken.
@@ -48,8 +48,8 @@ class MinimizeMismatch(Objective):
         """
         if "twiss" not in get_key:
             logging.warning(
-                "The get_key should contain 'twiss'. Taking "
-                "'twiss' and setting phase space to zdelta."
+                "The get_key should contain 'twiss'. Taking 'twiss' and "
+                "setting phase space to zdelta."
             )
             get_key = "twiss"
             get_kwargs["phase_space_name"] = "zdelta"
@@ -80,7 +80,7 @@ class MinimizeMismatch(Objective):
         return message
 
     def _twiss_getter(self, simulation_output: SimulationOutput) -> np.ndarray:
-        """Get desired value using :func:`SimulationOutput.get` method."""
+        """Get desired value using :meth:`.SimulationOutput.get` method."""
         return simulation_output.beam_parameters.get(
             self.get_key, **self.get_kwargs
         )

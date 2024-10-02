@@ -89,7 +89,7 @@ class NSGA(OptimisationAlgorithm):
 
     @property
     def _problem_arguments(self) -> dict[str, int | np.ndarray]:
-        """Gather arguments required for :class:`ElementwiseProblem`."""
+        """Gather arguments required for :class:`.ElementwiseProblem`."""
         _xl, _xu = self._format_variables()
         kwargs = {
             "n_var": self.n_var,
@@ -101,7 +101,7 @@ class NSGA(OptimisationAlgorithm):
         return kwargs
 
     def _format_variables(self) -> tuple[np.ndarray, np.ndarray]:
-        """Format :class:`Variable` for this algorithm."""
+        """Format :class:`.Variable` for this algorithm."""
         _xl = [var.limits[0] for var in self.variables]
         _xu = [var.limits[1] for var in self.variables]
         return _xl, _xu
