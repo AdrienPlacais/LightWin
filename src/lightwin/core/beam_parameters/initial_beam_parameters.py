@@ -47,15 +47,18 @@ class InitialBeamParameters:
     z_abs: float
     gamma_kin: float
     beta_kin: float
-    zdelta: InitialPhaseSpaceBeamParameters
-    z: InitialPhaseSpaceBeamParameters
-    phiw: InitialPhaseSpaceBeamParameters
-    x: InitialPhaseSpaceBeamParameters
-    y: InitialPhaseSpaceBeamParameters
-    t: InitialPhaseSpaceBeamParameters
-    phiw99: InitialPhaseSpaceBeamParameters
-    x99: InitialPhaseSpaceBeamParameters
-    y99: InitialPhaseSpaceBeamParameters
+
+    def __post_init__(self) -> None:
+        """Declare the various phase spaces without initalizing them."""
+        self.zdelta: InitialPhaseSpaceBeamParameters
+        self.z: InitialPhaseSpaceBeamParameters
+        self.phiw: InitialPhaseSpaceBeamParameters
+        self.x: InitialPhaseSpaceBeamParameters
+        self.y: InitialPhaseSpaceBeamParameters
+        self.t: InitialPhaseSpaceBeamParameters
+        self.phiw99: InitialPhaseSpaceBeamParameters
+        self.x99: InitialPhaseSpaceBeamParameters
+        self.y99: InitialPhaseSpaceBeamParameters
 
     def __str__(self) -> str:
         """Give compact information on the data that is stored."""
