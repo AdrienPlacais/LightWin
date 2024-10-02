@@ -1,7 +1,7 @@
 """Define a factory to create :class:`.Objective` objects.
 
 When you implement a new objective preset, also add it to the list of
-implemented presets in :mod:`config.optimisation.objective`.
+implemented presets in :data:`.OBJECTIVE_PRESETS` and :mod:`.config.wtf`.
 
 .. todo::
     decorator to auto output the variables and constraints?
@@ -42,7 +42,7 @@ from lightwin.util.dicts_output import markdown
 # =============================================================================
 @dataclass
 class ObjectiveFactory(ABC):
-    """A base class to create :class:`Objective`.
+    """A base class to create :class:`.Objective`.
 
     It is intended to be sub-classed to make presets. Look at
     :class:`EnergyPhaseMismatch` or :class:`EnergySyncPhaseMismatch` for
@@ -87,16 +87,16 @@ class ObjectiveFactory(ABC):
 
     @abstractmethod
     def get_objectives(self) -> list[Objective]:
-        """Create the :class:`Objective` instances."""
+        """Create the :class:`.Objective` instances."""
 
     @property
     @abstractmethod
     def objective_position_preset(self) -> list[str]:
         """
-        Give a preset for :func:`failures.position.zone_to_recompute`.
+        Give a preset for :func:`.zone_to_recompute`.
 
-        The returned values must be in the ``POSITION_TO_INDEX`` dictionary of
-        :mod:`failures.position`.
+        The returned values must be in the :data:`.POSITION_TO_INDEX`
+        dictionary, defined in :mod:`.position`.
 
         """
         pass
@@ -105,7 +105,7 @@ class ObjectiveFactory(ABC):
     @abstractmethod
     def compensation_zone_override_settings(self) -> dict[str, bool]:
         """
-        Give flags for :func:`failures.position.zone_to_recompute`.
+        Give flags for :func:`.zone_to_recompute`.
 
         The returned dictionary may have three flags:
             - full_lattices

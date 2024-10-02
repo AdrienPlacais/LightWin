@@ -47,16 +47,16 @@ def zone_to_recompute(
     broken_elts : ListOfElements
         :class:`.ListOfElements` from the broken linac.
     objective_position_preset : Collection[str]
-        Short strings that must be in ``POSITION_TO_INDEX`` dictionary to
+        Short strings that must be in :data:`.POSITION_TO_INDEX` dictionary to
         determine where the objectives should be evaluated.
     fault_idx, comp_idx : Iterable[int]
         Cavity index of the faults and compensating cavities, directly
         converted to element index in the routine.
     full_lattices : bool, optional
         If you want the compensation zone to encompass full lattices only. It
-        is a little bit slower as more ``Element`` are calculated. Plus,
-        it has no impact even with :class:`TraceWin` solver. Keeping it in case
-        it has an impact that I did not see.
+        is a little bit slower as more :class:`.Element` are calculated. Plus,
+        it has no impact even with :class:`.TraceWin` solver. Keeping it in
+        case it has an impact that I did not see.
     full_linac : bool, optional
         To compute full linac at every step of the optimisation process. Can be
         very time-consuming, but may be necessary with some future
@@ -187,4 +187,4 @@ POSITION_TO_INDEX = {
     "end of last failed lattice": _end_last_failed_lattice,
     "one lattice after last failed lattice": _one_lattice_after_last_failed_lattice,
     "end of linac": _end_linac,
-}
+}  #:

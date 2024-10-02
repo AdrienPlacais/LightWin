@@ -28,18 +28,19 @@ class QuantityIsBetween(Objective):
         loss_function: str | None = None,
     ) -> None:
         """
-        Set complementary :func:`get` flags, reference value.
+        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
 
         Parameters
         ----------
         get_key : str
             Name of the quantity to get, which must be an attribute of
-            :class:`SimulationOutput`.
+            :class:`.SimulationOutput`.
         get_kwargs : dict[str, Element | str | bool]
-            Keyword arguments for the :func:`get` method. We do not check its
-            validity, but in general you will want to define the keys ``elt``
-            and ``pos``. If objective concerns a phase, you may want to precise
-            the ``to_deg`` key. You also should explicit the ``to_numpy`` key.
+            Keyword arguments for the :meth:`.SimulationOutput.get` method. We
+            do not check its validity, but in general you will want to define
+            the keys ``elt`` and ``pos``. If objective concerns a phase, you
+            may want to precise the ``to_deg`` key. You also should explicit
+            the ``to_numpy`` key.
         limits : tuple[float]
             Lower and upper bound for the value.
         loss_function : str | None, optional
@@ -82,7 +83,7 @@ class QuantityIsBetween(Objective):
         return message
 
     def _value_getter(self, simulation_output: SimulationOutput) -> float:
-        """Get desired value using :func:`SimulationOutput.get` method."""
+        """Get desired value using :meth:`.SimulationOutput.get` method."""
         return simulation_output.get(self.get_key, **self.get_kwargs)
 
     def evaluate(self, simulation_output: SimulationOutput) -> float:
