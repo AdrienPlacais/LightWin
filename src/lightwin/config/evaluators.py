@@ -1,7 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Define the functions to check that :class:`.Evaluator` will initialize."""
-
 
 IMPLEMENTED_EVALUATORS = (
     "no power loss",
@@ -21,6 +18,6 @@ IMPLEMENTED_EVALUATORS = (
 def test(beam_calc_post: list[str], **evaluators_kw: str) -> None:
     """Check that desired evaluators are implemented."""
     for evaluator_name in beam_calc_post:
-        assert evaluator_name in IMPLEMENTED_EVALUATORS, (
-            f"{evaluator_name = } is not implemented."
-        )
+        assert (
+            evaluator_name in IMPLEMENTED_EVALUATORS
+        ), f"{evaluator_name = } is not implemented."
