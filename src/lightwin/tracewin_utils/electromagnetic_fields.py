@@ -15,6 +15,7 @@ import logging
 import os.path
 from collections.abc import Callable, Collection, Sequence
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 import pandas as pd
@@ -152,7 +153,7 @@ def _get_filemaps_extensions(
     Parameters
     ----------
     field_map_type : dict[str, str]
-        Dictionary which keys are in :data:`FIELD_TYPE` and values are values
+        Dictionary which keys are in :data:`FIELD_TYPES` and values are values
         of :data:`.FIELD_GEOMETRIES`.
 
     Returns
@@ -207,17 +208,17 @@ def _get_filemap_extensions(field_type: str, field_geometry: str) -> list[str]:
     return extensions
 
 
-def _get_field_nature(second_word_field_type: str) -> str:
+def _get_field_nature(second_word_field_type: str) -> Literal["e", "b"]:
     """Give first letter of the file extension.
 
     Parameters
     ----------
-    second_word_field_type : {'electric', 'magnetic'}
-        This is the second word in a :data:`FIELD_TYPE` entry.
+    second_word_field_type : {"electric", "magnetic"}
+        This is the second word in a :data:`FIELD_TYPES` entry.
 
     Returns
     -------
-    first_character : {'e', 'b'}
+    first_character : Literal["e", "b"]
         First character in the file extension.
 
     """
@@ -231,17 +232,17 @@ def _get_field_nature(second_word_field_type: str) -> str:
     )
 
 
-def _get_type(first_word_field_type: str) -> str:
+def _get_type(first_word_field_type: str) -> Literal["s", "d"]:
     """Give second letter of the file extension.
 
     Parameters
     ----------
-    first_word_field_type : {'static', 'RF'}
-        The first word in a :data:`FIELD_TYPE` entry.
+    first_word_field_type : {"static", "RF"}
+        The first word in a :data:`FIELD_TYPES` entry.
 
     Returns
     -------
-    second_character : {'s', 'd'}
+    second_character : Literal["s", "d"]
         Second character in the file extension.
 
     """
