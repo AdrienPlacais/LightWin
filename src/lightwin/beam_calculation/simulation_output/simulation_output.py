@@ -8,7 +8,7 @@
 
 .. todo::
     Transfer matrices are stored in :class:`.TransferMatrix`, but also in
-    :attr:`.BeamParameters.zdelta`.
+    ``BeamParameters.zdelta``.
 
 .. todo::
     Maybe the synchronous phase model should appear somewhere in here?
