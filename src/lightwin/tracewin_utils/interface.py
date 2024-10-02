@@ -2,7 +2,6 @@
 
 import logging
 import math
-from collections.abc import Sequence
 from pathlib import Path
 
 import numpy as np
@@ -81,15 +80,15 @@ TYPES = {
 
 def variables_to_command(
     warn_skipped: bool = False, **kwargs: str | float | int
-) -> Sequence[str]:
+) -> list[str]:
     """Generate a TraceWin command from the input dictionary.
 
-    If the `value` of the `dict` is None, only corresponding `key` is added
-    (behavior for `hide` command).
+    If the ``value`` of the ``dict`` is None, only corresponding ``key`` is
+    added (behavior for ``hide`` command).
 
-    If `value` is `np.nan`, it is ignored.
+    If ``value`` is ``np.nan``, it is ignored.
 
-    Else, the pair `key`-`value` is added as `key=value` string.
+    Else, the pair ``key``-``value`` is added as ``key=value`` string.
 
     """
     command = []
@@ -130,10 +129,10 @@ def beam_calculator_to_command(
 
 def list_of_elements_to_command(dat_filepath: Path) -> list[str]:
     """
-    Return a command from `ListOfElements` attributes.
+    Return a command from :class:`.ListOfElements` attributes.
 
-    `ParticleInitialState` and `BeamParameters` have their own function, they
-    are not called from here.
+    :class:`.ParticleInitialState` and :class:`.BeamParameters` have their own
+    method, they are not called from here.
 
     """
     kwargs = {
@@ -186,8 +185,8 @@ def set_of_cavity_settings_to_command(
     set_of_cavity_settings: SetOfCavitySettings,
     phi_bunch_first_element: float,
     idx_first_element: int,
-) -> Sequence[str]:
-    """Return the ``ele`` commands for :class:`SetOfCavitySettings`.
+) -> list[str]:
+    """Return the ``ele`` commands for :class:`.SetOfCavitySettings`.
 
     Parameters
     ----------
@@ -201,7 +200,7 @@ def set_of_cavity_settings_to_command(
 
     Returns
     -------
-    Sequence[str]
+    list[str]
         Full command that will alter the TraceWin exection to match the
         desired ``set_of_cavity_settings``.
 
@@ -223,7 +222,7 @@ def _cavity_settings_to_command(
     cavity_settings: CavitySettings,
     delta_phi_bunch: float = 0.0,
     delta_index: int = 0,
-) -> Sequence[str]:
+) -> list[str]:
     """Convert ``cavity_settings`` into TraceWin CLI arguments.
 
     Parameters
@@ -233,18 +232,20 @@ def _cavity_settings_to_command(
     cavity_settings : CavitySettings
         Settings to try.
     delta_phi_bunch : float, optional
-        Phase at entry of first element of :class:`.ListOfElements` under study. The default is 0.
+        Phase at entry of first element of :class:`.ListOfElements` under
+        study. The default is 0.
     delta_index : int, optional
-        Index of the first element of :class:`.ListOfElements` under study. The default is 0.
+        Index of the first element of :class:`.ListOfElements` under study. The
+        default is 0.
 
     Returns
     -------
-    command : Sequence[str]
+    command : list[str]
         Piece of command to alter ``field_map`` with ``cavity_settings``.
 
     """
     if cavity_settings == field_map.cavity_settings:
-        return ()
+        return []
     if not hasattr(cavity_settings, "phi_bunch"):
         nominal_phi_bunch = field_map.cavity_settings.phi_bunch
         cavity_settings.phi_bunch = nominal_phi_bunch
@@ -270,7 +271,7 @@ ARGS_POSITIONS = {
 
 def _alter_element(
     index: int, alter_kwargs: dict[str, float | int]
-) -> Sequence[str]:
+) -> list[str]:
     """Create the command piece to modify the element at ``index``.
 
     Parameters
@@ -285,7 +286,7 @@ def _alter_element(
 
     Returns
     -------
-    Sequence[str]
+    list[str]
         The ``ele[i][j]=val`` command altering the given element.
 
     """
