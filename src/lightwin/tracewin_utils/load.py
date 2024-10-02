@@ -159,7 +159,7 @@ def results(path: Path, prop: str) -> np.ndarray:
 
     Returns
     -------
-    data_ref: numpy array
+    data_ref: np.ndarray
         Array containing the desired property.
 
     """
