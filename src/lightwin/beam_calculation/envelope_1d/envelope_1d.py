@@ -26,6 +26,9 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
 
+ENVELOPE1D_METHODS = ("RK4", "leapfrog")  #:
+methods_t = Literal["RK4", "leapfrog"]
+
 
 class Envelope1D(BeamCalculator):
     """The fastest beam calculator, adapted to high energies."""
@@ -36,7 +39,7 @@ class Envelope1D(BeamCalculator):
         flag_phi_abs: bool,
         flag_cython: bool,
         n_steps_per_cell: int,
-        method: Literal["RK4", "leaprog"],
+        method: methods_t,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
         phi_s_definition: Literal["historical"] = "historical",

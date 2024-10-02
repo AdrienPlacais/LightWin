@@ -1,2 +1,2 @@
-Entry    ,Type ,Description      ,Allowed values                        ,Mandatory? 
-``tool`` ,str  ,Name of the tool ,:data:`~config.beam_calculator.tools` ,✅         
+Entry    ,Type ,Description      ,Allowed values                                ,Mandatory? 
+``tool`` ,str  ,Name of the tool ,Keys of :data:`.IMPLEMENTED_BEAM_CALCULATORS` ,✅         
