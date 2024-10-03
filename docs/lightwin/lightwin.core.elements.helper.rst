@@ -1,4 +1,4 @@
-lightwin.core.elements.helper module
+helper module
 ====================================
 
 .. automodule:: lightwin.core.elements.helper

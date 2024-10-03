@@ -1,4 +1,4 @@
-lightwin.util.phases module
+phases module
 ===========================
 
 .. automodule:: lightwin.util.phases

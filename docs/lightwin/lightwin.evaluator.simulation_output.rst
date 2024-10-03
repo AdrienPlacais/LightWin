@@ -1,4 +1,4 @@
-lightwin.evaluator.simulation\_output package
+simulation\_output package
 =============================================
 
 .. automodule:: lightwin.evaluator.simulation_output

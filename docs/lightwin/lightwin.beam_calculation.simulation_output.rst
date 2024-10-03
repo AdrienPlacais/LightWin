@@ -1,4 +1,4 @@
-lightwin.beam\_calculation.simulation\_output package
+simulation\_output package
 =====================================================
 
 .. automodule:: lightwin.beam_calculation.simulation_output

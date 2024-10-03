@@ -1,4 +1,4 @@
-lightwin.config.files module
+files module
 ============================
 
 .. automodule:: lightwin.config.files

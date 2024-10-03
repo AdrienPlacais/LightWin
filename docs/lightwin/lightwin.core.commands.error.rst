@@ -1,4 +1,4 @@
-lightwin.core.commands.error module
+error module
 ===================================
 
 .. automodule:: lightwin.core.commands.error

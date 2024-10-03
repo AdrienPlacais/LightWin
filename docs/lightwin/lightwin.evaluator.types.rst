@@ -1,4 +1,4 @@
-lightwin.evaluator.types module
+types module
 ===============================
 
 .. automodule:: lightwin.evaluator.types

@@ -1,4 +1,4 @@
-lightwin.util.pickling module
+pickling module
 =============================
 
 .. automodule:: lightwin.util.pickling

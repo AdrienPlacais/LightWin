@@ -1,4 +1,4 @@
-lightwin.optimisation.design\_space.variable module
+variable module
 ===================================================
 
 .. automodule:: lightwin.optimisation.design_space.variable

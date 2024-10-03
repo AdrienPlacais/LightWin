@@ -1,4 +1,4 @@
-lightwin.optimisation.objective.minimize\_mismatch module
+minimize\_mismatch module
 =========================================================
 
 .. automodule:: lightwin.optimisation.objective.minimize_mismatch

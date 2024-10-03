@@ -1,4 +1,4 @@
-lightwin.optimisation.design\_space.constraint module
+constraint module
 =====================================================
 
 .. automodule:: lightwin.optimisation.design_space.constraint

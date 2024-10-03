@@ -1,4 +1,4 @@
-lightwin.core.elements.aperture module
+aperture module
 ======================================
 
 .. automodule:: lightwin.core.elements.aperture

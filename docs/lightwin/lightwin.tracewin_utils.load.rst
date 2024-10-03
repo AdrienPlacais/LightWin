@@ -1,4 +1,4 @@
-lightwin.tracewin\_utils.load module
+load module
 ====================================
 
 .. automodule:: lightwin.tracewin_utils.load

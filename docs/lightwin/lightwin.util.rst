@@ -1,4 +1,4 @@
-lightwin.util package
+util package
 =====================
 
 .. automodule:: lightwin.util

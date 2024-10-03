@@ -1,4 +1,4 @@
-lightwin.core.list\_of\_elements package
+list\_of\_elements package
 ========================================
 
 .. automodule:: lightwin.core.list_of_elements

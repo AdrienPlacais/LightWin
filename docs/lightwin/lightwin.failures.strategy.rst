@@ -1,4 +1,4 @@
-lightwin.failures.strategy module
+strategy module
 =================================
 
 .. automodule:: lightwin.failures.strategy

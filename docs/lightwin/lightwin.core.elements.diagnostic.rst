@@ -1,4 +1,4 @@
-lightwin.core.elements.diagnostic module
+diagnostic module
 ========================================
 
 .. automodule:: lightwin.core.elements.diagnostic

@@ -1,4 +1,4 @@
-lightwin.optimisation.objective.position module
+position module
 ===============================================
 
 .. automodule:: lightwin.optimisation.objective.position

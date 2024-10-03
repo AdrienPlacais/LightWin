@@ -1,4 +1,4 @@
-lightwin.core.electric\_field module
+electric\_field module
 ====================================
 
 .. automodule:: lightwin.core.electric_field

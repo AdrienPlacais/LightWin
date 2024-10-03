@@ -1,4 +1,4 @@
-lightwin.beam\_calculation.tracewin.transfer\_matrix\_factory module
+transfer\_matrix\_factory module
 ====================================================================
 
 .. automodule:: lightwin.beam_calculation.tracewin.transfer_matrix_factory

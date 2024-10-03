@@ -1,4 +1,4 @@
-lightwin.core.elements.element module
+element module
 =====================================
 
 .. automodule:: lightwin.core.elements.element

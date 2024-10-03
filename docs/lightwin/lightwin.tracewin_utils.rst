@@ -1,4 +1,4 @@
-lightwin.tracewin\_utils package
+tracewin\_utils package
 ================================
 
 .. automodule:: lightwin.tracewin_utils

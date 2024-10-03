@@ -1,4 +1,4 @@
-lightwin.constants module
+constants module
 =========================
 
 .. automodule:: lightwin.constants

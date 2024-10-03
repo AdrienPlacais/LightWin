@@ -1,4 +1,4 @@
-lightwin.optimisation.algorithms.explorator module
+explorator module
 ==================================================
 
 .. automodule:: lightwin.optimisation.algorithms.explorator

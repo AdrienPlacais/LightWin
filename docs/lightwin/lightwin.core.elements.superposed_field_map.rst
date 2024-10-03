@@ -1,4 +1,4 @@
-lightwin.core.elements.superposed\_field\_map module
+superposed\_field\_map module
 ====================================================
 
 .. automodule:: lightwin.core.elements.superposed_field_map

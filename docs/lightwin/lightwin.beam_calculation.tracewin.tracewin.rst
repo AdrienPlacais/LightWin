@@ -1,4 +1,4 @@
-lightwin.beam\_calculation.tracewin.tracewin module
+tracewin module
 ===================================================
 
 .. automodule:: lightwin.beam_calculation.tracewin.tracewin

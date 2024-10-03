@@ -1,4 +1,4 @@
-lightwin.core.elements.solenoid module
+solenoid module
 ======================================
 
 .. automodule:: lightwin.core.elements.solenoid

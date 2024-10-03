@@ -1,4 +1,4 @@
-lightwin.core.commands.command module
+command module
 =====================================
 
 .. automodule:: lightwin.core.commands.command

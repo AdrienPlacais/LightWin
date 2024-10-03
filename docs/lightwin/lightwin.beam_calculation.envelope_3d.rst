@@ -1,4 +1,4 @@
-lightwin.beam\_calculation.envelope\_3d package
+envelope\_3d package
 ===============================================
 
 .. automodule:: lightwin.beam_calculation.envelope_3d

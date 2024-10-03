@@ -1,4 +1,4 @@
-lightwin.config.beam\_calculator module
+beam\_calculator module
 =======================================
 
 .. automodule:: lightwin.config.beam_calculator

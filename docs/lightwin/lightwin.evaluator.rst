@@ -1,4 +1,4 @@
-lightwin.evaluator package
+evaluator package
 ==========================
 
 .. automodule:: lightwin.evaluator
