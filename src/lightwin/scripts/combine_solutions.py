@@ -270,8 +270,12 @@ def _load_evaluation(
 
     """
     df = pd.read_csv(
-        evaluation_folder / "evaluations.csv", usecols=evaluation_namecol  # type: ignore
+        evaluation_folder / "evaluations.csv",
+        # usecols=evaluation_namecol  # type: ignore
     )
+    df.columns = df.columns.str.trip()
+    df = df[[evaluation_namecol]]
+
     if new_name is not None:
         assert evaluation_namecol is not None
         assert len(new_name) == len(evaluation_namecol)
