@@ -1,4 +1,4 @@
-field\_map\_path module
+lightwin.core.commands.field\_map\_path module
 ==============================================
 
 .. automodule:: lightwin.core.commands.field_map_path

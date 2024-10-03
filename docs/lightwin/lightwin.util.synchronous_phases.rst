@@ -1,4 +1,4 @@
-synchronous\_phases module
+lightwin.util.synchronous\_phases module
 ========================================
 
 .. automodule:: lightwin.util.synchronous_phases

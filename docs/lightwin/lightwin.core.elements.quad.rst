@@ -1,4 +1,4 @@
-quad module
+lightwin.core.elements.quad module
 ==================================
 
 .. automodule:: lightwin.core.elements.quad

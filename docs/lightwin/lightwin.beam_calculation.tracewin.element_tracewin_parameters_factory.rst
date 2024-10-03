@@ -1,4 +1,4 @@
-element\_tracewin\_parameters\_factory module
+lightwin.beam\_calculation.tracewin.element\_tracewin\_parameters\_factory module
 =================================================================================
 
 .. automodule:: lightwin.beam_calculation.tracewin.element_tracewin_parameters_factory

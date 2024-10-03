@@ -1,4 +1,4 @@
-downhill\_simplex module
+lightwin.optimisation.algorithms.downhill\_simplex module
 =========================================================
 
 .. automodule:: lightwin.optimisation.algorithms.downhill_simplex

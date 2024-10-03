@@ -1,4 +1,4 @@
-fault module
+lightwin.failures.fault module
 ==============================
 
 .. automodule:: lightwin.failures.fault

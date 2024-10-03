@@ -1,4 +1,4 @@
-beam\_calculation package
+lightwin.beam\_calculation package
 ==================================
 
 .. automodule:: lightwin.beam_calculation

@@ -1,4 +1,4 @@
-i\_phase\_space\_beam\_parameters module
+lightwin.core.beam\_parameters.phase\_space.i\_phase\_space\_beam\_parameters module
 ====================================================================================
 
 .. automodule:: lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters

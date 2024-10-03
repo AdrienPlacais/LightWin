@@ -1,4 +1,4 @@
-drift module
+lightwin.core.elements.drift module
 ===================================
 
 .. automodule:: lightwin.core.elements.drift

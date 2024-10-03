@@ -1,4 +1,4 @@
-fault\_scenario module
+lightwin.failures.fault\_scenario module
 ========================================
 
 .. automodule:: lightwin.failures.fault_scenario

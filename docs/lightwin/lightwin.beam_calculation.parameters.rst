@@ -1,4 +1,4 @@
-parameters package
+lightwin.beam\_calculation.parameters package
 =============================================
 
 .. automodule:: lightwin.beam_calculation.parameters

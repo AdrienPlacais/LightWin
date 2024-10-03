@@ -1,4 +1,4 @@
-scripts\_shorthands module
+lightwin.scripts.scripts\_shorthands module
 ===========================================
 
 .. automodule:: lightwin.scripts.scripts_shorthands

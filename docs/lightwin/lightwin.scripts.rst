@@ -1,4 +1,4 @@
-scripts package
+lightwin.scripts package
 ========================
 
 .. automodule:: lightwin.scripts

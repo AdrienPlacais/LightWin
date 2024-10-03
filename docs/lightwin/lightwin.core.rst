@@ -1,4 +1,4 @@
-core package
+lightwin.core package
 =====================
 
 .. automodule:: lightwin.core

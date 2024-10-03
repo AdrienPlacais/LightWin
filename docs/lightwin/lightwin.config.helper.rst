@@ -1,4 +1,4 @@
-helper module
+lightwin.config.helper module
 =============================
 
 .. automodule:: lightwin.config.helper

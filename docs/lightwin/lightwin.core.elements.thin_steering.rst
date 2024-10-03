@@ -1,4 +1,4 @@
-thin\_steering module
+lightwin.core.elements.thin\_steering module
 ============================================
 
 .. automodule:: lightwin.core.elements.thin_steering

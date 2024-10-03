@@ -1,4 +1,4 @@
-factory module
+lightwin.optimisation.algorithms.factory module
 ===============================================
 
 .. automodule:: lightwin.optimisation.algorithms.factory

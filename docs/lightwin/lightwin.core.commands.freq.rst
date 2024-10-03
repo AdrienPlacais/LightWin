@@ -1,4 +1,4 @@
-freq module
+lightwin.core.commands.freq module
 ==================================
 
 .. automodule:: lightwin.core.commands.freq

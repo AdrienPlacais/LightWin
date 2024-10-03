@@ -1,4 +1,4 @@
-factory module
+lightwin.core.elements.factory module
 =====================================
 
 .. automodule:: lightwin.core.elements.factory

@@ -1,4 +1,4 @@
-set\_sync\_phase module
+lightwin.core.commands.set\_sync\_phase module
 ==============================================
 
 .. automodule:: lightwin.core.commands.set_sync_phase

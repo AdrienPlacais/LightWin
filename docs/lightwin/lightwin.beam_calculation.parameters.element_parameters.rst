@@ -1,4 +1,4 @@
-element\_parameters module
+lightwin.beam\_calculation.parameters.element\_parameters module
 ================================================================
 
 .. automodule:: lightwin.beam_calculation.parameters.element_parameters

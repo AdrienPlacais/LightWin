@@ -1,4 +1,4 @@
-bend module
+lightwin.core.elements.bend module
 ==================================
 
 .. automodule:: lightwin.core.elements.bend

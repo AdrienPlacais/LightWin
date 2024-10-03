@@ -1,4 +1,4 @@
-electromagnetic\_fields module
+lightwin.tracewin\_utils.electromagnetic\_fields module
 =======================================================
 
 .. automodule:: lightwin.tracewin_utils.electromagnetic_fields

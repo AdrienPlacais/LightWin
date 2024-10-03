@@ -1,4 +1,4 @@
-integrators package
+lightwin.beam\_calculation.integrators package
 ==============================================
 
 .. automodule:: lightwin.beam_calculation.integrators

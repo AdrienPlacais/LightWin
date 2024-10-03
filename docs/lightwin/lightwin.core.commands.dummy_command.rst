@@ -1,4 +1,4 @@
-dummy\_command module
+lightwin.core.commands.dummy\_command module
 ============================================
 
 .. automodule:: lightwin.core.commands.dummy_command

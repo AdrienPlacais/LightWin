@@ -1,4 +1,4 @@
-marker module
+lightwin.core.commands.marker module
 ====================================
 
 .. automodule:: lightwin.core.commands.marker

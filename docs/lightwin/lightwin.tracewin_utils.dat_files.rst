@@ -1,4 +1,4 @@
-dat\_files module
+lightwin.tracewin\_utils.dat\_files module
 ==========================================
 
 .. automodule:: lightwin.tracewin_utils.dat_files

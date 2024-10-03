@@ -1,4 +1,4 @@
-dummy module
+lightwin.core.elements.dummy module
 ===================================
 
 .. automodule:: lightwin.core.elements.dummy

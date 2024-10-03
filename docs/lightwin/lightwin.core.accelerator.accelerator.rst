@@ -1,4 +1,4 @@
-accelerator module
+lightwin.core.accelerator.accelerator module
 ============================================
 
 .. automodule:: lightwin.core.accelerator.accelerator

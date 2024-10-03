@@ -1,4 +1,4 @@
-transfer\_matrix package
+lightwin.core.transfer\_matrix package
 ======================================
 
 .. automodule:: lightwin.core.transfer_matrix

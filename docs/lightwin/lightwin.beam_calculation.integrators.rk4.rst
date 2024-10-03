@@ -1,4 +1,4 @@
-rk4 module
+lightwin.beam\_calculation.integrators.rk4 module
 =================================================
 
 .. automodule:: lightwin.beam_calculation.integrators.rk4

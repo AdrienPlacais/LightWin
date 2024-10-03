@@ -1,4 +1,4 @@
-optimisation package
+lightwin.optimisation package
 =============================
 
 .. automodule:: lightwin.optimisation

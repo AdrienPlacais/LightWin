@@ -1,4 +1,4 @@
-beam module
+lightwin.config.beam module
 ===========================
 
 .. automodule:: lightwin.config.beam

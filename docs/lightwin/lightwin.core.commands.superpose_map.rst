@@ -1,4 +1,4 @@
-superpose\_map module
+lightwin.core.commands.superpose\_map module
 ============================================
 
 .. automodule:: lightwin.core.commands.superpose_map

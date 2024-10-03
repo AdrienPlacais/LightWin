@@ -1,4 +1,4 @@
-particle module
+lightwin.core.particle module
 =============================
 
 .. automodule:: lightwin.core.particle

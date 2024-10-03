@@ -1,4 +1,4 @@
-anim module
+lightwin.visualization.anim module
 ==================================
 
 .. automodule:: lightwin.visualization.anim

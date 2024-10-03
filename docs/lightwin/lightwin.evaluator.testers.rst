@@ -1,4 +1,4 @@
-testers module
+lightwin.evaluator.testers module
 =================================
 
 .. automodule:: lightwin.evaluator.testers

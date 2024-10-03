@@ -1,4 +1,4 @@
-visualization package
+lightwin.visualization package
 ==============================
 
 .. automodule:: lightwin.visualization

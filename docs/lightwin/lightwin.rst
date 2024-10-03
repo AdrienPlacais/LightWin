@@ -16,7 +16,6 @@ Subpackages
    lightwin.config
    lightwin.core
    lightwin.evaluator
-   lightwin.experimental
    lightwin.failures
    lightwin.optimisation
    lightwin.scripts

@@ -1,4 +1,4 @@
-debug module
+lightwin.util.debug module
 ==========================
 
 .. automodule:: lightwin.util.debug

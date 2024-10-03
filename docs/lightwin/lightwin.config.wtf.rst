@@ -1,4 +1,4 @@
-wtf module
+lightwin.config.wtf module
 ==========================
 
 .. automodule:: lightwin.config.wtf

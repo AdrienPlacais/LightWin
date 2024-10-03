@@ -1,4 +1,4 @@
-instruction module
+lightwin.core.instruction module
 ================================
 
 .. automodule:: lightwin.core.instruction

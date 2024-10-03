@@ -1,4 +1,4 @@
-downhill\_simplex\_penalty module
+lightwin.optimisation.algorithms.downhill\_simplex\_penalty module
 ==================================================================
 
 .. automodule:: lightwin.optimisation.algorithms.downhill_simplex_penalty
