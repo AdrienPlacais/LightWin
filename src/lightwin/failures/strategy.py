@@ -6,7 +6,7 @@ In particular, it answers the question:
 .. note::
     In order to add a compensation strategy, you must add it to the
     :data:`COMPENSATING_SELECTOR` dict, and also to the list of supported
-    strategies in :mod:`config.wtf` module.
+    strategies in :mod:`.config.wtf` module.
 
 """
 

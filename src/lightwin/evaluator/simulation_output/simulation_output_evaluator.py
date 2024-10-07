@@ -121,7 +121,7 @@ class SimulationOutputEvaluator(ABC):
         argument must be ``value``, second argument ``ref_value``. They return
         an update ``value``, which is passed to the next function in
         ``post_treaters``. The default is a tuple containing only
-        :func:`._do_nothing`.
+        :func:`.do_nothing`.
     tester : tester_t | None, optional
         A function that takes post-treated ``value`` and test it. It can return
         a boolean or a float. The default is None.

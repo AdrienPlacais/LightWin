@@ -85,8 +85,7 @@ class OptimisationAlgorithm(ABC):
         positional argument ``elts`` being set by a ``functools`.partial`.
     compute_residuals : ComputeResidualsT
         Method to compute residuals from a :class:`.SimulationOutput`.
-    compute_constraints : ComputeConstraintsT | None, \
-    optional
+    compute_constraints : ComputeConstraintsT | None, optional
         Method to compute constraint violation. The default is None.
     folder : str | None, optional
         Where history, phase space and other optimisation information will be
