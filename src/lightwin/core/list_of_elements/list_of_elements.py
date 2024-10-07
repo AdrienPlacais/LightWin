@@ -283,7 +283,7 @@ class ListOfElements(list):
 
         Raises
         ------
-        NotImplementedError :
+        NotImplementedError
             If ``which_phase`` is different from ``"phi_0_abs"`` or
             ``"phi_0_rel"``.
 
