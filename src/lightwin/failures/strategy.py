@@ -94,7 +94,7 @@ def k_out_of_n[
         Failed cavities/lattice.
     k : int
         Number of compensating cavity per failure.
-    tie_politics : {'upstream first', 'downstream first'}, optional
+    tie_politics : Literal['upstream first', 'downstream first'], optional
         When two elements have the same position, will you want to have the
         upstream or the downstream first? The default is ``"upstream first"``.
     shift : int, optional
@@ -142,13 +142,15 @@ def l_neighboring_lattices[
     the errors :cite:`Bouly2014,Placais2022a`. You must provide ``l``.
     Non-failed cavities in the same lattice as the failure are also used.
 
+    Parameters
+    ----------
     elements_by_lattice : Sequence[Sequence[T]]
         Tunable elements sorted by lattice.
     failed_elements : Sequence[T]
         Failed cavities/lattice.
     l : int
         Number of compensating lattice per failure.
-    tie_politics : {'upstream first', 'downstream first'}, optional
+    tie_politics : Literal['upstream first', 'downstream first'], optional
         When two elements have the same position, will you want to have the
         upstream or the downstream first? The default is ``"upstream first"``.
     shift : int, optional

@@ -4,6 +4,7 @@
     Clean this, check what is still used.
 
 """
+
 import logging
 from collections.abc import Generator, Iterable
 from typing import Any, Iterator
@@ -221,7 +222,7 @@ def save_energy_phase_tm(lin: object) -> None:
 
     Parameters
     ----------
-    lin : Accelerator object
+    lin : Accelerator
         Object of corresponding to desired output.
     """
     n_z = lin.get("z_abs").shape[0]
@@ -251,7 +252,7 @@ def save_vcav_and_phis(lin: object) -> None:
 
     Parameters
     ----------
-    accelerator: Accelerator object
+    accelerator: Accelerator
         Object of corresponding to desired output.
     """
     printc("helper.save_vcav_and_phis warning:", "s [m] not saved.")
