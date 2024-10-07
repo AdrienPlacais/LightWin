@@ -6,6 +6,9 @@ It holds the transfer matrix function that is used, according to the solver
 (Runge-Kutta or leapfrog) and their version (Python or Cython), as well as the
 meshing in accelerating elements.
 
+The :class:`.Element` objects with a transfer matrix are listed in
+:data:`.PARAMETERS_1D`.
+
 """
 
 import math

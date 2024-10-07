@@ -1,7 +1,7 @@
 """Define a base class for :class:`ElementBeamCalculatorParameters`.
 
 It is an attribute of an :class:`.Element`, and holds parameters that depend on
-both the :class:`.Element` under study and the :class:`BeamCalculator` solver
+both the :class:`.Element` under study and the :class:`.BeamCalculator` solver
 that is used.
 
 Currently, it is used by :class:`.Envelope1D` and :class:`.Envelope3D` only, as

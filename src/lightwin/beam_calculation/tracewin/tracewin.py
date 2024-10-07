@@ -105,8 +105,8 @@ class TraceWin(BeamCalculator):
     def _set_up_specific_factories(self) -> None:
         """Set up the factories specific to the :class:`.BeamCalculator`.
 
-        This method is called in the :meth:`.BeamCalculator.__post_init__`,
-        hence it appears only in the base :class:`.BeamCalculator`.
+        This method is called in the :meth:`.BeamCalculator.__init__`, hence it
+        appears only in the base :class:`.BeamCalculator`.
 
         """
         self.beam_calc_parameters_factory = ElementTraceWinParametersFactory()

@@ -1,6 +1,6 @@
 """Define a base class for beam propagation computing tools.
 
-The base class :class:`BeamCalculator`, allows to compute the propagation of
+The base class :class:`BeamCalculator` allows to compute the propagation of
 the beam in a :class:`.ListOfElements`, possibly with a specific
 :class:`.SetOfCavitySettings` (optimisation process). It should return a
 :class:`.SimulationOutput`.
@@ -85,7 +85,7 @@ class BeamCalculator(ABC):
         self._set_up_specific_factories()
 
     def _set_up_common_factories(self) -> None:
-        """Create the factories declared in :meth:`__post_init__`.
+        """Create the factories declared in :meth:`__init__`.
 
         .. todo::
             ``default_field_map_folder`` has a wrong default value. Should take
