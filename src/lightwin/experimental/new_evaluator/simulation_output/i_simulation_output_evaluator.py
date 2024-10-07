@@ -172,7 +172,7 @@ class ISimulationOutputEvaluator(IEvaluator):
             we consider that the test if failed.
         lower_limit, upper_limit : npt.NDArray[np.float64] | float, optional
             Min/max value for data. Where it is ``np.nan``, the test is passed.
-        nan_in_data_is_allowed : boolean, optional
+        nan_in_data_is_allowed : bool, optional
             If the test is valid where ``post_treated`` is NaN. Use for example
             with synchronous phases, which is Nan when not in a cavity.
 

@@ -457,7 +457,7 @@ def create_fig_if_not_exists(
     axnum : int | list[int]
         Axes indexes as understood by fig.add_subplot or number of desired
         axes.
-    sharex : boolean, optional
+    sharex : bool, optional
         If x axis should be shared. The default is False.
     num : int, optional
         Fig number. The default is 1.
