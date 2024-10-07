@@ -10,8 +10,7 @@ def check_type(
     name: str,
     *args: Any,
 ) -> None:
-    """
-    Raise a warning if ``args`` are not all of type ``instance``.
+    """Raise a warning if ``args`` are not all of type ``instance``.
 
     Not matching the provided type does not stop the program from running.
 
@@ -32,10 +31,10 @@ def find_file(toml_folder: Path, file: str | Path) -> Path:
 
     We sequentially check and return the first valid path:
 
-        1. If ``file`` is a ``Path`` object, we consider that the user already
-        set it as he wanted. We check if it exists.
-        2. If ``file`` is in ``toml_folder``.
-        3. If ``file`` is absolute.
+    1. If ``file`` is a ``Path`` object, we consider that the user already
+       set it as he wanted. We check if it exists.
+    2. If ``file`` is in ``toml_folder``.
+    3. If ``file`` is absolute.
 
     Parameters
     ----------
@@ -46,7 +45,7 @@ def find_file(toml_folder: Path, file: str | Path) -> Path:
 
     Returns
     -------
-    file : Path
+    file : pathlib.Path
         Absolute filepath, which existence has been checked.
 
     """
@@ -70,5 +69,3 @@ def find_file(toml_folder: Path, file: str | Path) -> Path:
     )
     logging.critical(msg)
     raise FileNotFoundError(msg)
-
-    pass

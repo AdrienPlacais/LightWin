@@ -59,7 +59,7 @@ class Element(Instruction):
         line : list[str]
             A line of the ``.dat`` file. If the element was given a name, it
             must not appear in ``line`` but rather in ``name``. First
-            element of the list must be in :data:`.IMPLEMENTED_ELEMENTS`.
+            element of the list must be in :data:`.implemented_elements`.
         dat_idx : int
             Position in the ``.dat`` file.
         name : str | None, optional
