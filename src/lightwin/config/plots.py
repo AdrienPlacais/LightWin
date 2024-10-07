@@ -1,10 +1,8 @@
-"""
-Define the functions to test that plots will work.
+"""Define the functions to test that plots will work.
 
-The presets listed here are defined in :mod:`visualization.plot`. This is where
-you will find corresponding documentation, and where you should define you own
-presets.
-
+The presets listed here are defined in :mod:`.visualization.plot`. This is
+where you will find corresponding documentation, and where you should define
+you own presets.
 
 .. todo::
     It would be interesting to be able to pass some fig_kw directly from the

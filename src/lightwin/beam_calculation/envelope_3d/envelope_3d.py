@@ -66,8 +66,8 @@ class Envelope3D(BeamCalculator):
     def _set_up_specific_factories(self) -> None:
         """Set up the factories specific to the :class:`.BeamCalculator`.
 
-        This method is called in the :meth:`super().__post_init__`, hence it
-        appears only in the base :class:`.BeamCalculator`.
+        This method is called in the :meth:`.BeamCalculator.__post_init__`,
+        hence it appears only in the base :class:`.BeamCalculator`.
 
         """
         self.simulation_output_factory = SimulationOutputFactoryEnvelope3D(
@@ -201,7 +201,7 @@ class Envelope3D(BeamCalculator):
     def init_solver_parameters(self, accelerator: Accelerator) -> None:
         """Create the number of steps, meshing, transfer functions for elts.
 
-        The solver parameters are stored in :attr:`.Element.beam_calc_param`.
+        The solver parameters are stored in the ``beam_calc_param``.
 
         Parameters
         ----------
@@ -284,7 +284,7 @@ class Envelope3D(BeamCalculator):
         return rf_parameters_as_dict
 
     def _compute_cavity_parameters(self, results: dict) -> tuple[float, float]:
-        """Compute the cavity parameters by calling :meth:`_phi_s_func`.
+        """Compute the cavity parameters by calling :meth:`._phi_s_func`.
 
         Parameters
         ----------

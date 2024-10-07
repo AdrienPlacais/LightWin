@@ -2,7 +2,7 @@
 
 See Also
 --------
-CavitySettings
+:class:`.CavitySettings`
 
 """
 

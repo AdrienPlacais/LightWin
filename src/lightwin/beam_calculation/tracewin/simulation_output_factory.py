@@ -86,7 +86,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         -------
         simulation_output : SimulationOutput
             Holds all relatable data in a consistent way between the different
-            :class:`BeamCalculator` objects.
+            :class:`.BeamCalculator` objects.
 
         """
         if exception:
@@ -180,10 +180,9 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         n_elts: int,
         filename: Path = Path("Cav_set_point_res.dat"),
     ) -> dict[str, list[float | None]]:
-        """
-        Load and format a dict containing v_cav and phi_s.
+        """Load and format a dict containing v_cav and phi_s.
 
-        It has the same format as :class:`Envelope1D` solver format.
+        It has the same format as :class:`.Envelope1D` solver format.
 
         Parameters
         ----------
@@ -231,11 +230,10 @@ def _remove_invalid_values(
 def _load_results_generic(
     filename: Path, path_cal: Path
 ) -> dict[str, np.ndarray]:
-    """
-    Load the TraceWin results.
+    """Load the TraceWin results.
 
     This function is not called directly. Instead, every instance of
-    :class:`TraceWin` object has a :func:`load_results` method which calls this
+    :class:`.TraceWin` object has a `load_results` method which calls this
     function with a default ``filename`` argument.
     The value of ``filename`` depends on the TraceWin simulation that was run:
     multiparticle or envelope.
@@ -305,7 +303,7 @@ def _set_phase_related_results(
     """
     Compute the phases, pos, frequencies.
 
-    Also shift position and phase if :class:`ListOfElements` under study does
+    Also shift position and phase if :class:`.ListOfElements` under study does
     not start at the beginning of the linac.
 
     TraceWin always starts with ``z=0`` and ``phi_abs=0``, even when we are not
@@ -328,7 +326,7 @@ def _set_phase_related_results(
         Same as input, but with ``lambda`` and ``phi_abs`` keys defined.
         ``phi_abs``
         and ``z(m)`` keys are modified in order to be 0. at the beginning of
-        the linac, not at the beginning of the :class:`ListOfElements` under
+        the linac, not at the beginning of the :class:`.ListOfElements` under
         study.
 
     """

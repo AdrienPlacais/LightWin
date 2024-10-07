@@ -90,8 +90,7 @@ class BeamParameters(InitialBeamParameters):
         phase_space_name: str | None = None,
         **kwargs: Any,
     ) -> Any:
-        """
-        Shorthand to get attributes from this class or its attributes.
+        """Get attributes from this class or its attributes.
 
         Notes
         -----
@@ -101,13 +100,9 @@ class BeamParameters(InitialBeamParameters):
         ``envelope_pos`` and ``envelope_energy``.
 
         Hence, you must provide either a ``phase_space`` argument which shall
-        be in :data:`IMPLEMENTED_PHASE_SPACES`, either you must append the
+        be in :data:`.IMPLEMENTED_PHASE_SPACES`, either or ypu must append the
         name of the phase space to the name of the desired variable with an
         underscore.
-
-        See Also
-        --------
-        :meth:`has`
 
         Parameters
         ----------
@@ -126,7 +121,7 @@ class BeamParameters(InitialBeamParameters):
         phase_space_name : str | None, optional
             Phase space in which you want the key. The default is None. In this
             case, the quantities from the ``zdelta`` phase space are taken.
-            Otherwise, it must be in :data:`IMPLEMENTED_PHASE_SPACES`.
+            Otherwise, it must be in :data:`.IMPLEMENTED_PHASE_SPACES`.
         **kwargs: Any
             Other arguments passed to recursive getter.
 

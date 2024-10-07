@@ -95,14 +95,14 @@ def _element_to_index(
     ----------
     _elts : ListOfElements
         List of :class:`.Element` where ``elt`` should be. Must be set by a
-        :func:`functools.partial`.
+        ``functools.partial``.
     _shift : int
         Mesh index of first :class:`.Element`. Used when the first
         :class:`.Element` of ``_elts`` is not the first of the
-        :class:`.Accelerator`. Must be set by :func:`functools.partial`.
+        :class:`.Accelerator`. Must be set by ``functools.partial``.
     _solver_id : str
         Name of the solver, to identify and take the proper
-        :class:`.SingleElementBeamParameters`.
+        :class:`.ElementBeamCalculatorParameters`.
     elt : Element | str
         Element of which you want the index.
     pos : {'in', 'out} | None, optional

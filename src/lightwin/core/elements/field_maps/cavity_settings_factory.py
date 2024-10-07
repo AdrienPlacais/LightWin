@@ -9,7 +9,7 @@ from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 
 
 class CavitySettingsFactory:
-    """Base class to create :class:`CavitySettings` objects."""
+    """Base class to create :class:`.CavitySettings` objects."""
 
     def __init__(self, freq_bunch_mhz: float) -> None:
         """Instantiate factory, with attributes common to all cavities."""

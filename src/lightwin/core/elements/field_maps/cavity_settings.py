@@ -10,7 +10,7 @@
 
 See Also
 --------
-NewRfField
+:class:`.NewRfField`
 
 """
 
@@ -633,7 +633,7 @@ class CavitySettings:
             will compute propagation of the beam in the :class:`.FieldMap`.
             Note that you should check that ``phi_0_rel`` key should be removed
             in your :class:`.BeamCalculator`, to avoid a clash in the
-            :func:`phi_0_rel_to_cavity_parameters`.
+            `phi_0_rel_to_cavity_parameters` function.
 
         See Also
         --------

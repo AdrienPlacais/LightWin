@@ -4,6 +4,7 @@
     Filtering consistency.
 
 """
+
 import logging
 from collections.abc import Callable, Iterable
 from functools import partial
@@ -314,7 +315,8 @@ def _get_first_key_of_idx_dict_higher_than(
     elts : Sequence[Element]
         List of elements to check.
     index_name : str
-        Name of the index to get. Must be a key of :attr:`.Element.idx`.
+        Name of the index to get. Must be a key of in the ``idx`` attribute of
+        :class:`.Element`.
     first_or_last : {'first', 'last'}
         If we want to check the ``n_to_check`` first or last elements.
     higher_than : int, optional

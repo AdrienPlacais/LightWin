@@ -31,6 +31,7 @@ def find_file(toml_folder: Path, file: str | Path) -> Path:
     """Look for the given filepath in all possible places, make it absolute.
 
     We sequentially check and return the first valid path:
+
         1. If ``file`` is a ``Path`` object, we consider that the user already
         set it as he wanted. We check if it exists.
         2. If ``file`` is in ``toml_folder``.

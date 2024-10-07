@@ -13,7 +13,7 @@
     When subclassing field_maps, do not forget to update the transfer matrix
     selector in:
     - :class:`.Envelope3D`
-    - :class:`.SingleElementEnvelope3DParameters`
+    - :class:`.ElementEnvelope3DParameters`
     - :class:`.SetOfCavitySettings`
     - the ``run_with_this`` methods
 
@@ -135,7 +135,7 @@ class FieldMap(Element):
 
         See Also
         --------
-        :func:`tracewin_utils.electromagnetic_fields.file_map_extensions`
+        :func:`.electromagnetic_fields._get_filemaps_extensions`
 
         """
         self.field_map_file_name = [
@@ -226,8 +226,8 @@ class FieldMap(Element):
                 \ 'as_in_original_dat'}
             Which phase should be putted in the output ``.dat``.
         inplace : bool, optional
-            To modify or not the :attr:`.Element` inplace. If False, we return
-            a modified copy. The default is False.
+            To modify the :class:`.Element` inplace. The default is False, in
+            which case, we return a modified copy.
 
         Returns
         -------

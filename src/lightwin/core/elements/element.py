@@ -145,7 +145,7 @@ class Element(Instruction):
         return tuple(out)
 
     def keep_rf_field(self, *args, **kwargs) -> None:
-        """Save data calculated by :func:`BeamCalculator.run_with_this`.
+        """Save data calculated by :meth:`.BeamCalculator.run_with_this`.
 
         .. deprecated:: 0.6.16
             Prefer :meth:`keep_cavity_settings`
@@ -158,7 +158,7 @@ class Element(Instruction):
         self,
         cavity_settings: CavitySettings,
     ) -> None:
-        """Save data calculated by :func:`BeamCalculator.run_with_this`."""
+        """Save data calculated by :meth:`.BeamCalculator.run_with_this`."""
         raise NotImplementedError("Please override this method.")
 
     @property

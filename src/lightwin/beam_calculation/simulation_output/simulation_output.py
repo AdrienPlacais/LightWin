@@ -36,7 +36,7 @@ from lightwin.util.pickling import MyPickler
 
 @dataclass
 class SimulationOutput:
-    """Stores the information produced by a :class:`.BeamCalculator`.
+    """Store the information produced by a :class:`.BeamCalculator`.
 
     Used for fitting, post-processing, plotting.
 
@@ -124,7 +124,7 @@ class SimulationOutput:
 
     @property
     def beam_calculator_information(self) -> Path:
-        """Use ``out_path`` to retrieve info on :class:`BeamCalculator`."""
+        """Use ``out_path`` to retrieve info on :class:`.BeamCalculator`."""
         if not hasattr(self, "out_path"):
             return self.out_folder
         return self.out_path.absolute().parents[1]
@@ -132,8 +132,8 @@ class SimulationOutput:
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class.
 
-        We also call the :meth:`.BeamParameters.has`, as it is designed to
-        handle the alias (such as ``twiss_zdelta`` <=> ``zdelta.twiss``).
+        We also call the :meth:`.InitialBeamParameters.has`, as it is designed
+        to handle the alias (such as ``twiss_zdelta`` <=> ``zdelta.twiss``).
 
         """
         return (

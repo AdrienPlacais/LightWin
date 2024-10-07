@@ -30,8 +30,8 @@ class FieldMap1100(FieldMap):
                 \ 'as_in_original_dat'}
             Which phase should be putted in the output ``.dat``.
         inplace : bool, optional
-            To modify or not the :attr:`.Element` inplace. If False, we return
-            a modified copy. The default is False.
+            To modify the :class:`.Element` inplace. The default is False, in
+            which case, we return a modified copy.
 
         Returns
         -------

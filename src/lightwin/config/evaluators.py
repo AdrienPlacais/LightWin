@@ -1,4 +1,4 @@
-"""Define the functions to check that :class:`.Evaluator` will initialize."""
+"""Check that :class:`.SimulationOutputEvaluator` will initialize."""
 
 IMPLEMENTED_EVALUATORS = (
     "no power loss",

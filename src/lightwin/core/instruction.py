@@ -120,7 +120,7 @@ class Instruction(ABC):
 
         Raises
         ------
-        NotImplementedError:
+        NotImplementedError
             ``with_name = True & inplace = True`` currently raises an error as
             I do not want the name of the element to be inserted several times.
 

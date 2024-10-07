@@ -9,15 +9,18 @@ import numpy as np
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from lightwin.core.elements.element import Element
-from lightwin.util import converters
-
-from .beam_parameters import BeamParameters
-from .initial_beam_parameters import InitialBeamParameters
-from .phase_space.initial_phase_space_beam_parameters import (
+from lightwin.core.beam_parameters.beam_parameters import BeamParameters
+from lightwin.core.beam_parameters.initial_beam_parameters import (
+    InitialBeamParameters,
+)
+from lightwin.core.beam_parameters.phase_space.initial_phase_space_beam_parameters import (
     InitialPhaseSpaceBeamParameters,
 )
-from .phase_space.phase_space_beam_parameters import PhaseSpaceBeamParameters
+from lightwin.core.beam_parameters.phase_space.phase_space_beam_parameters import (
+    PhaseSpaceBeamParameters,
+)
+from lightwin.core.elements.element import Element
+from lightwin.util import converters
 
 
 # Subclassed for every BeamCalculator
@@ -393,8 +396,8 @@ class InitialBeamParametersFactory(ABC):
             dict that can be passed to the `get` method and that will return
             the data at the beginning of the linac portion.
         skip_missing_phase_spaces : bool
-            To handle when a phase space from :attr:`self.phase_spaces` is not
-            defined in ``original_beam_parameters``, and is therefore not
+            To handle when a phase space from ``phase_spaces`` from ``self`` is
+            not defined in ``original_beam_parameters``, and is therefore not
             initializable. If True, we just skip it. If False and such a case
             happens, an ``AttributeError`` will be raised.
 
@@ -403,7 +406,7 @@ class InitialBeamParametersFactory(ABC):
         initial_phase_spaces_kw : dict[str, dict[str, float | np.ndarray]]
             Keys are the name of the phase spaces.
             The values are other dictionaries, which keys-values are
-            :class:`.PhaseSpaceInitialBeamParameters` attributes.
+            :class:`.InitialPhaseSpaceBeamParameters` attributes.
 
         """
         args = (

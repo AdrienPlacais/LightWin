@@ -13,8 +13,9 @@ The list of implemented transfer matrices is
 """
 
 from abc import abstractmethod
+from collections.abc import Callable, Sequence
 from types import ModuleType
-from typing import Any, Callable, Sequence
+from typing import Any
 
 import numpy as np
 

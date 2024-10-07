@@ -56,8 +56,8 @@ class TraceWin(BeamCalculator):
         Path to the ``.ini`` TraceWin file.
     base_kwargs : dict[str, str | bool | int | None | float]
         TraceWin optional arguments. Override what is defined in ``.ini``, but
-        overriden by arguments from :class:`ListOfElements` and
-        :class:`SimulationOutput`.
+        overriden by arguments from :class:`.ListOfElements` and
+        :class:`.SimulationOutput`.
     _tracewin_command : list[str] | None, optional
         Attribute to hold the value of the base command to call TraceWin.
     id : str
@@ -105,8 +105,8 @@ class TraceWin(BeamCalculator):
     def _set_up_specific_factories(self) -> None:
         """Set up the factories specific to the :class:`.BeamCalculator`.
 
-        This method is called in the :meth:`super().__post_init__`, hence it
-        appears only in the base :class:`.BeamCalculator`.
+        This method is called in the :meth:`.BeamCalculator.__post_init__`,
+        hence it appears only in the base :class:`.BeamCalculator`.
 
         """
         self.beam_calc_parameters_factory = ElementTraceWinParametersFactory()
@@ -160,13 +160,13 @@ class TraceWin(BeamCalculator):
         """Set the full TraceWin command.
 
         It contains the 'base' command, which includes every argument that is
-        common to every calculation with this :class:`BeamCalculator`: path to
+        common to every calculation with this :class:`.BeamCalculator`: path to
         ``.ini`` file, to executable...
 
-        It contains the :class:`ListOfElements` command: path to the ``.dat``
+        It contains the :class:`.ListOfElements` command: path to the ``.dat``
         file, initial energy and beam properties.
 
-        It can contain some :class:`SetOfCavitySettings` commands: ``ele``
+        It can contain some :class:`.SetOfCavitySettings` commands: ``ele``
         arguments to modify some cavities tuning.
 
         """
@@ -331,7 +331,7 @@ class TraceWin(BeamCalculator):
         updated when ``path_cal`` changes.
 
         .. note::
-            In contrary to :class:`.Element1D` and :class:`.Element3D`, this
+            In contrary to :class:`.Envelope1D` and :class:`.Envelope3D`, this
             routine does not set parameters for the :class:`.BeamCalculator`.
             As a matter of a fact, TraceWin is a standalone code and does not
             need out solver parameters.
@@ -374,7 +374,7 @@ class TraceWin(BeamCalculator):
 
         This quantity is required to switch between the different definitions
         of the phase. Note that, with :class:`.Envelope1D` and
-        :class:`.Envelope3D', it is done during the propagation of the beam, in
+        :class:`.Envelope3D`, it is done during the propagation of the beam, in
         the ``for elt in elts`` loop.
 
         .. todo::

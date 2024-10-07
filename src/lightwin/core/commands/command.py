@@ -21,8 +21,8 @@ class Command(Instruction):
 
     See Also
     --------
-    :func:`.core.list_of_elements.factory.subset_of_pre_existing_list_of_elements`
-    :func:`.tracewin_utils.dat_files.dat_filecontent_from_smaller_list_of_elements`
+    :meth:`.ListOfElementsFactory.subset_list_run`
+    :func:`.dat_filecontent_from_smaller_list_of_elements`
 
     """
 
