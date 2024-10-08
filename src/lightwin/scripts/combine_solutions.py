@@ -50,13 +50,13 @@ def combine_bests(
 
     Parameters
     ----------
-    paths : Sequence[Path]
+    paths : Sequence[pathlib.Path]
         Project folders (where ``evaluations.csv`` and every simulation is).
     criterion_to_minimize : str, optional
         The ``evaluations.csv`` column against which simulations are compared.
         The default is ``"Lost power over whole linac in W."`` (we keep
         simulations with the lowest lost power).
-    out_folder : Path | str, optional
+    out_folder : pathlib.Path | str, optional
         Where every best simulation folder will be gathered. If not provided,
         we create a ``combined/`` folder in the last common ancestor of all
         provided paths.
@@ -112,7 +112,7 @@ def _select_best_simulations(
 
     Parameters
     ----------
-    paths : Sequence[Path]
+    paths : Sequence[pathlib.Path]
         Path to project folders to be compared.
     criterion_to_minimize : str
         The quantity that we want to minimize. It must be a column name in
@@ -254,7 +254,7 @@ def _load_evaluation(
 
     Parameters
     ----------
-    evaluation_folder : Path
+    evaluation_folder : pathlib.Path
         Folder where the ``evaluations.csv`` file is.
     evaluation_namecol : Sequence[str] | None, optional
         Name of the column in the ``evaluations.csv`` for the sorting; if not

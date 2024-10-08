@@ -26,9 +26,9 @@ class AcceleratorFactory(ABC):
 
         Parameters
         ----------
-        dat_file : Path
+        dat_file : pathlib.Path
             The original ``.dat`` file, as understood by TraceWin.
-        project_folder : Path
+        project_folder : pathlib.Path
             Base folder where results will be saved. If the ``project_folder``
             key is not given in the configuration file, it is a folder in the
             same base folder as ``dat_file``.
@@ -86,7 +86,7 @@ class AcceleratorFactory(ABC):
 
         Parameters
         ----------
-        out_folders : Sequence[Path]
+        out_folders : Sequence[pathlib.Path]
             Name of the folders that will store outputs. By default, it is the
             name of the solver, preceeded by its position in the list of
             :class:`.BeamCalculator`.

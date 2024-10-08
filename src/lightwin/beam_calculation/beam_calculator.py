@@ -55,11 +55,11 @@ class BeamCalculator(ABC):
         flag_phi_abs : bool
             If the entry phase of the cavities :math:`\phi_0` are absolute or
             relative. See the examples for an illustration of what it implies.
-        out_folder : Path | str
+        out_folder : pathlib.Path | str
             Name of the folder where results should be stored, for each
             :class:`.Accelerator` under study. This is the name of a folder,
             not a full path.
-        default_field_map_folder : Path | str
+        default_field_map_folder : pathlib.Path | str
             Where to look for field map files by default.
 
         """

@@ -62,7 +62,7 @@ class InstructionsFactory:
         ----------
         freq_bunch_mhz : float
             Beam bunch frequency in MHz.
-        default_field_map_folder : Path
+        default_field_map_folder : pathlib.Path
             Where to look for field maps when no ``FIELD_MAP_PATH`` is
             precised. This is also the folder where the ``.dat`` is.
         load_field_maps : bool

@@ -37,7 +37,7 @@ def load_dat_file(
 
     Parameters
     ----------
-    dat_path : Path
+    dat_path : pathlib.Path
         Filepath to the ``.dat`` file, as understood by TraceWin.
     keep : Literal["none", "comments", "empty lines", "all"], optional
         To determine which un-necessary lines in the dat file should be kept.
@@ -151,7 +151,7 @@ def results(path: Path, prop: str) -> np.ndarray:
 
     Parameters
     ----------
-    path : Path
+    path : pathlib.Path
         Path to results file. It must be saved from TraceWin:
         ``Data`` > ``Save table to file``.
     prop : str
@@ -195,7 +195,7 @@ def electric_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
 
     Parameters
     ----------
-    path : Path
+    path : pathlib.Path
         The path to the ``.edz`` file to load.
 
     Returns

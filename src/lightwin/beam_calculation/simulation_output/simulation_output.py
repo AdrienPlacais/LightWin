@@ -42,7 +42,7 @@ class SimulationOutput:
 
     Parameters
     ----------
-    out_folder : Path
+    out_folder : pathlib.Path
         Results folder used by the :class:`.BeamCalculator` that created this.
     is_multiparticle : bool
         Tells if the simulation is a multiparticle simulation.

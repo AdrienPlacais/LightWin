@@ -70,7 +70,7 @@ def process_config(
 
     Parameters
     ----------
-    config_path : Path
+    config_path : pathlib.Path
         Path to the configuration file. It must be a ```.toml`` file.
     config_keys : dict[str, str]
         Associate the name of LightWin's group of parameters to the entry in

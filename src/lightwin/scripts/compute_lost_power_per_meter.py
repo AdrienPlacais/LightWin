@@ -51,7 +51,7 @@ def compute(
 
     Parameters
     ----------
-    path : Path | str
+    path : pathlib.Path | str
         Path to a single ``partran1.out`` file, or to a full LightWin project.
     full_project : bool, optional
         Indicate if the given path is a full project. If True, we take all the

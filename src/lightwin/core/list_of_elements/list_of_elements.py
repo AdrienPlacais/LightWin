@@ -75,7 +75,7 @@ class ListOfElements(list):
         first_init : bool, optional
             To indicate if this a full linac or only a portion (fit process).
             The default is True.
-        files : dict[str, str | list[list[str]] | Path]
+        files : dict[str, str | list[list[str]] | pathlib.Path]
             A dictionary to hold information on the source and output
             files/folders of the object. The keys are:
 
@@ -266,7 +266,7 @@ class ListOfElements(list):
 
         Parameters
         ----------
-        dat_file : Path
+        dat_file : pathlib.Path
             Where the output ``.dat`` should be saved.
         which_phase : Literal['phi_0_abs', 'phi_0_rel', 'phi_s', \
                 'as_in_settings', 'as_in_original_dat']

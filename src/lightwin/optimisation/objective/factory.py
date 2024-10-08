@@ -60,7 +60,7 @@ class ObjectiveFactory(ABC):
         Cavities that failed.
     compensating_elements : list[Element]
         Cavities that will be used for the compensation.
-    design_space_kw : dict[str, str | bool | Path | float]
+    design_space_kw : dict[str, str | bool | pathlib.Path | float]
         Holds information on variables/constraints limits/initial values. Used
         to compute the limits that ``phi_s`` must respect when the synchronous
         phase is defined as an objective.

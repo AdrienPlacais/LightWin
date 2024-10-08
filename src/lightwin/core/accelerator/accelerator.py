@@ -53,9 +53,9 @@ class Accelerator:
         ----------
         name : str
             Name of the accelerator, used in plots.
-        dat_file : Path
+        dat_file : pathlib.Path
             Absolute path to the linac ``.dat`` file.
-        accelerator_path : Path
+        accelerator_path : pathlib.Path
             Absolute path where results for each :class:`.BeamCalculator` will
             be stored.
         list_of_elements_factory : ListOfElementsFactory

@@ -13,7 +13,7 @@ def test(config_folder: Path, dat_file: str, **files_kw: str | Path) -> None:
 
     Parameters
     ----------
-    config_folder : Path
+    config_folder : pathlib.Path
         Where the ``.toml`` is stored. Used to resolve relative paths.
     dat_file : str
         Path to the ``.dat`` file.

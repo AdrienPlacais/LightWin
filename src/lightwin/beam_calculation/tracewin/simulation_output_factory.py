@@ -77,7 +77,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         ----------
         elts : ListOfElements
             Contains all elements or only a fraction or all the elements.
-        path_cal : Path
+        path_cal : pathlib.Path
             Path to results folder.
         exception : bool
             Indicates if the run was unsuccessful or not.
@@ -186,11 +186,11 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
 
         Parameters
         ----------
-        path_cal : Path
+        path_cal : pathlib.Path
             Path to the folder where the cavity parameters file is stored.
         n_elts : int
             Number of elements under study.
-        filename : Path, optional
+        filename : pathlib.Path, optional
             The name of the cavity parameters file produced by TraceWin. The
             default is Path('Cav_set_point_res.dat').
 
@@ -240,9 +240,9 @@ def _load_results_generic(
 
     Parameters
     ----------
-    filename : Path
+    filename : pathlib.Path
         Results file produced by TraceWin.
-    path_cal : Path
+    path_cal : pathlib.Path
         Folder where the results file is located.
 
     Returns
@@ -430,9 +430,9 @@ def _load_cavity_parameters(
 
     Parameters
     ----------
-    path_cal : Path
+    path_cal : pathlib.Path
         Path to the folder where the cavity parameters file is stored.
-    filename : Path
+    filename : pathlib.Path
         The name of the cavity parameters file produced by TraceWin.
 
     Returns

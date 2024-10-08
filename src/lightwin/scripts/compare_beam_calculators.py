@@ -74,7 +74,7 @@ def compare_beam_calculators(
 
     Parameters
     ----------
-    toml_filepath : Path
+    toml_filepath : pathlib.Path
         Path to the configuration file.
     toml_keys : dict[str, str]
         Keys in the configuration file.

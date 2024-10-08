@@ -75,9 +75,9 @@ class DesignSpaceFactory(ABC):
 
         Parameters
         ----------
-        variables_filepath : Path
+        variables_filepath : pathlib.Path
             Path to the ``variables.csv`` file.
-        constraints_filepath : Path | None
+        constraints_filepath : pathlib.Path | None
             Path to the ``constraints.csv`` file. The default is None.
 
         """

@@ -38,9 +38,9 @@ def find_file(toml_folder: Path, file: str | Path) -> Path:
 
     Parameters
     ----------
-    toml_folder : Path
+    toml_folder : pathlib.Path
         Folder where the ``.toml`` configuration file is.
-    file : str | Path
+    file : str | pathlib.Path
         Filepath to look for.
 
     Returns
