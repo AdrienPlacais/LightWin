@@ -62,7 +62,7 @@ class DesignSpace:
 
         Returns
         -------
-        cls
+        Self
 
         """
         variables = _from_file(
