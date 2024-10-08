@@ -220,10 +220,10 @@ class CavitySettings:
             New field amplitude.
         phi : float
             New reference phase. Its nature is defined by ``reference``.
-        status : {"compensate (in progress)", "compensate (ok)", "compensate \
-                (not ok)"}
+        status : Literal["compensate (in progress)", "compensate (ok)", \
+                "compensate (not ok)"]
             Status of the created settings.
-        reference : {"phi_0_rel", "phi_0_abs", "phi_s"}
+        reference : Literal["phi_0_rel", "phi_0_abs", "phi_s"]
             The phase used as a reference.
 
         Returns

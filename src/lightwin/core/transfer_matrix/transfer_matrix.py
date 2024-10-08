@@ -16,7 +16,7 @@
 """
 
 import logging
-from typing import Any, Callable
+from typing import Any, Callable, Literal
 
 import numpy as np
 
@@ -24,8 +24,7 @@ from lightwin.core.elements.element import Element
 
 
 class TransferMatrix:
-    """
-    Hold the (n, 6, 6) transfer matrix along the linac.
+    """Hold the (n, 6, 6) transfer matrix along the linac.
 
     .. note::
         When the simulation is in 1D only, the values corresponding to the
@@ -94,7 +93,7 @@ class TransferMatrix:
         self,
         *keys: str,
         elt: Element | None = None,
-        pos: str | None = None,
+        pos: Literal["in", "out"] | None = None,
         **kwargs: Any,
     ) -> tuple[np.ndarray | float, ...]:
         """
@@ -111,7 +110,7 @@ class TransferMatrix:
             To convert None to np.nan. The default is True.
         elt : Element | None, optional
             If provided, return the attributes only at the considered Element.
-        pos : 'in' | 'out' | None
+        pos : Literal["in", "out"] | None
             If you want the attribute at the entry, exit, or in the whole
             Element.
         **kwargs: Any

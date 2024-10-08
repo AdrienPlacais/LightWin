@@ -50,7 +50,7 @@ def combine_bests(
 
     Parameters
     ----------
-    paths : Sequence[Paths]
+    paths : Sequence[Path]
         Project folders (where ``evaluations.csv`` and every simulation is).
     criterion_to_minimize : str, optional
         The ``evaluations.csv`` column against which simulations are compared.

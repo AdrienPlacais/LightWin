@@ -134,7 +134,7 @@ class SimulationOutputEvaluator(ABC):
     markdown : str, optional
         A markdown name for this quantity, used in plots y label. The default
         is an empty string.
-    plt_kwargs : dict[str, Any] | None = None
+    plt_kwargs : dict[str, Any] | None, optional
         A dictionary with keyword arguments passed to the ``plt.Figure``. The
         default is None.
 

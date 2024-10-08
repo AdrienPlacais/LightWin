@@ -90,7 +90,7 @@ class OptimisationAlgorithm(ABC):
     folder : str | None, optional
         Where history, phase space and other optimisation information will be
         saved if necessary. The default is None.
-    cavity_settings_factory : ICavitySettingsFactory
+    cavity_settings_factory : CavitySettingsFactory
         A factory to easily create the cavity settings to try at each iteration
         of the optimisation algorithm.
 

@@ -268,8 +268,8 @@ class ListOfElements(list):
         ----------
         dat_file : Path
             Where the output ``.dat`` should be saved.
-        which_phase : {'phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_settings',
-                \ 'as_in_original_dat'}
+        which_phase : Literal['phi_0_abs', 'phi_0_rel', 'phi_s', \
+                'as_in_settings', 'as_in_original_dat']
             Which phase should be put in the output ``.dat``.
         save : bool, optional
             If the output file should be created. The default is True.

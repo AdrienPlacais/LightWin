@@ -213,7 +213,7 @@ def _get_field_nature(second_word_field_type: str) -> Literal["e", "b"]:
 
     Parameters
     ----------
-    second_word_field_type : {"electric", "magnetic"}
+    second_word_field_type : Literal["electric", "magnetic"]
         This is the second word in a :data:`FIELD_TYPES` entry.
 
     Returns
@@ -237,7 +237,7 @@ def _get_type(first_word_field_type: str) -> Literal["s", "d"]:
 
     Parameters
     ----------
-    first_word_field_type : {"static", "RF"}
+    first_word_field_type : Literal["static", "RF"]
         The first word in a :data:`FIELD_TYPES` entry.
 
     Returns
@@ -260,8 +260,8 @@ def _get_field_components(first_words_field_geometry: str) -> list[str]:
 
     Parameters
     ----------
-    first_words_field_geometry : {'1D:', '2D cylindrical', '2D cartesian',\
-                                  '3D cartesian', '3D cylindrical'}
+    first_words_field_geometry : Literal['1D:', '2D cylindrical', \
+            '2D cartesian', '3D cartesian', '3D cylindrical']
         Beginning of a :data:`FIELD_GEOMETRIES` value.
 
     Returns

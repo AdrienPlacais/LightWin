@@ -11,6 +11,7 @@ from abc import ABC
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 from lightwin.core.elements.element import Element
 from lightwin.core.list_of_elements.helper import equivalent_elt
@@ -146,7 +147,9 @@ class DesignSpaceFactory(ABC):
         return design_space
 
     def _get_initial_value_from_kw(
-        self, variable: str, reference_element: Element
+        self,
+        variable: Literal["k_e", "phi_0_rel", "phi_0_abs", "phi_s"],
+        reference_element: Element,
     ) -> float:
         """Select initial value for given variable.
 
@@ -155,7 +158,7 @@ class DesignSpaceFactory(ABC):
 
         Parameters
         ----------
-        variable : {'k_e', 'phi_0_rel', 'phi_0_abs', 'phi_s'}
+        variable : Literal["k_e", "phi_0_rel", "phi_0_abs", "phi_s"]
             The variable from which you want the limits.
         reference_element : Element
             The element in its nominal tuning.
@@ -170,7 +173,7 @@ class DesignSpaceFactory(ABC):
 
     def _get_limits_from_kw(
         self,
-        variable: str,
+        variable: Literal["k_e", "phi_0_rel", "phi_0_abs", "phi_s"],
         reference_element: Element,
         reference_elements: list[Element],
     ) -> tuple[float, float]:
@@ -181,7 +184,7 @@ class DesignSpaceFactory(ABC):
 
         Parameters
         ----------
-        variable : {'k_e', 'phi_0_rel', 'phi_0_abs', 'phi_s'}
+        variable : Literal["k_e", "phi_0_rel", "phi_0_abs", "phi_s"]
             The variable from which you want the limits.
         reference_element : Element
             The element in its nominal tuning.

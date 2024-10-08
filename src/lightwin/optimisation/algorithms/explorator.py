@@ -18,6 +18,7 @@ a "brute-force" optimisation algorithm.
 import logging
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -188,7 +189,7 @@ class Explorator(OptimisationAlgorithm):
         self,
         variable_comb: np.ndarray,
         objectives_values: np.ndarray,
-        criterion: str,
+        criterion: Literal["minimize norm of objective",],
     ) -> tuple[np.ndarray | None, np.ndarray | None]:
         """Take the "best" of the calculated solutions.
 
@@ -198,7 +199,7 @@ class Explorator(OptimisationAlgorithm):
             All the set of variables (cavity parameters) that were tried.
         objectives_values : np.ndarray
             The values of the objective corresponding to ``variable_comb``.
-        criterion : {'minimize norm of objective', }
+        criterion : Literal['minimize norm of objective']
             Name of the criterion that will determine which solution is the
             "best". Only one is implemented for now, may add others in the
             future.

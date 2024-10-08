@@ -21,7 +21,7 @@
 
 import math
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 
@@ -213,7 +213,13 @@ class FieldMap(Element):
 
     def to_line(
         self,
-        which_phase: str = "phi_0_rel",
+        which_phase: Literal[
+            "phi_0_abs",
+            "phi_0_rel",
+            "phi_s",
+            "as_in_settings",
+            "as_in_original_dat",
+        ] = "phi_0_rel",
         *args,
         inplace: bool = False,
         **kwargs,
@@ -222,9 +228,9 @@ class FieldMap(Element):
 
         Parameters
         ----------
-        which_phase : {'phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_settings',
-                \ 'as_in_original_dat'}
-            Which phase should be putted in the output ``.dat``.
+        which_phase : Literal["phi_0_abs", "phi_0_rel", "phi_s", \
+                "as_in_settings", "as_in_original_dat"]
+            Which phase should be put in the output ``.dat``.
         inplace : bool, optional
             To modify the :class:`.Element` inplace. The default is False, in
             which case, we return a modified copy.
@@ -260,7 +266,16 @@ class FieldMap(Element):
             indexes[key] += 1
         return indexes
 
-    def _phase_for_line(self, which_phase: str) -> tuple[float, int]:
+    def _phase_for_line(
+        self,
+        which_phase: Literal[
+            "phi_0_abs",
+            "phi_0_rel",
+            "phi_s",
+            "as_in_settings",
+            "as_in_original_dat",
+        ],
+    ) -> tuple[float, int]:
         """Give the phase to put in ``.dat`` line, with abs phase flag."""
         settings = self.cavity_settings
         match which_phase:

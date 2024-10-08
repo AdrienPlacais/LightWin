@@ -8,7 +8,7 @@
 import logging
 from collections.abc import Callable, Iterable
 from functools import partial
-from typing import Any, Sequence, Type, TypeGuard, TypeVar
+from typing import Any, Literal, Sequence, Type, TypeGuard, TypeVar
 
 import numpy as np
 
@@ -301,7 +301,7 @@ def _get_first_key_of_idx_dict_higher_than(
     elts: Sequence[Element],
     *,
     index_name: str,
-    first_or_last: str,
+    first_or_last: Literal["first", "last"],
     higher_than: int = -1,
     n_to_check: int = 10,
 ) -> int:
@@ -317,7 +317,7 @@ def _get_first_key_of_idx_dict_higher_than(
     index_name : str
         Name of the index to get. Must be a key of in the ``idx`` attribute of
         :class:`.Element`.
-    first_or_last : {'first', 'last'}
+    first_or_last : Literal["first", "last"]
         If we want to check the ``n_to_check`` first or last elements.
     higher_than : int, optional
         The index under which the value is invalid. The default is -1, which is

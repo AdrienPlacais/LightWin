@@ -2,7 +2,7 @@
 
 import logging
 from abc import ABC, abstractmethod
-from typing import Iterable, Sequence
+from typing import Iterable, Literal, Sequence
 
 import numpy as np
 
@@ -91,8 +91,8 @@ class BeamParametersFactory(ABC):
     def _set_from_other_phase_space(
         self,
         beam_parameters: BeamParameters,
-        other_phase_space_name: str,
-        phase_space_names: Sequence[str],
+        other_phase_space_name: Literal["zdelta"],
+        phase_space_names: Sequence[Literal["phiw", "z"]],
         gamma_kin: np.ndarray,
         beta_kin: np.ndarray,
     ) -> None:
@@ -102,10 +102,10 @@ class BeamParametersFactory(ABC):
         ----------
         beam_parameters : BeamParameters
             Object holding the beam parameters in different phase spaces.
-        other_phase_space_name : {'zdelta'}
+        other_phase_space_name : Literal["zdelta"]
             Name of the phase space from which the new phase space will be
             initialized.
-        phase_space_names : Sequence[{'phiw', 'z'}]
+        phase_space_names : Sequence[Literal["phiw", "z"]]
             Name of the phase spaces that will be created.
         gamma_kin : np.ndarray
             Lorentz gamma factor.
@@ -457,8 +457,8 @@ class InitialBeamParametersFactory(ABC):
     def _set_from_other_phase_space(
         self,
         initial_beam_parameters: InitialBeamParameters,
-        other_phase_space_name: str,
-        phase_space_names: Sequence[str],
+        other_phase_space_name: Literal["zdelta"],
+        phase_space_names: Sequence[Literal["phiw", "z"]],
     ) -> None:
         """Instantiate a phase space from another one.
 
@@ -466,10 +466,10 @@ class InitialBeamParametersFactory(ABC):
         ----------
         initial_beam_parameters : InitialBeamParameters
             Object holding the beam parameters in different phase spaces.
-        other_phase_space_name : {'zdelta'}
+        other_phase_space_name : Literal["zdelta"]
             Name of the phase space from which the new phase space will be
             initialized.
-        phase_space_names : Sequence[{'phiw', 'z'}]
+        phase_space_names : Sequence[Literal["phiw", "z"]]
             Name of the phase spaces that will be created.
         gamma_kin : float
             Lorentz gamma factor.

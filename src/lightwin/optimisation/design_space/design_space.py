@@ -352,7 +352,7 @@ def _from_file(
 
     Parameters
     ----------
-    parameter_class : {type[Variable], type[Constraint]}
+    parameter_class : type[Variable] | type[Constraint]
         Object which ``from_pd_series`` method will be called.
     filepath : Path
         Path to the ``.csv``.

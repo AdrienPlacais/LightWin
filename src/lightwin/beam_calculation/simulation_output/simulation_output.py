@@ -19,7 +19,7 @@ import logging
 import math
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Self
+from typing import Any, Callable, Literal, Self
 
 import numpy as np
 import pandas as pd
@@ -148,7 +148,7 @@ class SimulationOutput:
         to_numpy: bool = True,
         to_deg: bool = False,
         elt: Element | str | None = None,
-        pos: str | None = None,
+        pos: Literal["in", "out"] | None = None,
         none_to_nan: bool = False,
         **kwargs: str | bool | None,
     ) -> Any:
@@ -167,7 +167,7 @@ class SimulationOutput:
             string.
         elt : Element | str | None, optional
             If provided, return the attributes only at the considered element.
-        pos : 'in' | 'out' | None
+        pos : Literal["in", "out"] | None, optional
             If you want the attribute at the entry, exit, or in the whole
             element.
         none_to_nan : bool, optional

@@ -68,6 +68,7 @@ nitpick_ignore = [
     ("py:exc", "NotImplementedError"),
     ("py:exc", "TypeError"),
     ("py:class", "abc.ABCMeta"),
+    ("py:class", "ABCMeta"),
     ("py:class", "abc.ABC"),
     ("py:class", "cls"),
     ("py:class", "collections.abc.Callable"),
@@ -85,6 +86,7 @@ nitpick_ignore = [
     ("py:class", "matplotlib.patches.Ellipse"),
     ("py:class", "matplotlib.patches.Rectangle"),
     ("py:class", "matplotlib.patches.Polygon"),
+    ("py:class", "ModuleType"),
     ("py:class", "mpl_toolkits.mplot3d.axes3d.Axes3D"),
     ("py:class", "numpy.ndarray"),
     ("py:class", "np.ndarray"),
@@ -112,10 +114,22 @@ nitpick_ignore = [
     ("py:obj", "lightwin.failures.set_of_cavity_settings.FieldMap"),
     ("py:class", "lightwin.core.list_of_elements.helper.ListOfElements"),
     # -----------------
+    # Due to Sphinx error, https://github.com/sphinx-doc/sphinx/issues/10785
+    ("py:class", "definitions_t"),
+    ("py:class", "ComputeBeamPropagationT"),
+    ("py:class", "ComputeConstraintsT"),
+    ("py:class", "ComputeResidualsT"),
+    ("py:class", "post_treater_t"),
+    ("py:class", "ref_value_t"),
+    ("py:class", "tester_t"),
+    ("py:class", "value_t"),
+    ("py:class", "REFERENCE_T"),
+    ("py:class", "STATUS_T"),
+    # -----------------
 ]
 # Avoid errors: `, optional` not recognized or so
 # https://github.com/sphinx-doc/sphinx/issues/6861
-napoleon_use_param = False
+napoleon_use_param = True
 
 templates_path = ["_templates"]
 exclude_patterns = [

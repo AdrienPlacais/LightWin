@@ -130,6 +130,9 @@ def _check_common_keys(
 ) -> None:
     """Check keys that are common between the two dictionaries.
 
+    .. todo::
+        Redocument ``default_kwargs``.
+
     Parameters
     ----------
     user_kwargs : dict[str, Any]
@@ -140,9 +143,6 @@ def _check_common_keys(
         kwargs as defined in the `_optimisation_algorithm_kwargs` (they
         will be overriden as they are considered as "default" or "fallback"
         values).
-
-    .. todo::
-        Redocument ``default_kwargs``.
 
     """
     user_keys = set(user_kwargs.keys())
