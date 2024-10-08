@@ -288,7 +288,7 @@ class BendEnvelope3DParameters(ElementEnvelope3DParameters):
 
         Parameters
         ----------
-        transf_mat_module : ModuleType
+        transf_mat_module : types.ModuleType
             Module where the transfer matrix function is defined.
         elt : Bend
             ``BEND`` element.
