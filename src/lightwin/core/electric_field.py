@@ -141,7 +141,7 @@ class RfField:
 
         Returns
         -------
-        out : list | np.ndarray | float | None
+        out : list | numpy.ndarray | float | None
             Attribute(s) value(s).
 
         """

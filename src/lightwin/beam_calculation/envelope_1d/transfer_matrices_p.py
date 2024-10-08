@@ -96,12 +96,12 @@ def z_field_map_rk4(
         ----------
         z : float
             Position where variation is calculated.
-        u : np.ndarray
+        u : numpy.ndarray
             First component is gamma. Second is phase in rad.
 
         Return
         ------
-        v : np.ndarray
+        v : numpy.ndarray
             First component is :math:`\Delta \gamma / \Delta z` in
             :math:`\mathrm{MeV / m}`.
             Second is :math:`\Delta \phi / \Delta z` in
@@ -265,7 +265,7 @@ def z_thin_lense(
         gamma at entrance of first drift.
     gamma_out : float
         gamma at exit of first drift.
-    gamma_phi_m : np.ndarray
+    gamma_phi_m : numpy.ndarray
         gamma and phase at the thin acceleration drift.
     half_dz : float
         Half a spatial step in m.
@@ -278,7 +278,7 @@ def z_thin_lense(
 
     Return
     ------
-    r_zz_array : np.ndarray
+    r_zz_array : numpy.ndarray
         Transfer matrix of the thin lense.
 
     """

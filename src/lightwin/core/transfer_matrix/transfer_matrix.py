@@ -32,10 +32,10 @@ class TransferMatrix:
 
     Parameters
     ----------
-    individual : np.ndarray
+    individual : numpy.ndarray
         Individual transfer matrices along the linac. Not defined if not
         provided at initialisation.
-    cumulated : np.ndarray
+    cumulated : numpy.ndarray
         Cumulated transfer matrices along the linac.
 
     """
@@ -54,12 +54,12 @@ class TransferMatrix:
         ----------
         is_3d : bool
             If the simulation is in 3d or not.
-        first_cumulated_transfer_matrix : np.ndarray
+        first_cumulated_transfer_matrix : numpy.ndarray
             First transfer matrix.
-        individual : np.ndarray | list[np.ndarray] | None, optional
+        individual : numpy.ndarray | list[numpy.ndarray] | None, optional
             Individual transfer matrices. The default is None, in which case
             the ``cumulated`` transfer matrix must be provided directly.
-        cumulated : np.ndarray | None, optional
+        cumulated : numpy.ndarray | None, optional
             Cumulated transfer matrices. The default is None, in which case the
             ``individual`` transfer matrices must be given.
         element_to_index :
@@ -101,7 +101,7 @@ class TransferMatrix:
 
         Parameters
         ----------
-        *keys: str
+        *keys : str
             Name of the desired attributes.
         to_numpy : bool, optional
             If you want the list output to be converted to a np.ndarray. The
@@ -113,12 +113,12 @@ class TransferMatrix:
         pos : Literal["in", "out"] | None
             If you want the attribute at the entry, exit, or in the whole
             Element.
-        **kwargs: Any
+        **kwargs : Any
             Other arguments passed to recursive getter.
 
         Returns
         -------
-        out : tuple[np.ndarray | float, ...]
+        out : tuple[numpy.ndarray | float, ...]
             Attribute(s) value(s). Will be floats if only one value is returned
             (``elt`` is given, ``pos`` is in ``('in', 'out')``).
 
@@ -151,9 +151,9 @@ class TransferMatrix:
 
         Parameters
         ----------
-        individual : np.ndarray
+        individual : numpy.ndarray
             Individual transfer matrices along the linac.
-        first_cumulated_transfer_matrix : np.ndarray | None
+        first_cumulated_transfer_matrix : numpy.ndarray | None
             First transfer matrix. It should be None if we study a linac
             from the start (``z_pos == 0.``), and should be the cumulated
             transfer matrix of the previous linac portion otherwise.
@@ -162,7 +162,7 @@ class TransferMatrix:
         -------
         n_points : int
             Number of mesh points along the linac.
-        cumulated : np.ndarray
+        cumulated : numpy.ndarray
             Cumulated transfer matrices.
 
         """
@@ -190,9 +190,9 @@ class TransferMatrix:
 
         Parameters
         ----------
-        cumulated : np.ndarray
+        cumulated : numpy.ndarray
             Cumulated transfer matrices along the linac.
-        first_cumulated_transfer_matrix : np.ndarray
+        first_cumulated_transfer_matrix : numpy.ndarray
             The first of the cumulated transfer matrices.
         tol : float, optional
             The max allowed difference between ``cumulated`` and
@@ -203,7 +203,7 @@ class TransferMatrix:
         -------
         n_points : int
             Number of mesh points along the linac.
-        cumulated : np.ndarray
+        cumulated : numpy.ndarray
             Cumulated transfer matrices.
 
         """
@@ -237,7 +237,7 @@ class TransferMatrix:
 
         Parameters
         ----------
-        first_cumulated_transfer_matrix : np.ndarray
+        first_cumulated_transfer_matrix : numpy.ndarray
             First transfer matrix. It should be eye matrix if we study a linac
             from the start (``z_pos == 0.``), and should be the cumulated
             transfer matrix of the previous linac portion otherwise.
@@ -250,7 +250,7 @@ class TransferMatrix:
 
         Returns
         -------
-        cumulated : np.ndarray
+        cumulated : numpy.ndarray
             Cumulated transfer matrix.
 
         .. todo::

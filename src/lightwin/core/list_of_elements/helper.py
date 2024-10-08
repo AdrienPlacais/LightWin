@@ -216,17 +216,17 @@ def indiv_to_cumul_transf_mat(
 
     Parameters
     ----------
-    tm_cumul_in : np.ndarray
+    tm_cumul_in : numpy.ndarray
         Cumulated transfer matrix @ first element. Should be eye matrix if we
         are at the first element.
-    r_zz_elt : list[np.ndarray]
+    r_zz_elt : list[numpy.ndarray]
         List of individual transfer matrix of the elements.
     n_steps : int
         Number of elements or elements slices.
 
     Returns
     -------
-    cumulated_transfer_matrices : np.ndarray
+    cumulated_transfer_matrices : numpy.ndarray
         Cumulated transfer matrices.
 
     """

@@ -247,7 +247,7 @@ def _load_results_generic(
 
     Returns
     -------
-    results : dict[str, np.ndarray]
+    results : dict[str, numpy.ndarray]
         Dictionary containing the raw outputs from TraceWin.
 
     """
@@ -280,12 +280,12 @@ def _set_energy_related_results(
 
     Parameters
     ----------
-    results : dict[str, np.ndarray]
+    results : dict[str, numpy.ndarray]
         Dictionary holding the TraceWin results.
 
     Returns
     -------
-    results : dict[str, np.ndarray]
+    results : dict[str, numpy.ndarray]
         Same as input, but with ``gamma``, ``w_kin``, ``beta`` keys defined.
 
     """
@@ -311,7 +311,7 @@ def _set_phase_related_results(
 
     Parameters
     ----------
-    results : dict[str, np.ndarray]
+    results : dict[str, numpy.ndarray]
         Dictionary holding the TraceWin results.
     z_in : float
         Absolute position in the linac of the beginning of the linac portion
@@ -322,7 +322,7 @@ def _set_phase_related_results(
 
     Returns
     -------
-    results : dict[str, np.ndarray]
+    results : dict[str, numpy.ndarray]
         Same as input, but with ``lambda`` and ``phi_abs`` keys defined.
         ``phi_abs``
         and ``z(m)`` keys are modified in order to be 0. at the beginning of
@@ -437,7 +437,7 @@ def _load_cavity_parameters(
 
     Returns
     -------
-    cavity_param : dict[float, np.ndarray]
+    cavity_param : dict[float, numpy.ndarray]
         Contains the cavity parameters.
 
     """

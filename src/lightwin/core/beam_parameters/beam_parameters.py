@@ -31,13 +31,13 @@ class BeamParameters(InitialBeamParameters):
 
     Parameters
     ----------
-    z_abs : np.ndarray
+    z_abs : numpy.ndarray
         Absolute position in the linac in m.
-    gamma_kin : np.ndarray
+    gamma_kin : numpy.ndarray
         Lorentz gamma factor.
-    beta_kin : np.ndarray
+    beta_kin : numpy.ndarray
         Lorentz gamma factor.
-    sigma_in : np.ndarray | None, optional
+    sigma_in : numpy.ndarray | None, optional
         Holds the (6, 6) :math:`\sigma` beam matrix at the entrance of the
         linac/portion of linac. The default is None.
     zdelta, z, phiw, x, y, t : PhaseSpaceBeamParameters
@@ -218,7 +218,7 @@ class BeamParameters(InitialBeamParameters):
 
         Returns
         -------
-        sigma : np.ndarray
+        sigma : numpy.ndarray
             ``(2, 2)`` :math:`\sigma` beam matrix at the linac entrance, in a
             single phase space.
 

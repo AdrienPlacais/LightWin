@@ -195,9 +195,9 @@ class Explorator(OptimisationAlgorithm):
 
         Parameters
         ----------
-        variable_comb : np.ndarray
+        variable_comb : numpy.ndarray
             All the set of variables (cavity parameters) that were tried.
-        objectives_values : np.ndarray
+        objectives_values : numpy.ndarray
             The values of the objective corresponding to ``variable_comb``.
         criterion : Literal['minimize norm of objective']
             Name of the criterion that will determine which solution is the
@@ -206,9 +206,9 @@ class Explorator(OptimisationAlgorithm):
 
         Returns
         -------
-        best_solution : np.ndarray | None
+        best_solution : numpy.ndarray | None
             "Best" solution.
-        best_objective : np.ndarray | None
+        best_objective : numpy.ndarray | None
             Objective values corresponding to ``best_solution``.
 
         """

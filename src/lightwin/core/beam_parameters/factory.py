@@ -107,9 +107,9 @@ class BeamParametersFactory(ABC):
             initialized.
         phase_space_names : Sequence[Literal["phiw", "z"]]
             Name of the phase spaces that will be created.
-        gamma_kin : np.ndarray
+        gamma_kin : numpy.ndarray
             Lorentz gamma factor.
-        beta_kin : np.ndarray
+        beta_kin : numpy.ndarray
             Lorentz beta factor.
 
         """
@@ -164,11 +164,11 @@ class BeamParametersFactory(ABC):
             Object holding the different phase spaces.
         phase_space_names : Sequence[str]
             Names of the phase spaces to initialize.
-        transfer_matrices : Sequence[np.ndarray]
+        transfer_matrices : Sequence[numpy.ndarray]
             Transfer matrix corresponding to each phase space.
-        gamma_kin : np.ndarray
+        gamma_kin : numpy.ndarray
             Lorentz gamma factor.
-        beta_kin : np.ndarray
+        beta_kin : numpy.ndarray
             Lorentz beta factor.
 
         """
@@ -266,7 +266,7 @@ class InitialBeamParametersFactory(ABC):
 
         Parameters
         ----------
-        sigma_in : np.ndarray
+        sigma_in : numpy.ndarray
             :math:`\sigma` beam matrix.
         w_kin : float
             Kinetic energy in MeV.
@@ -403,7 +403,7 @@ class InitialBeamParametersFactory(ABC):
 
         Returns
         -------
-        initial_phase_spaces_kw : dict[str, dict[str, float | np.ndarray]]
+        initial_phase_spaces_kw : dict[str, dict[str, float | numpy.ndarray]]
             Keys are the name of the phase spaces.
             The values are other dictionaries, which keys-values are
             :class:`.InitialPhaseSpaceBeamParameters` attributes.

@@ -67,12 +67,12 @@ class SimulationOutput:
         The cavity parameters used for the simulation.
     transfer_matrix : TransferMatrix
          Holds absolute and relative transfer matrices in all planes.
-    z_abs : np.ndarray | None, optional
+    z_abs : numpy.ndarray | None, optional
         Absolute position in the linac in m. The default is None.
     in_tw_fashion : pd.DataFrame | None, optional
         A way to output the :class:`.SimulationOutput` in the same way as the
         ``Data`` tab of TraceWin. The default is None.
-    r_zz_elt : list[np.ndarray] | None, optional
+    r_zz_elt : list[numpy.ndarray] | None, optional
         Cumulated transfer matrices in the [z-delta] plane. The default is
         None.
 

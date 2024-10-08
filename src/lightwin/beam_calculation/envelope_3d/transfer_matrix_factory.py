@@ -33,7 +33,7 @@ class TransferMatrixFactoryEnvelope3D(TransferMatrixFactory):
 
         Parameters
         ----------
-        first_cumulated_transfer_matrix : np.ndarray
+        first_cumulated_transfer_matrix : numpy.ndarray
             Cumulated transfer matrix at beginning of :class:`.ListOfElements`
             under study.
         single_elts_results : list[dict[str, Any]]
