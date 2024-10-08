@@ -122,7 +122,7 @@ def _select_best_simulations(
     -------
     best_simulation_folders : pd.Series
         For each fault scenario, holds the path to the best simulation folder.
-    combined : pd.DataFrame
+    combined : pandas.DataFrame
         A ``evaluations.csv`` where each row holds the values for the best
         simulation. You must ensure that all ``evaluations.csv`` have the same
         columns.
@@ -173,7 +173,7 @@ def _concat_evaluations_files(
 
     Parameters
     ----------
-    evaluations : dict[str, pd.DataFrame]
+    evaluations : dict[str, pandas.DataFrame]
         Keys are user-defined names for every simulation. Values are
         corresponding ``evaluations.csv`` files; their columns must be the
         same. They must have the same indexes.
@@ -184,7 +184,7 @@ def _concat_evaluations_files(
 
     Returns
     -------
-    combined : pd.DataFrame
+    combined : pandas.DataFrame
         Same columns as ``evaluations``. Every row contains the
         ``evaluations.csv`` row of the best solution.
 
@@ -265,7 +265,7 @@ def _load_evaluation(
 
     Returns
     -------
-    pd.DataFrame
+    pandas.DataFrame
         Holds all the values of ``evaluation_namecol`` in ``evaluation_path``.
 
     """

@@ -69,7 +69,7 @@ class SimulationOutput:
          Holds absolute and relative transfer matrices in all planes.
     z_abs : numpy.ndarray | None, optional
         Absolute position in the linac in m. The default is None.
-    in_tw_fashion : pd.DataFrame | None, optional
+    in_tw_fashion : pandas.DataFrame | None, optional
         A way to output the :class:`.SimulationOutput` in the same way as the
         ``Data`` tab of TraceWin. The default is None.
     r_zz_elt : list[numpy.ndarray] | None, optional

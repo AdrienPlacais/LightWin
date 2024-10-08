@@ -23,7 +23,7 @@ def concatenate_evaluation_files(
 
     Returns
     -------
-    pd.DataFrame
+    pandas.DataFrame
         Holds all the values of ``evaluation_namecol`` in ``evaluation_path``;
         new name of the column is ``simulation_id``.
 
