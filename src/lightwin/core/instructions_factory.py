@@ -75,7 +75,7 @@ class InstructionsFactory:
         load_cython_field_maps : bool
             To load or not the field maps for Cython (useful only with
             :class:`.Envelope1D` and :class:`.Envelope3D` used with Cython).
-        elements_to_dump : ABCMeta | tuple[ABCMeta, ...], optional
+        elements_to_dump : abc.ABCMeta | tuple[abc.ABCMeta, ...], optional
             Class of Elements that you want to remove. If you want to skip an
             Element because it is not implemented, prefer assigning it to a
             :class:`.DummyElement`. The default is an empty tuple.

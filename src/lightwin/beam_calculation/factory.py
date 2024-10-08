@@ -85,7 +85,7 @@ class BeamCalculatorsFactory:
 
         Parameters
         ----------
-        beam_calculator_class : ABCMeta
+        beam_calculator_class : abc.ABCMeta
             The specific beam calculator.
 
         Returns
