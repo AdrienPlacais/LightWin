@@ -161,7 +161,7 @@ def _plot_preset(
     all_y_axis: list[str] | None = None,
     save_fig: bool = True,
     **kwargs: bool | str | int,
-) -> plt.figure:
+) -> Figure:
     """
     Plot a preset.
 
@@ -180,6 +180,7 @@ def _plot_preset(
         To save Figures or not. The default is True.
     **kwargs : bool | str | int
         Holds all complementary data on the plots.
+
     """
     fig, axx = create_fig_if_not_exists(len(all_y_axis), **kwargs)
 
