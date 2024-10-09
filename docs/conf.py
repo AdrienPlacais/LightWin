@@ -18,11 +18,16 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import os
+import sys
 from pprint import pformat
 
 from sphinx.util import inspect
 
 import lightwin
+
+# Add the _ext/ folder so that Sphinx can find it
+sys.path.append(os.path.abspath("./_ext"))
 
 project = "LightWin"
 copyright = (
@@ -51,6 +56,7 @@ extensions = [
     # "sphinx.ext.viewcode",
     "nbsphinx",
     "sphinx_multiversion",
+    "lightwin_sphinx_extensions",
 ]
 
 autodoc_default_options = {
