@@ -387,3 +387,14 @@ class ListOfElements(list):
         """Instantiate object from previously pickled file."""
         list_of_elements = pickler.unpickle(path)
         return list_of_elements  # type: ignore
+
+    @property
+    def files_info(self) -> dict:
+        """Return the ``files`` attribute.
+
+        .. deprecated::
+            This is just an alias to the ``files`` dict; ``files_info`` should
+            not be used anymore.
+
+        """
+        return self.files
