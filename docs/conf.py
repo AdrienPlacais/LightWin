@@ -135,7 +135,7 @@ latex_elements = {"preamble": r"\usepackage{enumitem}\setlistdepth{99}"}
 # -- Options for multiversion in doc -----------------------------------------
 smv_tag_whitelist = (
     # r"^v\d+\.\d+.*$|latest"  # would keep all the versions (unnecessary)
-    r"v0.7.0b2|latest"  # keep only major tags
+    r"v0.7.0b3|latest"  # keep only major tags
 )
 smv_branch_whitelist = "main|doc"
 smv_remote_whitelist = None
