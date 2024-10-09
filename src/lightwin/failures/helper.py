@@ -1,8 +1,8 @@
-"""Define helper function to ease lists manipulation in :mod:``.strategy``.
+"""Define helper function to ease lists manipulation in :mod:`.strategy`.
 
 .. note::
     If you are unsure about how a function works, check out the implementation
-    of the tests in ``lightwin/tests/test_failure/test_helper.py``.
+    of the tests in :file:`LightWin/tests/test_failure/test_helper.py`.
 
 """
 
@@ -225,9 +225,8 @@ def nested_containing_desired[
 
     Example
     -------
-    nested_containing_desired(ListOfElements.by_lattice,
-                              failed_elements
-                              ) -> lattices_with_a_failure
+    ``nested_containing_desired(ListOfElements.by_lattice, failed_elements)``
+    will return ``lattices_with_a_failure``
 
     """
     nested_with_desired_elements = [
