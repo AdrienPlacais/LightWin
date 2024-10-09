@@ -9,19 +9,15 @@ from sphinx.util.typing import ExtensionMetadata
 
 
 class UnitRole(SphinxRole):
-    """A role to display units in math's mathrm format."""
+    """A role to display units in math's mathrm format.
+
+    Note that in order to show units such as Ohm, the omega must be escaped
+    twice: :unit:`\\Omega`.
+
+    """
 
     def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
-        text = "".join((r"\mathrm{", f"{self.text}", r"}"))
-        node = nodes.math(text=text)
-        return [node], []
-
-
-class PiUnitRole(SphinxRole):
-    """A role to display units in math's mathrm format, with a pi first."""
-
-    def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
-        text = "".join((r"\pi\mathrm{.", f"{self.text}", r"}"))
+        text = "".join((r"\mathrm{", self.text, r"}"))
         node = nodes.math(text=text)
         return [node], []
 
@@ -29,7 +25,6 @@ class PiUnitRole(SphinxRole):
 def setup(app: Sphinx) -> ExtensionMetadata:
     """Plug new directives into Sphinx."""
     app.add_role("unit", UnitRole())
-    app.add_role("piunit", PiUnitRole())
 
     return {
         "version": "0.1",
