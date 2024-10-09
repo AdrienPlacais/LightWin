@@ -29,9 +29,8 @@ def reconstruct_sigma(
     r"""
     Set :math:`\sigma` matrix from the two top components and emittance.
 
-    Inputs are in :math:`\mathrm{mm}` and :math:`\mathrm{mrad}`, but the
-    :math:`\sigma` matrix is in SI units (:math:`\mathrm{m}` and
-    :math:`\mathrm{rad}`).
+    Inputs are in :unit:`mm` and :unit:`mrad`, but the :math:`\sigma` matrix is
+    in SI units (:unit:`m` and :unit:`rad`).
 
     See Also
     --------
@@ -121,10 +120,9 @@ def eps_from_sigma(
     r"""
     Compute emittance from :math:`\sigma` beam matrix.
 
-    In the :math:`[z-\delta]` phase space, emittance is in
-    :math:`\pi.\mathrm{mm.\%}`.
-    In the transverse phase spaces, emittance is in
-    :math:`\pi.\mathrm{mm.mrad}`. :math:`\sigma` is always in SI units.
+    In the :math:`[z-\delta]` phase space, emittance is in :unit:`\\pi.mm.\\%`.
+    In the transverse phase spaces, emittance is in :unit:`\\pi.mm.mrad`.
+    :math:`\sigma` is always in SI units.
 
     Parameters
     ----------
@@ -187,9 +185,9 @@ def twiss_from_sigma(
     r"""Compute the Twiss parameters using the :math:`\sigma` matrix.
 
     In the :math:`[z-\delta]` phase space, emittance and Twiss are in
-    :math:`\mathrm{mm}` and :math:`\mathrm{\%}`.
-    In the transverse phase spaces, emittance and Twiss are in
-    :math:`\mathrm{mm}` and :math:`\mathrm{mrad}`.
+    :unit:`mm` and :unit:`\\%`.
+    In the transverse phase spaces, emittance and Twiss are in :unit:`mm` and
+    :unit:`mrad`.
     :math:`\sigma` is always in SI units.
 
     .. todo::
@@ -252,10 +250,10 @@ def envelopes_from_sigma(
 ) -> np.ndarray:
     r"""Compute the envelopes.
 
-    Units are :math:`\mathrm{mm}` for the position envelope in
-    :math:`[z-\delta]`, :math:`[x-x']`, :math:`[y-y']`.
-    Units are :math:`\mathrm{\%}` for the energy envelope in :math:`[z-\delta]`,
-    and :math:`\mathrm{mrad}` for :math:`[x-x']` and :math:`[y-y']`.
+    Units are :unit:`mm` for the position envelope in :math:`[z-\delta]`,
+    :math:`[x-x']`, :math:`[y-y']`. Units are :unit:`\\%` for the energy
+    envelope in :math:`[z-\delta]`, and :unit:`mrad` for :math:`[x-x']` and
+    :math:`[y-y']`.
 
     Parameters
     ----------

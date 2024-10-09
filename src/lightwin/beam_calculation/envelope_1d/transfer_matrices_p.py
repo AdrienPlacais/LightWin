@@ -103,9 +103,8 @@ def z_field_map_rk4(
         ------
         v : numpy.ndarray
             First component is :math:`\Delta \gamma / \Delta z` in
-            :math:`\mathrm{MeV / m}`.
-            Second is :math:`\Delta \phi / \Delta z` in
-            :math:`\mathrm{rad / m}`.
+            :unit:`MeV/m`. Second is :math:`\Delta \phi / \Delta z` in
+            :unit:`rad/m`.
 
         """
         v0 = k_k * e_func(z, e_spat, u[1], phi_0_rel)
