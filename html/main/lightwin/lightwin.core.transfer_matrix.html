@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lightwin.core.transfer_matrix package &mdash; LightWin  documentation</title>
+  <title>transfer_matrix package &mdash; LightWin  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -24,8 +24,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="lightwin.core.transfer_matrix.factory module" href="lightwin.core.transfer_matrix.factory.html" />
-    <link rel="prev" title="lightwin.core.list_of_elements.list_of_elements module" href="lightwin.core.list_of_elements.list_of_elements.html" /> 
+    <link rel="next" title="factory module" href="lightwin.core.transfer_matrix.factory.html" />
+    <link rel="prev" title="list_of_elements module" href="lightwin.core.list_of_elements.list_of_elements.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,7 +40,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b2
+                0.7.0b3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -54,41 +54,40 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.accelerator.html">lightwin.core.accelerator package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">lightwin.core.beam_parameters package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.html">lightwin.core.commands package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.html">lightwin.core.elements package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">lightwin.core.list_of_elements package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">lightwin.core.transfer_matrix package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.transfer_matrix.factory.html">lightwin.core.transfer_matrix.factory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html">lightwin.core.transfer_matrix.transfer_matrix module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.core.html">core package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.accelerator.html">accelerator package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">beam_parameters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.html">commands package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.html">elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">list_of_elements package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">transfer_matrix package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.transfer_matrix.factory.html">factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html">transfer_matrix module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">lightwin.core.electric_field module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">lightwin.core.instruction module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">lightwin.core.instructions_factory module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">lightwin.core.particle module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">electric_field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">instruction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">instructions_factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">particle module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
@@ -109,8 +108,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
-          <li class="breadcrumb-item"><a href="lightwin.core.html">lightwin.core package</a></li>
-      <li class="breadcrumb-item active">lightwin.core.transfer_matrix package</li>
+          <li class="breadcrumb-item"><a href="lightwin.core.html">core package</a></li>
+      <li class="breadcrumb-item active">transfer_matrix package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.core.transfer_matrix.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -123,12 +122,12 @@
            <div itemprop="articleBody">
              
   <section id="module-lightwin.core.transfer_matrix">
-<span id="lightwin-core-transfer-matrix-package"></span><h1>lightwin.core.transfer_matrix package<a class="headerlink" href="#module-lightwin.core.transfer_matrix" title="Link to this heading"></a></h1>
+<span id="transfer-matrix-package"></span><h1>transfer_matrix package<a class="headerlink" href="#module-lightwin.core.transfer_matrix" title="Link to this heading"></a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.transfer_matrix.factory.html">lightwin.core.transfer_matrix.factory module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.transfer_matrix.factory.html">factory module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.transfer_matrix.factory.html#lightwin.core.transfer_matrix.factory.TransferMatrixFactory"><code class="docutils literal notranslate"><span class="pre">TransferMatrixFactory</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.factory.html#lightwin.core.transfer_matrix.factory.TransferMatrixFactory.__init__"><code class="docutils literal notranslate"><span class="pre">TransferMatrixFactory.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.factory.html#lightwin.core.transfer_matrix.factory.TransferMatrixFactory._preprocess"><code class="docutils literal notranslate"><span class="pre">TransferMatrixFactory._preprocess()</span></code></a></li>
@@ -138,7 +137,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html">lightwin.core.transfer_matrix.transfer_matrix module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html">transfer_matrix module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix"><code class="docutils literal notranslate"><span class="pre">TransferMatrix</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.__init__"><code class="docutils literal notranslate"><span class="pre">TransferMatrix.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.transfer_matrix.html#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix.has"><code class="docutils literal notranslate"><span class="pre">TransferMatrix.has()</span></code></a></li>
@@ -164,14 +163,14 @@
           </div>
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lightwin.core.list_of_elements.list_of_elements.html" class="btn btn-neutral float-left" title="lightwin.core.list_of_elements.list_of_elements module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="lightwin.core.transfer_matrix.factory.html" class="btn btn-neutral float-right" title="lightwin.core.transfer_matrix.factory module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lightwin.core.list_of_elements.list_of_elements.html" class="btn btn-neutral float-left" title="list_of_elements module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.core.transfer_matrix.factory.html" class="btn btn-neutral float-right" title="factory module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
@@ -194,7 +193,7 @@
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b2/lightwin/lightwin.core.transfer_matrix.html">v0.7.0b2</a></dd>
+         <dd><a href="../../v0.7.0b3/lightwin/lightwin.core.transfer_matrix.html">v0.7.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

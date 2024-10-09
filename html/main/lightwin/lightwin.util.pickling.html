@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lightwin.util.pickling module &mdash; LightWin  documentation</title>
+  <title>pickling module &mdash; LightWin  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="lightwin.util.synchronous_phases module" href="lightwin.util.synchronous_phases.html" />
-    <link rel="prev" title="lightwin.util.phases module" href="lightwin.util.phases.html" /> 
+    <link rel="next" title="synchronous_phases module" href="lightwin.util.synchronous_phases.html" />
+    <link rel="prev" title="phases module" href="lightwin.util.phases.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b2
+                0.7.0b3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -52,37 +52,36 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.converters.html">lightwin.util.converters module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.debug.html">lightwin.util.debug module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.dicts_output.html">lightwin.util.dicts_output module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.helper.html">lightwin.util.helper module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.log_manager.html">lightwin.util.log_manager module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pandas_helper.html">lightwin.util.pandas_helper module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pass_beauty.html">lightwin.util.pass_beauty module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.phases.html">lightwin.util.phases module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">lightwin.util.pickling module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.synchronous_phases.html">lightwin.util.synchronous_phases module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.util.html">util package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.converters.html">converters module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.debug.html">debug module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.dicts_output.html">dicts_output module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.helper.html">helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.log_manager.html">log_manager module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pandas_helper.html">pandas_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pass_beauty.html">pass_beauty module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.phases.html">phases module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pickling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.synchronous_phases.html">synchronous_phases module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
@@ -103,8 +102,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
-          <li class="breadcrumb-item"><a href="lightwin.util.html">lightwin.util package</a></li>
-      <li class="breadcrumb-item active">lightwin.util.pickling module</li>
+          <li class="breadcrumb-item"><a href="lightwin.util.html">util package</a></li>
+      <li class="breadcrumb-item active">pickling module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.util.pickling.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -117,7 +116,7 @@
            <div itemprop="articleBody">
              
   <section id="module-lightwin.util.pickling">
-<span id="lightwin-util-pickling-module"></span><h1>lightwin.util.pickling module<a class="headerlink" href="#module-lightwin.util.pickling" title="Link to this heading"></a></h1>
+<span id="pickling-module"></span><h1>pickling module<a class="headerlink" href="#module-lightwin.util.pickling" title="Link to this heading"></a></h1>
 <p>Define a class to pickle objects.</p>
 <p>“pickling” a file comes down to saving it in binary format. It can be loaded
 and used again later, even with a different Python instance. This is useful
@@ -149,23 +148,23 @@ module. I do not plan to refactor them, so for now we stick with
 <dl class="py class">
 <dt class="sig sig-object py" id="lightwin.util.pickling.MyPickler">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MyPickler</span></span><a class="headerlink" href="#lightwin.util.pickling.MyPickler" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
 <p>Define an object that can save/load arbitrary objects to files.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.util.pickling.MyPickler.pickle">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">my_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.util.pickling.MyPickler.pickle" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">my_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><span class="pre">object</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lightwin.util.pickling.MyPickler.pickle" title="Link to this definition"></a></dt>
 <dd><p>Pickle (“save”) the object to a binary file.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.util.pickling.MyPickler.unpickle">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unpickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#lightwin.util.pickling.MyPickler.unpickle" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unpickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><span class="pre">object</span></a></span></span><a class="headerlink" href="#lightwin.util.pickling.MyPickler.unpickle" title="Link to this definition"></a></dt>
 <dd><p>Unpickle (“load”) the given path to recreate original object.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.util.pickling.MyPickler._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#lightwin.util.pickling.MyPickler._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8625dec90&gt;</span></em><a class="headerlink" href="#lightwin.util.pickling.MyPickler._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -174,30 +173,30 @@ module. I do not plan to refactor them, so for now we stick with
 <dt class="sig sig-object py" id="lightwin.util.pickling.MyCloudPickler">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MyCloudPickler</span></span><a class="headerlink" href="#lightwin.util.pickling.MyCloudPickler" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#lightwin.util.pickling.MyPickler" title="lightwin.util.pickling.MyPickler"><code class="xref py py-class docutils literal notranslate"><span class="pre">MyPickler</span></code></a></p>
-<p>Define a <code class="xref py py-class docutils literal notranslate"><span class="pre">Pickler</span></code> that can handle modules and lambda functions.</p>
+<p>Define a <a class="reference internal" href="#lightwin.util.pickling.MyPickler" title="lightwin.util.pickling.MyPickler"><code class="xref py py-class docutils literal notranslate"><span class="pre">MyPickler</span></code></a> that can handle modules and lambda functions.</p>
 <p>This pickler should not raise errors, but all attributes may not be
 properly re-created.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.util.pickling.MyCloudPickler.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.util.pickling.MyCloudPickler.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lightwin.util.pickling.MyCloudPickler.__init__" title="Link to this definition"></a></dt>
 <dd><p>Import the necessary module.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.util.pickling.MyCloudPickler.pickle">
-<span class="sig-name descname"><span class="pre">pickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">my_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.util.pickling.MyCloudPickler.pickle" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">pickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">my_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><span class="pre">object</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lightwin.util.pickling.MyCloudPickler.pickle" title="Link to this definition"></a></dt>
 <dd><p>Pickle (“save”) the object to a binary file.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.util.pickling.MyCloudPickler.unpickle">
-<span class="sig-name descname"><span class="pre">unpickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#lightwin.util.pickling.MyCloudPickler.unpickle" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">unpickle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><span class="pre">object</span></a></span></span><a class="headerlink" href="#lightwin.util.pickling.MyCloudPickler.unpickle" title="Link to this definition"></a></dt>
 <dd><p>Unpickle (“load”) the given path to recreate original object.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.util.pickling.MyCloudPickler._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#lightwin.util.pickling.MyCloudPickler._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8625dec30&gt;</span></em><a class="headerlink" href="#lightwin.util.pickling.MyCloudPickler._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -209,14 +208,14 @@ properly re-created.</p>
           </div>
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lightwin.util.phases.html" class="btn btn-neutral float-left" title="lightwin.util.phases module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="lightwin.util.synchronous_phases.html" class="btn btn-neutral float-right" title="lightwin.util.synchronous_phases module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lightwin.util.phases.html" class="btn btn-neutral float-left" title="phases module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.util.synchronous_phases.html" class="btn btn-neutral float-right" title="synchronous_phases module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
@@ -239,7 +238,7 @@ properly re-created.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b2/lightwin/lightwin.util.pickling.html">v0.7.0b2</a></dd>
+         <dd><a href="../../v0.7.0b3/lightwin/lightwin.util.pickling.html">v0.7.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

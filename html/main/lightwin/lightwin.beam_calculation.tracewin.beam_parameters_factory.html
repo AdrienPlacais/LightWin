@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lightwin.beam_calculation.tracewin.beam_parameters_factory module &mdash; LightWin  documentation</title>
+  <title>beam_parameters_factory module &mdash; LightWin  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -24,8 +24,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="lightwin.beam_calculation.tracewin.element_tracewin_parameters module" href="lightwin.beam_calculation.tracewin.element_tracewin_parameters.html" />
-    <link rel="prev" title="lightwin.beam_calculation.tracewin package" href="lightwin.beam_calculation.tracewin.html" /> 
+    <link rel="next" title="element_tracewin_parameters module" href="lightwin.beam_calculation.tracewin.element_tracewin_parameters.html" />
+    <link rel="prev" title="tracewin package" href="lightwin.beam_calculation.tracewin.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,7 +40,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b2
+                0.7.0b3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -54,43 +54,42 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.html">lightwin.beam_calculation.envelope_1d package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.html">lightwin.beam_calculation.envelope_3d package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.integrators.html">lightwin.beam_calculation.integrators package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.parameters.html">lightwin.beam_calculation.parameters package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.html">lightwin.beam_calculation.simulation_output package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="lightwin.beam_calculation.tracewin.html">lightwin.beam_calculation.tracewin package</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">lightwin.beam_calculation.tracewin.beam_parameters_factory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.element_tracewin_parameters.html">lightwin.beam_calculation.tracewin.element_tracewin_parameters module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.element_tracewin_parameters_factory.html">lightwin.beam_calculation.tracewin.element_tracewin_parameters_factory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html">lightwin.beam_calculation.tracewin.simulation_output_factory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.tracewin.html">lightwin.beam_calculation.tracewin.tracewin module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.transfer_matrix_factory.html">lightwin.beam_calculation.tracewin.transfer_matrix_factory module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.html">envelope_1d package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.html">envelope_3d package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.integrators.html">integrators package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.parameters.html">parameters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.html">simulation_output package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="lightwin.beam_calculation.tracewin.html">tracewin package</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">beam_parameters_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.element_tracewin_parameters.html">element_tracewin_parameters module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.element_tracewin_parameters_factory.html">element_tracewin_parameters_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html">simulation_output_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.tracewin.html">tracewin module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.transfer_matrix_factory.html">transfer_matrix_factory module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html">lightwin.beam_calculation.beam_calculator module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html">lightwin.beam_calculation.factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html">beam_calculator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html">factory module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
@@ -111,9 +110,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
-          <li class="breadcrumb-item"><a href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
-          <li class="breadcrumb-item"><a href="lightwin.beam_calculation.tracewin.html">lightwin.beam_calculation.tracewin package</a></li>
-      <li class="breadcrumb-item active">lightwin.beam_calculation.tracewin.beam_parameters_factory module</li>
+          <li class="breadcrumb-item"><a href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.beam_calculation.tracewin.html">tracewin package</a></li>
+      <li class="breadcrumb-item active">beam_parameters_factory module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.beam_calculation.tracewin.beam_parameters_factory.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -126,38 +125,38 @@
            <div itemprop="articleBody">
              
   <section id="module-lightwin.beam_calculation.tracewin.beam_parameters_factory">
-<span id="lightwin-beam-calculation-tracewin-beam-parameters-factory-module"></span><h1>lightwin.beam_calculation.tracewin.beam_parameters_factory module<a class="headerlink" href="#module-lightwin.beam_calculation.tracewin.beam_parameters_factory" title="Link to this heading"></a></h1>
+<span id="beam-parameters-factory-module"></span><h1>beam_parameters_factory module<a class="headerlink" href="#module-lightwin.beam_calculation.tracewin.beam_parameters_factory" title="Link to this heading"></a></h1>
 <p>Define a function to generate a <a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamParameters</span></code></a> for TraceWin.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BeamParametersFactoryTraceWin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_multipart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BeamParametersFactoryTraceWin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_multipart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="lightwin.core.beam_parameters.factory.html#lightwin.core.beam_parameters.factory.BeamParametersFactory" title="lightwin.core.beam_parameters.factory.BeamParametersFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamParametersFactory</span></code></a></p>
 <p>A class holding method to generate <a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamParameters</span></code></a>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin.factory_method">
-<span class="sig-name descname"><span class="pre">factory_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma_kin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_to_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">slice</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></span><a class="headerlink" href="#lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin.factory_method" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">factory_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_abs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma_kin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_to_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#slice" title="(in Python v3.13)"><span class="pre">slice</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><span class="pre">BeamParameters</span></a></span></span><a class="headerlink" href="#lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin.factory_method" title="Link to this definition"></a></dt>
 <dd><p>Create the <a class="reference internal" href="lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters" title="lightwin.core.beam_parameters.beam_parameters.BeamParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamParameters</span></code></a> object.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin._extract_phase_space_data_for_sigma">
-<span class="sig-name descname"><span class="pre">_extract_phase_space_data_for_sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_space_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin._extract_phase_space_data_for_sigma" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_extract_phase_space_data_for_sigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_space_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'x'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'y'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'zdelta'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin._extract_phase_space_data_for_sigma" title="Link to this definition"></a></dt>
 <dd><p>Retrieve the data necessary to reconstruct <span class="math notranslate nohighlight">\(\sigma\)</span> beam matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>phase_space_name</strong> (<em>{'x'</em><em>, </em><em>'y'</em><em>, </em><em>'zdelta'}</em>) – Name of a single phase space.</p></li>
-<li><p><strong>results</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>np.ndarray</em><em>]</em>) – Results dictionary, which keys are <code class="docutils literal notranslate"><span class="pre">tracewin.out</span></code> or
+<li><p><strong>phase_space_name</strong> (<em>Literal</em><em>[</em><em>&quot;x&quot;</em><em>, </em><em>&quot;y&quot;</em><em>, </em><em>&quot;zdelta&quot;</em><em>]</em>) – Name of a single phase space.</p></li>
+<li><p><strong>results</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><em>numpy.ndarray</em></a><em>]</em>) – Results dictionary, which keys are <code class="docutils literal notranslate"><span class="pre">tracewin.out</span></code> or
 <code class="docutils literal notranslate"><span class="pre">partran1.out</span></code> headers and which values are corresponding data.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>sigma_00</strong> (<em>np.ndarray</em>) – <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">)</span></code> array containing top-left component of the <span class="math notranslate nohighlight">\(\sigma\)</span>
+<li><p><strong>sigma_00</strong> (<em>numpy.ndarray</em>) – <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">)</span></code> array containing top-left component of the <span class="math notranslate nohighlight">\(\sigma\)</span>
 beam matrix.</p></li>
-<li><p><strong>sigma_01</strong> (<em>np.ndarray</em>) – <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">)</span></code> array containing top-right component of the
+<li><p><strong>sigma_01</strong> (<em>numpy.ndarray</em>) – <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">)</span></code> array containing top-right component of the
 <span class="math notranslate nohighlight">\(\sigma\)</span> beam matrix.</p></li>
-<li><p><strong>eps_normalized</strong> (<em>np.ndarray</em>) – <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">)</span></code> array of normalized emittance.</p></li>
+<li><p><strong>eps_normalized</strong> (<em>numpy.ndarray</em>) – <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">)</span></code> array of normalized emittance.</p></li>
 </ul>
 </p>
 </dd>
@@ -166,7 +165,7 @@ beam matrix.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin._extract_emittance_for_99percent">
-<span class="sig-name descname"><span class="pre">_extract_emittance_for_99percent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_space_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin._extract_emittance_for_99percent" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_extract_emittance_for_99percent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_space_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'x99'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'y99'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'phiw99'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a></span></span><a class="headerlink" href="#lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin._extract_emittance_for_99percent" title="Link to this definition"></a></dt>
 <dd><p>Retrieve the 99% emittances.</p>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
@@ -175,8 +174,8 @@ beam matrix.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>phase_space_name</strong> (<em>{'x99'</em><em>, </em><em>'y99'</em><em>, </em><em>'phiw99'}</em>) – Name of a single phase space.</p></li>
-<li><p><strong>results</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>np.ndarray</em><em>]</em>) – Results dictionary, which keys are <code class="docutils literal notranslate"><span class="pre">tracewin.out</span></code> or
+<li><p><strong>phase_space_name</strong> (<em>Literal</em><em>[</em><em>&quot;x99&quot;</em><em>, </em><em>&quot;y99&quot;</em><em>, </em><em>&quot;phiw99&quot;</em><em>]</em>) – Name of a single phase space.</p></li>
+<li><p><strong>results</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><em>numpy.ndarray</em></a><em>]</em>) – Results dictionary, which keys are <code class="docutils literal notranslate"><span class="pre">tracewin.out</span></code> or
 <code class="docutils literal notranslate"><span class="pre">partran1.out</span></code> headers and which values are corresponding data.</p></li>
 </ul>
 </dd>
@@ -184,14 +183,14 @@ beam matrix.</p></li>
 <dd class="field-even"><p><strong>eps</strong> – 99% emittance in the desired phase space.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8ab5b3a10&gt;</span></em><a class="headerlink" href="#lightwin.beam_calculation.tracewin.beam_parameters_factory.BeamParametersFactoryTraceWin._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -203,14 +202,14 @@ beam matrix.</p></li>
           </div>
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lightwin.beam_calculation.tracewin.html" class="btn btn-neutral float-left" title="lightwin.beam_calculation.tracewin package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="lightwin.beam_calculation.tracewin.element_tracewin_parameters.html" class="btn btn-neutral float-right" title="lightwin.beam_calculation.tracewin.element_tracewin_parameters module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lightwin.beam_calculation.tracewin.html" class="btn btn-neutral float-left" title="tracewin package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.beam_calculation.tracewin.element_tracewin_parameters.html" class="btn btn-neutral float-right" title="element_tracewin_parameters module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
@@ -233,7 +232,7 @@ beam matrix.</p></li>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b2/lightwin/lightwin.beam_calculation.tracewin.beam_parameters_factory.html">v0.7.0b2</a></dd>
+         <dd><a href="../../v0.7.0b3/lightwin/lightwin.beam_calculation.tracewin.beam_parameters_factory.html">v0.7.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

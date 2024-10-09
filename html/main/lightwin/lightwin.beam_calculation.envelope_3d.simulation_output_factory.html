@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lightwin.beam_calculation.envelope_3d.simulation_output_factory module &mdash; LightWin  documentation</title>
+  <title>simulation_output_factory module &mdash; LightWin  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="lightwin.beam_calculation.envelope_3d.transfer_matrices_p module" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html" />
-    <link rel="prev" title="lightwin.beam_calculation.envelope_3d.envelope_3d module" href="lightwin.beam_calculation.envelope_3d.envelope_3d.html" /> 
+    <link rel="next" title="transfer_matrices_p module" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html" />
+    <link rel="prev" title="envelope_3d module" href="lightwin.beam_calculation.envelope_3d.envelope_3d.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b2
+                0.7.0b3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -52,44 +52,43 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.html">lightwin.beam_calculation.envelope_1d package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.html">lightwin.beam_calculation.envelope_3d package</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.beam_parameters_factory.html">lightwin.beam_calculation.envelope_3d.beam_parameters_factory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html">lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.html">lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.envelope_3d.html">lightwin.beam_calculation.envelope_3d.envelope_3d module</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">lightwin.beam_calculation.envelope_3d.simulation_output_factory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html">lightwin.beam_calculation.envelope_3d.transfer_matrices_p module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrix_factory.html">lightwin.beam_calculation.envelope_3d.transfer_matrix_factory module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.html">envelope_1d package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.html">envelope_3d package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.beam_parameters_factory.html">beam_parameters_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html">element_envelope3d_parameters module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.html">element_envelope3d_parameters_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.envelope_3d.html">envelope_3d module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">simulation_output_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html">transfer_matrices_p module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrix_factory.html">transfer_matrix_factory module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.integrators.html">lightwin.beam_calculation.integrators package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.parameters.html">lightwin.beam_calculation.parameters package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.html">lightwin.beam_calculation.simulation_output package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.tracewin.html">lightwin.beam_calculation.tracewin package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html">lightwin.beam_calculation.beam_calculator module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html">lightwin.beam_calculation.factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.integrators.html">integrators package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.parameters.html">parameters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.html">simulation_output package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.tracewin.html">tracewin package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html">beam_calculator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html">factory module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
@@ -110,9 +109,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
-          <li class="breadcrumb-item"><a href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
-          <li class="breadcrumb-item"><a href="lightwin.beam_calculation.envelope_3d.html">lightwin.beam_calculation.envelope_3d package</a></li>
-      <li class="breadcrumb-item active">lightwin.beam_calculation.envelope_3d.simulation_output_factory module</li>
+          <li class="breadcrumb-item"><a href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.beam_calculation.envelope_3d.html">envelope_3d package</a></li>
+      <li class="breadcrumb-item active">simulation_output_factory module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.beam_calculation.envelope_3d.simulation_output_factory.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -125,21 +124,21 @@
            <div itemprop="articleBody">
              
   <section id="module-lightwin.beam_calculation.envelope_3d.simulation_output_factory">
-<span id="lightwin-beam-calculation-envelope-3d-simulation-output-factory-module"></span><h1>lightwin.beam_calculation.envelope_3d.simulation_output_factory module<a class="headerlink" href="#module-lightwin.beam_calculation.envelope_3d.simulation_output_factory" title="Link to this heading"></a></h1>
+<span id="simulation-output-factory-module"></span><h1>simulation_output_factory module<a class="headerlink" href="#module-lightwin.beam_calculation.envelope_3d.simulation_output_factory" title="Link to this heading"></a></h1>
 <p>Define a class to easily generate the <a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulationOutput</span></code></a>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SimulationOutputFactoryEnvelope3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_is_multipart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_solver_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SimulationOutputFactoryEnvelope3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">_is_multipart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">_solver_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory" title="lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulationOutputFactory</span></code></a></p>
 <p>A class for creating simulation outputs for <a class="reference internal" href="lightwin.beam_calculation.envelope_3d.envelope_3d.html#lightwin.beam_calculation.envelope_3d.envelope_3d.Envelope3D" title="lightwin.beam_calculation.envelope_3d.envelope_3d.Envelope3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope3D</span></code></a>.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D.out_folder">
-<span class="sig-name descname"><span class="pre">out_folder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></em><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D.out_folder" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">out_folder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></em><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D.out_folder" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D.__post_init__">
-<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D.__post_init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D.__post_init__" title="Link to this definition"></a></dt>
 <dd><p>Create the factories.</p>
 <p>The created factories are <a class="reference internal" href="lightwin.core.transfer_matrix.factory.html#lightwin.core.transfer_matrix.factory.TransferMatrixFactory" title="lightwin.core.transfer_matrix.factory.TransferMatrixFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransferMatrixFactory</span></code></a> and
 <a class="reference internal" href="lightwin.core.beam_parameters.factory.html#lightwin.core.beam_parameters.factory.BeamParametersFactory" title="lightwin.core.beam_parameters.factory.BeamParametersFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamParametersFactory</span></code></a>. The sub-class that is used is declared
@@ -149,19 +148,19 @@ in <a class="reference internal" href="#lightwin.beam_calculation.envelope_3d.si
 
 <dl class="py property">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D._transfer_matrix_factory_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_transfer_matrix_factory_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ABCMeta</span></em><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D._transfer_matrix_factory_class" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_transfer_matrix_factory_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABCMeta" title="(in Python v3.13)"><span class="pre">ABCMeta</span></a></em><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D._transfer_matrix_factory_class" title="Link to this definition"></a></dt>
 <dd><p>Give the <strong>class</strong> of the transfer matrix factory.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D._beam_parameters_factory_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_beam_parameters_factory_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ABCMeta</span></em><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D._beam_parameters_factory_class" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_beam_parameters_factory_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABCMeta" title="(in Python v3.13)"><span class="pre">ABCMeta</span></a></em><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D._beam_parameters_factory_class" title="Link to this definition"></a></dt>
 <dd><p>Give the <strong>class</strong> of the beam parameters factory.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements" title="lightwin.core.list_of_elements.list_of_elements.ListOfElements"><span class="pre">ListOfElements</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_elts_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_of_cavity_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings" title="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings"><span class="pre">SetOfCavitySettings</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><span class="pre">SimulationOutput</span></a></span></span><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D.run" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements" title="lightwin.core.list_of_elements.list_of_elements.ListOfElements"><span class="pre">ListOfElements</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_elts_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_of_cavity_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings" title="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings"><span class="pre">SetOfCavitySettings</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput" title="lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><span class="pre">SimulationOutput</span></a></span></span><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D.run" title="Link to this definition"></a></dt>
 <dd><p>Transform the outputs of BeamCalculator to a SimulationOutput.</p>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
@@ -172,12 +171,12 @@ future, input beam will not hold transf mat in anymore.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_is_multipart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_solver_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_is_3d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">_is_multipart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">_solver_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8610a5430&gt;</span></em><a class="headerlink" href="#lightwin.beam_calculation.envelope_3d.simulation_output_factory.SimulationOutputFactoryEnvelope3D._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -189,14 +188,14 @@ future, input beam will not hold transf mat in anymore.</p>
           </div>
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lightwin.beam_calculation.envelope_3d.envelope_3d.html" class="btn btn-neutral float-left" title="lightwin.beam_calculation.envelope_3d.envelope_3d module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html" class="btn btn-neutral float-right" title="lightwin.beam_calculation.envelope_3d.transfer_matrices_p module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lightwin.beam_calculation.envelope_3d.envelope_3d.html" class="btn btn-neutral float-left" title="envelope_3d module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html" class="btn btn-neutral float-right" title="transfer_matrices_p module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
@@ -219,7 +218,7 @@ future, input beam will not hold transf mat in anymore.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b2/lightwin/lightwin.beam_calculation.envelope_3d.simulation_output_factory.html">v0.7.0b2</a></dd>
+         <dd><a href="../../v0.7.0b3/lightwin/lightwin.beam_calculation.envelope_3d.simulation_output_factory.html">v0.7.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

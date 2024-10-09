@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b2
+                0.7.0b3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -52,7 +52,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="configuration.html">Configuration</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="configuration.files.html"><code class="docutils literal notranslate"><span class="pre">files</span></code> section (mandatory)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.beam.html"><code class="docutils literal notranslate"><span class="pre">beam</span></code> section (mandatory)</a></li>
@@ -103,7 +103,7 @@
 <h1><code class="docutils literal notranslate"><span class="pre">evaluators</span></code> section<a class="headerlink" href="#evaluators-section" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<p>This section is used to defined <code class="xref py py-class docutils literal notranslate"><span class="pre">FaultScenarioSimulationOutputEvaluator</span></code> objects.
+<p>This section is used to define <a class="reference internal" href="../lightwin/lightwin.evaluator.simulation_output.simulation_output_evaluator.html#lightwin.evaluator.simulation_output.simulation_output_evaluator.SimulationOutputEvaluator" title="lightwin.evaluator.simulation_output.simulation_output_evaluator.SimulationOutputEvaluator"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulationOutputEvaluator</span></code></a> objects.
 They are used to evaluate the absolute or relative <em>quality</em> of compensation settings.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -125,14 +125,14 @@ They are used to evaluate the absolute or relative <em>quality</em> of compensat
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">beam_calc_post</span></code></p></td>
 <td><p>str</p></td>
 <td><p>Name of the desired evaluators</p></td>
-<td><p><code class="xref py py-data docutils literal notranslate"><span class="pre">evaluators</span></code></p></td>
+<td><p><a class="reference internal" href="../lightwin/lightwin.config.evaluators.html#lightwin.config.evaluators.IMPLEMENTED_EVALUATORS" title="lightwin.config.evaluators.IMPLEMENTED_EVALUATORS"><code class="xref py py-data docutils literal notranslate"><span class="pre">IMPLEMENTED_EVALUATORS</span></code></a></p></td>
 <td><p>❌</p></td>
 </tr>
 </tbody>
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>There is also a <a class="reference internal" href="../lightwin/lightwin.evaluator.simulation_output.simulation_output_evaluator.html#lightwin.evaluator.simulation_output.simulation_output_evaluator.SimulationOutputEvaluator" title="lightwin.evaluator.simulation_output.simulation_output_evaluator.SimulationOutputEvaluator"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulationOutputEvaluator</span></code></a> object that is used internally by LightWin to determine if a <a class="reference internal" href="../lightwin/lightwin.failures.fault.html#lightwin.failures.fault.Fault" title="lightwin.failures.fault.Fault"><code class="xref py py-class docutils literal notranslate"><span class="pre">Fault</span></code></a> was correctly fixed.</p>
+<p>These objects will be refactored in updates to come, to provide more robust implementation and user experience.</p>
 </div>
 </section>
 
@@ -148,7 +148,7 @@ They are used to evaluate the absolute or relative <em>quality</em> of compensat
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
@@ -171,7 +171,7 @@ They are used to evaluate the absolute or relative <em>quality</em> of compensat
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b2/manual/configuration.evaluators.html">v0.7.0b2</a></dd>
+         <dd><a href="../../v0.7.0b3/manual/configuration.evaluators.html">v0.7.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

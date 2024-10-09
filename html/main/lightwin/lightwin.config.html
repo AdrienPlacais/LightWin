@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lightwin.config package &mdash; LightWin  documentation</title>
+  <title>config package &mdash; LightWin  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="lightwin.config.beam module" href="lightwin.config.beam.html" />
-    <link rel="prev" title="lightwin.beam_calculation.factory module" href="lightwin.beam_calculation.factory.html" /> 
+    <link rel="next" title="beam module" href="lightwin.config.beam.html" />
+    <link rel="prev" title="factory module" href="lightwin.beam_calculation.factory.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b2
+                0.7.0b3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -52,35 +52,34 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">lightwin.config package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.config.beam.html">lightwin.config.beam module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.config.beam_calculator.html">lightwin.config.beam_calculator module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.config.design_space.html">lightwin.config.design_space module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.config.evaluators.html">lightwin.config.evaluators module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.config.files.html">lightwin.config.files module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.config.helper.html">lightwin.config.helper module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.config.plots.html">lightwin.config.plots module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.config.wtf.html">lightwin.config.wtf module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">config package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.config.beam.html">beam module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.config.beam_calculator.html">beam_calculator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.config.design_space.html">design_space module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.config.evaluators.html">evaluators module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.config.files.html">files module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.config.helper.html">helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.config.plots.html">plots module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.config.wtf.html">wtf module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
@@ -101,7 +100,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
-      <li class="breadcrumb-item active">lightwin.config package</li>
+      <li class="breadcrumb-item active">config package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.config.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -114,7 +113,7 @@
            <div itemprop="articleBody">
              
   <section id="module-lightwin.config">
-<span id="lightwin-config-package"></span><h1>lightwin.config package<a class="headerlink" href="#module-lightwin.config" title="Link to this heading"></a></h1>
+<span id="config-package"></span><h1>config package<a class="headerlink" href="#module-lightwin.config" title="Link to this heading"></a></h1>
 <p>This subpackage defines methods to validate the <code class="docutils literal notranslate"><span class="pre">.toml</span></code> config file.</p>
 <p>It is a first filter, so that most obvious input mistakes are detected at the
 beginning of the script rather than after hours of simulation.
@@ -131,12 +130,12 @@ It would be clearer I think…</p>
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.config.beam.html">lightwin.config.beam module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.config.beam.html">beam module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.beam.html#lightwin.config.beam.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.beam.html#lightwin.config.beam.edit_configuration_dict_in_place"><code class="docutils literal notranslate"><span class="pre">edit_configuration_dict_in_place()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.config.beam_calculator.html">lightwin.config.beam_calculator module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.config.beam_calculator.html">beam_calculator module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.beam_calculator.html#lightwin.config.beam_calculator.IMPLEMENTED_BEAM_CALCULATORS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_BEAM_CALCULATORS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.beam_calculator.html#lightwin.config.beam_calculator.IMPLEMENTED_ENVELOPE1D_METHODS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_ENVELOPE1D_METHODS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.beam_calculator.html#lightwin.config.beam_calculator.IMPLEMENTED_ENVELOPE3D_METHODS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_ENVELOPE3D_METHODS</span></code></a></li>
@@ -152,7 +151,7 @@ It would be clearer I think…</p>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.beam_calculator.html#lightwin.config.beam_calculator._edit_configuration_dict_in_place_envelope3d"><code class="docutils literal notranslate"><span class="pre">_edit_configuration_dict_in_place_envelope3d()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.config.design_space.html">lightwin.config.design_space module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.config.design_space.html">design_space module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.design_space.html#lightwin.config.design_space.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.design_space.html#lightwin.config.design_space._test_from_file"><code class="docutils literal notranslate"><span class="pre">_test_from_file()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.design_space.html#lightwin.config.design_space._test_not_from_file"><code class="docutils literal notranslate"><span class="pre">_test_not_from_file()</span></code></a></li>
@@ -161,30 +160,30 @@ It would be clearer I think…</p>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.design_space.html#lightwin.config.design_space._edit_configuration_dict_in_place_not_from_file"><code class="docutils literal notranslate"><span class="pre">_edit_configuration_dict_in_place_not_from_file()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.config.evaluators.html">lightwin.config.evaluators module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.config.evaluators.html">evaluators module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.evaluators.html#lightwin.config.evaluators.IMPLEMENTED_EVALUATORS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_EVALUATORS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.evaluators.html#lightwin.config.evaluators.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.config.files.html">lightwin.config.files module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.config.files.html">files module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.files.html#lightwin.config.files.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.files.html#lightwin.config.files.edit_configuration_dict_in_place"><code class="docutils literal notranslate"><span class="pre">edit_configuration_dict_in_place()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.files.html#lightwin.config.files._create_project_folders"><code class="docutils literal notranslate"><span class="pre">_create_project_folders()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.config.helper.html">lightwin.config.helper module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.config.helper.html">helper module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.helper.html#lightwin.config.helper.check_type"><code class="docutils literal notranslate"><span class="pre">check_type()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.helper.html#lightwin.config.helper.dict_for_pretty_output"><code class="docutils literal notranslate"><span class="pre">dict_for_pretty_output()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.helper.html#lightwin.config.helper.find_file"><code class="docutils literal notranslate"><span class="pre">find_file()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.config.plots.html">lightwin.config.plots module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.config.plots.html">plots module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.plots.html#lightwin.config.plots.IMPLEMENTED_PLOTS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_PLOTS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.plots.html#lightwin.config.plots.TO_UPDATE_OR_FIX"><code class="docutils literal notranslate"><span class="pre">TO_UPDATE_OR_FIX</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.plots.html#lightwin.config.plots.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.config.wtf.html">lightwin.config.wtf module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.config.wtf.html">wtf module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.wtf.html#lightwin.config.wtf.IMPLEMENTED_STRATEGIES"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_STRATEGIES</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.wtf.html#lightwin.config.wtf.IMPLEMENTED_OBJECTIVE_PRESETS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_OBJECTIVE_PRESETS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.wtf.html#lightwin.config.wtf.IMPLEMENTED_OPTIMISATION_ALGORITHMS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_OPTIMISATION_ALGORITHMS</span></code></a></li>
@@ -207,14 +206,14 @@ It would be clearer I think…</p>
           </div>
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lightwin.beam_calculation.factory.html" class="btn btn-neutral float-left" title="lightwin.beam_calculation.factory module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="lightwin.config.beam.html" class="btn btn-neutral float-right" title="lightwin.config.beam module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lightwin.beam_calculation.factory.html" class="btn btn-neutral float-left" title="factory module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.config.beam.html" class="btn btn-neutral float-right" title="beam module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
@@ -237,7 +236,7 @@ It would be clearer I think…</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b2/lightwin/lightwin.config.html">v0.7.0b2</a></dd>
+         <dd><a href="../../v0.7.0b3/lightwin/lightwin.config.html">v0.7.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

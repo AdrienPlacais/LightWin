@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lightwin.scripts.compare_runs module &mdash; LightWin  documentation</title>
+  <title>compare_runs module &mdash; LightWin  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="lightwin.scripts.compute_lost_power_per_meter module" href="lightwin.scripts.compute_lost_power_per_meter.html" />
-    <link rel="prev" title="lightwin.scripts.compare_beam_calculators module" href="lightwin.scripts.compare_beam_calculators.html" /> 
+    <link rel="next" title="compute_lost_power_per_meter module" href="lightwin.scripts.compute_lost_power_per_meter.html" />
+    <link rel="prev" title="compare_beam_calculators module" href="lightwin.scripts.compare_beam_calculators.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b2
+                0.7.0b3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -52,35 +52,34 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.combine_solutions.html">lightwin.scripts.combine_solutions module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.compare_beam_calculators.html">lightwin.scripts.compare_beam_calculators module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">lightwin.scripts.compare_runs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.compute_lost_power_per_meter.html">lightwin.scripts.compute_lost_power_per_meter module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.generate_design_space_files.html">lightwin.scripts.generate_design_space_files module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.reorder_output_figures.html">lightwin.scripts.reorder_output_figures module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.save_cavity_settings.html">lightwin.scripts.save_cavity_settings module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.scripts_shorthands.html">lightwin.scripts.scripts_shorthands module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.scripts.html">scripts package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.combine_solutions.html">combine_solutions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.compare_beam_calculators.html">compare_beam_calculators module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">compare_runs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.compute_lost_power_per_meter.html">compute_lost_power_per_meter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.generate_design_space_files.html">generate_design_space_files module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.reorder_output_figures.html">reorder_output_figures module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.save_cavity_settings.html">save_cavity_settings module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.scripts.scripts_shorthands.html">scripts_shorthands module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
@@ -101,8 +100,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
-          <li class="breadcrumb-item"><a href="lightwin.scripts.html">lightwin.scripts package</a></li>
-      <li class="breadcrumb-item active">lightwin.scripts.compare_runs module</li>
+          <li class="breadcrumb-item"><a href="lightwin.scripts.html">scripts package</a></li>
+      <li class="breadcrumb-item active">compare_runs module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.scripts.compare_runs.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -115,18 +114,18 @@
            <div itemprop="articleBody">
              
   <section id="module-lightwin.scripts.compare_runs">
-<span id="lightwin-scripts-compare-runs-module"></span><h1>lightwin.scripts.compare_runs module<a class="headerlink" href="#module-lightwin.scripts.compare_runs" title="Link to this heading"></a></h1>
+<span id="compare-runs-module"></span><h1>compare_runs module<a class="headerlink" href="#module-lightwin.scripts.compare_runs" title="Link to this heading"></a></h1>
 <p>Define functions to compare several runs based on their <code class="docutils literal notranslate"><span class="pre">evaluations.csv</span></code>.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="lightwin.scripts.compare_runs.concatenate_evaluation_files">
-<span class="sig-name descname"><span class="pre">concatenate_evaluation_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_namecol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#lightwin.scripts.compare_runs.concatenate_evaluation_files" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">concatenate_evaluation_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_namecol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.3)"><span class="pre">DataFrame</span></a></span></span><a class="headerlink" href="#lightwin.scripts.compare_runs.concatenate_evaluation_files" title="Link to this definition"></a></dt>
 <dd><p>Load the file and rename column header.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>simulation_id</strong> (<em>str</em>) – Name that will be given to the simulation in the plot.</p></li>
-<li><p><strong>evaluation_folder</strong> (<em>Path</em>) – Folder where the <code class="docutils literal notranslate"><span class="pre">evaluations.csv</span></code> file is.</p></li>
-<li><p><strong>evaluation_namecol</strong> (<em>str</em>) – Name of the column in the <code class="docutils literal notranslate"><span class="pre">evaluations.csv</span></code> file.</p></li>
+<li><p><strong>simulation_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name that will be given to the simulation in the plot.</p></li>
+<li><p><strong>evaluation_folder</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>pathlib.Path</em></a>) – Folder where the <code class="docutils literal notranslate"><span class="pre">evaluations.csv</span></code> file is.</p></li>
+<li><p><strong>evaluation_namecol</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the column in the <code class="docutils literal notranslate"><span class="pre">evaluations.csv</span></code> file.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -134,22 +133,22 @@
 new name of the column is <code class="docutils literal notranslate"><span class="pre">simulation_id</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame</p>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.3)">pandas.DataFrame</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="lightwin.scripts.compare_runs._compare_one_quantity_all_simulations">
-<span class="sig-name descname"><span class="pre">_compare_one_quantity_all_simulations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_ids_and_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_namecol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.scripts.compare_runs._compare_one_quantity_all_simulations" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_compare_one_quantity_all_simulations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_ids_and_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_namecol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lightwin.scripts.compare_runs._compare_one_quantity_all_simulations" title="Link to this definition"></a></dt>
 <dd><p>Load and plot all the given files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>simulation_ids_and_paths</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Keys are name of the simulation in the plot, values are corresponding
+<li><p><strong>simulation_ids_and_paths</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>pathlib.Path</em></a><em>]</em>) – Keys are name of the simulation in the plot, values are corresponding
 <code class="docutils literal notranslate"><span class="pre">evaluations.csv</span></code> path.</p></li>
-<li><p><strong>evaluation_namecol</strong> (<em>str</em>) – Name of the column to take in <code class="docutils literal notranslate"><span class="pre">evaluations.csv</span></code>.</p></li>
-<li><p><strong>y_label</strong> (<em>str</em>) – Name of the y-axis in the plot.</p></li>
+<li><p><strong>evaluation_namecol</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the column to take in <code class="docutils literal notranslate"><span class="pre">evaluations.csv</span></code>.</p></li>
+<li><p><strong>y_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the y-axis in the plot.</p></li>
 </ul>
 </dd>
 </dl>
@@ -157,14 +156,14 @@ new name of the column is <code class="docutils literal notranslate"><span class
 
 <dl class="py function">
 <dt class="sig sig-object py" id="lightwin.scripts.compare_runs.compare_simulations">
-<span class="sig-name descname"><span class="pre">compare_simulations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_ids_and_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">studies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#lightwin.scripts.compare_runs.compare_simulations" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">compare_simulations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_ids_and_paths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">studies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lightwin.scripts.compare_runs.compare_simulations" title="Link to this definition"></a></dt>
 <dd><p>Perform all defined studies.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>simulation_ids_and_paths</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Keys are name of the simulation in the plot, values are corresponding
+<li><p><strong>simulation_ids_and_paths</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>pathlib.Path</em></a><em>]</em>) – Keys are name of the simulation in the plot, values are corresponding
 <code class="docutils literal notranslate"><span class="pre">evaluations.csv</span></code> path.</p></li>
-<li><p><strong>studies</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – Keys are the y-labels of the plots, values are corresponding column
+<li><p><strong>studies</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>]</em>) – Keys are the y-labels of the plots, values are corresponding column
 names in <code class="docutils literal notranslate"><span class="pre">evaluations.csv.</span></code></p></li>
 </ul>
 </dd>
@@ -186,14 +185,14 @@ names in <code class="docutils literal notranslate"><span class="pre">evaluation
           </div>
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lightwin.scripts.compare_beam_calculators.html" class="btn btn-neutral float-left" title="lightwin.scripts.compare_beam_calculators module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="lightwin.scripts.compute_lost_power_per_meter.html" class="btn btn-neutral float-right" title="lightwin.scripts.compute_lost_power_per_meter module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lightwin.scripts.compare_beam_calculators.html" class="btn btn-neutral float-left" title="compare_beam_calculators module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.scripts.compute_lost_power_per_meter.html" class="btn btn-neutral float-right" title="compute_lost_power_per_meter module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
@@ -216,7 +215,7 @@ names in <code class="docutils literal notranslate"><span class="pre">evaluation
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b2/lightwin/lightwin.scripts.compare_runs.html">v0.7.0b2</a></dd>
+         <dd><a href="../../v0.7.0b3/lightwin/lightwin.scripts.compare_runs.html">v0.7.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

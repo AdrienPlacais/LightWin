@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lightwin.util.synchronous_phases module &mdash; LightWin  documentation</title>
+  <title>synchronous_phases module &mdash; LightWin  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="lightwin.visualization package" href="lightwin.visualization.html" />
-    <link rel="prev" title="lightwin.util.pickling module" href="lightwin.util.pickling.html" /> 
+    <link rel="next" title="visualization package" href="lightwin.visualization.html" />
+    <link rel="prev" title="pickling module" href="lightwin.util.pickling.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b2
+                0.7.0b3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -52,37 +52,36 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.converters.html">lightwin.util.converters module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.debug.html">lightwin.util.debug module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.dicts_output.html">lightwin.util.dicts_output module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.helper.html">lightwin.util.helper module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.log_manager.html">lightwin.util.log_manager module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pandas_helper.html">lightwin.util.pandas_helper module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pass_beauty.html">lightwin.util.pass_beauty module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.phases.html">lightwin.util.phases module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html">lightwin.util.pickling module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">lightwin.util.synchronous_phases module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.util.html">util package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.converters.html">converters module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.debug.html">debug module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.dicts_output.html">dicts_output module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.helper.html">helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.log_manager.html">log_manager module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pandas_helper.html">pandas_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pass_beauty.html">pass_beauty module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.phases.html">phases module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.util.pickling.html">pickling module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">synchronous_phases module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
@@ -103,8 +102,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
-          <li class="breadcrumb-item"><a href="lightwin.util.html">lightwin.util package</a></li>
-      <li class="breadcrumb-item active">lightwin.util.synchronous_phases module</li>
+          <li class="breadcrumb-item"><a href="lightwin.util.html">util package</a></li>
+      <li class="breadcrumb-item active">synchronous_phases module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.util.synchronous_phases.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -117,15 +116,15 @@
            <div itemprop="articleBody">
              
   <section id="module-lightwin.util.synchronous_phases">
-<span id="lightwin-util-synchronous-phases-module"></span><h1>lightwin.util.synchronous_phases module<a class="headerlink" href="#module-lightwin.util.synchronous_phases" title="Link to this heading"></a></h1>
+<span id="synchronous-phases-module"></span><h1>synchronous_phases module<a class="headerlink" href="#module-lightwin.util.synchronous_phases" title="Link to this heading"></a></h1>
 <p>Define various functions to compute the synchronous phase.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="lightwin.util.synchronous_phases.phi_s_legacy">
-<span class="sig-name descname"><span class="pre">phi_s_legacy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">integrated_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">complex</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.util.synchronous_phases.phi_s_legacy" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">phi_s_legacy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">integrated_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><span class="pre">complex</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.util.synchronous_phases.phi_s_legacy" title="Link to this definition"></a></dt>
 <dd><p>Compute the cavity parameters with phi_s historical definition.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>integrated_field</strong> (<em>complex</em><em> | </em><em>None</em>) – Complex electric field felt by the synchronous particle. It is None
+<dd class="field-odd"><p><strong>integrated_field</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.13)"><em>complex</em></a><em> | </em><em>None</em>) – Complex electric field felt by the synchronous particle. It is None
 if the cavity is failed.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -142,29 +141,29 @@ None.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="lightwin.util.synchronous_phases.phi_s_lagniel">
-<span class="sig-name descname"><span class="pre">phi_s_lagniel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.util.synchronous_phases.phi_s_lagniel" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">phi_s_lagniel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><span class="pre">object</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.util.synchronous_phases.phi_s_lagniel" title="Link to this definition"></a></dt>
 <dd><p>Compute cavity parameters with phi_s model proposed by JM Lagniel.</p>
 <p>See  Longitudinal beam dynamics at high accelerating fields, what changes?
 ROSCOFF 2021.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>transf_mat_21</strong> (<em>float</em>) – (2, 1) component of the field map transfer matrix.</p></li>
-<li><p><strong>delta_w_kin</strong> (<em>float</em>) – Energy gained by the synchronous particle in the cavity.</p></li>
+<li><p><strong>transf_mat_21</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – (2, 1) component of the field map transfer matrix.</p></li>
+<li><p><strong>delta_w_kin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Energy gained by the synchronous particle in the cavity.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>phi_s</strong> – Corrected synchronous phase of the cavity.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="lightwin.util.synchronous_phases.phi_s_from_tracewin_file">
-<span class="sig-name descname"><span class="pre">phi_s_from_tracewin_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.util.synchronous_phases.phi_s_from_tracewin_file" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">phi_s_from_tracewin_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulation_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><span class="pre">object</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.util.synchronous_phases.phi_s_from_tracewin_file" title="Link to this definition"></a></dt>
 <dd><p>Get the synchronous phase from a TraceWin output file.</p>
 <p>It is up to you to edit the <code class="docutils literal notranslate"><span class="pre">tracewin.ini</span></code> file in order to have the
 synchronous phase that you want.</p>
@@ -172,7 +171,10 @@ synchronous phase that you want.</p>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="lightwin.util.synchronous_phases.SYNCHRONOUS_PHASE_FUNCTIONS">
-<span class="sig-name descname"><span class="pre">SYNCHRONOUS_PHASE_FUNCTIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'historical':</span> <span class="pre">&lt;function</span> <span class="pre">phi_s_legacy&gt;,</span> <span class="pre">'lagniel':</span> <span class="pre">&lt;function</span> <span class="pre">phi_s_lagniel&gt;,</span> <span class="pre">'legacy':</span> <span class="pre">&lt;function</span> <span class="pre">phi_s_legacy&gt;,</span> <span class="pre">'tracewin':</span> <span class="pre">&lt;function</span> <span class="pre">phi_s_from_tracewin_file&gt;}</span></em><a class="headerlink" href="#lightwin.util.synchronous_phases.SYNCHRONOUS_PHASE_FUNCTIONS" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">SYNCHRONOUS_PHASE_FUNCTIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{</span>&#160;&#160; <span class="pre">'historical':</span> <span class="pre">&lt;function</span> <span class="pre">phi_s_legacy</span> <span class="pre">at</span> <span class="pre">0x7fe86189a750&gt;,</span>
+&#160;&#160;&#160; <span class="pre">'lagniel':</span> <span class="pre">&lt;function</span> <span class="pre">phi_s_lagniel</span> <span class="pre">at</span> <span class="pre">0x7fe86189a690&gt;,</span>
+&#160;&#160;&#160; <span class="pre">'legacy':</span> <span class="pre">&lt;function</span> <span class="pre">phi_s_legacy</span> <span class="pre">at</span> <span class="pre">0x7fe86189a750&gt;,</span>
+&#160;&#160;&#160; <span class="pre">'tracewin':</span> <span class="pre">&lt;function</span> <span class="pre">phi_s_from_tracewin_file</span> <span class="pre">at</span> <span class="pre">0x7fe86189a5d0&gt;}</span></em><a class="headerlink" href="#lightwin.util.synchronous_phases.SYNCHRONOUS_PHASE_FUNCTIONS" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
@@ -182,14 +184,14 @@ synchronous phase that you want.</p>
           </div>
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lightwin.util.pickling.html" class="btn btn-neutral float-left" title="lightwin.util.pickling module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="lightwin.visualization.html" class="btn btn-neutral float-right" title="lightwin.visualization package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lightwin.util.pickling.html" class="btn btn-neutral float-left" title="pickling module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.visualization.html" class="btn btn-neutral float-right" title="visualization package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
@@ -212,7 +214,7 @@ synchronous phase that you want.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b2/lightwin/lightwin.util.synchronous_phases.html">v0.7.0b2</a></dd>
+         <dd><a href="../../v0.7.0b3/lightwin/lightwin.util.synchronous_phases.html">v0.7.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

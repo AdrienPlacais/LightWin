@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b2
+                0.7.0b3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -52,7 +52,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="configuration.html">Configuration</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="configuration.files.html"><code class="docutils literal notranslate"><span class="pre">files</span></code> section (mandatory)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.beam.html"><code class="docutils literal notranslate"><span class="pre">beam</span></code> section (mandatory)</a></li>
@@ -123,7 +123,7 @@
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tool</span></code></p></td>
 <td><p>str</p></td>
 <td><p>Name of the tool</p></td>
-<td><p><code class="xref py py-data docutils literal notranslate"><span class="pre">tools</span></code></p></td>
+<td><p>Keys of <a class="reference internal" href="../lightwin/lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BEAM_CALCULATORS" title="lightwin.beam_calculation.factory.BEAM_CALCULATORS"><code class="xref py py-data docutils literal notranslate"><span class="pre">BEAM_CALCULATORS</span></code></a></p></td>
 <td><p>✅</p></td>
 </tr>
 </tbody>
@@ -167,12 +167,12 @@
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">method</span></code></p></td>
 <td><p>str</p></td>
 <td><p>Integration method</p></td>
-<td><p><code class="xref py py-data docutils literal notranslate"><span class="pre">methods</span></code></p></td>
+<td><p><a class="reference internal" href="../lightwin/lightwin.beam_calculation.envelope_1d.envelope_1d.html#lightwin.beam_calculation.envelope_1d.envelope_1d.ENVELOPE1D_METHODS" title="lightwin.beam_calculation.envelope_1d.envelope_1d.ENVELOPE1D_METHODS"><code class="xref py py-data docutils literal notranslate"><span class="pre">ENVELOPE1D_METHODS</span></code></a></p></td>
 <td><p>✅</p></td>
 </tr>
 </tbody>
 </table>
-<p>Note that <code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope3D</span></code> takes the same configuration entries, except <code class="docutils literal notranslate"><span class="pre">flag_cython</span></code> (not implemented yet) and <code class="docutils literal notranslate"><span class="pre">method</span></code> that must be <code class="docutils literal notranslate"><span class="pre">'RK4'</span></code> (<code class="docutils literal notranslate"><span class="pre">'leapgrog'</span></code> not implemented yet).</p>
+<p>Note that <a class="reference internal" href="../lightwin/lightwin.beam_calculation.envelope_3d.envelope_3d.html#lightwin.beam_calculation.envelope_3d.envelope_3d.Envelope3D" title="lightwin.beam_calculation.envelope_3d.envelope_3d.Envelope3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Envelope3D</span></code></a> takes the same configuration entries, except <code class="docutils literal notranslate"><span class="pre">flag_cython</span></code> (not implemented yet) and <code class="docutils literal notranslate"><span class="pre">method</span></code> that must be <code class="docutils literal notranslate"><span class="pre">'RK4'</span></code> (<code class="docutils literal notranslate"><span class="pre">'leapfrog'</span></code> not implemented yet).</p>
 <p>If the desired <a class="reference internal" href="../lightwin/lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a> is <a class="reference internal" href="../lightwin/lightwin.beam_calculation.tracewin.tracewin.html#lightwin.beam_calculation.tracewin.tracewin.TraceWin" title="lightwin.beam_calculation.tracewin.tracewin.TraceWin"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraceWin</span></code></a>:</p>
 <table class="docutils align-default">
 <colgroup>
@@ -263,7 +263,7 @@ This is mainly useful for defining a more precise – but more time-consuming �
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
@@ -286,7 +286,7 @@ This is mainly useful for defining a more precise – but more time-consuming �
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b2/manual/configuration.beam_calculator.html">v0.7.0b2</a></dd>
+         <dd><a href="../../v0.7.0b3/manual/configuration.beam_calculator.html">v0.7.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

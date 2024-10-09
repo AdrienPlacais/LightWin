@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lightwin.core.commands package &mdash; LightWin  documentation</title>
+  <title>commands package &mdash; LightWin  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="lightwin.core.commands.adjust module" href="lightwin.core.commands.adjust.html" />
-    <link rel="prev" title="lightwin.core.beam_parameters.initial_beam_parameters module" href="lightwin.core.beam_parameters.initial_beam_parameters.html" /> 
+    <link rel="next" title="adjust module" href="lightwin.core.commands.adjust.html" />
+    <link rel="prev" title="initial_beam_parameters module" href="lightwin.core.beam_parameters.initial_beam_parameters.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b2
+                0.7.0b3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -52,56 +52,55 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.accelerator.html">lightwin.core.accelerator package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">lightwin.core.beam_parameters package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">lightwin.core.commands package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.adjust.html">lightwin.core.commands.adjust module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.command.html">lightwin.core.commands.command module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.dummy_command.html">lightwin.core.commands.dummy_command module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.end.html">lightwin.core.commands.end module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.error.html">lightwin.core.commands.error module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.factory.html">lightwin.core.commands.factory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.field_map_path.html">lightwin.core.commands.field_map_path module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.freq.html">lightwin.core.commands.freq module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.helper.html">lightwin.core.commands.helper module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.lattice.html">lightwin.core.commands.lattice module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.marker.html">lightwin.core.commands.marker module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html">lightwin.core.commands.repeat_ele module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.set_adv.html">lightwin.core.commands.set_adv module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html">lightwin.core.commands.set_sync_phase module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.shift.html">lightwin.core.commands.shift module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.steerer.html">lightwin.core.commands.steerer module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.superpose_map.html">lightwin.core.commands.superpose_map module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.core.html">core package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.accelerator.html">accelerator package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">beam_parameters package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">commands package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.adjust.html">adjust module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.command.html">command module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.dummy_command.html">dummy_command module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.end.html">end module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.error.html">error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.factory.html">factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.field_map_path.html">field_map_path module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.freq.html">freq module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.helper.html">helper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.lattice.html">lattice module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.marker.html">marker module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html">repeat_ele module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.set_adv.html">set_adv module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html">set_sync_phase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.shift.html">shift module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.steerer.html">steerer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.superpose_map.html">superpose_map module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.html">lightwin.core.elements package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">lightwin.core.list_of_elements package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.html">lightwin.core.transfer_matrix package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">lightwin.core.electric_field module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">lightwin.core.instruction module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">lightwin.core.instructions_factory module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">lightwin.core.particle module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.html">elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">list_of_elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.html">transfer_matrix package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">electric_field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">instruction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">instructions_factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">particle module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
@@ -122,8 +121,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
-          <li class="breadcrumb-item"><a href="lightwin.core.html">lightwin.core package</a></li>
-      <li class="breadcrumb-item active">lightwin.core.commands package</li>
+          <li class="breadcrumb-item"><a href="lightwin.core.html">core package</a></li>
+      <li class="breadcrumb-item active">commands package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.core.commands.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -136,7 +135,7 @@
            <div itemprop="articleBody">
              
   <section id="module-lightwin.core.commands">
-<span id="lightwin-core-commands-package"></span><h1>lightwin.core.commands package<a class="headerlink" href="#module-lightwin.core.commands" title="Link to this heading"></a></h1>
+<span id="commands-package"></span><h1>commands package<a class="headerlink" href="#module-lightwin.core.commands" title="Link to this heading"></a></h1>
 <p>In this package we define the different commands (TraceWin syntax).</p>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
@@ -146,7 +145,7 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.adjust.html">lightwin.core.commands.adjust module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.adjust.html">adjust module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.adjust.html#lightwin.core.commands.adjust.Adjust"><code class="docutils literal notranslate"><span class="pre">Adjust</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.adjust.html#lightwin.core.commands.adjust.Adjust.is_implemented"><code class="docutils literal notranslate"><span class="pre">Adjust.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.adjust.html#lightwin.core.commands.adjust.Adjust.n_attributes"><code class="docutils literal notranslate"><span class="pre">Adjust.n_attributes</span></code></a></li>
@@ -158,7 +157,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.command.html">lightwin.core.commands.command module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.command.html">command module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.command.html#lightwin.core.commands.command.Command"><code class="docutils literal notranslate"><span class="pre">Command</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.command.html#lightwin.core.commands.command.Command.__init__"><code class="docutils literal notranslate"><span class="pre">Command.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.command.html#lightwin.core.commands.command.Command.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">Command.set_influenced_elements()</span></code></a></li>
@@ -171,7 +170,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.dummy_command.html">lightwin.core.commands.dummy_command module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.dummy_command.html">dummy_command module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.dummy_command.html#lightwin.core.commands.dummy_command.DummyCommand"><code class="docutils literal notranslate"><span class="pre">DummyCommand</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.dummy_command.html#lightwin.core.commands.dummy_command.DummyCommand.is_implemented"><code class="docutils literal notranslate"><span class="pre">DummyCommand.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.dummy_command.html#lightwin.core.commands.dummy_command.DummyCommand.__init__"><code class="docutils literal notranslate"><span class="pre">DummyCommand.__init__()</span></code></a></li>
@@ -183,7 +182,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.end.html">lightwin.core.commands.end module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.end.html">end module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.end.html#lightwin.core.commands.end.End"><code class="docutils literal notranslate"><span class="pre">End</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.end.html#lightwin.core.commands.end.End.is_implemented"><code class="docutils literal notranslate"><span class="pre">End.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.end.html#lightwin.core.commands.end.End.n_attributes"><code class="docutils literal notranslate"><span class="pre">End.n_attributes</span></code></a></li>
@@ -195,7 +194,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.error.html">lightwin.core.commands.error module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.error.html">error module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.Error"><code class="docutils literal notranslate"><span class="pre">Error</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.Error.__init__"><code class="docutils literal notranslate"><span class="pre">Error.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.Error._abc_impl"><code class="docutils literal notranslate"><span class="pre">Error._abc_impl</span></code></a></li>
@@ -279,7 +278,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.factory.html">lightwin.core.commands.factory module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.factory.html">factory module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.factory.html#lightwin.core.commands.factory.IMPLEMENTED_COMMANDS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_COMMANDS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.factory.html#lightwin.core.commands.factory.CommandFactory"><code class="docutils literal notranslate"><span class="pre">CommandFactory</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.factory.html#lightwin.core.commands.factory.CommandFactory.__init__"><code class="docutils literal notranslate"><span class="pre">CommandFactory.__init__()</span></code></a></li>
@@ -289,7 +288,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.field_map_path.html">lightwin.core.commands.field_map_path module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.field_map_path.html">field_map_path module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.field_map_path.html#lightwin.core.commands.field_map_path.FieldMapPath"><code class="docutils literal notranslate"><span class="pre">FieldMapPath</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.field_map_path.html#lightwin.core.commands.field_map_path.FieldMapPath.is_implemented"><code class="docutils literal notranslate"><span class="pre">FieldMapPath.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.field_map_path.html#lightwin.core.commands.field_map_path.FieldMapPath.n_attributes"><code class="docutils literal notranslate"><span class="pre">FieldMapPath.n_attributes</span></code></a></li>
@@ -301,7 +300,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.freq.html">lightwin.core.commands.freq module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.freq.html">freq module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.freq.html#lightwin.core.commands.freq.Freq"><code class="docutils literal notranslate"><span class="pre">Freq</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.freq.html#lightwin.core.commands.freq.Freq.is_implemented"><code class="docutils literal notranslate"><span class="pre">Freq.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.freq.html#lightwin.core.commands.freq.Freq.n_attributes"><code class="docutils literal notranslate"><span class="pre">Freq.n_attributes</span></code></a></li>
@@ -313,11 +312,11 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.helper.html">lightwin.core.commands.helper module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.helper.html">helper module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.helper.html#lightwin.core.commands.helper.apply_commands"><code class="docutils literal notranslate"><span class="pre">apply_commands()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.lattice.html">lightwin.core.commands.lattice module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.lattice.html">lattice module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.Lattice"><code class="docutils literal notranslate"><span class="pre">Lattice</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.Lattice.is_implemented"><code class="docutils literal notranslate"><span class="pre">Lattice.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.Lattice.n_attributes"><code class="docutils literal notranslate"><span class="pre">Lattice.n_attributes</span></code></a></li>
@@ -340,7 +339,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.marker.html">lightwin.core.commands.marker module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.marker.html">marker module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.marker.html#lightwin.core.commands.marker.Marker"><code class="docutils literal notranslate"><span class="pre">Marker</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.marker.html#lightwin.core.commands.marker.Marker.is_implemented"><code class="docutils literal notranslate"><span class="pre">Marker.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.marker.html#lightwin.core.commands.marker.Marker.__init__"><code class="docutils literal notranslate"><span class="pre">Marker.__init__()</span></code></a></li>
@@ -352,7 +351,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html">lightwin.core.commands.repeat_ele module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html">repeat_ele module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html#lightwin.core.commands.repeat_ele.RepeatEle"><code class="docutils literal notranslate"><span class="pre">RepeatEle</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html#lightwin.core.commands.repeat_ele.RepeatEle.is_implemented"><code class="docutils literal notranslate"><span class="pre">RepeatEle.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html#lightwin.core.commands.repeat_ele.RepeatEle.n_attributes"><code class="docutils literal notranslate"><span class="pre">RepeatEle.n_attributes</span></code></a></li>
@@ -364,7 +363,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.set_adv.html">lightwin.core.commands.set_adv module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.set_adv.html">set_adv module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.set_adv.html#lightwin.core.commands.set_adv.SetAdv"><code class="docutils literal notranslate"><span class="pre">SetAdv</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_adv.html#lightwin.core.commands.set_adv.SetAdv.__init__"><code class="docutils literal notranslate"><span class="pre">SetAdv.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_adv.html#lightwin.core.commands.set_adv.SetAdv._abc_impl"><code class="docutils literal notranslate"><span class="pre">SetAdv._abc_impl</span></code></a></li>
@@ -372,7 +371,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html">lightwin.core.commands.set_sync_phase module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html">set_sync_phase module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html#lightwin.core.commands.set_sync_phase.SetSyncPhase"><code class="docutils literal notranslate"><span class="pre">SetSyncPhase</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html#lightwin.core.commands.set_sync_phase.SetSyncPhase.is_implemented"><code class="docutils literal notranslate"><span class="pre">SetSyncPhase.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html#lightwin.core.commands.set_sync_phase.SetSyncPhase.n_attributes"><code class="docutils literal notranslate"><span class="pre">SetSyncPhase.n_attributes</span></code></a></li>
@@ -385,7 +384,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.shift.html">lightwin.core.commands.shift module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.shift.html">shift module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.shift.html#lightwin.core.commands.shift.Shift"><code class="docutils literal notranslate"><span class="pre">Shift</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.shift.html#lightwin.core.commands.shift.Shift.is_implemented"><code class="docutils literal notranslate"><span class="pre">Shift.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.shift.html#lightwin.core.commands.shift.Shift.__init__"><code class="docutils literal notranslate"><span class="pre">Shift.__init__()</span></code></a></li>
@@ -396,7 +395,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.steerer.html">lightwin.core.commands.steerer module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.steerer.html">steerer module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.steerer.html#lightwin.core.commands.steerer.Steerer"><code class="docutils literal notranslate"><span class="pre">Steerer</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.steerer.html#lightwin.core.commands.steerer.Steerer.is_implemented"><code class="docutils literal notranslate"><span class="pre">Steerer.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.steerer.html#lightwin.core.commands.steerer.Steerer.__init__"><code class="docutils literal notranslate"><span class="pre">Steerer.__init__()</span></code></a></li>
@@ -407,7 +406,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.superpose_map.html">lightwin.core.commands.superpose_map module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.superpose_map.html">superpose_map module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap"><code class="docutils literal notranslate"><span class="pre">SuperposeMap</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap.is_implemented"><code class="docutils literal notranslate"><span class="pre">SuperposeMap.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap.n_attributes"><code class="docutils literal notranslate"><span class="pre">SuperposeMap.n_attributes</span></code></a></li>
@@ -432,14 +431,14 @@
           </div>
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lightwin.core.beam_parameters.initial_beam_parameters.html" class="btn btn-neutral float-left" title="lightwin.core.beam_parameters.initial_beam_parameters module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="lightwin.core.commands.adjust.html" class="btn btn-neutral float-right" title="lightwin.core.commands.adjust module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lightwin.core.beam_parameters.initial_beam_parameters.html" class="btn btn-neutral float-left" title="initial_beam_parameters module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.core.commands.adjust.html" class="btn btn-neutral float-right" title="adjust module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
@@ -462,7 +461,7 @@
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b2/lightwin/lightwin.core.commands.html">v0.7.0b2</a></dd>
+         <dd><a href="../../v0.7.0b3/lightwin/lightwin.core.commands.html">v0.7.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lightwin.core.elements package &mdash; LightWin  documentation</title>
+  <title>elements package &mdash; LightWin  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -24,8 +24,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="lightwin.core.elements.field_maps package" href="lightwin.core.elements.field_maps.html" />
-    <link rel="prev" title="lightwin.core.commands.superpose_map module" href="lightwin.core.commands.superpose_map.html" /> 
+    <link rel="next" title="field_maps package" href="lightwin.core.elements.field_maps.html" />
+    <link rel="prev" title="superpose_map module" href="lightwin.core.commands.superpose_map.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,7 +40,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b2
+                0.7.0b3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -54,53 +54,52 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="xref py py-func docutils literal notranslate"><span class="pre">get()</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">lightwin.beam_calculation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">lightwin.config package</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="lightwin.core.html">lightwin.core package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.accelerator.html">lightwin.core.accelerator package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">lightwin.core.beam_parameters package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.html">lightwin.core.commands package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">lightwin.core.elements package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.html">lightwin.core.elements.field_maps package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.aperture.html">lightwin.core.elements.aperture module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.bend.html">lightwin.core.elements.bend module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.diagnostic.html">lightwin.core.elements.diagnostic module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.drift.html">lightwin.core.elements.drift module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.dummy.html">lightwin.core.elements.dummy module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.edge.html">lightwin.core.elements.edge module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.element.html">lightwin.core.elements.element module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.factory.html">lightwin.core.elements.factory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.helper.html">lightwin.core.elements.helper module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.quad.html">lightwin.core.elements.quad module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.solenoid.html">lightwin.core.elements.solenoid module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html">lightwin.core.elements.superposed_field_map module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.thin_steering.html">lightwin.core.elements.thin_steering module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.core.html">core package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.accelerator.html">accelerator package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">beam_parameters package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.html">commands package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">elements package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.html">field_maps package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.aperture.html">aperture module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.bend.html">bend module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.diagnostic.html">diagnostic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.drift.html">drift module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.dummy.html">dummy module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.edge.html">edge module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.element.html">element module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.factory.html">factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.helper.html">helper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.quad.html">quad module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.solenoid.html">solenoid module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html">superposed_field_map module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.thin_steering.html">thin_steering module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">lightwin.core.list_of_elements package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.html">lightwin.core.transfer_matrix package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">lightwin.core.electric_field module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">lightwin.core.instruction module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">lightwin.core.instructions_factory module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">lightwin.core.particle module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">list_of_elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.html">transfer_matrix package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">electric_field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">instruction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">instructions_factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">particle module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">lightwin.evaluator package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.experimental.html">lightwin.experimental package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">lightwin.failures package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">lightwin.optimisation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">lightwin.scripts package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">lightwin.tracewin_utils package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">lightwin.util package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">lightwin.visualization package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">lightwin.config_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">lightwin.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
@@ -121,8 +120,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
-          <li class="breadcrumb-item"><a href="lightwin.core.html">lightwin.core package</a></li>
-      <li class="breadcrumb-item active">lightwin.core.elements package</li>
+          <li class="breadcrumb-item"><a href="lightwin.core.html">core package</a></li>
+      <li class="breadcrumb-item active">elements package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/lightwin/lightwin.core.elements.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -135,46 +134,111 @@
            <div itemprop="articleBody">
              
   <section id="module-lightwin.core.elements">
-<span id="lightwin-core-elements-package"></span><h1>lightwin.core.elements package<a class="headerlink" href="#module-lightwin.core.elements" title="Link to this heading"></a></h1>
+<span id="elements-package"></span><h1>elements package<a class="headerlink" href="#module-lightwin.core.elements" title="Link to this heading"></a></h1>
 <p>Here we define all the linac elements (TraceWin syntax).</p>
 <section id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.field_maps.html">lightwin.core.elements.field_maps package</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.field_maps.html">field_maps package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.field_maps.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html">lightwin.core.elements.field_maps.cavity_settings module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html">cavity_settings module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.ALLOWED_REFERENCES"><code class="docutils literal notranslate"><span class="pre">ALLOWED_REFERENCES</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.ALLOWED_STATUS"><code class="docutils literal notranslate"><span class="pre">ALLOWED_STATUS</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings"><code class="docutils literal notranslate"><span class="pre">CavitySettings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings"><code class="docutils literal notranslate"><span class="pre">CavitySettings</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.__init__"><code class="docutils literal notranslate"><span class="pre">CavitySettings.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.__str__"><code class="docutils literal notranslate"><span class="pre">CavitySettings.__str__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.from_other_cavity_settings"><code class="docutils literal notranslate"><span class="pre">CavitySettings.from_other_cavity_settings()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.from_optimisation_algorithm"><code class="docutils literal notranslate"><span class="pre">CavitySettings.from_optimisation_algorithm()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings._attr_to_str"><code class="docutils literal notranslate"><span class="pre">CavitySettings._attr_to_str()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.has"><code class="docutils literal notranslate"><span class="pre">CavitySettings.has()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.get"><code class="docutils literal notranslate"><span class="pre">CavitySettings.get()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings._check_consistency_of_status_and_reference"><code class="docutils literal notranslate"><span class="pre">CavitySettings._check_consistency_of_status_and_reference()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.set_bunch_to_rf_freq_func"><code class="docutils literal notranslate"><span class="pre">CavitySettings.set_bunch_to_rf_freq_func()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.reference"><code class="docutils literal notranslate"><span class="pre">CavitySettings.reference</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.phi_ref"><code class="docutils literal notranslate"><span class="pre">CavitySettings.phi_ref</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings._delete_non_reference_phases"><code class="docutils literal notranslate"><span class="pre">CavitySettings._delete_non_reference_phases()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.status"><code class="docutils literal notranslate"><span class="pre">CavitySettings.status</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.phi_0_abs"><code class="docutils literal notranslate"><span class="pre">CavitySettings.phi_0_abs</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.phi_0_rel"><code class="docutils literal notranslate"><span class="pre">CavitySettings.phi_0_rel</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.phi_s"><code class="docutils literal notranslate"><span class="pre">CavitySettings.phi_s</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.set_cavity_parameters_methods"><code class="docutils literal notranslate"><span class="pre">CavitySettings.set_cavity_parameters_methods()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.set_cavity_parameters_arguments"><code class="docutils literal notranslate"><span class="pre">CavitySettings.set_cavity_parameters_arguments()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.v_cav_mv"><code class="docutils literal notranslate"><span class="pre">CavitySettings.v_cav_mv</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.phi_rf"><code class="docutils literal notranslate"><span class="pre">CavitySettings.phi_rf</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.phi_bunch"><code class="docutils literal notranslate"><span class="pre">CavitySettings.phi_bunch</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.shift_phi_bunch"><code class="docutils literal notranslate"><span class="pre">CavitySettings.shift_phi_bunch()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings._get_valid_func"><code class="docutils literal notranslate"><span class="pre">_get_valid_func()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings_factory.html">lightwin.core.elements.field_maps.cavity_settings_factory module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings_factory.html#lightwin.core.elements.field_maps.cavity_settings_factory.CavitySettingsFactory"><code class="docutils literal notranslate"><span class="pre">CavitySettingsFactory</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings_factory.html">cavity_settings_factory module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings_factory.html#lightwin.core.elements.field_maps.cavity_settings_factory.CavitySettingsFactory"><code class="docutils literal notranslate"><span class="pre">CavitySettingsFactory</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings_factory.html#lightwin.core.elements.field_maps.cavity_settings_factory.CavitySettingsFactory.__init__"><code class="docutils literal notranslate"><span class="pre">CavitySettingsFactory.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings_factory.html#lightwin.core.elements.field_maps.cavity_settings_factory.CavitySettingsFactory.from_line_in_dat_file"><code class="docutils literal notranslate"><span class="pre">CavitySettingsFactory.from_line_in_dat_file()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings_factory.html#lightwin.core.elements.field_maps.cavity_settings_factory.CavitySettingsFactory.from_optimisation_algorithm"><code class="docutils literal notranslate"><span class="pre">CavitySettingsFactory.from_optimisation_algorithm()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings_factory.html#lightwin.core.elements.field_maps.cavity_settings_factory.CavitySettingsFactory.from_other_cavity_settings"><code class="docutils literal notranslate"><span class="pre">CavitySettingsFactory.from_other_cavity_settings()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings_factory.html#lightwin.core.elements.field_maps.cavity_settings_factory.CavitySettingsFactory._reference"><code class="docutils literal notranslate"><span class="pre">CavitySettingsFactory._reference()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.factory.html">lightwin.core.elements.field_maps.factory module</a><ul>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.factory.html">factory module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.factory.html#lightwin.core.elements.field_maps.factory.IMPLEMENTED_FIELD_MAPS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_FIELD_MAPS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.factory.html#lightwin.core.elements.field_maps.factory.warn_once"><code class="docutils literal notranslate"><span class="pre">warn_once()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.factory.html#lightwin.core.elements.field_maps.factory.FieldMapFactory"><code class="docutils literal notranslate"><span class="pre">FieldMapFactory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.factory.html#lightwin.core.elements.field_maps.factory.FieldMapFactory"><code class="docutils literal notranslate"><span class="pre">FieldMapFactory</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.factory.html#lightwin.core.elements.field_maps.factory.FieldMapFactory.__init__"><code class="docutils literal notranslate"><span class="pre">FieldMapFactory.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.factory.html#lightwin.core.elements.field_maps.factory.FieldMapFactory.run"><code class="docutils literal notranslate"><span class="pre">FieldMapFactory.run()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.factory.html#lightwin.core.elements.field_maps.factory.FieldMapFactory._append_absolute_phase_flag"><code class="docutils literal notranslate"><span class="pre">FieldMapFactory._append_absolute_phase_flag()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.factory.html#lightwin.core.elements.field_maps.factory.FieldMapFactory._get_proper_field_map_subclass"><code class="docutils literal notranslate"><span class="pre">FieldMapFactory._get_proper_field_map_subclass()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html">lightwin.core.elements.field_maps.field_map module</a><ul>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html">field_map module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.IMPLEMENTED_STATUS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_STATUS</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap"><code class="docutils literal notranslate"><span class="pre">FieldMap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap"><code class="docutils literal notranslate"><span class="pre">FieldMap</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap.base_name"><code class="docutils literal notranslate"><span class="pre">FieldMap.base_name</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap.n_attributes"><code class="docutils literal notranslate"><span class="pre">FieldMap.n_attributes</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap.__init__"><code class="docutils literal notranslate"><span class="pre">FieldMap.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap.status"><code class="docutils literal notranslate"><span class="pre">FieldMap.status</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap.is_accelerating"><code class="docutils literal notranslate"><span class="pre">FieldMap.is_accelerating</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap.can_be_retuned"><code class="docutils literal notranslate"><span class="pre">FieldMap.can_be_retuned</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap.update_status"><code class="docutils literal notranslate"><span class="pre">FieldMap.update_status()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap.set_full_path"><code class="docutils literal notranslate"><span class="pre">FieldMap.set_full_path()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap.keep_cavity_settings"><code class="docutils literal notranslate"><span class="pre">FieldMap.keep_cavity_settings()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap.get"><code class="docutils literal notranslate"><span class="pre">FieldMap.get()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap.to_line"><code class="docutils literal notranslate"><span class="pre">FieldMap.to_line()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap._indexes_in_line"><code class="docutils literal notranslate"><span class="pre">FieldMap._indexes_in_line</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap._abc_impl"><code class="docutils literal notranslate"><span class="pre">FieldMap._abc_impl</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap._phase_for_line"><code class="docutils literal notranslate"><span class="pre">FieldMap._phase_for_line()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_100.html">lightwin.core.elements.field_maps.field_map_100 module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_100.html#lightwin.core.elements.field_maps.field_map_100.FieldMap100"><code class="docutils literal notranslate"><span class="pre">FieldMap100</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_1100.html">lightwin.core.elements.field_maps.field_map_1100 module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_1100.html#lightwin.core.elements.field_maps.field_map_1100.FieldMap1100"><code class="docutils literal notranslate"><span class="pre">FieldMap1100</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_100.html">field_map_100 module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_100.html#lightwin.core.elements.field_maps.field_map_100.FieldMap100"><code class="docutils literal notranslate"><span class="pre">FieldMap100</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_100.html#lightwin.core.elements.field_maps.field_map_100.FieldMap100._abc_impl"><code class="docutils literal notranslate"><span class="pre">FieldMap100._abc_impl</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_7700.html">lightwin.core.elements.field_maps.field_map_7700 module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_7700.html#lightwin.core.elements.field_maps.field_map_7700.FieldMap7700"><code class="docutils literal notranslate"><span class="pre">FieldMap7700</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_1100.html">field_map_1100 module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_1100.html#lightwin.core.elements.field_maps.field_map_1100.FieldMap1100"><code class="docutils literal notranslate"><span class="pre">FieldMap1100</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_1100.html#lightwin.core.elements.field_maps.field_map_1100.FieldMap1100.__init__"><code class="docutils literal notranslate"><span class="pre">FieldMap1100.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_1100.html#lightwin.core.elements.field_maps.field_map_1100.FieldMap1100.to_line"><code class="docutils literal notranslate"><span class="pre">FieldMap1100.to_line()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_1100.html#lightwin.core.elements.field_maps.field_map_1100.FieldMap1100._abc_impl"><code class="docutils literal notranslate"><span class="pre">FieldMap1100._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_7700.html">field_map_7700 module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_7700.html#lightwin.core.elements.field_maps.field_map_7700.FieldMap7700"><code class="docutils literal notranslate"><span class="pre">FieldMap7700</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_7700.html#lightwin.core.elements.field_maps.field_map_7700.FieldMap7700.__init__"><code class="docutils literal notranslate"><span class="pre">FieldMap7700.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_7700.html#lightwin.core.elements.field_maps.field_map_7700.FieldMap7700._abc_impl"><code class="docutils literal notranslate"><span class="pre">FieldMap7700._abc_impl</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -188,7 +252,7 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.aperture.html">lightwin.core.elements.aperture module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.aperture.html">aperture module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.aperture.html#lightwin.core.elements.aperture.Aperture"><code class="docutils literal notranslate"><span class="pre">Aperture</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.aperture.html#lightwin.core.elements.aperture.Aperture.base_name"><code class="docutils literal notranslate"><span class="pre">Aperture.base_name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.aperture.html#lightwin.core.elements.aperture.Aperture.increment_lattice_idx"><code class="docutils literal notranslate"><span class="pre">Aperture.increment_lattice_idx</span></code></a></li>
@@ -199,7 +263,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.bend.html">lightwin.core.elements.bend module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.bend.html">bend module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.bend.html#lightwin.core.elements.bend.Bend"><code class="docutils literal notranslate"><span class="pre">Bend</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.bend.html#lightwin.core.elements.bend.Bend.base_name"><code class="docutils literal notranslate"><span class="pre">Bend.base_name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.bend.html#lightwin.core.elements.bend.Bend.n_attributes"><code class="docutils literal notranslate"><span class="pre">Bend.n_attributes</span></code></a></li>
@@ -212,7 +276,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.diagnostic.html">lightwin.core.elements.diagnostic module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.diagnostic.html">diagnostic module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.diagnostic.html#lightwin.core.elements.diagnostic.Diagnostic"><code class="docutils literal notranslate"><span class="pre">Diagnostic</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.diagnostic.html#lightwin.core.elements.diagnostic.Diagnostic.base_name"><code class="docutils literal notranslate"><span class="pre">Diagnostic.base_name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.diagnostic.html#lightwin.core.elements.diagnostic.Diagnostic.increment_lattice_idx"><code class="docutils literal notranslate"><span class="pre">Diagnostic.increment_lattice_idx</span></code></a></li>
@@ -395,7 +459,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.drift.html">lightwin.core.elements.drift module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.drift.html">drift module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.drift.html#lightwin.core.elements.drift.Drift"><code class="docutils literal notranslate"><span class="pre">Drift</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.drift.html#lightwin.core.elements.drift.Drift.base_name"><code class="docutils literal notranslate"><span class="pre">Drift.base_name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.drift.html#lightwin.core.elements.drift.Drift.n_attributes"><code class="docutils literal notranslate"><span class="pre">Drift.n_attributes</span></code></a></li>
@@ -405,7 +469,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.dummy.html">lightwin.core.elements.dummy module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.dummy.html">dummy module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.dummy.html#lightwin.core.elements.dummy.DummyElement"><code class="docutils literal notranslate"><span class="pre">DummyElement</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.dummy.html#lightwin.core.elements.dummy.DummyElement.is_implemented"><code class="docutils literal notranslate"><span class="pre">DummyElement.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.dummy.html#lightwin.core.elements.dummy.DummyElement.__init__"><code class="docutils literal notranslate"><span class="pre">DummyElement.__init__()</span></code></a></li>
@@ -414,7 +478,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.edge.html">lightwin.core.elements.edge module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.edge.html">edge module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.edge.html#lightwin.core.elements.edge.Edge"><code class="docutils literal notranslate"><span class="pre">Edge</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.edge.html#lightwin.core.elements.edge.Edge.base_name"><code class="docutils literal notranslate"><span class="pre">Edge.base_name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.edge.html#lightwin.core.elements.edge.Edge.increment_lattice_idx"><code class="docutils literal notranslate"><span class="pre">Edge.increment_lattice_idx</span></code></a></li>
@@ -425,7 +489,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.element.html">lightwin.core.elements.element module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.element.html">element module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element"><code class="docutils literal notranslate"><span class="pre">Element</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element.base_name"><code class="docutils literal notranslate"><span class="pre">Element.base_name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element.increment_elt_idx"><code class="docutils literal notranslate"><span class="pre">Element.increment_elt_idx</span></code></a></li>
@@ -444,7 +508,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.factory.html">lightwin.core.elements.factory module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.factory.html">factory module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.factory.html#lightwin.core.elements.factory.implemented_elements"><code class="docutils literal notranslate"><span class="pre">implemented_elements</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.factory.html#lightwin.core.elements.factory.ElementFactory"><code class="docutils literal notranslate"><span class="pre">ElementFactory</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.factory.html#lightwin.core.elements.factory.ElementFactory.__init__"><code class="docutils literal notranslate"><span class="pre">ElementFactory.__init__()</span></code></a></li>
@@ -455,13 +519,13 @@
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.factory.html#lightwin.core.elements.factory._get_constructor"><code class="docutils literal notranslate"><span class="pre">_get_constructor()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.helper.html">lightwin.core.elements.helper module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.helper.html">helper module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.helper.html#lightwin.core.elements.helper.give_name_to_elements"><code class="docutils literal notranslate"><span class="pre">give_name_to_elements()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.helper.html#lightwin.core.elements.helper.force_a_section_for_every_element"><code class="docutils literal notranslate"><span class="pre">force_a_section_for_every_element()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.helper.html#lightwin.core.elements.helper.force_a_lattice_for_every_element"><code class="docutils literal notranslate"><span class="pre">force_a_lattice_for_every_element()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.quad.html">lightwin.core.elements.quad module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.quad.html">quad module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.quad.html#lightwin.core.elements.quad.Quad"><code class="docutils literal notranslate"><span class="pre">Quad</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.quad.html#lightwin.core.elements.quad.Quad.base_name"><code class="docutils literal notranslate"><span class="pre">Quad.base_name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.quad.html#lightwin.core.elements.quad.Quad.n_attributes"><code class="docutils literal notranslate"><span class="pre">Quad.n_attributes</span></code></a></li>
@@ -471,7 +535,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.solenoid.html">lightwin.core.elements.solenoid module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.solenoid.html">solenoid module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.solenoid.html#lightwin.core.elements.solenoid.Solenoid"><code class="docutils literal notranslate"><span class="pre">Solenoid</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.solenoid.html#lightwin.core.elements.solenoid.Solenoid.base_name"><code class="docutils literal notranslate"><span class="pre">Solenoid.base_name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.solenoid.html#lightwin.core.elements.solenoid.Solenoid.n_attributes"><code class="docutils literal notranslate"><span class="pre">Solenoid.n_attributes</span></code></a></li>
@@ -481,7 +545,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html">lightwin.core.elements.superposed_field_map module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html">superposed_field_map module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html#lightwin.core.elements.superposed_field_map.SuperposedFieldMap"><code class="docutils literal notranslate"><span class="pre">SuperposedFieldMap</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html#lightwin.core.elements.superposed_field_map.SuperposedFieldMap.is_implemented"><code class="docutils literal notranslate"><span class="pre">SuperposedFieldMap.is_implemented</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html#lightwin.core.elements.superposed_field_map.SuperposedFieldMap.n_attributes"><code class="docutils literal notranslate"><span class="pre">SuperposedFieldMap.n_attributes</span></code></a></li>
@@ -491,7 +555,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.thin_steering.html">lightwin.core.elements.thin_steering module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.elements.thin_steering.html">thin_steering module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.elements.thin_steering.html#lightwin.core.elements.thin_steering.ThinSteering"><code class="docutils literal notranslate"><span class="pre">ThinSteering</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.thin_steering.html#lightwin.core.elements.thin_steering.ThinSteering.increment_lattice_idx"><code class="docutils literal notranslate"><span class="pre">ThinSteering.increment_lattice_idx</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.thin_steering.html#lightwin.core.elements.thin_steering.ThinSteering.is_implemented"><code class="docutils literal notranslate"><span class="pre">ThinSteering.is_implemented</span></code></a></li>
@@ -511,14 +575,14 @@
           </div>
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lightwin.core.commands.superpose_map.html" class="btn btn-neutral float-left" title="lightwin.core.commands.superpose_map module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="lightwin.core.elements.field_maps.html" class="btn btn-neutral float-right" title="lightwin.core.elements.field_maps package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lightwin.core.commands.superpose_map.html" class="btn btn-neutral float-left" title="superpose_map module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.core.elements.field_maps.html" class="btn btn-neutral float-right" title="field_maps package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, B. Yee-Rendon.</p>
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
@@ -541,7 +605,7 @@
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b2/lightwin/lightwin.core.elements.html">v0.7.0b2</a></dd>
+         <dd><a href="../../v0.7.0b3/lightwin/lightwin.core.elements.html">v0.7.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>
