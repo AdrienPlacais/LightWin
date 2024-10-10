@@ -1,21 +1,49 @@
 """Test that the files that should exist do exist."""
 
+from pathlib import Path
+from typing import Literal
+
 import pytest
 
-from lightwin.constants import example_dat, example_folder
+from lightwin.constants import (
+    example_config,
+    example_dat,
+    example_folder,
+    example_ini,
+    example_machine_config,
+)
+
+params = [
+    pytest.param(
+        (example_folder, "directory"),
+        id="example_folder",
+    ),
+]
 
 
 @pytest.mark.smoke
 @pytest.mark.implementation
-def test_example_folder_exists() -> None:
-    """Check if the folder where examples are stored is still here."""
-    assert (
-        example_folder.is_dir()
-    ), f"{example_folder = } does not exists anymore."
+@pytest.mark.parametrize(
+    ("file_or_folder", "nature"),
+    [
+        (example_folder, "directory"),
+        (example_config, "file"),
+        (example_dat, "file"),
+        (example_ini, "file"),
+        (example_machine_config, "file"),
+    ],
+)
+def test_example_files_exist(
+    file_or_folder: Path, nature: Literal["directory", "file"]
+) -> None:
+    """Test that all the defined folders and files exist."""
+    match nature:
+        case "directory":
+            meth_name = "is_dir"
+        case "file":
+            meth_name = "is_file"
+        case _:
+            raise ValueError("bad test")
 
-
-@pytest.mark.smoke
-@pytest.mark.implementation
-def test_example_dat_exists() -> None:
-    """Check if the example linac is still here."""
-    assert example_dat.is_file(), f"{example_dat = } does not exists anymore."
+    meth = getattr(file_or_folder, meth_name)
+    assert meth(), f"{file_or_folder} should exist but was not found"
