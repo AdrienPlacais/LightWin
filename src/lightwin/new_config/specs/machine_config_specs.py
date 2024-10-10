@@ -13,7 +13,9 @@ MACHINE_CONFIG_CONFIG = (
     KeyValConfSpec(
         key="noX11_full",
         types=(str, Path),
-        description="Path to the ``TraceWin_noX11`` executable.",
+        description=(
+            "Path to the ``TraceWin_noX11`` or ``TraceWin_GUI`` executable."
+        ),
         default_value="",
         is_mandatory=False,
         is_a_path_that_must_exists=True,
