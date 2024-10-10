@@ -26,13 +26,17 @@ def dict_for_pretty_output(some_kw: dict) -> str:
     return "\n".join(nice)
 
 
-def find_file(toml_folder: Path | None, file: str | Path) -> Path:
+def find_file(
+    toml_folder: Path | None,
+    file: str | Path,
+) -> Path:
     """Look for the given filepath in all possible places, make it absolute.
 
     We sequentially check and return the first valid path:
 
     1. If ``file`` is a ``Path`` object, we consider that the user already
-       set it as he wanted. We check if it exists.
+       set it as he wanted. We check if it exists. If not, we continue the
+       search.
     2. If ``file`` is in ``toml_folder``.
     3. If ``file`` is absolute.
 
@@ -46,13 +50,15 @@ def find_file(toml_folder: Path | None, file: str | Path) -> Path:
     Returns
     -------
     file : pathlib.Path
-        Absolute filepath, which existence has been checked.
+        Absolute filepath, which existence has been checked if
+        ``assert_exists``.
 
     """
     if isinstance(file, Path):
         path = file.resolve().absolute()
         if path.is_file():
             return path
+
     if toml_folder is None:
         msg = (
             "You must provide the location of the toml file to allow for a "
@@ -70,10 +76,9 @@ def find_file(toml_folder: Path | None, file: str | Path) -> Path:
         return path
 
     msg = (
-        f"{file = } was not found. It can be defined relative to the "
-        ".toml (recommended), absolute, or relative to the execution dir"
-        " of the script (not recommended). "
-        f"Provided {toml_folder = }"
+        f"{file = } was not found. It can be defined relative to the .toml "
+        "(recommended), absolute, or relative to the execution dir of the "
+        f"script (not recommended). Provided {toml_folder = }"
     )
     logging.critical(msg)
     raise FileNotFoundError(msg)
