@@ -28,6 +28,8 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
 
+ENVELOPE3D_METHODS = ("RK4",)  #:
+
 
 class Envelope3D(BeamCalculator):
     """A 3D envelope solver."""
