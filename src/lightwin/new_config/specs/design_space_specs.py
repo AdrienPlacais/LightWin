@@ -80,7 +80,7 @@ DESIGN_SPACE_CALCULATED = _DESIGN_SPACE_BASE + (
     ),
 )
 
-DESIGN_SPACE_CALCULATED = _DESIGN_SPACE_BASE + (
+DESIGN_SPACE_FROM_FILE = _DESIGN_SPACE_BASE + (
     KeyValConfSpec(
         key="constraints_filepath",
         types=(str, Path),
@@ -114,3 +114,8 @@ DESIGN_SPACE_CALCULATED = _DESIGN_SPACE_BASE + (
         is_a_path_that_must_exists=True,
     ),
 )
+
+DESIGN_SPACE_CONFIGS = {
+    "calculated": DESIGN_SPACE_CALCULATED,
+    "from_file": DESIGN_SPACE_FROM_FILE,
+}
