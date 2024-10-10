@@ -51,6 +51,9 @@ class KeyValConfSpec:
     action : Literal["store_true", "store_false"] | None = None
         on/off flag, also check the ``argparse`` documentation. Will skip
         testing over type and allowed values.
+    warning_message : str | None, optional
+        If provided, using current key will print a warning with this message.
+        The default is None.
     error_message : str | None, optional
         If provided, using current key will raise an IOError with this error
         message. The default is None.
@@ -65,6 +68,7 @@ class KeyValConfSpec:
     is_mandatory: bool = True
     is_a_path_that_must_exists: bool = False
     action: Literal["store_true", "store_false"] | None = None
+    warning_message: str | None = None
     error_message: str | None = None
 
     def __post_init__(self) -> None:
@@ -74,6 +78,8 @@ class KeyValConfSpec:
 
     def validate(self, toml_value: Any, **kwargs) -> bool:
         """Check that the given ``toml`` line is valid."""
+        if self.warning_message:
+            logging.warning(self.warning_message)
         if self.error_message:
             logging.critical(self.error_message)
             raise IOError(self.error_message)
