@@ -1,4 +1,10 @@
-"""Gather in a single object all the parameters for LW to run."""
+"""Gather in a single object all the parameters for LW to run.
+
+.. note::
+    For now, there a single :class:`FullConfSpec`. But we may create different
+    objects in the future, according to the various types of run.
+
+"""
 
 import logging
 from typing import Any, Literal
@@ -10,16 +16,20 @@ from lightwin.new_config.specs.beam_specs import BEAM_CONFIG
 from lightwin.new_config.specs.files_specs import FILES_CONFIG
 from lightwin.new_config.specs_base_objects import TableConfSpec
 
+BEAM_CALCULATORS_CONFIGS = {
+    "TraceWin": TRACEWIN_CONFIG,
+    # "Envelope1D": ENVELOPE1D_CONFIG,
+    # "Envelope3D": ENVELOPE3D_CONFIG,
+}
+
 
 class FullConfSpec:
-    """Define all the LightWin inputs, their types, allowed values, etc.
+    """Hold all the LightWin inputs, their types, allowed values, etc.
 
     Parameters
     ----------
     MANDATORY_CONFIG_ENTRIES : tuple[str, ...]
-        Entries that you should provide for this config to work.
-    specs : tuple[TableConfSpec, ...]
-        Holds the different tables required by LightWin to run.
+        Entries that you should must for this :class:`FullConfSpec` to work.
 
     """
 
