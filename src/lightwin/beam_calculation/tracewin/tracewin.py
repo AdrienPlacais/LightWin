@@ -50,9 +50,9 @@ class TraceWin(BeamCalculator):
 
     Parameters
     ----------
-    executable : str
+    executable : pathlib.Path
         Path to the TraceWin executable.
-    ini_path : str
+    ini_path : pathlib.Path
         Path to the ``.ini`` TraceWin file.
     base_kwargs : dict[str, str | bool | int | None | float]
         TraceWin optional arguments. Override what is defined in ``.ini``, but
@@ -60,17 +60,13 @@ class TraceWin(BeamCalculator):
         :class:`.SimulationOutput`.
     _tracewin_command : list[str] | None, optional
         Attribute to hold the value of the base command to call TraceWin.
-    id : str
-        Complete name of the solver.
-    out_folder : str
+    out_folder : pathlib.Path | str
         Name of the results folder (not a complete path, just a folder name).
-    load_results : Callable
-        Function to call to get the output results.
-    path_cal : str
+    path_cal : pathlib.Path
         Name of the results folder. Updated at every call of the
         :func:`init_solver_parameters` method, using
         ``Accelerator.accelerator_path`` and ``self.out_folder`` attributes.
-    dat_file :
+    dat_file : pathlib.Path
         Base name for the ``.dat`` file. ??
 
     """
