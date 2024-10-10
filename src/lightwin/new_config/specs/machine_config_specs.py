@@ -1,4 +1,9 @@
-"""Define how :file:`machine_config_file.toml` should be set."""
+"""Define how :file:`machine_config_file.toml` should be set.
+
+.. note::
+    We do not check that the given paths are executable.
+
+"""
 
 from pathlib import Path
 
