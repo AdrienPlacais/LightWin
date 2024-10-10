@@ -14,7 +14,7 @@ from lightwin.new_config.specs_base_objects import TableConfSpec
 class FullConfSpec:
     """Define all the LightWin inputs, their types, allowed values, etc.
 
-    Attributes
+    Parameters
     ----------
     MANDATORY_CONFIG_ENTRIES : tuple[str, ...]
         Entries that you should provide for this config to work.
@@ -28,9 +28,9 @@ class FullConfSpec:
     def __init__(
         self,
         *,
-        beam_table_name: str,
-        files_table_name: str,
-        beam_calculator_table_name: str,
+        beam_table_name: str = "beam",
+        files_table_name: str = "files",
+        beam_calculator_table_name: str = "beam_calculator",
     ) -> None:
         """Define static specifications.
 
