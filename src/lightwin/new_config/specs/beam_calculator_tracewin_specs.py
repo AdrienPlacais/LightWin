@@ -6,6 +6,10 @@
 .. todo::
     Handle the toml_configuration file
 
+- Could implement directly providing ``executable`` to override the
+  ``machine_config_file`` settings.
+
+
 """
 
 from pathlib import Path
@@ -14,13 +18,6 @@ from lightwin.constants import example_ini, example_machine_config
 from lightwin.new_config.specs_base_objects import KeyValConfSpec
 
 TRACEWIN_CONFIG = (
-    KeyValConfSpec(
-        key="tool",
-        types=(str,),
-        description="Name of the tool.",
-        default_value="TraceWin",
-        allowed_values=("TraceWin", "tracewin"),
-    ),
     KeyValConfSpec(
         key="ini_path",
         types=(str, Path),
@@ -42,6 +39,17 @@ TRACEWIN_CONFIG = (
         is_a_path_that_must_exists=True,
     ),
     KeyValConfSpec(
+        key="machine_name",
+        types=(str,),
+        description=(
+            "Name of current machine. Must be a table name in "
+            "``machine_config_file``. By default, do not provide it and let "
+            "LightWin handle this part."
+        ),
+        default_value=None,
+        is_mandatory=False,
+    ),
+    KeyValConfSpec(
         key="partran",
         types=(int, bool),
         description="To activate/deactivate patran tracking.",
@@ -56,11 +64,18 @@ TRACEWIN_CONFIG = (
         default_value="noX11_full",
     ),
     KeyValConfSpec(
+        key="tool",
+        types=(str,),
+        description="Name of the tool.",
+        default_value="TraceWin",
+        allowed_values=("TraceWin", "tracewin"),
+    ),
+    KeyValConfSpec(
         key="upgrade",
         types=(str,),
         description="To update LightWin",
         default_value="",
         is_mandatory=False,
-        error_message="Upgrading TraceWin from LightWin is not recommended.",
+        error_message="Upgrading TraceWin from LightWin is a bad idea.",
     ),
 )
