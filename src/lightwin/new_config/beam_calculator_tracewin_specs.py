@@ -10,12 +10,8 @@
 
 from pathlib import Path
 
+from lightwin.constants import example_ini, example_machine_config
 from lightwin.new_config.config_specs import KeyValConfSpec
-
-default_data = Path("/home/placais/LightWin/data/example/")
-default_ini = default_data / "example.ini"
-default_dat = default_data / "example.dat"
-default_machine_config_file = default_data / "machine_config.toml"
 
 TRACEWIN_CONFIG = (
     KeyValConfSpec(
@@ -29,7 +25,7 @@ TRACEWIN_CONFIG = (
         key="ini_path",
         types=(str, Path),
         description="Path to the ``.ini`` TraceWin file.",
-        default_value=default_ini,
+        default_value=example_ini,
         is_a_path_that_must_exists=True,
     ),
     KeyValConfSpec(
@@ -42,7 +38,7 @@ TRACEWIN_CONFIG = (
         key="machine_config_file",
         types=(str, Path),
         description="Path to a file holding the paths to TW executables",
-        default_value=default_machine_config_file,
+        default_value=example_machine_config,
         is_a_path_that_must_exists=True,
     ),
     KeyValConfSpec(
