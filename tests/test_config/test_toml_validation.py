@@ -1,10 +1,16 @@
 """Ensure that loading and validating ``.toml`` works as expected."""
 
-from pathlib import Path
 from typing import Any
 
 import pytest
 
+from lightwin.constants import (
+    example_config,
+    example_dat,
+    example_folder,
+    example_ini,
+    example_machine_config,
+)
 from lightwin.new_config.config_manager import (
     dict_to_toml,
     load_toml,
@@ -12,9 +18,6 @@ from lightwin.new_config.config_manager import (
 )
 from lightwin.new_config.full_specs import FullConfSpec
 
-DATA_DIR = Path("data", "example")
-CONFIG_PATH = DATA_DIR / "lightwin.toml"
-DAT_PATH = DATA_DIR / "example.dat"
 CONFIG_KEYS = {
     "beam": "beam",
     "files": "files",
@@ -42,7 +45,7 @@ def full_conf_specs() -> FullConfSpec:
 def toml_fulldict_unaltered() -> dict[str, dict[str, Any]]:
     """Load the configuration file without editing or testing it."""
     toml_fulldict = load_toml(
-        CONFIG_PATH, CONFIG_KEYS, warn_mismatch=True, override=None
+        example_config, CONFIG_KEYS, warn_mismatch=True, override=None
     )
     return toml_fulldict
 
@@ -64,7 +67,7 @@ def dummy_beam() -> dict[str, Any]:
 @pytest.fixture(scope="class")
 def dummy_files() -> dict[str, Any]:
     """Generate a default dummy files conf dict."""
-    dummy_files = {"dat_file": DAT_PATH}
+    dummy_files = {"dat_file": example_dat}
     return dummy_files
 
 
@@ -73,8 +76,8 @@ def dummy_beam_calculator_tracewin() -> dict[str, Any]:
     """Generate a default dummy :class:`.TraceWin` conf dict."""
     dummy_tracewin = {
         "tool": "TraceWin",
-        "ini_path": DATA_DIR / "example.ini",
-        "machine_config_file": DATA_DIR / "machine_config.toml",
+        "ini_path": example_ini,
+        "machine_config_file": example_machine_config,
         "partran": 0,
         "simulation_type": "noX11_full",
         "hide": True,
@@ -113,9 +116,11 @@ class TestConfigManager:
     def test_load(self) -> None:
         """Check if toml loading does not throw errors."""
         toml_fulldict = load_toml(
-            CONFIG_PATH, CONFIG_KEYS, warn_mismatch=True, override=None
+            example_config, CONFIG_KEYS, warn_mismatch=True, override=None
         )
-        assert isinstance(toml_fulldict, dict), f"Error loading {CONFIG_PATH}"
+        assert isinstance(
+            toml_fulldict, dict
+        ), f"Error loading {example_config}"
 
     def test_validate(
         self,
@@ -124,8 +129,10 @@ class TestConfigManager:
     ) -> None:
         """Check if loaded toml is valid."""
         assert full_conf_specs.validate(
-            dummy_toml_dict, id_type="configured_object", toml_folder=DATA_DIR
-        ), f"Error validating {CONFIG_PATH}"
+            dummy_toml_dict,
+            id_type="configured_object",
+            toml_folder=example_folder,
+        ), f"Error validating {example_config}"
 
     def test_generate_works(
         self, generated_toml_dict: dict[str, dict[str, Any]]

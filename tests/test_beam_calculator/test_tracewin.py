@@ -9,7 +9,6 @@
 
 """
 
-from pathlib import Path
 from typing import Any
 
 import pytest
@@ -21,12 +20,9 @@ from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import NoFault
-
-DATA_DIR = Path("data", "example")
-TEST_DIR = Path("tests")
-
 
 params = [
     pytest.param((0,)),
@@ -43,7 +39,6 @@ def config(
     out_folder = tmp_path_factory.mktemp("tmp")
     (partran,) = request.param
 
-    config_path = DATA_DIR / "lightwin.toml"
     config_keys = {
         "files": "files",
         "beam_calculator": "generic_tracewin",
@@ -58,7 +53,7 @@ def config(
         },
     }
     my_config = lightwin.config_manager.process_config(
-        config_path, config_keys, warn_mismatch=True, override=override
+        example_config, config_keys, warn_mismatch=True, override=override
     )
     return my_config
 
