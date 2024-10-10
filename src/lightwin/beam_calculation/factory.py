@@ -10,7 +10,7 @@ from lightwin.beam_calculation.envelope_1d.envelope_1d import Envelope1D
 from lightwin.beam_calculation.envelope_3d.envelope_3d import Envelope3D
 from lightwin.beam_calculation.tracewin.tracewin import TraceWin
 
-IMPLEMENTED_BEAM_CALCULATORS = {
+BEAM_CALCULATORS = {
     "Envelope1D": Envelope1D,
     "TraceWin": TraceWin,
     "Envelope3D": Envelope3D,
@@ -85,7 +85,7 @@ class BeamCalculatorsFactory:
 
         Parameters
         ----------
-        beam_calculator_class : ABCMeta
+        beam_calculator_class : abc.ABCMeta
             The specific beam calculator.
 
         Returns
@@ -93,7 +93,7 @@ class BeamCalculatorsFactory:
         BeamCalculator
 
         """
-        beam_calculator_class = IMPLEMENTED_BEAM_CALCULATORS[tool]
+        beam_calculator_class = BEAM_CALCULATORS[tool]
         beam_calculator = beam_calculator_class(
             out_folder=self.out_folders.pop(0),
             default_field_map_folder=self._original_dat_dir,

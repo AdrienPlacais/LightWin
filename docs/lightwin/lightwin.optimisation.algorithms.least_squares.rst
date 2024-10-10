@@ -1,4 +1,4 @@
-lightwin.optimisation.algorithms.least\_squares module
+least\_squares module
 ======================================================
 
 .. automodule:: lightwin.optimisation.algorithms.least_squares

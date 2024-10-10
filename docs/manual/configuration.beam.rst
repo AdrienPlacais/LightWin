@@ -1,7 +1,7 @@
 ``beam`` section (mandatory)
 ****************************
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
 Here we define the main properties of the beam at the entrance of the linac.
 Note that with :class:`.TraceWin`, most of these properties are defined within it's own ``.ini`` file.

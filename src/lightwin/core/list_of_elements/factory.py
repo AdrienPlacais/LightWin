@@ -81,7 +81,7 @@ class ListOfElementsFactory:
         phi_s_definition : str, optional
             Definition for the synchronous phases that will be used. Allowed
             values are in
-            :var:`util.synchronous_phases.SYNCHRONOUS_PHASE_FUNCTIONS`. The
+            :data:`.SYNCHRONOUS_PHASE_FUNCTIONS`. The
             default is ``'historical'``.
 
         """
@@ -114,9 +114,9 @@ class ListOfElementsFactory:
 
         Parameters
         ----------
-        dat_file : Path
+        dat_file : pathlib.Path
             Absolute path to the ``.dat`` file.
-        accelerator_path : Path
+        accelerator_path : pathlib.Path
             Absolute path where results for each :class:`.BeamCalculator` will
             be stored.
         instructions_to_insert : Collection[Instruction], optional
@@ -128,7 +128,7 @@ class ListOfElementsFactory:
         Returns
         -------
         list_of_elements : ListOfElements
-            Contains all the :class:`.Elements` of the linac, as well as the
+            Contains all the :class:`.Element` of the linac, as well as the
             proper particle and beam properties at its entry.
 
         """
@@ -197,7 +197,7 @@ class ListOfElementsFactory:
 
         It creates the proper :class:`.ParticleInitialState` and
         :class:`.BeamParameters` objects. In contrary to
-        :func:`new_list_of_elements`, the :class:`.BeamParameters` must contain
+        :meth:`whole_list_run`, the :class:`.BeamParameters` must contain
         information on the transverse plane if beam propagation is performed
         with :class:`.TraceWin`.
 
@@ -209,7 +209,7 @@ class ListOfElementsFactory:
         simulation_output : SimulationOutput
             Holds the results of the pre-existing list of elements.
         files_from_full_list_of_elements : dict
-            The :attr:`.ListOfElements.files` from the full
+            The `files` attribute of :class:`.ListOfElements` from the full
             :class:`.ListOfElements`.
 
         Returns

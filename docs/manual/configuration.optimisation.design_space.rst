@@ -1,7 +1,7 @@
 ``optimisation.design_space`` section
 *************************************
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
 This section parametrizes how the design space will be set, i.e. what are the variables, their limits and initial values, and what are the constraints and their limits.
 If you have any doubt, know that all these settings are passed down to :meth:`.DesignSpaceFactory.__init__` as ``design_space_kw``.

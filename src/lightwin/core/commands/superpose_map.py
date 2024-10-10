@@ -16,7 +16,7 @@ from lightwin.core.instruction import Instruction
 class SuperposeMap(Command):
     """Command to merge several field maps.
 
-    Attributes
+    Parameters
     ----------
     z_0 : float
         Position at which the next field map should be inserted.
@@ -49,8 +49,8 @@ class SuperposeMap(Command):
         ```
 
         .. warning::
-        Only the first of the ``SUPERPOSE_MAP`` command will have the entire
-        valid range of elements.
+            Only the first of the ``SUPERPOSE_MAP`` command will have the
+            entire valid range of elements.
 
         """
         start = self.idx["dat_idx"]

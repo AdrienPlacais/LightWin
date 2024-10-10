@@ -1,4 +1,4 @@
-lightwin.core.commands.steerer module
+steerer module
 =====================================
 
 .. automodule:: lightwin.core.commands.steerer

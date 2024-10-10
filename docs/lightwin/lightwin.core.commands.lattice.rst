@@ -1,4 +1,4 @@
-lightwin.core.commands.lattice module
+lattice module
 =====================================
 
 .. automodule:: lightwin.core.commands.lattice

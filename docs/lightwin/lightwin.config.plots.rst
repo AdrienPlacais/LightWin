@@ -1,4 +1,4 @@
-lightwin.config.plots module
+plots module
 ============================
 
 .. automodule:: lightwin.config.plots

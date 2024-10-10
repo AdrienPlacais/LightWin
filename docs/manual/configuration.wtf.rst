@@ -1,7 +1,7 @@
 ``wtf`` section
 ***************
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
 ``wtf`` stands for *what to fit*.
 This section parametrizes the failed cavities, as well as how they are fixed.
@@ -13,7 +13,7 @@ This section parametrizes the failed cavities, as well as how they are fixed.
 
 Each ``strategy`` entry requires specific additional arguments.
 As an example, with the ``k out of n`` method, you need to give LightWin ``k``, the number of compensating cavities per failed cavity.
-The specific documentation can be found in :mod:`failures.strategy`.
+The specific documentation can be found in :mod:`.failures.strategy`.
 
 You can type the index of failed cavities on several lines if you want to study several fault scenarios at once.
 
@@ -22,7 +22,7 @@ You can type the index of failed cavities on several lines if you want to study 
 .. code-block:: toml
 
    # Indexes are cavity indexes
-   idx = cavity
+   idx = "cavity"
    failed = [
       [0, 1],       # First simulation first cryomodule is down
       [0],          # Second simulation only first cavity is down

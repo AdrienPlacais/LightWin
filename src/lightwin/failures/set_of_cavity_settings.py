@@ -85,7 +85,7 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
 
         We give each cavity settings from ``set_of_cavity_settings`` if they
         are listed in this object. If they are not, we give them their default
-        :class:`.CavitySettings` (:attr:`.FieldMap.cavity_settings` attribute).
+        :class:`.CavitySettings` (`FieldMap.cavity_settings` attribute).
         This method is used to generate :class:`.SimulationOutput` where all
         the cavity settings are explicitly defined.
 
@@ -141,8 +141,8 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
     def re_set_elements_index_to_absolute_value(self) -> None:
         """Update cavities index to properly set `ele[n][v]` commands.
 
-        When switching from a sub-:class:`ListOfElements` during the
-        optimisation process to the full :class:`ListOfElements` after the
+        When switching from a sub-:class:`.ListOfElements` during the
+        optimisation process to the full :class:`.ListOfElements` after the
         optimisation, we must update index ``n`` in the ``ele[n][v]]`` command.
 
         """
@@ -151,7 +151,7 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
             setting.index = absolute_index
 
     def _order(self) -> tuple[Sequence[FieldMap], Sequence[CavitySettings]]:
-        """Return all the :class:`Element` in ``self`` in good order."""
+        """Return all the :class:`.Element` in ``self`` in good order."""
         ordered_cav = sorted(self.keys(), key=lambda cav: cav.idx["elt_idx"])
         ordered_settings = [self[cav] for cav in ordered_cav]
         return ordered_cav, ordered_settings
@@ -175,7 +175,7 @@ def _settings_getter(
         Cavity for which you want settings.
     set_of_cavity_settings : SetOfCavitySettings
         Different cavity settings (a priori given by an
-        :class:`OptimisationAlgorithm`), or an empty dict.
+        :class:`.OptimisationAlgorithm`), or an empty dict.
     instantiate_new : bool, optional
         To force the creation of a new object; will allow to keep the original
         :class:`.CavitySettings` unaltered.

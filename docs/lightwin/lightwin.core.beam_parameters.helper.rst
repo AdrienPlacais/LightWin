@@ -1,4 +1,4 @@
-lightwin.core.beam\_parameters.helper module
+helper module
 ============================================
 
 .. automodule:: lightwin.core.beam_parameters.helper

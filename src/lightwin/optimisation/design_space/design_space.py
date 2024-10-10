@@ -47,11 +47,11 @@ class DesignSpace:
         ----------
         elements_names : Sequence[str]
             Name of the elements with variables and constraints.
-        filepath_variables : Path
+        filepath_variables : pathlib.Path
             Path to the ``variables.csv`` file.
         variables_names : Sequence[str]
             Name of the variables to create.
-        filepath_constraints : Path | None, optional
+        filepath_constraints : pathlib.Path | None, optional
             Path to the ``constraints.csv`` file. The default is None, in which
             case no constraint is created.
         constraints_names : Sequence[str] | None, optional
@@ -62,7 +62,7 @@ class DesignSpace:
 
         Returns
         -------
-        cls
+        Self
 
         """
         variables = _from_file(
@@ -144,9 +144,9 @@ class DesignSpace:
 
         Parameters
         ----------
-        basepath : Path
+        basepath : pathlib.Path
             Folder where the files will be stored.
-        variables_filename, constraints_filename : Path | str, optional
+        variables_filename, constraints_filename : pathlib.Path | str, optional
             Name of the output files without extension.
         overwrite : bool, optional
             To overwrite an existing file with the same name or not. The
@@ -194,7 +194,7 @@ class DesignSpace:
         ----------
         parameters : list[DesignSpaceParameter]
             All the defined parameters.
-        filepath : Path
+        filepath : pathlib.Path
             Where file will be stored.
         delimiter : str
             Delimiter between two columns. The default is ','.
@@ -352,9 +352,9 @@ def _from_file(
 
     Parameters
     ----------
-    parameter_class : {type[Variable], type[Constraint]}
+    parameter_class : type[Variable] | type[Constraint]
         Object which ``from_pd_series`` method will be called.
-    filepath : Path
+    filepath : pathlib.Path
         Path to the ``.csv``.
     elements_names : Sequence[str]
         Name of the elements.

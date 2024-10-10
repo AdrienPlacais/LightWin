@@ -1,4 +1,4 @@
-lightwin.core.elements.field\_maps.cavity\_settings\_factory module
+cavity\_settings\_factory module
 ===================================================================
 
 .. automodule:: lightwin.core.elements.field_maps.cavity_settings_factory

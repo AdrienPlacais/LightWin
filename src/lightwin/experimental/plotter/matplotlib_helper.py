@@ -190,7 +190,7 @@ def create_fig_if_not_exists(
     title : str, optional
         Title of the figure. The default is an empty string. It will not
         override a pre-existing title.
-    sharex : boolean, optional
+    sharex : bool, optional
         If x axis should be shared. The default is False.
     num : int, optional
         Fig number. The default is 1.

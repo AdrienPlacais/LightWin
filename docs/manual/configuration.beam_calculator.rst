@@ -1,7 +1,9 @@
+.. _BeamCalculator-configuration-help-page:
+
 ``beam_calculator`` section (mandatory)
 ***************************************
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
 
 .. csv-table::
@@ -16,7 +18,7 @@ If the desired :class:`.BeamCalculator` is :class:`.Envelope1D`:
    :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
-Note that :class:`Envelope3D` takes the same configuration entries, except ``flag_cython`` (not implemented yet) and ``method`` that must be ``'RK4'`` (``'leapgrog'`` not implemented yet).
+Note that :class:`.Envelope3D` takes the same configuration entries, except ``flag_cython`` (not implemented yet) and ``method`` that must be ``'RK4'`` (``'leapfrog'`` not implemented yet).
 
 If the desired :class:`.BeamCalculator` is :class:`.TraceWin`:
 
@@ -38,4 +40,3 @@ See `data/examples/machine_config_file.toml` for an example.
 The ``[beam_calculator_post]`` follows the same format.
 It is used to store a second :class:`.BeamCalculator`.
 This is mainly useful for defining a more precise -- but more time-consuming -- beam dynamics tool, for example to check your compensation settings.
-

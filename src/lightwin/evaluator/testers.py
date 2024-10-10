@@ -1,6 +1,6 @@
 """Regroup the functions dedicated to testing data.
 
-They are used by :class:`.SimulationOutputEvaluator'. They all take a value and
+They are used by :class:`.SimulationOutputEvaluator`. They all take a value and
 limits/upper or lower or objective value as arguments, and return a boolean.
 
 """
@@ -43,5 +43,5 @@ def value_is(
     tol: float = 1e-10,
     **kwargs: bool,
 ) -> bool:
-    """Test if the value equals ``objective_value`."""
+    """Test if the value equals `objective_value`."""
     return np.all(np.abs(treated_value - objective_value) < tol)

@@ -1,4 +1,4 @@
-lightwin.core.list\_of\_elements package
+list\_of\_elements package
 ========================================
 
 .. automodule:: lightwin.core.list_of_elements
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.core.list_of_elements.factory
    lightwin.core.list_of_elements.helper

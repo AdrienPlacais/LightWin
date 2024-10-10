@@ -2,22 +2,25 @@
 
 import logging
 from abc import ABC, abstractmethod
-from typing import Iterable, Sequence
+from typing import Iterable, Literal, Sequence
 
 import numpy as np
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from lightwin.core.elements.element import Element
-from lightwin.util import converters
-
-from .beam_parameters import BeamParameters
-from .initial_beam_parameters import InitialBeamParameters
-from .phase_space.initial_phase_space_beam_parameters import (
+from lightwin.core.beam_parameters.beam_parameters import BeamParameters
+from lightwin.core.beam_parameters.initial_beam_parameters import (
+    InitialBeamParameters,
+)
+from lightwin.core.beam_parameters.phase_space.initial_phase_space_beam_parameters import (
     InitialPhaseSpaceBeamParameters,
 )
-from .phase_space.phase_space_beam_parameters import PhaseSpaceBeamParameters
+from lightwin.core.beam_parameters.phase_space.phase_space_beam_parameters import (
+    PhaseSpaceBeamParameters,
+)
+from lightwin.core.elements.element import Element
+from lightwin.util import converters
 
 
 # Subclassed for every BeamCalculator
@@ -88,8 +91,8 @@ class BeamParametersFactory(ABC):
     def _set_from_other_phase_space(
         self,
         beam_parameters: BeamParameters,
-        other_phase_space_name: str,
-        phase_space_names: Sequence[str],
+        other_phase_space_name: Literal["zdelta"],
+        phase_space_names: Sequence[Literal["phiw", "z"]],
         gamma_kin: np.ndarray,
         beta_kin: np.ndarray,
     ) -> None:
@@ -99,14 +102,14 @@ class BeamParametersFactory(ABC):
         ----------
         beam_parameters : BeamParameters
             Object holding the beam parameters in different phase spaces.
-        other_phase_space_name : {'zdelta'}
+        other_phase_space_name : Literal["zdelta"]
             Name of the phase space from which the new phase space will be
             initialized.
-        phase_space_names : Sequence[{'phiw', 'z'}]
+        phase_space_names : Sequence[Literal["phiw", "z"]]
             Name of the phase spaces that will be created.
-        gamma_kin : np.ndarray
+        gamma_kin : numpy.ndarray
             Lorentz gamma factor.
-        beta_kin : np.ndarray
+        beta_kin : numpy.ndarray
             Lorentz beta factor.
 
         """
@@ -161,11 +164,11 @@ class BeamParametersFactory(ABC):
             Object holding the different phase spaces.
         phase_space_names : Sequence[str]
             Names of the phase spaces to initialize.
-        transfer_matrices : Sequence[np.ndarray]
+        transfer_matrices : Sequence[numpy.ndarray]
             Transfer matrix corresponding to each phase space.
-        gamma_kin : np.ndarray
+        gamma_kin : numpy.ndarray
             Lorentz gamma factor.
-        beta_kin : np.ndarray
+        beta_kin : numpy.ndarray
             Lorentz beta factor.
 
         """
@@ -236,7 +239,6 @@ class InitialBeamParametersFactory(ABC):
     .. todo::
         Remove the ``is_3d``, ``is_multipart`` as I always create the same
         object with ``True``, ``True``.
-        Also :meth:`self._determine_phase_spaces` is useless.
 
     """
 
@@ -264,7 +266,7 @@ class InitialBeamParametersFactory(ABC):
 
         Parameters
         ----------
-        sigma_in : np.ndarray
+        sigma_in : numpy.ndarray
             :math:`\sigma` beam matrix.
         w_kin : float
             Kinetic energy in MeV.
@@ -394,17 +396,17 @@ class InitialBeamParametersFactory(ABC):
             dict that can be passed to the `get` method and that will return
             the data at the beginning of the linac portion.
         skip_missing_phase_spaces : bool
-            To handle when a phase space from :var:`self.phase_spaces` is not
-            defined in ``original_beam_parameters``, and is therefore not
+            To handle when a phase space from ``phase_spaces`` from ``self`` is
+            not defined in ``original_beam_parameters``, and is therefore not
             initializable. If True, we just skip it. If False and such a case
             happens, an ``AttributeError`` will be raised.
 
         Returns
         -------
-        initial_phase_spaces_kw : dict[str, dict[str, float | np.ndarray]]
+        initial_phase_spaces_kw : dict[str, dict[str, float | numpy.ndarray]]
             Keys are the name of the phase spaces.
             The values are other dictionaries, which keys-values are
-            :class:`.PhaseSpaceInitialBeamParameters` attributes.
+            :class:`.InitialPhaseSpaceBeamParameters` attributes.
 
         """
         args = (
@@ -455,8 +457,8 @@ class InitialBeamParametersFactory(ABC):
     def _set_from_other_phase_space(
         self,
         initial_beam_parameters: InitialBeamParameters,
-        other_phase_space_name: str,
-        phase_space_names: Sequence[str],
+        other_phase_space_name: Literal["zdelta"],
+        phase_space_names: Sequence[Literal["phiw", "z"]],
     ) -> None:
         """Instantiate a phase space from another one.
 
@@ -464,10 +466,10 @@ class InitialBeamParametersFactory(ABC):
         ----------
         initial_beam_parameters : InitialBeamParameters
             Object holding the beam parameters in different phase spaces.
-        other_phase_space_name : {'zdelta'}
+        other_phase_space_name : Literal["zdelta"]
             Name of the phase space from which the new phase space will be
             initialized.
-        phase_space_names : Sequence[{'phiw', 'z'}]
+        phase_space_names : Sequence[Literal["phiw", "z"]]
             Name of the phase spaces that will be created.
         gamma_kin : float
             Lorentz gamma factor.

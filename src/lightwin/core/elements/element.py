@@ -23,7 +23,7 @@ from lightwin.util.helper import recursive_getter, recursive_items
 class Element(Instruction):
     """Generic element.
 
-    Attributes
+    Parameters
     ----------
     base_name : str, optional
         Short name for the element according to TraceWin. Should be overriden.
@@ -59,7 +59,7 @@ class Element(Instruction):
         line : list[str]
             A line of the ``.dat`` file. If the element was given a name, it
             must not appear in ``line`` but rather in ``name``. First
-            element of the list must be in :data:`.IMPLEMENTED_ELEMENTS`.
+            element of the list must be in :data:`.implemented_elements`.
         dat_idx : int
             Position in the ``.dat`` file.
         name : str | None, optional
@@ -145,7 +145,7 @@ class Element(Instruction):
         return tuple(out)
 
     def keep_rf_field(self, *args, **kwargs) -> None:
-        """Save data calculated by :func:`BeamCalculator.run_with_this`.
+        """Save data calculated by :meth:`.BeamCalculator.run_with_this`.
 
         .. deprecated:: 0.6.16
             Prefer :meth:`keep_cavity_settings`
@@ -158,7 +158,7 @@ class Element(Instruction):
         self,
         cavity_settings: CavitySettings,
     ) -> None:
-        """Save data calculated by :func:`BeamCalculator.run_with_this`."""
+        """Save data calculated by :meth:`.BeamCalculator.run_with_this`."""
         raise NotImplementedError("Please override this method.")
 
     @property

@@ -3,7 +3,7 @@
 Units and conventions
 =====================
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
 .. todo::
    Consistency between font size of normal text and math text. Not aesthetic when I have text and units side to side.
@@ -15,7 +15,7 @@ Units and conventions
 
 Beam parameters
 ***************
-The beam parameters are defined in :mod:`core.beam_parameters` and stored in the :class:`.BeamParameters` object.
+The beam parameters are defined in :mod:`beam_parameters<lightwin.core.beam_parameters.beam_parameters>` and stored in the :class:`.BeamParameters` object.
 We use the same units and conventions as TraceWin.
 
 RMS emittances
@@ -27,7 +27,7 @@ RMS emittances
     :header-rows: 1
 
 .. warning::
-   In TraceWin's output files ``partran.out`` and ``tracewin.out``, ``eps_zdelta`` is expressed in :math:`\pi\mathrm{.mm.mrad}`, not in :math:`\pi\mathrm{mm.\%}`!
+   In TraceWin's output files ``partran.out`` and ``tracewin.out``, ``eps_zdelta`` is expressed in :unit:`\\pi.mm.mrad`, not in :unit:`\\pi.mm.\\%`!
    The conversion is: :math:`1\pi\mathrm{.mm.mrad} = 10\pi\mathrm{.mm.\%}`
 
 Twiss
@@ -59,5 +59,5 @@ Envelopes
 
 :math:`\sigma` beam matrix
 --------------------------
-We save this matrix in SI units, *i.e.* in :math:`\mathrm{m}` and :math:`\mathrm{rad}`.
-When given in the ``.ini`` configuration file, it must also be in SI units.
+We save this matrix in SI units, *i.e.* in :unit:`m` and :unit:`rad`.
+When given in the ``.toml`` configuration file, it must also be in SI units.

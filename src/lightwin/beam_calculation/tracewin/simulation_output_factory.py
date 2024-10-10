@@ -77,7 +77,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         ----------
         elts : ListOfElements
             Contains all elements or only a fraction or all the elements.
-        path_cal : Path
+        path_cal : pathlib.Path
             Path to results folder.
         exception : bool
             Indicates if the run was unsuccessful or not.
@@ -86,7 +86,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         -------
         simulation_output : SimulationOutput
             Holds all relatable data in a consistent way between the different
-            :class:`BeamCalculator` objects.
+            :class:`.BeamCalculator` objects.
 
         """
         if exception:
@@ -180,18 +180,17 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         n_elts: int,
         filename: Path = Path("Cav_set_point_res.dat"),
     ) -> dict[str, list[float | None]]:
-        """
-        Load and format a dict containing v_cav and phi_s.
+        """Load and format a dict containing v_cav and phi_s.
 
-        It has the same format as :class:`Envelope1D` solver format.
+        It has the same format as :class:`.Envelope1D` solver format.
 
         Parameters
         ----------
-        path_cal : Path
+        path_cal : pathlib.Path
             Path to the folder where the cavity parameters file is stored.
         n_elts : int
             Number of elements under study.
-        filename : Path, optional
+        filename : pathlib.Path, optional
             The name of the cavity parameters file produced by TraceWin. The
             default is Path('Cav_set_point_res.dat').
 
@@ -231,25 +230,24 @@ def _remove_invalid_values(
 def _load_results_generic(
     filename: Path, path_cal: Path
 ) -> dict[str, np.ndarray]:
-    """
-    Load the TraceWin results.
+    """Load the TraceWin results.
 
     This function is not called directly. Instead, every instance of
-    :class:`TraceWin` object has a :func:`load_results` method which calls this
+    :class:`.TraceWin` object has a `load_results` method which calls this
     function with a default ``filename`` argument.
     The value of ``filename`` depends on the TraceWin simulation that was run:
     multiparticle or envelope.
 
     Parameters
     ----------
-    filename : Path
+    filename : pathlib.Path
         Results file produced by TraceWin.
-    path_cal : Path
+    path_cal : pathlib.Path
         Folder where the results file is located.
 
     Returns
     -------
-    results : dict[str, np.ndarray]
+    results : dict[str, numpy.ndarray]
         Dictionary containing the raw outputs from TraceWin.
 
     """
@@ -282,12 +280,12 @@ def _set_energy_related_results(
 
     Parameters
     ----------
-    results : dict[str, np.ndarray]
+    results : dict[str, numpy.ndarray]
         Dictionary holding the TraceWin results.
 
     Returns
     -------
-    results : dict[str, np.ndarray]
+    results : dict[str, numpy.ndarray]
         Same as input, but with ``gamma``, ``w_kin``, ``beta`` keys defined.
 
     """
@@ -305,7 +303,7 @@ def _set_phase_related_results(
     """
     Compute the phases, pos, frequencies.
 
-    Also shift position and phase if :class:`ListOfElements` under study does
+    Also shift position and phase if :class:`.ListOfElements` under study does
     not start at the beginning of the linac.
 
     TraceWin always starts with ``z=0`` and ``phi_abs=0``, even when we are not
@@ -313,7 +311,7 @@ def _set_phase_related_results(
 
     Parameters
     ----------
-    results : dict[str, np.ndarray]
+    results : dict[str, numpy.ndarray]
         Dictionary holding the TraceWin results.
     z_in : float
         Absolute position in the linac of the beginning of the linac portion
@@ -324,11 +322,11 @@ def _set_phase_related_results(
 
     Returns
     -------
-    results : dict[str, np.ndarray]
+    results : dict[str, numpy.ndarray]
         Same as input, but with ``lambda`` and ``phi_abs`` keys defined.
         ``phi_abs``
         and ``z(m)`` keys are modified in order to be 0. at the beginning of
-        the linac, not at the beginning of the :class:`ListOfElements` under
+        the linac, not at the beginning of the :class:`.ListOfElements` under
         study.
 
     """
@@ -432,14 +430,14 @@ def _load_cavity_parameters(
 
     Parameters
     ----------
-    path_cal : Path
+    path_cal : pathlib.Path
         Path to the folder where the cavity parameters file is stored.
-    filename : Path
+    filename : pathlib.Path
         The name of the cavity parameters file produced by TraceWin.
 
     Returns
     -------
-    cavity_param : dict[float, np.ndarray]
+    cavity_param : dict[float, numpy.ndarray]
         Contains the cavity parameters.
 
     """

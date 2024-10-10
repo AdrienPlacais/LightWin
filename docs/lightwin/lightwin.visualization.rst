@@ -1,4 +1,4 @@
-lightwin.visualization package
+visualization package
 ==============================
 
 .. automodule:: lightwin.visualization
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.visualization.anim
    lightwin.visualization.plot

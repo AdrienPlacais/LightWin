@@ -1,6 +1,6 @@
 """Define a function to generate a :class:`.BeamParameters` for TraceWin."""
 
-from typing import Callable
+from typing import Callable, Literal
 
 import numpy as np
 
@@ -89,7 +89,7 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
 
     def _extract_phase_space_data_for_sigma(
         self,
-        phase_space_name: str,
+        phase_space_name: Literal["x", "y", "zdelta"],
         results: dict[str, np.ndarray],
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         r"""
@@ -97,21 +97,21 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
 
         Parameters
         ----------
-        phase_space_name : {'x', 'y', 'zdelta'}
+        phase_space_name : Literal["x", "y", "zdelta"]
             Name of a single phase space.
-        results : dict[str, np.ndarray]
+        results : dict[str, numpy.ndarray]
             Results dictionary, which keys are ``tracewin.out`` or
             ``partran1.out`` headers and which values are corresponding data.
 
         Returns
         -------
-        sigma_00 : np.ndarray
+        sigma_00 : numpy.ndarray
             ``(n, )`` array containing top-left component of the :math:`\sigma`
             beam matrix.
-        sigma_01 : np.ndarray
+        sigma_01 : numpy.ndarray
             ``(n, )`` array containing top-right component of the
             :math:`\sigma` beam matrix.
-        eps_normalized : np.ndarray
+        eps_normalized : numpy.ndarray
             ``(n, )`` array of normalized emittance.
 
         """
@@ -129,7 +129,7 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
 
     def _extract_emittance_for_99percent(
         self,
-        phase_space_name: str,
+        phase_space_name: Literal["x99", "y99", "phiw99"],
         results: dict[str, np.ndarray],
     ) -> np.ndarray:
         r"""
@@ -140,15 +140,15 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
 
         Parameters
         ----------
-        phase_space_name : {'x99', 'y99', 'phiw99'}
+        phase_space_name : Literal["x99", "y99", "phiw99"]
             Name of a single phase space.
-        results : dict[str, np.ndarray]
+        results : dict[str, numpy.ndarray]
             Results dictionary, which keys are ``tracewin.out`` or
             ``partran1.out`` headers and which values are corresponding data.
 
         Returns
         -------
-        eps : np.ndarray
+        eps : numpy.ndarray
             99% emittance in the desired phase space.
 
         """

@@ -1,5 +1,7 @@
 """Define a field map with 1D rf electro-magnetic field."""
 
+from typing import Literal
+
 from lightwin.core.elements.field_maps.field_map import FieldMap
 
 
@@ -17,7 +19,13 @@ class FieldMap1100(FieldMap):
 
     def to_line(
         self,
-        which_phase: str = "phi_0_rel",
+        which_phase: Literal[
+            "phi_0_abs",
+            "phi_0_rel",
+            "phi_s",
+            "as_in_settings",
+            "as_in_original_dat",
+        ] = "phi_0_rel",
         *args,
         inplace: bool = False,
         **kwargs,
@@ -26,12 +34,12 @@ class FieldMap1100(FieldMap):
 
         Parameters
         ----------
-        which_phase : {'phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_settings',
-                \ 'as_in_original_dat'}
-            Which phase should be putted in the output ``.dat``.
+        which_phase : Literal["phi_0_abs", "phi_0_rel", "phi_s", \
+                "as_in_settings", "as_in_original_dat"]
+            Which phase should be put in the output ``.dat``.
         inplace : bool, optional
-            To modify or not the :attr:`.Element` inplace. If False, we return
-            a modified copy. The default is False.
+            To modify the :class:`.Element` inplace. The default is False, in
+            which case, we return a modified copy.
 
         Returns
         -------

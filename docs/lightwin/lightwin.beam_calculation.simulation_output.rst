@@ -1,4 +1,4 @@
-lightwin.beam\_calculation.simulation\_output package
+simulation\_output package
 =====================================================
 
 .. automodule:: lightwin.beam_calculation.simulation_output
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.beam_calculation.simulation_output.factory
    lightwin.beam_calculation.simulation_output.simulation_output

@@ -10,10 +10,11 @@ Welcome to LightWin's documentation!
 ====================================
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
    :caption: LightWin
    :titlesonly:
    :glob:
+   :includehidden:
 
    manual/installation
    manual/usage
@@ -21,7 +22,8 @@ Welcome to LightWin's documentation!
    manual/configuration
    manual/units
    Utility scripts <manual/scripts>
-   API Reference <modules>
+   manual/bibliography
+   API Reference <lightwin/lightwin>
    manual/examples
 
 .. todolist::

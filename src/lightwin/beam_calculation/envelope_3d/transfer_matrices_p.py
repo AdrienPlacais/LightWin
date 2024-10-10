@@ -67,7 +67,7 @@ def drift(
     -------
     transfer_matrix: np.ndarray
         (n_steps, 6, 6) array containing the transfer matrices.
-    gamma_phi : np.ndarray
+    gamma_phi : numpy.ndarray
         (n_steps, 2) with Lorentz gamma in first column and relative phase in
         second column.
     itg_field : None
@@ -121,7 +121,7 @@ def quad(
     -------
     transfer_matrix: np.ndarray
         (1, 6, 6) array containing the transfer matrices.
-    gamma_phi : np.ndarray
+    gamma_phi : numpy.ndarray
         (1, 2) with Lorentz gamma in first column and relative phase in
         second column.
     itg_field : None
@@ -231,12 +231,12 @@ def field_map_rk4(
         ----------
         z : float
             Position where variation is calculated.
-        u : np.ndarray
+        u : numpy.ndarray
             First component is gamma. Second is phase in rad.
 
         Return
         ------
-        v : np.ndarray
+        v : numpy.ndarray
             First component is delta gamma / delta z in MeV / m.
             Second is delta phase / delta_z in rad / m.
 
@@ -311,7 +311,7 @@ def thin_lense(
         gamma at entrance of first drift.
     gamma_out : float
         gamma at exit of first drift.
-    gamma_phi_m : np.ndarray
+    gamma_phi_m : numpy.ndarray
         gamma and phase at the thin acceleration drift.
     half_dz : float
         Half a spatial step in m.
@@ -326,7 +326,7 @@ def thin_lense(
 
     Return
     ------
-    transfer_matrix : np.ndarray
+    transfer_matrix : numpy.ndarray
         Transfer matrix of the thin lense.
 
     """

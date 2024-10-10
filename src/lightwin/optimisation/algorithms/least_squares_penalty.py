@@ -1,4 +1,4 @@
-"""Define a variation of :class:`LeastSquares`.
+"""Define a variation of :class:`.LeastSquares`.
 
 It is not intended to be used with ``phi_s fit``. Approach is here to make the
 residues grow when the constraints are not respected.
@@ -18,7 +18,7 @@ from lightwin.optimisation.algorithms.least_squares import LeastSquares
 class LeastSquaresPenalty(LeastSquares):
     """A least-squares method, with a penalty function to consider constraints.
 
-    Everything is inherited from :class:`LeastSquares`.
+    Everything is inherited from :class:`.LeastSquares`.
 
     """
 

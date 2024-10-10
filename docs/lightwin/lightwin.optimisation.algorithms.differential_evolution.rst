@@ -1,4 +1,4 @@
-lightwin.optimisation.algorithms.differential\_evolution module
+differential\_evolution module
 ===============================================================
 
 .. automodule:: lightwin.optimisation.algorithms.differential_evolution

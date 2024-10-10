@@ -1,4 +1,4 @@
-lightwin.optimisation.algorithms.nsga module
+nsga module
 ============================================
 
 .. automodule:: lightwin.optimisation.algorithms.nsga

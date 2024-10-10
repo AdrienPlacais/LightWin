@@ -1,4 +1,4 @@
-lightwin.beam\_calculation.envelope\_3d package
+envelope\_3d package
 ===============================================
 
 .. automodule:: lightwin.beam_calculation.envelope_3d
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.beam_calculation.envelope_3d.beam_parameters_factory
    lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters

@@ -37,9 +37,9 @@ def load_dat_file(
 
     Parameters
     ----------
-    dat_path : Path
+    dat_path : pathlib.Path
         Filepath to the ``.dat`` file, as understood by TraceWin.
-    keep : {"none", "comments", "empty lines", "all"}, optional
+    keep : Literal["none", "comments", "empty lines", "all"], optional
         To determine which un-necessary lines in the dat file should be kept.
         The default is `'none'`.
     instructions_to_insert : Collection[Instruction], optional
@@ -151,7 +151,7 @@ def results(path: Path, prop: str) -> np.ndarray:
 
     Parameters
     ----------
-    path : Path
+    path : pathlib.Path
         Path to results file. It must be saved from TraceWin:
         ``Data`` > ``Save table to file``.
     prop : str
@@ -159,7 +159,7 @@ def results(path: Path, prop: str) -> np.ndarray:
 
     Returns
     -------
-    data_ref: numpy array
+    data_ref : numpy.ndarray
         Array containing the desired property.
 
     """
@@ -195,7 +195,7 @@ def electric_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
 
     Parameters
     ----------
-    path : Path
+    path : pathlib.Path
         The path to the ``.edz`` file to load.
 
     Returns
@@ -208,7 +208,7 @@ def electric_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
         Electric field normalisation factor. It is different from k_e (6th
         argument of the FIELD_MAP command). Electric fields are normalised by
         k_e/norm, hence norm should be unity by default.
-    f_z : np.ndarray
+    f_z : numpy.ndarray
         Array of electric field in MV/m.
     n_cell : int
         Number of cells in the cavity.

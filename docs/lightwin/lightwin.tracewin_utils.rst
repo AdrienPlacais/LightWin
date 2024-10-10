@@ -1,4 +1,4 @@
-lightwin.tracewin\_utils package
+tracewin\_utils package
 ================================
 
 .. automodule:: lightwin.tracewin_utils
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.tracewin_utils.dat_files
    lightwin.tracewin_utils.electromagnetic_fields

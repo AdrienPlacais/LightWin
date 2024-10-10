@@ -1,8 +1,8 @@
 """Store cavity settings that can change during an optimisation.
 
 .. note::
-    As for now, :class:`.FieldMap` is the only object to have its properties in
-    a dedicated object.
+    As for now, :class:`.FieldMap` is the only :class:`.Element` to have its
+    properties in a dedicated object.
 
 .. todo::
     Similar to synchronous phase, allow for V_cav to be "master" instead of
@@ -10,7 +10,7 @@
 
 See Also
 --------
-NewRfField
+:class:`.NewRfField`
 
 """
 
@@ -97,7 +97,7 @@ class CavitySettings:
             Name of the phase used for reference. When a particle enters the
             cavity, this is the phase that is not recomputed.
         status : STATUS_T
-            A value in :var:`ALLOWED_STATUS`.
+            A value in :data:`ALLOWED_STATUS`.
         freq_bunch_mhz : float
             Bunch frequency in MHz.
         freq_cavity_mhz : float | None, optional
@@ -220,10 +220,10 @@ class CavitySettings:
             New field amplitude.
         phi : float
             New reference phase. Its nature is defined by ``reference``.
-        status : {"compensate (in progress)", "compensate (ok)", "compensate \
-                (not ok)"}
+        status : Literal["compensate (in progress)", "compensate (ok)", \
+                "compensate (not ok)"]
             Status of the created settings.
-        reference : {"phi_0_rel", "phi_0_abs", "phi_s"}
+        reference : Literal["phi_0_rel", "phi_0_abs", "phi_s"]
             The phase used as a reference.
 
         Returns
@@ -578,12 +578,13 @@ class CavitySettings:
         """Set the generic methods to compute beam propagation, cavity params.
 
         This function is called within two contexts:
-            - When initializing the :class:`.BeamCalculator` specific
-            parameters (:class:`.ElementBeamCalculatorParameters`).
-            - When re-initalizing the :class:`.ElementBeamCalculatorParameters`
-            because the ``status`` of the cavity changed, and in particular
-            when it switches to ``'failed'``. In this case, the ``phi_s_func``
-            is not altered.
+
+        - When initializing the :class:`.BeamCalculator` specific parameters
+          (:class:`.ElementBeamCalculatorParameters`).
+        - When re-initalizing the :class:`.ElementBeamCalculatorParameters`
+          because the ``status`` of the cavity changed, and in particular when
+          it switches to ``'failed'``. In this case, the ``phi_s_func`` is not
+          altered.
 
         Parameters
         ----------
@@ -632,7 +633,7 @@ class CavitySettings:
             will compute propagation of the beam in the :class:`.FieldMap`.
             Note that you should check that ``phi_0_rel`` key should be removed
             in your :class:`.BeamCalculator`, to avoid a clash in the
-            :func:`phi_0_rel_to_cavity_parameters`.
+            `phi_0_rel_to_cavity_parameters` function.
 
         See Also
         --------

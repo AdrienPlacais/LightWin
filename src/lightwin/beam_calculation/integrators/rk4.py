@@ -22,9 +22,9 @@ def rk4(
 
     Parameters
     ----------
-    u : np.ndarray
+    u : numpy.ndarray
         Holds the value of the function to integrate in ``x``.
-    du_dx : Callable[[float, np.ndarray], np.ndarray]
+    du_dx : Callable[[float, numpy.ndarray], numpy.ndarray]
         Gives the variation of ``u`` components with ``x``.
     x : float
         Where ``u`` is known.
@@ -33,7 +33,7 @@ def rk4(
 
     Return
     ------
-    delta_u : np.ndarray
+    delta_u : numpy.ndarray
         Variation of ``u`` between ``x`` and ``x+dx``.
 
     """

@@ -1,20 +1,20 @@
 """Define a class to hold solver parameters for :class:`.Envelope3D`.
 
 This module holds :class:`ElementEnvelope3DParameters`, that inherits
-from the Abstract Base Class :class:`.ElementCalculatorParameters`.
+from the Abstract Base Class :class:`.ElementBeamCalculatorParameters`.
 It holds the transfer matrix function that is used, as well as the meshing in
 accelerating elements.
 
 In a first time, only Runge-Kutta (no leapfrog) and only Python (no Cython).
 
-The list of implemented transfer matrices is
-:data:`implemented_transfer_matrices`.
+The list of implemented transfer matrices is :data:`.PARAMETERS_3D`.
 
 """
 
 from abc import abstractmethod
+from collections.abc import Callable, Sequence
 from types import ModuleType
-from typing import Any, Callable, Sequence
+from typing import Any
 
 import numpy as np
 
@@ -288,7 +288,7 @@ class BendEnvelope3DParameters(ElementEnvelope3DParameters):
 
         Parameters
         ----------
-        transf_mat_module : ModuleType
+        transf_mat_module : types.ModuleType
             Module where the transfer matrix function is defined.
         elt : Bend
             ``BEND`` element.

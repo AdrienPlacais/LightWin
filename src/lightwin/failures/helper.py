@@ -1,8 +1,8 @@
-"""Define helper function to ease lists manipulation in :mod:``.strategy``.
+"""Define helper function to ease lists manipulation in :mod:`.strategy`.
 
 .. note::
     If you are unsure about how a function works, check out the implementation
-    of the tests in ``lightwin/tests/test_failure/test_helper.py``.
+    of the tests in :file:`LightWin/tests/test_failure/test_helper.py`.
 
 """
 
@@ -10,6 +10,7 @@ import itertools
 import math
 from collections.abc import Callable, Collection, Sequence
 from functools import partial
+from typing import Literal
 
 
 def _distance_to_ref[
@@ -18,7 +19,7 @@ def _distance_to_ref[
     element: T,
     failed: Sequence[T],
     all_elements: Sequence[T],
-    tie_politics: str,
+    tie_politics: Literal["upstream first", "downstream first"],
     shift: int = 0,
 ) -> tuple[int, int]:
     """Give distance between ``element`` and closest of ``failed``.
@@ -33,7 +34,7 @@ def _distance_to_ref[
         list of failed :class:`.Element` or a list of lattices with a fault.
     all_elements : Sequence[T]
         All the elements/lattices/sections.
-    tie_politics : {'upstream first', 'downstream first'}
+    tie_politics : Literal["upstream first", "downstream first"]
         When two elements have the same position, will you want to have the
         upstream or the downstream first?
     shift : int, optional
@@ -87,7 +88,9 @@ def sort_by_position[
 ](
     all_elements: Sequence[T],
     failed: Sequence[T],
-    tie_politics: str = "upstream first",
+    tie_politics: Literal[
+        "upstream first", "downstream first"
+    ] = "upstream first",
     shift: int = 0,
 ) -> Sequence[T]:
     """Sort given list by how far its elements are from ``elements[idx]``.
@@ -104,7 +107,7 @@ def sort_by_position[
         list of failed :class:`.Element` or a list of lattices with a fault.
     all_elements : Sequence[T]
         All the elements/lattices/sections.
-    tie_politics : {'upstream first', 'downstream first'}
+    tie_politics : Literal["upstream first", "downstream first"]
         When two elements have the same position, will you want to have the
         upstream or the downstream first?
     shift : int, optional
@@ -222,9 +225,8 @@ def nested_containing_desired[
 
     Example
     -------
-    nested_containing_desired(ListOfElements.by_lattice,
-                              failed_elements
-                              ) -> lattices_with_a_failure
+    ``nested_containing_desired(ListOfElements.by_lattice, failed_elements)``
+    will return ``lattices_with_a_failure``
 
     """
     nested_with_desired_elements = [

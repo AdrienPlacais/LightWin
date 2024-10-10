@@ -9,7 +9,7 @@ import logging
 from abc import ABC, ABCMeta, abstractmethod
 from dataclasses import dataclass
 from functools import partial
-from typing import Callable
+from typing import Callable, Literal
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -77,7 +77,7 @@ def _element_to_index(
     _shift: int,
     _solver_id: str,
     elt: Element | str,
-    pos: str | None = None,
+    pos: Literal["in", "out"] | None = None,
     return_elt_idx: bool = False,
 ) -> int | slice:
     """Convert ``elt`` and ``pos`` into a mesh index.
@@ -95,17 +95,17 @@ def _element_to_index(
     ----------
     _elts : ListOfElements
         List of :class:`.Element` where ``elt`` should be. Must be set by a
-        :func:`functools.partial`.
+        ``functools.partial``.
     _shift : int
         Mesh index of first :class:`.Element`. Used when the first
         :class:`.Element` of ``_elts`` is not the first of the
-        :class:`.Accelerator`. Must be set by :func:`functools.partial`.
+        :class:`.Accelerator`. Must be set by ``functools.partial``.
     _solver_id : str
         Name of the solver, to identify and take the proper
-        :class:`.SingleElementBeamParameters`.
+        :class:`.ElementBeamCalculatorParameters`.
     elt : Element | str
         Element of which you want the index.
-    pos : {'in', 'out} | None, optional
+    pos : Literal["in", "out"] | None, optional
         Index of entry or exit of the :class:`.Element`. If None, return full
         indexes array. The default is None.
     return_elt_idx : bool, optional

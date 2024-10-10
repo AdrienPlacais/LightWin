@@ -2,7 +2,7 @@ Utility scripts
 ===============
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
    :hidden:
 
 LightWin includes several utility scripts located in the `LightWin/scripts/` folder.
@@ -68,7 +68,7 @@ They can be called from everywhere in your system:
 .. note::
    Preliminary steps are mandatory if you installed LightWin with conda:
 
-   i. **Set execution permissions** (if the script does not already have execution permission):
+   1. **Set execution permissions** (if the script does not already have execution permission):
 
       * Unix (Linux/macOS): use the following command:
 
@@ -80,6 +80,6 @@ They can be called from everywhere in your system:
 
       This allows you to run the script with `./my_script.py` instead of `python my_script.py`.
          
-   ii. **Adding Scripts to PATH**:
+   2. **Adding Scripts to PATH**:
    To run the scripts from any location on your system, add the `/path/to/lightwin/scripts/` directory to your system `PATH`.
 

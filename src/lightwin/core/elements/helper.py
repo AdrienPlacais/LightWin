@@ -10,7 +10,7 @@ from lightwin.core.elements.element import Element
 def give_name_to_elements(
     elts: Sequence[Element], warn_default_element_names: bool = True
 ) -> None:
-    """Give to every :class:`.Element the name TraceWin would give it."""
+    """Give to every :class:`.Element` the name TraceWin would give it."""
     civil_register: dict[str, int] = {}
     elements_with_a_default_name = []
     for elt in elts:

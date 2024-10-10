@@ -41,8 +41,7 @@ ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
     "differential_evolution": DifferentialEvolution,
     "explorator": Explorator,
     "experimental": Explorator,
-}
-algorithms = tuple(ALGORITHM_SELECTOR.keys())  #:
+}  #:
 
 
 def optimisation_algorithm_factory(
@@ -131,6 +130,9 @@ def _check_common_keys(
 ) -> None:
     """Check keys that are common between the two dictionaries.
 
+    .. todo::
+        Redocument ``default_kwargs``.
+
     Parameters
     ----------
     user_kwargs : dict[str, Any]
@@ -138,7 +140,7 @@ def _check_common_keys(
         :meth:`.FaultScenario._set_optimisation_algorithms` (they have
         precedence).
     default_kwargs : [str, Any]
-        kwargs as defined in the :func:`_optimisation_algorithm_kwargs` (they
+        kwargs as defined in the `_optimisation_algorithm_kwargs` (they
         will be overriden as they are considered as "default" or "fallback"
         values).
 

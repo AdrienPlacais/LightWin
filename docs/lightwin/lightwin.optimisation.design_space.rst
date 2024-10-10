@@ -1,4 +1,4 @@
-lightwin.optimisation.design\_space package
+design\_space package
 ===========================================
 
 .. automodule:: lightwin.optimisation.design_space
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.optimisation.design_space.constraint
    lightwin.optimisation.design_space.design_space

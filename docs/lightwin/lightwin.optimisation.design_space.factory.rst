@@ -1,4 +1,4 @@
-lightwin.optimisation.design\_space.factory module
+factory module
 ==================================================
 
 .. automodule:: lightwin.optimisation.design_space.factory

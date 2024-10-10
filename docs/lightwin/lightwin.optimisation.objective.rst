@@ -1,4 +1,4 @@
-lightwin.optimisation.objective package
+objective package
 =======================================
 
 .. automodule:: lightwin.optimisation.objective
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.optimisation.objective.factory
    lightwin.optimisation.objective.minimize_difference_with_ref

@@ -16,7 +16,7 @@ class DifferentialEvolution(OptimisationAlgorithm):
     Downhill simplex method, which does not use derivatives.
 
     All the attributes but ``solution`` are inherited from the Abstract Base
-    Class :class:`OptimisationAlgorithm`.
+    Class :class:`.OptimisationAlgorithm`.
 
     """
 
@@ -72,7 +72,7 @@ class DifferentialEvolution(OptimisationAlgorithm):
         return kwargs
 
     def _format_variables(self) -> tuple[np.ndarray, Bounds]:
-        """Convert the :class:`Variable` to an array and :class:`Bounds`."""
+        """Convert the :class:`.Variable` to an array and ``Bounds``."""
         x_0 = np.array([var.x_0 for var in self.variables])
         _bounds = np.array([var.limits for var in self.variables])
         bounds = Bounds(_bounds[:, 0], _bounds[:, 1])

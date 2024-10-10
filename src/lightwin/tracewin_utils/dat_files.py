@@ -76,7 +76,7 @@ def export_dat_filecontent(
     ----------
     dat_content : Collection[Collection[str]]
         Content of the ``.dat``, line per line, word per word.
-    dat_path : Path
+    dat_path : pathlib.Path
         Where to save the ``.dat``.
 
     """

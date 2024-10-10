@@ -1,7 +1,7 @@
 ``plots`` section (mandatory)
 *****************************
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
 This section defines what quantities will be plotted at the end of the simulation.
 

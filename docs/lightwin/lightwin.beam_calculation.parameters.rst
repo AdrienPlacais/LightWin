@@ -1,4 +1,4 @@
-lightwin.beam\_calculation.parameters package
+parameters package
 =============================================
 
 .. automodule:: lightwin.beam_calculation.parameters
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.beam_calculation.parameters.element_parameters
    lightwin.beam_calculation.parameters.factory

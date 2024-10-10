@@ -1,4 +1,4 @@
-lightwin.core.elements.field\_maps package
+field\_maps package
 ==========================================
 
 .. automodule:: lightwin.core.elements.field_maps
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.core.elements.field_maps.cavity_settings
    lightwin.core.elements.field_maps.cavity_settings_factory

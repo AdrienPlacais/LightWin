@@ -35,11 +35,11 @@ class TransferMatrixFactoryTraceWin(TransferMatrixFactory):
 
         Returns
         -------
-        element_numbers : np.ndarray
+        element_numbers : numpy.ndarray
             Number of the elements.
-        position_in_m : np.ndarray
+        position_in_m : numpy.ndarray
             Position of the elements.
-        transfer_matrices : np.ndarray
+        transfer_matrices : numpy.ndarray
             Cumulated transfer matrices of the elements.
 
         """
@@ -67,7 +67,7 @@ class TransferMatrixFactoryTraceWin(TransferMatrixFactory):
 
         Parameters
         ----------
-        tm_cumul_in : np.ndarray
+        tm_cumul_in : numpy.ndarray
             Cumulated transfer matrix at entrance of linac or linac subset.
         path_cal : str
             Full path to transfer matrix file.

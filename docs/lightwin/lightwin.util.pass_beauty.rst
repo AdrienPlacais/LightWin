@@ -1,4 +1,4 @@
-lightwin.util.pass\_beauty module
+pass\_beauty module
 =================================
 
 .. automodule:: lightwin.util.pass_beauty

@@ -20,7 +20,7 @@ class DownhillSimplexPenalty(DownhillSimplex):
     """
     A Downhill Simplex method, with a penalty function to consider constraints.
 
-    Everything is inherited from :class:`DownhillSimplex`.
+    Everything is inherited from :class:`.DownhillSimplex`.
 
     """
 

@@ -1,4 +1,4 @@
-lightwin.beam\_calculation.tracewin package
+tracewin package
 ===========================================
 
 .. automodule:: lightwin.beam_calculation.tracewin
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.beam_calculation.tracewin.beam_parameters_factory
    lightwin.beam_calculation.tracewin.element_tracewin_parameters

@@ -121,7 +121,7 @@ class SimulationOutputEvaluator(ABC):
         argument must be ``value``, second argument ``ref_value``. They return
         an update ``value``, which is passed to the next function in
         ``post_treaters``. The default is a tuple containing only
-        :func:`._do_nothing`.
+        :func:`.do_nothing`.
     tester : tester_t | None, optional
         A function that takes post-treated ``value`` and test it. It can return
         a boolean or a float. The default is None.
@@ -134,7 +134,7 @@ class SimulationOutputEvaluator(ABC):
     markdown : str, optional
         A markdown name for this quantity, used in plots y label. The default
         is an empty string.
-    plt_kwargs : dict[str, Any] | None = None
+    plt_kwargs : dict[str, Any] | None, optional
         A dictionary with keyword arguments passed to the ``plt.Figure``. The
         default is None.
 

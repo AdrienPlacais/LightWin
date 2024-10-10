@@ -1,4 +1,4 @@
-"""Define :class:``.NSGA``, a genetic algorithm for optimisation."""
+"""Define :class:`NSGA`, a genetic algorithm for optimisation."""
 
 import logging
 from dataclasses import dataclass
@@ -35,8 +35,7 @@ class NSGA(OptimisationAlgorithm):
         keep_history: bool = False,
         save_history: bool = False,
     ) -> tuple[bool, SetOfCavitySettings | None, OptiInfo]:
-        """
-        Set up the optimisation and solve the problem.
+        """Set up the optimisation and solve the problem.
 
         Returns
         -------
@@ -90,7 +89,7 @@ class NSGA(OptimisationAlgorithm):
 
     @property
     def _problem_arguments(self) -> dict[str, int | np.ndarray]:
-        """Gather arguments required for :class:`ElementwiseProblem`."""
+        """Gather arguments required for :class:`.ElementwiseProblem`."""
         _xl, _xu = self._format_variables()
         kwargs = {
             "n_var": self.n_var,
@@ -102,14 +101,14 @@ class NSGA(OptimisationAlgorithm):
         return kwargs
 
     def _format_variables(self) -> tuple[np.ndarray, np.ndarray]:
-        """Format :class:`Variable` for this algorithm."""
+        """Format :class:`.Variable` for this algorithm."""
         _xl = [var.limits[0] for var in self.variables]
         _xu = [var.limits[1] for var in self.variables]
         return _xl, _xu
 
     @property
     def x_0(self) -> np.ndarray:
-        """Return initial value used in `LeastSquares'."""
+        """Return initial value used in :class:`.LeastSquares`."""
         return np.array([var.x_0 for var in self.variables])
 
     @property

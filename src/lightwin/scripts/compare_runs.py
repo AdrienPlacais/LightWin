@@ -16,14 +16,14 @@ def concatenate_evaluation_files(
     ----------
     simulation_id : str
         Name that will be given to the simulation in the plot.
-    evaluation_folder : Path
+    evaluation_folder : pathlib.Path
         Folder where the ``evaluations.csv`` file is.
     evaluation_namecol : str
         Name of the column in the ``evaluations.csv`` file.
 
     Returns
     -------
-    pd.DataFrame
+    pandas.DataFrame
         Holds all the values of ``evaluation_namecol`` in ``evaluation_path``;
         new name of the column is ``simulation_id``.
 
@@ -45,7 +45,7 @@ def _compare_one_quantity_all_simulations(
 
     Parameters
     ----------
-    simulation_ids_and_paths : dict[str, Path]
+    simulation_ids_and_paths : dict[str, pathlib.Path]
         Keys are name of the simulation in the plot, values are corresponding
         ``evaluations.csv`` path.
     evaluation_namecol : str
@@ -74,7 +74,7 @@ def compare_simulations(
 
     Parameters
     ----------
-    simulation_ids_and_paths : dict[str, Path]
+    simulation_ids_and_paths : dict[str, pathlib.Path]
         Keys are name of the simulation in the plot, values are corresponding
         ``evaluations.csv`` path.
     studies : dict[str, str]

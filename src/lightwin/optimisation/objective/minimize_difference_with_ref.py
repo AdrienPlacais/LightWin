@@ -27,18 +27,19 @@ class MinimizeDifferenceWithRef(Objective):
         descriptor: str | None = None,
     ) -> None:
         """
-        Set complementary :func:`get` flags, reference value.
+        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
 
         Parameters
         ----------
         get_key : str
             Name of the quantity to get, which must be an attribute of
-            :class:`SimulationOutput`.
+            :class:`.SimulationOutput`.
         get_kwargs : dict[str, Element | str | bool]
-            Keyword arguments for the :func:`get` method. We do not check its
-            validity, but in general you will want to define the keys ``elt``
-            and ``pos``. If objective concerns a phase, you may want to precise
-            the ``to_deg`` key. You also should explicit the ``to_numpy`` key.
+            Keyword arguments for the :meth:`.SimulationOutput.get` method. We
+            do not check its validity, but in general you will want to define
+            the keys ``elt`` and ``pos``. If objective concerns a phase, you
+            may want to precise the ``to_deg`` key. You also should explicit
+            the ``to_numpy`` key.
         reference : SimulationOutput
             The reference simulation output from which the ideal value will be
             taken.
@@ -84,16 +85,15 @@ class MinimizeDifferenceWithRef(Objective):
         return message
 
     def _value_getter(self, simulation_output: SimulationOutput) -> float:
-        """Get desired value using :func:`SimulationOutput.get` method."""
+        """Get desired value using :meth:`.SimulationOutput.get` method."""
         return simulation_output.get(self.get_key, **self.get_kwargs)
 
     def _check_ideal_value(self) -> None:
         """Assert the the reference value is a float."""
         if not isinstance(self.ideal_value, float):
             logging.warning(
-                f"Tried to get {self.get_key} with "
-                f"{self.get_kwargs}, which returned "
-                f"{self.ideal_value} instead of a float."
+                f"Tried to get {self.get_key} with {self.get_kwargs}, which "
+                f"returned {self.ideal_value} instead of a float."
             )
 
     def evaluate(self, simulation_output: SimulationOutput) -> float:

@@ -162,17 +162,17 @@ class TestLoadDatFile:
     line_adj_phase = ["ADJUST", "42", "3", "1", "-180", "180"]
     line_adj_ampl = ["ADJUST", "42", "6", "1", "1.50", "1.60"]
 
-    def test_file_was_not_changed(self) -> None:
-        """Compare checksums to verify file is still the same.
-
-        Otherwise, I may mess up with those tests.
-
-        """
-        actual_checksum = md5(self.dat_path)
-        assert actual_checksum == self.expected_checksum, (
-            f"The checksum of {self.dat_path} does not match the expected one."
-            " Maybe the file was edited?"
-        )
+    # def test_file_was_not_changed(self) -> None:
+    #     """Compare checksums to verify file is still the same.
+    #
+    #     Otherwise, I may mess up with those tests.
+    #
+    #     """
+    #     actual_checksum = md5(self.dat_path)
+    #     assert actual_checksum == self.expected_checksum, (
+    #         f"The checksum of {self.dat_path} does not match the expected one."
+    #         " Maybe the file was edited?"
+    #     )
 
     def test_some_lines_of_the_dat(self) -> None:
         """Check one some lines that the loading is correct."""

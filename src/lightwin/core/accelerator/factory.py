@@ -26,9 +26,9 @@ class AcceleratorFactory(ABC):
 
         Parameters
         ----------
-        dat_file : Path
+        dat_file : pathlib.Path
             The original ``.dat`` file, as understood by TraceWin.
-        project_folder : Path
+        project_folder : pathlib.Path
             Base folder where results will be saved. If the ``project_folder``
             key is not given in the configuration file, it is a folder in the
             same base folder as ``dat_file``.
@@ -61,22 +61,32 @@ class AcceleratorFactory(ABC):
 
         The default structure is:
 
-        where_original_dat_is/
-            YYYY.MM.DD_HHhMM_SSs_MILLIms/         <- project_folder (abs)
-                000000_ref/                       <- accelerator_path (abs)
-                    0_FirstBeamCalculatorName/    <- out_folder (rel)
-                    (1_SecondBeamCalculatorName/) <- out_folder (rel)
-                000001/
-                    0_FirstBeamCalculatorName/
-                    (1_SecondBeamCalculatorName/)
-                000002/
-                    0_FirstBeamCalculatorName/
-                    (1_SecondBeamCalculatorName/)
-                etc
+        - ``where_original_dat_is/``
+
+          - ``YYYY.MM.DD_HHhMM_SSs_MILLIms/``     <- ``project_folder``
+            (absolute)
+
+            - ``000000_ref/``                     <- ``accelerator_path``
+              (absolute)
+
+              - ``0_FirstBeamCalculatorName/``    <- ``out_folder`` (relative)
+              - (``1_SecondBeamCalculatorName/``) <- ``out_folder`` (relative)
+
+            - ``000001/``
+
+              - ``0_FirstBeamCalculatorName/``
+              - (``1_SecondBeamCalculatorName/``)
+
+            - ``000002/``
+
+              - ``0_FirstBeamCalculatorName/``
+              - (``1_SecondBeamCalculatorName/``)
+
+            - etc
 
         Parameters
         ----------
-        out_folders : Sequence[Path]
+        out_folders : Sequence[pathlib.Path]
             Name of the folders that will store outputs. By default, it is the
             name of the solver, preceeded by its position in the list of
             :class:`.BeamCalculator`.

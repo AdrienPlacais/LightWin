@@ -1,14 +1,10 @@
 """Define a factory to create :class:`.Objective` objects.
 
 When you implement a new objective preset, also add it to the list of
-implemented presets in :mod:`config.optimisation.objective`.
+implemented presets in :data:`.OBJECTIVE_PRESETS` and :mod:`.config.wtf`.
 
 .. todo::
     decorator to auto output the variables and constraints?
-
-.. todo::
-    Clarify that ``objective_position_preset`` should be understandable by
-    :mod:`failures.position`.
 
 """
 
@@ -37,9 +33,7 @@ from lightwin.optimisation.objective.minimize_difference_with_ref import (
 from lightwin.optimisation.objective.minimize_mismatch import MinimizeMismatch
 from lightwin.optimisation.objective.objective import Objective
 from lightwin.optimisation.objective.position import zone_to_recompute
-from lightwin.optimisation.objective.quantity_is_between import (
-    QuantityIsBetween,
-)
+from lightwin.optimisation.objective.quantity_is_between import QuantityIsBetween
 from lightwin.util.dicts_output import markdown
 
 
@@ -48,13 +42,13 @@ from lightwin.util.dicts_output import markdown
 # =============================================================================
 @dataclass
 class ObjectiveFactory(ABC):
-    """A base class to create :class:`Objective`.
+    """A base class to create :class:`.Objective`.
 
     It is intended to be sub-classed to make presets. Look at
     :class:`EnergyPhaseMismatch` or :class:`EnergySyncPhaseMismatch` for
     examples.
 
-    Attributes
+    Parameters
     ----------
     reference_elts : ListOfElements
         All the reference elements.
@@ -66,7 +60,7 @@ class ObjectiveFactory(ABC):
         Cavities that failed.
     compensating_elements : list[Element]
         Cavities that will be used for the compensation.
-    design_space_kw : dict[str, str | bool | Path | float]
+    design_space_kw : dict[str, str | bool | pathlib.Path | float]
         Holds information on variables/constraints limits/initial values. Used
         to compute the limits that ``phi_s`` must respect when the synchronous
         phase is defined as an objective.
@@ -93,16 +87,16 @@ class ObjectiveFactory(ABC):
 
     @abstractmethod
     def get_objectives(self) -> list[Objective]:
-        """Create the :class:`Objective` instances."""
+        """Create the :class:`.Objective` instances."""
 
     @property
     @abstractmethod
     def objective_position_preset(self) -> list[str]:
         """
-        Give a preset for :func:`failures.position.zone_to_recompute`.
+        Give a preset for :func:`.zone_to_recompute`.
 
-        The returned values must be in the ``POSITION_TO_INDEX`` dictionary of
-        :mod:`failures.position`.
+        The returned values must be in the :data:`.POSITION_TO_INDEX`
+        dictionary, defined in :mod:`.position`.
 
         """
         pass
@@ -111,7 +105,7 @@ class ObjectiveFactory(ABC):
     @abstractmethod
     def compensation_zone_override_settings(self) -> dict[str, bool]:
         """
-        Give flags for :func:`failures.position.zone_to_recompute`.
+        Give flags for :func:`.zone_to_recompute`.
 
         The returned dictionary may have three flags:
             - full_lattices
@@ -557,7 +551,7 @@ OBJECTIVE_PRESETS = {
     "EnergySyncPhaseMismatch": EnergySyncPhaseMismatch,
     "sync_phase_as_objective_ADS": EnergySyncPhaseMismatch,
     "experimental": EnergySeveralMismatches,
-}
+}  #:
 
 
 def get_objectives_and_residuals_function(

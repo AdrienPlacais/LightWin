@@ -15,7 +15,7 @@ from lightwin.util.dicts_output import markdown
 class DesignSpaceParameter(ABC):
     """Hold a single variable or constraint.
 
-    Attributes
+    Parameters
     ----------
     name : str
         Name of the parameter. Must be compatible with the

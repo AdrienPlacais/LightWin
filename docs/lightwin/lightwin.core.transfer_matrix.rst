@@ -1,4 +1,4 @@
-lightwin.core.transfer\_matrix package
+transfer\_matrix package
 ======================================
 
 .. automodule:: lightwin.core.transfer_matrix
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.core.transfer_matrix.factory
    lightwin.core.transfer_matrix.transfer_matrix

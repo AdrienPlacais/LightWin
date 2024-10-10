@@ -1,4 +1,4 @@
-lightwin.evaluator.simulation\_output package
+simulation\_output package
 =============================================
 
 .. automodule:: lightwin.evaluator.simulation_output
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.evaluator.simulation_output.factory
    lightwin.evaluator.simulation_output.presets

@@ -1,4 +1,4 @@
-lightwin.tracewin\_utils.interface module
+interface module
 =========================================
 
 .. automodule:: lightwin.tracewin_utils.interface

@@ -5,8 +5,8 @@ In particular, it answers the question:
 
 .. note::
     In order to add a compensation strategy, you must add it to the
-    ``COMPENSATING_SELECTOR`` dict, and also to the list of
-    supported strategies in :mod:`config.wtf` module.
+    :data:`COMPENSATING_SELECTOR` dict, and also to the list of supported
+    strategies in :mod:`.config.wtf` module.
 
 """
 
@@ -20,7 +20,11 @@ from lightwin.core.list_of_elements.helper import (
     is_list_of_list_of_field_maps,
 )
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
-from lightwin.failures.helper import gather, nested_containing_desired, sort_by_position
+from lightwin.failures.helper import (
+    gather,
+    nested_containing_desired,
+    sort_by_position,
+)
 from lightwin.util.helper import flatten
 
 cavities_id = Sequence[int] | Sequence[str]
@@ -90,7 +94,7 @@ def k_out_of_n[
         Failed cavities/lattice.
     k : int
         Number of compensating cavity per failure.
-    tie_politics : {'upstream first', 'downstream first'}, optional
+    tie_politics : Literal['upstream first', 'downstream first'], optional
         When two elements have the same position, will you want to have the
         upstream or the downstream first? The default is ``"upstream first"``.
     shift : int, optional
@@ -135,26 +139,18 @@ def l_neighboring_lattices[
     """Select full lattices neighboring the failed cavities.
 
     Every fault will be compensated by ``l`` full lattices, direct neighbors of
-    the errors [1, 2]. You must provide ``l``. Non-failed cavities in the same
-    lattice as the failure are also used.
+    the errors :cite:`Bouly2014,Placais2022a`. You must provide ``l``.
+    Non-failed cavities in the same lattice as the failure are also used.
 
-    References
+    Parameters
     ----------
-    .. [1] F. Bouly, J.-L. Biarrotte, and D. Uriot, "Fault tolerance and
-        consequences in the MYRRHA superconducting LINAC," in Proc. 27th Linear
-        Accelerator Conf. (LINAC14). Geneva, Switzerland: JACoW Publishing,
-        Geneva, Switzerland, 2014.
-    .. [2] A. Plaçais and F. Bouly, "Cavity Failure Compensation Strategies in
-        Superconducting Linacs," in Proceedings of LINAC2022, 2022, pp.
-        552–555. doi:10.18429/JACoW-LINAC2022-TUPORI04
-
     elements_by_lattice : Sequence[Sequence[T]]
         Tunable elements sorted by lattice.
     failed_elements : Sequence[T]
         Failed cavities/lattice.
     l : int
         Number of compensating lattice per failure.
-    tie_politics : {'upstream first', 'downstream first'}, optional
+    tie_politics : Literal['upstream first', 'downstream first'], optional
         When two elements have the same position, will you want to have the
         upstream or the downstream first? The default is ``"upstream first"``.
     shift : int, optional
@@ -305,4 +301,4 @@ COMPENSATING_SELECTOR = {
     "l neighboring lattices": l_neighboring_lattices,
     "global": global_compensation,
     "global_downstream": global_downstream,
-}
+}  #:

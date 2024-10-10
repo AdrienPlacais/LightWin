@@ -62,7 +62,7 @@ class InstructionsFactory:
         ----------
         freq_bunch_mhz : float
             Beam bunch frequency in MHz.
-        default_field_map_folder : Path
+        default_field_map_folder : pathlib.Path
             Where to look for field maps when no ``FIELD_MAP_PATH`` is
             precised. This is also the folder where the ``.dat`` is.
         load_field_maps : bool
@@ -75,7 +75,7 @@ class InstructionsFactory:
         load_cython_field_maps : bool
             To load or not the field maps for Cython (useful only with
             :class:`.Envelope1D` and :class:`.Envelope3D` used with Cython).
-        elements_to_dump : ABCMeta | tuple[ABCMeta, ...], optional
+        elements_to_dump : abc.ABCMeta | tuple[abc.ABCMeta, ...], optional
             Class of Elements that you want to remove. If you want to skip an
             Element because it is not implemented, prefer assigning it to a
             :class:`.DummyElement`. The default is an empty tuple.

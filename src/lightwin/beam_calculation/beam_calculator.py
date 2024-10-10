@@ -1,6 +1,6 @@
 """Define a base class for beam propagation computing tools.
 
-The base class :class:`BeamCalculator`, allows to compute the propagation of
+The base class :class:`BeamCalculator` allows to compute the propagation of
 the beam in a :class:`.ListOfElements`, possibly with a specific
 :class:`.SetOfCavitySettings` (optimisation process). It should return a
 :class:`.SimulationOutput`.
@@ -55,11 +55,11 @@ class BeamCalculator(ABC):
         flag_phi_abs : bool
             If the entry phase of the cavities :math:`\phi_0` are absolute or
             relative. See the examples for an illustration of what it implies.
-        out_folder : Path | str
+        out_folder : pathlib.Path | str
             Name of the folder where results should be stored, for each
             :class:`.Accelerator` under study. This is the name of a folder,
             not a full path.
-        default_field_map_folder : Path | str
+        default_field_map_folder : pathlib.Path | str
             Where to look for field map files by default.
 
         """
@@ -85,7 +85,7 @@ class BeamCalculator(ABC):
         self._set_up_specific_factories()
 
     def _set_up_common_factories(self) -> None:
-        """Create the factories declared in :meth:`__post_init__`.
+        """Create the factories declared in :meth:`__init__`.
 
         .. todo::
             ``default_field_map_folder`` has a wrong default value. Should take

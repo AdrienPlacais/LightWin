@@ -38,6 +38,7 @@ class LogFormatter(logging.Formatter):
     RESET_CODE = "\033[0m"
 
     def __init__(self, color, *args, **kwargs):
+        """Instantiate object."""
         super(LogFormatter, self).__init__(*args, **kwargs)
         self.color = color
 

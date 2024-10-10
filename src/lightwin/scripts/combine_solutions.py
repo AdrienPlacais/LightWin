@@ -50,13 +50,13 @@ def combine_bests(
 
     Parameters
     ----------
-    paths : Sequence[Paths]
+    paths : Sequence[pathlib.Path]
         Project folders (where ``evaluations.csv`` and every simulation is).
     criterion_to_minimize : str, optional
         The ``evaluations.csv`` column against which simulations are compared.
         The default is ``"Lost power over whole linac in W."`` (we keep
         simulations with the lowest lost power).
-    out_folder : Path | str, optional
+    out_folder : pathlib.Path | str, optional
         Where every best simulation folder will be gathered. If not provided,
         we create a ``combined/`` folder in the last common ancestor of all
         provided paths.
@@ -74,6 +74,8 @@ def combine_bests(
         out_folder = _infer_an_output_folder(paths)
     if isinstance(out_folder, str):
         out_folder = Path(out_folder)
+    if not out_folder.is_dir():
+        os.mkdir(out_folder)
 
     combined.to_csv(out_folder / "evaluations.csv", sep=",")
 
@@ -110,7 +112,7 @@ def _select_best_simulations(
 
     Parameters
     ----------
-    paths : Sequence[Path]
+    paths : Sequence[pathlib.Path]
         Path to project folders to be compared.
     criterion_to_minimize : str
         The quantity that we want to minimize. It must be a column name in
@@ -120,7 +122,7 @@ def _select_best_simulations(
     -------
     best_simulation_folders : pd.Series
         For each fault scenario, holds the path to the best simulation folder.
-    combined : pd.DataFrame
+    combined : pandas.DataFrame
         A ``evaluations.csv`` where each row holds the values for the best
         simulation. You must ensure that all ``evaluations.csv`` have the same
         columns.
@@ -171,7 +173,7 @@ def _concat_evaluations_files(
 
     Parameters
     ----------
-    evaluations : dict[str, pd.DataFrame]
+    evaluations : dict[str, pandas.DataFrame]
         Keys are user-defined names for every simulation. Values are
         corresponding ``evaluations.csv`` files; their columns must be the
         same. They must have the same indexes.
@@ -182,7 +184,7 @@ def _concat_evaluations_files(
 
     Returns
     -------
-    combined : pd.DataFrame
+    combined : pandas.DataFrame
         Same columns as ``evaluations``. Every row contains the
         ``evaluations.csv`` row of the best solution.
 
@@ -252,7 +254,7 @@ def _load_evaluation(
 
     Parameters
     ----------
-    evaluation_folder : Path
+    evaluation_folder : pathlib.Path
         Folder where the ``evaluations.csv`` file is.
     evaluation_namecol : Sequence[str] | None, optional
         Name of the column in the ``evaluations.csv`` for the sorting; if not
@@ -263,13 +265,17 @@ def _load_evaluation(
 
     Returns
     -------
-    pd.DataFrame
+    pandas.DataFrame
         Holds all the values of ``evaluation_namecol`` in ``evaluation_path``.
 
     """
     df = pd.read_csv(
-        evaluation_folder / "evaluations.csv", usecols=evaluation_namecol  # type: ignore
+        evaluation_folder / "evaluations.csv",
+        # usecols=evaluation_namecol  # type: ignore
     )
+    df.columns = df.columns.str.trip()
+    df = df[[evaluation_namecol]]
+
     if new_name is not None:
         assert evaluation_namecol is not None
         assert len(new_name) == len(evaluation_namecol)

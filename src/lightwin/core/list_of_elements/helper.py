@@ -4,10 +4,11 @@
     Filtering consistency.
 
 """
+
 import logging
 from collections.abc import Callable, Iterable
 from functools import partial
-from typing import Any, Sequence, Type, TypeGuard, TypeVar
+from typing import Any, Literal, Sequence, Type, TypeGuard, TypeVar
 
 import numpy as np
 
@@ -215,17 +216,17 @@ def indiv_to_cumul_transf_mat(
 
     Parameters
     ----------
-    tm_cumul_in : np.ndarray
+    tm_cumul_in : numpy.ndarray
         Cumulated transfer matrix @ first element. Should be eye matrix if we
         are at the first element.
-    r_zz_elt : list[np.ndarray]
+    r_zz_elt : list[numpy.ndarray]
         List of individual transfer matrix of the elements.
     n_steps : int
         Number of elements or elements slices.
 
     Returns
     -------
-    cumulated_transfer_matrices : np.ndarray
+    cumulated_transfer_matrices : numpy.ndarray
         Cumulated transfer matrices.
 
     """
@@ -300,7 +301,7 @@ def _get_first_key_of_idx_dict_higher_than(
     elts: Sequence[Element],
     *,
     index_name: str,
-    first_or_last: str,
+    first_or_last: Literal["first", "last"],
     higher_than: int = -1,
     n_to_check: int = 10,
 ) -> int:
@@ -314,8 +315,9 @@ def _get_first_key_of_idx_dict_higher_than(
     elts : Sequence[Element]
         List of elements to check.
     index_name : str
-        Name of the index to get. Must be a key of :attr:`.Element.idx`.
-    first_or_last : {'first', 'last'}
+        Name of the index to get. Must be a key of in the ``idx`` attribute of
+        :class:`.Element`.
+    first_or_last : Literal["first", "last"]
         If we want to check the ``n_to_check`` first or last elements.
     higher_than : int, optional
         The index under which the value is invalid. The default is -1, which is

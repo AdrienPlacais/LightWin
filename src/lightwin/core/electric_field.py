@@ -2,7 +2,7 @@
 
 See Also
 --------
-CavitySettings
+:class:`.CavitySettings`
 
 """
 
@@ -43,7 +43,7 @@ class RfField:
 
     All phases are stored in radian.
 
-    Attributes
+    Parameters
     ----------
     e_spat : Callable[[float], float]
         Spatial component of the electric field. Needs to be multiplied by the
@@ -141,7 +141,7 @@ class RfField:
 
         Returns
         -------
-        out : list | np.ndarray | float | None
+        out : list | numpy.ndarray | float | None
             Attribute(s) value(s).
 
         """
@@ -226,7 +226,7 @@ class NewRfField:
 
     All phases are stored in radian.
 
-    Attributes
+    Parameters
     ----------
     e_spat : Callable[[float], float]
         Spatial component of the electric field. Needs to be multiplied by the

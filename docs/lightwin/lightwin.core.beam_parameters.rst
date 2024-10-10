@@ -1,4 +1,4 @@
-lightwin.core.beam\_parameters package
+beam\_parameters package
 ======================================
 
 .. automodule:: lightwin.core.beam_parameters
@@ -10,7 +10,7 @@ Subpackages
 -----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.core.beam_parameters.phase_space
 
@@ -18,7 +18,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.core.beam_parameters.beam_parameters
    lightwin.core.beam_parameters.factory

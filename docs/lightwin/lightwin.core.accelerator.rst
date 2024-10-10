@@ -1,4 +1,4 @@
-lightwin.core.accelerator package
+accelerator package
 =================================
 
 .. automodule:: lightwin.core.accelerator
@@ -10,7 +10,7 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    lightwin.core.accelerator.accelerator
    lightwin.core.accelerator.factory

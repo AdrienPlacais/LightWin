@@ -1,9 +1,9 @@
 ``evaluators`` section
 **********************
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
-This section is used to defined :class:`.FaultScenarioSimulationOutputEvaluator` objects.
+This section is used to define :class:`.SimulationOutputEvaluator` objects.
 They are used to evaluate the absolute or relative *quality* of compensation settings.
 
 .. csv-table::
@@ -12,4 +12,4 @@ They are used to evaluate the absolute or relative *quality* of compensation set
    :header-rows: 1
 
 .. note::
-   There is also a :class:`.SimulationOutputEvaluator` object that is used internally by LightWin to determine if a :class:`.Fault` was correctly fixed.
+   These objects will be refactored in updates to come, to provide more robust implementation and user experience.

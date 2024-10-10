@@ -1,4 +1,4 @@
-lightwin.evaluator.post\_treaters module
+post\_treaters module
 ========================================
 
 .. automodule:: lightwin.evaluator.post_treaters

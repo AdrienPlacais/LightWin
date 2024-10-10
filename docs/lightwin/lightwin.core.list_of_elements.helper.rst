@@ -1,4 +1,4 @@
-lightwin.core.list\_of\_elements.helper module
+helper module
 ==============================================
 
 .. automodule:: lightwin.core.list_of_elements.helper

@@ -26,6 +26,9 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
 
+ENVELOPE1D_METHODS = ("RK4", "leapfrog")  #:
+methods_t = Literal["RK4", "leapfrog"]
+
 
 class Envelope1D(BeamCalculator):
     """The fastest beam calculator, adapted to high energies."""
@@ -36,7 +39,7 @@ class Envelope1D(BeamCalculator):
         flag_phi_abs: bool,
         flag_cython: bool,
         n_steps_per_cell: int,
-        method: Literal["RK4", "leaprog"],
+        method: methods_t,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
         phi_s_definition: Literal["historical"] = "historical",
@@ -53,7 +56,7 @@ class Envelope1D(BeamCalculator):
     def _set_up_specific_factories(self) -> None:
         """Set up the factories specific to the :class:`.BeamCalculator`.
 
-        This method is called in the :meth:`super().__post_init__`, hence it
+        This method is called in the :meth:`.BeamCalculator.__init__`, hence it
         appears only in the base :class:`.BeamCalculator`.
 
         """
@@ -171,7 +174,7 @@ class Envelope1D(BeamCalculator):
         full_elts: ListOfElements,
         **specific_kwargs,
     ) -> SimulationOutput:
-        """Run :class:`Envelope1D. with optimized cavity settings.
+        """Run :class:`Envelope1D` with optimized cavity settings.
 
         With this solver, we have nothing to do, nothing to update. Just call
         the regular :meth:`run_with_this` method.
@@ -188,7 +191,8 @@ class Envelope1D(BeamCalculator):
     def init_solver_parameters(self, accelerator: Accelerator) -> None:
         """Create the number of steps, meshing, transfer functions for elts.
 
-        The solver parameters are stored in :attr:`.Element.beam_calc_param`.
+        The solver parameters are stored in the ``beam_calc_param`` attribute
+        of :class:`.Element`.
 
         Parameters
         ----------
@@ -275,7 +279,7 @@ class Envelope1D(BeamCalculator):
         cavity_settings.phi_s = phi_s
 
     def _compute_cavity_parameters(self, results: dict) -> tuple[float, float]:
-        """Compute the cavity parameters by calling :meth:`_phi_s_func`.
+        """Compute the cavity parameters by calling ``_phi_s_func``.
 
         Parameters
         ----------

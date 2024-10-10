@@ -4,16 +4,16 @@
     Handle the different kind of field_maps...
 
 .. todo::
-    Handle the SET_SYNCH_PHASE command
+    Completely handle the SET_SYNCH_PHASE command
 
 .. todo::
-    Hande phi_s fitting with :class:`beam_calculation.tracewin.Tracewin`
+    Hande phi_s fitting with :class:`.TraceWin`.
 
-.. todo::
-    when subclassing field_maps, do not forget to update the transfer matrix
+.. note::
+    When subclassing field_maps, do not forget to update the transfer matrix
     selector in:
     - :class:`.Envelope3D`
-    - :class:`.SingleElementEnvelope3DParameters`
+    - :class:`.ElementEnvelope3DParameters`
     - :class:`.SetOfCavitySettings`
     - the ``run_with_this`` methods
 
@@ -21,7 +21,7 @@
 
 import math
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 
@@ -135,7 +135,7 @@ class FieldMap(Element):
 
         See Also
         --------
-        :func:`tracewin_utils.electromagnetic_fields.file_map_extensions`
+        :func:`.electromagnetic_fields._get_filemaps_extensions`
 
         """
         self.field_map_file_name = [
@@ -213,7 +213,13 @@ class FieldMap(Element):
 
     def to_line(
         self,
-        which_phase: str = "phi_0_rel",
+        which_phase: Literal[
+            "phi_0_abs",
+            "phi_0_rel",
+            "phi_s",
+            "as_in_settings",
+            "as_in_original_dat",
+        ] = "phi_0_rel",
         *args,
         inplace: bool = False,
         **kwargs,
@@ -222,12 +228,12 @@ class FieldMap(Element):
 
         Parameters
         ----------
-        which_phase : {'phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_settings',
-                \ 'as_in_original_dat'}
-            Which phase should be putted in the output ``.dat``.
+        which_phase : Literal["phi_0_abs", "phi_0_rel", "phi_s", \
+                "as_in_settings", "as_in_original_dat"]
+            Which phase should be put in the output ``.dat``.
         inplace : bool, optional
-            To modify or not the :attr:`.Element` inplace. If False, we return
-            a modified copy. The default is False.
+            To modify the :class:`.Element` inplace. The default is False, in
+            which case, we return a modified copy.
 
         Returns
         -------
@@ -251,7 +257,7 @@ class FieldMap(Element):
 
     @property
     def _indexes_in_line(self) -> dict[str, int]:
-        """Give the position of the arguments in the ``FIELD_MAP ``command."""
+        """Give the position of the arguments in the ``FIELD_MAP`` command."""
         indexes = {"phase": 3, "k_e": 6, "abs_phase_flag": 10}
 
         if not self._personalized_name:
@@ -260,7 +266,16 @@ class FieldMap(Element):
             indexes[key] += 1
         return indexes
 
-    def _phase_for_line(self, which_phase: str) -> tuple[float, int]:
+    def _phase_for_line(
+        self,
+        which_phase: Literal[
+            "phi_0_abs",
+            "phi_0_rel",
+            "phi_s",
+            "as_in_settings",
+            "as_in_original_dat",
+        ],
+    ) -> tuple[float, int]:
         """Give the phase to put in ``.dat`` line, with abs phase flag."""
         settings = self.cavity_settings
         match which_phase:

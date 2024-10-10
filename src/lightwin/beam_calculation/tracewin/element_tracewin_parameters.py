@@ -43,7 +43,7 @@ class ElementTraceWinParameters(ElementBeamCalculatorParameters):
             self
         length_m : float
             length_m
-        z_of_this_element_from_tw : np.ndarray
+        z_of_this_element_from_tw : numpy.ndarray
             z_of_this_element_from_tw
         s_in : int
             s_in

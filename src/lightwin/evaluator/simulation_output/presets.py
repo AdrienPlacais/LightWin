@@ -5,7 +5,11 @@ practices to create your own presets in a dedicated module in your project
 folder.
 
 If you want to add your preset to this file, you must also add it's key in the
-:mod:`config.evaluators`.
+:mod:`.config.evaluators`.
+
+.. todo::
+    Only one reference for the existing evaluators. Here or the configuration
+    module. Here would be better, as configuration handling will evolve.
 
 """
 

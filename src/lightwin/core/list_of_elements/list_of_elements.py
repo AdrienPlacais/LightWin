@@ -1,8 +1,9 @@
 """Define a ``list`` of :class:`.Element`, with some additional methods.
 
 Two objects can have a :class:`ListOfElements` as attribute:
-    - :class:`.Accelerator`: holds all the :class:`.Element` of the linac.
-    - :class:`.Fault`: it holds only a fraction of the linac
+
+    * :class:`.Accelerator`: holds all the :class:`.Element` of the linac.
+    * :class:`.Fault`: it holds only a fraction of the linac
       :class:`.Element`. Beam will be propagated a huge number of times
       during optimisation process, so we recompute only the strict necessary.
 
@@ -19,7 +20,9 @@ from typing import Any, Literal, Self, overload
 
 import numpy as np
 
-from lightwin.core.beam_parameters.initial_beam_parameters import InitialBeamParameters
+from lightwin.core.beam_parameters.initial_beam_parameters import (
+    InitialBeamParameters,
+)
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import REFERENCE_T
 from lightwin.core.elements.field_maps.field_map import FieldMap
@@ -72,15 +75,16 @@ class ListOfElements(list):
         first_init : bool, optional
             To indicate if this a full linac or only a portion (fit process).
             The default is True.
-        files : dict[str, str | list[list[str]] | Path]
+        files : dict[str, str | list[list[str]] | pathlib.Path]
             A dictionary to hold information on the source and output
             files/folders of the object. The keys are:
-                - ``dat_file``: absolute path to the ``.dat`` file
-                - ``elts_n_cmds``: list of objects representing dat content
-                - ``accelerator_path``: where calculation results for each
-                :class:`.BeamCalculator` will be stored.
-                - ``dat_content``: list of list of str, holding content of the
-                ``.dat``.
+
+            * ``dat_file``: absolute path to the ``.dat`` file
+            * ``elts_n_cmds``: list of objects representing dat content
+            * ``accelerator_path``: where calculation results for each
+              :class:`.BeamCalculator` will be stored.
+            * ``dat_content``: list of list of str, holding content of the
+              ``.dat``.
 
         """
         self.input_particle = input_particle
@@ -262,10 +266,10 @@ class ListOfElements(list):
 
         Parameters
         ----------
-        dat_file : Path
+        dat_file : pathlib.Path
             Where the output ``.dat`` should be saved.
-        which_phase : {'phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_settings',
-                \ 'as_in_original_dat'}
+        which_phase : Literal['phi_0_abs', 'phi_0_rel', 'phi_s', \
+                'as_in_settings', 'as_in_original_dat']
             Which phase should be put in the output ``.dat``.
         save : bool, optional
             If the output file should be created. The default is True.
@@ -279,7 +283,7 @@ class ListOfElements(list):
 
         Raises
         ------
-        NotImplementedError:
+        NotImplementedError
             If ``which_phase`` is different from ``"phi_0_abs"`` or
             ``"phi_0_rel"``.
 
@@ -383,3 +387,14 @@ class ListOfElements(list):
         """Instantiate object from previously pickled file."""
         list_of_elements = pickler.unpickle(path)
         return list_of_elements  # type: ignore
+
+    @property
+    def files_info(self) -> dict:
+        """Return the ``files`` attribute.
+
+        .. deprecated::
+            This is just an alias to the ``files`` dict; ``files_info`` should
+            not be used anymore.
+
+        """
+        return self.files

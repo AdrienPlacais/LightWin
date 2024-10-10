@@ -8,7 +8,7 @@
 
 .. todo::
     Transfer matrices are stored in :class:`.TransferMatrix`, but also in
-    :data:`.BeamParameters.zdelta`.
+    ``BeamParameters.zdelta``.
 
 .. todo::
     Maybe the synchronous phase model should appear somewhere in here?
@@ -19,7 +19,7 @@ import logging
 import math
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Self
+from typing import Any, Callable, Literal, Self
 
 import numpy as np
 import pandas as pd
@@ -36,13 +36,13 @@ from lightwin.util.pickling import MyPickler
 
 @dataclass
 class SimulationOutput:
-    """Stores the information produced by a :class:`.BeamCalculator`.
+    """Store the information produced by a :class:`.BeamCalculator`.
 
     Used for fitting, post-processing, plotting.
 
-    Attributes
+    Parameters
     ----------
-    out_folder : Path
+    out_folder : pathlib.Path
         Results folder used by the :class:`.BeamCalculator` that created this.
     is_multiparticle : bool
         Tells if the simulation is a multiparticle simulation.
@@ -67,12 +67,12 @@ class SimulationOutput:
         The cavity parameters used for the simulation.
     transfer_matrix : TransferMatrix
          Holds absolute and relative transfer matrices in all planes.
-    z_abs : np.ndarray | None, optional
+    z_abs : numpy.ndarray | None, optional
         Absolute position in the linac in m. The default is None.
-    in_tw_fashion : pd.DataFrame | None, optional
+    in_tw_fashion : pandas.DataFrame | None, optional
         A way to output the :class:`.SimulationOutput` in the same way as the
         ``Data`` tab of TraceWin. The default is None.
-    r_zz_elt : list[np.ndarray] | None, optional
+    r_zz_elt : list[numpy.ndarray] | None, optional
         Cumulated transfer matrices in the [z-delta] plane. The default is
         None.
 
@@ -124,7 +124,7 @@ class SimulationOutput:
 
     @property
     def beam_calculator_information(self) -> Path:
-        """Use ``out_path`` to retrieve info on :class:`BeamCalculator`."""
+        """Use ``out_path`` to retrieve info on :class:`.BeamCalculator`."""
         if not hasattr(self, "out_path"):
             return self.out_folder
         return self.out_path.absolute().parents[1]
@@ -132,8 +132,8 @@ class SimulationOutput:
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class.
 
-        We also call the :meth:`.BeamParameters.has`, as it is designed to
-        handle the alias (such as ``twiss_zdelta`` <=> ``zdelta.twiss``).
+        We also call the :meth:`.InitialBeamParameters.has`, as it is designed
+        to handle the alias (such as ``twiss_zdelta`` <=> ``zdelta.twiss``).
 
         """
         return (
@@ -148,7 +148,7 @@ class SimulationOutput:
         to_numpy: bool = True,
         to_deg: bool = False,
         elt: Element | str | None = None,
-        pos: str | None = None,
+        pos: Literal["in", "out"] | None = None,
         none_to_nan: bool = False,
         **kwargs: str | bool | None,
     ) -> Any:
@@ -167,7 +167,7 @@ class SimulationOutput:
             string.
         elt : Element | str | None, optional
             If provided, return the attributes only at the considered element.
-        pos : 'in' | 'out' | None
+        pos : Literal["in", "out"] | None, optional
             If you want the attribute at the entry, exit, or in the whole
             element.
         none_to_nan : bool, optional
