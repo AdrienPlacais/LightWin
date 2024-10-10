@@ -3,7 +3,7 @@
 from pathlib import Path
 
 from lightwin.constants import example_dat, example_folder
-from lightwin.new_config.config_specs import KeyValConfSpec
+from lightwin.new_config.specs_base_objects import KeyValConfSpec
 
 FILES_CONFIG = (
     KeyValConfSpec(

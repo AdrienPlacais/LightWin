@@ -3,10 +3,12 @@
 import logging
 from typing import Any, Literal
 
-from lightwin.new_config.beam_calculator_tracewin_specs import TRACEWIN_CONFIG
-from lightwin.new_config.beam_specs import BEAM_CONFIG
-from lightwin.new_config.config_specs import TableConfSpec
-from lightwin.new_config.files_specs import FILES_CONFIG
+from lightwin.new_config.specs.beam_calculator_tracewin_specs import (
+    TRACEWIN_CONFIG,
+)
+from lightwin.new_config.specs.beam_specs import BEAM_CONFIG
+from lightwin.new_config.specs.files_specs import FILES_CONFIG
+from lightwin.new_config.specs_base_objects import TableConfSpec
 
 
 class FullConfSpec:

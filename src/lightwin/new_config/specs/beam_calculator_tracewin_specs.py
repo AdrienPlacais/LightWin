@@ -11,7 +11,7 @@
 from pathlib import Path
 
 from lightwin.constants import example_ini, example_machine_config
-from lightwin.new_config.config_specs import KeyValConfSpec
+from lightwin.new_config.specs_base_objects import KeyValConfSpec
 
 TRACEWIN_CONFIG = (
     KeyValConfSpec(
