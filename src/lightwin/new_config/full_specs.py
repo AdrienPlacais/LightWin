@@ -16,6 +16,10 @@ from lightwin.new_config.specs.beam_calculator_tracewin_specs import (
     TRACEWIN_CONFIG,
 )
 from lightwin.new_config.specs.beam_specs import BEAM_CONFIG
+from lightwin.new_config.specs.design_space_specs import (
+    DESIGN_SPACE_CALCULATED,
+    DESIGN_SPACE_FROM_FILE,
+)
 from lightwin.new_config.specs.files_specs import FILES_CONFIG
 from lightwin.new_config.specs_base_objects import TableConfSpec
 
@@ -23,6 +27,10 @@ BEAM_CALCULATORS_CONFIGS = {
     "TraceWin": TRACEWIN_CONFIG,
     "Envelope1D": ENVELOPE1D_CONFIG,
     # "Envelope3D": ENVELOPE3D_CONFIG,
+}
+DESIGN_SPACE_CONFIGS = {
+    "calculated": DESIGN_SPACE_CALCULATED,
+    "from_file": DESIGN_SPACE_FROM_FILE,
 }
 
 
