@@ -7,10 +7,12 @@ import pytest
 
 from lightwin.constants import (
     example_config,
+    example_constraints,
     example_dat,
     example_folder,
     example_ini,
     example_machine_config,
+    example_variables,
 )
 
 params = [
@@ -27,10 +29,12 @@ params = [
     ("file_or_folder", "nature"),
     [
         (example_folder, "directory"),
+        (example_constraints, "file"),
         (example_config, "file"),
         (example_dat, "file"),
         (example_ini, "file"),
         (example_machine_config, "file"),
+        (example_variables, "file"),
     ],
 )
 def test_example_files_exist(
