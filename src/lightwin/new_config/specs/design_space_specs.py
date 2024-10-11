@@ -12,7 +12,7 @@ _DESIGN_SPACE_BASE = (
     KeyValConfSpec(
         key="design_space_preset",
         types=(str,),
-        description=("What are the variables and constraints."),
+        description="What are the variables and constraints.",
         allowed_values=tuple(DESIGN_SPACE_FACTORY_PRESETS.keys()),
         default_value="SyncPhaseAmplitude",
         is_mandatory=True,
