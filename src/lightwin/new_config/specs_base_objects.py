@@ -1,4 +1,13 @@
-"""Define the base objects constraining values/types of config parameters."""
+"""Define the base objects constraining values/types of config parameters.
+
+.. todo::
+    Maybe the table object should handle when several sets of KeyValConfSpec
+    can be imported
+
+.. todo::
+    Allow some KeyValConfSpec to override others.
+
+"""
 
 import logging
 from collections.abc import Collection
@@ -57,6 +66,9 @@ class KeyValConfSpec:
     error_message : str | None, optional
         If provided, using current key will raise an IOError with this error
         message. The default is None.
+    overrides_previously_defined : bool, optional
+        If the current object should remove a previously defined
+        :class:`KeyValConfSpec` with the same name.
 
     """
 
@@ -70,6 +82,7 @@ class KeyValConfSpec:
     action: Literal["store_true", "store_false"] | None = None
     warning_message: str | None = None
     error_message: str | None = None
+    overrides_previously_defined: bool = False
 
     def __post_init__(self) -> None:
         """Force ``self.types`` to be a tuple of types."""
@@ -253,6 +266,7 @@ class TableConfSpec:
 
         """
         specs = self._get_specs(toml_subdict)
+        specs = _remove_overriden_keys(specs)
         self.specs_as_dict = {spec.key: spec for spec in specs}
 
     def _get_proper_spec(self, spec_name: str) -> KeyValConfSpec | None:
@@ -324,3 +338,33 @@ class TableConfSpec:
             if spec.is_mandatory or not only_mandatory
         }
         return dummy_conf
+
+
+def _remove_overriden_keys(
+    specs: Collection[KeyValConfSpec],
+) -> list[KeyValConfSpec]:
+    """Remove the :class:`.KeyValConfSpec` objects to override.
+
+    .. todo::
+        Not Pythonic at all.
+
+    """
+    cleaned_specs = []
+    keys = []
+    for spec in specs:
+        if key := spec.key not in keys:
+            cleaned_specs.append(spec)
+            keys.append(key)
+            continue
+
+        assert spec.overrides_previously_defined, (
+            f"The key {spec} is defined twice, but it was not declared that it"
+            " can override."
+        )
+        idx_to_del = keys.index(key)
+        del cleaned_specs[idx_to_del]
+        del keys[idx_to_del]
+        cleaned_specs.append(spec)
+        keys.append(key)
+
+    return list(specs)
