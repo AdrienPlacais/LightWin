@@ -17,19 +17,18 @@ _DESIGN_SPACE_BASE = (
         default_value="SyncPhaseAmplitude",
         is_mandatory=True,
     ),
-)
-
-DESIGN_SPACE_CALCULATED = _DESIGN_SPACE_BASE + (
     KeyValConfSpec(
         key="from_file",
         types=(bool,),
         description=(
             "If variable limits/constraints should be taken from a file."
         ),
-        allowed_values=(False,),
-        default_value=True,
+        default_value=False,
         is_mandatory=True,
     ),
+)
+
+DESIGN_SPACE_CALCULATED = _DESIGN_SPACE_BASE + (
     KeyValConfSpec(
         key="max_increase_sync_phase_in_percent",
         types=(float,),
@@ -93,16 +92,6 @@ DESIGN_SPACE_FROM_FILE = _DESIGN_SPACE_BASE + (
         is_a_path_that_must_exists=True,
     ),
     KeyValConfSpec(
-        key="from_file",
-        types=(bool,),
-        description=(
-            "If variable limits/constraints should be taken from a file."
-        ),
-        allowed_values=(True,),
-        default_value=True,
-        is_mandatory=True,
-    ),
-    KeyValConfSpec(
         key="variables_filepath",
         types=(str,),
         description=(
@@ -116,6 +105,6 @@ DESIGN_SPACE_FROM_FILE = _DESIGN_SPACE_BASE + (
 )
 
 DESIGN_SPACE_CONFIGS = {
-    "calculated": DESIGN_SPACE_CALCULATED,
-    "from_file": DESIGN_SPACE_FROM_FILE,
+    False: DESIGN_SPACE_CALCULATED,
+    True: DESIGN_SPACE_FROM_FILE,
 }

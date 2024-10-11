@@ -1,10 +1,4 @@
-"""Define the base objects constraining values/types of config parameters.
-
-.. todo::
-    Maybe the table object should handle when several sets of KeyValConfSpec
-    can be imported
-
-"""
+"""Define the base objects constraining values/types of config parameters."""
 
 import logging
 from collections.abc import Collection
@@ -39,11 +33,13 @@ class TableConfSpec:
         ],
         table_entry: str,
         specs: (
-            Collection[KeyValConfSpec] | dict[str, Collection[KeyValConfSpec]]
+            Collection[KeyValConfSpec]
+            | dict[str, Collection[KeyValConfSpec]]
+            | dict[bool, Collection[KeyValConfSpec]]
         ),
         is_mandatory: bool = True,
         can_have_untested_keys: bool = False,
-        selectkey_n_default: tuple[str, str] | None = None,
+        selectkey_n_default: tuple[str, str | bool] | None = None,
     ) -> None:
         """Set a table of properties. Correspond to a [table] in the ``.toml``.
 
@@ -53,7 +49,7 @@ class TableConfSpec:
             Name of the object that will receive associated parameters.
         table_entry : str
             Name of the table in the ``.toml`` file, without brackets.
-        specs : Collection[KeyValConfSpec] | dict[str, Collection[KeyValConfSpec]]
+        specs : Collection[KeyValConfSpec] | dict[str, Collection[KeyValConfSpec]] | dict[str, Collection[KeyValConfSpec]]
             The :class:`KeyValConfSpec` objects in the current table. When the
             format of the table depends on the value of a key provide a
             dictionary linking every possible table with the corresponding
@@ -64,7 +60,7 @@ class TableConfSpec:
             If LightWin should remain calm when some keys are provided in the
             ``.toml`` but do not correspond to any :class:`KeyValConfSpec`. The
             default is False.
-        selectkey_n_default : tuple[str, str] | None, optional
+        selectkey_n_default : tuple[str, str | bool] | None, optional
             Must be given if ``specs`` is a dict. First value is name of the
             spec, second value is default value. We will look for this spec in
             the configuration file and select the proper ``Collection`` of
@@ -124,7 +120,7 @@ class TableConfSpec:
         value = self._selectkey_n_default[1]
         if toml_subdict is not None:
             value = toml_subdict.get(self._selectkey_n_default[0])
-        assert isinstance(value, str)
+
         specs = self._specs[value]
         assert specs is not None
         return list(specs)

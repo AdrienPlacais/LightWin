@@ -7,30 +7,21 @@
 """
 
 import logging
-from abc import ABC
 from typing import Any, Literal
 
-from lightwin.new_config.specs.beam_calculator_envelope1d_specs import (
-    ENVELOPE1D_CONFIG,
-)
-from lightwin.new_config.specs.beam_calculator_tracewin_specs import (
-    TRACEWIN_CONFIG,
+from lightwin.new_config.specs.beam_calculator_specs import (
+    BEAM_CALCULATORS_CONFIGS,
 )
 from lightwin.new_config.specs.beam_specs import BEAM_CONFIG
 from lightwin.new_config.specs.design_space_specs import DESIGN_SPACE_CONFIGS
+from lightwin.new_config.specs.evaluators_specs import EVALUATORS_CONFIG
 from lightwin.new_config.specs.files_specs import FILES_CONFIG
 from lightwin.new_config.specs.plots_specs import PLOTS_CONFIG
 from lightwin.new_config.specs.wtf_specs import WTF_CONFIGS
 from lightwin.new_config.table_spec import TableConfSpec
 
-BEAM_CALCULATORS_CONFIGS = {
-    "TraceWin": TRACEWIN_CONFIG,
-    "Envelope1D": ENVELOPE1D_CONFIG,
-    # "Envelope3D": ENVELOPE3D_CONFIG,
-}
 
-
-class ConfSpec(ABC):
+class ConfSpec:
     """Define structure of a configuration object.
 
     Parameters
@@ -40,7 +31,7 @@ class ConfSpec(ABC):
 
     """
 
-    MANDATORY_CONFIG_ENTRIES: tuple[str, ...]
+    MANDATORY_CONFIG_ENTRIES: tuple[str, ...] = ()
 
     def __init__(
         self,
@@ -52,6 +43,7 @@ class ConfSpec(ABC):
         evaluators_table_name: str = "",
         design_space_table_name: str = "",
         wtf_table_name: str = "",
+        **kwargs,
     ) -> None:
         """Declare the attributes."""
         table_of_specs = []
