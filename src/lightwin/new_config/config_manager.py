@@ -59,7 +59,32 @@ def load_toml(
     warn_mismatch: bool,
     override: dict[str, dict[str, Any]] | None,
 ) -> dict[str, dict[str, Any]]:
-    """Load the ``.toml`` and extract the dicts asked by user."""
+    """Load the ``.toml`` and extract the dicts asked by user.
+
+
+    Parameters
+    ----------
+    config_path : pathlib.Path
+        Path to the configuration file.
+    config_keys : dict[str, str]
+        Keys will be the keys of the output. Values are the name of the tables
+        in the configuration file. If ``config_keys = {"beam": "proton_beam"}``
+        , the output will look like ``{"beam": {<content of [proton_beam]>}}``.
+    warn_mismatch : bool
+        Check if there are discrepancies between ``override`` and the keys or
+        dicts to override in ``config_keys``.
+    override : dict[str, dict[str, Any]] | None
+        To override some entries of the output dictionary, before even testing
+        it.
+
+    Returns
+    -------
+    dict[str, dict[str, Any]]
+        A dictionary which keys are the keys of ``config_keys``, and the values
+        are dictionaries holding corresponding table entries from the
+        configuration file.
+
+    """
     all_toml: dict[str, dict[str, Any]]
     with open(config_path, "rb") as f:
         all_toml = tomllib.load(f)
