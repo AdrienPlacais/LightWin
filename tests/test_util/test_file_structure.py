@@ -15,13 +15,6 @@ from lightwin.constants import (
     example_variables,
 )
 
-params = [
-    pytest.param(
-        (example_folder, "directory"),
-        id="example_folder",
-    ),
-]
-
 
 @pytest.mark.smoke
 @pytest.mark.implementation
