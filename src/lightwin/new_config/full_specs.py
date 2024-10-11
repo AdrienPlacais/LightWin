@@ -35,68 +35,60 @@ class ConfSpec:
 
     def __init__(
         self,
-        beam_table_name: str = "",
-        files_table_name: str = "",
-        beam_calculator_table_name: str = "",
-        post_beam_calculator_table_name: str = "",
-        plots_table_name: str = "",
-        evaluators_table_name: str = "",
-        design_space_table_name: str = "",
-        wtf_table_name: str = "",
+        beam: str = "",
+        files: str = "",
+        beam_calculator: str = "",
+        post_beam_calculator: str = "",
+        plots: str = "",
+        evaluators: str = "",
+        design_space: str = "",
+        wtf: str = "",
         **kwargs,
     ) -> None:
         """Declare the attributes."""
         table_of_specs = []
-        if beam_table_name:
-            table_of_specs.append(
-                TableConfSpec("beam", beam_table_name, BEAM_CONFIG)
-            )
-        if files_table_name:
-            table_of_specs.append(
-                TableConfSpec("files", files_table_name, FILES_CONFIG)
-            )
-        if beam_calculator_table_name:
+        if beam:
+            table_of_specs.append(TableConfSpec("beam", beam, BEAM_CONFIG))
+        if files:
+            table_of_specs.append(TableConfSpec("files", files, FILES_CONFIG))
+        if beam_calculator:
             table_of_specs.append(
                 TableConfSpec(
                     "beam_calculator",
-                    beam_calculator_table_name,
+                    beam_calculator,
                     BEAM_CALCULATORS_CONFIGS,
                     selectkey_n_default=("tool", "Envelope1D"),
                 )
             )
-        if post_beam_calculator_table_name:
+        if post_beam_calculator:
             table_of_specs.append(
                 TableConfSpec(
                     "beam_calculator",
-                    post_beam_calculator_table_name,
+                    post_beam_calculator,
                     BEAM_CALCULATORS_CONFIGS,
                     selectkey_n_default=("tool", "Envelope1D"),
                 )
             )
-        if plots_table_name:
+        if plots:
+            table_of_specs.append(TableConfSpec("plots", plots, PLOTS_CONFIG))
+        if evaluators:
             table_of_specs.append(
-                TableConfSpec("plots", plots_table_name, PLOTS_CONFIG)
+                TableConfSpec("evaluators", evaluators, EVALUATORS_CONFIG)
             )
-        if evaluators_table_name:
-            table_of_specs.append(
-                TableConfSpec(
-                    "evaluators", evaluators_table_name, EVALUATORS_CONFIG
-                )
-            )
-        if design_space_table_name:
+        if design_space:
             table_of_specs.append(
                 TableConfSpec(
                     "design_space",
-                    design_space_table_name,
+                    design_space,
                     DESIGN_SPACE_CONFIGS,
                     selectkey_n_default=("from_file", True),
                 )
             )
-        if wtf_table_name:
+        if wtf:
             table_of_specs.append(
                 TableConfSpec(
                     "wtf",
-                    wtf_table_name,
+                    wtf,
                     WTF_CONFIGS,
                     selectkey_n_default=("strategy", "k out of n"),
                 )
@@ -262,9 +254,9 @@ class SimplestConfSpec(ConfSpec):
     def __init__(
         self,
         *,
-        beam_table_name: str = "beam",
-        files_table_name: str = "files",
-        beam_calculator_table_name: str = "beam_calculator",
+        beam: str = "beam",
+        files: str = "files",
+        beam_calculator: str = "beam_calculator",
     ) -> None:
         """Define static specifications.
 
@@ -273,7 +265,7 @@ class SimplestConfSpec(ConfSpec):
 
         """
         super().__init__(
-            beam_table_name=beam_table_name,
-            files_table_name=files_table_name,
-            beam_calculator_table_name=beam_calculator_table_name,
+            beam=beam,
+            files=files,
+            beam_calculator=beam_calculator,
         )

@@ -35,9 +35,9 @@ def conf_specs() -> SimplestConfSpec:
 
     """
     return SimplestConfSpec(
-        beam_table_name="beam",
-        files_table_name="files",
-        beam_calculator_table_name="generic_tracewin",
+        beam="beam",
+        files="files",
+        beam_calculator="generic_tracewin",
     )
 
 
