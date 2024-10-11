@@ -7,6 +7,7 @@
 """
 
 import logging
+from abc import ABC
 from typing import Any, Literal
 
 from lightwin.new_config.specs.beam_calculator_envelope1d_specs import (
@@ -18,7 +19,9 @@ from lightwin.new_config.specs.beam_calculator_tracewin_specs import (
 from lightwin.new_config.specs.beam_specs import BEAM_CONFIG
 from lightwin.new_config.specs.design_space_specs import DESIGN_SPACE_CONFIGS
 from lightwin.new_config.specs.files_specs import FILES_CONFIG
-from lightwin.new_config.specs_base_objects import TableConfSpec
+from lightwin.new_config.specs.plots_specs import PLOTS_CONFIG
+from lightwin.new_config.specs.wtf_specs import WTF_CONFIGS
+from lightwin.new_config.table_spec import TableConfSpec
 
 BEAM_CALCULATORS_CONFIGS = {
     "TraceWin": TRACEWIN_CONFIG,
@@ -27,50 +30,91 @@ BEAM_CALCULATORS_CONFIGS = {
 }
 
 
-class FullConfSpec:
-    """Hold all the LightWin inputs, their types, allowed values, etc.
+class ConfSpec(ABC):
+    """Define structure of a configuration object.
 
     Parameters
     ----------
     MANDATORY_CONFIG_ENTRIES : tuple[str, ...]
-        Entries that you should must for this :class:`FullConfSpec` to work.
+        Entries that you must declare for this :class:`ConfSpec` to work.
 
     """
 
-    MANDATORY_CONFIG_ENTRIES = (
-        "beam",
-        "files",
-        "beam_calculator",
-    )  #:
+    MANDATORY_CONFIG_ENTRIES: tuple[str, ...]
 
     def __init__(
         self,
-        *,
-        beam_table_name: str = "beam",
-        files_table_name: str = "files",
-        beam_calculator_table_name: str = "beam_calculator",
+        beam_table_name: str = "",
+        files_table_name: str = "",
+        beam_calculator_table_name: str = "",
+        post_beam_calculator_table_name: str = "",
+        plots_table_name: str = "",
+        evaluators_table_name: str = "",
+        design_space_table_name: str = "",
+        wtf_table_name: str = "",
     ) -> None:
-        """Define static specifications.
-
-        In the future, may add different mandatory specs, for example if
-        failures are to be fixed or not.
-
-        """
-        self.tables_of_specs = (
-            TableConfSpec("beam", beam_table_name, BEAM_CONFIG),
-            TableConfSpec("files", files_table_name, FILES_CONFIG),
-            TableConfSpec(
-                "beam_calculator",
-                beam_calculator_table_name,
-                BEAM_CALCULATORS_CONFIGS,
-                selectkey_n_default=("tool", "Envelope1D"),
-            ),
-        )
+        """Declare the attributes."""
+        table_of_specs = []
+        if beam_table_name:
+            table_of_specs.append(
+                TableConfSpec("beam", beam_table_name, BEAM_CONFIG)
+            )
+        if files_table_name:
+            table_of_specs.append(
+                TableConfSpec("files", files_table_name, FILES_CONFIG)
+            )
+        if beam_calculator_table_name:
+            table_of_specs.append(
+                TableConfSpec(
+                    "beam_calculator",
+                    beam_calculator_table_name,
+                    BEAM_CALCULATORS_CONFIGS,
+                    selectkey_n_default=("tool", "Envelope1D"),
+                )
+            )
+        if post_beam_calculator_table_name:
+            table_of_specs.append(
+                TableConfSpec(
+                    "beam_calculator",
+                    post_beam_calculator_table_name,
+                    BEAM_CALCULATORS_CONFIGS,
+                    selectkey_n_default=("tool", "Envelope1D"),
+                )
+            )
+        if plots_table_name:
+            table_of_specs.append(
+                TableConfSpec("plots", plots_table_name, PLOTS_CONFIG)
+            )
+        if evaluators_table_name:
+            table_of_specs.append(
+                TableConfSpec(
+                    "evaluators", evaluators_table_name, EVALUATORS_CONFIG
+                )
+            )
+        if design_space_table_name:
+            table_of_specs.append(
+                TableConfSpec(
+                    "design_space",
+                    design_space_table_name,
+                    DESIGN_SPACE_CONFIGS,
+                    selectkey_n_default=("from_file", True),
+                )
+            )
+        if wtf_table_name:
+            table_of_specs.append(
+                TableConfSpec(
+                    "wtf",
+                    wtf_table_name,
+                    WTF_CONFIGS,
+                    selectkey_n_default=("strategy", "k out of n"),
+                )
+            )
+        self.tables_of_specs = tuple(table_of_specs)
 
     def __repr__(self) -> str:
         """Print info on how object was instantiated."""
         tables_info = (
-            ["FullConfSpec("]
+            [f"{self.__name__}("]
             + ["\t" + table.__repr__() for table in self.tables_of_specs]
             + [")"]
         )
@@ -83,7 +127,7 @@ class FullConfSpec:
             "configured_object", "table_entry"
         ] = "configured_object",
     ) -> TableConfSpec:
-        """Get the specifications for the table named ``table_id``.
+        """Get the :class:`.TableConfSpec` named ``table_id``.
 
         Parameters
         ----------
@@ -208,3 +252,36 @@ class FullConfSpec:
             if spec.is_mandatory or not only_mandatory
         }
         return dummy_conf
+
+
+class SimplestConfSpec(ConfSpec):
+    """Hold all the LightWin inputs, their types, allowed values, etc.
+
+    Defined for a run without optimization.
+
+    """
+
+    MANDATORY_CONFIG_ENTRIES = (
+        "beam",
+        "files",
+        "beam_calculator",
+    )  #:
+
+    def __init__(
+        self,
+        *,
+        beam_table_name: str = "beam",
+        files_table_name: str = "files",
+        beam_calculator_table_name: str = "beam_calculator",
+    ) -> None:
+        """Define static specifications.
+
+        In the future, may add different mandatory specs, for example if
+        failures are to be fixed or not.
+
+        """
+        super().__init__(
+            beam_table_name=beam_table_name,
+            files_table_name=files_table_name,
+            beam_calculator_table_name=beam_calculator_table_name,
+        )

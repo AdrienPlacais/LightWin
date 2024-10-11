@@ -16,7 +16,7 @@ from lightwin.new_config.config_manager import (
     load_toml,
     process_config,
 )
-from lightwin.new_config.full_specs import FullConfSpec
+from lightwin.new_config.full_specs import SimplestConfSpec
 
 CONFIG_KEYS = {
     "beam": "beam",
@@ -26,15 +26,15 @@ CONFIG_KEYS = {
 
 
 @pytest.fixture(scope="class")
-def full_conf_specs() -> FullConfSpec:
+def conf_specs() -> SimplestConfSpec:
     """Give the specifications to validate.
 
     Putting this in a fixture does not make much sense for now, but I may have
-    different :class:`.FullConfSpec` in the future and parametrization will
+    different :class:`.SimplestConfSpec` in the future and parametrization will
     then be easier.
 
     """
-    return FullConfSpec(
+    return SimplestConfSpec(
         beam_table_name="beam",
         files_table_name="files",
         beam_calculator_table_name="generic_tracewin",
@@ -102,10 +102,10 @@ def dummy_toml_dict(
 
 @pytest.fixture(scope="class")
 def generated_toml_dict(
-    full_conf_specs: FullConfSpec,
+    conf_specs: SimplestConfSpec,
 ) -> dict[str, dict[str, Any]]:
     """Generate a configuration dict with default values."""
-    return full_conf_specs.generate_dummy_dict()
+    return conf_specs.generate_dummy_dict()
 
 
 @pytest.mark.smoke
@@ -124,11 +124,11 @@ class TestConfigManager:
 
     def test_validate(
         self,
-        full_conf_specs: FullConfSpec,
+        conf_specs: SimplestConfSpec,
         dummy_toml_dict: dict[str, dict[str, Any]],
     ) -> None:
         """Check if loaded toml is valid."""
-        assert full_conf_specs.validate(
+        assert conf_specs.validate(
             dummy_toml_dict,
             id_type="configured_object",
             toml_folder=example_folder,
@@ -144,22 +144,22 @@ class TestConfigManager:
 
     def test_generate_is_valid(
         self,
-        full_conf_specs: FullConfSpec,
+        conf_specs: SimplestConfSpec,
         generated_toml_dict: dict[str, dict[str, Any]],
     ) -> None:
         """Check that generating a default toml leads to a valid dict."""
-        assert full_conf_specs.validate(
+        assert conf_specs.validate(
             generated_toml_dict, id_type="table_entry"
         ), "Error validating default configuration dict."
 
     def test_config_can_be_saved_to_file(
         self,
-        full_conf_specs: FullConfSpec,
+        conf_specs: SimplestConfSpec,
         dummy_toml_dict: dict[str, dict[str, Any]],
         tmp_path_factory: pytest.TempPathFactory,
     ):
         """Check if saving the given conf dict as toml works."""
         toml_path = tmp_path_factory.mktemp("test_toml") / "test.toml"
-        dict_to_toml(dummy_toml_dict, toml_path, full_conf_specs)
-        process_config(toml_path, CONFIG_KEYS, full_conf_specs=full_conf_specs)
+        dict_to_toml(dummy_toml_dict, toml_path, conf_specs)
+        process_config(toml_path, CONFIG_KEYS, conf_specs=conf_specs)
         assert True

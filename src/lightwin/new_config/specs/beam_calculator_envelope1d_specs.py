@@ -3,7 +3,7 @@
 from lightwin.beam_calculation.envelope_1d.envelope_1d import (
     ENVELOPE1D_METHODS,
 )
-from lightwin.new_config.specs_base_objects import KeyValConfSpec
+from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
 
 ENVELOPE1D_CONFIG = (
     KeyValConfSpec(

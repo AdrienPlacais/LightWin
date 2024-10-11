@@ -7,7 +7,7 @@
 """
 
 from lightwin.failures.strategy import COMPENSATING_SELECTOR
-from lightwin.new_config.specs_base_objects import KeyValConfSpec
+from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
 from lightwin.optimisation.algorithms.factory import ALGORITHM_SELECTOR
 from lightwin.optimisation.objective.factory import OBJECTIVE_PRESETS
 

@@ -7,7 +7,7 @@
 
 from pathlib import Path
 
-from lightwin.new_config.specs_base_objects import KeyValConfSpec
+from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
 
 MACHINE_CONFIG_CONFIG = (
     KeyValConfSpec(

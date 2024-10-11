@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from lightwin.new_config.specs_base_objects import KeyValConfSpec
+from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
 
 BEAM_CONFIG = (
     KeyValConfSpec(

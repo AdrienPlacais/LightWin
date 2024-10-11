@@ -1,6 +1,6 @@
 """Define parameters to set the plots."""
 
-from lightwin.new_config.specs_base_objects import KeyValConfSpec
+from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
 
 PLOTS_CONFIG = (
     KeyValConfSpec(
