@@ -6,7 +6,7 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
-from lightwin.new_config.full_specs import FullConfSpec
+from lightwin.new_config.full_specs import ConfSpec, SimplestConfSpec
 
 
 def process_config(
@@ -14,7 +14,7 @@ def process_config(
     config_keys: dict[str, str],
     warn_mismatch: bool = False,
     override: dict[str, dict[str, Any]] | None = None,
-    full_conf_specs: FullConfSpec | None = None,
+    conf_specs: ConfSpec | None = None,
 ) -> dict[str, dict[str, Any]]:
     """Load and test the configuration file.
 
@@ -30,7 +30,7 @@ def process_config(
     override : dict[str, dict[str, Any]] | None, optional
         To override entries in the ``.toml``. If not provided, we keep
         defaults.
-    full_conf_specs : FullConfSpec | None, optional
+    conf_specs : ConfSpec | None, optional
         The specifications that the ``.toml`` must match to be accepted. If not
         provided, we take a default.
 
@@ -47,9 +47,9 @@ def process_config(
         config_path, config_keys, warn_mismatch, override
     )
 
-    if full_conf_specs is None:
-        full_conf_specs = FullConfSpec()
-    full_conf_specs.validate(toml_fulldict, toml_folder=config_path.parent)
+    if conf_specs is None:
+        conf_specs = SimplestConfSpec()
+    conf_specs.validate(toml_fulldict, toml_folder=config_path.parent)
     return toml_fulldict
 
 
@@ -100,7 +100,7 @@ def _override_some_toml_entries(
 def dict_to_toml(
     toml_fulldict: dict[str, dict[str, Any]],
     toml_path: Path,
-    full_conf_specs: FullConfSpec,
+    full_conf_specs: SimplestConfSpec,
     allow_overwrite: bool = False,
 ) -> None:
     """Write the provided configuration dict to a ``.toml`` file.
