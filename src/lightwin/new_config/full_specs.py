@@ -98,7 +98,7 @@ class ConfSpec:
     def __repr__(self) -> str:
         """Print info on how object was instantiated."""
         tables_info = (
-            [f"{self.__name__}("]
+            [f"{self.__class__.__name__}("]
             + ["\t" + table.__repr__() for table in self.tables_of_specs]
             + [")"]
         )
@@ -212,16 +212,18 @@ class ConfSpec:
         """Ensure that all the mandatory parameters are defined."""
         they_are_all_present = True
 
-        for table in self.tables_of_specs:
-            if not table.is_mandatory:
-                continue
-            if table.configured_object in self.MANDATORY_CONFIG_ENTRIES:
-                continue
-            they_are_all_present = False
-            logging.error(
-                f"The table entry {table} should be given but was not found."
-            )
+        for table_id in self.MANDATORY_CONFIG_ENTRIES:
+            try:
+                _ = self._get_proper_table(
+                    table_id, id_type="configured_object"
+                )
 
+            except ValueError:
+                logging.error(
+                    f"The table entry {table_id} should be given but was not "
+                    "found."
+                )
+                they_are_all_present = False
         return they_are_all_present
 
     def generate_dummy_dict(
