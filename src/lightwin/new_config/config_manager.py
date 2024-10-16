@@ -6,7 +6,7 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
-from lightwin.new_config.full_specs import ConfSpec, SimplestConfSpec
+from lightwin.new_config.full_specs import ConfSpec
 
 
 def process_config(
@@ -48,7 +48,7 @@ def process_config(
     )
 
     if conf_specs is None:
-        conf_specs = SimplestConfSpec()
+        conf_specs = ConfSpec()
     conf_specs.validate(toml_fulldict, toml_folder=config_path.parent)
     return toml_fulldict
 
@@ -125,7 +125,7 @@ def _override_some_toml_entries(
 def dict_to_toml(
     toml_fulldict: dict[str, dict[str, Any]],
     toml_path: Path,
-    full_conf_specs: SimplestConfSpec,
+    conf_specs: ConfSpec,
     allow_overwrite: bool = False,
 ) -> None:
     """Write the provided configuration dict to a ``.toml`` file.
@@ -137,7 +137,7 @@ def dict_to_toml(
         table entries.
     toml_path : Path
         Where to save the ``.toml``.
-    full_conf_specs : FullConfSpec
+    conf_specs : ConfSpec
         Holds the template to be respected. In particular, the type of the
         values in the different tables.
     allow_overwrite : bool, optional
@@ -148,7 +148,7 @@ def dict_to_toml(
     if _indue_overwritting(toml_path, allow_overwrite):
         return
 
-    strings = full_conf_specs.to_toml_strings(toml_fulldict)
+    strings = conf_specs.to_toml_strings(toml_fulldict)
     with open(toml_path, "w") as f:
         for dict_entry_string in strings:
             f.write(dict_entry_string)
