@@ -21,7 +21,6 @@ from itertools import zip_longest
 from pathlib import Path
 from typing import Any
 
-import lightwin.config_manager as con
 from lightwin.core.commands.factory import IMPLEMENTED_COMMANDS, CommandFactory
 from lightwin.core.commands.helper import apply_commands
 from lightwin.core.elements.dummy import DummyElement
@@ -110,9 +109,6 @@ class InstructionsFactory:
             )
         self._field_maps_in_3d = field_maps_in_3d
         self._load_cython_field_maps = load_cython_field_maps
-
-        self._cython: bool = con.FLAG_CYTHON
-        # would be better without config dependency
 
     def run(self, dat_content: Collection[list[str]]) -> list[Instruction]:
         """Create all the elements and commands.
