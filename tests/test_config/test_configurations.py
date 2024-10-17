@@ -1,7 +1,7 @@
-"""Test that :file:`example.toml` and the :class:`.TableConfSpec`. match.
+"""Test that :file:`example.toml` and the :class:`.TableConfSpec` match.
 
-We sequentially load every table of :file:`example.toml` and check it with the
-corresponding :class:`.TableConfSpec`.
+We sequentially load each relatable table of :file:`example.toml`, and match it
+with the corresponding :class:`.TableSpec`.
 
 """
 
@@ -23,7 +23,7 @@ from lightwin.new_config.config_manager import (
 )
 from lightwin.new_config.full_specs import ConfSpec
 
-config_keys = (
+CONFIG_KEYS = (
     pytest.param(({"beam": "beam"},), id="Beam configuration"),
     pytest.param(({"files": "files"},), id="Files configuration"),
     pytest.param(
@@ -59,12 +59,20 @@ config_keys = (
         ({"wtf": "wtf_manual"},),
         id="Configuration of compensating cavities with manual method.",
     ),
-)
+)  #: Links every LightWin parameter with a table from :file:`example.toml`.
 
 
-@pytest.fixture(scope="class", params=config_keys)
+@pytest.fixture(scope="class", params=CONFIG_KEYS)
 def config_key(request: pytest.FixtureRequest) -> dict[str, str]:
-    """Give the dict for a single table study."""
+    """Give the dict for a single table study.
+
+    Returns
+    -------
+    config_key : dict[str, str]
+        A dictionary with a unique key-value pair. The key is the name of a
+        LightWin configuration entry (eg ``beam`` or ``wtf``), the value is a
+        table in :file:`example.toml` (eg ``generic_envelope1d``).
+    """
     (config_key,) = request.param
     return config_key
 
