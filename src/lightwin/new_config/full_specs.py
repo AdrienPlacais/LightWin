@@ -1,6 +1,7 @@
 """Gather in a single object all the parameters for LW to run."""
 
 import logging
+from pathlib import Path
 from typing import Any, Literal
 
 from lightwin.new_config.specs.beam_calculator_specs import (
@@ -138,6 +139,8 @@ class ConfSpec:
         id_type: Literal[
             "configured_object", "table_entry"
         ] = "configured_object",
+        original_toml_folder: Path | None = None,
+        **kwargs,
     ) -> list[str]:
         """Convert the given dict in string that can be put in a ``.toml``.
 
@@ -149,6 +152,9 @@ class ConfSpec:
             If ``toml_fulldict`` keys are name of the object (eg ``'beam'``) or
             of the table entry in the ``.toml`` (eg ``'my_proton_beam'``,
             without brackets).
+        original_toml_folder : pathlib.Path | None, optional
+            Where the original ``.toml`` was; this is used to resolve paths
+            relative to this location.
 
         Returns
         -------
@@ -160,7 +166,9 @@ class ConfSpec:
         strings = []
         for key, val in toml_fulldict.items():
             spec = self._get_proper_table(key, id_type=id_type)
-            strings += spec.to_toml_strings(val)
+            strings += spec.to_toml_strings(
+                val, original_toml_folder=original_toml_folder, **kwargs
+            )
 
         return strings
 

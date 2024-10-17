@@ -2,6 +2,7 @@
 
 import logging
 from collections.abc import Collection
+from pathlib import Path
 from typing import Any, Literal
 
 from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
@@ -154,14 +155,38 @@ class TableConfSpec:
         logging.error(msg)
         raise IOError(msg)
 
-    def to_toml_strings(self, toml_subdict: dict[str, Any]) -> list[str]:
-        """Convert the given dict in string that can be put in a ``.toml``."""
+    def to_toml_strings(
+        self,
+        toml_subdict: dict[str, Any],
+        original_toml_folder: Path | None = None,
+        **kwargs,
+    ) -> list[str]:
+        """Convert the given dict in string that can be put in a ``.toml``.
+
+        Parameters
+        ----------
+        toml_subdict : dict[str, Any]
+            A dictionary corresponding to a ``.toml`` table.
+        original_toml_folder : pathlib.Path | None, optional
+            Where the original ``.toml`` was; this is used to resolve paths
+            relative to this location.
+
+        Returns
+        -------
+        list[str]
+            All the ``.toml`` lines corresponding to the table under study.
+
+        """
         strings = [f"[{self.table_entry}]"]
         for key, val in toml_subdict.items():
             spec = self._get_proper_spec(key)
             if spec is None:
                 continue
-            strings.append(spec.to_toml_string(val))
+            strings.append(
+                spec.to_toml_string(
+                    val, original_toml_folder=original_toml_folder, **kwargs
+                )
+            )
 
         return strings
 

@@ -127,6 +127,8 @@ def dict_to_toml(
     toml_path: Path,
     conf_specs: ConfSpec,
     allow_overwrite: bool = False,
+    original_toml_folder: Path | None = None,
+    **kwargs,
 ) -> None:
     """Write the provided configuration dict to a ``.toml`` file.
 
@@ -143,12 +145,17 @@ def dict_to_toml(
     allow_overwrite : bool, optional
         If a pre-existing ``.toml`` can be overwritten. The default is False,
         in which case an error will be raised.
+    original_toml_folder : pathlib.Path | None, optional
+        Where the original ``.toml`` was; this is used to resolve paths
+        relative to this location.
 
     """
     if _indue_overwritting(toml_path, allow_overwrite):
         return
 
-    strings = conf_specs.to_toml_strings(toml_fulldict)
+    strings = conf_specs.to_toml_strings(
+        toml_fulldict, original_toml_folder=original_toml_folder, **kwargs
+    )
     with open(toml_path, "w") as f:
         for dict_entry_string in strings:
             f.write(dict_entry_string)

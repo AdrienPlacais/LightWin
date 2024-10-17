@@ -114,14 +114,39 @@ class KeyValConfSpec:
         _ = find_file(toml_folder, toml_value)
         return True
 
-    def to_toml_string(self, toml_value: Any | None = None) -> str:
-        """Convert the value into a line that can be put in a ``.toml``."""
+    def to_toml_string(
+        self,
+        toml_value: Any | None = None,
+        original_toml_folder: Path | None = None,
+        **kwargs,
+    ) -> str:
+        """Convert the value into a line that can be put in a ``.toml``.
+
+        Parameters
+        ----------
+        toml_value : Any | None, optional
+            The value to put in the file. If not provided, we issue a warnign
+            and set at default value.
+        original_toml_folder : pathlib.Path | None, optional
+            Where the original ``.toml`` was; this is used to resolve paths
+            relative to this location.
+
+        Returns
+        -------
+        str
+            The ``.toml`` line corresponding to current object.
+
+        """
         if toml_value is None:
             logging.error(
                 f"You must provide a value for {self.key = }. Trying to "
                 f"continue with {self.default_value = }..."
             )
             toml_value = self.default_value
+
+        if Path in self.types:
+            assert isinstance(toml_value, (str, Path))
+            toml_value = find_file(original_toml_folder, toml_value)
 
         formatted = format_for_toml(
             self.key, toml_value, preferred_type=self.types[0]
