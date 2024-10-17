@@ -301,4 +301,5 @@ COMPENSATING_SELECTOR = {
     "l neighboring lattices": l_neighboring_lattices,
     "global": global_compensation,
     "global_downstream": global_downstream,
+    "manual": manual,
 }  #:
