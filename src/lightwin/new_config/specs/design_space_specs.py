@@ -93,7 +93,7 @@ DESIGN_SPACE_FROM_FILE = _DESIGN_SPACE_BASE + (
     ),
     KeyValConfSpec(
         key="variables_filepath",
-        types=(str,),
+        types=(str, Path),
         description=(
             "Path to the ``.csv`` holding variables. Mandatory if "
             "``from_file`` is ``True``."
