@@ -1,10 +1,4 @@
-"""Gather in a single object all the parameters for LW to run.
-
-.. note::
-    For now, there a single :class:`FullConfSpec`. But we may create different
-    objects in the future, according to the various types of run.
-
-"""
+"""Gather in a single object all the parameters for LW to run."""
 
 import logging
 from typing import Any, Literal
