@@ -19,4 +19,18 @@ EVALUATORS_CONFIG = (
         default_value=["mismatch factor at end"],
         is_mandatory=False,
     ),
+    KeyValConfSpec(
+        key="simulation_output",
+        types=(list,),
+        description=(
+            "Keyword arguments for the :class:`.SimulationOutputEvaluator`."
+        ),
+        default_value=[
+            {
+                "name": "LongitudinalEmittance",
+                "max_percentage_rel_increase": 0.005,
+            }
+        ],
+        is_mandatory=False,
+    ),
 )
