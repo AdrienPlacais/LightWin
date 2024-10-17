@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
-from lightwin.config.helper import find_file
+from lightwin.config.helper import find_path
 from lightwin.new_config.toml_formatter import format_for_toml
 
 
@@ -111,7 +111,7 @@ class KeyValConfSpec:
         """Check that the given path exists."""
         if not self.is_a_path_that_must_exists:
             return True
-        _ = find_file(toml_folder, toml_value)
+        _ = find_path(toml_folder, toml_value)
         return True
 
     def to_toml_string(
@@ -146,9 +146,9 @@ class KeyValConfSpec:
 
         if Path in self.types:
             assert isinstance(toml_value, (str, Path))
-            toml_value = find_file(original_toml_folder, toml_value)
+            toml_value = find_path(original_toml_folder, toml_value)
 
         formatted = format_for_toml(
             self.key, toml_value, preferred_type=self.types[0]
         )
-        return f"{self.key} = {formatted}"
+        return formatted

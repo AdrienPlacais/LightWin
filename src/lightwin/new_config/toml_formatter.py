@@ -5,6 +5,36 @@ from typing import Any
 
 
 def format_for_toml(key: str, value: Any, preferred_type: type) -> str:
+    """Format the key-value pair so that it matches ``toml`` standard."""
+    if isinstance(value, dict):
+        formatted_value = _concat_dict(value)
+    elif isinstance(value, list):
+        formatted_value = _format_list(value, preferred_type)
+    else:
+        formatted_value = _format_value(key, value, preferred_type)
+
+    return f"{key} = {formatted_value}"
+
+
+def _concat_dict(value: dict[str, Any]) -> str:
+    """Adapt Python dict to toml inline table."""
+    entries = (
+        format_for_toml(subkey, subval, type(subval))
+        for subkey, subval in value.items()
+    )
+    return "{ " + ", ".join(entries) + " }"
+
+
+def _format_list(value: list, preferred_type: type) -> str:
+    """Format a list of values, including handling lists of dicts."""
+    if all(isinstance(item, dict) for item in value):
+        formatted_items = [_concat_dict(item) for item in value]
+    else:
+        formatted_items = [str(item) for item in value]
+    return "[ " + ", ".join(formatted_items) + " ]"
+
+
+def _format_value(key: str, value: Any, preferred_type: type) -> str:
     """Format the value so that it matches ``toml`` standard."""
     if preferred_type is str:
         return _str_toml(key, value)
