@@ -1,4 +1,5 @@
 """Define utility functions to test out the ``.toml`` config file."""
+
 import functools
 import logging
 from pathlib import Path
@@ -25,10 +26,10 @@ def dict_for_pretty_output(some_kw: dict) -> str:
     nice = [f"{key:>52s} = {value}" for key, value in some_kw.items()]
     return "\n".join(nice)
 
-def _path_exists_method(nature: Literal["file", "folder"] | None = None
-                      )
 
-def check_nature(path: Path, nature: Literal["file", "folder"] | None) -> bool:
+def _find_according_to_nature(
+    path: Path, nature: Literal["file", "folder"] | None
+) -> bool:
     """Helper function to check if the path matches the desired nature."""
     match nature:
         case "file":
@@ -41,12 +42,13 @@ def check_nature(path: Path, nature: Literal["file", "folder"] | None) -> bool:
             logging.error(
                 "f{nature = } not recognized. Considering it's None..."
             )
-            return check_nature(path, nature=None)
+            return _find_according_to_nature(path, nature=None)
+
 
 def find_path(
     toml_folder: Path | None,
     path: str | Path,
-    nature: Literal["file", "folder"] | None = None
+    nature: Literal["file", "folder"] | None = None,
 ) -> Path:
     """Look for the given path in all possible places, make it absolute.
 
@@ -73,7 +75,7 @@ def find_path(
     """
 
     def path_exists(p: Path) -> bool:
-        return check_nature(p, nature)
+        return _find_according_to_nature(p, nature)
 
     if isinstance(path, Path):
         updated_path = path.resolve().absolute()
