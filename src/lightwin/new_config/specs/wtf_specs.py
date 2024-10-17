@@ -14,8 +14,11 @@ from lightwin.optimisation.objective.factory import OBJECTIVE_PRESETS
 _WTF_BASE = (
     KeyValConfSpec(
         key="failed",
-        types=(list[list[int]], list[list[str]]),
-        description=("Index/name of failed cavities."),
+        types=(list,),
+        description=(
+            "Index/name of failed cavities. Must be a list[list[int]] or "
+            "list[list[str]]."
+        ),
         default_value=[[5]],
     ),
     KeyValConfSpec(
@@ -117,16 +120,20 @@ WTF_L_NEIGHBORING_LATTICES = _WTF_BASE_AUTOMATIC + (
 WTF_MANUAL = _WTF_BASE + (
     KeyValConfSpec(
         key="failed",
-        types=(list[list[list[int]]], list[list[list[str]]]),
-        description="Index/name of failed cavities.",
+        types=(list,),
+        description=(
+            "Index/name of failed cavities. Must be a list[list[list[int]]] or"
+            " list[list[list[str]]]."
+        ),
         default_value=[[[5]]],
         overrides_previously_defined=True,
     ),
     KeyValConfSpec(
         key="compensating_manual",
-        types=(list[list[list[int]]], list[list[list[str]]]),
+        types=(list,),
         description=(
-            "Index/name of compensating cavities cavities. The number of "
+            "Index/name of compensating cavities cavities. Must be a "
+            "list[list[list[int]]] or list[list[list[str]]]. The number of "
             "FaultScenarios (length of most outer list) must match ``failed``."
             " The number of groups of compensating cavities (second level) "
             "must match ``failed``."
