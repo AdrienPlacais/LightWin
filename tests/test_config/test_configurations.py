@@ -3,6 +3,9 @@
 We sequentially load each relatable table of :file:`example.toml`, and match it
 with the corresponding :class:`.TableSpec`.
 
+.. todo::
+    Writting to ``.toml`` will fail with lists of dictionaries
+
 """
 
 from typing import Any
@@ -53,7 +56,10 @@ CONFIG_KEYS = (
     ),
     pytest.param(
         ({"wtf": "wtf_l_neighboring_lattices"},),
-        id="Configuration of compensating cavities with l neighboring lattices method.",
+        id=(
+            "Configuration of compensating cavities with l neighboring "
+            "lattices method."
+        ),
     ),
     pytest.param(
         ({"wtf": "wtf_manual"},),
@@ -121,16 +127,24 @@ class TestSingleTable:
             toml_dict, id_type="configured_object", toml_folder=example_folder
         ), f"Mismatch between {toml_dict = } and {conf_spec = }"
 
-    def atest_config_can_be_saved_to_file(
+    def test_config_can_be_saved_to_file(
         self,
         config_key: dict[str, str],
         toml_dict: dict[str, dict[str, Any]],
         conf_spec: ConfSpec,
         tmp_path_factory: pytest.TempPathFactory,
     ):
-        """Check if saving the given conf dict as toml works."""
-        toml_path = tmp_path_factory.mktemp("test_toml") / "test.toml"
-        dict_to_toml(toml_dict, toml_path, conf_spec)
+        """Check that the loaded config can be saved back to ``.toml``."""
+        toml_path = (
+            tmp_path_factory.mktemp("test_configurations")
+            / "test_config_can_be_saved_to_file.toml"
+        )
+        dict_to_toml(
+            toml_dict,
+            toml_path,
+            conf_spec,
+            original_toml_folder=example_folder,
+        )
         process_config(toml_path, config_key, conf_specs=conf_spec)
         assert True
 
