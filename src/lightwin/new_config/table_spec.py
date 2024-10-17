@@ -178,7 +178,7 @@ class TableConfSpec:
         all_is_validated = all(validations)
         if not all_is_validated:
             logging.error(
-                "At least one error was raised treating {self.table}"
+                f"At least one error was raised treating {self.table_entry}"
             )
 
         return all_is_validated

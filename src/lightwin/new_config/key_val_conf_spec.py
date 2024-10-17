@@ -86,7 +86,7 @@ class KeyValConfSpec:
             and self.path_exists(toml_value, **kwargs)
         )
         if not valid:
-            logging.error("An error was detected while treating {self.key}")
+            logging.error(f"An error was detected while treating {self.key}")
         return valid
 
     def is_valid_type(self, toml_value: Any, **kwargs) -> bool:
