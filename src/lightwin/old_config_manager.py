@@ -39,7 +39,6 @@ import lightwin.config.wtf
 from lightwin.config.helper import dict_for_pretty_output
 
 # Values that will be available everywhere
-FLAG_CYTHON = bool
 
 E_MEV, E_REST_MEV, INV_E_REST_MEV = float(), float(), float()
 GAMMA_INIT = float()
@@ -191,6 +190,3 @@ def _make_global(
 
     if beam_calculator is None:
         return
-
-    global FLAG_CYTHON
-    FLAG_CYTHON = beam_calculator.get("flag_cython", None)

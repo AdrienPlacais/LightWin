@@ -44,12 +44,18 @@ class Envelope3D(BeamCalculator):
         flag_cython: bool = False,
         method: Literal["RK4"] = "RK4",
         phi_s_definition: Literal["historical"] = "historical",
+        **kwargs,
     ) -> None:
         """Set the proper motion integration function, according to inputs."""
-        self.flag_cython = flag_cython
         self.n_steps_per_cell = n_steps_per_cell
         self.method = method
-        super().__init__(flag_phi_abs, out_folder, default_field_map_folder)
+        super().__init__(
+            flag_phi_abs=flag_phi_abs,
+            out_folder=out_folder,
+            default_field_map_folder=default_field_map_folder,
+            flag_cython=flag_cython,
+            **kwargs,
+        )
 
         self._phi_s_definition = phi_s_definition
         self._phi_s_func = SYNCHRONOUS_PHASE_FUNCTIONS[self._phi_s_definition]

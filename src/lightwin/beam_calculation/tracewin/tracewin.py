@@ -92,7 +92,12 @@ class TraceWin(BeamCalculator):
         if self.is_a_multiparticle_simulation:
             filename = Path("partran1.out")
         self._filename = filename
-        super().__init__(flag_phi_abs, out_folder, default_field_map_folder)
+        super().__init__(
+            flag_phi_abs=flag_phi_abs,
+            out_folder=out_folder,
+            default_field_map_folder=default_field_map_folder,
+            **kwargs,
+        )
 
         self.path_cal: Path
         self.dat_file: Path

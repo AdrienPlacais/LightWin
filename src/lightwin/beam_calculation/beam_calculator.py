@@ -47,6 +47,8 @@ class BeamCalculator(ABC):
         flag_phi_abs: bool,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
+        flag_cython: bool = False,
+        **kwargs,
     ) -> None:
         r"""Set ``id``, some generic parameters such as results folders.
 
@@ -61,9 +63,13 @@ class BeamCalculator(ABC):
             not a full path.
         default_field_map_folder : pathlib.Path | str
             Where to look for field map files by default.
+        flag_cython : bool, optional
+            If the beam calculator involves loading cython field maps. The
+            default is False.
 
         """
         self.flag_phi_abs = flag_phi_abs
+        self.flag_cython = flag_cython
         self.id: str = f"{self.__class__.__name__}_{next(self._ids)}"
 
         if isinstance(out_folder, str):
@@ -102,7 +108,7 @@ class BeamCalculator(ABC):
             load_field_maps=True,  # useless with TraceWin
             field_maps_in_3d=False,  # not implemented anyway
             # Different loading of field maps if Cython
-            load_cython_field_maps=con.FLAG_CYTHON,
+            load_cython_field_maps=self.flag_cython,
             elements_to_dump=(),
         )
 
