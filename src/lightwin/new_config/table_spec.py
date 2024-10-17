@@ -147,14 +147,12 @@ class TableConfSpec:
             return spec
         if self.can_have_untested_keys:
             return
-        logging.error(
+        msg = (
             f"The table {self.table_entry} has no specs for property "
-            "{spec_name}"
+            f"{spec_name}"
         )
-        raise IOError(
-            f"The table {self.table_entry} has no specs for property "
-            "{spec_name}"
-        )
+        logging.error(msg)
+        raise IOError(msg)
 
     def to_toml_strings(self, toml_subdict: dict[str, Any]) -> list[str]:
         """Convert the given dict in string that can be put in a ``.toml``."""
