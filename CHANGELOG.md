@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `evaluator` objects are more robust and can be configured from the `.toml`.
 - Plotting is now performed thanks to the `plotter` library.
 
+## [0.8.0b0] 2024-10-??
+
+### Changed
+
+- The configuration manager was refactored.
+
+### Deleted
+
+- Constants were removed from the config module to fix circular dependency and bad design issues.
+ - `BeamCalculator` objects now need to be given the `beam` configuration dict.
+
 ## [0.7.0b3] 2024-10-09
 
 ### Added
