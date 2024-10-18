@@ -1,7 +1,7 @@
 """Create the solver parameters for :class:`.Envelope3D`."""
 
 import logging
-from typing import Literal
+from typing import Any, Literal
 
 from lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters import (
     BendEnvelope3DParameters,
@@ -42,6 +42,7 @@ class ElementEnvelope3DParametersFactory(
         method: Literal["RK4"],
         n_steps_per_cell: int,
         solver_id: str,
+        beam_kwargs: dict[str, Any],
         flag_cython: bool = False,
         phi_s_definition: Literal["historical"] = "historical",
     ) -> None:
@@ -49,6 +50,7 @@ class ElementEnvelope3DParametersFactory(
         self.method = method
         self.n_steps_per_cell = n_steps_per_cell
         self.solver_id = solver_id
+        self.beam_kwargs = beam_kwargs
         self.phi_s_definition = phi_s_definition
 
         if flag_cython:
@@ -81,7 +83,7 @@ class ElementEnvelope3DParametersFactory(
         subclass = self._parameters_constructor(elt)
 
         single_element_envelope_3d_parameters = subclass(
-            self.transf_mat_module, elt, **kwargs
+            self.transf_mat_module, elt, beam_kwargs=self.beam_kwargs, **kwargs
         )
 
         return single_element_envelope_3d_parameters

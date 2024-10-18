@@ -16,6 +16,7 @@ from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory
 from lightwin.beam_calculation.envelope_1d.simulation_output_factory import (
     SimulationOutputFactoryEnvelope1D,
 )
+from lightwin.beam_calculation.envelope_1d.util import ENVELOPE1D_METHODS_T
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
@@ -25,9 +26,6 @@ from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
-
-ENVELOPE1D_METHODS = ("RK4", "leapfrog")  #:
-methods_t = Literal["RK4", "leapfrog"]
 
 
 class Envelope1D(BeamCalculator):
@@ -39,7 +37,7 @@ class Envelope1D(BeamCalculator):
         flag_phi_abs: bool,
         flag_cython: bool,
         n_steps_per_cell: int,
-        method: methods_t,
+        method: ENVELOPE1D_METHODS_T,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
         phi_s_definition: Literal["historical"] = "historical",
@@ -73,10 +71,11 @@ class Envelope1D(BeamCalculator):
             self.out_folder,
         )
         self.beam_calc_parameters_factory = ElementEnvelope1DParametersFactory(
-            self.method,
-            self.n_steps_per_cell,
-            self.id,
-            self.flag_cython,
+            method=self.method,
+            n_steps_per_cell=self.n_steps_per_cell,
+            solver_id=self.id,
+            beam_kwargs=self.beam_kwargs,
+            flag_cython=self.flag_cython,
         )
 
     def run(

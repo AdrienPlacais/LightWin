@@ -89,10 +89,7 @@ def config(
 @pytest.fixture
 def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
     """Instantiate the solver with the proper parameters."""
-    factory = BeamCalculatorsFactory(
-        beam_calculator=config["beam_calculator"],
-        files=config["files"],
-    )
+    factory = BeamCalculatorsFactory(**config)
     my_solver = factory.run_all()[0]
     return my_solver
 

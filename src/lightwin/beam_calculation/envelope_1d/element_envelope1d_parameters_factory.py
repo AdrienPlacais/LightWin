@@ -1,13 +1,17 @@
 """Create the solver parameters for :class:`.Envelope1D`."""
 
 import logging
-from typing import Literal
+from typing import Any, Literal
 
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
     BendEnvelope1DParameters,
     DriftEnvelope1DParameters,
     ElementEnvelope1DParameters,
     FieldMapEnvelope1DParameters,
+)
+from lightwin.beam_calculation.envelope_1d.util import (
+    ENVELOPE1D_METHODS,
+    ENVELOPE1D_METHODS_T,
 )
 from lightwin.beam_calculation.parameters.factory import (
     ElementBeamCalculatorParametersFactory,
@@ -41,18 +45,20 @@ class ElementEnvelope1DParametersFactory(
 
     def __init__(
         self,
-        method: Literal["leapfrog", "RK4"],
+        method: ENVELOPE1D_METHODS_T,
         n_steps_per_cell: int,
         solver_id: str,
+        beam_kwargs: dict[str, Any],
         flag_cython: bool = False,
         phi_s_definition: Literal["historical"] = "historical",
     ) -> None:
         """Prepare import of proper functions."""
-        assert method in ("leapfrog", "RK4")
+        assert method in ENVELOPE1D_METHODS
         self.method = method
         self.n_steps_per_cell = n_steps_per_cell
         self.solver_id = solver_id
         self.phi_s_definition = phi_s_definition
+        self.beam_kwargs = beam_kwargs
 
         if flag_cython:
             try:
@@ -98,7 +104,10 @@ class ElementEnvelope1DParametersFactory(
             "phi_s_definition": self.phi_s_definition,
         }
         single_element_envelope_1d_parameters = subclass(
-            self.transf_mat_module, elt=elt, **kwargs
+            self.transf_mat_module,
+            elt=elt,
+            beam_kwargs=self.beam_kwargs,
+            **kwargs,
         )
 
         return single_element_envelope_1d_parameters

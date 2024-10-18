@@ -17,7 +17,6 @@ from typing import Callable
 
 import numpy as np
 
-import lightwin.config_manager as con
 from lightwin.beam_calculation.integrators.rk4 import rk4
 from lightwin.constants import c
 
@@ -40,7 +39,11 @@ def e_func(
 # Transfer matrices
 # =============================================================================
 def z_drift(
-    gamma_in: float, delta_s: float, n_steps: int = 1
+    gamma_in: float,
+    delta_s: float,
+    omega_0_bunch: float,
+    n_steps: int = 1,
+    **kwargs,
 ) -> tuple[np.ndarray, np.ndarray, None]:
     """Calculate the transfer matrix of a drift."""
     gamma_in_min2 = gamma_in**-2
@@ -48,7 +51,7 @@ def z_drift(
         (n_steps, 2, 2), np.array([[1.0, delta_s * gamma_in_min2], [0.0, 1.0]])
     )
     beta_in = math.sqrt(1.0 - gamma_in_min2)
-    delta_phi = con.OMEGA_0_BUNCH * delta_s / (beta_in * c)
+    delta_phi = omega_0_bunch * delta_s / (beta_in * c)
 
     # Two possibilites: second one is faster
     # l_gamman = [gamma for i in range(n_steps)]
@@ -70,6 +73,9 @@ def z_field_map_rk4(
     k_e: float,
     phi_0_rel: float,
     e_spat: Callable[[float], float],
+    q_adim: float,
+    inv_e_rest_mev: float,
+    omega_0_bunch: float,
     **kwargs,
 ) -> tuple[np.ndarray, np.ndarray, complex]:
     """Calculate the transfer matrix of a FIELD_MAP using Runge-Kutta."""
@@ -79,7 +85,7 @@ def z_field_map_rk4(
 
     # Constants to speed up calculation
     delta_phi_norm = omega0_rf * d_z / c
-    delta_gamma_norm = con.Q_ADIM * d_z * con.INV_E_REST_MEV
+    delta_gamma_norm = q_adim * d_z * inv_e_rest_mev
     k_k = delta_gamma_norm * k_e
 
     r_zz = np.empty((n_steps, 2, 2))
@@ -141,6 +147,7 @@ def z_field_map_rk4(
             delta_gamma_middle_max,
             phi_0_rel,
             omega0_rf,
+            omega_0_bunch=omega_0_bunch,
         )
 
         z_rel += d_z
@@ -156,6 +163,10 @@ def z_field_map_leapfrog(
     k_e: float,
     phi_0_rel: float,
     e_spat: Callable[[float], float],
+    q_adim: float,
+    inv_e_rest_mev: float,
+    gamma_init: float,
+    omega_0_bunch: float,
     **kwargs,
 ) -> tuple[np.ndarray, np.ndarray, float]:
     """
@@ -184,7 +195,7 @@ def z_field_map_leapfrog(
 
     # Constants to speed up calculation
     delta_phi_norm = omega0_rf * d_z / c
-    delta_gamma_norm = con.Q_ADIM * d_z * con.INV_E_REST_MEV
+    delta_gamma_norm = q_adim * d_z * inv_e_rest_mev
     k_k = delta_gamma_norm * k_e
 
     r_zz = np.empty((n_steps, 2, 2))
@@ -192,7 +203,7 @@ def z_field_map_leapfrog(
     gamma_phi[0, 1] = 0.0
     # Rewind energy from i=0 to i=-0.5 if we are at the first cavity:
     # FIXME must be cleaner
-    if gamma_in == con.GAMMA_INIT:
+    if gamma_in == gamma_init:
         gamma_phi[0, 0] = gamma_in - 0.5 * k_k * e_func(
             z_rel, e_spat, gamma_phi[0, 1], phi_0_rel
         )
@@ -239,6 +250,7 @@ def z_field_map_leapfrog(
             delta_gamma_middle_max,
             phi_0_rel,
             omega0_rf,
+            omega_0_bunch=omega_0_bunch,
         )
 
         z_rel += d_z
@@ -254,6 +266,7 @@ def z_thin_lense(
     delta_gamma_m_max: float,
     phi_0: float,
     omega0_rf: float,
+    omega_0_bunch: float,
 ) -> np.ndarray:
     """
     Thin lense approximation: drift-acceleration-drift.
@@ -274,6 +287,8 @@ def z_thin_lense(
         Input phase of the cavity.
     omega0_rf : float
         Pulsation of the cavity.
+    omega_0_bunch : float
+        Pulsation of the beam.
 
     Return
     ------
@@ -294,8 +309,11 @@ def z_thin_lense(
     k_3 = (1.0 - k_speed2) / k_2
 
     # Faster than matmul or matprod_22
-    r_zz_array = z_drift(gamma_out, half_dz)[0][0] @ (
-        np.array(([k_3, 0.0], [k_1, k_2])) @ z_drift(gamma_in, half_dz)[0][0]
+    r_zz_array = z_drift(gamma_out, half_dz, omega_0_bunch=omega_0_bunch)[0][
+        0
+    ] @ (
+        np.array(([k_3, 0.0], [k_1, k_2]))
+        @ z_drift(gamma_in, half_dz, omega_0_bunch=omega_0_bunch)[0][0]
     )
     return r_zz_array
 
@@ -306,6 +324,8 @@ def z_bend(
     factor_1: float,
     factor_2: float,
     factor_3: float,
+    omega_0_bunch: float,
+    **kwargs,
 ) -> tuple[np.ndarray, np.ndarray, None]:
     r"""Compute the longitudinal transfer matrix of a bend.
 
@@ -332,6 +352,6 @@ def z_bend(
     r_zz = np.eye(2)
     r_zz[0, 1] = topright
 
-    delta_phi = con.OMEGA_0_BUNCH * delta_s / (math.sqrt(beta_in_squared) * c)
+    delta_phi = omega_0_bunch * delta_s / (math.sqrt(beta_in_squared) * c)
     gamma_phi = np.array([gamma_in, delta_phi])
     return r_zz[np.newaxis, :], gamma_phi[np.newaxis, :], None

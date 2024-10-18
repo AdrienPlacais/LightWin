@@ -16,8 +16,8 @@ import time
 from abc import ABC, abstractmethod
 from itertools import count
 from pathlib import Path
+from typing import Any
 
-import lightwin.config_manager as con
 from lightwin.beam_calculation.parameters.factory import (
     ElementBeamCalculatorParametersFactory,
 )
@@ -47,6 +47,7 @@ class BeamCalculator(ABC):
         flag_phi_abs: bool,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
+        beam_kwargs: dict[str, Any],
         flag_cython: bool = False,
         **kwargs,
     ) -> None:
@@ -66,6 +67,8 @@ class BeamCalculator(ABC):
         flag_cython : bool, optional
             If the beam calculator involves loading cython field maps. The
             default is False.
+        beam_kwargs : dict[str, Any]
+            The config dictionary holding all the initial beam properties.
 
         """
         self.flag_phi_abs = flag_phi_abs
@@ -81,6 +84,7 @@ class BeamCalculator(ABC):
         self.default_field_map_folder = (
             default_field_map_folder.resolve().absolute()
         )
+        self.beam_kwargs = beam_kwargs
 
         self.simulation_output_factory: SimulationOutputFactory
         self.list_of_elements_factory: ListOfElementsFactory
@@ -103,7 +107,7 @@ class BeamCalculator(ABC):
         self.list_of_elements_factory = ListOfElementsFactory(
             self.is_a_3d_simulation,
             self.is_a_multiparticle_simulation,
-            con.F_BUNCH_MHZ,
+            self.beam_kwargs["f_bunch_mhz"],
             default_field_map_folder=self.default_field_map_folder,
             load_field_maps=True,  # useless with TraceWin
             field_maps_in_3d=False,  # not implemented anyway
