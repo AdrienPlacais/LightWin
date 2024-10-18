@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - The configuration manager was refactored.
+- `NewRfField` object officially replaces `RfField`.
 
 ### Deleted
 
