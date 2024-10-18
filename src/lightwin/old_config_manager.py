@@ -39,7 +39,7 @@ from lightwin.config.helper import dict_for_pretty_output
 # Values that will be available everywhere
 
 E_REST_MEV = float()
-F_BUNCH_MHZ, OMEGA_0_BUNCH, LAMBDA_BUNCH = float(), float(), float()
+OMEGA_0_BUNCH, LAMBDA_BUNCH = float(), float()
 Q_OVER_M, M_OVER_Q = float(), float()
 
 
@@ -177,7 +177,6 @@ def _make_global(
     LAMBDA_BUNCH = beam["lambda_bunch"]  # util.converters
     Q_OVER_M = beam["q_over_m"]  # util.converters
     M_OVER_Q = beam["m_over_q"]  # util.converters
-    F_BUNCH_MHZ = beam["f_bunch_mhz"]  # core.electric_field
 
     if beam_calculator is None:
         return
