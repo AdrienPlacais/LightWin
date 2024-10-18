@@ -84,7 +84,9 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         self, w_kin_in: float, **rf_field_kwargs
     ) -> dict:
         """Calculate beam propagation in the :class:`.Element`."""
-        gamma_in = convert.energy(w_kin_in, "kin to gamma")
+        gamma_in = convert.energy(
+            w_kin_in, "kin to gamma", **self._beam_kwargs
+        )
         r_zz, gamma_phi, itg_field = self.transf_mat_function(
             gamma_in=gamma_in,
             **self.transfer_matrix_kw(),
@@ -105,7 +107,9 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
     ) -> dict:
         """Convert the results given by the transf_mat function to dict."""
         assert integrated_field is None
-        w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
         results = {
             "r_zz": r_zz,
             "cav_params": None,
@@ -129,7 +133,9 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
 
         """
         assert itg_field is None
-        w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
         results = {
             "r_zz": r_zz,
             "cav_params": {"v_cav_mv": np.nan, "phi_s": np.nan},
@@ -236,7 +242,9 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
         """
         assert integrated_field is not None
-        w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
         gamma_phi[:, 1] = self._rf_to_bunch(gamma_phi[:, 1])
         cav_params = self.compute_cavity_parameters(integrated_field)
         results = {
@@ -267,7 +275,9 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
             """
             assert integrated_field is None
-            w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
+            w_kin = convert.energy(
+                gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+            )
             cav_params = self.compute_cavity_parameters(np.nan)
             results = {
                 "r_zz": r_zz,

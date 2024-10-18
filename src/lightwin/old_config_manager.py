@@ -177,6 +177,8 @@ def _make_global(
     LAMBDA_BUNCH = beam["lambda_bunch"]  # util.converters
     Q_OVER_M = beam["q_over_m"]  # util.converters
     M_OVER_Q = beam["m_over_q"]  # util.converters
+    # I just need to give the optional arguments everytime I call a converters
+    # - ParticleFullTrajectory must be init with beam
 
     if beam_calculator is None:
         return

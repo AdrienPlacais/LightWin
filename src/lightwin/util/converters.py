@@ -26,34 +26,27 @@ def position(
 def energy(
     energy_in: float | np.ndarray,
     key: str,
-    q_over_m: float | None = None,
-    m_over_q: float | None = None,
-    e_rest: float | None = None,
+    q_over_m: float,
+    m_over_q: float,
+    e_rest_mev: float,
+    **beam,
 ) -> float | np.ndarray:
     """Convert energy or Lorentz factor into another related quantity."""
-    if q_over_m is None:
-        q_over_m = con.Q_OVER_M
-    if m_over_q is None:
-        m_over_q = con.M_OVER_Q
-    if e_rest is None:
-        e_rest = con.E_REST_MEV
-    assert isinstance(q_over_m, float)
-    assert isinstance(m_over_q, float)
-    assert isinstance(e_rest, float)
-
     conversion_functions = {
         "v to kin": lambda x: 0.5 * m_over_q * x**2 * 1e-6,
         "kin to v": lambda x: np.sqrt(2e6 * q_over_m * x),
-        "kin to gamma": lambda x: 1.0 + x / e_rest,
-        "gamma to kin": lambda x: e_rest * (x - 1.0),
+        "kin to gamma": lambda x: 1.0 + x / e_rest_mev,
+        "gamma to kin": lambda x: e_rest_mev * (x - 1.0),
         "beta to gamma": lambda x: 1.0 / np.sqrt(1.0 - x**2),
         "gamma to beta": lambda x: np.sqrt(1.0 - x**-2),
-        "kin to beta": lambda x: np.sqrt(1.0 - (e_rest / (x + e_rest)) ** 2),
-        "beta to kin": lambda x: None,
-        "kin to p": lambda x: np.sqrt((x + e_rest) ** 2 - e_rest**2),
-        "p to kin": lambda x: np.sqrt(x**2 + e_rest**2) - e_rest,
-        "gamma to p": lambda x: x * np.sqrt(1.0 - x**-2) * e_rest,
-        "beta to p": lambda x: x / np.sqrt(1.0 - x**2) * e_rest,
+        "kin to beta": lambda x: np.sqrt(
+            1.0 - (e_rest_mev / (x + e_rest_mev)) ** 2
+        ),
+        "beta to kin": lambda _: None,
+        "kin to p": lambda x: np.sqrt((x + e_rest_mev) ** 2 - e_rest_mev**2),
+        "p to kin": lambda x: np.sqrt(x**2 + e_rest_mev**2) - e_rest_mev,
+        "gamma to p": lambda x: x * np.sqrt(1.0 - x**-2) * e_rest_mev,
+        "beta to p": lambda x: x / np.sqrt(1.0 - x**2) * e_rest_mev,
     }
     energy_out = conversion_functions[key](energy_in)
     return energy_out

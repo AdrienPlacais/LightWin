@@ -2,7 +2,7 @@
 
 import logging
 from abc import ABC, abstractmethod
-from typing import Iterable, Literal, Sequence
+from typing import Any, Iterable, Literal, Sequence
 
 import numpy as np
 
@@ -35,11 +35,13 @@ class BeamParametersFactory(ABC):
         self,
         is_3d: bool,
         is_multipart: bool,
+        beam_kwargs: dict[str, Any],
     ) -> None:
         """Initialize the class."""
         self.phase_spaces = self._determine_phase_spaces(is_3d, is_multipart)
         self.is_3d = is_3d
         self.is_multipart = is_multipart
+        self._beam_kwargs = beam_kwargs
 
     def _determine_phase_spaces(
         self, is_3d: bool, is_multipart: bool
@@ -67,7 +69,9 @@ class BeamParametersFactory(ABC):
             f" {z_abs.shape = }."
         )
 
-        beta_kin = converters.energy(gamma_kin, "gamma to beta")
+        beta_kin = converters.energy(
+            gamma_kin, "gamma to beta", **self._beam_kwargs
+        )
         assert isinstance(beta_kin, np.ndarray)
         return z_abs, gamma_kin, beta_kin
 
@@ -242,7 +246,9 @@ class InitialBeamParametersFactory(ABC):
 
     """
 
-    def __init__(self, is_3d: bool, is_multipart: bool) -> None:
+    def __init__(
+        self, is_3d: bool, is_multipart: bool, beam_kwargs: dict[str, Any]
+    ) -> None:
         """Create factory and list of phase spaces to generate.
 
         Parameters
@@ -251,11 +257,14 @@ class InitialBeamParametersFactory(ABC):
             If the simulation is in 3D.
         is_multipart : bool
             If the simulation is a multiparticle.
+        beam_kwargs : dict[str, Any]
+            Configuration dict holding some constants of the beam.
 
         """
         # self.phase_spaces = self._determine_phase_spaces(is_3d)
         # self.is_3d = is_3d
         # self.is_multipart = is_multipart
+        self._beam_kwargs = beam_kwargs
 
         self.phase_spaces = ("x", "y", "z", "zdelta")
 
@@ -280,8 +289,12 @@ class InitialBeamParametersFactory(ABC):
             Beam parameters at the start of the linac.
 
         """
-        gamma_kin = converters.energy(w_kin, "kin to gamma")
-        beta_kin = converters.energy(gamma_kin, "gamma to beta")
+        gamma_kin = converters.energy(
+            w_kin, "kin to gamma", **self._beam_kwargs
+        )
+        beta_kin = converters.energy(
+            gamma_kin, "gamma to beta", **self._beam_kwargs
+        )
         assert isinstance(gamma_kin, float)
         assert isinstance(beta_kin, float)
 

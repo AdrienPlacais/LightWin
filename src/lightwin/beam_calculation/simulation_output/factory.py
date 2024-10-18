@@ -9,7 +9,7 @@ import logging
 from abc import ABC, ABCMeta, abstractmethod
 from dataclasses import dataclass
 from functools import partial
-from typing import Callable, Literal
+from typing import Any, Callable, Literal
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -26,6 +26,7 @@ class SimulationOutputFactory(ABC):
     _is_3d: bool
     _is_multipart: bool
     _solver_id: str
+    _beam_kwargs: dict[str, Any]
 
     def __post_init__(self) -> None:
         """Create the factories.
@@ -40,7 +41,7 @@ class SimulationOutputFactory(ABC):
             self._is_3d
         )
         self.beam_parameters_factory = self._beam_parameters_factory_class(
-            self._is_3d, self._is_multipart
+            self._is_3d, self._is_multipart, beam_kwargs=self._beam_kwargs,
         )
 
     @property

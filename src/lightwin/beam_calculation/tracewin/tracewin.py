@@ -78,6 +78,7 @@ class TraceWin(BeamCalculator):
         base_kwargs: dict[str, str | int | float | bool | None],
         out_folder: Path | str,
         default_field_map_folder: Path | str,
+        beam_kwargs: dict[str, Any],
         flag_phi_abs: bool = False,
         cal_file: Path | None = None,
         **kwargs: Any,
@@ -87,6 +88,7 @@ class TraceWin(BeamCalculator):
         self.ini_path = ini_path.resolve().absolute()
         self.base_kwargs = base_kwargs
         self.cal_file = cal_file
+        self._beam_kwargs = beam_kwargs
 
         filename = Path("tracewin.out")
         if self.is_a_multiparticle_simulation:
@@ -119,6 +121,7 @@ class TraceWin(BeamCalculator):
             self.out_folder,
             self._filename,
             self.beam_calc_parameters_factory,
+            beam=self._beam_kwargs,
         )
 
     def _tracewin_base_command(

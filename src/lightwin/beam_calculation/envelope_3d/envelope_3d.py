@@ -60,7 +60,9 @@ class Envelope3D(BeamCalculator):
         self._phi_s_func = SYNCHRONOUS_PHASE_FUNCTIONS[self._phi_s_definition]
 
         self.beam_parameters_factory = BeamParametersFactoryEnvelope3D(
-            self.is_a_3d_simulation, self.is_a_multiparticle_simulation
+            self.is_a_3d_simulation,
+            self.is_a_multiparticle_simulation,
+            beam_kwargs=self.beam_kwargs,
         )
         self.transfer_matrix_factory = TransferMatrixFactoryEnvelope3D(
             self.is_a_3d_simulation
@@ -78,10 +80,11 @@ class Envelope3D(BeamCalculator):
 
         """
         self.simulation_output_factory = SimulationOutputFactoryEnvelope3D(
-            self.is_a_3d_simulation,
-            self.is_a_multiparticle_simulation,
-            self.id,
-            self.out_folder,
+            _is_3d=self.is_a_3d_simulation,
+            _is_multipart=self.is_a_multiparticle_simulation,
+            _solver_id=self.id,
+            _beam_kwargs=self.beam_kwargs,
+            out_folder=self.out_folder,
         )
         self.beam_calc_parameters_factory = ElementEnvelope3DParametersFactory(
             method=self.method,

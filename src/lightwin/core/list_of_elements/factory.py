@@ -58,8 +58,8 @@ class ListOfElementsFactory:
         self,
         is_3d: bool,
         is_multipart: bool,
-        freq_bunch_mhz: float,
         default_field_map_folder: Path,
+        beam_kwargs: dict[str, Any],
         load_field_maps: bool = True,
         field_maps_in_3d: bool = False,
         load_cython_field_maps: bool = False,
@@ -85,11 +85,15 @@ class ListOfElementsFactory:
             default is ``'historical'``.
 
         """
+        freq_bunch_mhz = beam_kwargs["f_bunch_mhz"]
+        assert isinstance(freq_bunch_mhz, float)
+
         self.initial_beam_factory = InitialBeamParametersFactory(
             # Useless with Envelope1D
             is_3d=True,
             # Useless with Envelope1D, Envelope3D, TraceWin if partran = 0
             is_multipart=True,
+            beam_kwargs=beam_kwargs,
         )
 
         self.instructions_factory = InstructionsFactory(

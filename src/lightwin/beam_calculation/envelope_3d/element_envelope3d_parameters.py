@@ -76,7 +76,9 @@ class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
     ) -> dict:
         """Convert the results given by the transf_mat function to dict."""
         assert integrated_field is None
-        w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
         results = {
             "transfer_matrix": transfer_matrix,
             "r_zz": transfer_matrix[:, 4:, 4:],
@@ -101,7 +103,9 @@ class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
 
         """
         assert itg_field is None
-        w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
         results = {
             "transfer_matrix": transfer_matrix,
             "r_zz": transfer_matrix[:, 4:, 4:],
@@ -245,7 +249,9 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
 
         """
         assert integrated_field is not None
-        w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
         gamma_phi[:, 1] = self._rf_to_bunch(gamma_phi[:, 1])
         cav_params = compute_param_cav(integrated_field)
         results = {
@@ -278,7 +284,9 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
 
             """
             assert integrated_field is None
-            w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
+            w_kin = convert.energy(
+                gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+            )
             cav_params = compute_param_cav(np.nan)
             results = {
                 "transfer_matrix": transfer_matrix,

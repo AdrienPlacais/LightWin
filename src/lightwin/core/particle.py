@@ -28,8 +28,7 @@ from lightwin.util.helper import (
 
 @dataclass
 class ParticleInitialState:
-    """
-    Hold the initial energy/phase of a particle, and if it is synchronous.
+    """Hold the initial energy/phase of a particle, and if it is synchronous.
 
     It is stored in Accelerator, and is parent of ParticleFullTrajectory.
 
@@ -67,6 +66,7 @@ class ParticleFullTrajectory:
     w_kin: np.ndarray | list
     phi_abs: np.ndarray | list
     synchronous: bool
+    beam: dict[str, Any]
 
     def __post_init__(self):
         """Ensure that LightWin has everything it needs, with proper format."""
@@ -76,7 +76,9 @@ class ParticleFullTrajectory:
         if isinstance(self.w_kin, list):
             self.w_kin = np.array(self.w_kin)
 
-        self.gamma = convert.energy(self.get("w_kin"), "kin to gamma")
+        self.gamma = convert.energy(
+            self.get("w_kin"), "kin to gamma", **self.beam
+        )
         self.beta: np.ndarray
 
     def __str__(self) -> str:
@@ -93,7 +95,9 @@ class ParticleFullTrajectory:
 
     def compute_complementary_data(self):
         """Compute some data necessary to do the post-treatment."""
-        self.beta = convert.energy(self.get("gamma"), "gamma to beta")
+        self.beta = convert.energy(
+            self.get("gamma"), "gamma to beta", **self.beam
+        )
 
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class."""
