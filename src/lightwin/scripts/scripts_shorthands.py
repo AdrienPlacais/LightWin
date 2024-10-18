@@ -18,7 +18,7 @@ from lightwin.core.accelerator.factory import NoFault
 
 def compute_beam(
     beam_calculator: BeamCalculator,
-    config_files: dict[str, Any],
+    config: dict[str, dict[str, Any]],
 ) -> tuple[Accelerator, SimulationOutput]:
     """Create the :class:`.Accelerator` and compute beam in it.
 
@@ -26,8 +26,8 @@ def compute_beam(
     ----------
     beam_calculator : BeamCalculator
         Solver to use.
-    config_files : dict[str, Any]
-        Holds info on file input/output.
+    config : dict[str, dict[str, Any]]
+        Full configuration dictionary.
 
     Returns
     -------
@@ -35,10 +35,7 @@ def compute_beam(
         An accelerator with its :class:`.SimulationOutput`.
 
     """
-    accelerator_factory = NoFault(
-        beam_calculator=beam_calculator, **config_files
-    )
-
+    accelerator_factory = NoFault(beam_calculators=beam_calculator, **config)
     accelerator = accelerator_factory.run()
     simulation_output = beam_calculator.compute(accelerator)
     return accelerator, simulation_output

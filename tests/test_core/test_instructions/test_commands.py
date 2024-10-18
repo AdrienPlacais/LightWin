@@ -1,3 +1,5 @@
+"""Provide tests to check if the TraceWin commands work as expected."""
+
 from pathlib import Path
 from typing import Any
 
@@ -99,7 +101,7 @@ def accelerator(
     solver: BeamCalculator, config: dict[str, dict[str, Any]]
 ) -> Accelerator:
     """Create an example linac."""
-    accelerator_factory = NoFault(beam_calculator=solver, **config["files"])
+    accelerator_factory = NoFault(beam_calculators=solver, **config)
     accelerator = accelerator_factory.run()
     return accelerator
 

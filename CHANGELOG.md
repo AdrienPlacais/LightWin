@@ -22,7 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deleted
 
 - Constants were removed from the config module to fix circular dependency and bad design issues.
- - `BeamCalculator` objects now need to be given the `beam` configuration dict.
+ - `BeamCalculator` objects now need to be given the `beam` configuration dict. Easiest is to instantiate `BeamCalculatorFactory` with `**config`.
+ - `Accelerator` will also use data from `beam`. Instantiate `AcceleratorFactory` with `**config`.
 
 ## [0.7.0b3] 2024-10-09
 

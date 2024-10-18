@@ -70,7 +70,7 @@ def accelerator(
     config: dict[str, dict[str, Any]],
 ) -> Accelerator:
     """Create an example linac."""
-    accelerator_factory = NoFault(beam_calculator=solver, **config["files"])
+    accelerator_factory = NoFault(beam_calculators=solver, **config)
     accelerator = accelerator_factory.run()
     return accelerator
 
