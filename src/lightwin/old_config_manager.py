@@ -175,12 +175,9 @@ def _make_global(
     beam: dict, beam_calculator: dict | None = None, **kwargs
 ) -> None:
     """Update the values of some variables so they can be used everywhere."""
-    global Q_ADIM, E_REST_MEV, INV_E_REST_MEV, OMEGA_0_BUNCH, GAMMA_INIT, LAMBDA_BUNCH, Q_OVER_M, M_OVER_Q, F_BUNCH_MHZ, E_MEV, SIGMA, LINAC
-    Q_ADIM = beam["q_adim"]
+    global E_REST_MEV, OMEGA_0_BUNCH, LAMBDA_BUNCH, Q_OVER_M, M_OVER_Q, F_BUNCH_MHZ, E_MEV, SIGMA, LINAC
     E_REST_MEV = beam["e_rest_mev"]
-    INV_E_REST_MEV = beam["inv_e_rest_mev"]
     OMEGA_0_BUNCH = beam["omega_0_bunch"]
-    GAMMA_INIT = beam["gamma_init"]
     LAMBDA_BUNCH = beam["lambda_bunch"]
     Q_OVER_M = beam["q_over_m"]
     M_OVER_Q = beam["m_over_q"]
