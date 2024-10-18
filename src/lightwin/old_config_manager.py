@@ -27,8 +27,6 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
-import numpy as np
-
 import lightwin.config.beam
 import lightwin.config.beam_calculator
 import lightwin.config.design_space
@@ -40,11 +38,9 @@ from lightwin.config.helper import dict_for_pretty_output
 
 # Values that will be available everywhere
 
-E_MEV, E_REST_MEV, INV_E_REST_MEV = float(), float(), float()
-GAMMA_INIT = float()
+E_REST_MEV = float()
 F_BUNCH_MHZ, OMEGA_0_BUNCH, LAMBDA_BUNCH = float(), float(), float()
-Q_ADIM, Q_OVER_M, M_OVER_Q = float(), float(), float()
-SIGMA = np.full((6, 6), np.nan)
+Q_OVER_M, M_OVER_Q = float(), float()
 
 
 MANDATORY_CONFIG_ENTRIES = ("files", "beam_calculator", "beam")  #:
@@ -175,15 +171,13 @@ def _make_global(
     beam: dict, beam_calculator: dict | None = None, **kwargs
 ) -> None:
     """Update the values of some variables so they can be used everywhere."""
-    global E_REST_MEV, OMEGA_0_BUNCH, LAMBDA_BUNCH, Q_OVER_M, M_OVER_Q, F_BUNCH_MHZ, E_MEV, SIGMA, LINAC
-    E_REST_MEV = beam["e_rest_mev"]
-    OMEGA_0_BUNCH = beam["omega_0_bunch"]
-    LAMBDA_BUNCH = beam["lambda_bunch"]
-    Q_OVER_M = beam["q_over_m"]
-    M_OVER_Q = beam["m_over_q"]
-    F_BUNCH_MHZ = beam["f_bunch_mhz"]
-    E_MEV = beam["e_mev"]
-    SIGMA = beam["sigma"]
+    global E_REST_MEV, OMEGA_0_BUNCH, LAMBDA_BUNCH, Q_OVER_M, M_OVER_Q, F_BUNCH_MHZ, LINAC
+    E_REST_MEV = beam["e_rest_mev"]  # util.converters
+    OMEGA_0_BUNCH = beam["omega_0_bunch"]  # util.converters
+    LAMBDA_BUNCH = beam["lambda_bunch"]  # util.converters
+    Q_OVER_M = beam["q_over_m"]  # util.converters
+    M_OVER_Q = beam["m_over_q"]  # util.converters
+    F_BUNCH_MHZ = beam["f_bunch_mhz"]  # core.electric_field
 
     if beam_calculator is None:
         return
