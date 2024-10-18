@@ -10,7 +10,7 @@
 
 See Also
 --------
-:class:`.NewRfField`
+:class:`.RfField`
 
 """
 

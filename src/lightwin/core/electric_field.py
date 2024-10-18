@@ -17,7 +17,7 @@ def compute_param_cav(integrated_field: complex) -> dict[str, float]:
     return cav_params
 
 
-class NewRfField:
+class RfField:
     r"""Cos-like RF field.
 
     Warning, all phases are defined as:

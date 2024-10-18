@@ -5,7 +5,7 @@ from collections.abc import Sequence
 
 from lightwin.core.commands.command import Command
 from lightwin.core.commands.dummy_command import DummyCommand
-from lightwin.core.electric_field import NewRfField
+from lightwin.core.electric_field import RfField
 from lightwin.core.elements.dummy import DummyElement
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
@@ -133,7 +133,7 @@ class SuperposeMap(Command):
             if superposed_field_map_is_already_inserted:
                 instructions_to_merge[i] = DummyElement(*args)
                 instructions_to_merge[i].nature = "SUPERPOSED_FIELD_MAP"
-                instructions_to_merge[i].new_rf_field = NewRfField()
+                instructions_to_merge[i].new_rf_field = RfField()
                 number_of_superposed += 1
                 continue
 
@@ -141,7 +141,7 @@ class SuperposeMap(Command):
                 *args, total_length=total_length
             )
             instructions_to_merge[i].nature = "SUPERPOSED_FIELD_MAP"
-            instructions_to_merge[i].new_rf_field = NewRfField()
+            instructions_to_merge[i].new_rf_field = RfField()
             superposed_field_map_is_already_inserted = True
         return instructions_to_merge, number_of_superposed
 
