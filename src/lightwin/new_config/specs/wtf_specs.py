@@ -6,6 +6,8 @@
 
 """
 
+from typing import Any
+
 from lightwin.failures.strategy import COMPENSATING_SELECTOR
 from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
 from lightwin.optimisation.algorithms.factory import ALGORITHM_SELECTOR
@@ -96,6 +98,8 @@ WTF_K_OUT_OF_N = _WTF_BASE_AUTOMATIC + (
     ),
 )
 
+K_OUT_OF_N_MONKEY_PATCHES: dict[str, Any] = {}
+
 WTF_L_NEIGHBORING_LATTICES = _WTF_BASE_AUTOMATIC + (
     KeyValConfSpec(
         key="l",
@@ -116,6 +120,7 @@ WTF_L_NEIGHBORING_LATTICES = _WTF_BASE_AUTOMATIC + (
         is_mandatory=False,
     ),
 )
+L_NEIGHBORING_LATTICES_MONKEY_PATCHES: dict[str, Any] = {}
 
 WTF_MANUAL = _WTF_BASE + (
     KeyValConfSpec(
@@ -142,8 +147,15 @@ WTF_MANUAL = _WTF_BASE + (
     ),
 )
 
+MANUAL_MONKEY_PATCHES: dict[str, Any] = {}
+
 WTF_CONFIGS = {
     "k out of n": WTF_K_OUT_OF_N,
     "l neighboring lattices": WTF_L_NEIGHBORING_LATTICES,
     "manual": WTF_MANUAL,
+}
+WTF_MONKEY_PATCHES = {
+    "k out of n": K_OUT_OF_N_MONKEY_PATCHES,
+    "l neighboring lattices": L_NEIGHBORING_LATTICES_MONKEY_PATCHES,
+    "manual": MANUAL_MONKEY_PATCHES,
 }

@@ -116,8 +116,9 @@ class BeamTableConfSpec(TableConfSpec):
 
     """
 
-    def _post_treat(self, toml_subdict: dict[str, Any]) -> None:
+    def _pre_treat(self, toml_subdict: dict[str, Any]) -> None:
         """Edit some values, create new ones."""
+        super()._pre_treat(toml_subdict)
         if not hasattr(self, "specs_as_dict"):
             raise AttributeError(
                 "You must call the _set_specs_as_dict method before calling "
@@ -142,6 +143,7 @@ class BeamTableConfSpec(TableConfSpec):
 
     def validate(self, toml_subdict: dict[str, Any], **kwargs) -> bool:
         """Add some other validations to the default ones."""
+        self._pre_treat(toml_subdict)
         default_tests = super().validate(toml_subdict, **kwargs)
 
         if i_milli_a := toml_subdict["i_milli_a"] > 1e-10:

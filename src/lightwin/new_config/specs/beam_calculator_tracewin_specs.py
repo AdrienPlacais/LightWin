@@ -6,19 +6,20 @@
 .. todo::
     Handle the toml_configuration file
 
-- Could implement directly providing ``executable`` to override the
-  ``machine_config_file`` settings.
-
-
 """
 
+import logging
+import socket
+import tomllib
 from pathlib import Path
+from typing import Any
 
+from lightwin.config.helper import find_file
 from lightwin.constants import example_ini, example_machine_config
 from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
+from lightwin.new_config.table_spec import TableConfSpec
 
-TRACEWIN_CONFIG = (
-    # ======================== pure TraceWin ==================================
+_PURE_TRACEWIN_CONFIG = (
     KeyValConfSpec(
         key="ini_path",
         types=(str, Path),
@@ -73,7 +74,31 @@ TRACEWIN_CONFIG = (
         is_mandatory=False,
         error_message="Upgrading TraceWin from LightWin is a bad idea.",
     ),
-    # ======================== LightWin =======================================
+)  #: Arguments that can be passed to TraceWin CLI
+
+TRACEWIN_CONFIG = _PURE_TRACEWIN_CONFIG + (
+    KeyValConfSpec(
+        key="tool",
+        types=(str,),
+        description="Name of the tool.",
+        default_value="TraceWin",
+        allowed_values=("TraceWin", "tracewin"),
+    ),
+    KeyValConfSpec(
+        key="executable",
+        types=(str, Path),
+        description=(
+            "Direct path to the TraceWin executable. If given, will override "
+            "the definition in the machine_config_file."
+        ),
+        default_value="",
+        is_a_path_that_must_exists=True,
+        is_mandatory=False,
+        warning_message=(
+            "Providing `executable` will override `machine_config_file` "
+            "settings."
+        ),
+    ),
     KeyValConfSpec(
         key="machine_config_file",
         types=(str, Path),
@@ -98,11 +123,131 @@ TRACEWIN_CONFIG = (
         description="A key in the machine_config.toml file",
         default_value="noX11_full",
     ),
-    KeyValConfSpec(
-        key="tool",
-        types=(str,),
-        description="Name of the tool.",
-        default_value="TraceWin",
-        allowed_values=("TraceWin", "tracewin"),
-    ),
-)
+)  #: Arguments for :class:`.TraceWin` object configuration
+
+
+def tracewin_pre_treat(
+    self: TableConfSpec, toml_subdict: dict[str, Any], **kwargs
+) -> None:
+    """Set the TW executable."""
+    if "executable" in toml_subdict:
+        declare = getattr(
+            self, "_declare_that_machine_config_is_not_mandatory_anymore"
+        )
+        declare()
+        return
+
+    toml_subdict["executable"] = _get_tracewin_executable(
+        **toml_subdict, **kwargs
+    )
+
+
+def tracewin_declare_that_machine_config_is_not_mandatory_anymore(
+    self: TableConfSpec,
+) -> None:
+    """Update configuration to avoid checking some entries."""
+    not_mandatory_anymore = ("machine_config_file", "simulation_type")
+    for name in not_mandatory_anymore:
+        keyval = self._get_proper_spec(name)
+        if keyval is None:
+            continue
+        keyval.is_mandatory = False
+        keyval.is_a_path_that_must_exists = False
+
+    keyval = self._get_proper_spec("executable")
+    if keyval is None:
+        return
+    keyval.overrides_previously_defined = True
+
+
+def tracewin_validate(
+    self: TableConfSpec, toml_subdict: dict[str, Any], **kwargs
+) -> bool:
+    """Check that the configuration will not lead to errors.
+
+    .. note::
+        This method also edits the dictionary to separate LightWin and
+        TraceWin specific arguments.
+
+    """
+    self._pre_treat(toml_subdict, **kwargs)
+    self._set_specs_as_dict(toml_subdict)
+
+    validations = [self._mandatory_keys_are_present(toml_subdict.keys())]
+    for key, val in toml_subdict.items():
+        spec = self._get_proper_spec(key)
+        if spec is None:
+            continue
+        validations.append(spec.validate(val, **kwargs))
+
+    all_is_validated = all(validations)
+    if not all_is_validated:
+        logging.error(
+            f"At least one error was raised treating {self.table_entry}"
+        )
+    self._post_treat(toml_subdict, **kwargs)
+    return all_is_validated
+
+
+def tracewin_post_treat(
+    self: TableConfSpec, toml_subdict: dict[str, Any], **kwargs
+) -> None:
+    """Separate TraceWin/LightWin arguments."""
+    new_toml_subdict = {"base_kwargs": {}}  # TraceWin arguments
+
+    entries_to_remove = (
+        "simulation_type",
+        "machine_config_file",
+        "machine_name",
+    )
+    lightwin_entries = ("tool",)
+
+    for key, value in toml_subdict.items():
+        if key in entries_to_remove:
+            continue
+
+        if key in lightwin_entries:
+            new_toml_subdict[key] = value
+            continue
+
+        new_toml_subdict["base_kwargs"][key] = value
+
+    toml_subdict.clear()
+    for key, value in new_toml_subdict.items():
+        toml_subdict[key] = value
+
+
+TRACEWIN_MONKEY_PATCHES = {
+    "_pre_treat": tracewin_pre_treat,
+    "_declare_that_machine_config_is_not_mandatory_anymore": tracewin_declare_that_machine_config_is_not_mandatory_anymore,
+    "validate": tracewin_validate,
+    "_post_treat": tracewin_post_treat,
+}
+
+
+def _get_tracewin_executable(
+    toml_folder: Path,
+    machine_config_file: str | Path,
+    simulation_type: str | Path,
+    machine_name: str | Path = "",
+    **toml_subdict,
+) -> Path:
+    """Check that the machine config file is valid."""
+    machine_config_file = find_file(toml_folder, machine_config_file)
+    with open(machine_config_file, "rb") as file:
+        config = tomllib.load(file)
+
+    if not machine_name:
+        machine_name = socket.gethostname()
+
+    assert (
+        machine_name in config
+    ), f"{machine_name = } should be in {config.keys() = }"
+    this_machine_config = config[machine_name]
+
+    assert (
+        simulation_type in this_machine_config
+    ), f"{simulation_type = } was not found in {this_machine_config = }"
+    executable = Path(this_machine_config[simulation_type])
+    assert executable.is_file, f"{executable = } was not found"
+    return executable

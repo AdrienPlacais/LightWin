@@ -52,3 +52,5 @@ ENVELOPE1D_CONFIG = (
         ),
     ),
 )
+
+ENVELOPE1D_MONKEY_PATCHES = {}

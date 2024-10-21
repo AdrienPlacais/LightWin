@@ -1,7 +1,7 @@
 """Define the base objects constraining values/types of config parameters."""
 
 import logging
-from collections.abc import Collection
+from collections.abc import Callable, Collection
 from pathlib import Path
 from typing import Any, Literal
 
@@ -47,6 +47,11 @@ class TableConfSpec:
         is_mandatory: bool = True,
         can_have_untested_keys: bool = False,
         selectkey_n_default: tuple[str, str | bool] | None = None,
+        monkey_patches: (
+            dict[str, dict[str, Callable]]
+            | dict[bool, dict[str, Callable]]
+            | None
+        ) = None,
     ) -> None:
         """Set a table of properties. Correspond to a [table] in the ``.toml``.
 
@@ -57,8 +62,8 @@ class TableConfSpec:
         table_entry : str
             Name of the table in the ``.toml`` file, without brackets.
         specs : Collection[KeyValConfSpec] | dict[str, Collection[KeyValConfSpec]] | dict[str, Collection[KeyValConfSpec]]
-            The :class:`KeyValConfSpec` objects in the current table. When the
-            format of the table depends on the value of a key provide a
+            The :class:`.KeyValConfSpec` objects in the current table. When the
+            format of the table depends on the value of a key, provide a
             dictionary linking every possible table with the corresponding
             value.
         is_mandatory : bool, optional
@@ -72,12 +77,16 @@ class TableConfSpec:
             spec, second value is default value. We will look for this spec in
             the configuration file and select the proper ``Collection`` of
             ``KeyValConfSpec`` accordingly.
+        monkey_patches : dict[str, dict[str, Callable]] | dict[bool, dict[str, Callable]] | None, optional
+            Same keys as ``specs``, to override some default methods. The
+            default is None.
 
         """
         self.configured_object = configured_object
         self.table_entry = table_entry
 
         self._specs = specs
+        self._monkey_patches = monkey_patches
         self._selectkey_n_default = selectkey_n_default
         self.specs_as_dict: dict[str, KeyValConfSpec]
         self._set_specs_as_dict()
@@ -127,9 +136,14 @@ class TableConfSpec:
         value = self._selectkey_n_default[1]
         if toml_subdict is not None:
             value = toml_subdict.get(self._selectkey_n_default[0])
+        assert isinstance(value, (str, bool))
 
         specs = self._specs[value]
         assert specs is not None
+
+        if self._monkey_patches is not None:
+            monkey_patches = self._monkey_patches[value]
+            self._apply_monkey_patches(monkey_patches)
         return list(specs)
 
     def _set_specs_as_dict(
@@ -196,14 +210,18 @@ class TableConfSpec:
 
         return strings
 
-    def _post_treat(self, toml_subdict: dict[str, Any]) -> None:
-        """Edit some values, create new ones."""
+    def _pre_treat(self, toml_subdict: dict[str, Any]) -> None:
+        """Edit some values, create new ones. To call before validation.
+
+        .. note::
+            In general, the edited values will undergo the validation process.
+
+        """
         pass
 
     def validate(self, toml_subdict: dict[str, Any], **kwargs) -> bool:
-        """Post-treat, check that key-values in ``toml_subdict`` are valid."""
+        """Check that key-values in ``toml_subdict`` are valid."""
         self._set_specs_as_dict(toml_subdict)
-        self._post_treat(toml_subdict)
 
         validations = [self._mandatory_keys_are_present(toml_subdict.keys())]
         for key, val in toml_subdict.items():
@@ -219,6 +237,16 @@ class TableConfSpec:
             )
 
         return all_is_validated
+
+    def _post_treat(self, toml_subdict: dict[str, Any]) -> None:
+        """Edit some values, create new ones. To call after validation.
+
+        .. note::
+            In general, the edited values will not be validated. To handle with
+            care.
+
+        """
+        pass
 
     def _mandatory_keys_are_present(self, toml_keys: Collection[str]) -> bool:
         """Ensure that all the mandatory parameters are defined."""
@@ -244,6 +272,13 @@ class TableConfSpec:
             if spec.is_mandatory or not only_mandatory
         }
         return dummy_conf
+
+    def _apply_monkey_patches(
+        self, monkey_patches: dict[str, Callable]
+    ) -> None:
+        """Override the base methods."""
+        for method_name, method in monkey_patches.items():
+            setattr(self, method_name, method.__get__(self, self.__class__))
 
 
 def _remove_overriden_keys(
