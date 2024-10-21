@@ -40,7 +40,6 @@ from lightwin.config.helper import dict_for_pretty_output
 
 E_REST_MEV = float()
 OMEGA_0_BUNCH, LAMBDA_BUNCH = float(), float()
-Q_OVER_M, M_OVER_Q = float(), float()
 
 
 MANDATORY_CONFIG_ENTRIES = ("files", "beam_calculator", "beam")  #:
@@ -171,12 +170,10 @@ def _make_global(
     beam: dict, beam_calculator: dict | None = None, **kwargs
 ) -> None:
     """Update the values of some variables so they can be used everywhere."""
-    global E_REST_MEV, OMEGA_0_BUNCH, LAMBDA_BUNCH, Q_OVER_M, M_OVER_Q, F_BUNCH_MHZ, LINAC
+    global E_REST_MEV, OMEGA_0_BUNCH, LAMBDA_BUNCH, F_BUNCH_MHZ, LINAC
     E_REST_MEV = beam["e_rest_mev"]  # util.converters
     OMEGA_0_BUNCH = beam["omega_0_bunch"]  # util.converters
     LAMBDA_BUNCH = beam["lambda_bunch"]  # util.converters
-    Q_OVER_M = beam["q_over_m"]  # util.converters
-    M_OVER_Q = beam["m_over_q"]  # util.converters
     # I just need to give the optional arguments everytime I call a converters
     # - ParticleFullTrajectory must be init with beam
 
