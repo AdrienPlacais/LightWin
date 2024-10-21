@@ -1,8 +1,16 @@
-"""Define parameters necessary to define a beam."""
+"""Define parameters necessary to define a beam.
+
+.. note::
+    Several parameters hold the ``derived`` flag. It means that these
+    quantities are calculated from other parameters by LightWin, and should not
+    be handled by the user.
+
+"""
 
 import numpy as np
 
 from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
+from lightwin.new_config.table_spec import TableConfSpec
 
 BEAM_CONFIG = (
     KeyValConfSpec(
@@ -44,4 +52,21 @@ BEAM_CONFIG = (
         + "be transformed to a 6*6 matrix.",
         default_value=[[0.0 for _ in range(6)] for _ in range(6)],
     ),
+    KeyValConfSpec(
+        key="q_over_m",
+        types=(float,),
+        description="Adimensioned charge over rest mass in :unit:`MeV`",
+        default_value=1.0,
+        is_mandatory=False,
+        derived=True,
+    ),
 )
+
+
+class BeamTableConfSpec(TableConfSpec):
+    """Set the specifications for the beam.
+
+    We subclass :class:`.TableConfSpec` to define some keys requiring a
+    specific treatment.
+
+    """

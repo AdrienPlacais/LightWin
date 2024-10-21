@@ -50,6 +50,9 @@ class KeyValConfSpec:
     overrides_previously_defined : bool, optional
         If the current object should remove a previously defined
         :class:`KeyValConfSpec` with the same name.
+    derived : bool, optional
+        If the property is calculated from other properties. The default is
+        False, in which case it must be set by the user.
 
     """
 
@@ -57,6 +60,7 @@ class KeyValConfSpec:
     types: tuple[type, ...]
     description: str
     default_value: Any
+
     allowed_values: Collection[Any] | None = None
     is_mandatory: bool = True
     is_a_path_that_must_exists: bool = False
@@ -64,6 +68,7 @@ class KeyValConfSpec:
     warning_message: str | None = None
     error_message: str | None = None
     overrides_previously_defined: bool = False
+    derived: bool = False
 
     def __post_init__(self) -> None:
         """Force ``self.types`` to be a tuple of types."""
@@ -137,6 +142,8 @@ class KeyValConfSpec:
             The ``.toml`` line corresponding to current object.
 
         """
+        if self.derived:
+            return ""
         if toml_value is None:
             logging.error(
                 f"You must provide a value for {self.key = }. Trying to "

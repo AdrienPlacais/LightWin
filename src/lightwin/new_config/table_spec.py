@@ -233,6 +233,10 @@ class TableConfSpec:
         }
         return dummy_conf
 
+    def post_treat(self, toml_subdict: dict[str, Any]) -> None:
+        """Edit some values, create new ones."""
+        pass
+
 
 def _remove_overriden_keys(
     specs: Collection[KeyValConfSpec],
