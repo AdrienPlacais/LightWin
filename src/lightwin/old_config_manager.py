@@ -157,14 +157,3 @@ def _process_config(
             "modifications, it looks like:\n"
             f"{dict_for_pretty_output(config_dict)}"
         )
-    _make_global(**toml_entries)
-
-
-def _make_global(
-    beam: dict, beam_calculator: dict | None = None, **kwargs
-) -> None:
-    """Update the values of some variables so they can be used everywhere."""
-    global LINAC
-
-    if beam_calculator is None:
-        return
