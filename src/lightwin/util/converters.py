@@ -2,7 +2,6 @@
 
 import numpy as np
 
-import lightwin.config_manager as con
 from lightwin.constants import c
 
 
@@ -10,15 +9,13 @@ def position(
     pos_in: float | np.ndarray,
     beta: float | np.ndarray,
     key: str,
-    omega: float | None = None,
+    omega_0_bunch: float,
+    **beam_kwargs,
 ) -> float | np.ndarray:
     """Phase/position converters."""
-    if omega is None:
-        omega = con.OMEGA_0_BUNCH
-    assert isinstance(omega, float)
     conversion_functions = {
-        "z to phi": lambda pos, bet: -omega * pos / (bet * c),
-        "phi to z": lambda pos, bet: -pos * bet * c / omega,
+        "z to phi": lambda pos, bet: -omega_0_bunch * pos / (bet * c),
+        "phi to z": lambda pos, bet: -pos * bet * c / omega_0_bunch,
     }
     return conversion_functions[key](pos_in, beta)
 
@@ -29,7 +26,7 @@ def energy(
     q_over_m: float,
     m_over_q: float,
     e_rest_mev: float,
-    **beam,
+    **beam_kwargs,
 ) -> float | np.ndarray:
     """Convert energy or Lorentz factor into another related quantity."""
     conversion_functions = {
@@ -56,15 +53,14 @@ def longitudinal(
     long_in: float | np.ndarray,
     ene: float | np.ndarray,
     key: str,
-    e_rest: float | None = None,
+    e_rest_mev: float,
+    **beam_kwargs,
 ) -> float | np.ndarray:
     """Convert energies between longitudinal phase spaces."""
-    if e_rest is None:
-        e_rest = con.E_REST_MEV
     conversion_functions = {
         "zprime gamma to zdelta": lambda zp, gam: zp * gam**-2 * 1e-1,
         "zprime kin to zdelta": lambda zp, kin: zp
-        * (1.0 + kin / e_rest) ** -2
+        * (1.0 + kin / e_rest_mev) ** -2
         * 1e-1,
     }
     return conversion_functions[key](long_in, ene)
@@ -74,17 +70,14 @@ def longitudinal(
 def emittance(
     eps_orig: float | np.ndarray,
     key: str,
-    gamma_kin: float | np.ndarray | None = None,
-    beta_kin: float | np.ndarray | None = None,
-    lam: float | np.ndarray | None = None,
-    e_0: float | np.ndarray | None = None,
+    gamma_kin: float | np.ndarray,
+    beta_kin: float | np.ndarray,
+    lambda_bunch: float | np.ndarray,
+    e_rest_mev: float | np.ndarray,
+    **beam_kwargs,
 ) -> float | np.ndarray:
     """Convert emittance from a phase space to another, or handle norm."""
-    if lam is None:
-        lam = con.LAMBDA_BUNCH
-    if e_0 is None:
-        e_0 = con.E_REST_MEV
-    k_1 = 360.0 * e_0 / lam
+    k_1 = 360.0 * e_rest_mev / lambda_bunch
     k_2 = gamma_kin * beta_kin
     k_3 = k_2 * gamma_kin**2
 
@@ -118,23 +111,17 @@ def twiss(
     twiss_orig: np.ndarray,
     gamma_kin: float | np.ndarray,
     key: str,
-    lam: float | np.ndarray | None = None,
-    e_0: float | np.ndarray | None = None,
+    lambda_bunch: float | np.ndarray,
+    e_rest_mev: float | np.ndarray,
     beta_kin: float | np.ndarray | None = None,
+    **beam_kwargs,
 ) -> np.ndarray:
     """Convert Twiss array from a phase space to another."""
-    if lam is None:
-        lam = con.LAMBDA_BUNCH
-    assert lam is not None
-    if e_0 is None:
-        e_0 = con.E_REST_MEV
-    assert e_0 is not None
     if beta_kin is None:
         beta_kin = np.sqrt(1.0 - gamma_kin**-2)
-    assert beta_kin is not None
 
     # Lighten the dict
-    k_1 = e_0 * (gamma_kin * beta_kin) * lam / 360.0
+    k_1 = e_rest_mev * (gamma_kin * beta_kin) * lambda_bunch / 360.0
     k_2 = k_1 * beta_kin**2
     k_3 = k_2 * gamma_kin**2
 

@@ -115,6 +115,8 @@ class BeamParametersFactory(ABC):
             Lorentz gamma factor.
         beta_kin : numpy.ndarray
             Lorentz beta factor.
+        beam_kwargs : dict[str, Any]
+            Configuration dictionary holding initial beam parameters.
 
         """
         implemented_in = ("zdelta",)
@@ -134,6 +136,7 @@ class BeamParametersFactory(ABC):
                 phase_space_name,
                 gamma_kin,
                 beta_kin,
+                beam_kwargs=self._beam_kwargs,
             )
             setattr(beam_parameters, phase_space_name, phase_space)
 
@@ -174,6 +177,8 @@ class BeamParametersFactory(ABC):
             Lorentz gamma factor.
         beta_kin : numpy.ndarray
             Lorentz beta factor.
+        beam_kwargs : dict[str, Any]
+            Configuration dictionary holding initial beam parameters.
 
         """
         for phase_space_name, transfer_matrix in zip(
@@ -187,6 +192,7 @@ class BeamParametersFactory(ABC):
                     tm_cumul=transfer_matrix,
                     gamma_kin=gamma_kin,
                     beta_kin=beta_kin,
+                    beam_kwargs=self._beam_kwargs,
                 )
             )
             setattr(beam_parameters, phase_space_name, phase_space)
@@ -228,6 +234,7 @@ class BeamParametersFactory(ABC):
                 sigma,
                 gamma_kin,
                 beta_kin,
+                beam_kwargs=self._beam_kwargs,
             )
             setattr(beam_parameters, phase_space_name, phase_space)
 
@@ -464,6 +471,7 @@ class InitialBeamParametersFactory(ABC):
                 sigma,
                 initial_beam_parameters.gamma_kin,
                 initial_beam_parameters.beta_kin,
+                beam_kwargs=self._beam_kwargs,
             )
             setattr(initial_beam_parameters, phase_space_name, phase_space)
 
@@ -508,6 +516,7 @@ class InitialBeamParametersFactory(ABC):
                     phase_space_name,
                     initial_beam_parameters.gamma_kin,
                     initial_beam_parameters.beta_kin,
+                    beam_kwargs=self._beam_kwargs,
                 )
             )
             setattr(initial_beam_parameters, phase_space_name, phase_space)

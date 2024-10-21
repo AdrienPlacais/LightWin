@@ -109,7 +109,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             w_kin=results["w_kin"],
             phi_abs=results["phi_abs"],
             synchronous=True,
-            beam=self.beam,
+            beam=self._beam_kwargs,
         )
 
         cavity_parameters = self._create_cavity_parameters(path_cal, len(elts))

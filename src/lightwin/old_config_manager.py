@@ -36,12 +36,6 @@ import lightwin.config.plots
 import lightwin.config.wtf
 from lightwin.config.helper import dict_for_pretty_output
 
-# Values that will be available everywhere
-
-E_REST_MEV = float()
-OMEGA_0_BUNCH, LAMBDA_BUNCH = float(), float()
-
-
 MANDATORY_CONFIG_ENTRIES = ("files", "beam_calculator", "beam")  #:
 OPTIONAL_CONFIG_ENTRIES = (
     "beam_calculator_post",
@@ -160,7 +154,7 @@ def _process_config(
 
         logging.info(
             f"Config dict {key} successfully tested. After potential "
-            " modifications, it looks like:\n"
+            "modifications, it looks like:\n"
             f"{dict_for_pretty_output(config_dict)}"
         )
     _make_global(**toml_entries)
@@ -170,12 +164,7 @@ def _make_global(
     beam: dict, beam_calculator: dict | None = None, **kwargs
 ) -> None:
     """Update the values of some variables so they can be used everywhere."""
-    global E_REST_MEV, OMEGA_0_BUNCH, LAMBDA_BUNCH, F_BUNCH_MHZ, LINAC
-    E_REST_MEV = beam["e_rest_mev"]  # util.converters
-    OMEGA_0_BUNCH = beam["omega_0_bunch"]  # util.converters
-    LAMBDA_BUNCH = beam["lambda_bunch"]  # util.converters
-    # I just need to give the optional arguments everytime I call a converters
-    # - ParticleFullTrajectory must be init with beam
+    global LINAC
 
     if beam_calculator is None:
         return

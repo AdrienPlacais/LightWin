@@ -9,7 +9,7 @@ For a list of the units associated with every parameter, see
 """
 
 from dataclasses import dataclass
-from typing import Self
+from typing import Any, Self
 
 import numpy as np
 
@@ -46,11 +46,17 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
         tm_cumul: np.ndarray,
         gamma_kin: np.ndarray,
         beta_kin: np.ndarray,
+        beam_kwargs: dict[str, Any],
     ) -> Self:
         r"""Compute :math:`\sigma` matrix, and everything from it."""
         sigma = sigma_from_transfer_matrices(sigma_in, tm_cumul)
         phase_space = cls.from_sigma(
-            phase_space_name, sigma, gamma_kin, beta_kin, tm_cumul=tm_cumul
+            phase_space_name,
+            sigma,
+            gamma_kin,
+            beta_kin,
+            tm_cumul=tm_cumul,
+            beam_kwargs=beam_kwargs,
         )
         return phase_space
 
@@ -61,11 +67,17 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
         sigma: np.ndarray,
         gamma_kin: np.ndarray,
         beta_kin: np.ndarray,
+        beam_kwargs: dict[str, Any],
         **kwargs: np.ndarray,  # tm_cumul
     ) -> Self:
         """Compute Twiss, eps, envelopes just from sigma matrix."""
         return super().from_sigma(
-            phase_space_name, sigma, gamma_kin, beta_kin, **kwargs
+            phase_space_name,
+            sigma,
+            gamma_kin,
+            beta_kin,
+            beam_kwargs=beam_kwargs,
+            **kwargs,
         )
 
     @classmethod
@@ -75,11 +87,17 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
         phase_space_name: str,
         gamma_kin: np.ndarray,
         beta_kin: np.ndarray,
+        beam_kwargs: dict[str, Any],
         **kwargs: np.ndarray,  # sigma, tm_cumul
     ) -> Self:
         """Fully initialize from another phase space."""
         return super().from_other_phase_space(
-            other_phase_space, phase_space_name, gamma_kin, beta_kin, **kwargs
+            other_phase_space,
+            phase_space_name,
+            gamma_kin,
+            beta_kin,
+            beam_kwargs=beam_kwargs,
+            **kwargs,
         )
 
     @classmethod

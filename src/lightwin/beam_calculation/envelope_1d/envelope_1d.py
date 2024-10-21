@@ -68,14 +68,14 @@ class Envelope1D(BeamCalculator):
             _is_3d=self.is_a_3d_simulation,
             _is_multipart=self.is_a_multiparticle_simulation,
             _solver_id=self.id,
-            _beam_kwargs=self.beam_kwargs,
+            _beam_kwargs=self._beam_kwargs,
             out_folder=self.out_folder,
         )
         self.beam_calc_parameters_factory = ElementEnvelope1DParametersFactory(
             method=self.method,
             n_steps_per_cell=self.n_steps_per_cell,
             solver_id=self.id,
-            beam_kwargs=self.beam_kwargs,
+            beam_kwargs=self._beam_kwargs,
             flag_cython=self.flag_cython,
         )
 

@@ -84,7 +84,7 @@ class BeamCalculator(ABC):
         self.default_field_map_folder = (
             default_field_map_folder.resolve().absolute()
         )
-        self.beam_kwargs = beam_kwargs
+        self._beam_kwargs = beam_kwargs
 
         self.simulation_output_factory: SimulationOutputFactory
         self.list_of_elements_factory: ListOfElementsFactory
@@ -107,7 +107,7 @@ class BeamCalculator(ABC):
         self.list_of_elements_factory = ListOfElementsFactory(
             self.is_a_3d_simulation,
             self.is_a_multiparticle_simulation,
-            beam_kwargs=self.beam_kwargs,
+            beam_kwargs=self._beam_kwargs,
             default_field_map_folder=self.default_field_map_folder,
             load_field_maps=True,  # useless with TraceWin
             field_maps_in_3d=False,  # not implemented anyway

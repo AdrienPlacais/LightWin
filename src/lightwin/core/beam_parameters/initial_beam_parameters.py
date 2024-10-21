@@ -23,22 +23,22 @@ from .phase_space.initial_phase_space_beam_parameters import (
 @dataclass
 class InitialBeamParameters:
     r"""
-    Hold all emittances, envelopes, etc in various planes @ single position.
+    Hold all emittances, envelopes, etc in various planes at a single position.
 
     Parameters
     ----------
     z_abs : float
-        Absolute position in the linac in m.
+        Absolute position in the linac in :unit:`m`.
     gamma_kin : float
         Lorentz gamma factor.
     beta_kin : float
-        Lorentz gamma factor.
+        Lorentz beta factor.
     zdelta, z, phiw, x, y, t : InitialPhaseSpaceBeamParameters
-        Holds beam parameters respectively in the :math:`[z-z\delta]`,
+        Beam parameters respectively in the :math:`[z-z\delta]`,
         :math:`[z-z']`, :math:`[\phi-W]`, :math:`[x-x']`, :math:`[y-y']` and
         :math:`[t-t']` planes.
     phiw99, x99, y99 : InitialPhaseSpaceBeamParameters
-        Holds 99% beam parameters respectively in the :math:`[\phi-W]`,
+        99% beam parameters respectively in the :math:`[\phi-W]`,
         :math:`[x-x']` and :math:`[y-y']` planes. Only used with multiparticle
         simulations.
 
@@ -49,7 +49,7 @@ class InitialBeamParameters:
     beta_kin: float
 
     def __post_init__(self) -> None:
-        """Declare the various phase spaces without initalizing them."""
+        """Declare the phase spaces without initalizing them."""
         self.zdelta: InitialPhaseSpaceBeamParameters
         self.z: InitialPhaseSpaceBeamParameters
         self.phiw: InitialPhaseSpaceBeamParameters

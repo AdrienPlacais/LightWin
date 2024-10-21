@@ -6,7 +6,7 @@ For more information on the units that are used in this module, see
 """
 
 import logging
-from typing import overload
+from typing import Any, overload
 
 import numpy as np
 
@@ -25,6 +25,7 @@ def reconstruct_sigma(
     eps_is_normalized: bool = False,
     gamma_kin: np.ndarray | None = None,
     beta_kin: np.ndarray | None = None,
+    **beam,
 ) -> np.ndarray:
     r"""
     Set :math:`\sigma` matrix from the two top components and emittance.
@@ -60,6 +61,8 @@ def reconstruct_sigma(
     beta_kin : numpy.ndarray | None, optional
         Lorentz beta factor. The default is None. In this case, we compute it
         from ``gamma_kin``.
+    beam : dict
+        Configuration dictionary holding the beam parameters.
 
     Returns
     -------
@@ -76,7 +79,9 @@ def reconstruct_sigma(
     if eps_is_normalized:
         assert gamma_kin is not None
         if beta_kin is None:
-            beta_kin = converters.energy(gamma_kin, "gamma to beta")
+            beta_kin = converters.energy(
+                energy_in=gamma_kin, key="gamma to beta", **beam
+            )
             assert isinstance(beta_kin, np.ndarray)
         eps /= beta_kin * gamma_kin
 
@@ -99,6 +104,7 @@ def eps_from_sigma(
     sigma: np.ndarray,
     gamma_kin: np.ndarray,
     beta_kin: np.ndarray,
+    beam_kwargs: dict[str, Any],
 ) -> tuple[np.ndarray, np.ndarray]: ...
 
 
@@ -108,6 +114,7 @@ def eps_from_sigma(
     sigma: np.ndarray,
     gamma_kin: float,
     beta_kin: float,
+    beam_kwargs: dict[str, Any],
 ) -> tuple[float, float]: ...
 
 
@@ -116,6 +123,7 @@ def eps_from_sigma(
     sigma: np.ndarray,
     gamma_kin: np.ndarray | float,
     beta_kin: np.ndarray | float,
+    beam_kwargs: dict[str, Any],
 ) -> tuple[np.ndarray | float, np.ndarray | float]:
     r"""
     Compute emittance from :math:`\sigma` beam matrix.
@@ -134,6 +142,8 @@ def eps_from_sigma(
         ``(n, )`` (or float) Lorentz gamma factor.
     beta_kin : numpy.ndarray | float
         ``(n, )`` (or float) Lorentz beta factor.
+    beam_kwargs : dict[str, Any]
+        Configuration dictionary holding the initial beam parameters.
 
     Returns
     -------
@@ -168,6 +178,7 @@ def eps_from_sigma(
         f"normalize {phase_space_name}",
         gamma_kin=gamma_kin,
         beta_kin=beta_kin,
+        **beam_kwargs,
     )
     if is_initials:
         return eps_no_normalisation[0], eps_normalized[0]
@@ -365,6 +376,7 @@ def eps_from_other_phase_space(
     eps_other: np.ndarray,
     gamma_kin: np.ndarray,
     beta_kin: np.ndarray,
+    **beam_kwargs,
 ) -> tuple[np.ndarray, np.ndarray]: ...
 
 
@@ -375,6 +387,7 @@ def eps_from_other_phase_space(
     eps_other: float,
     gamma_kin: float,
     beta_kin: float,
+    **beam_kwargs,
 ) -> tuple[float, float]: ...
 
 
@@ -384,6 +397,7 @@ def eps_from_other_phase_space(
     eps_other: np.ndarray | float,
     gamma_kin: np.ndarray | float,
     beta_kin: np.ndarray | float,
+    **beam_kwargs,
 ) -> tuple[np.ndarray | float, np.ndarray | float]:
     """Convert emittance from another phase space.
 
@@ -406,6 +420,8 @@ def eps_from_other_phase_space(
         ``(n, )`` array (or float) of Lorentz gamma.
     beta_kin : numpy.ndarray | float
         ``(n, )`` array (or float) of Lorentz beta
+    beam_kwargs :
+        Configuration dictionary holding the initial beam parameters.
 
     Returns
     -------
@@ -417,11 +433,19 @@ def eps_from_other_phase_space(
     """
     convert_key = f"{other_phase_space_name} to {phase_space_name}"
     eps_normalized = converters.emittance(
-        eps_other, convert_key, gamma_kin=gamma_kin, beta_kin=beta_kin
+        eps_other,
+        convert_key,
+        gamma_kin=gamma_kin,
+        beta_kin=beta_kin,
+        **beam_kwargs,
     )
 
     eps_no_normalisation = converters.emittance(
-        eps_normalized, f"de-normalize {phase_space_name}", gamma_kin, beta_kin
+        eps_normalized,
+        f"de-normalize {phase_space_name}",
+        gamma_kin,
+        beta_kin,
+        **beam_kwargs,
     )
     return eps_no_normalisation, eps_normalized
 
@@ -432,6 +456,7 @@ def twiss_from_other_phase_space(
     twiss_other: np.ndarray,
     gamma_kin: np.ndarray | float,
     beta_kin: np.ndarray | float,
+    **beam,
 ) -> np.ndarray:
     """Compute Twiss parameters from Twiss parameters in another plane.
 
@@ -447,6 +472,8 @@ def twiss_from_other_phase_space(
         ``(n, )`` array (or float) of Lorentz gamma.
     beta_kin : numpy.ndarray | float
         ``(n, )`` array (or float) of Lorentz beta
+    beam :
+        Configuration dictionary holding the initial beam parameters.
 
     Returns
     -------
@@ -462,7 +489,7 @@ def twiss_from_other_phase_space(
         twiss_other = twiss_other[np.newaxis, :]
 
     twiss = converters.twiss(
-        twiss_other, gamma_kin, convert_key, beta_kin=beta_kin
+        twiss_other, gamma_kin, convert_key, beta_kin=beta_kin, **beam
     )
     if is_initial:
         return twiss[0, :]

@@ -98,6 +98,7 @@ class TraceWin(BeamCalculator):
             flag_phi_abs=flag_phi_abs,
             out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
+            beam_kwargs=beam_kwargs,
             **kwargs,
         )
 
@@ -115,13 +116,13 @@ class TraceWin(BeamCalculator):
         self.beam_calc_parameters_factory = ElementTraceWinParametersFactory()
 
         self.simulation_output_factory = SimulationOutputFactoryTraceWin(
-            self.is_a_3d_simulation,
-            self.is_a_multiparticle_simulation,
-            self.id,
-            self.out_folder,
-            self._filename,
-            self.beam_calc_parameters_factory,
-            beam=self._beam_kwargs,
+            _is_3d=self.is_a_3d_simulation,
+            _is_multipart=self.is_a_multiparticle_simulation,
+            _solver_id=self.id,
+            _beam_kwargs=self._beam_kwargs,
+            out_folder=self.out_folder,
+            _filename=self._filename,
+            beam_calc_parameters_factory=self.beam_calc_parameters_factory,
         )
 
     def _tracewin_base_command(
