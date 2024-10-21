@@ -52,7 +52,8 @@ class KeyValConfSpec:
         :class:`KeyValConfSpec` with the same name.
     derived : bool, optional
         If the property is calculated from other properties. The default is
-        False, in which case it must be set by the user.
+        False, in which case it must be set by the user. Note that derived keys
+        will not appear in the ``.toml`` output strings.
 
     """
 

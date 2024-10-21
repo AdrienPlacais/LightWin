@@ -7,7 +7,7 @@ from typing import Any, Literal
 from lightwin.new_config.specs.beam_calculator_specs import (
     BEAM_CALCULATORS_CONFIGS,
 )
-from lightwin.new_config.specs.beam_specs import BEAM_CONFIG
+from lightwin.new_config.specs.beam_specs import BEAM_CONFIG, BeamTableConfSpec
 from lightwin.new_config.specs.design_space_specs import DESIGN_SPACE_CONFIGS
 from lightwin.new_config.specs.evaluators_specs import EVALUATORS_CONFIG
 from lightwin.new_config.specs.files_specs import FILES_CONFIG
@@ -43,7 +43,7 @@ class ConfSpec:
         """Declare the attributes."""
         table_of_specs = []
         if beam:
-            table_of_specs.append(TableConfSpec("beam", beam, BEAM_CONFIG))
+            table_of_specs.append(BeamTableConfSpec("beam", beam, BEAM_CONFIG))
         if files:
             table_of_specs.append(TableConfSpec("files", files, FILES_CONFIG))
         if beam_calculator:

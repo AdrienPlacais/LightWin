@@ -19,7 +19,13 @@ CONFIGURABLE_OBJECTS = (
 
 
 class TableConfSpec:
-    """Set specifications for a table, which holds several key-value pairs."""
+    """Set specifications for a table, which holds several key-value pairs.
+
+    .. note::
+        This object can be subclassed for specific configuration needs, eg
+        :class:`.BeamTableConfSpec`.
+
+    """
 
     def __init__(
         self,
@@ -73,7 +79,7 @@ class TableConfSpec:
 
         self._specs = specs
         self._selectkey_n_default = selectkey_n_default
-        self.specs_as_dict: dict[str, Any]
+        self.specs_as_dict: dict[str, KeyValConfSpec]
         self._set_specs_as_dict()
 
         self.is_mandatory = is_mandatory
@@ -190,9 +196,15 @@ class TableConfSpec:
 
         return strings
 
+    def _post_treat(self, toml_subdict: dict[str, Any]) -> None:
+        """Edit some values, create new ones."""
+        pass
+
     def validate(self, toml_subdict: dict[str, Any], **kwargs) -> bool:
-        """Check that all the key-values in ``toml_subdict`` are valid."""
+        """Post-treat, check that key-values in ``toml_subdict`` are valid."""
         self._set_specs_as_dict(toml_subdict)
+        self._post_treat(toml_subdict)
+
         validations = [self._mandatory_keys_are_present(toml_subdict.keys())]
         for key, val in toml_subdict.items():
             spec = self._get_proper_spec(key)
@@ -232,10 +244,6 @@ class TableConfSpec:
             if spec.is_mandatory or not only_mandatory
         }
         return dummy_conf
-
-    def post_treat(self, toml_subdict: dict[str, Any]) -> None:
-        """Edit some values, create new ones."""
-        pass
 
 
 def _remove_overriden_keys(
