@@ -3,12 +3,14 @@
 import logging
 from typing import Any
 
+import numpy as np
+
 
 def format_for_toml(key: str, value: Any, preferred_type: type) -> str:
     """Format the key-value pair so that it matches ``toml`` standard."""
     if isinstance(value, dict):
         formatted_value = _concat_dict(value)
-    elif isinstance(value, list):
+    elif isinstance(value, (list, np.ndarray)):
         formatted_value = _format_list(value, preferred_type)
     else:
         formatted_value = _format_value(key, value, preferred_type)
@@ -25,11 +27,13 @@ def _concat_dict(value: dict[str, Any]) -> str:
     return "{ " + ", ".join(entries) + " }"
 
 
-def _format_list(value: list, preferred_type: type) -> str:
+def _format_list(value: list | np.ndarray, preferred_type: type) -> str:
     """Format a list of values, including handling lists of dicts."""
     if all(isinstance(item, dict) for item in value):
         formatted_items = [_concat_dict(item) for item in value]
     else:
+        if isinstance(value, np.ndarray):
+            value = value.tolist()
         formatted_items = [str(item) for item in value]
     return "[ " + ", ".join(formatted_items) + " ]"
 
