@@ -12,13 +12,7 @@ from typing import Any
 
 import pytest
 
-from lightwin.constants import (
-    example_config,
-    example_dat,
-    example_folder,
-    example_ini,
-    example_machine_config,
-)
+from lightwin.constants import example_config, example_folder
 from lightwin.new_config.config_manager import (
     dict_to_toml,
     load_toml,
