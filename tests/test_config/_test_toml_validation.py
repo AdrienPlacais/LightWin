@@ -128,7 +128,7 @@ class TestConfigManager:
         dummy_toml_dict: dict[str, dict[str, Any]],
     ) -> None:
         """Check if loaded toml is valid."""
-        assert conf_specs.validate(
+        assert conf_specs.prepare(
             dummy_toml_dict,
             id_type="configured_object",
             toml_folder=example_folder,
@@ -148,7 +148,7 @@ class TestConfigManager:
         generated_toml_dict: dict[str, dict[str, Any]],
     ) -> None:
         """Check that generating a default toml leads to a valid dict."""
-        assert conf_specs.validate(
+        assert conf_specs.prepare(
             generated_toml_dict, id_type="table_entry"
         ), "Error validating default configuration dict."
 
@@ -161,5 +161,5 @@ class TestConfigManager:
         """Check if saving the given conf dict as toml works."""
         toml_path = tmp_path_factory.mktemp("test_toml") / "test.toml"
         dict_to_toml(dummy_toml_dict, toml_path, conf_specs)
-        process_config(toml_path, CONFIG_KEYS, conf_specs=conf_specs)
+        process_config(toml_path, CONFIG_KEYS, conf_specs_t=SimplestConfSpec)
         assert True

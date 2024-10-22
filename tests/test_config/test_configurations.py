@@ -77,7 +77,7 @@ def config_key(request: pytest.FixtureRequest) -> dict[str, str]:
     return config_key
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="function")
 def toml_dict(config_key: dict[str, str]) -> dict[str, dict[str, Any]]:
     """Check that loading the table does not raise any error."""
     toml_dict = load_toml(
@@ -117,7 +117,7 @@ class TestSingleTable:
         self, toml_dict: dict[str, dict[str, Any]], conf_spec: ConfSpec
     ) -> None:
         """Check that the example table matches associated specifications."""
-        assert conf_spec.validate(
+        assert conf_spec.prepare(
             toml_dict, id_type="configured_object", toml_folder=example_folder
         ), f"Mismatch between {toml_dict = } and {conf_spec = }"
 
@@ -139,7 +139,7 @@ class TestSingleTable:
             conf_spec,
             original_toml_folder=example_folder,
         )
-        process_config(toml_path, config_key, conf_specs=conf_spec)
+        process_config(toml_path, config_key, conf_specs_t=ConfSpec)
         assert True
 
     def atest_generate_works(self, *args, **kwargs) -> None:
