@@ -4,17 +4,17 @@ import logging
 from pathlib import Path
 from typing import Any, Literal
 
-from lightwin.config.specs.beam_calculator_specs import (
+from lightwin.beam_calculation.specs import (
     BEAM_CALCULATOR_MONKEY_PATCHES,
     BEAM_CALCULATORS_CONFIGS,
 )
-from lightwin.config.specs.beam_specs import BEAM_CONFIG, BeamTableConfSpec
-from lightwin.config.specs.design_space_specs import DESIGN_SPACE_CONFIGS
-from lightwin.config.specs.evaluators_specs import EVALUATORS_CONFIG
-from lightwin.config.specs.files_specs import FILES_CONFIG, FilesTableConfSpec
-from lightwin.config.specs.plots_specs import PLOTS_CONFIG
-from lightwin.config.specs.wtf_specs import WTF_CONFIGS, WTF_MONKEY_PATCHES
 from lightwin.config.table_spec import TableConfSpec
+from lightwin.core.beam_specs import BEAM_CONFIG, BeamTableConfSpec
+from lightwin.core.files_specs import FILES_CONFIG, FilesTableConfSpec
+from lightwin.evaluator.specs import EVALUATORS_CONFIG
+from lightwin.optimisation.design_space_specs import DESIGN_SPACE_CONFIGS
+from lightwin.optimisation.wtf_specs import WTF_CONFIGS, WTF_MONKEY_PATCHES
+from lightwin.visualization.specs import PLOTS_CONFIG
 
 
 class ConfSpec:

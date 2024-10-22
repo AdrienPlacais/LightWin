@@ -1,14 +1,14 @@
 """Gather the configurations for the different :class:`.BeamCalculator`."""
 
-from lightwin.config.specs.beam_calculator_envelope1d_specs import (
+from lightwin.beam_calculation.envelope_1d.specs import (
     ENVELOPE1D_CONFIG,
     ENVELOPE1D_MONKEY_PATCHES,
 )
-from lightwin.config.specs.beam_calculator_envelope3d_specs import (
+from lightwin.beam_calculation.envelope_3d.specs import (
     ENVELOPE3D_CONFIG,
     ENVELOPE3D_MONKEY_PATCHES,
 )
-from lightwin.config.specs.beam_calculator_tracewin_specs import (
+from lightwin.beam_calculation.tracewin.specs import (
     TRACEWIN_CONFIG,
     TRACEWIN_MONKEY_PATCHES,
 )
