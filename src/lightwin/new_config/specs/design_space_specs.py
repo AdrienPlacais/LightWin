@@ -88,7 +88,7 @@ DESIGN_SPACE_FROM_FILE = _DESIGN_SPACE_BASE + (
             "``from_file`` is ``True``."
         ),
         default_value=example_constraints,
-        is_mandatory=True,
+        is_mandatory=False,
         is_a_path_that_must_exists=True,
     ),
     KeyValConfSpec(

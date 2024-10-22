@@ -14,7 +14,7 @@ def process_config(
     config_keys: dict[str, str],
     warn_mismatch: bool = False,
     override: dict[str, dict[str, Any]] | None = None,
-    conf_specs: ConfSpec | None = None,
+    conf_specs_t: type[ConfSpec] = ConfSpec,
 ) -> dict[str, dict[str, Any]]:
     """Load and test the configuration file.
 
@@ -30,7 +30,7 @@ def process_config(
     override : dict[str, dict[str, Any]] | None, optional
         To override entries in the ``.toml``. If not provided, we keep
         defaults.
-    conf_specs : ConfSpec | None, optional
+    conf_specs_t : type[ConfSpec], optional
         The specifications that the ``.toml`` must match to be accepted. If not
         provided, we take a default.
 
@@ -45,9 +45,8 @@ def process_config(
     assert toml_path.is_file(), f"{toml_path = } does not exist."
     toml_fulldict = load_toml(toml_path, config_keys, warn_mismatch, override)
 
-    if conf_specs is None:
-        conf_specs = ConfSpec()
-    conf_specs.validate(toml_fulldict, toml_folder=toml_path.parent)
+    conf_specs = conf_specs_t(**config_keys)
+    conf_specs.prepare(toml_fulldict, toml_folder=toml_path.parent)
     return toml_fulldict
 
 

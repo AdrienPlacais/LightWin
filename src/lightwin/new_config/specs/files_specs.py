@@ -68,13 +68,9 @@ class FilesTableConfSpec(TableConfSpec):
             the ``kwargs``.
 
         """
+        super()._pre_treat(toml_subdict, **kwargs)
         project_path = _create_project_folders(**kwargs, **toml_subdict)
         _set_up_logging(project_path=project_path, **toml_subdict)
-
-    def validate(self, toml_subdict: dict[str, Any], **kwargs) -> bool:
-        """Insert the pre-treat methd before validation."""
-        self._pre_treat(toml_subdict=toml_subdict, **kwargs)
-        return super().validate(toml_subdict, **kwargs)
 
 
 def _set_up_logging(

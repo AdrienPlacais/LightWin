@@ -57,3 +57,5 @@ ENVELOPE3D_CONFIG = (
         ),
     ),
 )
+
+ENVELOPE3D_MONKEY_PATCHES = {}

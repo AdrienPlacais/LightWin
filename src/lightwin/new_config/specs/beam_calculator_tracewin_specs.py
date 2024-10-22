@@ -10,7 +10,6 @@
 
 """
 
-import logging
 import socket
 import tomllib
 from pathlib import Path
@@ -80,11 +79,16 @@ _PURE_TRACEWIN_CONFIG = (
 
 TRACEWIN_CONFIG = _PURE_TRACEWIN_CONFIG + (
     KeyValConfSpec(
-        key="tool",
-        types=(str,),
-        description="Name of the tool.",
-        default_value="TraceWin",
-        allowed_values=("TraceWin", "tracewin"),
+        key="base_kwargs",
+        types=(dict,),
+        description=(
+            "Keyword arguments passed to TraceWin CLI. Internal use of "
+            "LightWin onnly."
+        ),
+        default_value={},
+        is_mandatory=False,
+        warning_message=("Providing `base_kwargs` is not recommended."),
+        derived=True,
     ),
     KeyValConfSpec(
         key="executable",
@@ -125,6 +129,13 @@ TRACEWIN_CONFIG = _PURE_TRACEWIN_CONFIG + (
         description="A key in the machine_config.toml file",
         default_value="noX11_full",
     ),
+    KeyValConfSpec(
+        key="tool",
+        types=(str,),
+        description="Name of the tool.",
+        default_value="TraceWin",
+        allowed_values=("TraceWin", "tracewin"),
+    ),
 )  #: Arguments for :class:`.TraceWin` object configuration
 
 
@@ -162,35 +173,6 @@ def tracewin_declare_that_machine_config_is_not_mandatory_anymore(
     keyval.overrides_previously_defined = True
 
 
-def tracewin_validate(
-    self: TableConfSpec, toml_subdict: dict[str, Any], **kwargs
-) -> bool:
-    """Check that the configuration will not lead to errors.
-
-    .. note::
-        This method also edits the dictionary to separate LightWin and
-        TraceWin specific arguments.
-
-    """
-    self._pre_treat(toml_subdict, **kwargs)
-    self._set_specs_as_dict(toml_subdict)
-
-    validations = [self._mandatory_keys_are_present(toml_subdict.keys())]
-    for key, val in toml_subdict.items():
-        spec = self._get_proper_spec(key)
-        if spec is None:
-            continue
-        validations.append(spec.validate(val, **kwargs))
-
-    all_is_validated = all(validations)
-    if not all_is_validated:
-        logging.error(
-            f"At least one error was raised treating {self.table_entry}"
-        )
-    self._post_treat(toml_subdict, **kwargs)
-    return all_is_validated
-
-
 def tracewin_post_treat(
     self: TableConfSpec, toml_subdict: dict[str, Any], **kwargs
 ) -> None:
@@ -222,7 +204,6 @@ def tracewin_post_treat(
 TRACEWIN_MONKEY_PATCHES = {
     "_pre_treat": tracewin_pre_treat,
     "_declare_that_machine_config_is_not_mandatory_anymore": tracewin_declare_that_machine_config_is_not_mandatory_anymore,
-    "validate": tracewin_validate,
     "_post_treat": tracewin_post_treat,
 }
 

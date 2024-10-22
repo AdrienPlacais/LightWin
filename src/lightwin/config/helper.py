@@ -72,6 +72,11 @@ def find_path(
     path : pathlib.Path
         Absolute path, whose existence has been checked.
 
+    Raises
+    ------
+    FileNotFoundError :
+        Raised if the required path does not exists.
+
     """
 
     def path_exists(p: Path) -> bool:

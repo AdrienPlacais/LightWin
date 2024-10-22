@@ -114,11 +114,15 @@ class KeyValConfSpec:
     def path_exists(
         self, toml_value: Any, toml_folder: Path | None = None, **kwargs
     ) -> bool:
-        """Check that the given path exists."""
+        """Check that the given path exists if necessary."""
         if not self.is_a_path_that_must_exists:
             return True
-        _ = find_path(toml_folder, toml_value)
-        return True
+        try:
+            _ = find_path(toml_folder, toml_value)
+            return True
+        except FileNotFoundError:
+            logging.error(f"{toml_value} should exist but was not found.")
+            return False
 
     def to_toml_string(
         self,

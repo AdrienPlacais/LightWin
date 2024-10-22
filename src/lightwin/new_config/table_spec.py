@@ -5,6 +5,7 @@ from collections.abc import Callable, Collection
 from pathlib import Path
 from typing import Any, Literal
 
+from lightwin.config.helper import find_path
 from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
 
 CONFIGURABLE_OBJECTS = (
@@ -210,7 +211,7 @@ class TableConfSpec:
 
         return strings
 
-    def _pre_treat(self, toml_subdict: dict[str, Any]) -> None:
+    def _pre_treat(self, toml_subdict: dict[str, Any], **kwargs) -> None:
         """Edit some values, create new ones. To call before validation.
 
         .. note::
@@ -219,10 +220,22 @@ class TableConfSpec:
         """
         pass
 
-    def validate(self, toml_subdict: dict[str, Any], **kwargs) -> bool:
-        """Check that key-values in ``toml_subdict`` are valid."""
+    def prepare(self, toml_subdict: dict[str, Any], **kwargs) -> bool:
+        """Validate the config dict and edit some values."""
         self._set_specs_as_dict(toml_subdict)
+        self._pre_treat(toml_subdict, **kwargs)
+        validations = self._validate(toml_subdict, **kwargs)
+        self._post_treat(toml_subdict, **kwargs)
+        self._set_specs_as_dict(toml_subdict)
+        return validations
 
+    def _validate(self, toml_subdict: dict[str, Any], **kwargs) -> bool:
+        """Check that key-values in ``toml_subdict`` are valid.
+
+        This method is defined to keep an implementation of the original method
+        even when ``validate`` is overriden by a monkey patch.
+
+        """
         validations = [self._mandatory_keys_are_present(toml_subdict.keys())]
         for key, val in toml_subdict.items():
             spec = self._get_proper_spec(key)
@@ -238,7 +251,7 @@ class TableConfSpec:
 
         return all_is_validated
 
-    def _post_treat(self, toml_subdict: dict[str, Any]) -> None:
+    def _post_treat(self, toml_subdict: dict[str, Any], **kwargs) -> None:
         """Edit some values, create new ones. To call after validation.
 
         .. note::
@@ -246,7 +259,27 @@ class TableConfSpec:
             care.
 
         """
-        pass
+        self._make_paths_absolute(toml_subdict, **kwargs)
+
+    def _make_paths_absolute(
+        self,
+        toml_subdict: dict[str, Any],
+        toml_folder: Path | None = None,
+        **kwargs,
+    ) -> None:
+        """Transform the paths to their absolute resolved version."""
+        for key, val in toml_subdict.items():
+            spec = self._get_proper_spec(key)
+            if spec is None:
+                continue
+            if Path not in spec.types:
+                continue
+
+            try:
+                new_val = find_path(toml_folder, val)
+                toml_subdict[key] = new_val
+            except FileNotFoundError:
+                continue
 
     def _mandatory_keys_are_present(self, toml_keys: Collection[str]) -> bool:
         """Ensure that all the mandatory parameters are defined."""

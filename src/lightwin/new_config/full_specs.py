@@ -181,7 +181,7 @@ class ConfSpec:
 
         return strings
 
-    def validate(
+    def prepare(
         self,
         toml_fulldict: dict[str, dict[str, Any]],
         toml_folder: Path,
@@ -191,6 +191,8 @@ class ConfSpec:
         **kwargs,
     ) -> bool:
         """Check that all the tables in ``toml_fulldict`` are valid.
+
+        Also edit some values if necessary.
 
         Parameters
         ----------
@@ -210,7 +212,7 @@ class ConfSpec:
         for table_name, toml_subdict in toml_fulldict.items():
             spec = self._get_proper_table(table_name, id_type=id_type)
             validations.append(
-                spec.validate(toml_subdict, toml_folder=toml_folder, **kwargs)
+                spec.prepare(toml_subdict, toml_folder=toml_folder, **kwargs)
             )
 
         all_is_validated = all(validations)
