@@ -1,4 +1,10 @@
-"""Load, validate and post-process the configuration."""
+"""Load, validate and post-process the configuration.
+
+.. todo::
+    Method to generate the .csv files of documentation from the tables, i.e.
+    docs/manual/configuration_entries
+
+"""
 
 import logging
 import shutil
