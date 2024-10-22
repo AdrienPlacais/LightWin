@@ -87,7 +87,7 @@ def _strip_comments(line: str) -> str:
 
 def _split_named_elements(line: str) -> list[str]:
     """Split named elements from a line."""
-    pattern = re.compile(r"(\w+)\s*:\s*(.*)")
+    pattern = re.compile(r"([A-Za-z0-9_\-]+)\s*:\s*(.*)")
     match = pattern.match(line)
     if match:
         return [match.group(1)] + match.group(2).split()
