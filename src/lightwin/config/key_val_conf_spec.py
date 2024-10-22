@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from lightwin.config.helper import find_path
-from lightwin.new_config.toml_formatter import format_for_toml
+from lightwin.config.toml_formatter import format_for_toml
 
 
 @dataclass

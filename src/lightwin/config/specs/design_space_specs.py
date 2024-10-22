@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
+from lightwin.config.key_val_conf_spec import KeyValConfSpec
 from lightwin.constants import example_constraints, example_variables
-from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
 from lightwin.optimisation.design_space.factory import (
     DESIGN_SPACE_FACTORY_PRESETS,
 )

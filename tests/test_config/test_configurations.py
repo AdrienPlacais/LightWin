@@ -12,13 +12,13 @@ from typing import Any
 
 import pytest
 
-from lightwin.constants import example_config, example_folder
-from lightwin.new_config.config_manager import (
+from lightwin.config.config_manager import (
     dict_to_toml,
     load_toml,
     process_config,
 )
-from lightwin.new_config.full_specs import ConfSpec
+from lightwin.config.full_specs import ConfSpec
+from lightwin.constants import example_config, example_folder
 
 CONFIG_KEYS = (
     pytest.param(({"beam": "beam"},), id="Beam configuration"),

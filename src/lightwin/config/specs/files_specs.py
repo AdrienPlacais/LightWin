@@ -11,9 +11,9 @@ import logging
 from pathlib import Path
 from typing import Any, Literal
 
+from lightwin.config.key_val_conf_spec import KeyValConfSpec
+from lightwin.config.table_spec import TableConfSpec
 from lightwin.constants import example_dat, example_folder
-from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
-from lightwin.new_config.table_spec import TableConfSpec
 from lightwin.util.log_manager import set_up_logging
 
 FILES_CONFIG = (

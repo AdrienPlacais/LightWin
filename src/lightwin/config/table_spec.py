@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from lightwin.config.helper import find_path
-from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
+from lightwin.config.key_val_conf_spec import KeyValConfSpec
 
 CONFIGURABLE_OBJECTS = (
     "beam",

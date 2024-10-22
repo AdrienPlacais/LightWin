@@ -6,7 +6,7 @@
 
 """
 
-from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
+from lightwin.config.key_val_conf_spec import KeyValConfSpec
 
 EVALUATORS_CONFIG = (
     KeyValConfSpec(

@@ -12,9 +12,9 @@ from typing import Any
 
 import numpy as np
 
+from lightwin.config.key_val_conf_spec import KeyValConfSpec
+from lightwin.config.table_spec import TableConfSpec
 from lightwin.constants import c
-from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
-from lightwin.new_config.table_spec import TableConfSpec
 
 BEAM_CONFIG = (
     KeyValConfSpec(

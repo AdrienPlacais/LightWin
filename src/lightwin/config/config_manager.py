@@ -6,7 +6,7 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
-from lightwin.new_config.full_specs import ConfSpec
+from lightwin.config.full_specs import ConfSpec
 
 
 def process_config(

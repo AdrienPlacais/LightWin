@@ -1,7 +1,7 @@
 """Define how :class:`.Envelope1D` should be configured."""
 
 from lightwin.beam_calculation.envelope_1d.util import ENVELOPE1D_METHODS
-from lightwin.new_config.key_val_conf_spec import KeyValConfSpec
+from lightwin.config.key_val_conf_spec import KeyValConfSpec
 
 ENVELOPE1D_CONFIG = (
     KeyValConfSpec(
