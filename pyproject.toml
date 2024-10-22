@@ -36,7 +36,7 @@ keywords = ["failure compensation", "linac", "linear accelerator", "reliability"
 name = "LightWin"
 readme = "README.md"
 requires-python = ">=3.12"
-version = "0.7.0b3"
+version = "0.7.0"
 
 [project.scripts]
 lw-combine-solutions = "lightwin.scripts.combine_solutions:main"
