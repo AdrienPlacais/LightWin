@@ -185,15 +185,18 @@ class KeyValConfSpec:
         if self.derived:
             return None
 
+        type_names = [f"``{t.__name__}``" for t in self.types]
+        fmt_types = " or ".join(type_names)
+
+        fmt_allowed = (
+            f"{self.allowed_values}" if self.allowed_values is not None else ""
+        )
+        fmt_mandatory = "✅" if self.is_mandatory else "❌"
         out = (
             self.key,
-            f"{self.types}",
+            fmt_types,
             self.description,
-            (
-                f"{self.allowed_values}"
-                if self.allowed_values is not None
-                else ""
-            ),
-            "✅" if self.is_mandatory else "❌",
+            fmt_allowed,
+            fmt_mandatory,
         )
         return out

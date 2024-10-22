@@ -54,7 +54,7 @@ def write_specs_to_csv(
 
 def main() -> None:
     """Generate all the necessary CSV files."""
-    output_dir = doc_folder / "configuration_entries"
+    output_dir = doc_folder / "manual/configuration_entries"
 
     files: dict[str, Sequence[KeyValConfSpec]]
     files = {
@@ -72,10 +72,10 @@ def main() -> None:
         # "wtf_l_neigboring_lattices": WTF_L_NEIGHBORING_LATTICES,
     }
 
-    for specs_list, config in files.items():
+    for name, specs_list in files.items():
         write_specs_to_csv(
-            specs_list=config,
-            output_file=(output_dir / specs_list).with_suffix(".csv"),
+            specs_list=specs_list,
+            output_file=(output_dir / name).with_suffix(".csv"),
         )
 
 
