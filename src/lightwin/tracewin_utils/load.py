@@ -95,19 +95,22 @@ def _split_named_elements(line: str) -> list[str]:
 
 
 def _split_weighted_elements(line: str) -> list[str]:
-    """Split weighted elements from a line."""
-    pattern = re.compile(r"(\w+)\s*(\(\d+\.?\d*e?-?\d*\))?")
+    """Split elements with parentheses into separate parts."""
+    pattern = re.compile(r"([A-Za-z0-9_]+)\((.*?)\)|(\S+)")
     matches = pattern.findall(line)
+
     result = []
     for match in matches:
-        result.append(match[0])
-        if match[1]:
-            result.append(match[1].strip())
+        if match[0]:
+            result.append(match[0])
+            result.append(f"({match[1]})")
+        else:
+            result.append(match[2])
     return result
 
 
 def slice_dat_line(line: str) -> list[str]:
-    """Slices a .dat line into its components."""
+    """Slice a .dat line into its components."""
     line = line.strip()
     if not line:
         return []
@@ -119,14 +122,11 @@ def slice_dat_line(line: str) -> list[str]:
 
     named_elements = _split_named_elements(line)
     if named_elements:
-        return named_elements
+        return [named_elements[0]] + _split_weighted_elements(
+            " ".join(named_elements[1:])
+        )
 
-    if "(" in line:
-        weighted_elements = _split_weighted_elements(line)
-        if weighted_elements:
-            return weighted_elements
-
-    return line.split()
+    return _split_weighted_elements(line)
 
 
 def table_structure_file(
