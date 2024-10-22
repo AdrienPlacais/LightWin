@@ -19,7 +19,10 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import WithFaults
-from lightwin.failures.fault_scenario import FaultScenario, fault_scenario_factory
+from lightwin.failures.fault_scenario import (
+    FaultScenario,
+    fault_scenario_factory,
+)
 
 params = [
     pytest.param(
@@ -38,7 +41,7 @@ params = [
         id="Envelope3D",
     ),
     pytest.param(
-        ("generic_tracewin", False, False),
+        ("generic_tracewin", None, None),
         marks=(pytest.mark.smoke, pytest.mark.slow, pytest.mark.tracewin),
         id="TraceWin",
     ),
@@ -65,9 +68,14 @@ def config(
         "files": {
             "project_folder": out_folder,
         },
+        # Trick to not set the flags when they are None (for TW)
         "beam_calculator": {
-            "flag_phi_abs": flag_phi_abs,
-            "flag_cython": flag_cython,
+            k: v
+            for k, v in {
+                "flag_phi_abs": flag_phi_abs,
+                "flag_cython": flag_cython,
+            }.items()
+            if v is not None
         },
     }
     my_config = lightwin.config_manager.process_config(

@@ -22,13 +22,6 @@ from lightwin.new_config.table_spec import TableConfSpec
 
 _PURE_TRACEWIN_CONFIG = (
     KeyValConfSpec(
-        key="ini_path",
-        types=(str, Path),
-        description="Path to the ``.ini`` TraceWin file.",
-        default_value=example_ini,
-        is_a_path_that_must_exists=True,
-    ),
-    KeyValConfSpec(
         key="hide",
         types=(bool,),
         description="Hide the GUI, or cancel console output (no parameter).",
@@ -106,6 +99,23 @@ TRACEWIN_CONFIG = _PURE_TRACEWIN_CONFIG + (
         ),
     ),
     KeyValConfSpec(
+        key="flag_phi_abs",
+        types=(bool,),
+        description=(
+            "If the field maps phases should be absolute (no implicit "
+            "rephasing after a failure)."
+        ),
+        default_value=True,
+        is_mandatory=False,
+    ),
+    KeyValConfSpec(
+        key="ini_path",
+        types=(str, Path),
+        description="Path to the ``.ini`` TraceWin file.",
+        default_value=example_ini,
+        is_a_path_that_must_exists=True,
+    ),
+    KeyValConfSpec(
         key="machine_config_file",
         types=(str, Path),
         description="Path to a file holding the paths to TW executables",
@@ -177,6 +187,8 @@ def tracewin_post_treat(
     self: TableConfSpec, toml_subdict: dict[str, Any], **kwargs
 ) -> None:
     """Separate TraceWin/LightWin arguments."""
+    self._make_paths_absolute(toml_subdict, **kwargs)
+
     new_toml_subdict = {"base_kwargs": {}}  # TraceWin arguments
 
     entries_to_remove = (
@@ -184,13 +196,15 @@ def tracewin_post_treat(
         "machine_config_file",
         "machine_name",
     )
-    lightwin_entries = ("tool",)
+    entries_to_put_in_base_kwargs = [
+        keyval.key for keyval in _PURE_TRACEWIN_CONFIG
+    ]
 
     for key, value in toml_subdict.items():
         if key in entries_to_remove:
             continue
 
-        if key in lightwin_entries:
+        if key not in entries_to_put_in_base_kwargs:
             new_toml_subdict[key] = value
             continue
 
