@@ -1,7 +1,0 @@
-Entry                             ,Type                              ,Description                                                ,Allowed values                         ,Mandatory? 
-``optimisation_algorithm``        ,str                               ,Name of optimisation algorithm                             ,Keys of :data:`.ALGORITHM_SELECTOR`    ,✅         
-``strategy``                      ,str                               ,How compensating cavities are selected                     ,Keys of :data:`.COMPENSATING_SELECTOR` ,✅         
-``id_nature``                     ,str                               ,Indicates if failed is element index/cavity index/name     ,``element`` or ``cavity`` or ``name``  ,✅         
-``failed``                        ,list[list[int]] | list[list[str]] ,Index of failed cavities                                   ,                                       ,✅         
-``objective_preset``              ,str                               ,Objectives for the optimisation algorithm                  ,Keys of :data:`.OBJECTIVE_PRESETS`     ,✅         
-``optimisation_algorithm_kwargs`` ,dict                              ,Keyword arguments passed to the actual optimisation method ,                                       ,❌         

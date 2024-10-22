@@ -1,7 +1,7 @@
-evaluators module
+files\_specs module
 =================================
 
-.. automodule:: lightwin.config.evaluators
+.. automodule:: lightwin.core.files_specs
    :members:
    :undoc-members:
    :show-inheritance:

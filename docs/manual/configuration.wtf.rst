@@ -6,16 +6,29 @@
 ``wtf`` stands for *what to fit*.
 This section parametrizes the failed cavities, as well as how they are fixed.
 
+If you want to use the *k out of n* method:
+
 .. csv-table::
-   :file: configuration_entries/wtf.csv
+   :file: configuration_entries/wtf_k_out_of_n.csv
    :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
-Each ``strategy`` entry requires specific additional arguments.
-As an example, with the ``k out of n`` method, you need to give LightWin ``k``, the number of compensating cavities per failed cavity.
-The specific documentation can be found in :mod:`.failures.strategy`.
+If you want to use the *l neighboring lattices* method:
 
-You can type the index of failed cavities on several lines if you want to study several fault scenarios at once.
+.. csv-table::
+   :file: configuration_entries/wtf_l_neighboring_lattices.csv
+   :widths: 30, 5, 50, 10, 5
+   :header-rows: 1
+
+If you want to manually associate each failed cavity with its compensating cavities:
+
+.. csv-table::
+   :file: configuration_entries/wtf_l_neighboring_lattices.csv
+   :widths: 30, 5, 50, 10, 5
+   :header-rows: 1
+
+.. note::
+   You can type the index of failed cavities on several lines if you want to study several fault scenarios at once.
 
 .. rubric:: Example
 

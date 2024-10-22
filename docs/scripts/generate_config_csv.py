@@ -58,18 +58,18 @@ def main() -> None:
 
     files: dict[str, Sequence[KeyValConfSpec]]
     files = {
-        # "beam": BEAM_CONFIG,
-        # "beam_calculator_envelope_1d": ENVELOPE1D_CONFIG,
-        # "beam_calculator_envelope_3d": ENVELOPE3D_CONFIG,
-        # "beam_calculator_tracewin": TRACEWIN_CONFIG,
-        # "design_space_calculated": DESIGN_SPACE_CALCULATED,
-        # "design_space_from_file": DESIGN_SPACE_FROM_FILE,
-        # "evaluator": EVALUATORS_CONFIG,
-        # "files": FILES_CONFIG,
-        # "plots": PLOTS_CONFIG,
+        "beam": BEAM_CONFIG,
+        "beam_calculator_envelope_1d": ENVELOPE1D_CONFIG,
+        "beam_calculator_envelope_3d": ENVELOPE3D_CONFIG,
+        "beam_calculator_tracewin": TRACEWIN_CONFIG,
+        "design_space_calculated": DESIGN_SPACE_CALCULATED,
+        "design_space_from_file": DESIGN_SPACE_FROM_FILE,
+        "evaluator": EVALUATORS_CONFIG,
+        "files": FILES_CONFIG,
+        "plots": PLOTS_CONFIG,
         "wtf_k_out_of_n": WTF_K_OUT_OF_N,
-        # "wtf_manual": WTF_MANUAL,
-        # "wtf_l_neigboring_lattices": WTF_L_NEIGHBORING_LATTICES,
+        "wtf_manual": WTF_MANUAL,
+        "wtf_l_neighboring_lattices": WTF_L_NEIGHBORING_LATTICES,
     }
 
     for name, specs_list in files.items():

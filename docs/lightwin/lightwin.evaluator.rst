@@ -22,5 +22,6 @@ Submodules
 
    lightwin.evaluator.list_of_simulation_output_evaluators
    lightwin.evaluator.post_treaters
+   lightwin.evaluator.specs
    lightwin.evaluator.testers
    lightwin.evaluator.types

@@ -74,7 +74,7 @@ def find_path(
 
     Raises
     ------
-    FileNotFoundError :
+    FileNotFoundError
         Raised if the required path does not exists.
 
     """

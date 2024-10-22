@@ -12,10 +12,7 @@ EVALUATORS_CONFIG = (
     KeyValConfSpec(
         key="beam_calc_post",
         types=(list[str],),
-        description=(
-            "The names of the evaluators, that must be in "
-            ":data:`.IMPLEMENTED_EVALUATORS`."
-        ),
+        description="The names of the evaluators.",
         default_value=["mismatch factor at end"],
         is_mandatory=False,
     ),

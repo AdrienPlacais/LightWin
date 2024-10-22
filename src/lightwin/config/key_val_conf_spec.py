@@ -14,7 +14,7 @@ from lightwin.config.toml_formatter import format_for_toml
 class KeyValConfSpec:
     """Set specifications for a single key-value pair.
 
-    Attributes
+    Parameters
     ----------
     key : str
         Name of the attribute.

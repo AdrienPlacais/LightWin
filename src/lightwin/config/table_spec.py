@@ -71,8 +71,8 @@ class TableConfSpec:
             If the current table must be provided. The default is True.
         can_have_untested_keys : bool, optional
             If LightWin should remain calm when some keys are provided in the
-            ``.toml`` but do not correspond to any :class:`KeyValConfSpec`. The
-            default is False.
+            ``.toml`` but do not correspond to any :class:`.KeyValConfSpec`.
+            The default is False.
         selectkey_n_default : tuple[str, str | bool] | None, optional
             Must be given if ``specs`` is a dict. First value is name of the
             spec, second value is default value. We will look for this spec in

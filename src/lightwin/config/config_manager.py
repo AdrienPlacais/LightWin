@@ -26,7 +26,7 @@ def process_config(
 
     Parameters
     ----------
-    toml_path : Path
+    toml_path : pathlib.Path
         Path to the configuration file. It must be a ```.toml`` file.
     config_keys : dict[str, str]
         Associate the name of LightWin's group of parameters to the entry in
@@ -140,7 +140,7 @@ def dict_to_toml(
     toml_fulldict : dict[str, dict[str, Any]]
         The configuration as a nested dictionary. The keys will be used as
         table entries.
-    toml_path : Path
+    toml_path : pathlib.Path
         Where to save the ``.toml``.
     conf_specs : ConfSpec
         Holds the template to be respected. In particular, the type of the

@@ -218,14 +218,14 @@ _PURE_TRACEWIN_CONFIG = (
     KeyValConfSpec(
         key="emit_e_limit",
         types=(float,),
-        description="Particle is excluded form emit. calculation if |W-Ws|/ Ws > emit_e_limit",
+        description=r"Particle is excluded form emit. calculation if \|W-Ws\|/ Ws > emit_e_limit",
         default_value=0.0,
         is_mandatory=False,
     ),
     KeyValConfSpec(
         key="emit_p_limit",
         types=(float,),
-        description="Particle is excluded form emit. calculation if |Ф- Ф s| > emit_p_limit",
+        description=r"Particle is excluded form emit. calculation if \|Ф- Ф s\| > emit_p_limit",
         default_value=0.0,
         is_mandatory=False,
     ),
@@ -310,14 +310,14 @@ _PURE_TRACEWIN_CONFIG = (
     KeyValConfSpec(
         key="lost_e_limit",
         types=(float,),
-        description="Particle is lost if |W-Ws| > lost_e_limit",
+        description=r"Particle is lost if \|W-Ws\| > lost_e_limit",
         default_value=0.0,
         is_mandatory=False,
     ),
     KeyValConfSpec(
         key="lost_p_limit",
         types=(float,),
-        description="Particle is lost if |Ф- Ф s| > lost_p_limit",
+        description=r"Particle is lost if \|Ф- Ф s\| > lost_p_limit",
         default_value=0.0,
         is_mandatory=False,
     ),

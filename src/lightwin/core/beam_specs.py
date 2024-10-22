@@ -20,25 +20,25 @@ BEAM_CONFIG = (
     KeyValConfSpec(
         key="e_mev",
         types=(float,),
-        description=r"Energy of particle at entrance in :math:`\mathrm{MeV}",
+        description=r"Energy of particle at entrance in :unit:`MeV`",
         default_value=1.0,
     ),
     KeyValConfSpec(
         key="e_rest_mev",
         types=(float,),
-        description=r"Rest energy of particle in :math:`\mathrm{MeV}`",
+        description=r"Rest energy of particle in :unit:`MeV`",
         default_value=0.0,
     ),
     KeyValConfSpec(
         key="f_bunch_mhz",
         types=(float,),
-        description=r"Beam bunch frequency in :math:\mathrm{MHz}`",
+        description=r"Beam bunch frequency in :unit:`MHz`",
         default_value=100.0,
     ),
     KeyValConfSpec(
         key="i_milli_a",
         types=(float,),
-        description=r"Beam current in :math:`\mathrm{mA}`",
+        description=r"Beam current in :unit:`mA`",
         default_value=0.0,
         is_mandatory=False,
     ),
@@ -51,8 +51,8 @@ BEAM_CONFIG = (
     KeyValConfSpec(
         key="sigma",
         types=(list, np.ndarray),
-        description=r"Input :math:`\sigma` beam matrix in :math:`\mathrm{m}`;"
-        + r" :math:`\mathrm{rad}`. Must be a list of lists of floats that can "
+        description=r"Input :math:`\sigma` beam matrix in :unit:`m`;"
+        + r" :unit:`rad`. Must be a list of lists of floats that can "
         + "be transformed to a 6*6 matrix.",
         default_value=[[0.0 for _ in range(6)] for _ in range(6)],
     ),

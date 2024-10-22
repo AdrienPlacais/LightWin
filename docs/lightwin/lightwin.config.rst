@@ -12,11 +12,9 @@ Submodules
 .. toctree::
    :maxdepth: 5
 
-   lightwin.config.beam
-   lightwin.config.beam_calculator
-   lightwin.config.design_space
-   lightwin.config.evaluators
-   lightwin.config.files
+   lightwin.config.config_manager
+   lightwin.config.full_specs
    lightwin.config.helper
-   lightwin.config.plots
-   lightwin.config.wtf
+   lightwin.config.key_val_conf_spec
+   lightwin.config.table_spec
+   lightwin.config.toml_formatter

@@ -1,2 +1,3 @@
-Entry              ,Type ,Description                    ,Allowed values                  ,Mandatory? 
-``beam_calc_post`` ,str  ,Name of the desired evaluators ,:data:`.IMPLEMENTED_EVALUATORS` ,❌         
+Entry,Type,Description,Allowed values,Mandatory?
+beam_calc_post,``list``,The names of the evaluators.,,❌
+simulation_output,``list``,Keyword arguments for the :class:`.SimulationOutputEvaluator`.,,❌

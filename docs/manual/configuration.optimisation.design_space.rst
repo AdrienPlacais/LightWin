@@ -10,7 +10,7 @@ There are two ways to define the design space limits and initial values; the fir
 This approach is easier to use for the first runs.
 
 .. csv-table::
-   :file: configuration_entries/design_space_no_file.csv
+   :file: configuration_entries/design_space_calculated.csv
    :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
@@ -20,7 +20,7 @@ This approach is more useful when you want to fine-tune the optimisation, as you
 To generate the ``.csv`` files with the proper format, look at ``examples/generate_design_space_files.py``.
 
 .. csv-table::
-   :file: configuration_entries/design_space_with_file.csv
+   :file: configuration_entries/design_space_from_file.csv
    :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 

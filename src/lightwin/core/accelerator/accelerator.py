@@ -61,7 +61,7 @@ class Accelerator:
             A factory to create the list of elements.
         e_mev : float
             Initial beam energy in :unit:`MeV`.
-        sigma : np.ndarray
+        sigma : numpy.ndarray
             Initial beam :math:`\sigma` matrix in :unit:`m` and :unit:`rad`.
 
         """
