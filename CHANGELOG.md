@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `evaluator` objects are more robust and can be configured from the `.toml`.
 - Plotting is now performed thanks to the `plotter` library.
 
+## [0.7.0] 2024-10-22
+
+### Added
+
+- Better display of units in documentation with the new `:unit:` role.
+
 ## [0.7.0b3] 2024-10-09
 
 ### Added
