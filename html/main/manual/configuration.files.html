@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b3
+                0.8.0b0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -122,21 +122,39 @@ It must contain the key <code class="docutils literal notranslate"><span class="
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dat_file</span></code></p></td>
-<td><p>path</p></td>
+<tr class="row-even"><td><p>dat_file</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></td>
 <td><p>Path to the <code class="docutils literal notranslate"><span class="pre">.dat</span></code> file</p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">out_folder</span></code></p></td>
-<td><p>path</p></td>
-<td><p>Name of the output folder</p></td>
+<tr class="row-odd"><td><p>logfile_console_level</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Level of messages written in console</p></td>
+<td><p>(‘DEBUG’, ‘INFO’, ‘WARNING’, ‘ERROR’, ‘CRITICAL’)</p></td>
+<td><p>❌</p></td>
+</tr>
+<tr class="row-even"><td><p>logfile_file</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Name of the file where the logging output will be written</p></td>
+<td></td>
+<td><p>❌</p></td>
+</tr>
+<tr class="row-odd"><td><p>logfile_log_level</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Level of messages written in logfile</p></td>
+<td><p>(‘DEBUG’, ‘INFO’, ‘WARNING’, ‘ERROR’, ‘CRITICAL’)</p></td>
+<td><p>❌</p></td>
+</tr>
+<tr class="row-even"><td><p>project_folder</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></td>
+<td><p>Where output results will be stored</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
 </tbody>
 </table>
-<p>See also: <a class="reference internal" href="../lightwin/lightwin.config.files.html#module-lightwin.config.files" title="lightwin.config.files"><code class="xref py py-mod docutils literal notranslate"><span class="pre">lightwin.config.files</span></code></a> and the <a class="reference internal" href="usage.compatibility_with_tracewin.html#tracewin-compatibility-note"><span class="std std-ref">TraceWin compatibility note</span></a>.</p>
+<p>See also the <a class="reference internal" href="usage.compatibility_with_tracewin.html#tracewin-compatibility-note"><span class="std std-ref">TraceWin compatibility note</span></a>.</p>
 </section>
 
 
@@ -174,7 +192,8 @@ It must contain the key <code class="docutils literal notranslate"><span class="
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b3/manual/configuration.files.html">v0.7.0b3</a></dd>
+         <dd><a href="../../v0.7.0/manual/configuration.files.html">v0.7.0</a></dd>
+         <dd><a href="../../v0.8.0b0/manual/configuration.files.html">v0.8.0b0</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

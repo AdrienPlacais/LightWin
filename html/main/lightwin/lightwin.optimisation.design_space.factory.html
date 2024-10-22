@@ -40,7 +40,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b3
+                0.8.0b0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -77,6 +77,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.objective.html">objective package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.design_space_specs.html">design_space_specs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.wtf_specs.html">wtf_specs module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
@@ -125,7 +127,7 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you add your own DesignSpaceFactory preset, do not forget to add it to
-the list of supported presets in <a class="reference internal" href="lightwin.config.design_space.html#module-lightwin.config.design_space" title="lightwin.config.design_space"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config.design_space</span></code></a>.</p>
+the list of supported presets in <a class="reference internal" href="lightwin.optimisation.design_space_specs.html#module-lightwin.optimisation.design_space_specs" title="lightwin.optimisation.design_space_specs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">optimisation.design_space_specs</span></code></a>.</p>
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.factory.DesignSpaceFactory">
@@ -259,7 +261,7 @@ compensation.</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.factory.DesignSpaceFactory._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8a7f39610&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.DesignSpaceFactory._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591e908110&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.DesignSpaceFactory._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -281,7 +283,7 @@ compensation.</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.factory.AbsPhaseAmplitude._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8abc31fd0&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.AbsPhaseAmplitude._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591e908350&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.AbsPhaseAmplitude._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -307,7 +309,7 @@ independent.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.factory.RelPhaseAmplitude._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8abc31a30&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.RelPhaseAmplitude._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591e9096d0&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.RelPhaseAmplitude._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -334,7 +336,7 @@ the <span class="math notranslate nohighlight">\(\phi_{0,\,\mathrm{rel}}\)</span
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.factory.SyncPhaseAmplitude._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8a5965130&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.SyncPhaseAmplitude._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591e9094f0&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.SyncPhaseAmplitude._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -366,7 +368,7 @@ constraints.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.factory.AbsPhaseAmplitudeWithConstrainedSyncPhase._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8aa2d8470&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.AbsPhaseAmplitudeWithConstrainedSyncPhase._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591e90a0f0&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.AbsPhaseAmplitudeWithConstrainedSyncPhase._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -398,7 +400,7 @@ constraints.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.factory.RelPhaseAmplitudeWithConstrainedSyncPhase._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8ace00b90&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.RelPhaseAmplitudeWithConstrainedSyncPhase._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591e90ac30&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.RelPhaseAmplitudeWithConstrainedSyncPhase._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -433,7 +435,7 @@ constraints.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.factory.Everything._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8ace02bd0&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.Everything._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591e90b4d0&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.Everything._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -453,7 +455,7 @@ constraints.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.factory.Unconstrained._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8ab9fd130&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.Unconstrained._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591e8c4a10&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.Unconstrained._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -473,7 +475,7 @@ constraints.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.factory.UnconstrainedRel._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8ad0f9b50&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.UnconstrainedRel._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591e8c6210&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.UnconstrainedRel._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -493,7 +495,7 @@ constraints.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.factory.SyncPhaseAsVariable._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8ad0fac30&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.SyncPhaseAsVariable._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591e8c7a10&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.SyncPhaseAsVariable._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -513,7 +515,7 @@ constraints.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.design_space.factory.ConstrainedSyncPhase._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8ad0fb650&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.ConstrainedSyncPhase._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591e9352b0&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.design_space.factory.ConstrainedSyncPhase._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -586,7 +588,8 @@ constraints.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b3/lightwin/lightwin.optimisation.design_space.factory.html">v0.7.0b3</a></dd>
+         <dd><a href="../../v0.7.0/lightwin/lightwin.optimisation.design_space.factory.html">v0.7.0</a></dd>
+         <dd><a href="../../v0.8.0b0/lightwin/lightwin.optimisation.design_space.factory.html">v0.8.0b0</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

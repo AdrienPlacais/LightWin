@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="accelerator package" href="lightwin.core.accelerator.html" />
-    <link rel="prev" title="wtf module" href="lightwin.config.wtf.html" /> 
+    <link rel="prev" title="toml_formatter module" href="lightwin.config.toml_formatter.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,7 +40,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b3
+                0.8.0b0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -69,7 +69,9 @@
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.html">elements package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">list_of_elements package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.html">transfer_matrix package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_specs.html">beam_specs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">electric_field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.files_specs.html">files_specs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">instruction module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">instructions_factory module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">particle module</a></li>
@@ -953,6 +955,7 @@ of the beam.</p>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements.take"><code class="docutils literal notranslate"><span class="pre">ListOfElements.take()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements.pickle"><code class="docutils literal notranslate"><span class="pre">ListOfElements.pickle()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements.from_pickle"><code class="docutils literal notranslate"><span class="pre">ListOfElements.from_pickle()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.ListOfElements.files_info"><code class="docutils literal notranslate"><span class="pre">ListOfElements.files_info</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1000,24 +1003,33 @@ of the beam.</p>
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.beam_specs.html">beam_specs module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.beam_specs.html#lightwin.core.beam_specs.BeamTableConfSpec"><code class="docutils literal notranslate"><span class="pre">BeamTableConfSpec</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_specs.html#lightwin.core.beam_specs.BeamTableConfSpec._pre_treat"><code class="docutils literal notranslate"><span class="pre">BeamTableConfSpec._pre_treat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_specs.html#lightwin.core.beam_specs.BeamTableConfSpec._validate"><code class="docutils literal notranslate"><span class="pre">BeamTableConfSpec._validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.core.electric_field.html">electric_field module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.compute_param_cav"><code class="docutils literal notranslate"><span class="pre">compute_param_cav()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField"><code class="docutils literal notranslate"><span class="pre">RfField</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.__init__"><code class="docutils literal notranslate"><span class="pre">RfField.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.has"><code class="docutils literal notranslate"><span class="pre">RfField.has()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.get"><code class="docutils literal notranslate"><span class="pre">RfField.get()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.set_rf_freq"><code class="docutils literal notranslate"><span class="pre">RfField.set_rf_freq()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.set_e_spat"><code class="docutils literal notranslate"><span class="pre">RfField.set_e_spat()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.update_phi_0_abs_to_adapt_to_new_ref_phase"><code class="docutils literal notranslate"><span class="pre">RfField.update_phi_0_abs_to_adapt_to_new_ref_phase()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.NewRfField"><code class="docutils literal notranslate"><span class="pre">NewRfField</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.NewRfField.__init__"><code class="docutils literal notranslate"><span class="pre">NewRfField.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.NewRfField.has"><code class="docutils literal notranslate"><span class="pre">NewRfField.has()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.NewRfField.get"><code class="docutils literal notranslate"><span class="pre">NewRfField.get()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.NewRfField.set_e_spat"><code class="docutils literal notranslate"><span class="pre">NewRfField.set_e_spat()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.files_specs.html">files_specs module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.files_specs.html#lightwin.core.files_specs.FilesTableConfSpec"><code class="docutils literal notranslate"><span class="pre">FilesTableConfSpec</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.files_specs.html#lightwin.core.files_specs.FilesTableConfSpec._pre_treat"><code class="docutils literal notranslate"><span class="pre">FilesTableConfSpec._pre_treat()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.files_specs.html#lightwin.core.files_specs._set_up_logging"><code class="docutils literal notranslate"><span class="pre">_set_up_logging()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.files_specs.html#lightwin.core.files_specs._create_project_folders"><code class="docutils literal notranslate"><span class="pre">_create_project_folders()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.files_specs.html#lightwin.core.files_specs._set_project_path"><code class="docutils literal notranslate"><span class="pre">_set_project_path()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.core.instruction.html">instruction module</a><ul>
@@ -1082,6 +1094,7 @@ of the beam.</p>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory.w_kin"><code class="docutils literal notranslate"><span class="pre">ParticleFullTrajectory.w_kin</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory.phi_abs"><code class="docutils literal notranslate"><span class="pre">ParticleFullTrajectory.phi_abs</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory.synchronous"><code class="docutils literal notranslate"><span class="pre">ParticleFullTrajectory.synchronous</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory.beam"><code class="docutils literal notranslate"><span class="pre">ParticleFullTrajectory.beam</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory.__post_init__"><code class="docutils literal notranslate"><span class="pre">ParticleFullTrajectory.__post_init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory.__str__"><code class="docutils literal notranslate"><span class="pre">ParticleFullTrajectory.__str__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory.tracewin_command"><code class="docutils literal notranslate"><span class="pre">ParticleFullTrajectory.tracewin_command</span></code></a></li>
@@ -1103,7 +1116,7 @@ of the beam.</p>
           </div>
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lightwin.config.wtf.html" class="btn btn-neutral float-left" title="wtf module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.config.toml_formatter.html" class="btn btn-neutral float-left" title="toml_formatter module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="lightwin.core.accelerator.html" class="btn btn-neutral float-right" title="accelerator package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
@@ -1133,7 +1146,8 @@ of the beam.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b3/lightwin/lightwin.core.html">v0.7.0b3</a></dd>
+         <dd><a href="../../v0.7.0/lightwin/lightwin.core.html">v0.7.0</a></dd>
+         <dd><a href="../../v0.8.0b0/lightwin/lightwin.core.html">v0.8.0b0</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

@@ -40,7 +40,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b3
+                0.8.0b0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -126,52 +126,52 @@ This approach is easier to use for the first runs.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">from_file</span></code></p></td>
-<td><p>bool</p></td>
-<td><p>If files should be used</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
+<tr class="row-even"><td><p>design_space_preset</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>What are the variables and constraints.</p></td>
+<td><p>(‘abs_phase_amplitude’, ‘rel_phase_amplitude’, ‘sync_phase_amplitude’, ‘abs_phase_amplitude_with_constrained_sync_phase’, ‘rel_phase_amplitude_with_constrained_sync_phase’, ‘everything’, ‘unconstrained’, ‘unconstrained_rel’, ‘constrained_sync_phase’, ‘sync_phase_as_variable’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">design_space_preset</span></code></p></td>
-<td><p>str</p></td>
-<td><p>What variables/constraints should be used</p></td>
-<td><p>Keys of <a class="reference internal" href="../lightwin/lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DESIGN_SPACE_FACTORY_PRESETS" title="lightwin.optimisation.design_space.factory.DESIGN_SPACE_FACTORY_PRESETS"><code class="xref py py-data docutils literal notranslate"><span class="pre">DESIGN_SPACE_FACTORY_PRESETS</span></code></a></p></td>
+<tr class="row-odd"><td><p>from_file</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>If variable limits/constraints should be taken from a file.</p></td>
+<td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">max_increase_sync_phase_in_percent</span></code></p></td>
-<td><p>float</p></td>
+<tr class="row-even"><td><p>max_increase_sync_phase_in_percent</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Max relative increase of <span class="math notranslate nohighlight">\(\phi_s\)</span> wrt nominal in <span class="math notranslate nohighlight">\(\mathrm{\%}\)</span></p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_absolute_sync_phase_in_deg</span></code></p></td>
-<td><p>float</p></td>
+<tr class="row-odd"><td><p>max_absolute_sync_phase_in_deg</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Max absolute <span class="math notranslate nohighlight">\(\phi_s\)</span> in <span class="math notranslate nohighlight">\(\mathrm{deg}\)</span></p></td>
-<td><p>default <code class="docutils literal notranslate"><span class="pre">0.</span></code></p></td>
+<td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">min_absolute_sync_phase_in_deg</span></code></p></td>
-<td><p>float</p></td>
+<tr class="row-even"><td><p>min_absolute_sync_phase_in_deg</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Min absolute <span class="math notranslate nohighlight">\(\phi_s\)</span> in <span class="math notranslate nohighlight">\(\mathrm{deg}\)</span></p></td>
-<td><p>default <code class="docutils literal notranslate"><span class="pre">90.</span></code></p></td>
+<td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_decrease_k_e_in_percent</span></code></p></td>
-<td><p>float</p></td>
+<tr class="row-odd"><td><p>max_decrease_k_e_in_percent</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Max decrease of <span class="math notranslate nohighlight">\(k_e\)</span> wrt nominal in <span class="math notranslate nohighlight">\(\mathrm{\%}\)</span></p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">max_increase_k_e_in_percent</span></code></p></td>
-<td><p>float</p></td>
+<tr class="row-even"><td><p>max_increase_k_e_in_percent</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Max increase of <span class="math notranslate nohighlight">\(k_e\)</span> wrt nominal in <span class="math notranslate nohighlight">\(\mathrm{\%}\)</span></p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maximum_k_e_is_calculated_wrt_maximum_k_e_of_section</span></code></p></td>
-<td><p>bool</p></td>
-<td><p>If max <span class="math notranslate nohighlight">\(k_e\)</span> should be the same for the whole section</p></td>
-<td><p>default <code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
+<tr class="row-odd"><td><p>maximum_k_e_is_calculated_wrt_maximum_k_e_of_section</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>If max <span class="math notranslate nohighlight">\(k_e\)</span> should be the same for all the cavities of the section</p></td>
+<td></td>
 <td><p>❌</p></td>
 </tr>
 </tbody>
@@ -197,29 +197,29 @@ To generate the <code class="docutils literal notranslate"><span class="pre">.cs
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">from_file</span></code></p></td>
-<td><p>bool</p></td>
-<td><p>If files should be used</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
+<tr class="row-even"><td><p>design_space_preset</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>What are the variables and constraints.</p></td>
+<td><p>(‘abs_phase_amplitude’, ‘rel_phase_amplitude’, ‘sync_phase_amplitude’, ‘abs_phase_amplitude_with_constrained_sync_phase’, ‘rel_phase_amplitude_with_constrained_sync_phase’, ‘everything’, ‘unconstrained’, ‘unconstrained_rel’, ‘constrained_sync_phase’, ‘sync_phase_as_variable’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">design_space_preset</span></code></p></td>
-<td><p>str</p></td>
-<td><p>What variables/constraints should be used</p></td>
-<td><p>Keys of <a class="reference internal" href="../lightwin/lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DESIGN_SPACE_FACTORY_PRESETS" title="lightwin.optimisation.design_space.factory.DESIGN_SPACE_FACTORY_PRESETS"><code class="xref py py-data docutils literal notranslate"><span class="pre">DESIGN_SPACE_FACTORY_PRESETS</span></code></a></p></td>
-<td><p>✅</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">variables_filepath</span></code></p></td>
-<td><p>str</p></td>
-<td><p>Path to the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> holding variables</p></td>
+<tr class="row-odd"><td><p>from_file</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>If variable limits/constraints should be taken from a file.</p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">constraints_filepath</span></code></p></td>
-<td><p>str</p></td>
-<td><p>Path to the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> holding constraints</p></td>
+<tr class="row-even"><td><p>constraints_filepath</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></td>
+<td><p>Path to the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> holding constraints. Mandatory if <code class="docutils literal notranslate"><span class="pre">from_file</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></td>
 <td></td>
 <td><p>❌</p></td>
+</tr>
+<tr class="row-odd"><td><p>variables_filepath</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></td>
+<td><p>Path to the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> holding variables. Mandatory if <code class="docutils literal notranslate"><span class="pre">from_file</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></td>
+<td></td>
+<td><p>✅</p></td>
 </tr>
 </tbody>
 </table>
@@ -261,7 +261,8 @@ To generate the <code class="docutils literal notranslate"><span class="pre">.cs
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b3/manual/configuration.optimisation.design_space.html">v0.7.0b3</a></dd>
+         <dd><a href="../../v0.7.0/manual/configuration.optimisation.design_space.html">v0.7.0</a></dd>
+         <dd><a href="../../v0.8.0b0/manual/configuration.optimisation.design_space.html">v0.8.0b0</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="beam_parameters_factory module" href="lightwin.beam_calculation.envelope_3d.beam_parameters_factory.html" />
-    <link rel="prev" title="transfer_matrix_factory module" href="lightwin.beam_calculation.envelope_1d.transfer_matrix_factory.html" /> 
+    <link rel="prev" title="util module" href="lightwin.beam_calculation.envelope_1d.util.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b3
+                0.8.0b0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -66,8 +66,10 @@
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.html">element_envelope3d_parameters_factory module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.envelope_3d.html">envelope_3d module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.simulation_output_factory.html">simulation_output_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.specs.html">specs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html">transfer_matrices_p module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrix_factory.html">transfer_matrix_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.util.html">util module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.integrators.html">integrators package</a></li>
@@ -76,6 +78,7 @@
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.tracewin.html">tracewin package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html">beam_calculator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html">factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.specs.html">specs module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
@@ -141,7 +144,6 @@
 <li class="toctree-l1"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html">element_envelope3d_parameters module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.ElementEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">ElementEnvelope3DParameters</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.ElementEnvelope3DParameters.__init__"><code class="docutils literal notranslate"><span class="pre">ElementEnvelope3DParameters.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.ElementEnvelope3DParameters.transfer_matrix_arguments"><code class="docutils literal notranslate"><span class="pre">ElementEnvelope3DParameters.transfer_matrix_arguments()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.ElementEnvelope3DParameters._transfer_matrix_results_to_dict"><code class="docutils literal notranslate"><span class="pre">ElementEnvelope3DParameters._transfer_matrix_results_to_dict()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.ElementEnvelope3DParameters._transfer_matrix_results_to_dict_broken_field_map"><code class="docutils literal notranslate"><span class="pre">ElementEnvelope3DParameters._transfer_matrix_results_to_dict_broken_field_map()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.ElementEnvelope3DParameters.re_set_for_broken_cavity"><code class="docutils literal notranslate"><span class="pre">ElementEnvelope3DParameters.re_set_for_broken_cavity()</span></code></a></li>
@@ -150,13 +152,13 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.DriftEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">DriftEnvelope3DParameters</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.DriftEnvelope3DParameters.__init__"><code class="docutils literal notranslate"><span class="pre">DriftEnvelope3DParameters.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.DriftEnvelope3DParameters.transfer_matrix_arguments"><code class="docutils literal notranslate"><span class="pre">DriftEnvelope3DParameters.transfer_matrix_arguments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.DriftEnvelope3DParameters.transfer_matrix_kw"><code class="docutils literal notranslate"><span class="pre">DriftEnvelope3DParameters.transfer_matrix_kw()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.DriftEnvelope3DParameters._abc_impl"><code class="docutils literal notranslate"><span class="pre">DriftEnvelope3DParameters._abc_impl</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.QuadEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">QuadEnvelope3DParameters</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.QuadEnvelope3DParameters.__init__"><code class="docutils literal notranslate"><span class="pre">QuadEnvelope3DParameters.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.QuadEnvelope3DParameters.transfer_matrix_arguments"><code class="docutils literal notranslate"><span class="pre">QuadEnvelope3DParameters.transfer_matrix_arguments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.QuadEnvelope3DParameters.transfer_matrix_kw"><code class="docutils literal notranslate"><span class="pre">QuadEnvelope3DParameters.transfer_matrix_kw()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.QuadEnvelope3DParameters._abc_impl"><code class="docutils literal notranslate"><span class="pre">QuadEnvelope3DParameters._abc_impl</span></code></a></li>
 </ul>
 </li>
@@ -167,7 +169,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.FieldMapEnvelope3DParameters"><code class="docutils literal notranslate"><span class="pre">FieldMapEnvelope3DParameters</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.FieldMapEnvelope3DParameters.__init__"><code class="docutils literal notranslate"><span class="pre">FieldMapEnvelope3DParameters.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.FieldMapEnvelope3DParameters.transfer_matrix_arguments"><code class="docutils literal notranslate"><span class="pre">FieldMapEnvelope3DParameters.transfer_matrix_arguments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.FieldMapEnvelope3DParameters.transfer_matrix_kw"><code class="docutils literal notranslate"><span class="pre">FieldMapEnvelope3DParameters.transfer_matrix_kw()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.FieldMapEnvelope3DParameters._transfer_matrix_results_to_dict"><code class="docutils literal notranslate"><span class="pre">FieldMapEnvelope3DParameters._transfer_matrix_results_to_dict()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.FieldMapEnvelope3DParameters.re_set_for_broken_cavity"><code class="docutils literal notranslate"><span class="pre">FieldMapEnvelope3DParameters.re_set_for_broken_cavity()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.FieldMapEnvelope3DParameters._abc_impl"><code class="docutils literal notranslate"><span class="pre">FieldMapEnvelope3DParameters._abc_impl</span></code></a></li>
@@ -221,6 +223,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.specs.html">specs module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html">transfer_matrices_p module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p.e_func"><code class="docutils literal notranslate"><span class="pre">e_func()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p.drift"><code class="docutils literal notranslate"><span class="pre">drift()</span></code></a></li>
@@ -243,6 +246,10 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.util.html">util module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.util.html#lightwin.beam_calculation.envelope_3d.util.ENVELOPE3D_METHODS"><code class="docutils literal notranslate"><span class="pre">ENVELOPE3D_METHODS</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -253,7 +260,7 @@
           </div>
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lightwin.beam_calculation.envelope_1d.transfer_matrix_factory.html" class="btn btn-neutral float-left" title="transfer_matrix_factory module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.beam_calculation.envelope_1d.util.html" class="btn btn-neutral float-left" title="util module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="lightwin.beam_calculation.envelope_3d.beam_parameters_factory.html" class="btn btn-neutral float-right" title="beam_parameters_factory module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
@@ -283,7 +290,8 @@
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b3/lightwin/lightwin.beam_calculation.envelope_3d.html">v0.7.0b3</a></dd>
+         <dd><a href="../../v0.7.0/lightwin/lightwin.beam_calculation.envelope_3d.html">v0.7.0</a></dd>
+         <dd><a href="../../v0.8.0b0/lightwin/lightwin.beam_calculation.envelope_3d.html">v0.8.0b0</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

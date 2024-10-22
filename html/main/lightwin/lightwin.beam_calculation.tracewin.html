@@ -40,7 +40,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b3
+                0.8.0b0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -70,13 +70,16 @@
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.beam_parameters_factory.html">beam_parameters_factory module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.element_tracewin_parameters.html">element_tracewin_parameters module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.element_tracewin_parameters_factory.html">element_tracewin_parameters_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.machine_config_specs.html">machine_config_specs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html">simulation_output_factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.specs.html">specs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.tracewin.html">tracewin module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.tracewin.transfer_matrix_factory.html">transfer_matrix_factory module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html">beam_calculator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html">factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.specs.html">specs module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
@@ -163,6 +166,7 @@ installed on your machine.</p>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.beam_calculation.tracewin.machine_config_specs.html">machine_config_specs module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html">simulation_output_factory module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory.SimulationOutputFactoryTraceWin"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactoryTraceWin</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory.SimulationOutputFactoryTraceWin.out_folder"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactoryTraceWin.out_folder</span></code></a></li>
@@ -188,6 +192,14 @@ installed on your machine.</p>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._add_dummy_data"><code class="docutils literal notranslate"><span class="pre">_add_dummy_data()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._load_cavity_parameters"><code class="docutils literal notranslate"><span class="pre">_load_cavity_parameters()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._cavity_parameters_uniform_with_envelope1d"><code class="docutils literal notranslate"><span class="pre">_cavity_parameters_uniform_with_envelope1d()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.beam_calculation.tracewin.specs.html">specs module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.tracewin.specs.html#lightwin.beam_calculation.tracewin.specs.TRACEWIN_CONFIG"><code class="docutils literal notranslate"><span class="pre">TRACEWIN_CONFIG</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.tracewin.specs.html#lightwin.beam_calculation.tracewin.specs.tracewin_pre_treat"><code class="docutils literal notranslate"><span class="pre">tracewin_pre_treat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.tracewin.specs.html#lightwin.beam_calculation.tracewin.specs.tracewin_declare_that_machine_config_is_not_mandatory_anymore"><code class="docutils literal notranslate"><span class="pre">tracewin_declare_that_machine_config_is_not_mandatory_anymore()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.tracewin.specs.html#lightwin.beam_calculation.tracewin.specs.tracewin_post_treat"><code class="docutils literal notranslate"><span class="pre">tracewin_post_treat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.tracewin.specs.html#lightwin.beam_calculation.tracewin.specs._get_tracewin_executable"><code class="docutils literal notranslate"><span class="pre">_get_tracewin_executable()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.beam_calculation.tracewin.tracewin.html">tracewin module</a><ul>
@@ -258,7 +270,8 @@ installed on your machine.</p>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b3/lightwin/lightwin.beam_calculation.tracewin.html">v0.7.0b3</a></dd>
+         <dd><a href="../../v0.7.0/lightwin/lightwin.beam_calculation.tracewin.html">v0.7.0</a></dd>
+         <dd><a href="../../v0.8.0b0/lightwin/lightwin.beam_calculation.tracewin.html">v0.8.0b0</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

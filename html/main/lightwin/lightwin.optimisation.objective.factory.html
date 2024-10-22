@@ -38,7 +38,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b3
+                0.8.0b0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -75,6 +75,8 @@
 <li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.quantity_is_between.html">quantity_is_between module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.design_space_specs.html">design_space_specs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.wtf_specs.html">wtf_specs module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
@@ -121,7 +123,8 @@
 <span id="factory-module"></span><h1>factory module<a class="headerlink" href="#module-lightwin.optimisation.objective.factory" title="Link to this heading"></a></h1>
 <p>Define a factory to create <a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective" title="lightwin.optimisation.objective.objective.Objective"><code class="xref py py-class docutils literal notranslate"><span class="pre">Objective</span></code></a> objects.</p>
 <p>When you implement a new objective preset, also add it to the list of
-implemented presets in <a class="reference internal" href="#lightwin.optimisation.objective.factory.OBJECTIVE_PRESETS" title="lightwin.optimisation.objective.factory.OBJECTIVE_PRESETS"><code class="xref py py-data docutils literal notranslate"><span class="pre">OBJECTIVE_PRESETS</span></code></a> and <a class="reference internal" href="lightwin.config.wtf.html#module-lightwin.config.wtf" title="lightwin.config.wtf"><code class="xref py py-mod docutils literal notranslate"><span class="pre">config.wtf</span></code></a>.</p>
+implemented presets in <a class="reference internal" href="#lightwin.optimisation.objective.factory.OBJECTIVE_PRESETS" title="lightwin.optimisation.objective.factory.OBJECTIVE_PRESETS"><code class="xref py py-data docutils literal notranslate"><span class="pre">OBJECTIVE_PRESETS</span></code></a> and
+<a class="reference internal" href="lightwin.optimisation.wtf_specs.html#module-lightwin.optimisation.wtf_specs" title="lightwin.optimisation.wtf_specs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">optimisation.wtf_specs</span></code></a>.</p>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
 <p>decorator to auto output the variables and constraints?</p>
@@ -238,7 +241,7 @@ dictionary, defined in <a class="reference internal" href="lightwin.optimisation
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.objective.factory.ObjectiveFactory._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8acf163f0&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.objective.factory.ObjectiveFactory._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591df975f0&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.objective.factory.ObjectiveFactory._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -292,7 +295,7 @@ all downstream cavities is not an issue.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.objective.factory.EnergyMismatch._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8a6285430&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.objective.factory.EnergyMismatch._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591df95430&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.objective.factory.EnergyMismatch._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -352,7 +355,7 @@ phase to help the optimisation algorithm to converge.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.objective.factory.EnergyPhaseMismatch._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8a8b70d10&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.objective.factory.EnergyPhaseMismatch._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591df945f0&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.objective.factory.EnergyPhaseMismatch._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -425,7 +428,7 @@ However, it can help keeping the acceptance as high as possible.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8a8b720f0&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591dfcc890&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -474,7 +477,7 @@ However, it can help keeping the acceptance as high as possible.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.optimisation.objective.factory.EnergySeveralMismatches._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fe8a6889790&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.objective.factory.EnergySeveralMismatches._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f591dfcfa10&gt;</span></em><a class="headerlink" href="#lightwin.optimisation.objective.factory.EnergySeveralMismatches._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -562,7 +565,8 @@ array of residues.</p></li>
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b3/lightwin/lightwin.optimisation.objective.factory.html">v0.7.0b3</a></dd>
+         <dd><a href="../../v0.7.0/lightwin/lightwin.optimisation.objective.factory.html">v0.7.0</a></dd>
+         <dd><a href="../../v0.8.0b0/lightwin/lightwin.optimisation.objective.factory.html">v0.8.0b0</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

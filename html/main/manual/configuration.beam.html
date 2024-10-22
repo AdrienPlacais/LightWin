@@ -40,7 +40,7 @@
             LightWin
           </a>
               <div class="version">
-                0.7.0b3
+                0.8.0b0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -106,7 +106,7 @@
 <div class="toctree-wrapper compound">
 </div>
 <p>Here we define the main properties of the beam at the entrance of the linac.
-Note that with <a class="reference internal" href="../lightwin/lightwin.beam_calculation.tracewin.tracewin.html#lightwin.beam_calculation.tracewin.tracewin.TraceWin" title="lightwin.beam_calculation.tracewin.tracewin.TraceWin"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraceWin</span></code></a>, most of these properties are defined within it’s own <code class="docutils literal notranslate"><span class="pre">.ini</span></code> file.
+Note that with <a class="reference internal" href="../lightwin/lightwin.beam_calculation.tracewin.tracewin.html#lightwin.beam_calculation.tracewin.tracewin.TraceWin" title="lightwin.beam_calculation.tracewin.tracewin.TraceWin"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraceWin</span></code></a>, most of these properties are defined within its own <code class="docutils literal notranslate"><span class="pre">.ini</span></code> file.
 The units must be consistent with LightWin’s system of units, see also <a class="reference internal" href="units.html#units-label"><span class="std std-ref">Units and conventions</span></a>.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -125,39 +125,39 @@ The units must be consistent with LightWin’s system of units, see also <a clas
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">e_rest_mev</span></code></p></td>
-<td><p>float</p></td>
-<td><p>Rest energy of particle in <span class="math notranslate nohighlight">\(\mathrm{MeV}\)</span></p></td>
-<td></td>
-<td><p>✅</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">q_adim</span></code></p></td>
-<td><p>float</p></td>
-<td><p>Adimensioned charge of particle</p></td>
-<td></td>
-<td><p>✅</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">e_mev</span></code></p></td>
-<td><p>float</p></td>
+<tr class="row-even"><td><p>e_mev</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Energy of particle at entrance in <span class="math notranslate nohighlight">\(\mathrm{MeV}\)</span></p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">f_bunch_mev</span></code></p></td>
-<td><p>float</p></td>
+<tr class="row-odd"><td><p>e_rest_mev</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p>Rest energy of particle in <span class="math notranslate nohighlight">\(\mathrm{MeV}\)</span></p></td>
+<td></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-even"><td><p>f_bunch_mhz</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Beam bunch frequency in <span class="math notranslate nohighlight">\(\mathrm{MHz}\)</span></p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">i_milli_a</span></code></p></td>
-<td><p>float</p></td>
+<tr class="row-odd"><td><p>i_milli_a</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Beam current in <span class="math notranslate nohighlight">\(\mathrm{mA}\)</span></p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sigma</span></code></p></td>
-<td><p>list of list of float</p></td>
-<td><p>Input <span class="math notranslate nohighlight">\(\sigma\)</span> beam matrix in <span class="math notranslate nohighlight">\(\mathrm{m}\)</span>; <span class="math notranslate nohighlight">\(\mathrm{rad}\)</span></p></td>
+<tr class="row-even"><td><p>q_adim</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
+<td><p>Adimensioned charge of particle</p></td>
+<td></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-odd"><td><p>sigma</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">list</span></code> or <code class="docutils literal notranslate"><span class="pre">ndarray</span></code></p></td>
+<td><p>Input <span class="math notranslate nohighlight">\(\sigma\)</span> beam matrix in <span class="math notranslate nohighlight">\(\mathrm{m}\)</span>; <span class="math notranslate nohighlight">\(\mathrm{rad}\)</span>. Must be a list of lists of floats that can be transformed to a 6*6 matrix.</p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
@@ -211,7 +211,8 @@ The units must be consistent with LightWin’s system of units, see also <a clas
    <div class="rst-other-versions">
       <dl>
          <dt>Tags</dt>
-         <dd><a href="../../v0.7.0b3/manual/configuration.beam.html">v0.7.0b3</a></dd>
+         <dd><a href="../../v0.7.0/manual/configuration.beam.html">v0.7.0</a></dd>
+         <dd><a href="../../v0.8.0b0/manual/configuration.beam.html">v0.8.0b0</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>
