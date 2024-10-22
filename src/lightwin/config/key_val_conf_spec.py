@@ -164,3 +164,36 @@ class KeyValConfSpec:
             self.key, toml_value, preferred_type=self.types[0]
         )
         return formatted
+
+    def to_csv_line(self) -> tuple[str, str, str, str, str] | None:
+        """Convert object to a line for the documentation CSV.
+
+        Returns
+        -------
+        key : str
+            Name of variable.
+        types : str
+            List of allowed types.
+        description : str
+            Description of the input.
+        allowed_values : str
+            List of allowed values if relatable.
+        is_mandatory : str
+            If the variable is mandatory or not.
+
+        """
+        if self.derived:
+            return None
+
+        out = (
+            self.key,
+            f"{self.types}",
+            self.description,
+            (
+                f"{self.allowed_values}"
+                if self.allowed_values is not None
+                else ""
+            ),
+            "✅" if self.is_mandatory else "❌",
+        )
+        return out
