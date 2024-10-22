@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The configuration manager was refactored.
 - `NewRfField` object officially replaces `RfField`.
+- The configurations for the different objects are now in the `specs.py` files, in the same folder as the object they instantiate.
 
 ### Deleted
 
