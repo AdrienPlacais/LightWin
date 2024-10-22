@@ -3,8 +3,10 @@
 .. todo::
     Handle args such as ``hide``.
 
-.. todo::
-    Handle the toml_configuration file
+.. note::
+    In this module we also define ``MONKEY_PATCHES``. They are used to modify
+    the ``_pre_treat``, ``validate`` and ``_post_treat`` methods from
+    :class:`.TableConfSpec`.
 
 """
 

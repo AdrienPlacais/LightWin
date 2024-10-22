@@ -11,7 +11,10 @@ from lightwin.new_config.specs.beam_calculator_specs import (
 from lightwin.new_config.specs.beam_specs import BEAM_CONFIG, BeamTableConfSpec
 from lightwin.new_config.specs.design_space_specs import DESIGN_SPACE_CONFIGS
 from lightwin.new_config.specs.evaluators_specs import EVALUATORS_CONFIG
-from lightwin.new_config.specs.files_specs import FILES_CONFIG
+from lightwin.new_config.specs.files_specs import (
+    FILES_CONFIG,
+    FilesTableConfSpec,
+)
 from lightwin.new_config.specs.plots_specs import PLOTS_CONFIG
 from lightwin.new_config.specs.wtf_specs import WTF_CONFIGS, WTF_MONKEY_PATCHES
 from lightwin.new_config.table_spec import TableConfSpec
@@ -31,8 +34,8 @@ class ConfSpec:
 
     def __init__(
         self,
-        beam: str = "",
         files: str = "",
+        beam: str = "",
         beam_calculator: str = "",
         post_beam_calculator: str = "",
         plots: str = "",
@@ -43,10 +46,12 @@ class ConfSpec:
     ) -> None:
         """Declare the attributes."""
         table_of_specs = []
+        if files:
+            table_of_specs.append(
+                FilesTableConfSpec("files", files, FILES_CONFIG)
+            )
         if beam:
             table_of_specs.append(BeamTableConfSpec("beam", beam, BEAM_CONFIG))
-        if files:
-            table_of_specs.append(TableConfSpec("files", files, FILES_CONFIG))
         if beam_calculator:
             table_of_specs.append(
                 TableConfSpec(
@@ -179,6 +184,7 @@ class ConfSpec:
     def validate(
         self,
         toml_fulldict: dict[str, dict[str, Any]],
+        toml_folder: Path,
         id_type: Literal[
             "configured_object", "table_entry"
         ] = "configured_object",
@@ -203,7 +209,9 @@ class ConfSpec:
         validations = [self._mandatory_keys_are_present]
         for table_name, toml_subdict in toml_fulldict.items():
             spec = self._get_proper_table(table_name, id_type=id_type)
-            validations.append(spec.validate(toml_subdict, **kwargs))
+            validations.append(
+                spec.validate(toml_subdict, toml_folder=toml_folder, **kwargs)
+            )
 
         all_is_validated = all(validations)
         if not all_is_validated:

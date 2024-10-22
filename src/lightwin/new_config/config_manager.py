@@ -10,7 +10,7 @@ from lightwin.new_config.full_specs import ConfSpec
 
 
 def process_config(
-    config_path: Path,
+    toml_path: Path,
     config_keys: dict[str, str],
     warn_mismatch: bool = False,
     override: dict[str, dict[str, Any]] | None = None,
@@ -20,7 +20,7 @@ def process_config(
 
     Parameters
     ----------
-    config_path : Path
+    toml_path : Path
         Path to the configuration file. It must be a ```.toml`` file.
     config_keys : dict[str, str]
         Associate the name of LightWin's group of parameters to the entry in
@@ -36,20 +36,18 @@ def process_config(
 
     Returns
     -------
-    configuration : dict[str, dict[str, Any]]
+    toml_fulldict : dict[str, dict[str, Any]]
         A dictonary holding all the keyword arguments that will be passed to
         LightWin objects, eg ``beam_calculator`` will be passed to
         :class:`.BeamCalculator`.
 
     """
-    assert config_path.is_file(), f"{config_path = } does not exist."
-    toml_fulldict = load_toml(
-        config_path, config_keys, warn_mismatch, override
-    )
+    assert toml_path.is_file(), f"{toml_path = } does not exist."
+    toml_fulldict = load_toml(toml_path, config_keys, warn_mismatch, override)
 
     if conf_specs is None:
         conf_specs = ConfSpec()
-    conf_specs.validate(toml_fulldict, toml_folder=config_path.parent)
+    conf_specs.validate(toml_fulldict, toml_folder=toml_path.parent)
     return toml_fulldict
 
 
