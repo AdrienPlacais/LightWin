@@ -9,7 +9,6 @@ under study.
 
 """
 
-from pathlib import Path
 from typing import Any
 
 import pytest
@@ -21,15 +20,10 @@ from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import WithFaults
-from lightwin.failures.fault_scenario import (
-    FaultScenario,
-    fault_scenario_factory,
-)
-
-DATA_DIR = Path("data", "example")
-TEST_DIR = Path("tests")
+from lightwin.failures.fault_scenario import FaultScenario, fault_scenario_factory
 
 params = [
     pytest.param(
@@ -69,7 +63,6 @@ def config(
     out_folder = tmp_path_factory.mktemp("tmp")
     (design_space_preset,) = request.param
 
-    config_path = DATA_DIR / "lightwin.toml"
     config_keys = {
         "files": "files",
         "beam_calculator": "generic_envelope1d",
@@ -86,7 +79,7 @@ def config(
         },
     }
     my_config = lightwin.config_manager.process_config(
-        config_path,
+        example_config,
         config_keys,
         warn_mismatch=True,
         override=override,
@@ -97,10 +90,7 @@ def config(
 @pytest.fixture(scope="class")
 def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
     """Instantiate the solver with the proper parameters."""
-    factory = BeamCalculatorsFactory(
-        beam_calculator=config["beam_calculator"],
-        files=config["files"],
-    )
+    factory = BeamCalculatorsFactory(**config)
     my_solver = factory.run_all()[0]
     return my_solver
 
@@ -112,9 +102,7 @@ def accelerators(
 ) -> list[Accelerator]:
     """Create ref linac, linac we will break, compute ref simulation_output."""
     solvers = (solver,)
-    accelerator_factory = WithFaults(
-        beam_calculators=solvers, **config["files"], **config["wtf"]
-    )
+    accelerator_factory = WithFaults(beam_calculators=solvers, **config)
     accelerators = accelerator_factory.run_all()
     solver.compute(accelerators[0])
     return accelerators

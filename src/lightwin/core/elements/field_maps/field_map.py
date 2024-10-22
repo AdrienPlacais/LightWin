@@ -25,7 +25,7 @@ from typing import Any, Literal
 
 import numpy as np
 
-from lightwin.core.electric_field import NewRfField
+from lightwin.core.electric_field import RfField
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.util.helper import recursive_getter
@@ -74,7 +74,7 @@ class FieldMap(Element):
         self.field_map_folder = default_field_map_folder
         self.field_map_file_name = Path(line[9])
 
-        self.new_rf_field: NewRfField
+        self.new_rf_field: RfField
         self._can_be_retuned: bool = True
         self.reinsert_optional_commands_in_line()
 

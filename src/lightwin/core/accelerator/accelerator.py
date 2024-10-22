@@ -10,9 +10,6 @@ at the entry of its :class:`.ListOfElements`.
     Compute_transfer_matrices: simplify, add a calculation of missing phi_0
     at the end
 
-.. todo::
-    Cleaner Accelerator factory (use class, not just a function).
-
 """
 
 import logging
@@ -22,7 +19,6 @@ from typing import Any, Self
 import numpy as np
 import pandas as pd
 
-import lightwin.config_manager as con
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
@@ -46,8 +42,11 @@ class Accelerator:
         dat_file: Path,
         accelerator_path: Path,
         list_of_elements_factory: ListOfElementsFactory,
+        e_mev: float,
+        sigma: np.ndarray,
+        **kwargs,
     ) -> None:
-        """Create object.
+        r"""Create object.
 
         Parameters
         ----------
@@ -60,6 +59,10 @@ class Accelerator:
             be stored.
         list_of_elements_factory : ListOfElementsFactory
             A factory to create the list of elements.
+        e_mev : float
+            Initial beam energy in :unit:`MeV`.
+        sigma : numpy.ndarray
+            Initial beam :math:`\sigma` matrix in :unit:`m` and :unit:`rad`.
 
         """
         self.name = name
@@ -68,10 +71,10 @@ class Accelerator:
         self.accelerator_path = accelerator_path
 
         kwargs = {
-            "w_kin": con.E_MEV,
+            "w_kin": e_mev,
             "phi_abs": 0.0,
             "z_in": 0.0,
-            "sigma_in": con.SIGMA,
+            "sigma_in": sigma,
         }
         self.elts: ListOfElements
         self.elts = list_of_elements_factory.whole_list_run(

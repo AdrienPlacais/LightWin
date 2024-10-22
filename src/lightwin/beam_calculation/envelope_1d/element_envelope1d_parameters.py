@@ -14,7 +14,7 @@ The :class:`.Element` objects with a transfer matrix are listed in
 import math
 from abc import abstractmethod
 from types import ModuleType
-from typing import Any, Callable, Sequence
+from typing import Any, Callable
 
 import numpy as np
 
@@ -46,11 +46,13 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         transf_mat_function: Callable,
         length_m: float,
         n_steps: int,
+        beam_kwargs: dict[str, Any],
         **kwargs: str | int,
     ) -> None:
         """Set the actually useful parameters."""
         self.transf_mat_function = transf_mat_function
         self.n_steps = n_steps
+        self._beam_kwargs = beam_kwargs
         self.d_z = length_m / self.n_steps
         self.rel_mesh = np.linspace(0.0, length_m, self.n_steps + 1)
 
@@ -74,29 +76,28 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         raise IOError("Calling this method for a non-field map is incorrect.")
 
     @abstractmethod
-    def transfer_matrix_arguments(self) -> Sequence[Any]:
-        """Give the element parameters necessary to compute transfer matrix."""
+    def transfer_matrix_kw(self) -> dict[str, Any]:
+        """Give all the arguments for the transfer matrix function."""
+        return {}
 
     def transf_mat_function_wrapper(
         self, w_kin_in: float, **rf_field_kwargs
     ) -> dict:
         """Calculate beam propagation in the :class:`.Element`."""
-        gamma_in = convert.energy(w_kin_in, "kin to gamma")
+        gamma_in = convert.energy(
+            w_kin_in, "kin to gamma", **self._beam_kwargs
+        )
         r_zz, gamma_phi, itg_field = self.transf_mat_function(
-            gamma_in,
-            *self.transfer_matrix_arguments(),
+            gamma_in=gamma_in,
             **self.transfer_matrix_kw(),
             **rf_field_kwargs,
+            **self._beam_kwargs,
         )
 
         results = self._transfer_matrix_results_to_dict(
             r_zz, gamma_phi, itg_field
         )
         return results
-
-    def transfer_matrix_kw(self) -> dict:
-        """Keyword arguments."""
-        return {}
 
     def _transfer_matrix_results_to_dict(
         self,
@@ -106,7 +107,9 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
     ) -> dict:
         """Convert the results given by the transf_mat function to dict."""
         assert integrated_field is None
-        w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
         results = {
             "r_zz": r_zz,
             "cav_params": None,
@@ -130,7 +133,9 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
 
         """
         assert itg_field is None
-        w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
         results = {
             "r_zz": r_zz,
             "cav_params": {"v_cav_mv": np.nan, "phi_s": np.nan},
@@ -152,6 +157,7 @@ class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
         self,
         transf_mat_module: ModuleType,
         elt: Element,
+        beam_kwargs: dict[str, Any],
         n_steps: int = 1,
         **kwargs: str | int,
     ) -> None:
@@ -161,12 +167,13 @@ class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
             transf_mat_function,
             length_m=elt.length_m,
             n_steps=n_steps,
+            beam_kwargs=beam_kwargs,
             **kwargs,
         )
 
-    def transfer_matrix_arguments(self) -> tuple[float, int]:
+    def transfer_matrix_kw(self) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
-        return self.d_z, self.n_steps
+        return {"delta_s": self.d_z, "n_steps": self.n_steps}
 
 
 class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
@@ -184,6 +191,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         method: str,
         n_steps_per_cell: int,
         solver_id: str,
+        beam_kwargs: dict[str, Any],
         phi_s_model: str = "historical",
         **kwargs: str | int,
     ) -> None:
@@ -199,7 +207,13 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         self.n_cell = elt.new_rf_field.n_cell
         self._rf_to_bunch = elt.cavity_settings.rf_phase_to_bunch_phase
         n_steps = self.n_cell * n_steps_per_cell
-        super().__init__(transf_mat_function, elt.length_m, n_steps, **kwargs)
+        super().__init__(
+            transf_mat_function,
+            elt.length_m,
+            n_steps,
+            beam_kwargs=beam_kwargs,
+            **kwargs,
+        )
         self._transf_mat_module = transf_mat_module
         self.field_map_file_name = str(elt.field_map_file_name)
         elt.cavity_settings.set_cavity_parameters_methods(
@@ -208,13 +222,13 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
             self.compute_cavity_parameters,
         )
 
-    def transfer_matrix_arguments(self) -> tuple[float, int]:
+    def transfer_matrix_kw(self) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
-        return self.d_z, self.n_steps
-
-    def transfer_matrix_kw(self) -> dict:
-        """Give field map filename, used by Cython."""
-        return {"filename": self.field_map_file_name}
+        return {
+            "d_z": self.d_z,
+            "n_steps": self.n_steps,
+            "filename": self.field_map_file_name,
+        }
 
     def _transfer_matrix_results_to_dict(
         self,
@@ -228,7 +242,9 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
         """
         assert integrated_field is not None
-        w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
         gamma_phi[:, 1] = self._rf_to_bunch(gamma_phi[:, 1])
         cav_params = self.compute_cavity_parameters(integrated_field)
         results = {
@@ -243,7 +259,10 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
     def re_set_for_broken_cavity(self) -> Callable:
         """Make beam calculator call Drift func instead of FieldMap."""
         self.transf_mat_function = self._transf_mat_module.z_drift
-        self.transfer_matrix_kw = lambda: {}
+        self.transfer_matrix_kw = lambda: {
+            "delta_s": self.d_z,
+            "n_steps": self.n_steps,
+        }
 
         def _new_transfer_matrix_results_to_dict(
             r_zz: np.ndarray,
@@ -256,7 +275,9 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
             """
             assert integrated_field is None
-            w_kin = convert.energy(gamma_phi[:, 0], "gamma to kin")
+            w_kin = convert.energy(
+                gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+            )
             cav_params = self.compute_cavity_parameters(np.nan)
             results = {
                 "r_zz": r_zz,
@@ -285,6 +306,7 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
         self,
         transf_mat_module: ModuleType,
         elt: Bend,
+        beam_kwargs: dict[str, Any],
         n_steps: int = 1,
         **kwargs: str | int,
     ) -> None:
@@ -296,6 +318,8 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
             Module where the transfer matrix function is defined.
         elt : Bend
             ``BEND`` element.
+        beam_kwargs : dict[str, Any]
+            Configuration dict holding all initial beam properties.
         n_steps : int, optional
             Number of integration steps. The default is 1.
 
@@ -303,7 +327,11 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
         transf_mat_function = transf_mat_module.z_bend
 
         super().__init__(
-            transf_mat_function, elt.length_m, n_steps=n_steps, **kwargs
+            transf_mat_function,
+            elt.length_m,
+            n_steps=n_steps,
+            beam_kwargs=beam_kwargs,
+            **kwargs,
         )
 
         factors = self._pre_compute_factors_for_transfer_matrix(
@@ -356,6 +384,11 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
         assert isinstance(factor_3, float)
         return factor_1, factor_2, factor_3
 
-    def transfer_matrix_arguments(self) -> tuple[float, float, float, float]:
+    def transfer_matrix_kw(self) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
-        return (self.d_z, self.factor_1, self.factor_2, self.factor_3)
+        return {
+            "delta_s": self.d_z,
+            "factor_1": self.factor_1,
+            "factor_2": self.factor_2,
+            "factor_3": self.factor_3,
+        }

@@ -18,6 +18,7 @@ from lightwin.beam_calculation.envelope_3d.simulation_output_factory import (
 from lightwin.beam_calculation.envelope_3d.transfer_matrix_factory import (
     TransferMatrixFactoryEnvelope3D,
 )
+from lightwin.beam_calculation.envelope_3d.util import ENVELOPE3D_METHODS_T
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
@@ -40,20 +41,28 @@ class Envelope3D(BeamCalculator):
         out_folder: Path | str,
         default_field_map_folder: Path | str,
         flag_cython: bool = False,
-        method: Literal["RK4"] = "RK4",
+        method: ENVELOPE3D_METHODS_T = "RK4",
         phi_s_definition: Literal["historical"] = "historical",
+        **kwargs,
     ) -> None:
         """Set the proper motion integration function, according to inputs."""
-        self.flag_cython = flag_cython
         self.n_steps_per_cell = n_steps_per_cell
         self.method = method
-        super().__init__(flag_phi_abs, out_folder, default_field_map_folder)
+        super().__init__(
+            flag_phi_abs=flag_phi_abs,
+            out_folder=out_folder,
+            default_field_map_folder=default_field_map_folder,
+            flag_cython=flag_cython,
+            **kwargs,
+        )
 
         self._phi_s_definition = phi_s_definition
         self._phi_s_func = SYNCHRONOUS_PHASE_FUNCTIONS[self._phi_s_definition]
 
         self.beam_parameters_factory = BeamParametersFactoryEnvelope3D(
-            self.is_a_3d_simulation, self.is_a_multiparticle_simulation
+            self.is_a_3d_simulation,
+            self.is_a_multiparticle_simulation,
+            beam_kwargs=self._beam_kwargs,
         )
         self.transfer_matrix_factory = TransferMatrixFactoryEnvelope3D(
             self.is_a_3d_simulation
@@ -71,16 +80,18 @@ class Envelope3D(BeamCalculator):
 
         """
         self.simulation_output_factory = SimulationOutputFactoryEnvelope3D(
-            self.is_a_3d_simulation,
-            self.is_a_multiparticle_simulation,
-            self.id,
-            self.out_folder,
+            _is_3d=self.is_a_3d_simulation,
+            _is_multipart=self.is_a_multiparticle_simulation,
+            _solver_id=self.id,
+            _beam_kwargs=self._beam_kwargs,
+            out_folder=self.out_folder,
         )
         self.beam_calc_parameters_factory = ElementEnvelope3DParametersFactory(
-            self.method,
-            self.n_steps_per_cell,
-            self.id,
-            self.flag_cython,
+            method=self.method,
+            n_steps_per_cell=self.n_steps_per_cell,
+            solver_id=self.id,
+            beam_kwargs=self._beam_kwargs,
+            flag_cython=self.flag_cython,
         )
 
     def run(

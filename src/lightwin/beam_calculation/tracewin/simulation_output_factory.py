@@ -109,6 +109,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             w_kin=results["w_kin"],
             phi_abs=results["phi_abs"],
             synchronous=True,
+            beam=self._beam_kwargs,
         )
 
         cavity_parameters = self._create_cavity_parameters(path_cal, len(elts))
@@ -149,7 +150,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
     ) -> dict[str, np.ndarray]:
         """Load the TraceWin results, compute common interest quantities."""
         results = self.load_results(path_cal=path_cal)
-        results = _set_energy_related_results(results)
+        results = _set_energy_related_results(results, **self._beam_kwargs)
         results = _set_phase_related_results(
             results, z_in=input_particle.z_in, phi_in=input_particle.phi_abs
         )
@@ -273,7 +274,7 @@ def _load_results_generic(
 
 
 def _set_energy_related_results(
-    results: dict[str, np.ndarray]
+    results: dict[str, np.ndarray], **beam_kwargs: float
 ) -> dict[str, np.ndarray]:
     """
     Compute the energy from ``gama-1`` column.
@@ -282,6 +283,8 @@ def _set_energy_related_results(
     ----------
     results : dict[str, numpy.ndarray]
         Dictionary holding the TraceWin results.
+    beam_kwargs : dict[str, Any]
+        Holds beam constants such as ``q_over_m`` or ``e_rest``.
 
     Returns
     -------
@@ -290,8 +293,12 @@ def _set_energy_related_results(
 
     """
     results["gamma"] = 1.0 + results["gama-1"]
-    results["w_kin"] = convert.energy(results["gamma"], "gamma to kin")
-    results["beta"] = convert.energy(results["w_kin"], "kin to beta")
+    results["w_kin"] = convert.energy(
+        results["gamma"], "gamma to kin", **beam_kwargs
+    )
+    results["beta"] = convert.energy(
+        results["w_kin"], "kin to beta", **beam_kwargs
+    )
     return results
 
 

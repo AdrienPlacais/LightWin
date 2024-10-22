@@ -23,7 +23,6 @@ from typing import Callable
 
 import numpy as np
 
-import lightwin.config_manager as con
 from lightwin.beam_calculation.integrators.rk4 import rk4
 from lightwin.constants import c
 
@@ -46,16 +45,22 @@ def e_func(
 # Transfer matrices
 # =============================================================================
 def drift(
-    gamma_in: float, delta_s: float, n_steps: int = 1, **kwargs
+    gamma_in: float,
+    delta_s: float,
+    omega_0_bunch: float,
+    n_steps: int = 1,
+    **kwargs,
 ) -> tuple[np.ndarray, np.ndarray, None]:
     """Calculate the transfer matrix of a drift.
 
     Parameters
     ----------
-    delta_s : float
-        Size of the drift in mm.
     gamma_in : float
         Lorentz gamma at entry of drift.
+    delta_s : float
+        Size of the drift in mm.
+    omega_0_bunch : float
+        Pulsation of the beam.
     n_steps : int, optional
         Number of integration steps. The number of integration steps has no
         influence on the results. The default is one. It is different from
@@ -89,7 +94,7 @@ def drift(
         ),
     )
     beta_in = np.sqrt(1.0 - gamma_in_min2)
-    delta_phi = con.OMEGA_0_BUNCH * delta_s / (beta_in * c)
+    delta_phi = omega_0_bunch * delta_s / (beta_in * c)
 
     gamma_phi = np.empty((n_steps, 2))
     gamma_phi[:, 0] = gamma_in
@@ -98,7 +103,13 @@ def drift(
 
 
 def quad(
-    gamma_in: float, delta_s: float, gradient: float, **kwargs
+    gamma_in: float,
+    delta_s: float,
+    gradient: float,
+    omega_0_bunch: float,
+    q_adim: float,
+    e_rest_mev: float,
+    **kwargs,
 ) -> tuple[np.ndarray, np.ndarray, None]:
     """Calculate the transfer matrix of a quadrupole.
 
@@ -116,6 +127,12 @@ def quad(
         linacs.
     gradient : float
         Quadrupole gradient in T/m.
+    omega_0_bunch : float
+        Pulsation of the beam.
+    q_adim : float
+        Adimensioned charge of accelerated particle.
+    e_rest_mev : float
+        Rest energy of the accelerated particle.
 
     Returns
     -------
@@ -131,15 +148,17 @@ def quad(
     gamma_in_min2 = gamma_in**-2
     beta_in = np.sqrt(1.0 - gamma_in_min2)
 
-    delta_phi = con.OMEGA_0_BUNCH * delta_s / (beta_in * c)
+    delta_phi = omega_0_bunch * delta_s / (beta_in * c)
     gamma_phi = np.empty((1, 2))
     gamma_phi[:, 0] = gamma_in
     gamma_phi[:, 1] = np.arange(0.0, 1) * delta_phi + delta_phi
 
-    magnetic_rigidity = _magnetic_rigidity(beta_in, gamma_in)
+    magnetic_rigidity = _magnetic_rigidity(
+        beta_in, gamma_in, e_rest_mev=e_rest_mev
+    )
     focusing_strength = _focusing_strength(gradient, magnetic_rigidity)
 
-    if con.Q_ADIM * gradient > 0.0:
+    if q_adim * gradient > 0.0:
         transfer_matrix = _horizontal_focusing_quadrupole(
             focusing_strength, delta_s, gamma_in_min2
         )
@@ -205,6 +224,9 @@ def field_map_rk4(
     k_e: float,
     phi_0_rel: float,
     e_spat: Callable[[float], float],
+    q_adim: float,
+    inv_e_rest_mev: float,
+    omega_0_bunch: float,
     **kwargs,
 ) -> tuple[np.ndarray, np.ndarray, float]:
     """Calculate the transfer matrix of a FIELD_MAP using Runge-Kutta."""
@@ -214,7 +236,7 @@ def field_map_rk4(
 
     # Constants to speed up calculation
     delta_phi_norm = omega0_rf * d_z / c
-    delta_gamma_norm = con.Q_ADIM * d_z * con.INV_E_REST_MEV
+    delta_gamma_norm = q_adim * d_z * inv_e_rest_mev
     k_k = delta_gamma_norm * k_e
 
     transfer_matrix = np.empty((n_steps, 6, 6))
@@ -285,6 +307,7 @@ def field_map_rk4(
             phi_0_rel,
             omega0_rf,
             delta_e_max,
+            omega_0_bunch=omega_0_bunch,
         )
 
         z_rel += d_z
@@ -301,9 +324,9 @@ def thin_lense(
     phi_0: float,
     omega0_rf: float,
     delta_e_max: float,
+    omega_0_bunch: float,
 ) -> np.ndarray:
-    """
-    Thin lense approximation: drift-acceleration-drift.
+    """Thin lense approximation: drift-acceleration-drift.
 
     Parameters
     ----------
@@ -323,6 +346,8 @@ def thin_lense(
         Pulsation of the cavity.
     delta_e_max : float
         Derivative of the electric field.
+    omega_0_bunch : float
+        Pulsation of the beam.
 
     Return
     ------
@@ -352,7 +377,9 @@ def thin_lense(
     k_2xy = 1.0 - k_speed2
     k_3xy = (1.0 - k_speed2) / k_2xy
 
-    transfer_matrix = drift(gamma_out, half_dz)[0][0] @ (
+    transfer_matrix = drift(
+        gamma_in=gamma_out, delta_s=half_dz, omega_0_bunch=omega_0_bunch
+    )[0][0] @ (
         np.array(
             (
                 [k_3xy, 0.0, 0.0, 0.0, 0.0, 0.0],
@@ -363,7 +390,9 @@ def thin_lense(
                 [0.0, 0.0, 0.0, 0.0, k_1, k_2],
             )
         )
-        @ drift(gamma_in, half_dz)[0][0]
+        @ drift(
+            gamma_in=gamma_in, delta_s=half_dz, omega_0_bunch=omega_0_bunch
+        )[0][0]
     )
     return transfer_matrix
 
@@ -371,9 +400,11 @@ def thin_lense(
 # =============================================================================
 # Helpers
 # =============================================================================
-def _magnetic_rigidity(beta: float, gamma: float) -> float:
+def _magnetic_rigidity(
+    beta: float, gamma: float, e_rest_mev: float, **kwargs
+) -> float:
     """Compute magnetic rigidity of particle."""
-    return 1e6 * con.E_REST_MEV * beta * gamma / c
+    return 1e6 * e_rest_mev * beta * gamma / c
 
 
 def _focusing_strength(gradient: float, magnetic_rigidity: float) -> float:

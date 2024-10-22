@@ -14,3 +14,4 @@ Submodules
 
    lightwin.visualization.anim
    lightwin.visualization.plot
+   lightwin.visualization.specs

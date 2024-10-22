@@ -4,7 +4,7 @@ import logging
 from abc import ABC
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Sequence
+from typing import Any, Sequence
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.core.accelerator.accelerator import Accelerator
@@ -17,27 +17,27 @@ class AcceleratorFactory(ABC):
 
     def __init__(
         self,
-        dat_file: Path,
-        project_folder: Path,
         beam_calculators: BeamCalculator | Sequence[BeamCalculator | None],
-        **files_kw: str | Path,
+        files: dict[str, Any],
+        beam: dict[str, Any],
+        **kwargs: dict,
     ) -> None:
-        """Create the object from the ``project_folder``.
+        """Facilitate creation of :class:`.Accelerator` objects.
 
         Parameters
         ----------
-        dat_file : pathlib.Path
-            The original ``.dat`` file, as understood by TraceWin.
-        project_folder : pathlib.Path
-            Base folder where results will be saved. If the ``project_folder``
-            key is not given in the configuration file, it is a folder in the
-            same base folder as ``dat_file``.
-        files_kw :
-            Other arguments from the ``file`` entry of the ``.ini``.
+        beam_calculators : BeamCalculator | Sequence[BeamCalculator | None]
+            Objects that will compute propagation of the beam.
+        files : dict[str, Any]
+            Configuration entries for the input/output paths.
+        beam : dict[str, Any]
+            Configuration dictionary holding the initial beam parameters.
+        kwargs :
+            Other configuration dictionaries.
 
         """
-        self.dat_file = dat_file
-        self.project_folder = project_folder
+        self.dat_file = files["dat_file"]
+        self.project_folder = files["project_folder"]
 
         if isinstance(beam_calculators, BeamCalculator):
             beam_calculators = (beam_calculators,)
@@ -45,6 +45,7 @@ class AcceleratorFactory(ABC):
             beam_calculators[0] is not None
         ), "Need at least one working BeamCalculator."
         self.beam_calculators = beam_calculators
+        self._beam = beam
 
     def run(self, *args, **kwargs) -> Accelerator:
         """Create the object."""
@@ -169,17 +170,28 @@ class NoFault(AcceleratorFactory):
 
     def __init__(
         self,
-        dat_file: Path,
-        project_folder: Path,
-        beam_calculator: BeamCalculator,
-        **files_kw,
+        beam_calculators: BeamCalculator,
+        files: dict[str, Any],
+        beam: dict[str, Any],
+        **kwargs: dict,
     ) -> None:
-        """Initialize."""
+        """Facilitate creation of :class:`.Accelerator`.
+
+        Parameters
+        ----------
+        beam_calculators : BeamCalculator
+            A unique object to compute propagation of the field. Even if there
+            is a ``s`` at the end of the variable name.
+        files : dict[str, Any]
+            Configuration entries for the input/output paths.
+        beam : dict[str, Any]
+            Configuration dictionary holding the initial beam parameters.
+        kwargs :
+            Other configuration dictionaries.
+
+        """
         super().__init__(
-            dat_file,
-            project_folder,
-            beam_calculators=beam_calculator,
-            **files_kw,
+            beam_calculators=beam_calculators, files=files, beam=beam, **kwargs
         )
 
     @property
@@ -204,6 +216,7 @@ class NoFault(AcceleratorFactory):
             dat_file=self.dat_file,
             accelerator_path=accelerator_path,
             list_of_elements_factory=list_of_elements_factory,
+            **self._beam,
         )
         return accelerator
 
@@ -217,16 +230,32 @@ class WithFaults(AcceleratorFactory):
 
     def __init__(
         self,
-        dat_file: Path,
-        project_folder: Path,
         beam_calculators: BeamCalculator | Sequence[BeamCalculator | None],
-        failed: list[list[int]] | None = None,
-        **kwargs: Path | str | float | list[int],
+        files: dict[str, Any],
+        beam: dict[str, Any],
+        wtf: dict[str, Any],
+        **kwargs: dict,
     ) -> None:
-        """Initialize."""
-        super().__init__(dat_file, project_folder, beam_calculators, **kwargs)
-        self.failed = failed
+        """Facilitate creation of :class:`.Accelerator` objects.
 
+        Parameters
+        ----------
+        beam_calculators : BeamCalculator | Sequence[BeamCalculator | None]
+            Objects that will compute propagation of the beam.
+        files : dict[str, Any]
+            Configuration entries for the input/output paths.
+        beam : dict[str, Any]
+            Configuration dictionary holding the initial beam parameters.
+        wtf : dict[str, Any]
+            Dictionary holding the information on what to fit.
+        kwargs :
+            Other configuration dictionaries.
+
+        """
+        super().__init__(
+            beam_calculators=beam_calculators, files=files, beam=beam, **kwargs
+        )
+        self.failed = wtf["failed"]
         self._n_simulations = 0
 
     @property
@@ -273,6 +302,7 @@ class WithFaults(AcceleratorFactory):
                 dat_file=self.dat_file,
                 accelerator_path=accelerator_path,
                 list_of_elements_factory=list_of_elements_factory,
+                **self._beam,
             )
             for name, accelerator_path in zip(names, accelerator_paths)
         ]

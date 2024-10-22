@@ -10,7 +10,7 @@ For a list of the units associated with every parameter, see
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Self
+from typing import Any, Self
 
 import numpy as np
 
@@ -44,6 +44,7 @@ class IPhaseSpaceBeamParameters(ABC):
     phase_space_name: str
     eps_no_normalisation: np.ndarray | float
     eps_normalized: np.ndarray | float
+    # _beam_kwargs: dict[str, Any]
     envelopes: np.ndarray | None = None
     twiss: np.ndarray | None = None
     sigma: np.ndarray | None = None
@@ -61,6 +62,7 @@ class IPhaseSpaceBeamParameters(ABC):
         sigma: np.ndarray,
         gamma_kin: np.ndarray | float,
         beta_kin: np.ndarray | float,
+        beam_kwargs: dict[str, Any],
         **kwargs: np.ndarray,
     ) -> Self:
         """Compute Twiss, eps, envelopes just from sigma matrix."""
@@ -69,6 +71,7 @@ class IPhaseSpaceBeamParameters(ABC):
             sigma,
             gamma_kin,
             beta_kin,
+            beam_kwargs=beam_kwargs,
         )
         twiss = twiss_from_sigma(phase_space_name, sigma, eps_no_normalisation)
         envelopes = envelopes_from_sigma(phase_space_name, sigma)
@@ -79,6 +82,7 @@ class IPhaseSpaceBeamParameters(ABC):
             sigma=sigma,
             twiss=twiss,
             envelopes=envelopes,
+            # _beam_kwargs=beam_kwargs,
             **kwargs,
         )
         return phase_space
@@ -90,6 +94,7 @@ class IPhaseSpaceBeamParameters(ABC):
         phase_space_name: str,
         gamma_kin: np.ndarray | float,
         beta_kin: np.ndarray | float,
+        beam_kwargs: dict[str, Any],
         **kwargs: np.ndarray,  # sigma, tm_cumul
     ) -> Self:
         """Fully initialize from another phase space."""
@@ -99,11 +104,12 @@ class IPhaseSpaceBeamParameters(ABC):
         assert twiss_other is not None
 
         eps_no_normalisation, eps_normalized = eps_from_other_phase_space(
-            other_phase_space_name,
-            phase_space_name,
-            eps_other,
-            gamma_kin,
-            beta_kin,
+            other_phase_space_name=other_phase_space_name,
+            phase_space_name=phase_space_name,
+            eps_other=eps_other,
+            gamma_kin=gamma_kin,
+            beta_kin=beta_kin,
+            **beam_kwargs,
         )
         twiss = twiss_from_other_phase_space(
             other_phase_space_name,
@@ -111,6 +117,7 @@ class IPhaseSpaceBeamParameters(ABC):
             twiss_other,
             gamma_kin,
             beta_kin,
+            **beam_kwargs,
         )
 
         eps_for_envelope = eps_no_normalisation
@@ -123,6 +130,7 @@ class IPhaseSpaceBeamParameters(ABC):
             eps_normalized=eps_normalized,
             twiss=twiss,
             envelopes=envelopes,
+            # _beam_kwargs=beam_kwargs,
             **kwargs,
         )
         return phase_space

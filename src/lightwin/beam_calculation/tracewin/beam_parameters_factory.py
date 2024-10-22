@@ -45,6 +45,7 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
                 eps_is_normalized=True,
                 gamma_kin=gamma_kin,
                 beta_kin=beta_kin,
+                **self._beam_kwargs,
             )
             for phase_space_name, data_to_retrieve_sigma in zip(
                 phase_space_names, data_to_retrieve_sigmas

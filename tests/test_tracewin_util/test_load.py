@@ -4,6 +4,7 @@ import hashlib
 from pathlib import Path
 from pprint import pformat
 
+from lightwin.constants import example_dat
 from lightwin.core.commands.adjust import Adjust
 from lightwin.tracewin_utils.load import load_dat_file, slice_dat_line
 
@@ -114,7 +115,6 @@ def md5(fname: Path | str) -> str:
 class TestLoadDatFile:
     """Ensure that the ``.dat`` file will be correctly loaded."""
 
-    dat_path = Path("data/example/example.dat")
     expected_checksum = "06d55c23082cedd0cc8f065dc04e608d"
     expected_dat_filecontent = [
         ["FIELD_MAP_PATH", "field_maps_1D"],
@@ -176,7 +176,7 @@ class TestLoadDatFile:
 
     def test_some_lines_of_the_dat(self) -> None:
         """Check one some lines that the loading is correct."""
-        actual_dat_filecontent = load_dat_file(self.dat_path)
+        actual_dat_filecontent = load_dat_file(example_dat)
         expected_dat_filecontent = self.expected_dat_filecontent
         assert expected_dat_filecontent == actual_dat_filecontent[:15], (
             f"Expected:\n{pformat(expected_dat_filecontent, width=120)}\nbut "
@@ -191,7 +191,7 @@ class TestLoadDatFile:
         expected_dat_filecontent.insert(self.idx_fm1, self.line_adj_phase)
 
         actual_dat_filecontent = load_dat_file(
-            self.dat_path, instructions_to_insert=(instruction_1,)
+            example_dat, instructions_to_insert=(instruction_1,)
         )
         assert expected_dat_filecontent == actual_dat_filecontent[:15], (
             f"Expected:\n{pformat(expected_dat_filecontent, width=120)}\nbut "
@@ -213,7 +213,7 @@ class TestLoadDatFile:
         expected_dat_filecontent.insert(self.idx_fm2 + 3, self.line_adj_ampl)
 
         actual_dat_filecontent = load_dat_file(
-            self.dat_path, instructions_to_insert=instructions
+            example_dat, instructions_to_insert=instructions
         )
         assert expected_dat_filecontent == actual_dat_filecontent[:15], (
             f"Expected:\n{pformat(expected_dat_filecontent, width=120)}\nbut "

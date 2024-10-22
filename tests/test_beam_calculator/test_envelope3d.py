@@ -5,7 +5,6 @@
 
 """
 
-from pathlib import Path
 from typing import Any
 
 import pytest
@@ -17,11 +16,9 @@ from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import NoFault
-
-DATA_DIR = Path("data", "example")
-TEST_DIR = Path("tests")
 
 params = [
     pytest.param((False, 40), marks=pytest.mark.smoke),
@@ -38,7 +35,6 @@ def config(
     out_folder = tmp_path_factory.mktemp("tmp")
     flag_phi_abs, n_steps_per_cell = request.param
 
-    config_path = DATA_DIR / "lightwin.toml"
     config_keys = {
         "files": "files",
         "beam_calculator": "generic_envelope3d",
@@ -55,7 +51,7 @@ def config(
         },
     }
     my_config = lightwin.config_manager.process_config(
-        config_path, config_keys, warn_mismatch=True, override=override
+        example_config, config_keys, warn_mismatch=True, override=override
     )
     return my_config
 
@@ -63,10 +59,7 @@ def config(
 @pytest.fixture(scope="class")
 def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
     """Instantiate the solver with the proper parameters."""
-    factory = BeamCalculatorsFactory(
-        beam_calculator=config["beam_calculator"],
-        files=config["files"],
-    )
+    factory = BeamCalculatorsFactory(**config)
     my_solver = factory.run_all()[0]
     return my_solver
 
@@ -77,7 +70,7 @@ def accelerator(
     config: dict[str, dict[str, Any]],
 ) -> Accelerator:
     """Create an example linac."""
-    accelerator_factory = NoFault(beam_calculator=solver, **config["files"])
+    accelerator_factory = NoFault(beam_calculators=solver, **config)
     accelerator = accelerator_factory.run()
     return accelerator
 

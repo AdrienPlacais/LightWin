@@ -1,3 +1,5 @@
+"""Provide tests to check if the TraceWin commands work as expected."""
+
 from pathlib import Path
 from typing import Any
 
@@ -89,10 +91,7 @@ def config(
 @pytest.fixture
 def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
     """Instantiate the solver with the proper parameters."""
-    factory = BeamCalculatorsFactory(
-        beam_calculator=config["beam_calculator"],
-        files=config["files"],
-    )
+    factory = BeamCalculatorsFactory(**config)
     my_solver = factory.run_all()[0]
     return my_solver
 
@@ -102,7 +101,7 @@ def accelerator(
     solver: BeamCalculator, config: dict[str, dict[str, Any]]
 ) -> Accelerator:
     """Create an example linac."""
-    accelerator_factory = NoFault(beam_calculator=solver, **config["files"])
+    accelerator_factory = NoFault(beam_calculators=solver, **config)
     accelerator = accelerator_factory.run()
     return accelerator
 
@@ -116,7 +115,6 @@ def simulation_output(
     return my_simulation_output
 
 
-@pytest.mark.implementation
 @pytest.mark.parametrize(
     "dat_file, beam_calculator_key",
     [

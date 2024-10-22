@@ -1,7 +1,7 @@
-beam\_calculator module
+specs module
 =======================================
 
-.. automodule:: lightwin.config.beam_calculator
+.. automodule:: lightwin.beam_calculation.specs
    :members:
    :undoc-members:
    :show-inheritance:

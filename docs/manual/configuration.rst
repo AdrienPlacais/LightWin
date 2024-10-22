@@ -14,9 +14,9 @@ Configuration
 
 Most of the configuration of LightWin is performed through a ``.toml`` configuration file, which should be given as argument to several objects initialisation.
 The configuration file is treated with the help of the `tomllib <https://docs.python.org/3/library/tomllib.html>`_ module.
-It is processed by the :func:`.process_config` function, which checks its validity and converts it to a dictionary.
+It is processed by the :func:`.config.config_manager.process_config` function, which checks its validity and converts it to a dictionary.
 
-The name of every section is not important, as long as every section is correctly passed to :func:`.process_config`.
+The name of every section is not important, as long as every section is correctly passed to :func:`.config.config_manager.process_config`.
 It is however recommended to use explicit names.
 
 .. rubric:: Example for the ``beam`` section

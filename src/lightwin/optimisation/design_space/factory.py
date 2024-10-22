@@ -2,7 +2,7 @@
 
 .. note::
     If you add your own DesignSpaceFactory preset, do not forget to add it to
-    the list of supported presets in :mod:`.config.design_space`.
+    the list of supported presets in :mod:`.optimisation.design_space_specs`.
 
 """
 

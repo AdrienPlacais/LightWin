@@ -27,3 +27,4 @@ Submodules
 
    lightwin.beam_calculation.beam_calculator
    lightwin.beam_calculation.factory
+   lightwin.beam_calculation.specs

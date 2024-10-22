@@ -46,6 +46,24 @@ optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
 
+[wtf_l_neighboring_lattices]
+failed = [["FM11"]]
+id_nature = "name"
+l = 3
+objective_preset = "simple_ADS"
+optimisation_algorithm = "downhill_simplex"
+optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
+strategy = "l neighboring lattices"
+
+[wtf_manual]
+compensating_manual = [[["FM9", "FM10", "FM12"]]]
+failed = [[["FM11"]]]
+id_nature = "name"
+objective_preset = "simple_ADS"
+optimisation_algorithm = "downhill_simplex"
+optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
+strategy = "manual"
+
 [generic_design_space]
 design_space_preset = "abs_phase_amplitude"
 from_file = false
@@ -55,6 +73,12 @@ max_increase_k_e_in_percent = 180.0
 max_increase_sync_phase_in_percent = 40.0
 maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = true
 min_absolute_sync_phase_in_deg = -90.0
+
+[design_space_from_file]
+constraints_filepath = "constraints.csv"
+design_space_preset = "abs_phase_amplitude"
+from_file = true
+variables_filepath = "variables.csv"
 
 [tiny_design_space]
 design_space_preset = "rel_phase_amplitude"

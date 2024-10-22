@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `evaluator` objects are more robust and can be configured from the `.toml`.
 - Plotting is now performed thanks to the `plotter` library.
 
+## [0.8.0b0] 2024-10-22
+
+### Changed
+
+- The configuration manager was refactored.
+- `NewRfField` object officially replaces `RfField`.
+- The configurations for the different objects are now in the `specs.py` files, in the same folder as the object they instantiate.
+
+### Deleted
+
+- Constants were removed from the config module to fix circular dependency and bad design issues.
+ - `BeamCalculator` objects now need to be given the `beam` configuration dict. Easiest is to instantiate `BeamCalculatorFactory` with `**config`.
+ - `Accelerator` will also use data from `beam`. Instantiate `AcceleratorFactory` with `**config`.
+ - `SimulationOutputFactory` instantiated with `_beam_kwargs`.
+
 ## [0.7.0] 2024-10-22
 
 ### Added

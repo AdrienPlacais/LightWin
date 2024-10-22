@@ -80,7 +80,10 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             ]
             phi_abs_array.extend(phi_abs)
         synch_trajectory = ParticleFullTrajectory(
-            w_kin=w_kin, phi_abs=phi_abs_array, synchronous=True
+            w_kin=w_kin,
+            phi_abs=phi_abs_array,
+            synchronous=True,
+            beam=self._beam_kwargs,
         )
 
         gamma_kin = synch_trajectory.gamma

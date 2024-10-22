@@ -23,7 +23,6 @@ import numpy as np
 cimport numpy as np
 np.import_array()
 from lightwin.constants import c
-import lightwin.config_manager as con
 
 
 # Must be changed to double if C float is replaced by double
@@ -31,11 +30,6 @@ DTYPE = np.float64
 ctypedef double DTYPE_t
 
 cdef DTYPE_t c_cdef = c
-cdef DTYPE_t E_rest_MeV_cdef = con.E_REST_MEV
-cdef DTYPE_t inv_E_rest_MeV_cdef = con.INV_E_REST_MEV
-cdef DTYPE_t OMEGA_0_BUNCH_cdef = con.OMEGA_0_BUNCH
-cdef DTYPE_t q_adim_cdef = con.Q_ADIM
-cdef DTYPE_t GAMMA_cdef = con.GAMMA_INIT
 
 
 cpdef init_arrays(list filepaths):
@@ -67,16 +61,6 @@ cpdef init_arrays(list filepaths):
 
     global c_cdef
     c_cdef = c
-    global E_rest_MeV_cdef
-    E_rest_MeV_cdef = con.E_REST_MEV
-    global inv_E_rest_MeV_cdef
-    inv_E_rest_MeV_cdef = con.INV_E_REST_MEV
-    global OMEGA_0_BUNCH_cdef
-    OMEGA_0_BUNCH_cdef = con.OMEGA_0_BUNCH
-    global q_adim_cdef
-    q_adim_cdef = con.Q_ADIM
-    global GAMMA_cdef
-    GAMMA_cdef = con.GAMMA_INIT
 
     # =============================================================================
     # Helpers
@@ -204,12 +188,16 @@ cdef du(DTYPE_t z_rel, DTYPE_t[:] u,
 # =============================================================================
 # Transfer matrices
 # =============================================================================
-cpdef z_drift(DTYPE_t gamma_in, DTYPE_t delta_s, np.int64_t n_steps=1):
+def z_drift(DTYPE_t gamma_in,
+             DTYPE_t delta_s,
+             DTYPE_t omega_0_bunch,
+             np.int64_t n_steps=1,
+             **kwargs):
     """Calculate the transfer matrix of a drift."""
     # Variables:
     cdef DTYPE_t gamma_in_min2 = gamma_in**-2
     cdef DTYPE_t beta_in = sqrt(1. - gamma_in_min2)
-    cdef DTYPE_t delta_phi = OMEGA_0_BUNCH_cdef * delta_s / (beta_in * c_cdef)
+    cdef DTYPE_t delta_phi = omega_0_bunch * delta_s / (beta_in * c_cdef)
     cdef Py_ssize_t i
 
     # Memory views:
@@ -234,6 +222,9 @@ def z_field_map_rk4(DTYPE_t gamma_in,
                     DTYPE_t omega0_rf,
                     DTYPE_t k_e,
                     DTYPE_t phi_0_rel,
+                    DTYPE_t q_adim,
+                    DTYPE_t inv_e_rest_mev,
+                    DTYPE_t omega_0_bunch,
                     **kwargs):
     """Calculate the transfer matrix of a field map using Runge-Kutta."""
     # Variables:
@@ -256,7 +247,7 @@ def z_field_map_rk4(DTYPE_t gamma_in,
 
     # Constants to speed up calculation
     cdef DTYPE_t delta_phi_norm = omega0_rf * d_z / c_cdef
-    cdef DTYPE_t delta_gamma_norm = q_adim_cdef * d_z * inv_E_rest_MeV_cdef
+    cdef DTYPE_t delta_gamma_norm = q_adim * d_z * inv_e_rest_mev
     cdef DTYPE_t k_k = delta_gamma_norm * k_e
 
     filename = kwargs['filename']
@@ -307,7 +298,8 @@ def z_field_map_rk4(DTYPE_t gamma_in,
                                            half_dz,
                                            delta_gamma_middle_max,
                                            phi_0_rel,
-                                           omega0_rf)
+                                           omega0_rf,
+                                           omega_0_bunch=omega_0_bunch)
         z_rel += d_z
 
     return r_zz_array, gamma_phi_array[1:, :], itg_field
@@ -320,6 +312,10 @@ def z_field_map_leapfrog(DTYPE_t gamma_in,
                          DTYPE_t k_e,
                          DTYPE_t phi_0_rel,
                          np.int64_t section_idx,
+                         DTYPE_t q_adim,
+                         DTYPE_t inv_e_rest_mev,
+                         DTYPE_t gamma_init,
+                         DTYPE_t omega_0_bunch,
                          **kwargs):
     """Calculate the transfer matrix of a field map using leapfrog."""
     # Variables:
@@ -343,7 +339,7 @@ def z_field_map_leapfrog(DTYPE_t gamma_in,
 
     # Constants to speed up calculation
     cdef DTYPE_t delta_phi_norm = omega0_rf * d_z / c_cdef
-    cdef DTYPE_t delta_gamma_norm = q_adim_cdef * d_z * inv_E_rest_MeV_cdef
+    cdef DTYPE_t delta_gamma_norm = q_adim * d_z * inv_e_rest_mev
     cdef DTYPE_t k_k = delta_gamma_norm * k_e
     cdef DTYPE_t delta_gamma_middle_max
     cdef DTYPE_t gamma_middle, phi_middle
@@ -357,7 +353,7 @@ def z_field_map_leapfrog(DTYPE_t gamma_in,
     gamma_phi[0, 1] = 0.
     # Rewind energy from i=0 to i=-0.5 if we are at the first cavity:
     # FIXME must be cleaner
-    if gamma_in == GAMMA_cdef:
+    if gamma_in == gamma_init:
         gamma_phi[0, 0] = gamma_in - 0.5 * k_k * e_func(
             z_rel, e_z, inv_dz_e, n_points_e, gamma_phi[0, 1], phi_0_rel)
     else:
@@ -393,9 +389,16 @@ def z_field_map_leapfrog(DTYPE_t gamma_in,
                                               inv_dz_e, n_points_e)
         # Compute thin lense transfer matrix
         r_zz_array[i, :, :] = z_thin_lense(
-            gamma_phi[i, 0], gamma_middle, gamma_phi[i + 1, 0],
-            phi_middle, half_dz, delta_gamma_middle_max, phi_0_rel,
-            omega0_rf)
+            gamma_phi[i, 0],
+            gamma_middle,
+            gamma_phi[i + 1, 0],
+            phi_middle,
+            half_dz,
+            delta_gamma_middle_max,
+            phi_0_rel,
+            omega0_rf,
+            omega_0_bunch=omega_0_bunch,
+        )
 
         z_rel += d_z
 
@@ -409,7 +412,8 @@ cdef z_thin_lense(DTYPE_t gamma_in,
                   DTYPE_t half_dz,
                   DTYPE_t delta_gamma_m_max,
                   DTYPE_t phi_0,
-                  DTYPE_t omega0_rf
+                  DTYPE_t omega0_rf,
+                  DTYPE_t omega_0_bunch,
                   ):
     # Used for tm components
     cdef DTYPE_t beta_m = sqrt(1. - gamma_m**-2)
@@ -427,17 +431,19 @@ cdef z_thin_lense(DTYPE_t gamma_in,
     k_3 = (1. - k_speed2) / k_2
 
     # Faster than matmul or matprod_22
-    r_zz_array = z_drift(gamma_out, half_dz)[0][0] \
+    r_zz_array = z_drift(gamma_out, half_dz, omega_0_bunch=omega_0_bunch)[0][0] \
                  @ (np.array(([k_3, 0.], [k_1, k_2]), dtype=DTYPE) \
-                    @ z_drift(gamma_in, half_dz)[0][0])
+                    @ z_drift(gamma_in, half_dz, omega_0_bunch=omega_0_bunch)[0][0])
     return r_zz_array
 
 
-cpdef z_bend(DTYPE_t gamma_in,
-             DTYPE_t delta_s,
-             DTYPE_t factor_1,
-             DTYPE_t factor_2,
-             DTYPE_t factor_3,
+def z_bend(DTYPE_t gamma_in,
+            DTYPE_t delta_s,
+            DTYPE_t factor_1,
+            DTYPE_t factor_2,
+            DTYPE_t factor_3,
+            DTYPE_t omega_0_bunch,
+            **kwargs
              ):
     cdef DTYPE_t gamma_in_min2 = gamma_in**-2
     cdef DTYPE_t beta_in_squared = 1. - gamma_in_min2
@@ -450,6 +456,6 @@ cpdef z_bend(DTYPE_t gamma_in,
         )
     cdef np.ndarray[DTYPE_t, ndim=2] gamma_phi = np.array(
         [[gamma_in,
-          OMEGA_0_BUNCH_cdef * delta_s / (sqrt(beta_in_squared) * c_cdef)
+          omega_0_bunch * delta_s / (sqrt(beta_in_squared) * c_cdef)
          ]], dtype=DTYPE)
     return r_zz, gamma_phi, None

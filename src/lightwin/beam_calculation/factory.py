@@ -24,6 +24,7 @@ class BeamCalculatorsFactory:
         self,
         beam_calculator: dict[str, Any],
         files: dict[str, Any],
+        beam: dict[str, Any],
         beam_calculator_post: dict[str, Any] | None = None,
         **other_kw: dict,
     ) -> None:
@@ -37,6 +38,8 @@ class BeamCalculatorsFactory:
             for optimisation.
         files : dict[str, Any]
             Configuration entries for the input/output paths.
+        beam : dict[str, Any]
+            Configuration dictionary holding the initial beam parameters.
         beam_calculator_post : dict[str, Any] | None
             Configuration entries for the second optional
             :class:`.BeamCalculator`, used for a more thorough calculation of
@@ -51,6 +54,7 @@ class BeamCalculatorsFactory:
                 beam_calculator,
                 beam_calculator_post,
             )
+        self._beam_kwargs = beam
 
         self.out_folders = self._set_out_folders(self.all_beam_calculator_kw)
 
@@ -97,6 +101,7 @@ class BeamCalculatorsFactory:
         beam_calculator = beam_calculator_class(
             out_folder=self.out_folders.pop(0),
             default_field_map_folder=self._original_dat_dir,
+            beam_kwargs=self._beam_kwargs,
             **beam_calculator_kw,
         )
         self.beam_calculators_id.append(beam_calculator.id)
@@ -123,8 +128,7 @@ class BeamCalculatorsFactory:
 
         if n_unique_values > 1:
             logging.warning(
-                "The different BeamCalculator objects have "
-                "different values for flag_phi_abs. This may lead "
-                "to inconstencies when cavities fail.\n"
-                f"{flag_phi_abs = }"
+                "The different BeamCalculator objects have different values "
+                "for flag_phi_abs. This may lead to inconstencies when "
+                f"cavities fail.\n{flag_phi_abs = }"
             )

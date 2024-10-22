@@ -50,9 +50,9 @@ class TraceWin(BeamCalculator):
 
     Parameters
     ----------
-    executable : str
+    executable : pathlib.Path
         Path to the TraceWin executable.
-    ini_path : str
+    ini_path : pathlib.Path
         Path to the ``.ini`` TraceWin file.
     base_kwargs : dict[str, str | bool | int | None | float]
         TraceWin optional arguments. Override what is defined in ``.ini``, but
@@ -60,17 +60,13 @@ class TraceWin(BeamCalculator):
         :class:`.SimulationOutput`.
     _tracewin_command : list[str] | None, optional
         Attribute to hold the value of the base command to call TraceWin.
-    id : str
-        Complete name of the solver.
-    out_folder : str
+    out_folder : pathlib.Path | str
         Name of the results folder (not a complete path, just a folder name).
-    load_results : Callable
-        Function to call to get the output results.
-    path_cal : str
+    path_cal : pathlib.Path
         Name of the results folder. Updated at every call of the
         :func:`init_solver_parameters` method, using
         ``Accelerator.accelerator_path`` and ``self.out_folder`` attributes.
-    dat_file :
+    dat_file : pathlib.Path
         Base name for the ``.dat`` file. ??
 
     """
@@ -82,6 +78,7 @@ class TraceWin(BeamCalculator):
         base_kwargs: dict[str, str | int | float | bool | None],
         out_folder: Path | str,
         default_field_map_folder: Path | str,
+        beam_kwargs: dict[str, Any],
         flag_phi_abs: bool = False,
         cal_file: Path | None = None,
         **kwargs: Any,
@@ -91,12 +88,19 @@ class TraceWin(BeamCalculator):
         self.ini_path = ini_path.resolve().absolute()
         self.base_kwargs = base_kwargs
         self.cal_file = cal_file
+        self._beam_kwargs = beam_kwargs
 
         filename = Path("tracewin.out")
         if self.is_a_multiparticle_simulation:
             filename = Path("partran1.out")
         self._filename = filename
-        super().__init__(flag_phi_abs, out_folder, default_field_map_folder)
+        super().__init__(
+            flag_phi_abs=flag_phi_abs,
+            out_folder=out_folder,
+            default_field_map_folder=default_field_map_folder,
+            beam_kwargs=beam_kwargs,
+            **kwargs,
+        )
 
         self.path_cal: Path
         self.dat_file: Path
@@ -112,12 +116,13 @@ class TraceWin(BeamCalculator):
         self.beam_calc_parameters_factory = ElementTraceWinParametersFactory()
 
         self.simulation_output_factory = SimulationOutputFactoryTraceWin(
-            self.is_a_3d_simulation,
-            self.is_a_multiparticle_simulation,
-            self.id,
-            self.out_folder,
-            self._filename,
-            self.beam_calc_parameters_factory,
+            _is_3d=self.is_a_3d_simulation,
+            _is_multipart=self.is_a_multiparticle_simulation,
+            _solver_id=self.id,
+            _beam_kwargs=self._beam_kwargs,
+            out_folder=self.out_folder,
+            _filename=self._filename,
+            beam_calc_parameters_factory=self.beam_calc_parameters_factory,
         )
 
     def _tracewin_base_command(

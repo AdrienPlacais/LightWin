@@ -1,7 +1,8 @@
 """Define a factory to create :class:`.Objective` objects.
 
 When you implement a new objective preset, also add it to the list of
-implemented presets in :data:`.OBJECTIVE_PRESETS` and :mod:`.config.wtf`.
+implemented presets in :data:`.OBJECTIVE_PRESETS` and
+:mod:`.optimisation.wtf_specs`.
 
 .. todo::
     decorator to auto output the variables and constraints?

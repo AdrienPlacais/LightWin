@@ -25,7 +25,9 @@ Submodules
 .. toctree::
    :maxdepth: 5
 
+   lightwin.core.beam_specs
    lightwin.core.electric_field
+   lightwin.core.files_specs
    lightwin.core.instruction
    lightwin.core.instructions_factory
    lightwin.core.particle

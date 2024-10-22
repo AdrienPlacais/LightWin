@@ -1,3 +1,6 @@
-Entry          ,Type ,Description               ,Allowed values ,Mandatory? 
-``dat_file``   ,path ,Path to the ``.dat`` file ,               ,✅         
-``out_folder`` ,path ,Name of the output folder ,               ,❌         
+Entry,Type,Description,Allowed values,Mandatory?
+dat_file,``str`` or ``Path``,Path to the ``.dat`` file,,✅
+logfile_console_level,``str``,Level of messages written in console,"('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')",❌
+logfile_file,``str``,Name of the file where the logging output will be written,,❌
+logfile_log_level,``str``,Level of messages written in logfile,"('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')",❌
+project_folder,``str`` or ``Path``,Where output results will be stored,,❌
