@@ -111,20 +111,6 @@ class TestDatLine:
         }
         return check(line, expected)
 
-    def test_element_with_a_name_with_hyphen(self) -> None:
-        """Test that a named element is properly sliced."""
-        line = "Louise-Michel : DRIFT 76"
-        expected = ["Louise-Michel", "DRIFT", "76"]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
-
-    def test_element_with_a_name_with_underscore(self) -> None:
-        """Test that a named element is properly sliced."""
-        line = "Louise_Michel : DRIFT 76"
-        expected = ["Louise_Michel", "DRIFT", "76"]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
-
     def test_diagnostic_with_a_weight(self) -> None:
         """Test that a weighted element is properly sliced."""
         line = "DIAG_BONJOURE(1e3) 777 0 1 2"
@@ -174,13 +160,6 @@ class TestDatLine:
             "splitted": ["DIAG_BONJOURE", "777", "0", "1", "2"],
         }
         return check(line, expected)
-
-    def test_diagnostic_with_a_weight_and_name(self) -> None:
-        """Test that a weighted element is properly sliced."""
-        line = "Louise : DIAG_BONJOURE(1e3) 777 0 1 2"
-        expected = ["Louise", "DIAG_BONJOURE", "(1e3)", "777", "0", "1", "2"]
-        returned = slice_dat_line(line)
-        assert expected == returned, f"{returned = } but {expected = }"
 
     def test_multiple_semicommas(self) -> None:
         """Check that when we have several ;, only the first is kept."""

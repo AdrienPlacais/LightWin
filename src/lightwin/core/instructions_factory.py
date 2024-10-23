@@ -32,6 +32,7 @@ from lightwin.core.elements.helper import (
     force_a_section_for_every_element,
     give_name_to_elements,
 )
+from lightwin.core.em_fields.field_factory import FieldFactory
 from lightwin.core.instruction import Comment, Dummy, Instruction, LineJump
 from lightwin.core.list_of_elements.helper import (
     group_elements_by_section,
@@ -110,6 +111,7 @@ class InstructionsFactory:
             )
         self._field_maps_in_3d = field_maps_in_3d
         self._load_cython_field_maps = load_cython_field_maps
+        self._field_factory = FieldFactory(default_field_map_folder)
 
     def run(self, dat_filecontent: Collection[DatLine]) -> list[Instruction]:
         """Create all the elements and commands.
@@ -138,6 +140,7 @@ class InstructionsFactory:
 
         if self._load_field_maps:
             field_maps = [elt for elt in elts if isinstance(elt, FieldMap)]
+            self._field_factory.run_all(field_maps)
             load_electromagnetic_fields(field_maps, True)
 
         return instructions
@@ -188,7 +191,7 @@ class InstructionsFactory:
                 dat_line, dat_idx, **instruction_kw
             )
 
-        return Dummy(dat_line, dat_idx, warning=True)
+        return Dummy(dat_line, warning=True)
 
     def _handle_lattice_and_section(self, elts: list[Element]) -> None:
         """Ensure that every element has proper lattice, section indexes."""

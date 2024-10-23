@@ -10,9 +10,9 @@ import cmath
 from functools import partial
 from typing import Any
 
-from lightwin.core.em_fields.longitudinal import (
-    default_e_spat,
-    longitudinal_e_spat_t,
+from lightwin.core.em_fields.helper import (
+    FieldFuncComponent1D,
+    null_field_1d,
     shifted_e_spat,
 )
 
@@ -55,8 +55,8 @@ class RfField:
 
     def __init__(self) -> None:
         """Instantiate object."""
-        self._original_e_spat: longitudinal_e_spat_t
-        self.e_spat: longitudinal_e_spat_t = default_e_spat
+        self._original_e_spat: FieldFuncComponent1D
+        self.e_spat: FieldFuncComponent1D = null_field_1d
         self.n_cell: int
         self.n_z: int
         self.is_loaded = False
@@ -96,7 +96,7 @@ class RfField:
             return out[0]
         return tuple(out)
 
-    def set_e_spat(self, e_spat: longitudinal_e_spat_t, n_cell: int) -> None:
+    def set_e_spat(self, e_spat: FieldFuncComponent1D, n_cell: int) -> None:
         """Set the pos. component of electric field, set number of cells."""
         self.e_spat = e_spat
         self.n_cell = n_cell

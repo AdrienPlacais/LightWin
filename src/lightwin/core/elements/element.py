@@ -15,7 +15,6 @@ from lightwin.beam_calculation.parameters.element_parameters import (
     ElementBeamCalculatorParameters,
 )
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
-from lightwin.core.em_fields.rf_field import RfField
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter, recursive_items
@@ -77,10 +76,6 @@ class Element(Instruction):
             "nature": line.splitted[0],
         }
         self.length_m = 1e-3 * float(line.splitted[1])
-
-        # By default, an element is non accelerating and has a dummy
-        # accelerating field.
-        self.rf_field = RfField()
 
         # TODO: init the indexes to -1 or something, to help type hinting
         # dict with pure type: int
