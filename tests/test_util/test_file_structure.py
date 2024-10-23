@@ -17,7 +17,6 @@ from lightwin.constants import (
 
 
 @pytest.mark.smoke
-@pytest.mark.implementation
 @pytest.mark.parametrize(
     ("file_or_folder", "nature"),
     [

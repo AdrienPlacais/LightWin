@@ -21,8 +21,12 @@ from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import NoFault
 
 params = [
-    pytest.param((False, 40), marks=pytest.mark.smoke),
-    pytest.param((True, 40), marks=pytest.mark.smoke),
+    pytest.param(
+        (False, 40), marks=pytest.mark.smoke, id="Envelope3D relative phase"
+    ),
+    pytest.param(
+        (True, 40), marks=pytest.mark.smoke, id="Envelope3D absolute phase"
+    ),
 ]
 
 
@@ -85,6 +89,7 @@ def simulation_output(
     return my_simulation_output
 
 
+@pytest.mark.envelope3d
 class TestSolver3D:
     """Gater all the tests in a single class."""
 

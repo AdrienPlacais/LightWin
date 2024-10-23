@@ -25,9 +25,10 @@ from typing import Any, Literal
 
 import numpy as np
 
-from lightwin.core.electric_field import RfField
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.elements.field_maps.util import set_full_field_map_path
+from lightwin.core.em_fields.rf_field import RfField
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter
 
@@ -74,7 +75,7 @@ class FieldMap(Element):
         self.field_map_folder = default_field_map_folder
         self.field_map_file_name = Path(line.splitted[9])
 
-        self.new_rf_field: RfField
+        self.rf_field: RfField
         self._can_be_retuned: bool = True
 
     @property
@@ -137,13 +138,9 @@ class FieldMap(Element):
         :func:`.electromagnetic_fields._get_filemaps_extensions`
 
         """
-        self.field_map_file_name = [
-            Path(self.field_map_folder, self.field_map_file_name).with_suffix(
-                "." + ext
-            )
-            for extension in extensions.values()
-            for ext in extension
-        ]
+        self.field_map_file_name = set_full_field_map_path(
+            self.field_map_folder, self.field_map_file_name, extensions
+        )
 
     def keep_cavity_settings(self, cavity_settings: CavitySettings) -> None:
         """Keep the cavity settings that were found."""
@@ -263,6 +260,7 @@ class FieldMap(Element):
             self.line.change_argument(val, key)
         return line
 
+    # May be useless, depending on to_line implementation
     @property
     def _indexes_in_line(self) -> dict[str, int]:
         """Give the position of the arguments in the ``FIELD_MAP`` command."""

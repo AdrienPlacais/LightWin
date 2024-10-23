@@ -13,7 +13,7 @@ class DummyElement(Element):
         self,
         line: DatLine,
         dat_idx: int | None = None,
-        **kwargs: str,
+        **kwargs,
     ) -> None:
         """Force an element with null-length, with no index."""
         super().__init__(line, dat_idx, **kwargs)

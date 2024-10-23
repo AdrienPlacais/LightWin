@@ -15,6 +15,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import NoFault
 
+# note: only r_zz matrix will be checked with envelope1d
 all_expected = {
     ("repeat_ele.dat", "generic_envelope3d"): np.array(
         # fmt: off
@@ -47,6 +48,17 @@ all_expected = {
             [+0.000000e+00, +0.000000e+00, -6.706392e-01, +6.573501e-01, +0.000000e+00, +0.000000e+00],
             [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, +2.474433e-01, +1.669207e+00],
             [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, -5.952788e-01, -5.059394e-02]
+        ]
+    ),
+    ("superpose_map.dat", "generic_envelope1d"): np.array(
+        # fmt: off
+        [
+            [-2.069032e+00, +5.428874e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00],
+            [-1.102989e+00, +2.419332e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00],
+            [+0.000000e+00, +0.000000e+00, -3.204445e-01, +1.797590e+00, +0.000000e+00, +0.000000e+00],
+            [+0.000000e+00, +0.000000e+00, -6.678054e-01, +6.807039e-01, +0.000000e+00, +0.000000e+00],
+            [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, +2.270358e-01, +1.620669e+00],
+            [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, -6.222453e-01, -1.151413e-01]
         ]
     ),
 }
@@ -118,9 +130,30 @@ def simulation_output(
 @pytest.mark.parametrize(
     "dat_file, beam_calculator_key",
     [
-        ("repeat_ele.dat", "generic_envelope3d"),
-        ("bigger_repeat_ele.dat", "generic_envelope3d"),
-        ("set_sync_phase.dat", "generic_envelope3d"),
+        pytest.param(
+            "repeat_ele.dat",
+            "generic_envelope3d",
+            id="Test of REPEAT_ELE command.",
+            marks=pytest.mark.envelope3d,
+        ),
+        pytest.param(
+            "bigger_repeat_ele.dat",
+            "generic_envelope3d",
+            id="Complementary test for REPEAT_ELE command",
+            marks=pytest.mark.envelope3d,
+        ),
+        pytest.param(
+            "set_sync_phase.dat",
+            "generic_envelope3d",
+            id="Test for SET_SYNC_PHASE command",
+            marks=pytest.mark.envelope3d,
+        ),
+        pytest.param(
+            "superpose_map.dat",
+            "generic_envelope1d",
+            id="Test for SUPERPOSE_MAP command",
+            marks=(pytest.mark.envelope1d, pytest.mark.implementation),
+        ),
     ],
 )
 def test_transfer_matrix(
@@ -134,6 +167,10 @@ def test_transfer_matrix(
     assert transfer_matrix is not None
     returned = transfer_matrix.cumulated[-1]
 
+    if "envelope1d" in beam_calculator_key:
+        returned = returned[4:, 4:]
+        expected = expected[4:, 4:]
+
     assert np.allclose(
         expected, returned, atol=1e-2
-    ), f"{expected = }, but {returned = }"
+    ), f"expected = \n{expected}\nbut returned =\n{returned}"

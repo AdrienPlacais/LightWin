@@ -14,7 +14,7 @@ The :class:`.Element` objects with a transfer matrix are listed in
 import math
 from abc import abstractmethod
 from types import ModuleType
-from typing import Any, Callable
+from typing import Any, Callable, Literal
 
 import numpy as np
 
@@ -25,11 +25,19 @@ from lightwin.beam_calculation.parameters.element_parameters import (
 from lightwin.core.elements.bend import Bend
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.core.elements.field_maps.superposed_field_map import (
+    SuperposedFieldMap,
+)
 from lightwin.util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
 
 FIELD_MAP_INTEGRATION_METHOD_TO_FUNC = {
     "RK4": lambda module: module.z_field_map_rk4,
     "leapfrog": lambda module: module.z_field_map_leapfrog,
+}
+
+
+SUPERPOSED_FIELD_MAP_INTEGRATION_METHOD_TO_FUNC = {
+    "RK4": lambda module: module.z_superposed_field_maps_rk4,
 }
 
 
@@ -188,7 +196,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         self,
         transf_mat_module: ModuleType,
         elt: FieldMap,
-        method: str,
+        method: Literal["leapfrog", "RK4"],
         n_steps_per_cell: int,
         solver_id: str,
         beam_kwargs: dict[str, Any],
@@ -204,7 +212,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         ]
 
         self.solver_id = solver_id
-        self.n_cell = elt.new_rf_field.n_cell
+        self.n_cell = elt.rf_field.n_cell
         self._rf_to_bunch = elt.cavity_settings.rf_phase_to_bunch_phase
         n_steps = self.n_cell * n_steps_per_cell
         super().__init__(
@@ -292,6 +300,100 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
             _new_transfer_matrix_results_to_dict
         )
         return self.transf_mat_function
+
+
+class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
+    """
+    Hold properties to compute transfer matrix of :class:`.SuperposedFieldMap`.
+
+    """
+
+    def __init__(
+        self,
+        transf_mat_module: ModuleType,
+        superposed: SuperposedFieldMap,
+        method: Literal["RK4"],
+        n_steps_per_cell: int,
+        solver_id: str,
+        phi_s_model: str = "historical",
+        **kwargs: str | int,
+    ) -> None:
+        """Create the specific parameters for a field map."""
+        if method == "leapfrog":
+            raise NotImplementedError(
+                "SUPERPOSE_MAP not implemented in leapfrog for now."
+            )
+        try:
+            transf_mat_function = (
+                SUPERPOSED_FIELD_MAP_INTEGRATION_METHOD_TO_FUNC[method](
+                    transf_mat_module
+                )
+            )
+        except ImportError:
+            raise NotImplementedError(
+                "SUPERPOSE_MAP not implemented in Cython for now."
+            )
+        self.compute_cavity_parameters = SYNCHRONOUS_PHASE_FUNCTIONS[
+            phi_s_model
+        ]
+
+        self.solver_id = solver_id
+        self.n_cell = superposed.rf_field.n_cell
+        self._rf_to_bunch = (
+            superposed.cavities_settings.rf_phase_to_bunch_phase
+        )
+        n_steps = self.n_cell * n_steps_per_cell
+        super().__init__(
+            transf_mat_function, superposed.length_m, n_steps, **kwargs
+        )
+        self._transf_mat_module = transf_mat_module
+
+        self.field_map_file_names = [
+            str(name) for name in superposed.field_map_file_names
+        ]
+        for settings in superposed.field_maps_settings:
+            settings.set_cavity_parameters_methods(
+                self.solver_id,
+                self.transf_mat_function_wrapper,
+                self.compute_cavity_parameters,
+            )
+
+    def transfer_matrix_kw(self) -> dict[str, Any]:
+        """Give the element parameters necessary to compute transfer matrix."""
+        return {"d_z": self.d_z, "n_steps": self.n_steps}
+
+    def _transfer_matrix_results_to_dict(
+        self,
+        r_zz: np.ndarray,
+        gamma_phi: np.ndarray,
+        integrated_field: float | None,
+    ) -> dict:
+        """Convert the results given by the transf_mat function to a dict.
+
+        Overrides the default method defined in the ABC.
+
+        """
+        assert integrated_field is not None
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
+        gamma_phi[:, 1] = self._rf_to_bunch(gamma_phi[:, 1])
+        cav_params = self.compute_cavity_parameters(integrated_field)
+        results = {
+            "r_zz": r_zz,
+            "cav_params": cav_params,
+            "w_kin": w_kin,
+            "phi_rel": gamma_phi[:, 1],
+            "integrated_field": integrated_field,
+        }
+        return results
+
+    def re_set_for_broken_cavity(self) -> Callable:
+        """Make beam calculator call Drift func instead of FieldMap."""
+        raise NotImplementedError(
+            "superposed field maps should not be modified during execution for"
+            " now"
+        )
 
 
 class BendEnvelope1DParameters(ElementEnvelope1DParameters):

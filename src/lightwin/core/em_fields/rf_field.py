@@ -7,7 +7,14 @@ See Also
 """
 
 import cmath
-from typing import Any, Callable
+from functools import partial
+from typing import Any
+
+from lightwin.core.em_fields.longitudinal import (
+    default_e_spat,
+    longitudinal_e_spat_t,
+    shifted_e_spat,
+)
 
 
 def compute_param_cav(integrated_field: complex) -> dict[str, float]:
@@ -32,25 +39,28 @@ class RfField:
 
     All phases are stored in radian.
 
-    Parameters
+    Attributes
     ----------
     e_spat : Callable[[float], float]
         Spatial component of the electric field. Needs to be multiplied by the
-        cos(omega t) to have the full electric field. Initialized to null
-        function.
+        :math:`\cos(\omega t)` to have the full electric field. Initialized to
+        null function.
     n_cell : int
         Number of cells in the cavity.
     n_z : int | None
-        Number of points in the file that gives `e_spat`, the spatial component
-        of the electric field.
+        Number of points in the file that gives ``e_spat``, the spatial
+        component of the electric field.
 
     """
 
     def __init__(self) -> None:
         """Instantiate object."""
-        self.e_spat: Callable[[float], float]
+        self._original_e_spat: longitudinal_e_spat_t
+        self.e_spat: longitudinal_e_spat_t = default_e_spat
         self.n_cell: int
         self.n_z: int
+        self.is_loaded = False
+        self.starting_position: float
 
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class."""
@@ -86,9 +96,25 @@ class RfField:
             return out[0]
         return tuple(out)
 
-    def set_e_spat(
-        self, e_spat: Callable[[float], float], n_cell: int
-    ) -> None:
+    def set_e_spat(self, e_spat: longitudinal_e_spat_t, n_cell: int) -> None:
         """Set the pos. component of electric field, set number of cells."""
         self.e_spat = e_spat
         self.n_cell = n_cell
+        self.is_loaded = True
+
+    def shift(self) -> None:
+        """Shift the electric field map.
+
+        .. warning::
+            You must ensure that for ``z < 0`` and ``z > element.length_m`` the
+            electric field is null. Interpolation can lead to funny results!
+
+        """
+        assert hasattr(
+            self, "starting_position"
+        ), "You need to set the starting_position attribute of the RfField."
+        if not hasattr(self, "_original_e_spat"):
+            self._original_e_spat = self.e_spat
+        self.e_spat = partial(
+            shifted_e_spat, e_spat=self.e_spat, z_shift=self.starting_position
+        )
