@@ -13,7 +13,10 @@ diagnostics (as well as ADJUST) to the final ``.dat`` in order to perform a
 
 """
 
+from typing import override
+
 from lightwin.core.elements.element import Element
+from lightwin.tracewin_utils.line import DatLine
 
 
 class Diagnostic(Element):
@@ -25,29 +28,18 @@ class Diagnostic(Element):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
-        name: str = "",
+        line: DatLine,
+        dat_idx: int | None = None,
         **kwargs: str,
     ) -> None:
         """Force an element with null-length, with no index."""
-        line, self.weight = self._separate_weight(line)
-        super().__init__(line, dat_idx, name)
+        super().__init__(line, dat_idx, **kwargs)
+        self.weight = 1.0
+        if line.weight is not None:
+            self.weight = line.weight
 
         self.length_m = 0.0
-        self.number = int(line[1])
-
-        # patch to keep weight in `line` attribute if it is present
-        # if self.weight != 1.0:
-        #     self.line.insert(1, f"({self.weight})")
-        self.reinsert_optional_commands_in_line()
-
-    def _separate_weight(self, line: list[str]) -> tuple[list[str], float]:
-        """Detect if a weight is present, separate if from args if so."""
-        weight = 1.0
-        if "(" in line[1]:
-            weight = float(line.pop(1).replace("(", "").replace(")", ""))
-        return line, weight
+        self.number = int(line.splitted[1])
 
 
 class DiagCurrent(Diagnostic):
@@ -109,18 +101,17 @@ class DiagDSize2(Diagnostic):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
-        name: str = "",
+        line: DatLine,
+        dat_idx: int | None = None,
         **kwargs: str,
     ) -> None:
         """Force an element with null-length, with no index."""
-        super().__init__(line, dat_idx, name)
-        self.x_rms_beam_delta_size = float(line[2])
-        self.y_rms_beam_delta_size = float(line[3])
+        super().__init__(line, dat_idx, **kwargs)
+        self.x_rms_beam_delta_size = float(line.splitted[2])
+        self.y_rms_beam_delta_size = float(line.splitted[3])
 
-        if len(line) == 5:
-            self.accuracy = float(line[4])
+        if line.n_args == 4:
+            self.accuracy = float(line.splitted[4])
 
 
 class DiagDSize3(Diagnostic):
@@ -131,18 +122,32 @@ class DiagDSize3(Diagnostic):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
-        name: str = "",
+        line: DatLine,
+        dat_idx: int | None = None,
         **kwargs: str,
     ) -> None:
         """Force an element with null-length, with no index."""
-        super().__init__(line, dat_idx, name)
-        self.rms_delta_phase_spread = float(line[2])
-        self.accuracy = float(line[3])
+        super().__init__(line, dat_idx, **kwargs)
+        self.rms_delta_phase_spread = float(line.splitted[2])
+        self.accuracy = float(line.splitted[3])
 
-        if len(line) == 5:
-            self.low_pass_filter_frequency = float(line[4])
+        if line.n_args == 4:
+            self.low_pass_filter_frequency = float(line.splitted[4])
+
+    @classmethod
+    @override
+    def _args_to_line(
+        cls,
+        number: int,
+        rms_delta_phase_spread: float = 0.0,
+        accuracy: float = 0.0,
+        low_pass_filter_frequency: float | None = None,
+    ) -> str:
+        """Convert list of arguments to corresponding line of dat file."""
+        line = f"DIAG_DSIZE3 {number} {rms_delta_phase_spread} {accuracy}"
+        if low_pass_filter_frequency is not None:
+            line += " " + str(low_pass_filter_frequency)
+        return line
 
 
 class DiagDSize4(Diagnostic):

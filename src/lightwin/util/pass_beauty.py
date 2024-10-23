@@ -57,21 +57,31 @@ def _cavity_settings_to_adjust(
     phase = getattr(cavity_settings, phase_nature)
     assert isinstance(phase, float)
     phase = math.degrees(phase)
-    line_phi = (
-        f"ADJUST {number} 3 0 {phase - tol_phi_deg} {phase + tol_phi_deg}"
+    adjust_phi = Adjust.from_args(
+        dat_idx,
+        number,
+        vth_variable=3,
+        n_link=0,
+        mini=phase - tol_phi_deg,
+        maxi=phase + tol_phi_deg,
     )
 
     k_e = cavity_settings.k_e
-    line_k_e = (
-        f"ADJUST {number} 5 {link_index} {k_e - tol_k_e} {k_e + tol_k_e}"
+    adjust_k_e = Adjust.from_args(
+        dat_idx,
+        number,
+        vth_variable=5,
+        n_link=link_index,
+        mini=k_e - tol_k_e,
+        maxi=k_e + tol_k_e,
     )
 
-    adjust_phi = Adjust(line_phi.split(), dat_idx)
-    adjust_k_e = Adjust(line_k_e.split(), dat_idx)
     if not link_index:
         return adjust_phi, adjust_k_e
-    line_k_g = f"ADJUST {number} 6 {link_index}"
-    return adjust_phi, adjust_k_e, Adjust(line_k_g.split(), dat_idx)
+    adjust_k_g = Adjust.from_args(
+        dat_idx, number, vth_variable=6, n_link=link_index
+    )
+    return adjust_phi, adjust_k_e, adjust_k_g
 
 
 def set_of_cavity_settings_to_adjust(
@@ -117,15 +127,14 @@ def elements_to_diagnostics(
     assert isinstance(last_compensating, list)
     post_compensating = lattices[lattices.index(last_compensating) + 1 :]
 
-    dzise_elements = (
+    dsize_elements = (
         first_compensating[0],
         *[lattice[0] for lattice in post_compensating[:number_of_dsize]],
     )
-    dsize_args = (
-        (f"DIAG_DSIZE3 {number} 0 0".split(), elt.idx["dat_idx"])
-        for elt in dzise_elements
-    )
-    dsizes = [DiagDSize3(*args) for args in dsize_args]
+    dsizes = [
+        DiagDSize3.from_args(elt.idx["dat_idx"], number=number)
+        for elt in dsize_elements
+    ]
     return dsizes
 
 

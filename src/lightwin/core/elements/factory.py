@@ -52,6 +52,7 @@ from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
 from lightwin.core.elements.thin_steering import ThinSteering
+from lightwin.tracewin_utils.line import DatLine
 
 implemented_elements = {
     "APERTURE": Aperture,
@@ -118,36 +119,21 @@ class ElementFactory:
         self.field_map_factory = field_map_factory
         implemented_elements["FIELD_MAP"] = field_map_factory.run
 
-    def run(self, line: list[str], dat_idx: int, **kwargs) -> Element:
+    def run(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs
+    ) -> Element:
         """Call proper constructor."""
-        name, line = self._personalized_name(line)
-        element_constructor = _get_constructor(line[0])
-        element = element_constructor(line, dat_idx, name, **kwargs)
+        if dat_idx is None:
+            dat_idx = line.idx
+        element_constructor = _get_constructor(line.instruction, dat_idx)
+        element = element_constructor(line, dat_idx, **kwargs)
         return element
 
-    def _personalized_name(
-        self, line: list[str]
-    ) -> tuple[str | None, list[str]]:
-        """Extract the user-defined name of the element if there is one.
 
-        .. todo::
-            Make this robust.
-
-        """
-        original_line = " ".join(line)
-        line_delimited_with_name = original_line.split(":", maxsplit=1)
-
-        if len(line_delimited_with_name) == 2:
-            name = line_delimited_with_name[0].strip()
-            cleaned_line = line_delimited_with_name[1].split()
-            return name, cleaned_line
-
-        return None, line
-
-
-def _get_constructor(first_word: str) -> type:
+def _get_constructor(instruction: str, dat_idx: int) -> type:
     """Get the proper constructor."""
-    key = first_word.upper()
-    if key in implemented_elements:
-        return implemented_elements[key]
-    raise IOError(f"No Element matching {key} was found.")
+    if instruction in implemented_elements:
+        return implemented_elements[instruction]
+    raise IOError(
+        f"No Element matching {instruction} at line {dat_idx + 1} was found."
+    )

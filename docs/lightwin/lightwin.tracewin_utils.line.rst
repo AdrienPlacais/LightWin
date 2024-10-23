@@ -1,7 +1,7 @@
-electric\_field module
+line module
 ====================================
 
-.. automodule:: lightwin.core.electric_field
+.. automodule:: lightwin.tracewin_utils.line
    :members:
    :undoc-members:
    :show-inheritance:

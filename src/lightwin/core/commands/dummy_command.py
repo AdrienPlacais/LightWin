@@ -4,6 +4,7 @@ import logging
 
 from lightwin.core.commands.command import Command
 from lightwin.core.instruction import Instruction
+from lightwin.tracewin_utils.line import DatLine
 
 
 class DummyCommand(Command):
@@ -11,9 +12,11 @@ class DummyCommand(Command):
 
     is_implemented = False
 
-    def __init__(self, line: list[str], dat_idx: int, **kwargs: str) -> None:
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
+    ) -> None:
         """Instantiate the dummy command."""
-        super().__init__(line, dat_idx)
+        super().__init__(line, dat_idx, **kwargs)
 
     def set_influenced_elements(
         self, instructions: list[Instruction], **kwargs: float

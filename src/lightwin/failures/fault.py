@@ -213,7 +213,7 @@ class Fault:
 
         """
         if path is None:
-            path = self.elts.files["accelerator_path"] / "fault.pkl"
+            path = self.elts.files_info["accelerator_path"] / "fault.pkl"
         assert isinstance(path, Path)
         pickler.pickle(self, path)
 

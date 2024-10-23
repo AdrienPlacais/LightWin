@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from lightwin.core.commands.adjust import Adjust
+from lightwin.core.commands.chopper import Chopper
 from lightwin.core.commands.command import Command
 from lightwin.core.commands.dummy_command import DummyCommand
 from lightwin.core.commands.end import End
@@ -42,11 +43,13 @@ from lightwin.core.commands.set_sync_phase import SetSyncPhase
 from lightwin.core.commands.shift import Shift
 from lightwin.core.commands.steerer import Steerer
 from lightwin.core.commands.superpose_map import SuperposeMap
+from lightwin.tracewin_utils.line import DatLine
 
 IMPLEMENTED_COMMANDS = {
     "ADJUST": Adjust,
     "ADJUST_STEERER": DummyCommand,
     "DUMMY_COMMAND": DummyCommand,
+    "CHOPPER": Chopper,
     "END": End,
     "ERROR_BEAM_DYN": ErrorBeamDyn,
     "ERROR_BEAM_STAT": ErrorBeamStat,
@@ -97,35 +100,16 @@ class CommandFactory:
         self.default_field_map_folder = default_field_map_folder
         return
 
-    def run(self, line: list[str], dat_idx: int, **command_kw) -> Command:
+    def run(
+        self, line: DatLine, dat_idx: int | None = None, **command_kw
+    ) -> Command:
         """Call proper constructor."""
-        name, line = self._personalized_name(line)
-        command_creator = IMPLEMENTED_COMMANDS[line[0].upper()]
+        command_creator = IMPLEMENTED_COMMANDS[line.instruction]
         command = command_creator(
             line,
             dat_idx,
             default_field_map_folder=self.default_field_map_folder,
-            name=name,
+            name=line.personalized_name,
             **command_kw,
         )
         return command
-
-    def _personalized_name(
-        self, line: list[str]
-    ) -> tuple[str | None, list[str]]:
-        """
-        Extract the user-defined name of the Element if there is one.
-
-        .. todo::
-            Make this robust.
-
-        """
-        original_line = " ".join(line)
-        line_delimited_with_name = original_line.split(":", maxsplit=1)
-
-        if len(line_delimited_with_name) == 2:
-            name = line_delimited_with_name[0].strip()
-            cleaned_line = line_delimited_with_name[1].split()
-            return name, cleaned_line
-
-        return None, line

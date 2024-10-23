@@ -9,7 +9,6 @@
 """
 
 import logging
-from typing import Any, Sequence
 
 import numpy as np
 
@@ -73,7 +72,3 @@ class ElementTraceWinParameters(ElementBeamCalculatorParameters):
     def transf_mat_function_wrapper(self, *args, **kwargs) -> dict:
         """Do nothing."""
         raise NotImplementedError("maybe should be @abstractmethod also.")
-
-    def _transfer_matrix_arguments(self) -> Sequence[Any]:
-        """Do nothing."""
-        return None, None

@@ -25,8 +25,8 @@ from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import NoFault
 
 params = [
-    pytest.param((0,)),
-    pytest.param((1,), marks=pytest.mark.slow),
+    pytest.param((0,), id="TraceWin envelope"),
+    pytest.param((1,), marks=pytest.mark.slow, id="TraceWin multiparticle"),
 ]
 
 

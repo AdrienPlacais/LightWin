@@ -25,9 +25,11 @@ from typing import Any, Literal
 
 import numpy as np
 
-from lightwin.core.electric_field import RfField
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.elements.field_maps.util import set_full_field_map_path
+from lightwin.core.em_fields.rf_field import RfField
+from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter
 
 # warning: doublon with cavity_settings.ALLOWED_STATUS
@@ -56,27 +58,25 @@ class FieldMap(Element):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
+        line: DatLine,
         default_field_map_folder: Path,
         cavity_settings: CavitySettings,
-        name: str | None = None,
+        dat_idx: int | None = None,
         **kwargs,
     ) -> None:
         """Set most of attributes defined in ``TraceWin``."""
-        super().__init__(line, dat_idx, name)
+        super().__init__(line, dat_idx, **kwargs)
 
-        self.geometry = int(line[1])
-        self.length_m = 1e-3 * float(line[2])
-        self.aperture_flag = int(line[8])  # K_a
+        self.geometry = int(line.splitted[1])
+        self.length_m = 1e-3 * float(line.splitted[2])
+        self.aperture_flag = int(line.splitted[8])  # K_a
         self.cavity_settings = cavity_settings
 
         self.field_map_folder = default_field_map_folder
-        self.field_map_file_name = Path(line[9])
+        self.field_map_file_name = Path(line.splitted[9])
 
-        self.new_rf_field: RfField
+        self.rf_field: RfField
         self._can_be_retuned: bool = True
-        self.reinsert_optional_commands_in_line()
 
     @property
     def status(self) -> str:
@@ -138,13 +138,9 @@ class FieldMap(Element):
         :func:`.electromagnetic_fields._get_filemaps_extensions`
 
         """
-        self.field_map_file_name = [
-            Path(self.field_map_folder, self.field_map_file_name).with_suffix(
-                "." + ext
-            )
-            for extension in extensions.values()
-            for ext in extension
-        ]
+        self.field_map_file_name = set_full_field_map_path(
+            self.field_map_folder, self.field_map_file_name, extensions
+        )
 
     def keep_cavity_settings(self, cavity_settings: CavitySettings) -> None:
         """Keep the cavity settings that were found."""
@@ -221,7 +217,6 @@ class FieldMap(Element):
             "as_in_original_dat",
         ] = "phi_0_rel",
         *args,
-        inplace: bool = False,
         **kwargs,
     ) -> list[str]:
         r"""Convert the object back into a line in the ``.dat`` file.
@@ -242,19 +237,30 @@ class FieldMap(Element):
             current object.
 
         """
-        line = super().to_line(*args, inplace=inplace, **kwargs)
+        line = super().to_line(*args, **kwargs)
 
         _phases = self._phase_for_line(which_phase)
+        # from main:
+        # new_values = {
+        #     "phase": _phases[0],
+        #     "k_e": self.cavity_settings.k_e,
+        #     "abs_phase_flag": _phases[1],
+        # }
+        # for key, val in new_values.items():
+        #     idx = self._indexes_in_line[key]
+        #     line[idx] = str(val)
+
+        # from implement_field_map_70:
         new_values = {
-            "phase": _phases[0],
-            "k_e": self.cavity_settings.k_e,
-            "abs_phase_flag": _phases[1],
+            3: _phases[0],
+            6: self.cavity_settings.k_e,
+            10: _phases[1],
         }
         for key, val in new_values.items():
-            idx = self._indexes_in_line[key]
-            line[idx] = str(val)
+            self.line.change_argument(val, key)
         return line
 
+    # May be useless, depending on to_line implementation
     @property
     def _indexes_in_line(self) -> dict[str, int]:
         """Give the position of the arguments in the ``FIELD_MAP`` command."""
@@ -297,8 +303,7 @@ class FieldMap(Element):
                 abs_phase_flag = int(settings.reference == "phi_0_abs")
 
             case "as_in_original_dat":
-                idx = self._indexes_in_line["abs_phase_flag"]
-                abs_phase_flag = int(self.line[idx])
+                abs_phase_flag = int(self.line.splitted[-1])
                 if abs_phase_flag == 0:
                     to_get = "phi_0_rel"
                 elif abs_phase_flag == 1:

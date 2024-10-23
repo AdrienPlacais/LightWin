@@ -5,6 +5,7 @@ import logging
 from lightwin.core.commands.command import Command
 from lightwin.core.elements.element import Element
 from lightwin.core.instruction import Instruction
+from lightwin.tracewin_utils.line import DatLine
 
 
 class Steerer(Command):
@@ -12,7 +13,9 @@ class Steerer(Command):
 
     is_implemented = False
 
-    def __init__(self, line: list[str], dat_idx: int, **kwargs: str) -> None:
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
+    ) -> None:
         """Call the mother ``__init__`` method."""
         super().__init__(line, dat_idx)
 

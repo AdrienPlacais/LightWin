@@ -10,12 +10,12 @@ from typing import Any
 import pytest
 from tests.reference import compare_with_other
 
-import lightwin.config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.config.config_manager import process_config
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import WithFaults
@@ -27,23 +27,23 @@ from lightwin.failures.fault_scenario import (
 params = [
     pytest.param(
         ("generic_envelope1d", True, False),
-        marks=pytest.mark.smoke,
-        id="Envelope1D",
+        marks=(pytest.mark.smoke, pytest.mark.envelope1d),
+        id="Compensation with Envelope1D",
     ),
     pytest.param(
         ("generic_envelope1d", True, True),
         marks=pytest.mark.cython,
-        id="Envelope1D (Cython)",
+        id="Compensation with Envelope1D (Cython)",
     ),
     pytest.param(
         ("generic_envelope3d", True, False),
-        marks=pytest.mark.smoke,
-        id="Envelope3D",
+        marks=(pytest.mark.smoke, pytest.mark.envelope3d),
+        id="Compensation with Envelope3D",
     ),
     pytest.param(
         ("generic_tracewin", None, None),
         marks=(pytest.mark.smoke, pytest.mark.slow, pytest.mark.tracewin),
-        id="TraceWin",
+        id="Compensation with TraceWin",
     ),
 ]
 
@@ -78,7 +78,7 @@ def config(
             if v is not None
         },
     }
-    my_config = lightwin.config_manager.process_config(
+    my_config = process_config(
         example_config,
         config_keys,
         warn_mismatch=True,

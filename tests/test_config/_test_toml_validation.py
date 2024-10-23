@@ -4,6 +4,12 @@ from typing import Any
 
 import pytest
 
+from lightwin.config.config_manager import (
+    dict_to_toml,
+    load_toml,
+    process_config,
+)
+from lightwin.config.full_specs import SimplestConfSpec
 from lightwin.constants import (
     example_config,
     example_dat,
@@ -11,12 +17,6 @@ from lightwin.constants import (
     example_ini,
     example_machine_config,
 )
-from lightwin.new_config.config_manager import (
-    dict_to_toml,
-    load_toml,
-    process_config,
-)
-from lightwin.new_config.full_specs import SimplestConfSpec
 
 CONFIG_KEYS = {
     "beam": "beam",

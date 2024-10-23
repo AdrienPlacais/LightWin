@@ -16,6 +16,7 @@ Subpackages
    lightwin.core.beam_parameters
    lightwin.core.commands
    lightwin.core.elements
+   lightwin.core.em_fields
    lightwin.core.list_of_elements
    lightwin.core.transfer_matrix
 
@@ -26,7 +27,6 @@ Submodules
    :maxdepth: 5
 
    lightwin.core.beam_specs
-   lightwin.core.electric_field
    lightwin.core.files_specs
    lightwin.core.instruction
    lightwin.core.instructions_factory

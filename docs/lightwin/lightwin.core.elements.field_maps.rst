@@ -18,4 +18,7 @@ Submodules
    lightwin.core.elements.field_maps.field_map
    lightwin.core.elements.field_maps.field_map_100
    lightwin.core.elements.field_maps.field_map_1100
+   lightwin.core.elements.field_maps.field_map_70
    lightwin.core.elements.field_maps.field_map_7700
+   lightwin.core.elements.field_maps.superposed_field_map
+   lightwin.core.elements.field_maps.util
