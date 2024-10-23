@@ -26,10 +26,6 @@ def give_name_to_elements(
             )
             civil_register[name] = nth
             continue
-            # assert name not in civil_register, (
-            #     f"You are trying to give to {elt = } the personalized name "
-            #     f"{name}, which is already taken."
-            # )
 
         nth = civil_register.get(name := elt.base_name, 0) + 1
         elt._default_name = f"{name}{nth}"
