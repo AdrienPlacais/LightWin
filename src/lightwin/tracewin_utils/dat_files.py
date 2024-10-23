@@ -28,9 +28,9 @@ def dat_filecontent_from_file(
 
     Parameters
     ----------
-    dat_path : Path
+    dat_path : pathlib.Path
         Filepath to the ``.dat`` file, as understood by TraceWin.
-    keep : {"none", "comments", "all"}, optional
+    keep : Literal["none", "comments", "all"], optional
         To determine which un-necessary lines in the dat file should be kept.
         The default is `'none'`.
     filter_func : Callable
@@ -62,13 +62,11 @@ def _filter_lines(
 ) -> list[DatLine]:
     """Remove some :class:`.DatLine` from ``dat_filecontent``.
 
-    [TODO:description]
-
     Parameters
     ----------
     dat_filecontent : Sequence[DatLine]
         Content loaded from the ``.dat`` file.
-    keep : {"none", "comments", "all"}, optional
+    keep : Literal["none", "comments", "all"], optional
         To determine which un-necessary lines in the dat file should be kept.
         The default is `'none'`.
     filter_func : Callable[[DatLine], bool], optional

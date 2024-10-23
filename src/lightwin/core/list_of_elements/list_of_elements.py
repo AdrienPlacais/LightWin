@@ -2,10 +2,10 @@
 
 Two objects can have a :class:`ListOfElements` as attribute:
 
-    * :class:`.Accelerator`: holds all the :class:`.Element` of the linac.
-    * :class:`.Fault`: it holds only a fraction of the linac
-      :class:`.Element`. Beam will be propagated a huge number of times
-      during optimisation process, so we recompute only the strict necessary.
+* :class:`.Accelerator`: holds all the :class:`.Element` of the linac.
+* :class:`.Fault`: it holds only a fraction of the linac
+  :class:`.Element`. Beam will be propagated a huge number of times during
+  optimisation process, so we recompute only the strict necessary.
 
 .. todo::
     Delete ``dat_filecontent``, which does the same thing as ``elts_n_cmds`` but
@@ -86,15 +86,16 @@ class ListOfElements(list):
         first_init : bool, optional
             To indicate if this a full linac or only a portion (fit process).
             The default is True.
-        files : DatFileInfo
+        files : FilesInfo
             A dictionary to hold information on the source and output
             files/folders of the object.
-                - ``dat_file``: absolute path to the ``.dat`` file
-                - ``elts_n_cmds``: list of objects representing dat content
-                - ``accelerator_path``: where calculation results for each
-                :class:`.BeamCalculator` will be stored.
-                - ``dat_filecontent``: list of list of str, holding content of the
-                ``.dat``.
+
+            * ``dat_file``: absolute path to the ``.dat`` file
+            * ``elts_n_cmds``: list of objects representing dat content
+            * ``accelerator_path``: where calculation results for each
+              :class:`.BeamCalculator` will be stored.
+            * ``dat_filecontent``: list of list of str, holding content of the
+              ``.dat``.
 
         """
         self.input_particle = input_particle
@@ -172,8 +173,7 @@ class ListOfElements(list):
         remove_first: bool = False,
         **kwargs: bool | str | Element | None,
     ) -> Any:
-        """
-        Shorthand to get attributes from this class or its attributes.
+        """Shorthand to get attributes from this class or its attributes.
 
         This method also looks into the first :class:`.Element` of self. If the
         desired ``key`` is in this :class:`.Element`, we recursively get ``key``

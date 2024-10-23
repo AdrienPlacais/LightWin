@@ -156,7 +156,7 @@ class InstructionsFactory:
 
         Parameters
         ----------
-        line : Datline
+        line : DatLine
             A single line of the ``.dat`` file.
         dat_idx : int, optional
             Line number of the line (starts at 0). If not provided, taken from
