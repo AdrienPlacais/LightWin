@@ -5,6 +5,7 @@ from collections.abc import Iterable, Sequence
 from typing import override
 
 from lightwin.core.instruction import Instruction
+from lightwin.tracewin_utils.line import DatLine
 
 
 class Command(Instruction):
@@ -26,7 +27,9 @@ class Command(Instruction):
 
     """
 
-    def __init__(self, line: list[str], dat_idx: int, **kwargs) -> None:
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs
+    ) -> None:
         """Instantiate mandatory attributes."""
         super().__init__(line, dat_idx, **kwargs)
         self.influenced = slice(0, 1)

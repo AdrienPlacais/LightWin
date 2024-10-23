@@ -19,6 +19,8 @@ from lightwin.core.elements.diagnostic import Diagnostic
 from lightwin.core.elements.drift import Drift
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.core.elements.field_maps.field_map_70 import FieldMap70
+from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
 
@@ -114,10 +116,15 @@ class ElementEnvelope3DParametersFactory(
         DriftEnvelope3DParameters
 
         """
+        element_class = type(elt)
+        if isinstance(elt, (FieldMap70, FieldMap7700)):
+            logging.error(
+                f"{elt = } of type {element_class} transverse dynamics not "
+                "implemented yet."
+            )
         if isinstance(elt, FieldMap) and not elt.is_accelerating:
             return default
 
-        element_class = type(elt)
         constructor = PARAMETERS_3D.get(element_class, None)
         if constructor is not None:
             return constructor

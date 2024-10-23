@@ -8,7 +8,7 @@ Two objects can have a :class:`ListOfElements` as attribute:
       during optimisation process, so we recompute only the strict necessary.
 
 .. todo::
-    Delete ``dat_content``, which does the same thing as ``elts_n_cmds`` but
+    Delete ``dat_filecontent``, which does the same thing as ``elts_n_cmds`` but
     less good
 
 """
@@ -16,7 +16,7 @@ Two objects can have a :class:`ListOfElements` as attribute:
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Literal, Self, overload
+from typing import Any, Literal, Self, TypedDict, overload
 
 import numpy as np
 
@@ -26,6 +26,7 @@ from lightwin.core.beam_parameters.initial_beam_parameters import (
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import REFERENCE_T
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.core.instruction import Instruction
 from lightwin.core.list_of_elements.helper import (
     first,
     group_elements_by_lattice,
@@ -35,12 +36,22 @@ from lightwin.core.list_of_elements.helper import (
 from lightwin.core.particle import ParticleInitialState
 from lightwin.tracewin_utils.dat_files import export_dat_filecontent
 from lightwin.tracewin_utils.interface import list_of_elements_to_command
+from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter, recursive_items
 from lightwin.util.pickling import MyPickler
 
 element_id = int | str
 elements_id = Sequence[int] | Sequence[str]
 nested_elements_id = Sequence[Sequence[int]] | Sequence[Sequence[str]]
+
+
+class FilesInfo(TypedDict):
+    """Keep information on the loaded dat file."""
+
+    dat_file: Path
+    dat_filecontent: list[DatLine]
+    accelerator_path: Path
+    elts_n_cmds: list[Instruction]
 
 
 class ListOfElements(list):
@@ -52,7 +63,7 @@ class ListOfElements(list):
         input_particle: ParticleInitialState,
         input_beam: InitialBeamParameters,
         tm_cumul_in: np.ndarray,
-        files: dict[str, Path | str | list[list[str]]],
+        files: FilesInfo,
         first_init: bool = True,
     ) -> None:
         """Create the object, encompassing all the linac or only a fraction.
@@ -75,16 +86,15 @@ class ListOfElements(list):
         first_init : bool, optional
             To indicate if this a full linac or only a portion (fit process).
             The default is True.
-        files : dict[str, str | list[list[str]] | pathlib.Path]
+        files : DatFileInfo
             A dictionary to hold information on the source and output
-            files/folders of the object. The keys are:
-
-            * ``dat_file``: absolute path to the ``.dat`` file
-            * ``elts_n_cmds``: list of objects representing dat content
-            * ``accelerator_path``: where calculation results for each
-              :class:`.BeamCalculator` will be stored.
-            * ``dat_content``: list of list of str, holding content of the
-              ``.dat``.
+            files/folders of the object.
+                - ``dat_file``: absolute path to the ``.dat`` file
+                - ``elts_n_cmds``: list of objects representing dat content
+                - ``accelerator_path``: where calculation results for each
+                :class:`.BeamCalculator` will be stored.
+                - ``dat_filecontent``: list of list of str, holding content of the
+                ``.dat``.
 
         """
         self.input_particle = input_particle
@@ -295,12 +305,12 @@ class ListOfElements(list):
         if which_phase in ("as_in_settings", "as_in_original_dat"):
             raise NotImplementedError
         self.files["dat_file"] = dat_file
-        dat_content = [
+        dat_filecontent = [
             instruction.to_line(which_phase=which_phase, inplace=False)
             for instruction in self.files["elts_n_cmds"]
         ]
         if save:
-            export_dat_filecontent(dat_content, dat_file)
+            export_dat_filecontent(dat_filecontent, dat_file)
 
     @overload
     def take(self, ids: int, id_nature: Literal["cavity"]) -> FieldMap: ...
@@ -389,7 +399,7 @@ class ListOfElements(list):
         return list_of_elements  # type: ignore
 
     @property
-    def files_info(self) -> dict:
+    def files_info(self) -> FilesInfo:
         """Return the ``files`` attribute.
 
         .. deprecated::

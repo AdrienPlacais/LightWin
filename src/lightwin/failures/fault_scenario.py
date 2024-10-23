@@ -143,7 +143,7 @@ class FaultScenario(list):
 
         """
         faults = []
-        files_from_full_list_of_elements = self.fix_acc.elts.files
+        files_from_full_list_of_elements = self.fix_acc.elts.files_info
 
         for faulty_cavities, compensating_cavities in zip(
             *cavities, strict=True
@@ -245,7 +245,7 @@ class FaultScenario(list):
                 fault, optimisation_algorithm, ref_simulation_output
             )
             success.append(args[0])
-            success.append(args[1])
+            info.append(args[1])
 
         self.fix_acc.name = (
             f"Fixed ({str(success.count(True))}" + f" of {str(len(success))})"
@@ -258,6 +258,11 @@ class FaultScenario(list):
 
         self._evaluate_fit_quality(save=True)
 
+        self.fix_acc.elts.store_settings_in_dat(
+            self.fix_acc.elts.files_info["dat_file"],
+            which_phase=self._reference_phase,
+            save=True,
+        )
         end_time = time.monotonic()
         delta_t = datetime.timedelta(seconds=end_time - start_time)
         logging.info(f"Elapsed time in optimisation: {delta_t}")
@@ -293,7 +298,7 @@ class FaultScenario(list):
 
         fault.update_elements_status(optimisation="finished", success=True)
         fault.elts.store_settings_in_dat(
-            fault.elts.files["dat_file"],
+            fault.elts.files_info["dat_file"],
             which_phase=self._reference_phase,
             save=True,
         )

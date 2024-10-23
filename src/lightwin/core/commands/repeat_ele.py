@@ -8,6 +8,7 @@ from lightwin.core.commands.command import Command
 from lightwin.core.commands.lattice import Lattice, LatticeEnd
 from lightwin.core.commands.set_adv import SetAdv
 from lightwin.core.instruction import Comment, Instruction
+from lightwin.tracewin_utils.line import DatLine
 
 
 class RepeatEle(Command):
@@ -16,15 +17,17 @@ class RepeatEle(Command):
     is_implemented = True
     n_attributes = 2
 
-    def __init__(self, line: list[str], dat_idx: int, **kwargs: str) -> None:
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
+    ) -> None:
         """Instantiate object."""
         logging.warning(
             "REPEAT_ELE under implementation. Behavior not tested w.r.t "
             "lattice number."
         )
         super().__init__(line, dat_idx)
-        self.k_times = int(line[1])
-        self.n_following = int(line[2])
+        self.k_times = int(line.splitted[1])
+        self.n_following = int(line.splitted[2])
 
     def set_influenced_elements(
         self, instructions: Sequence[Instruction], **kwargs: float

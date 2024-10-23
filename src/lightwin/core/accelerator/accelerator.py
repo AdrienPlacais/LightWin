@@ -199,7 +199,7 @@ class Accelerator:
         for cavity, settings in set_of_cavity_settings.items():
             cavity.cavity_settings = settings
 
-        original_dat_file = self.elts.files["dat_file"]
+        original_dat_file = self.elts.files_info["dat_file"]
         assert isinstance(original_dat_file, Path)
         filename = original_dat_file.name
         dat_file = (

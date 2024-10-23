@@ -12,20 +12,21 @@ from abc import ABC
 from collections.abc import Collection, MutableSequence
 from typing import Self
 
+from lightwin.tracewin_utils.line import DatLine
+
 
 class Instruction(ABC):
     """An object corresponding to a line in a ``.dat`` file."""
 
-    line: list[str]
+    line: DatLine
     idx: dict[str, int]
     n_attributes: int | range | Collection
     is_implemented: bool
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
-        name: str | None = None,
+        line: DatLine,
+        dat_idx: int | None = None,
         **kwargs,
     ) -> None:
         """Instantiate corresponding line and line number in ``.dat`` file.
@@ -38,27 +39,22 @@ class Instruction(ABC):
             Position in the ``.dat``. Note that this index will vary if some
             instructions (empty lines, comments in particular) are removed from
             the dat content.
-        name : str | None
-            Name of the instruction.
 
         """
         self.line = line
+        if dat_idx is None:
+            dat_idx = line.idx
         self._assert_correct_number_of_args(dat_idx)
         self.idx = {"dat_idx": dat_idx}
 
-        self._personalized_name = name
+        self._personalized_name = line.personalized_name
         self._default_name: str
 
     def _assert_correct_number_of_args(self, idx: int) -> None:
         """Check if given number of arguments is ok."""
-        n_args = len(self.line) - 1
         if not self.is_implemented:
             return
-        assert hasattr(self, "n_attributes"), (
-            "You must define the number of allowed attributes for every "
-            f"implemented instruction. Full instruction (line #{idx}, detected"
-            f"type {self.__class__.__name__}):\n{self.line}"
-        )
+        n_args = self.line.n_args
         if isinstance(self.n_attributes, int):
             assert n_args == self.n_attributes, (
                 f"At line #{idx}, the number of arguments is {n_args} "
@@ -82,15 +78,6 @@ class Instruction(ABC):
             f"{self.__class__.__name__:15s} {self.name}"
         return f"{self.__class__.__name__:15s} {self.line}"
 
-    def reinsert_optional_commands_in_line(self) -> None:
-        """Reput name and weight."""
-        shift = 0
-        if self._personalized_name:
-            self.line.insert(0, f"{self._personalized_name}:")
-            shift += 1
-        if (weight := getattr(self, "weight", 1.0)) != 1.0:
-            self.line.insert(1 + shift, f"({weight})")
-
     @property
     def name(self) -> str:
         """Give personal. name of instruction if exists, default otherwise."""
@@ -100,45 +87,35 @@ class Instruction(ABC):
             return self._default_name
         return str(self.line)
 
-    def to_line(
-        self, *args, inplace: bool = False, with_name: bool = False, **kwargs
-    ) -> list[str]:
-        """Convert the object back into a ``.dat`` line.
-
-        Parameters
-        ----------
-        inplace : bool, optional
-            To edit the ``self.line`` attribute. The default is False.
-        with_name : bool, optional
-            To add the name of the element to the line. The default is False.
-
-        Returns
-        -------
-        list[str]
-            A line of the ``.dat`` file. The arguments are each an element in
-            the list.
-
-        Raises
-        ------
-        NotImplementedError
-            ``with_name = True & inplace = True`` currently raises an error as
-            I do not want the name of the element to be inserted several times.
-
-        """
-        line = self.line
-        if not inplace:
-            line = [x for x in self.line]
-            if with_name:
-                raise NotImplementedError
-                assert not inplace, (
-                    "I am afraid that {with_name = } associated with {inplace = } "
-                    "may lead to inserting the name of the element several times."
-                )
-        return line
+    def to_line(self, *args, **kwargs) -> list[str]:
+        """Convert the object back into a ``.dat`` line."""
+        return self.line.splitted_full
 
     def increment_dat_position(self, increment: int = 1) -> None:
         """Increment dat index for when another instruction is inserted."""
         self.idx["dat_idx"] += increment
+        self.line.idx += 1
+
+    def insert_dat_line(
+        self,
+        *args,
+        dat_filecontent: list[DatLine],
+        previously_inserted: int = 0,
+        **kwargs,
+    ) -> None:
+        """Insert the current object in the ``dat_filecontent`` object.
+
+        Parameters
+        ----------
+        dat_filecontent : list[Collection[str]]
+            The list of instructions, in the form of a list of lines.
+        previously_inserted : int, optional
+            Number of :class:`.Instruction` that were already inserted in the
+            given ``dat_filecontent``.
+
+        """
+        index = self.line.idx + previously_inserted
+        dat_filecontent.insert(index, self.line)
 
     def insert_line(
         self,
@@ -167,6 +144,20 @@ class Instruction(ABC):
         for instruction in instructions[self.idx["dat_idx"] + 1 :]:
             instruction.increment_dat_position()
 
+    @classmethod
+    def from_args(cls, dat_idx: int, *args, **kwargs) -> Self:
+        """Instantiate instruction from its arguments directly."""
+        line = cls._args_to_line(*args, **kwargs)
+        dat_line = DatLine(line, dat_idx)
+        return cls(dat_line)
+
+    @classmethod
+    def _args_to_line(cls, *args, **kwargs) -> str:
+        """Create the line of the dat file from arguments of the command."""
+        raise NotImplementedError(
+            "Must be overriden for specific instruction."
+        )
+
 
 class Dummy(Instruction):
     """An object corresponding to a non-implemented element or command."""
@@ -175,15 +166,15 @@ class Dummy(Instruction):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
+        line: DatLine,
         warning: bool = False,
+        **kwargs,
     ) -> None:
         """Create the dummy object, raise a warning if necessary.
 
         Parameters
         ----------
-        line : list[str]
+        line : DatLine
             Arguments of the line in the ``.dat`` file.
         dat_idx : int
             Line number in the ``.dat`` file.
@@ -192,7 +183,7 @@ class Dummy(Instruction):
             is False.
 
         """
-        super().__init__(line, dat_idx)
+        super().__init__(line, **kwargs)
         if warning:
             logging.warning(
                 "A dummy element was added as the corresponding element or "
@@ -200,15 +191,17 @@ class Dummy(Instruction):
                 "TraceWin, this may be a problem. In particular if the missing"
                 " element has a length that is non-zero. You can disable this "
                 "warning in tracewin_utils.dat_files._create"
-                f"_element_n_command_objects. Line with a problem (#{dat_idx})"
-                f":\n{line}"
+                f"_element_n_command_objects. Line with a problem:\n"
+                f"{self.line}"
             )
 
 
 class Comment(Dummy):
     """An object corresponding to a comment."""
 
-    def __init__(self, line: list[str], dat_idx: int) -> None:
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs
+    ) -> None:
         """Create the object, but never raise a warning.
 
         Parameters
@@ -219,7 +212,7 @@ class Comment(Dummy):
             Line number in the ``.dat`` file.
 
         """
-        super().__init__(line, dat_idx, warning=False)
+        super().__init__(line, warning=False, **kwargs)
 
 
 class LineJump(Comment):

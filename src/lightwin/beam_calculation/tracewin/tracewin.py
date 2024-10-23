@@ -41,6 +41,7 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.tracewin_utils.interface import (
     beam_calculator_to_command,
+    failed_cavities_to_command,
     set_of_cavity_settings_to_command,
 )
 
@@ -175,8 +176,7 @@ class TraceWin(BeamCalculator):
         arguments to modify some cavities tuning.
 
         """
-        accelerator_path = elts.files["accelerator_path"]
-        assert isinstance(accelerator_path, Path)
+        accelerator_path = elts.files_info["accelerator_path"]
         command, path_cal = self._tracewin_base_command(
             accelerator_path, **kwargs
         )
@@ -188,6 +188,12 @@ class TraceWin(BeamCalculator):
             set_of_cavity_settings_to_command(
                 set_of_cavity_settings,
                 phi_bunch_first_element=elts.input_particle.phi_abs,
+                idx_first_element=elts[0].idx["elt_idx"],
+            )
+        )
+        command.extend(
+            failed_cavities_to_command(
+                elts.l_cav,
                 idx_first_element=elts[0].idx["elt_idx"],
             )
         )
@@ -320,9 +326,16 @@ class TraceWin(BeamCalculator):
         """
         optimized_cavity_settings.re_set_elements_index_to_absolute_value()
 
-        full_elts.store_settings_in_dat(
-            full_elts.files["dat_file"], which_phase=self.reference_phase
-        )
+        # patch: to have the new settings saved in the .dat, we incorporate
+        # new cavity settings now
+        # for cavity in full_elts.l_cav:
+        #     if cavity not in optimized_cavity_settings:
+        #         continue
+        #     cavity.cavity_settings = optimized_cavity_settings[cavity]
+
+        # full_elts.store_settings_in_dat(
+        #     full_elts.files_info["dat_file"], which_phase=self.reference_phase
+        # )
 
         simulation_output = self.run_with_this(
             optimized_cavity_settings, full_elts, **specific_kwargs

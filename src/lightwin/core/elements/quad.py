@@ -1,6 +1,7 @@
 """This module holds :class:`Quad`."""
 
 from lightwin.core.elements.element import Element
+from lightwin.tracewin_utils.line import DatLine
 
 
 class Quad(Element):
@@ -11,12 +12,10 @@ class Quad(Element):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
-        name: str | None = None,
+        line: DatLine,
+        dat_idx: int | None = None,
         **kwargs: str,
     ) -> None:
         """Check number of attributes, set gradient."""
-        super().__init__(line, dat_idx, name)
-        self.grad = float(line[2])
-        self.reinsert_optional_commands_in_line()
+        super().__init__(line, dat_idx, **kwargs)
+        self.grad = float(line.splitted[2])

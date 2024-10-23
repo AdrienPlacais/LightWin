@@ -5,7 +5,11 @@ from collections.abc import Sequence
 
 import numpy as np
 
-from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.elements.field_maps.cavity_settings import (
+    REFERENCE_T,
+    CavitySettings,
+)
+from lightwin.tracewin_utils.line import DatLine
 
 
 class CavitySettingsFactory:
@@ -17,13 +21,15 @@ class CavitySettingsFactory:
 
     def from_line_in_dat_file(
         self,
-        line: list[str],
+        line: DatLine,
         set_sync_phase: bool = False,
     ) -> CavitySettings:
         """Create the cavity settings as read in the ``.dat`` file."""
-        k_e = float(line[6])
-        phi_0 = math.radians(float(line[3]))
-        reference = self._reference(bool(int(line[10])), set_sync_phase)
+        k_e = float(line.splitted[6])
+        phi_0 = math.radians(float(line.splitted[3]))
+        reference = self._reference(
+            bool(int(line.splitted[10])), set_sync_phase
+        )
         status = "nominal"
 
         cavity_settings = CavitySettings(
@@ -75,7 +81,7 @@ class CavitySettingsFactory:
         self,
         absolute_phase_flag: bool,
         set_sync_phase: bool,
-    ) -> str:
+    ) -> REFERENCE_T:
         """Determine which phase will be the reference one."""
         if set_sync_phase:
             return "phi_s"

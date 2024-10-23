@@ -2,6 +2,7 @@
 
 import logging
 import math
+from collections.abc import Sequence
 from pathlib import Path
 
 import numpy as np
@@ -217,6 +218,24 @@ def set_of_cavity_settings_to_command(
     return [x for x in flatten(command)]
 
 
+def failed_cavities_to_command(
+    cavities: Sequence[FieldMap],
+    idx_first_element: int,
+) -> list[str]:
+    """Return the ``ele`` commands to desactivate some cavities."""
+    command = [
+        _cavity_settings_to_command(
+            field_map,
+            field_map.cavity_settings,
+            delta_phi_bunch=0.0,
+            delta_index=idx_first_element,
+        )
+        for field_map in cavities
+        if field_map.status == "failed"
+    ]
+    return [x for x in flatten(command)]
+
+
 def _cavity_settings_to_command(
     field_map: FieldMap,
     cavity_settings: CavitySettings,
@@ -260,7 +279,7 @@ def _cavity_settings_to_command(
     elt_idx = field_map.idx["elt_idx"]
     alter_kwargs = {"k_e": cavity_settings.k_e, "phi_0": phi_0}
     tracewin_command = _alter_element(elt_idx - delta_index, alter_kwargs)
-    return tracewin_command
+    return list(tracewin_command)
 
 
 ARGS_POSITIONS = {

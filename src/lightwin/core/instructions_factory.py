@@ -40,6 +40,7 @@ from lightwin.core.list_of_elements.helper import (
 from lightwin.tracewin_utils.electromagnetic_fields import (
     load_electromagnetic_fields,
 )
+from lightwin.tracewin_utils.line import DatLine
 
 
 class InstructionsFactory:
@@ -110,7 +111,7 @@ class InstructionsFactory:
         self._field_maps_in_3d = field_maps_in_3d
         self._load_cython_field_maps = load_cython_field_maps
 
-    def run(self, dat_content: Collection[list[str]]) -> list[Instruction]:
+    def run(self, dat_filecontent: Collection[DatLine]) -> list[Instruction]:
         """Create all the elements and commands.
 
         .. todo::
@@ -118,13 +119,13 @@ class InstructionsFactory:
 
         Parameters
         ----------
-        dat_content : Collection[list[str]]
+        dat_filecontent : Collection[DatLine]
             List containing all the lines of ``dat_filepath``.
 
         """
         instructions = [
             self._call_proper_factory(line, dat_idx)
-            for dat_idx, line in enumerate(dat_content)
+            for dat_idx, line in enumerate(dat_filecontent)
         ]
         instructions = apply_commands(instructions, self._freq_bunch_mhz)
 
@@ -142,7 +143,10 @@ class InstructionsFactory:
         return instructions
 
     def _call_proper_factory(
-        self, line: list[str], dat_idx: int, **instruction_kw: str
+        self,
+        dat_line: DatLine,
+        dat_idx: int | None = None,
+        **instruction_kw: str,
     ) -> Instruction:
         """Create proper :class:`.Instruction`, or :class:`.Dummy`.
 
@@ -152,10 +156,11 @@ class InstructionsFactory:
 
         Parameters
         ----------
-        line : list[str]
+        line : Datline
             A single line of the ``.dat`` file.
-        dat_idx : int
-            Line number of the line (starts at 0).
+        dat_idx : int, optional
+            Line number of the line (starts at 0). If not provided, taken from
+            ``line``.
         command_fac : CommandFactory
             A factory to create :class:`.Command`.
         element_fac : ElementFactory
@@ -170,33 +175,20 @@ class InstructionsFactory:
             or :class:`.Comment`.
 
         """
-        if len(line) == 0:
-            return LineJump(line, dat_idx)
+        if not dat_line.instruction:
+            return LineJump(dat_line, dat_idx)
+        if dat_line.instruction == ";":
+            return Comment(dat_line, dat_idx)
+        if dat_line.instruction in IMPLEMENTED_COMMANDS:
+            return self._command_factory.run(
+                dat_line, dat_idx, **instruction_kw
+            )
+        if dat_line.instruction in implemented_elements:
+            return self.element_factory.run(
+                dat_line, dat_idx, **instruction_kw
+            )
 
-        for word in line:
-            if ";" in word:
-                return Comment(line, dat_idx)
-
-            word = word.upper()
-            if word in IMPLEMENTED_COMMANDS:
-                return self._command_factory.run(
-                    line, dat_idx, **instruction_kw
-                )
-            if word in implemented_elements:
-                return self.element_factory.run(
-                    line, dat_idx, **instruction_kw
-                )
-            if "DIAG" in word:
-                logging.critical(
-                    "A DIAG was detected but not in implemented_elements."
-                    "Maybe it has a weight and the parenthesis were not"
-                    " correctly detected?"
-                )
-                return self.element_factory.run(
-                    line, dat_idx, **instruction_kw
-                )
-
-        return Dummy(line, dat_idx, warning=True)
+        return Dummy(dat_line, dat_idx, warning=True)
 
     def _handle_lattice_and_section(self, elts: list[Element]) -> None:
         """Ensure that every element has proper lattice, section indexes."""

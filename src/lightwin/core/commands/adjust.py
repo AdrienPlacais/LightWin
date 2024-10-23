@@ -13,9 +13,12 @@ DIAGNOSTIC commands to perform a beauty pass.
 
 """
 
+from typing import override
+
 from lightwin.core.commands.command import Command
 from lightwin.core.elements.element import Element
 from lightwin.core.instruction import Instruction
+from lightwin.tracewin_utils.line import DatLine
 
 
 class Adjust(Command):
@@ -24,16 +27,40 @@ class Adjust(Command):
     is_implemented = False
     n_attributes = range(2, 8)
 
-    def __init__(self, line: list[str], dat_idx: int, **kwargs) -> None:
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs
+    ) -> None:
         """Instantiate the object."""
         super().__init__(line, dat_idx, **kwargs)
-        self.number = int(line[1])
-        self.vth_variable = int(line[2])
-        self.n_link = int(line[3]) if len(line) > 3 else 0
-        self.min = float(line[4]) if len(line) > 4 else None
-        self.max = float(line[5]) if len(line) > 5 else None
-        self.start_step = float(line[6]) if len(line) > 6 else None
-        self.k_n = float(line[7]) if len(line) > 7 else None
+        self.number = int(line.splitted[1])
+        self.vth_variable = int(line.splitted[2])
+        self.n_link = int(line.splitted[3]) if len(line.splitted) > 3 else 0
+        self.min = float(line.splitted[4]) if len(line.splitted) > 4 else None
+        self.max = float(line.splitted[5]) if len(line.splitted) > 5 else None
+        self.start_step = (
+            float(line.splitted[6]) if len(line.splitted) > 6 else None
+        )
+        self.k_n = float(line.splitted[7]) if len(line.splitted) > 7 else None
+
+    @classmethod
+    @override
+    def _args_to_line(
+        cls,
+        number: int,
+        vth_variable: int,
+        n_link: int = 0,
+        mini: float | None = None,
+        maxi: float | None = None,
+        start_step: float | None = None,
+        k_n: float | None = None,
+    ) -> str:
+        """Create the :class:`.DatLine` corresponding to ``self`` object."""
+        line = f"ADJUST {number} {vth_variable} {n_link}"
+        for optional_variable in (mini, maxi, start_step, k_n):
+            if optional_variable is None:
+                return line
+            line += " " + str(optional_variable)
+        return line
 
     def set_influenced_elements(
         self, instructions: list[Instruction], **kwargs: float

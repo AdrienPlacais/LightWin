@@ -8,6 +8,7 @@
 import logging
 
 from lightwin.core.elements.element import Element
+from lightwin.tracewin_utils.line import DatLine
 
 
 class Edge(Element):
@@ -19,17 +20,15 @@ class Edge(Element):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
-        name: str | None = None,
+        line: DatLine,
+        dat_idx: int | None = None,
         **kwargs: str,
     ) -> None:
         """Force an element with null-length, with no index."""
-        super().__init__(line, dat_idx, name)
+        super().__init__(line, dat_idx, **kwargs)
         self.length_m = 0.0
         logging.warning(
             "Documentation does not mention that EDGE element should be "
             "ignored by LATTICE. So why did I set increment_lattice_idx to "
             "False?"
         )
-        self.reinsert_optional_commands_in_line()

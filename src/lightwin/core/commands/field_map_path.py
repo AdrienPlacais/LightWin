@@ -6,6 +6,7 @@ from pathlib import Path
 from lightwin.core.commands.command import Command
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.instruction import Instruction
+from lightwin.tracewin_utils.line import DatLine
 
 
 class FieldMapPath(Command):
@@ -16,14 +17,15 @@ class FieldMapPath(Command):
 
     def __init__(
         self,
-        line: list[str],
-        dat_idx: int,
-        default_field_map_folder: Path,
+        line: DatLine,
+        dat_idx: int | None = None,
+        default_field_map_folder: Path | None = None,
         **kwargs: str,
     ) -> None:
         """Save the given path as attribute."""
-        super().__init__(line, dat_idx)
-        path = Path(line[1])
+        assert default_field_map_folder is not None
+        super().__init__(line, dat_idx, **kwargs)
+        path = Path(line.splitted[1])
 
         self.path = path
         if self.path.is_dir():

@@ -42,13 +42,17 @@ from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.instruction import Instruction
 from lightwin.core.instructions_factory import InstructionsFactory
-from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.core.list_of_elements.list_of_elements import (
+    FilesInfo,
+    ListOfElements,
+)
 from lightwin.core.particle import ParticleInitialState
 from lightwin.tracewin_utils.dat_files import (
+    dat_filecontent_from_file,
     dat_filecontent_from_smaller_list_of_elements,
     export_dat_filecontent,
 )
-from lightwin.tracewin_utils.load import load_dat_file
+from lightwin.tracewin_utils.line import DatLine
 
 
 class ListOfElementsFactory:
@@ -109,7 +113,7 @@ class ListOfElementsFactory:
         self,
         dat_file: Path,
         accelerator_path: Path,
-        instructions_to_insert: Collection[Instruction] = (),
+        instructions_to_insert: Collection[Instruction | DatLine] = (),
         **kwargs: Any,
     ) -> ListOfElements:
         """Create a new :class:`.ListOfElements`, encompassing a full linac.
@@ -141,20 +145,18 @@ class ListOfElementsFactory:
             f"Created with {dat_file = }"
         )
 
-        dat_filecontent = load_dat_file(
+        dat_filecontent = dat_filecontent_from_file(
             dat_file, keep="all", instructions_to_insert=instructions_to_insert
         )
-        files = {
-            "dat_file": dat_file,
-            "dat_content": dat_filecontent,
-            "accelerator_path": accelerator_path,
-            "elts_n_cmds": list[Instruction],
-        }
-
         instructions = self.instructions_factory.run(dat_filecontent)
         elts = [x for x in instructions if isinstance(x, Element)]
 
-        files["elts_n_cmds"] = instructions
+        files: FilesInfo = {
+            "dat_file": dat_file,
+            "dat_filecontent": dat_filecontent,
+            "accelerator_path": accelerator_path,
+            "elts_n_cmds": instructions,
+        }
 
         input_particle = self._whole_list_input_particle(**kwargs)
         input_beam = self.initial_beam_factory.factory_new(
@@ -188,9 +190,7 @@ class ListOfElementsFactory:
         self,
         elts: list[Element],
         simulation_output: SimulationOutput,
-        files_from_full_list_of_elements: dict[
-            str, Path | str | list[list[str]]
-        ],
+        files_from_full_list_of_elements: FilesInfo,
     ) -> ListOfElements:
         """Create a :class:`.ListOfElements` as subset of a previous one.
 
@@ -212,7 +212,7 @@ class ListOfElementsFactory:
             contain.
         simulation_output : SimulationOutput
             Holds the results of the pre-existing list of elements.
-        files_from_full_list_of_elements : dict
+        files_from_full_list_of_elements : FilesInfo
             The `files` attribute of :class:`.ListOfElements` from the full
             :class:`.ListOfElements`.
 
@@ -278,33 +278,31 @@ class ListOfElementsFactory:
     def _subset_files_dictionary(
         self,
         elts: list[Element],
-        files_from_full_list_of_elements: dict[str, Any],
+        files_from_full_list_of_elements: FilesInfo,
         folder: Path | str = Path("tmp"),
         dat_name: Path | str = Path("tmp.dat"),
-    ) -> dict[str, Path | list[list[str]]]:
+    ) -> FilesInfo:
         """Set the new ``.dat`` file containing only elements of ``elts``."""
         accelerator_path = files_from_full_list_of_elements["accelerator_path"]
         out = accelerator_path / folder
         out.mkdir(exist_ok=True)
         dat_file = out / dat_name
 
-        original_instructions = files_from_full_list_of_elements["elts_n_cmds"]
-        assert isinstance(original_instructions, list)
-        dat_content, instructions = (
+        dat_filecontent, instructions = (
             dat_filecontent_from_smaller_list_of_elements(
                 files_from_full_list_of_elements["elts_n_cmds"],
                 elts,
             )
         )
 
-        files = {
+        files: FilesInfo = {
             "dat_file": dat_file,
-            "dat_content": dat_content,
-            "elts_n_cmds": instructions,
+            "dat_filecontent": dat_filecontent,
             "accelerator_path": accelerator_path / folder,
+            "elts_n_cmds": instructions,
         }
 
-        export_dat_filecontent(dat_content, dat_file)
+        export_dat_filecontent(dat_filecontent, dat_file)
         return files
 
     def _delta_phi_for_tracewin(
@@ -395,5 +393,5 @@ class ListOfElementsFactory:
             instructions_to_insert=instructions_to_insert,
             **kwargs,
         )
-        export_dat_filecontent(new_elts.files["dat_content"], new_dat)
+        export_dat_filecontent(new_elts.files["dat_filecontent"], new_dat)
         return new_elts
