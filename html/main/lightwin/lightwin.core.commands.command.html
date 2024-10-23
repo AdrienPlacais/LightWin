@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="dummy_command module" href="lightwin.core.commands.dummy_command.html" />
-    <link rel="prev" title="adjust module" href="lightwin.core.commands.adjust.html" /> 
+    <link rel="prev" title="chopper module" href="lightwin.core.commands.chopper.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -65,6 +65,7 @@
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">beam_parameters package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="lightwin.core.commands.html">commands package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.adjust.html">adjust module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.chopper.html">chopper module</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">command module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.dummy_command.html">dummy_command module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.end.html">end module</a></li>
@@ -142,7 +143,7 @@
 <p>Define the base class from which all commands will inherit.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="lightwin.core.commands.command.Command">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lightwin.core.commands.command.Command" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lightwin.core.commands.command.Command" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction" title="lightwin.core.instruction.Instruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Instruction</span></code></a></p>
 <p>A generic Command class.</p>
 <dl class="field-list simple">
@@ -161,7 +162,7 @@ the <code class="docutils literal notranslate"><span class="pre">.dat</span></co
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.core.commands.command.Command.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lightwin.core.commands.command.Command.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lightwin.core.commands.command.Command.__init__" title="Link to this definition"></a></dt>
 <dd><p>Instantiate mandatory attributes.</p>
 </dd></dl>
 
@@ -224,7 +225,7 @@ provided, we set it to the type of <code class="docutils literal notranslate"><s
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="lightwin.core.commands.command.Command._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f58d889e450&gt;</span></em><a class="headerlink" href="#lightwin.core.commands.command.Command._abc_impl" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd0fcca4530&gt;</span></em><a class="headerlink" href="#lightwin.core.commands.command.Command._abc_impl" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -236,7 +237,7 @@ provided, we set it to the type of <code class="docutils literal notranslate"><s
           </div>
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lightwin.core.commands.adjust.html" class="btn btn-neutral float-left" title="adjust module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.core.commands.chopper.html" class="btn btn-neutral float-left" title="chopper module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="lightwin.core.commands.dummy_command.html" class="btn btn-neutral float-right" title="dummy_command module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

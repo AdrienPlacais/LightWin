@@ -227,6 +227,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.core.commands.html">commands package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.adjust.html">adjust module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.chopper.html">chopper module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.command.html">command module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.dummy_command.html">dummy_command module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.core.commands.end.html">end module</a></li>
@@ -253,6 +254,7 @@
 <li class="toctree-l5"><a class="reference internal" href="lightwin/lightwin.core.elements.field_maps.field_map.html">field_map module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin/lightwin.core.elements.field_maps.field_map_100.html">field_map_100 module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin/lightwin.core.elements.field_maps.field_map_1100.html">field_map_1100 module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin/lightwin.core.elements.field_maps.field_map_70.html">field_map_70 module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin/lightwin.core.elements.field_maps.field_map_7700.html">field_map_7700 module</a></li>
 </ul>
 </li>
@@ -363,6 +365,7 @@
 <li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.tracewin_utils.dat_files.html">dat_files module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.tracewin_utils.electromagnetic_fields.html">electromagnetic_fields module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.tracewin_utils.interface.html">interface module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.tracewin_utils.line.html">line module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.tracewin_utils.load.html">load module</a></li>
 </ul>
 </li>
@@ -614,11 +617,6 @@ consistency with rest of the code…</p>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.beam_parameters.initial_beam_parameters.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/beam_parameters/initial_beam_parameters.py:docstring of lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters.sigma, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
-<p>Implement SET_SYNC_PHASE</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.commands.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/commands/__init__.py:docstring of lightwin.core.commands, line 3.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
 <p>How should I save the min/max variables?? For now, use None.</p>
 </div>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.commands.adjust.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/commands/adjust.py:docstring of lightwin.core.commands.adjust, line 8.)</p>
@@ -633,11 +631,6 @@ consistency with rest of the code…</p>
 I would be better off with a run function instead of a class.</p>
 </div>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.commands.factory.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/commands/factory.py:docstring of lightwin.core.commands.factory.CommandFactory.__init__, line 3.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
-<p>Make this robust.</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.commands.factory.html#id3"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/commands/factory.py:docstring of lightwin.core.commands.factory.CommandFactory._personalized_name, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>As for now, the effect of this command will be overriden by the
@@ -666,11 +659,6 @@ initialized with -1 instead of None.</p>
 &#64;property</p>
 </div>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.elements.element.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/elements/element.py:docstring of lightwin.core.elements.element, line 3.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
-<p>Make this robust.</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.elements.factory.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/elements/factory.py:docstring of lightwin.core.elements.factory.ElementFactory._personalized_name, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Similar to synchronous phase, allow for V_cav to be “master” instead of
@@ -793,7 +781,7 @@ the <a class="reference internal" href="lightwin/lightwin.beam_calculation.beam_
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.list_of_elements.helper.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/list_of_elements/helper.py:docstring of lightwin.core.list_of_elements.helper, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
-<p>Delete <code class="docutils literal notranslate"><span class="pre">dat_content</span></code>, which does the same thing as <code class="docutils literal notranslate"><span class="pre">elts_n_cmds</span></code> but
+<p>Delete <code class="docutils literal notranslate"><span class="pre">dat_filecontent</span></code>, which does the same thing as <code class="docutils literal notranslate"><span class="pre">elts_n_cmds</span></code> but
 less good</p>
 </div>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.list_of_elements.list_of_elements.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/list_of_elements/list_of_elements.py:docstring of lightwin.core.list_of_elements.list_of_elements, line 10.)</p>
@@ -1062,7 +1050,7 @@ accelerates or not (ex when quadrupole defined by a field map)</p>
 <p class="admonition-title">Todo</p>
 <p>A Jupyter Notebook would be better to show with examples.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/get_method.html#id1"><em>original entry</em></a> is located in /tmp/tmp40d0tni0/9f350915cb8d9132b82ac93bfef8ddc069968d03/docs/manual/get_method.rst, line 6.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/get_method.html#id1"><em>original entry</em></a> is located in /tmp/tmpmfz8_js3/89ff86d04a349b60167e18a3d40353937786ec6c/docs/manual/get_method.rst, line 6.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <ul class="simple">
@@ -1070,33 +1058,33 @@ accelerates or not (ex when quadrupole defined by a field map)</p>
 <li><p>Specific Cython tests</p></li>
 </ul>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.cython.html#id1"><em>original entry</em></a> is located in /tmp/tmp40d0tni0/9f350915cb8d9132b82ac93bfef8ddc069968d03/docs/manual/installation.cython.rst, line 82.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/installation.cython.html#id1"><em>original entry</em></a> is located in /tmp/tmpmfz8_js3/89ff86d04a349b60167e18a3d40353937786ec6c/docs/manual/installation.cython.rst, line 82.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Consider providing more detailed instructions for setting the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.
 For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online for additional guidance.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.python.html#id1"><em>original entry</em></a> is located in /tmp/tmp40d0tni0/9f350915cb8d9132b82ac93bfef8ddc069968d03/docs/manual/installation.python.rst, line 43.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/installation.python.html#id1"><em>original entry</em></a> is located in /tmp/tmpmfz8_js3/89ff86d04a349b60167e18a3d40353937786ec6c/docs/manual/installation.python.rst, line 43.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Allow for an easy way to skip Cython compilation.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.troubleshooting.html#id2"><em>original entry</em></a> is located in /tmp/tmp40d0tni0/9f350915cb8d9132b82ac93bfef8ddc069968d03/docs/manual/installation.troubleshooting.rst, line 25.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/installation.troubleshooting.html#id2"><em>original entry</em></a> is located in /tmp/tmpmfz8_js3/89ff86d04a349b60167e18a3d40353937786ec6c/docs/manual/installation.troubleshooting.rst, line 25.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Consistency between font size of normal text and math text. Not aesthetic when I have text and units side to side.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id1"><em>original entry</em></a> is located in /tmp/tmp40d0tni0/9f350915cb8d9132b82ac93bfef8ddc069968d03/docs/manual/units.rst, line 8.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id1"><em>original entry</em></a> is located in /tmp/tmpmfz8_js3/89ff86d04a349b60167e18a3d40353937786ec6c/docs/manual/units.rst, line 8.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>General units: MeV etc</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id2"><em>original entry</em></a> is located in /tmp/tmp40d0tni0/9f350915cb8d9132b82ac93bfef8ddc069968d03/docs/manual/units.rst, line 11.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id2"><em>original entry</em></a> is located in /tmp/tmpmfz8_js3/89ff86d04a349b60167e18a3d40353937786ec6c/docs/manual/units.rst, line 11.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Ease re-usage of old simulations. Very easy to implement, just use the <code class="docutils literal notranslate"><span class="pre">recompute</span></code> flag, override the <code class="docutils literal notranslate"><span class="pre">run_with_this</span></code> method, and user must provide a <code class="docutils literal notranslate"><span class="pre">results</span></code> directory.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/usage.html#id1"><em>original entry</em></a> is located in /tmp/tmp40d0tni0/9f350915cb8d9132b82ac93bfef8ddc069968d03/docs/manual/usage.rst, line 11.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/usage.html#id1"><em>original entry</em></a> is located in /tmp/tmpmfz8_js3/89ff86d04a349b60167e18a3d40353937786ec6c/docs/manual/usage.rst, line 11.)</p>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>

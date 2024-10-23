@@ -13,6 +13,7 @@ Submodules
    :maxdepth: 5
 
    lightwin.core.commands.adjust
+   lightwin.core.commands.chopper
    lightwin.core.commands.command
    lightwin.core.commands.dummy_command
    lightwin.core.commands.end

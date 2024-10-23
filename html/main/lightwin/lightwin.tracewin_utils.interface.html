@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="load module" href="lightwin.tracewin_utils.load.html" />
+    <link rel="next" title="line module" href="lightwin.tracewin_utils.line.html" />
     <link rel="prev" title="electromagnetic_fields module" href="lightwin.tracewin_utils.electromagnetic_fields.html" /> 
 </head>
 
@@ -69,6 +69,7 @@
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.dat_files.html">dat_files module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html">electromagnetic_fields module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">interface module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html">line module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.load.html">load module</a></li>
 </ul>
 </li>
@@ -177,6 +178,12 @@ desired <code class="docutils literal notranslate"><span class="pre">set_of_cavi
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.interface.failed_cavities_to_command">
+<span class="sig-name descname"><span class="pre">failed_cavities_to_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cavities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.13)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap" title="lightwin.core.elements.field_maps.field_map.FieldMap"><span class="pre">FieldMap</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_first_element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface.failed_cavities_to_command" title="Link to this definition"></a></dt>
+<dd><p>Return the <code class="docutils literal notranslate"><span class="pre">ele</span></code> commands to desactivate some cavities.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="lightwin.tracewin_utils.interface._cavity_settings_to_command">
 <span class="sig-name descname"><span class="pre">_cavity_settings_to_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.FieldMap" title="lightwin.core.elements.field_maps.field_map.FieldMap"><span class="pre">FieldMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cavity_settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings" title="lightwin.core.elements.field_maps.cavity_settings.CavitySettings"><span class="pre">CavitySettings</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_phi_bunch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.interface._cavity_settings_to_command" title="Link to this definition"></a></dt>
 <dd><p>Convert <code class="docutils literal notranslate"><span class="pre">cavity_settings</span></code> into TraceWin CLI arguments.</p>
@@ -242,7 +249,7 @@ value is np.nan. Key must be in <a class="reference internal" href="#lightwin.tr
 
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="lightwin.tracewin_utils.electromagnetic_fields.html" class="btn btn-neutral float-left" title="electromagnetic_fields module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="lightwin.tracewin_utils.load.html" class="btn btn-neutral float-right" title="load module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lightwin.tracewin_utils.line.html" class="btn btn-neutral float-right" title="line module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

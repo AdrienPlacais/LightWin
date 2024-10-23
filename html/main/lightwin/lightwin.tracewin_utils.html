@@ -69,6 +69,7 @@
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.dat_files.html">dat_files module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html">electromagnetic_fields module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.interface.html">interface module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html">line module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.load.html">load module</a></li>
 </ul>
 </li>
@@ -118,6 +119,9 @@ TraceWin.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.tracewin_utils.dat_files.html">dat_files module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.dat_files.html#lightwin.tracewin_utils.dat_files.dat_filecontent_from_file"><code class="docutils literal notranslate"><span class="pre">dat_filecontent_from_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.dat_files.html#lightwin.tracewin_utils.dat_files._filter_lines"><code class="docutils literal notranslate"><span class="pre">_filter_lines()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.dat_files.html#lightwin.tracewin_utils.dat_files._insert_instructions"><code class="docutils literal notranslate"><span class="pre">_insert_instructions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.dat_files.html#lightwin.tracewin_utils.dat_files.dat_filecontent_from_smaller_list_of_elements"><code class="docutils literal notranslate"><span class="pre">dat_filecontent_from_smaller_list_of_elements()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.dat_files.html#lightwin.tracewin_utils.dat_files._is_needed_element"><code class="docutils literal notranslate"><span class="pre">_is_needed_element()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.dat_files.html#lightwin.tracewin_utils.dat_files._is_useful_command"><code class="docutils literal notranslate"><span class="pre">_is_useful_command()</span></code></a></li>
@@ -149,10 +153,34 @@ TraceWin.</p>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.interface.html#lightwin.tracewin_utils.interface.beam_parameters_to_command"><code class="docutils literal notranslate"><span class="pre">beam_parameters_to_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.interface.html#lightwin.tracewin_utils.interface.particle_initial_state_to_command"><code class="docutils literal notranslate"><span class="pre">particle_initial_state_to_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.interface.html#lightwin.tracewin_utils.interface.set_of_cavity_settings_to_command"><code class="docutils literal notranslate"><span class="pre">set_of_cavity_settings_to_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.interface.html#lightwin.tracewin_utils.interface.failed_cavities_to_command"><code class="docutils literal notranslate"><span class="pre">failed_cavities_to_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.interface.html#lightwin.tracewin_utils.interface._cavity_settings_to_command"><code class="docutils literal notranslate"><span class="pre">_cavity_settings_to_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.interface.html#lightwin.tracewin_utils.interface.ARGS_POSITIONS"><code class="docutils literal notranslate"><span class="pre">ARGS_POSITIONS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.interface.html#lightwin.tracewin_utils.interface._alter_element"><code class="docutils literal notranslate"><span class="pre">_alter_element()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.interface.html#lightwin.tracewin_utils.interface._proper_type"><code class="docutils literal notranslate"><span class="pre">_proper_type()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.tracewin_utils.line.html">line module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine"><code class="docutils literal notranslate"><span class="pre">DatLine</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine._original_line"><code class="docutils literal notranslate"><span class="pre">DatLine._original_line</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.idx"><code class="docutils literal notranslate"><span class="pre">DatLine.idx</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.personalized_name"><code class="docutils literal notranslate"><span class="pre">DatLine.personalized_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.weight"><code class="docutils literal notranslate"><span class="pre">DatLine.weight</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.splitted"><code class="docutils literal notranslate"><span class="pre">DatLine.splitted</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.__init__"><code class="docutils literal notranslate"><span class="pre">DatLine.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.__str__"><code class="docutils literal notranslate"><span class="pre">DatLine.__str__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine._parse_line"><code class="docutils literal notranslate"><span class="pre">DatLine._parse_line()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.instruction"><code class="docutils literal notranslate"><span class="pre">DatLine.instruction</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.line"><code class="docutils literal notranslate"><span class="pre">DatLine.line</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.splitted_full"><code class="docutils literal notranslate"><span class="pre">DatLine.splitted_full</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.n_args"><code class="docutils literal notranslate"><span class="pre">DatLine.n_args</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.change_argument"><code class="docutils literal notranslate"><span class="pre">DatLine.change_argument()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line._split_named_elements"><code class="docutils literal notranslate"><span class="pre">_split_named_elements()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line._split_weighted_elements"><code class="docutils literal notranslate"><span class="pre">_split_weighted_elements()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.slice_dat_line"><code class="docutils literal notranslate"><span class="pre">slice_dat_line()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line._is_a_path_instruction"><code class="docutils literal notranslate"><span class="pre">_is_a_path_instruction()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.tracewin_utils.load.html">load module</a><ul>
