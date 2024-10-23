@@ -1,20 +1,69 @@
-# Minimal makefile for Sphinx documentation
-#
+# Makefile for Sphinx documentation
 
-# You can set these variables from the command line, and also
-# from the environment for the first two.
 SPHINXOPTS    ?=
+# Builders
 SPHINXBUILD   ?= sphinx-build
+SPHINXMULTI   ?= sphinx-multiversion
+SPHINXAPIDOC  ?= sphinx-apidoc
+# Dirs
 SOURCEDIR     = .
 BUILDDIR      = ../../_tmp_LightWin-docs
+SRC_DIR       = ../src
+EXCLUDE_DIR   = ../src/lightwin/experimental/*
+APIDOC_DIR    = lightwin
+CONFIG_ENTRIES_DIR = manual/configuration_entries
+MULTIVERSION_OUTPUT = ../../LightWin-docs/html
 
-# Put it first so that "make" without argument is like "make help".
+GENERATE_CSV  = scripts/generate_config_csv.py
+
+.PHONY: help clean apidoc generate_csv html multiversion
+
+# Default target: help
+.DEFAULT_GOAL := help
+
 help:
-	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@echo "Usage: make [TARGET]"
+	@echo ""
+	@echo "Available targets:"
+	@echo "  help            Show this help message"
+	@echo "  clean           Clean build artifacts"
+	@echo "  apidoc          Generate API documentation"
+	@echo "  generate_csv    Generate CSV configuration files"
+	@echo "  html            Build unversioned HTML documentation"
+	@echo "  multiversion    Build versioned documentation using sphinx-multiversion"
 
-.PHONY: help Makefile
+# Clean build artifacts
+clean:
+	@echo "Cleaning build artifacts..."
+	@rm -rf "$(BUILDDIR)"
+	@if [ -d "$(APIDOC_DIR)" ]; then rm -rf "$(APIDOC_DIR)"/*; fi
+	@if [ -d "$(CONFIG_ENTRIES_DIR)" ]; then rm -rf "$(CONFIG_ENTRIES_DIR)"/*; fi
+	@if [ -d "$(MULTIVERSION_OUTPUT)" ]; then \
+	  find "$(MULTIVERSION_OUTPUT)" -mindepth 1 ! -name 'index.html' -exec rm -rf {} +; \
+	fi
 
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-%: Makefile
-	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+# Generate API documentation using sphinx-apidoc
+apidoc:
+	@echo "Generating API documentation..."
+	@$(SPHINXAPIDOC) -o "$(APIDOC_DIR)" -d 5 -f -e -M "$(SRC_DIR)" "$(EXCLUDE_DIR)"
+	@cd "$(APIDOC_DIR)" && perl -i -pe 's/^\S*\.(\S*) (package|module)/$$1 $$2/' *.rst
+
+# Generate CSV for configuration documentation
+generate_csv:
+	@echo "Generating CSV configuration files..."
+	@python "$(GENERATE_CSV)"
+
+# Build unversioned HTML documentation
+html:
+	@echo "Building unversioned HTML documentation..."
+	@$(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)/html" $(SPHINXOPTS) $(O)
+
+# Build versioned documentation using sphinx-multiversion
+multiversion:
+	@echo "Building versioned documentation..."
+	@$(SPHINXMULTI) "$(SOURCEDIR)" "$(MULTIVERSION_OUTPUT)"
+
+# Catch-all target: route all unknown targets to Sphinx using the new "make mode" option
+%:
+	@echo "Unknown target '$@'."
+	@$(MAKE) help
