@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Creation of `DatLine` object, holding a line of the ``.dat`` file. Solves several bugs, e.g. with hyphens in personalized names.
 - Makefile for docs is up-to-date. Instructions in README.
 
+### Fixed
+
+- When several `Element` objects have the same `_personalized_name`, a fallback name and a warning is raised instead of raising an `AssertionError`.
+
 ## [0.8.0b0] 2024-10-22
 
 ### Changed

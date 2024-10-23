@@ -15,12 +15,21 @@ def give_name_to_elements(
     elements_with_a_default_name = []
     for elt in elts:
         if name := elt._personalized_name:
-            assert name not in civil_register, (
-                f"You are trying to give to {elt = } the personalized name "
-                f"{name}, which is already taken."
+            if name not in civil_register:
+                civil_register[name] = 1
+                continue
+            nth = civil_register[name] + 1
+            elt._personalized_name = f"{name}_{nth}"
+            logging.warning(
+                f"Duplicate personalized name found: {name}. Renaming to "
+                f"{elt._personalized_name}."
             )
-            civil_register[name] = 1
+            civil_register[name] = nth
             continue
+            # assert name not in civil_register, (
+            #     f"You are trying to give to {elt = } the personalized name "
+            #     f"{name}, which is already taken."
+            # )
 
         nth = civil_register.get(name := elt.base_name, 0) + 1
         elt._default_name = f"{name}{nth}"
