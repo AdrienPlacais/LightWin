@@ -2,34 +2,29 @@
 
 import functools
 from collections.abc import Collection
+from typing import Self
 
 from lightwin.core.em_fields.field import Field
-from lightwin.core.em_fields.types import AnyDimFloat, FieldFuncTimedComponent
+from lightwin.core.em_fields.types import (
+    FieldFuncComplexTimedComponent,
+    PosAnyDim,
+)
 
 
 class SuperposedFields(tuple[Field, ...]):
     """Gather several electromagnetic fields."""
 
-    def __new__(cls, fields: Collection[Field]) -> None:
+    def __new__(cls, fields: Collection[Field]) -> Self:
         """Create the new instance."""
-        super().__new__(cls, tuple(fields))
-
-    def __init__(self, fields: Collection[Field]) -> None:
-        """Instantiate object.
-
-        .. note::
-            Do not call ``super().__init__`` as ``tuple`` are immutable.
-
-        """
-        pass
+        return super().__new__(cls, tuple(fields))
 
     def e_z(
         self,
-        pos: AnyDimFloat,
+        pos: PosAnyDim,
         phi: float,
         amplitudes: Collection[float],
         phi_0_rels: Collection[float],
-    ) -> float:
+    ) -> complex:
         """Give longitudinal electric field values."""
         all_e_z = (
             field.e_z(pos, phi, amplitude, phi_0_rel)
@@ -41,7 +36,7 @@ class SuperposedFields(tuple[Field, ...]):
 
     def generate_e_z_with_settings(
         self, amplitudes: Collection[float], phi_0_rels: Collection[float]
-    ) -> FieldFuncTimedComponent:
+    ) -> FieldFuncComplexTimedComponent:
         """Generate a function for a transfer matrix calculation."""
         return functools.partial(
             self.e_z, amplitudes=amplitudes, phi_0_rels=phi_0_rels
