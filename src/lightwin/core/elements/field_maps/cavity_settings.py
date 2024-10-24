@@ -23,6 +23,7 @@ from typing import Any, Literal, Self
 import numpy as np
 from scipy.optimize import minimize_scalar
 
+from lightwin.core.em_fields.rf_field import RfField
 from lightwin.util.phases import (
     diff_angle,
     phi_0_abs_to_rel,
@@ -148,6 +149,9 @@ class CavitySettings:
         self.omega0_rf: float
         if freq_cavity_mhz is not None:
             self.set_bunch_to_rf_freq_func(freq_cavity_mhz)
+
+        # NEW
+        self.rf_field: RfField
 
     def __str__(self) -> str:
         """Print out the different phases/k_e, and which one is the reference.
@@ -650,7 +654,10 @@ class CavitySettings:
         ) -> tuple[float, float]:
             """Compute propagation of the beam, deduce v_cav and phi_s."""
             results = transf_mat_function_wrapper(
-                phi_0_rel=phi_0_rel, w_kin_in=w_kin, **kwargs
+                w_kin=w_kin,
+                phi_0_rel=phi_0_rel,
+                cavity_setttings=self,
+                **kwargs,
             )
             cavity_parameters = phi_s_func(**results)
             return cavity_parameters

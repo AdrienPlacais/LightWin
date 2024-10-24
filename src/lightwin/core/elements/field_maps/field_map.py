@@ -71,13 +71,14 @@ class FieldMap(Element):
         self.geometry = int(line.splitted[1])
         self.length_m = 1e-3 * float(line.splitted[2])
         self.aperture_flag = int(line.splitted[8])  # K_a
-        self.cavity_settings = cavity_settings
 
         self.field_map_folder = default_field_map_folder
         self.field_map_file_name = Path(line.splitted[9])
 
         self._can_be_retuned: bool = True
         self.rf_field = RfField(section_idx=self.idx["section"])
+        self.cavity_settings = cavity_settings
+        self.cavity_settings.rf_field = self.rf_field
         self.field: Field
 
     @property
