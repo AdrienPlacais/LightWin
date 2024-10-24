@@ -27,6 +27,7 @@ from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
 )
+from lightwin.core.em_fields.rf_field import RfField
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
@@ -297,30 +298,33 @@ class Envelope1D(BeamCalculator):
         """Set the keyword arguments of the transfer matrix function."""
         if element not in set_of_cavity_settings:
             return {}, None
+        assert isinstance(element, FieldMap)
 
         cavity_settings = set_of_cavity_settings[element]
+        rf_field = element.rf_field
         _set_entry_phase(phi_bunch_abs, cavity_settings)
 
         if isinstance(element, SuperposedFieldMap):
             assert isinstance(cavities_settings := cavity_settings, list)
-            kwargs = _superposed_field_map_kwargs(element, cavities_settings)
+            assert isinstance(rf_fields := rf_field, list)
+            kwargs = _superposed_field_map_kwargs(
+                cavities_settings=cavities_settings, rf_fields=rf_fields
+            )
             if not kwargs:
                 return {}, None
             _add_cavities_phases(self.id, w_kin_in, cavities_settings, kwargs)
             return kwargs, None
 
         if isinstance(element, FieldMap):
-            kwargs = _field_map_kwargs(element, cavity_settings)
+            kwargs = _field_map_kwargs(cavity_settings, rf_field)
             if not kwargs:
                 return {}, cavity_settings
             _add_cavity_phase(self.id, w_kin_in, cavity_settings, kwargs)
             return kwargs, cavity_settings
 
-        raise IOError
-
 
 def _field_map_kwargs(
-    field_map: FieldMap, cavity_settings: CavitySettings
+    cavity_settings: CavitySettings, rf_field: RfField
 ) -> dict[str, Callable | int | float]:
     """Format the cavity settings for the current solver transfer matrix func.
 
@@ -336,12 +340,12 @@ def _field_map_kwargs(
         return {}
 
     rf_parameters_as_dict = {
-        "bunch_to_rf": field_map.cavity_settings.bunch_phase_to_rf_phase,
-        "e_spat": field_map.rf_field.e_spat,
+        "bunch_to_rf": cavity_settings.bunch_phase_to_rf_phase,
+        "e_spat": rf_field.e_spat,
         "k_e": cavity_settings.k_e,
-        "n_cell": field_map.rf_field.n_cell,
-        "omega0_rf": field_map.cavity_settings.omega0_rf,
-        "section_idx": field_map.idx["section"],
+        "n_cell": rf_field.n_cell,
+        "omega0_rf": cavity_settings.omega0_rf,
+        "section_idx": rf_field.section_idx,
     }
     return rf_parameters_as_dict
 
@@ -371,11 +375,9 @@ def _add_cavity_phase(
 
 
 def _superposed_field_map_kwargs(
-    superposed: SuperposedFieldMap,
-    cavities_settings: Sequence[CavitySettings],
+    cavities_settings: Sequence[CavitySettings], rf_fields: Sequence[RfField]
 ) -> dict[str, list[Callable] | int | float | list[float]]:
     """Format cavity settings for superposed field map object."""
-    rf_fields = superposed.rf_fields
     rf_parameters_as_dict = {
         "bunch_to_rf": cavities_settings[0].bunch_phase_to_rf_phase,
         "e_spats": [rf_field.e_spat for rf_field in rf_fields],

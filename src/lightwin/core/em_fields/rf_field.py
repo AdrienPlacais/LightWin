@@ -39,7 +39,7 @@ class RfField:
 
     All phases are stored in radian.
 
-    Attributes
+    Parameters
     ----------
     e_spat : Callable[[float], float]
         Spatial component of the electric field. Needs to be multiplied by the
@@ -53,7 +53,7 @@ class RfField:
 
     """
 
-    def __init__(self) -> None:
+    def __init__(self, section_idx: int) -> None:
         """Instantiate object."""
         self._original_e_spat: FieldFuncComponent1D
         self.e_spat: FieldFuncComponent1D = null_field_1d
@@ -61,6 +61,7 @@ class RfField:
         self.n_z: int
         self.is_loaded = False
         self.starting_position: float
+        self.section_idx: int = section_idx
 
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class."""

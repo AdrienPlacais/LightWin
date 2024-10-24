@@ -77,7 +77,7 @@ class FieldMap(Element):
         self.field_map_file_name = Path(line.splitted[9])
 
         self._can_be_retuned: bool = True
-        self.rf_field = RfField()
+        self.rf_field = RfField(section_idx=self.idx["section"])
         self.field: Field
 
     @property
