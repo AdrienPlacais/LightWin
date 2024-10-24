@@ -236,31 +236,6 @@ class Envelope1D(BeamCalculator):
         """Return False."""
         return False
 
-    def _adapt_cavity_settings(
-        self,
-        field_map: FieldMap,
-        phi_bunch_abs: float,
-        w_kin_in: float,
-        cavity_settings: CavitySettings,
-    ) -> dict[str, Callable | int | float]:
-        """Format the given :class:`.CavitySettings` for current solver.
-
-        For the transfer matrix function of :class:`Envelope1D`, we need a
-        dictionary.
-
-        """
-        _set_entry_phase(phi_bunch_abs, *cavity_settings)
-
-        fun1 = _field_map_kwargs
-        fun2 = _add_cavity_phase
-
-        rf_parameters_as_dict = fun1(field_map, cavity_settings)
-        if not rf_parameters_as_dict:
-            return rf_parameters_as_dict
-
-        fun2(self.id, w_kin_in, cavity_settings, rf_parameters_as_dict)
-        return rf_parameters_as_dict
-
     def _post_treat_cavity_settings(
         self, cavity_settings: CavitySettings, results: dict
     ) -> None:
