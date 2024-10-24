@@ -13,7 +13,10 @@ from pathlib import Path
 import numpy as np
 
 from lightwin.core.em_fields.field import Field
-from lightwin.core.em_fields.helper import create_1d_field_func, shifted_e_spat
+from lightwin.core.em_fields.field_helpers import (
+    create_1d_field_func,
+    shifted_e_spat,
+)
 from lightwin.core.em_fields.types import Pos1D
 from lightwin.tracewin_utils.electromagnetic_fields import (
     is_a_valid_1d_electric_field,

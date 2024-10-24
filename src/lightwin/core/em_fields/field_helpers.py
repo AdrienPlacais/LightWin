@@ -1,12 +1,10 @@
 """Define functions to compute 1D longitudinal electric fields.
 
-The ones used by :class:`.Field` will be in :file:`field_helpers.py` from now
-on.
+This will eventually replace :file:`core/em_fields/helper.py`
 
 """
 
 import math
-from collections.abc import Callable
 from functools import partial
 from typing import Any
 
@@ -22,7 +20,7 @@ def null_field_1d(pos: Any) -> float:
 
 def create_1d_field_func(
     field_values: np.ndarray, corresponding_positions: np.ndarray
-) -> Callable[[float], float]:
+) -> FieldFuncComponent1D:
     """Create the function to get spatial component of electric field."""
     func = partial(
         _evaluate_1d_field,
@@ -48,14 +46,14 @@ def _evaluate_1d_field(
 
 
 def normalized_e_1d(
-    pos: float, e_func: Callable[[float], float], phi: float, phi_0: float
+    pos: float, e_func: FieldFuncComponent1D, phi: float, phi_0: float
 ) -> float:
     """Compute electric field, normalized."""
     return e_func(pos) * math.cos(phi + phi_0)
 
 
 def normalized_e_1d_complex(
-    pos: float, e_func: Callable[[float], float], phi: float, phi_0: float
+    pos: float, e_func: FieldFuncComponent1D, phi: float, phi_0: float
 ) -> complex:
     """Compute electric field, normalized."""
     return e_func(pos) * (math.cos(phi + phi_0) + 1j * math.sin(phi + phi_0))
@@ -63,7 +61,7 @@ def normalized_e_1d_complex(
 
 def e_1d(
     pos: float,
-    e_func: Callable[[float], float],
+    e_func: FieldFuncComponent1D,
     phi: float,
     amplitude: float,
     phi_0: float,
@@ -74,13 +72,20 @@ def e_1d(
 
 def e_1d_complex(
     pos: float,
-    e_func: Callable[[float], float],
+    e_func: FieldFuncComponent1D,
     phi: float,
     amplitude: float,
     phi_0: float,
 ) -> complex:
     """Compute normed 1D electric field."""
     return amplitude * normalized_e_1d_complex(pos, e_func, phi, phi_0)
+
+
+def shifted_e_spat(
+    e_spat: FieldFuncComponent1D, z_shift: float, z_pos: float
+) -> float:
+    """Shift electric field by ``z_shift``."""
+    return e_spat(z_pos + z_shift)
 
 
 # def superpose_longitudinal_e_spats(
@@ -98,10 +103,3 @@ def e_1d_complex(
 #         for e_spat, z_0 in zip(e_spats, z_0s, strict=True)
 #     ]
 #     return shifted_e_spats
-
-
-def shifted_e_spat(
-    e_spat: FieldFuncComponent1D, z_shift: float, z_pos: float
-) -> float:
-    """Shift electric field by ``z_shift``."""
-    return e_spat(z_pos + z_shift)

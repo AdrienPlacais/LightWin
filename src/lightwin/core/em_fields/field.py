@@ -22,7 +22,7 @@ from collections.abc import Callable, Collection
 from pathlib import Path
 from typing import Any, Literal, overload
 
-from lightwin.core.em_fields.helper import null_field_1d
+from lightwin.core.em_fields.field_helpers import null_field_1d
 from lightwin.core.em_fields.types import FieldFuncComplexTimedComponent
 
 EXTENSION_TO_COMPONENT = {
@@ -90,6 +90,10 @@ class Field(ABC):
         self.load_fieldmaps()
         if self.z_0:
             self.shift()
+
+    def __repr__(self) -> str:
+        """Print out class name and associated field map path."""
+        return f"{self.__class__.__name__:>s10} | {self.field_map_path.name}"
 
     def load_fieldmaps(self) -> None:
         """Load all field components for class :attr:`extensions`."""
