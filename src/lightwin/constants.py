@@ -18,3 +18,5 @@ example_dat = example_folder / "example.dat"
 example_ini = example_folder / "example.ini"
 example_machine_config = example_folder / "machine_config.toml"
 example_variables = example_folder / "variables.csv"
+
+NEW = True

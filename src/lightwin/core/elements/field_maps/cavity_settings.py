@@ -11,6 +11,7 @@
 See Also
 --------
 :class:`.RfField`
+:class:`.Field`
 
 """
 
@@ -23,6 +24,7 @@ from typing import Any, Literal, Self
 import numpy as np
 from scipy.optimize import minimize_scalar
 
+from lightwin.core.em_fields.field import Field
 from lightwin.util.phases import (
     diff_angle,
     phi_0_abs_to_rel,
@@ -83,6 +85,7 @@ class CavitySettings:
         freq_cavity_mhz: float | None = None,
         transf_mat_func_wrappers: dict[str, Callable] | None = None,
         phi_s_funcs: dict[str, Callable] | None = None,
+        field: Field | None = None,
     ) -> None:
         """Instantiate the object.
 
@@ -115,6 +118,10 @@ class CavitySettings:
             phase and accelerating voltage from the ouput of corresponding
             ``transf_mat_func_wrapper``. The default is None, in which case
             attribute is not set.
+        field : Field | None, optional
+            Holds the electromagnetic field properties related to the field
+            maps; these objets are shared within several
+            :class:`CavitySettings`.
 
         """
         self.k_e = k_e
@@ -148,6 +155,10 @@ class CavitySettings:
         self.omega0_rf: float
         if freq_cavity_mhz is not None:
             self.set_bunch_to_rf_freq_func(freq_cavity_mhz)
+
+        self.field: Field
+        if field is not None:
+            self.field = field
 
     def __str__(self) -> str:
         """Print out the different phases/k_e, and which one is the reference.
@@ -197,6 +208,7 @@ class CavitySettings:
             other.freq_cavity_mhz,
             transf_mat_func_wrappers=other.transf_mat_func_wrappers,
             phi_s_funcs=other.phi_s_funcs,
+            field=getattr(other, "field", None),
         )
         return settings
 
@@ -242,8 +254,9 @@ class CavitySettings:
             status,
             base._freq_bunch_mhz,
             base.freq_cavity_mhz,
-            base.transf_mat_func_wrappers,
-            base.phi_s_funcs,
+            transf_mat_func_wrappers=base.transf_mat_func_wrappers,
+            phi_s_funcs=base.phi_s_funcs,
+            field=getattr(base, "field", None),
         )
         return settings
 
@@ -629,15 +642,15 @@ class CavitySettings:
             Kinetic energy of the synchronous particle at the entry of the
             cavity.
         kwargs :
-            Other keyword arguments that will be passed to the function that
-            will compute propagation of the beam in the :class:`.FieldMap`.
-            Note that you should check that ``phi_0_rel`` key should be removed
-            in your :class:`.BeamCalculator`, to avoid a clash in the
+            Other keyword arguments that will be passed to the function
+            computing the propagation of the beam in the :class:`.FieldMap`.
+            Note that you should check that ``phi_0_rel`` is removed in your
+            :class:`.BeamCalculator`, to avoid a clash in the
             `phi_0_rel_to_cavity_parameters` function.
 
         See Also
         --------
-        set_cavity_parameters_methods
+        :meth:`set_cavity_parameters_methods`
 
         """
         transf_mat_function_wrapper = _get_valid_func(
@@ -807,6 +820,51 @@ class CavitySettings:
         assert (
             self.phi_bunch >= 0.0
         ), "The phase of the synchronous particle should never be negative."
+
+    # =============================================================================
+    # Field object related
+    # =============================================================================
+    def complex_e_z_func(
+        self, solver_id: str, w_kin_in: float, kwargs: dict[str, Any]
+    ) -> Callable[[float, float], complex]:
+        r"""Get the longitudinal electric field function.
+
+        In particular, we set the amplitude and :math:`\phi_{0,\,\mathrm{rel}}`
+        of the electric field map stored in ``self.field``.
+        If necessary, we compute the relative entry phase from :math:`\phi_s`.
+
+        .. warning::
+            Side effect: the relative entry phase
+            :math:`\phi_{0,\,\mathrm{rel}}` is added to ``rf_kwargs``.
+
+        Parameters
+        ----------
+        solver_id : str
+            The name of the solver used to compute synchronous phase.
+        w_kin_in : float
+            Kinetic energy at the entrance of the field map in :unit:`MeV`.
+        kwargs : dict[str, Any]
+            Other kwargs arguments passed to the function computing relative
+            entry phase from synchronous phase.
+
+        Returns
+        -------
+        Callable[[float, float], complex]
+            The function giving the longitudinal electric field. First argument
+            is 1D longitudinal position in :unit:`m` and second is the rf phase
+            of the beam in :unit:`rad`.
+
+        """
+        if self.reference != "phi_s":
+            assert self.phi_0_rel is not None
+            kwargs["phi_0_rel"] = self.phi_0_rel
+            self.set_cavity_parameters_arguments(solver_id, w_kin_in, **kwargs)
+        else:
+            self.set_cavity_parameters_arguments(solver_id, w_kin_in, **kwargs)
+            assert self.phi_0_rel is not None
+            kwargs["phi_0_rel"] = self.phi_0_rel
+
+        return self.field.partial_e_z(self.k_e, self.phi_0_rel)
 
     # .. list-table:: Meaning of status
     #     :widths: 40, 60

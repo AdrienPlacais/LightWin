@@ -20,6 +20,7 @@
 """
 
 import math
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Literal
 
@@ -78,7 +79,6 @@ class FieldMap(Element):
 
         self._can_be_retuned: bool = True
         self.rf_field = RfField()
-        self.field: Field
 
     @property
     def status(self) -> str:
@@ -101,6 +101,45 @@ class FieldMap(Element):
     def can_be_retuned(self, value: bool) -> None:
         """Forbid this cavity from being retuned (or re-allow it)."""
         self._can_be_retuned = value
+
+    @property
+    def field(self) -> Field:
+        """Return the :class:`.Field` from ``self.cavity_settings``."""
+        return self.cavity_settings.field
+
+    @field.setter
+    def field(self, value: Field) -> None:
+        """Assign the given :class:`.Field` to ``self.cavity_settings``."""
+        self.cavity_settings.field = value
+
+    def complex_e_z_func(
+        self, solver_id: str, w_kin_in: float, kwargs: dict[str, Any]
+    ) -> Callable[[float, float], complex]:
+        r"""Get the longitudinal electric field function.
+
+        We simply call ``self.cavity_settings.complex_e_z_func``.
+
+        Parameters
+        ----------
+        solver_id : str
+            The name of the solver used to compute synchronous phase.
+        w_kin_in : float
+            Kinetic energy at the entrance of the field map in :unit:`MeV`.
+        kwargs : dict[str, Any]
+            Other kwargs arguments passed to the function computing relative
+            entry phase from synchronous phase.
+
+        Returns
+        -------
+        Callable[[float, float], complex]
+            The function giving the longitudinal electric field. First argument
+            is 1D longitudinal position in :unit:`m` and second is the rf phase
+            of the beam in :unit:`rad`.
+
+        """
+        return self.cavity_settings.complex_e_z_func(
+            solver_id=solver_id, w_kin_in=w_kin_in, kwargs=kwargs
+        )
 
     def update_status(self, new_status: str) -> None:
         """Change the status of the cavity.

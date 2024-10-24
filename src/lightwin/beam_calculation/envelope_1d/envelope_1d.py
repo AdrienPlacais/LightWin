@@ -20,6 +20,7 @@ from lightwin.beam_calculation.envelope_1d.util import ENVELOPE1D_METHODS_T
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.constants import NEW
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
@@ -310,6 +311,12 @@ class Envelope1D(BeamCalculator):
             return kwargs, None
 
         if isinstance(element, FieldMap):
+            if NEW:
+                kwargs = _new_field_map_kwargs(
+                    self.id, w_kin_in, cavity_settings
+                )
+                return kwargs, cavity_settings
+
             kwargs = _field_map_kwargs(element, cavity_settings)
             if not kwargs:
                 return {}, cavity_settings
@@ -317,6 +324,25 @@ class Envelope1D(BeamCalculator):
             return kwargs, cavity_settings
 
         raise IOError
+
+
+def _new_field_map_kwargs(
+    solver_id: str, w_kin_in: float, cavity_settings: CavitySettings
+) -> dict[str, Any]:
+    """Set the parameters required by field map transf mat functions."""
+    if cavity_settings.status == "failed":
+        return {}
+
+    rf_kwargs = {
+        "n_cell": cavity_settings.field.n_cell,
+        "omega0_rf": cavity_settings.omega0_rf,
+    }
+    complex_e_func = cavity_settings.complex_e_z_func(
+        solver_id=solver_id, w_kin_in=w_kin_in, kwargs=rf_kwargs
+    )
+    rf_kwargs["complex_e_func"] = complex_e_func
+    # old: bunch_to_rf, e_spat, k_e, n_cell, section_idx
+    return rf_kwargs
 
 
 def _field_map_kwargs(

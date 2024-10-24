@@ -22,6 +22,7 @@ import lightwin.util.converters as convert
 from lightwin.beam_calculation.parameters.element_parameters import (
     ElementBeamCalculatorParameters,
 )
+from lightwin.constants import NEW
 from lightwin.core.elements.bend import Bend
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
@@ -31,7 +32,9 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
 from lightwin.util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
 
 FIELD_MAP_INTEGRATION_METHOD_TO_FUNC = {
-    "RK4": lambda module: module.z_field_map_rk4,
+    "RK4": lambda module: (
+        module.z_field_map_rk4_new if NEW else module.z_field_map_rk4
+    ),
     "leapfrog": lambda module: module.z_field_map_leapfrog,
 }
 
@@ -180,7 +183,7 @@ class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
         )
 
     def transfer_matrix_kw(self) -> dict[str, Any]:
-        """Give the element parameters necessary to compute transfer matrix."""
+        """Give the fixed args to compute transfer matrix."""
         return {"delta_s": self.d_z, "n_steps": self.n_steps}
 
 
@@ -231,7 +234,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         )
 
     def transfer_matrix_kw(self) -> dict[str, Any]:
-        """Give the element parameters necessary to compute transfer matrix."""
+        """Give the fixed args to compute transfer matrix."""
         return {
             "d_z": self.d_z,
             "n_steps": self.n_steps,
@@ -359,7 +362,7 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
             )
 
     def transfer_matrix_kw(self) -> dict[str, Any]:
-        """Give the element parameters necessary to compute transfer matrix."""
+        """Give the fixed args to compute transfer matrix."""
         return {"d_z": self.d_z, "n_steps": self.n_steps}
 
     def _transfer_matrix_results_to_dict(
@@ -487,7 +490,7 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
         return factor_1, factor_2, factor_3
 
     def transfer_matrix_kw(self) -> dict[str, Any]:
-        """Give the element parameters necessary to compute transfer matrix."""
+        """Give the fixed args to compute transfer matrix."""
         return {
             "delta_s": self.d_z,
             "factor_1": self.factor_1,
