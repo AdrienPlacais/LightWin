@@ -2,11 +2,14 @@
 
 from collections.abc import Callable
 
-AnyDimInt = tuple[int] | tuple[int, int] | tuple[int, int, int]
-AnyDimFloat = tuple[float] | tuple[float, float] | tuple[float, float, float]
+Pos1D = tuple[float]
+Pos2D = tuple[float, float]
+Pos3D = tuple[float, float, float]
+PosAnyDim = Pos1D | Pos2D | Pos3D
 
-FieldFuncComponent = Callable[[AnyDimFloat], float]
-FieldFuncComponent1D = Callable[[tuple[float]], float]
 
-FieldFuncTimedComponent = Callable[[AnyDimFloat, float], float]
-FieldFuncComplexTimedComponent = Callable[[AnyDimFloat, float], complex]
+FieldFuncComponent = Callable[[PosAnyDim], float]
+FieldFuncComponent1D = Callable[[Pos1D], float]
+
+FieldFuncTimedComponent = Callable[[PosAnyDim, float], float]
+FieldFuncComplexTimedComponent = Callable[[PosAnyDim, float], complex]

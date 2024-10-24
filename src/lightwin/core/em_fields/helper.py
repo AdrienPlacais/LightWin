@@ -6,10 +6,10 @@ from functools import partial
 
 import numpy as np
 
-from lightwin.core.em_fields.types import AnyDimFloat, FieldFuncComponent1D
+from lightwin.core.em_fields.types import FieldFuncComponent1D
 
 
-def null_field_1d(pos: AnyDimFloat) -> float:
+def null_field_1d(pos: Any) -> float:
     """Define a null electric/magnetic field."""
     return 0.0
 

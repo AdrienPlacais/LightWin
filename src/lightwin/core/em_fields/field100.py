@@ -7,13 +7,14 @@ implemented for now.
 
 import functools
 import math
+from collections.abc import Callable
 from pathlib import Path
 
 import numpy as np
 
 from lightwin.core.em_fields.field import Field
 from lightwin.core.em_fields.helper import create_1d_field_func, shifted_e_spat
-from lightwin.core.em_fields.types import FieldFuncComponent1D
+from lightwin.core.em_fields.types import Pos1D
 from lightwin.tracewin_utils.electromagnetic_fields import (
     is_a_valid_1d_electric_field,
     rescale,
@@ -29,7 +30,7 @@ class Field100(Field):
 
     def _load_fieldmap(
         self, path: Path, **validity_check_kwargs
-    ) -> tuple[FieldFuncComponent1D, int, int]:
+    ) -> tuple[Callable[[Pos1D], float], tuple[int], int]:
         r"""Load a 1D field (``.edz`` extension).
 
         Parameters
@@ -39,10 +40,10 @@ class Field100(Field):
 
         Returns
         -------
-        e_z : FieldFuncComponent1D
+        e_z : Callable[[Pos1D], float]
             Function that takes in ``z`` position and returns corresponding
             field, at null phase, for amplitude of :math:`1\,\mathrm{MV/m}`.
-        n_z : int
+        n_z : tuple[int]
             Number of interpolation points.
         n_cell : int
             Number of cell for cavities.
@@ -57,7 +58,7 @@ class Field100(Field):
         f_z = rescale(f_z, norm)
         z_positions = np.linspace(0.0, zmax, n_z + 1)
         e_z = create_1d_field_func(f_z, z_positions)
-        return e_z, n_z, n_cell
+        return e_z, (n_z,), n_cell
 
     def shift(self) -> None:
         """Shift the electric field map.
@@ -76,7 +77,7 @@ class Field100(Field):
         self._e_z_spat_rf = shifted
 
     def e_z(
-        self, pos: float, phi: float, amplitude: float, phi_0_rel: float
+        self, pos: Pos1D, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
         """Give longitudinal electric field value."""
         return (

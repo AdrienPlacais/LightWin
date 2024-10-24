@@ -18,17 +18,12 @@ import functools
 import logging
 import math
 from abc import ABC, abstractmethod
-from collections.abc import Collection
+from collections.abc import Callable, Collection
 from pathlib import Path
-from typing import Literal, overload
+from typing import Any, Literal, overload
 
 from lightwin.core.em_fields.helper import null_field_1d
-from lightwin.core.em_fields.types import (
-    AnyDimFloat,
-    AnyDimInt,
-    FieldFuncComplexTimedComponent,
-    FieldFuncComponent,
-)
+from lightwin.core.em_fields.types import FieldFuncComplexTimedComponent
 
 EXTENSION_TO_COMPONENT = {
     ".edx": "_e_x_spat_rf",
@@ -71,20 +66,20 @@ class Field(ABC):
         self.z_0: float = z_0
 
         # Where we store interpolated field maps (to multiply by cos phi)
-        self._e_x_spat_rf: FieldFuncComponent = null_field_1d
-        self._e_y_spat_rf: FieldFuncComponent = null_field_1d
-        self._e_z_spat_rf: FieldFuncComponent = null_field_1d
-        self._b_x_spat_rf: FieldFuncComponent = null_field_1d
-        self._b_y_spat_rf: FieldFuncComponent = null_field_1d
-        self._b_z_spat_rf: FieldFuncComponent = null_field_1d
+        self._e_x_spat_rf: Callable[[Any], float] = null_field_1d
+        self._e_y_spat_rf: Callable[[Any], float] = null_field_1d
+        self._e_z_spat_rf: Callable[[Any], float] = null_field_1d
+        self._b_x_spat_rf: Callable[[Any], float] = null_field_1d
+        self._b_y_spat_rf: Callable[[Any], float] = null_field_1d
+        self._b_z_spat_rf: Callable[[Any], float] = null_field_1d
 
         # Where we store static field maps (no phase anyway)
-        self._e_x_dc: FieldFuncComponent = null_field_1d
-        self._e_y_dc: FieldFuncComponent = null_field_1d
-        self._e_z_dc: FieldFuncComponent = null_field_1d
-        self._b_x_dc: FieldFuncComponent = null_field_1d
-        self._b_y_dc: FieldFuncComponent = null_field_1d
-        self._b_z_dc: FieldFuncComponent = null_field_1d
+        self._e_x_dc: Callable[[Any], float] = null_field_1d
+        self._e_y_dc: Callable[[Any], float] = null_field_1d
+        self._e_z_dc: Callable[[Any], float] = null_field_1d
+        self._b_x_dc: Callable[[Any], float] = null_field_1d
+        self._b_y_dc: Callable[[Any], float] = null_field_1d
+        self._b_z_dc: Callable[[Any], float] = null_field_1d
 
         if not self.is_implemented:
             logging.warning(
@@ -108,11 +103,38 @@ class Field(ABC):
                 self._patch_to_keep_consistency(n_interp, n_cell)
         self.is_loaded = True
 
+    @abstractmethod
+    def _load_fieldmap(
+        self,
+        path: Path,
+        **validity_check_kwargs,
+    ) -> tuple[Callable[..., float], Any, int]:
+        """Generate field function corresponding to a single field file.
+
+        Parameters
+        ----------
+        path : pathlib.Path
+            Path to a field map file.
+
+        Returns
+        -------
+        func : Callable[..., float]
+            Give field at a given position, position being a tuple of 1, 2 or 3
+            floats.
+        n_interp : Any
+            Number of interpolation points in the various directions (tuple of
+            1, 2 or 3 integers).
+        n_cell : int
+            Number of cells (makes sense only for .edz as for now).
+
+        """
+        ...
+
     @overload
     def _calculate_field(
         self,
-        component_func: FieldFuncComponent,
-        pos: AnyDimFloat,
+        component_func: Callable[..., float],
+        pos: Any,
         phi: float,
         amplitude: float,
         phi_0_rel: float,
@@ -123,8 +145,8 @@ class Field(ABC):
     @overload
     def _calculate_field(
         self,
-        component_func: FieldFuncComponent,
-        pos: AnyDimFloat,
+        component_func: Callable[..., float],
+        pos: Any,
         phi: float,
         amplitude: float,
         phi_0_rel: float,
@@ -134,8 +156,8 @@ class Field(ABC):
 
     def _calculate_field(
         self,
-        component_func: FieldFuncComponent,
-        pos: AnyDimFloat,
+        component_func: Callable[..., float],
+        pos: Any,
         phi: float,
         amplitude: float,
         phi_0_rel: float,
@@ -146,8 +168,9 @@ class Field(ABC):
 
         Parameters
         ----------
-        component_func : FieldFuncComponent
+        component_func : Callable[..., float]
             The spatial field component function (e.g., self._e_x_spat_rf).
+            Must accept a tuple of 1 to 3 floats (position) and return a float.
         pos : AnyDimFloat
             The position at which to evaluate the field.
         phi : float
@@ -176,7 +199,7 @@ class Field(ABC):
         raise NotImplementedError("Not yet implemented!")
 
     def e_x(
-        self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
+        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
         """Give transverse x electric field value."""
         return self._calculate_field(
@@ -189,7 +212,7 @@ class Field(ABC):
         )
 
     def e_y(
-        self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
+        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
         """Give transverse y electric field value."""
         return self._calculate_field(
@@ -202,7 +225,7 @@ class Field(ABC):
         )
 
     def e_z(
-        self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
+        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
         """Give longitudinal electric field value."""
         return self._calculate_field(
@@ -215,7 +238,7 @@ class Field(ABC):
         )
 
     def b_x(
-        self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
+        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
         """Give transverse x magnetic field value."""
         return self._calculate_field(
@@ -228,7 +251,7 @@ class Field(ABC):
         )
 
     def b_y(
-        self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
+        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
         """Give transverse y magnetic field value."""
         return self._calculate_field(
@@ -241,7 +264,7 @@ class Field(ABC):
         )
 
     def b_z(
-        self, pos: AnyDimFloat, phi: float, amplitude: float, phi_0_rel: float
+        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
         """Give longitudinal magnetic field value."""
         return self._calculate_field(
@@ -261,33 +284,9 @@ class Field(ABC):
             self.e_z, amplitude=amplitude, phi_0_rel=phi_0_rel
         )
 
-    def _patch_to_keep_consistency(
-        self, n_interp: AnyDimInt, n_cell: int
-    ) -> None:
+    def _patch_to_keep_consistency(self, n_interp: Any, n_cell: int) -> None:
         """Save ``n_cell`` and ``n_z``. Temporary solution."""
-        assert isinstance(n_interp, int)
+        if not (isinstance(n_interp, tuple) and len(n_interp) == 1):
+            raise ValueError(f"{n_interp = } but should be a 1D tuple.")
+        self.n_z = n_interp[0]
         self.n_cell = n_cell
-        self.n_z = n_interp
-
-    @abstractmethod
-    def _load_fieldmap(
-        self, path: Path
-    ) -> tuple[FieldFuncComponent, AnyDimInt, int]:
-        """Generate field function corresponding to a single field file.
-
-        Parameters
-        ----------
-        path : pathlib.Path
-            Path to a field map file.
-
-        Returns
-        -------
-        func : FieldFuncComponent
-            Give field at a given position.
-        n_interp : AnyDimInt
-            Number of interpolation points in the various directions.
-        n_cell : int
-            Number of cells (makes sense only for .edz as for now).
-
-        """
-        pass
