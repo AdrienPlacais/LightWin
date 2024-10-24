@@ -663,7 +663,7 @@ class CavitySettings:
         ) -> tuple[float, float]:
             """Compute propagation of the beam, deduce v_cav and phi_s."""
             results = transf_mat_function_wrapper(
-                phi_0_rel=phi_0_rel, w_kin_in=w_kin, **kwargs
+                w_kin_in=w_kin, phi_0_rel=phi_0_rel, **kwargs
             )
             cavity_parameters = phi_s_func(**results)
             return cavity_parameters
@@ -825,7 +825,11 @@ class CavitySettings:
     # Field object related
     # =============================================================================
     def complex_e_z_func(
-        self, solver_id: str, w_kin_in: float, kwargs: dict[str, Any]
+        self,
+        solver_id: str,
+        w_kin_in: float,
+        kwargs: dict[str, Any],
+        phi_0_rel: float | None = None,
     ) -> Callable[[float, float], complex]:
         r"""Get the longitudinal electric field function.
 

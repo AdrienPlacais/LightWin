@@ -152,15 +152,15 @@ class Envelope1D(BeamCalculator):
         )
 
         for elt in elts:
-            rf_field_kwargs, cavity_settings = self._transfer_matrix_kwargs(
-                elt, set_of_cavity_settings, phi_abs, w_kin
-            )
-            # Technically: if we made a phi_s fit, following lines are useless
-            # elt_results already calculated
-            # v_cav, phi_s already calculated
+            # rf_field_kwargs, cavity_settings = self._transfer_matrix_kwargs(
+            #     elt, set_of_cavity_settings, phi_abs, w_kin
+            # )
+            # func = elt.beam_calc_param[self.id].transf_mat_function_wrapper
+            # elt_results = func(w_kin, **rf_field_kwargs)
 
+            cavity_settings = set_of_cavity_settings.get(elt, None)
             func = elt.beam_calc_param[self.id].transf_mat_function_wrapper
-            elt_results = func(w_kin, **rf_field_kwargs)
+            elt_results = func(w_kin, cavity_settings)
 
             if cavity_settings is not None:
                 v_cav_mv, phi_s = self._compute_cavity_parameters(elt_results)
@@ -236,6 +236,7 @@ class Envelope1D(BeamCalculator):
         """Return False."""
         return False
 
+    # currently unused
     def _adapt_cavity_settings(
         self,
         field_map: FieldMap,
@@ -311,12 +312,6 @@ class Envelope1D(BeamCalculator):
             return kwargs, None
 
         if isinstance(element, FieldMap):
-            if NEW:
-                kwargs = _new_field_map_kwargs(
-                    self.id, w_kin_in, cavity_settings
-                )
-                return kwargs, cavity_settings
-
             kwargs = _field_map_kwargs(element, cavity_settings)
             if not kwargs:
                 return {}, cavity_settings
@@ -324,25 +319,6 @@ class Envelope1D(BeamCalculator):
             return kwargs, cavity_settings
 
         raise IOError
-
-
-def _new_field_map_kwargs(
-    solver_id: str, w_kin_in: float, cavity_settings: CavitySettings
-) -> dict[str, Any]:
-    """Set the parameters required by field map transf mat functions."""
-    if cavity_settings.status == "failed":
-        return {}
-
-    rf_kwargs = {
-        "n_cell": cavity_settings.field.n_cell,
-        "omega0_rf": cavity_settings.omega0_rf,
-    }
-    complex_e_func = cavity_settings.complex_e_z_func(
-        solver_id=solver_id, w_kin_in=w_kin_in, kwargs=rf_kwargs
-    )
-    rf_kwargs["complex_e_func"] = complex_e_func
-    # old: bunch_to_rf, e_spat, k_e, n_cell, section_idx
-    return rf_kwargs
 
 
 def _field_map_kwargs(

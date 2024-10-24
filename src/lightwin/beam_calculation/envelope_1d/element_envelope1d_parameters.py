@@ -25,6 +25,7 @@ from lightwin.beam_calculation.parameters.element_parameters import (
 from lightwin.constants import NEW
 from lightwin.core.elements.bend import Bend
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
@@ -87,22 +88,40 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         raise IOError("Calling this method for a non-field map is incorrect.")
 
     @abstractmethod
-    def transfer_matrix_kw(self) -> dict[str, Any]:
+    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give all the arguments for the transfer matrix function."""
         return {}
 
     def transf_mat_function_wrapper(
-        self, w_kin_in: float, **rf_field_kwargs
+        self,
+        w_kin_in: float,
+        cavity_settings: CavitySettings | None = None,
+        phi_0_rel: float | None = None,  # given = phi_s fit
+        # **rf_field_kwargs
     ) -> dict:
-        """Calculate beam propagation in the :class:`.Element`."""
+        """Calculate beam propagation in the :class:`.Element`.
+
+        Parameters
+        ----------
+        w_kin_in : float
+            Kinetic energy at element entrance in :unit:`MeV`.
+        rf_field_kwargs :
+            Keyword arguments required by the transfer matrix function. Note
+            that fixed element parameters (``n_steps``, ``d_z``) are taken from
+            ``self.transfer_matrix_kw()``, and fixed beam parameters (
+            ``q_adim``, ``omega_0_rf``, ``e_rest_mev``) from
+            ``self._beam_kwargs``.
+
+        """
         gamma_in = convert.energy(
             w_kin_in, "kin to gamma", **self._beam_kwargs
         )
+        kwargs = self.transfer_matrix_kw(w_kin_in, cavity_settings, phi_0_rel)
         r_zz, gamma_phi, itg_field = self.transf_mat_function(
             gamma_in=gamma_in,
-            **self.transfer_matrix_kw(),
-            **rf_field_kwargs,
+            # **self.transfer_matrix_kw(),
             **self._beam_kwargs,
+            **kwargs,
         )
 
         results = self._transfer_matrix_results_to_dict(
@@ -182,7 +201,7 @@ class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
             **kwargs,
         )
 
-    def transfer_matrix_kw(self) -> dict[str, Any]:
+    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the fixed args to compute transfer matrix."""
         return {"delta_s": self.d_z, "n_steps": self.n_steps}
 
@@ -233,13 +252,43 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
             self.compute_cavity_parameters,
         )
 
-    def transfer_matrix_kw(self) -> dict[str, Any]:
+    def old_transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the fixed args to compute transfer matrix."""
         return {
             "d_z": self.d_z,
             "n_steps": self.n_steps,
             "filename": self.field_map_file_name,
         }
+
+    def transfer_matrix_kw(
+        self,
+        w_kin_in: float,
+        cavity_settings: CavitySettings,
+        *args,
+        phi_0_rel: float | None = None,
+        **kwargs,
+    ) -> dict[str, Any]:
+        """Set the full list of arguments to run the transfer matrix func."""
+        generic = {
+            "d_z": self.d_z,
+            "n_steps": self.n_steps,
+            "filename": self.field_map_file_name,
+        }
+        if cavity_settings.status == "failed":
+            return generic
+
+        rf_kwargs = {
+            "n_cell": cavity_settings.field.n_cell,
+            "omega0_rf": cavity_settings.omega0_rf,
+        }
+        complex_e_func = cavity_settings.complex_e_z_func(
+            solver_id=self.solver_id,
+            w_kin_in=w_kin_in,
+            kwargs=rf_kwargs,
+            phi_0_rel=phi_0_rel,
+        )
+        rf_kwargs["complex_e_func"] = complex_e_func
+        return generic | rf_kwargs
 
     def _transfer_matrix_results_to_dict(
         self,
@@ -267,42 +316,43 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         }
         return results
 
-    def re_set_for_broken_cavity(self) -> Callable:
+    def re_set_for_broken_cavity(self) -> None:
         """Make beam calculator call Drift func instead of FieldMap."""
         self.transf_mat_function = self._transf_mat_module.z_drift
-        self.transfer_matrix_kw = lambda: {
-            "delta_s": self.d_z,
-            "n_steps": self.n_steps,
-        }
-
-        def _new_transfer_matrix_results_to_dict(
-            r_zz: np.ndarray,
-            gamma_phi: np.ndarray,
-            integrated_field: float | None,
-        ) -> dict:
-            """Convert the results given by the transf_mat function to dict.
-
-            Overrides the default method defined in the ABC.
-
-            """
-            assert integrated_field is None
-            w_kin = convert.energy(
-                gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
-            )
-            cav_params = self.compute_cavity_parameters(np.nan)
-            results = {
-                "r_zz": r_zz,
-                "cav_params": cav_params,
-                "w_kin": w_kin,
-                "phi_rel": gamma_phi[:, 1],
-                "integrated_field": integrated_field,
-            }
-            return results
-
+        self.transfer_matrix_kw = self._broken_transfer_matrix_kw
         self._transfer_matrix_results_to_dict = (
-            _new_transfer_matrix_results_to_dict
+            self._broken_transfer_matrix_results_to_dict
         )
         return self.transf_mat_function
+
+    def _broken_transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
+        """Define args to compute transf mat of broken field map."""
+        return {"delta_s": self.d_z, "n_steps": self.n_steps}
+
+    def _broken_transfer_matrix_results_to_dict(
+        self,
+        r_zz: np.ndarray,
+        gamma_phi: np.ndarray,
+        integrated_field: float | None,
+    ) -> dict:
+        """Convert the results given by the transf_mat function to dict.
+
+        Overrides the default method defined in the ABC.
+
+        """
+        assert integrated_field is None
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
+        cav_params = self.compute_cavity_parameters(np.nan)
+        results = {
+            "r_zz": r_zz,
+            "cav_params": cav_params,
+            "w_kin": w_kin,
+            "phi_rel": gamma_phi[:, 1],
+            "integrated_field": integrated_field,
+        }
+        return results
 
 
 class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
@@ -361,7 +411,7 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
                 self.compute_cavity_parameters,
             )
 
-    def transfer_matrix_kw(self) -> dict[str, Any]:
+    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the fixed args to compute transfer matrix."""
         return {"d_z": self.d_z, "n_steps": self.n_steps}
 
@@ -489,7 +539,7 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
         assert isinstance(factor_3, float)
         return factor_1, factor_2, factor_3
 
-    def transfer_matrix_kw(self) -> dict[str, Any]:
+    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the fixed args to compute transfer matrix."""
         return {
             "delta_s": self.d_z,
