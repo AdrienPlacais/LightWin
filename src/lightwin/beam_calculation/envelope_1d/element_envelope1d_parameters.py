@@ -267,39 +267,39 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
     def re_set_for_broken_cavity(self) -> Callable:
         """Make beam calculator call Drift func instead of FieldMap."""
         self.transf_mat_function = self._transf_mat_module.z_drift
-        self.transfer_matrix_kw = lambda: {
+        self._transfer_matrix_results_to_dict = (
+            self._broken_transfer_matrix_results_to_dict
+        )
+        self.transfer_matrix_kw = self._broken_transfer_matrix_kw
+        return self.transf_mat_function
+
+    def _broken_transfer_matrix_results_to_dict(
+        self,
+        r_zz: np.ndarray,
+        gamma_phi: np.ndarray,
+        integrated_field: float | None,
+    ) -> dict:
+        """Convert the results given by the transf_mat function to a dict."""
+        assert integrated_field is None
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
+        cav_params = self.compute_cavity_parameters(np.nan)
+        results = {
+            "r_zz": r_zz,
+            "cav_params": cav_params,
+            "w_kin": w_kin,
+            "phi_rel": gamma_phi[:, 1],
+            "integrated_field": integrated_field,
+        }
+        return results
+
+    def _broken_transfer_matrix_kw(self) -> dict[str, Any]:
+        """Give the element parameters necessary to compute transfer matrix."""
+        return {
             "delta_s": self.d_z,
             "n_steps": self.n_steps,
         }
-
-        def _new_transfer_matrix_results_to_dict(
-            r_zz: np.ndarray,
-            gamma_phi: np.ndarray,
-            integrated_field: float | None,
-        ) -> dict:
-            """Convert the results given by the transf_mat function to dict.
-
-            Overrides the default method defined in the ABC.
-
-            """
-            assert integrated_field is None
-            w_kin = convert.energy(
-                gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
-            )
-            cav_params = self.compute_cavity_parameters(np.nan)
-            results = {
-                "r_zz": r_zz,
-                "cav_params": cav_params,
-                "w_kin": w_kin,
-                "phi_rel": gamma_phi[:, 1],
-                "integrated_field": integrated_field,
-            }
-            return results
-
-        self._transfer_matrix_results_to_dict = (
-            _new_transfer_matrix_results_to_dict
-        )
-        return self.transf_mat_function
 
 
 class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
@@ -388,7 +388,7 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         }
         return results
 
-    def re_set_for_broken_cavity(self) -> Callable:
+    def re_set_for_broken_cavity(self) -> None:
         """Make beam calculator call Drift func instead of FieldMap."""
         raise NotImplementedError(
             "superposed field maps should not be modified during execution for"
