@@ -134,7 +134,7 @@ class QuadEnvelope3DParameters(ElementEnvelope3DParameters):
         )
         self.gradient = elt.grad
 
-    def transfer_matrix_kw(self) -> dict[str, Any]:
+    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
         return self._beam_kwargs | {
             "delta_s": self.d_z,
@@ -202,7 +202,7 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
             self.compute_cavity_parameters,
         )
 
-    def transfer_matrix_kw(self) -> dict[str, Any]:
+    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
         return self._beam_kwargs | {"d_z": self.d_z, "n_steps": self.n_steps}
 
@@ -264,7 +264,7 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
         }
         return results
 
-    def _broken_transfer_matrix_kw(self) -> dict[str, Any]:
+    def _broken_transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
         return self._beam_kwargs | {
             "delta_s": self.d_z,

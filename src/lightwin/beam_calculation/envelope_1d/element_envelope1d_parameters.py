@@ -82,7 +82,7 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         """Change solver parameters for efficiency purposes."""
         raise IOError("Calling this method for a non-field map is incorrect.")
 
-    def transfer_matrix_kw(self) -> dict[str, Any]:
+    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
         return self._beam_kwargs | {
             "delta_s": self.d_z,
@@ -201,7 +201,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
             self.compute_cavity_parameters,
         )
 
-    def transfer_matrix_kw(self) -> dict[str, Any]:
+    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
         return self._beam_kwargs | {
             "d_z": self.d_z,
@@ -265,7 +265,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         }
         return results
 
-    def _broken_transfer_matrix_kw(self) -> dict[str, Any]:
+    def _broken_transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
         return self._beam_kwargs | {
             "delta_s": self.d_z,
@@ -328,6 +328,14 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
                 self.transf_mat_function_wrapper,
                 self.compute_cavity_parameters,
             )
+
+    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
+        """Give the element parameters necessary to compute transfer matrix."""
+        return self._beam_kwargs | {
+            "d_z": self.d_z,
+            "n_steps": self.n_steps,
+            "filenames": self.field_map_file_names,
+        }
 
     def _transfer_matrix_results_to_dict(
         self,
@@ -453,7 +461,7 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
         assert isinstance(factor_3, float)
         return factor_1, factor_2, factor_3
 
-    def transfer_matrix_kw(self) -> dict[str, Any]:
+    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
         return self._beam_kwargs | {
             "delta_s": self.d_z,
