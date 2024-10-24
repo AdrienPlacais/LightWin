@@ -89,36 +89,6 @@ class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
         }
         return results
 
-    def _transfer_matrix_results_to_dict_broken_field_map(
-        self,
-        transfer_matrix: np.ndarray,
-        gamma_phi: np.ndarray,
-        itg_field: float | None,
-    ) -> dict:
-        """Convert the results given by the transf_mat function to dict.
-
-        This method should override the default
-        ``_transfer_matrix_results_to_dict`` when the element under study is a
-        broken field map.
-
-        """
-        assert itg_field is None
-        w_kin = convert.energy(
-            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
-        )
-        results = {
-            "transfer_matrix": transfer_matrix,
-            "r_zz": transfer_matrix[:, 4:, 4:],
-            "cav_params": {"v_cav_mv": np.nan, "phi_s": np.nan},
-            "w_kin": w_kin,
-            "phi_rel": gamma_phi[:, 1],
-        }
-        return results
-
-    def re_set_for_broken_cavity(self):
-        """Change solver parameters for efficiency purposes."""
-        raise IOError("Calling this method for a non-field map is incorrect.")
-
 
 class DriftEnvelope3DParameters(ElementEnvelope3DParameters):
     """Hold the properties to compute transfer matrix of a :class:`.Drift`."""
@@ -140,10 +110,6 @@ class DriftEnvelope3DParameters(ElementEnvelope3DParameters):
             n_steps=n_steps,
             **kwargs,
         )
-
-    def transfer_matrix_kw(self) -> dict[str, Any]:
-        """Give the element parameters necessary to compute transfer matrix."""
-        return {"delta_s": self.d_z, "n_steps": self.n_steps}
 
 
 class QuadEnvelope3DParameters(ElementEnvelope3DParameters):
@@ -170,7 +136,10 @@ class QuadEnvelope3DParameters(ElementEnvelope3DParameters):
 
     def transfer_matrix_kw(self) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
-        return {"delta_s": self.d_z, "gradient": self.gradient}
+        return self._beam_kwargs | {
+            "delta_s": self.d_z,
+            "gradient": self.gradient,
+        }
 
 
 class SolenoidEnvelope3DParameters(ElementEnvelope3DParameters):
@@ -235,7 +204,7 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
 
     def transfer_matrix_kw(self) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
-        return {"d_z": self.d_z, "n_steps": self.n_steps}
+        return self._beam_kwargs | {"d_z": self.d_z, "n_steps": self.n_steps}
 
     def _transfer_matrix_results_to_dict(
         self,
@@ -267,41 +236,40 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
     def re_set_for_broken_cavity(self) -> Callable:
         """Make beam calculator call Drift func instead of FieldMap."""
         self.transf_mat_function = self._transf_mat_module.drift
-        self.transfer_matrix_kw = lambda: {
+        self.transfer_matrix_kw = self._broken_transfer_matrix_kw
+        self._transfer_matrix_results_to_dict = (
+            self._broken_transfer_matrix_results_to_dict
+        )
+        return self.transf_mat_function
+
+    def _broken_transfer_matrix_results_to_dict(
+        self,
+        transfer_matrix: np.ndarray,
+        gamma_phi: np.ndarray,
+        integrated_field: float | None,
+    ) -> dict:
+        """Convert the results given by the transf_mat function to a dict."""
+        assert integrated_field is None
+        w_kin = convert.energy(
+            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
+        )
+        cav_params = self.compute_cavity_parameters(np.nan)
+        results = {
+            "transfer_matrix": transfer_matrix,
+            "r_zz": transfer_matrix[4:, 4:],
+            "cav_params": cav_params,
+            "w_kin": w_kin,
+            "phi_rel": gamma_phi[:, 1],
+            "integrated_field": integrated_field,
+        }
+        return results
+
+    def _broken_transfer_matrix_kw(self) -> dict[str, Any]:
+        """Give the element parameters necessary to compute transfer matrix."""
+        return self._beam_kwargs | {
             "delta_s": self.d_z,
             "n_steps": self.n_steps,
         }
-
-        def _new_transfer_matrix_results_to_dict(
-            transfer_matrix: np.ndarray,
-            gamma_phi: np.ndarray,
-            integrated_field: float | None,
-        ) -> dict:
-            """
-            Convert the results given by the transf_mat function to dict.
-
-            Overrides the default method defined in the ABC.
-
-            """
-            assert integrated_field is None
-            w_kin = convert.energy(
-                gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
-            )
-            cav_params = compute_param_cav(np.nan)
-            results = {
-                "transfer_matrix": transfer_matrix,
-                "r_zz": transfer_matrix[:, 4:, 4:],
-                "cav_params": cav_params,
-                "w_kin": w_kin,
-                "phi_rel": gamma_phi[:, 1],
-                "integrated_field": integrated_field,
-            }
-            return results
-
-        self._transfer_matrix_results_to_dict = (
-            _new_transfer_matrix_results_to_dict
-        )
-        return self.transf_mat_function
 
 
 class BendEnvelope3DParameters(ElementEnvelope3DParameters):

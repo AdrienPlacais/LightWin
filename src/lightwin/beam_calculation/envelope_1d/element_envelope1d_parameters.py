@@ -12,7 +12,6 @@ The :class:`.Element` objects with a transfer matrix are listed in
 """
 
 import math
-from abc import abstractmethod
 from types import ModuleType
 from typing import Any, Callable, Literal
 
@@ -83,10 +82,12 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         """Change solver parameters for efficiency purposes."""
         raise IOError("Calling this method for a non-field map is incorrect.")
 
-    @abstractmethod
     def transfer_matrix_kw(self) -> dict[str, Any]:
-        """Give all the arguments for the transfer matrix function."""
-        return {}
+        """Give the element parameters necessary to compute transfer matrix."""
+        return self._beam_kwargs | {
+            "delta_s": self.d_z,
+            "n_steps": self.n_steps,
+        }
 
     def transf_mat_function_wrapper(
         self, w_kin_in: float, **rf_field_kwargs
@@ -99,7 +100,6 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
             gamma_in=gamma_in,
             **self.transfer_matrix_kw(),
             **rf_field_kwargs,
-            **self._beam_kwargs,
         )
 
         results = self._transfer_matrix_results_to_dict(
@@ -124,31 +124,6 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
             "w_kin": w_kin,
             "phi_rel": gamma_phi[:, 1],
             "integrated_field": integrated_field,
-        }
-        return results
-
-    def _transfer_matrix_results_to_dict_broken_field_map(
-        self,
-        r_zz: np.ndarray,
-        gamma_phi: np.ndarray,
-        itg_field: float | None,
-    ) -> dict:
-        """Convert the results given by the transf_mat function to dict.
-
-        This method should override the default
-        ``_transfer_matrix_results_to_dict`` when the element under study is a
-        broken field map.
-
-        """
-        assert itg_field is None
-        w_kin = convert.energy(
-            gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
-        )
-        results = {
-            "r_zz": r_zz,
-            "cav_params": {"v_cav_mv": np.nan, "phi_s": np.nan},
-            "w_kin": w_kin,
-            "phi_rel": gamma_phi[:, 1],
         }
         return results
 
@@ -178,10 +153,6 @@ class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
             beam_kwargs=beam_kwargs,
             **kwargs,
         )
-
-    def transfer_matrix_kw(self) -> dict[str, Any]:
-        """Give the element parameters necessary to compute transfer matrix."""
-        return {"delta_s": self.d_z, "n_steps": self.n_steps}
 
 
 class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
@@ -232,7 +203,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def transfer_matrix_kw(self) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
-        return {
+        return self._beam_kwargs | {
             "d_z": self.d_z,
             "n_steps": self.n_steps,
             "filename": self.field_map_file_name,
@@ -296,7 +267,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def _broken_transfer_matrix_kw(self) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
-        return {
+        return self._beam_kwargs | {
             "delta_s": self.d_z,
             "n_steps": self.n_steps,
         }
@@ -357,10 +328,6 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
                 self.transf_mat_function_wrapper,
                 self.compute_cavity_parameters,
             )
-
-    def transfer_matrix_kw(self) -> dict[str, Any]:
-        """Give the element parameters necessary to compute transfer matrix."""
-        return {"d_z": self.d_z, "n_steps": self.n_steps}
 
     def _transfer_matrix_results_to_dict(
         self,
@@ -488,7 +455,7 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def transfer_matrix_kw(self) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
-        return {
+        return self._beam_kwargs | {
             "delta_s": self.d_z,
             "factor_1": self.factor_1,
             "factor_2": self.factor_2,

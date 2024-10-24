@@ -9,7 +9,6 @@
 """
 
 import logging
-from collections.abc import Callable
 
 import numpy as np
 
@@ -66,7 +65,7 @@ class ElementTraceWinParameters(ElementBeamCalculatorParameters):
         self.s_in = s_in
         self.s_out = s_out
 
-    def re_set_for_broken_cavity(self) -> Callable:
+    def re_set_for_broken_cavity(self) -> None:
         """Do nothing."""
         pass
 
