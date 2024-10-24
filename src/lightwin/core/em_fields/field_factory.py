@@ -1,6 +1,10 @@
-"""Define a factory to easily create the :class:`.Field` objects."""
+"""Define a factory to easily create the :class:`.Field` objects.
 
-from abc import ABCMeta
+.. todo::
+    Implement :class:`.SuperposedFieldMap`.
+
+"""
+
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
@@ -14,7 +18,7 @@ from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
 )
-from lightwin.core.em_fields.field import AnyDimFloat, Field
+from lightwin.core.em_fields.field import Field
 from lightwin.core.em_fields.field70 import Field70
 from lightwin.core.em_fields.field100 import Field100
 
@@ -41,18 +45,19 @@ class FieldFactory:
         Parameters
         ----------
         field_maps : Collection[FieldMap]
-            All the :class:`.FieldMap` that must have a :class:`.Field`.
+            All the :class:`.FieldMap` instances requiring a :class:`.Field`.
 
         Returns
         -------
-        dict[Path, list[FieldMap]]
-            Keys are path to the field map files. Values are all the
-            :class:`.FieldMap` that use the field maps.
+        dict[pathlib.Path, list[FieldMap]]
+            A dictionary where each key is a path to a field map file, and each
+            value is a list of :class:`.FieldMap` instances that use that file.
 
         Raises
         ------
         NotImplementedError
-            :class:`.SuperposedFieldMap` not yet supported.
+            If a :class:`.SuperposedFieldMap` is encountered, as it's not yet
+            supported.
 
         """
         to_load: dict[Path, list[FieldMap]] = {}
@@ -62,13 +67,13 @@ class FieldFactory:
                     "Loading of field maps not yet implemented for Superposed."
                 )
             assert isinstance(field_map.field_map_file_name, Path)
-            file_name = (
+            file_path = (
                 field_map.field_map_folder / field_map.field_map_file_name
             )
-            if file_name not in to_load:
-                to_load[file_name] = []
+            if file_path not in to_load:
+                to_load[file_path] = []
 
-            to_load[file_name].append(field_map)
+            to_load[file_path].append(field_map)
 
         self._check_uniformity_of_types(to_load)
         return to_load
@@ -87,10 +92,10 @@ class FieldFactory:
 
     def _run(
         self,
-        constructor: ABCMeta,
+        constructor: type[Field],
         field_map_path: Path,
         length_m: float,
-        z_0: AnyDimFloat = (0.0,),
+        z_0: float = 0.0,
         **kwargs,
     ) -> Field:
         """Create a single :class:`.Field`."""
@@ -109,13 +114,13 @@ class FieldFactory:
         """Generate the :class:`.Field` objects and store it in field maps."""
         to_load = self._gather_files_to_load(field_maps)
         for path, field_maps in to_load.items():
-            field = field_maps[0]
+            field_map = field_maps[0]
 
-            constructor = FIELDS[field.__class__]
-            kwargs = self._run_kwargs(field)
+            constructor = FIELDS[field_map.__class__]
+            kwargs = self._run_kwargs(field_map)
 
             field = self._run(constructor, field_map_path=path, **kwargs)
 
-            for field_map in field_maps:
-                field_map.field = field
+            for fm in field_maps:
+                fm.field = field
         return
