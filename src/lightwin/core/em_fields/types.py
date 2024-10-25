@@ -13,3 +13,4 @@ FieldFuncComponent1D = Callable[[Pos1D], float]
 
 FieldFuncTimedComponent = Callable[[PosAnyDim, float], float]
 FieldFuncComplexTimedComponent = Callable[[PosAnyDim, float], complex]
+FieldFuncPhisFit = Callable[[PosAnyDim, float, float], complex]

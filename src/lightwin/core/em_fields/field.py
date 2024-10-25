@@ -12,6 +12,9 @@ See Also
     Define a FieldMapLoader function to easily choose between binary/ascii file
     format.
 
+.. todo::
+    Should have a omega0_rf attribute
+
 """
 
 import functools
@@ -23,7 +26,10 @@ from pathlib import Path
 from typing import Any, Literal, overload
 
 from lightwin.core.em_fields.field_helpers import null_field_1d
-from lightwin.core.em_fields.types import FieldFuncComplexTimedComponent
+from lightwin.core.em_fields.types import (
+    FieldFuncComplexTimedComponent,
+    FieldFuncPhisFit,
+)
 
 EXTENSION_TO_COMPONENT = {
     ".edx": "_e_x_spat_rf",
@@ -287,6 +293,10 @@ class Field(ABC):
         return functools.partial(
             self.e_z, amplitude=amplitude, phi_0_rel=phi_0_rel
         )
+
+    def partial_e_z_phis_fit(self, amplitude: float) -> FieldFuncPhisFit:
+        """Generate a function for longitudinal transfer matrix calculation."""
+        return functools.partial(self.e_z, amplitude=amplitude)
 
     def _patch_to_keep_consistency(self, n_interp: Any, n_cell: int) -> None:
         """Save ``n_cell`` and ``n_z``. Temporary solution."""
