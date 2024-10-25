@@ -19,6 +19,7 @@ from typing import Any, Callable, Literal
 import numpy as np
 
 import lightwin.util.converters as convert
+from lightwin.beam_calculation.envelope_1d.util import ENVELOPE1D_METHODS_T
 from lightwin.beam_calculation.parameters.element_parameters import (
     ElementBeamCalculatorParameters,
 )
@@ -186,7 +187,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         self,
         transf_mat_module: ModuleType,
         elt: FieldMap,
-        method: Literal["leapfrog", "RK4"],
+        method: ENVELOPE1D_METHODS_T,
         n_steps_per_cell: int,
         solver_id: str,
         beam_kwargs: dict[str, Any],
