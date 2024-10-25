@@ -6,7 +6,6 @@ implemented for now.
 """
 
 import functools
-import math
 from collections.abc import Callable
 from pathlib import Path
 
