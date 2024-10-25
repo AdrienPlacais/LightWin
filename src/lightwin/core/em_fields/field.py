@@ -23,7 +23,7 @@ import math
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Collection
 from pathlib import Path
-from typing import Any, Literal, overload
+from typing import Any
 
 from lightwin.core.em_fields.field_helpers import null_field_1d
 from lightwin.core.em_fields.types import (
