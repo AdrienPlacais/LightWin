@@ -84,6 +84,7 @@ class CavitySettings:
         freq_cavity_mhz: float | None = None,
         transf_mat_func_wrappers: dict[str, Callable] | None = None,
         phi_s_funcs: dict[str, Callable] | None = None,
+        rf_field: RfField | None = None,
     ) -> None:
         """Instantiate the object.
 
@@ -152,6 +153,8 @@ class CavitySettings:
 
         # NEW
         self.rf_field: RfField
+        if rf_field is not None:
+            self.rf_field = rf_field
 
     def __str__(self) -> str:
         """Print out the different phases/k_e, and which one is the reference.
@@ -201,6 +204,7 @@ class CavitySettings:
             other.freq_cavity_mhz,
             transf_mat_func_wrappers=other.transf_mat_func_wrappers,
             phi_s_funcs=other.phi_s_funcs,
+            rf_field=other.rf_field,
         )
         return settings
 
@@ -248,6 +252,7 @@ class CavitySettings:
             base.freq_cavity_mhz,
             base.transf_mat_func_wrappers,
             base.phi_s_funcs,
+            rf_field=base.rf_field,
         )
         return settings
 
@@ -656,7 +661,7 @@ class CavitySettings:
             results = transf_mat_function_wrapper(
                 w_kin=w_kin,
                 phi_0_rel=phi_0_rel,
-                cavity_setttings=self,
+                cavity_settings=self,
                 **kwargs,
             )
             cavity_parameters = phi_s_func(**results)

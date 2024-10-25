@@ -11,7 +11,7 @@ The list of implemented transfer matrices is :data:`.PARAMETERS_3D`.
 
 """
 
-from collections.abc import Callable
+from collections.abc import Callable, Collection
 from types import ModuleType
 from typing import Any
 
@@ -23,6 +23,7 @@ from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import 
 )
 from lightwin.core.elements.bend import Bend
 from lightwin.core.elements.drift import Drift
+from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
@@ -202,9 +203,56 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
             self.compute_cavity_parameters,
         )
 
-    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
-        """Give the element parameters necessary to compute transfer matrix."""
-        return self._beam_kwargs | {"d_z": self.d_z, "n_steps": self.n_steps}
+    def transfer_matrix_kw(
+        self,
+        w_kin: float,
+        cavity_settings: CavitySettings,
+        *args,
+        phi_0_rel: float | None = None,
+        **kwargs,
+    ) -> dict[str, Any]:
+        r"""Give the element parameters necessary to compute transfer matrix.
+
+        Parameters
+        ----------
+        w_kin : float
+            Kinetic energy at the entrance of cavity in :unit:`MeV`.
+        cavity_settings : CavitySettings
+            Object holding the cavity parameters that can be changed.
+        phi_0_rel : float | None
+            Relative entry phase of the cavity. When provided, it means that we
+            are trying to find the :math:`\phi_{0,\,\mathrm{rel}}` matching a
+            given :math:`\phi_s`. The default is None.
+
+        Returns
+        -------
+        dict[str, Any]
+            Keyword arguments that will be passed to the 1D transfer matrix
+            function defined in :mod:`.envelope_1d.transfer_matrices_p`.
+
+        """
+        assert cavity_settings.status != "failed"
+
+        geometry_kwargs = {
+            "d_z": self.d_z,
+            "n_steps": self.n_steps,
+        }
+        rf_field = cavity_settings.rf_field
+        rf_kwargs = {
+            "bunch_to_rf": cavity_settings.bunch_phase_to_rf_phase,
+            "e_spat": rf_field.e_spat,
+            "k_e": cavity_settings.k_e,
+            "n_cell": rf_field.n_cell,
+            "omega0_rf": cavity_settings.omega0_rf,
+            "section_idx": rf_field.section_idx,
+        }
+        if phi_0_rel is not None:
+            rf_kwargs["phi_0_rel"] = phi_0_rel
+        else:
+            _add_cavity_phase(
+                self.solver_id, w_kin, cavity_settings, rf_kwargs
+            )
+        return self._beam_kwargs | rf_kwargs | geometry_kwargs
 
     def _transfer_matrix_results_to_dict(
         self,
@@ -296,3 +344,55 @@ class BendEnvelope3DParameters(ElementEnvelope3DParameters):
 
         """
         raise NotImplementedError
+
+
+def _add_cavity_phase(
+    solver_id: str,
+    w_kin_in: float,
+    cavity_settings: CavitySettings,
+    rf_kwargs: dict[str, Callable | int | float],
+) -> None:
+    r"""Set reference phase and function to compute :math:`\phi_s`."""
+    if cavity_settings.reference == "phi_s":
+        cavity_settings.set_cavity_parameters_arguments(
+            solver_id, w_kin_in, **rf_kwargs
+        )
+        phi_0_rel = cavity_settings.phi_0_rel
+        assert phi_0_rel is not None
+        rf_kwargs["phi_0_rel"] = phi_0_rel
+        return
+
+    phi_0_rel = cavity_settings.phi_0_rel
+    assert phi_0_rel is not None
+    rf_kwargs["phi_0_rel"] = phi_0_rel
+    cavity_settings.set_cavity_parameters_arguments(
+        solver_id, w_kin_in, **rf_kwargs
+    )
+
+
+def _add_cavities_phases(
+    solver_id: str,
+    w_kin_in: float,
+    cavities_settings: Collection[CavitySettings],
+    rf_parameters_as_dict: dict[
+        str, list[Callable] | int | float | list[float]
+    ],
+) -> None:
+    r"""Set reference phase and function to compute :math:`\phi_s`."""
+    assert isinstance(rf_parameters_as_dict["phi_0_rels"], list)
+    for cavity_settings in cavities_settings:
+        if cavity_settings.reference == "phi_s":
+            cavity_settings.set_cavity_parameters_arguments(
+                solver_id, w_kin_in, **rf_parameters_as_dict
+            )
+            phi_0_rel = cavity_settings.phi_0_rel
+            assert phi_0_rel is not None
+            rf_parameters_as_dict["phi_0_rels"].append(phi_0_rel)
+            return
+
+        phi_0_rel = cavity_settings.phi_0_rel
+        assert phi_0_rel is not None
+        rf_parameters_as_dict["phi_0_rels"].append(phi_0_rel)
+        cavity_settings.set_cavity_parameters_arguments(
+            solver_id, w_kin_in, **rf_parameters_as_dict
+        )
