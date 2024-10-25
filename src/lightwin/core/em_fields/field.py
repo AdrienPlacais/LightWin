@@ -29,6 +29,7 @@ from lightwin.core.em_fields.field_helpers import null_field_1d
 from lightwin.core.em_fields.types import (
     FieldFuncComplexTimedComponent,
     FieldFuncPhisFit,
+    FieldFuncTimedComponent,
 )
 
 EXTENSION_TO_COMPONENT = {
@@ -140,30 +141,6 @@ class Field(ABC):
         """
         ...
 
-    @overload
-    def _calculate_field(
-        self,
-        component_func: Callable[..., float],
-        pos: Any,
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-        *,
-        complex_output: Literal[True],
-    ) -> complex: ...
-
-    @overload
-    def _calculate_field(
-        self,
-        component_func: Callable[..., float],
-        pos: Any,
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-        *,
-        complex_output: Literal[False],
-    ) -> float: ...
-
     def _calculate_field(
         self,
         component_func: Callable[..., float],
@@ -197,6 +174,11 @@ class Field(ABC):
         complex | float
             The calculated field value.
         """
+        phase = phi + phi_0_rel
+        field_value = amplitude * component_func(pos) * math.cos(phase)
+        if complex_output:
+            return field_value * (1.0 + 1j * math.tan(phase))
+        return field_value
         field_value = amplitude * component_func(pos)
         phase = phi + phi_0_rel
         if complex_output:
@@ -235,8 +217,13 @@ class Field(ABC):
         )
 
     def e_z(
-        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
+        self,
+        pos: Any,
+        phi: float,
+        amplitude: float,
+        phi_0_rel: float,
+        complex_output: bool = True,
+    ) -> complex | float:
         """Give longitudinal electric field value."""
         return self._calculate_field(
             self._e_z_spat_rf,
@@ -244,7 +231,7 @@ class Field(ABC):
             phi,
             amplitude,
             phi_0_rel,
-            complex_output=True,
+            complex_output=complex_output,
         )
 
     def b_x(
@@ -288,15 +275,21 @@ class Field(ABC):
 
     def partial_e_z(
         self, amplitude: float, phi_0_rel: float
-    ) -> FieldFuncComplexTimedComponent:
+    ) -> tuple[FieldFuncComplexTimedComponent, FieldFuncTimedComponent]:
         """Generate a function for longitudinal transfer matrix calculation."""
-        return functools.partial(
-            self.e_z, amplitude=amplitude, phi_0_rel=phi_0_rel
+        compl = functools.partial(
+            self.e_z,
+            amplitude=amplitude,
+            phi_0_rel=phi_0_rel,
+            complex_output=True,
         )
-
-    def partial_e_z_phis_fit(self, amplitude: float) -> FieldFuncPhisFit:
-        """Generate a function for longitudinal transfer matrix calculation."""
-        return functools.partial(self.e_z, amplitude=amplitude)
+        rea = functools.partial(
+            self.e_z,
+            amplitude=amplitude,
+            phi_0_rel=phi_0_rel,
+            complex_output=False,
+        )
+        return compl, rea
 
     def _patch_to_keep_consistency(self, n_interp: Any, n_cell: int) -> None:
         """Save ``n_cell`` and ``n_z``. Temporary solution."""

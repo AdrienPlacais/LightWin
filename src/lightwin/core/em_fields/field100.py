@@ -78,13 +78,3 @@ class Field100(Field):
             shifted_e_spat, e_spat=self._e_z_spat_rf, z_shift=self.z_0
         )
         self._e_z_spat_rf = shifted
-
-    def e_z(
-        self, pos: Pos1D, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        """Give longitudinal electric field value."""
-        return (
-            amplitude
-            * self._e_z_spat_rf(pos)
-            * (math.cos(phi + phi_0_rel) + 1j * math.sin(phi + phi_0_rel))
-        )

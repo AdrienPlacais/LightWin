@@ -27,7 +27,10 @@ import numpy as np
 
 from lightwin.beam_calculation.integrators.rk4 import rk4
 from lightwin.constants import c
-from lightwin.core.em_fields.types import FieldFuncComplexTimedComponent
+from lightwin.core.em_fields.types import (
+    FieldFuncComplexTimedComponent,
+    FieldFuncTimedComponent,
+)
 
 
 # =============================================================================
@@ -142,6 +145,7 @@ def z_field_map_rk4(
     n_steps: int,
     omega0_rf: float,
     complex_e_func: FieldFuncComplexTimedComponent,
+    real_e_func: FieldFuncTimedComponent,
     q_adim: float,
     inv_e_rest_mev: float,
     omega_0_bunch: float,
@@ -183,7 +187,7 @@ def z_field_map_rk4(
 
         """
         # v0 = k_k * e_func(z, e_spat, u[1], phi_0_rel)
-        v0 = delta_gamma_norm * complex_e_func(z, u[1]).real
+        v0 = delta_gamma_norm * real_e_func(z, u[1])
         beta = np.sqrt(1.0 - u[0] ** -2)
         v1 = delta_phi_norm / beta
         return np.array([v0, v1])

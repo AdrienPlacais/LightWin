@@ -272,27 +272,26 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
                 # phi_0_rel will be set when trying to access
                 # CavitySettings.phi_0_rel (this is the case #2)
                 phi_0_rel = _get_phi_0_rel(cavity_settings)
-                rf_kwargs["complex_e_func"] = field.partial_e_z(
-                    cavity_settings.k_e, phi_0_rel
-                )
+                funcs = field.partial_e_z(cavity_settings.k_e, phi_0_rel)
+                rf_kwargs["complex_e_func"], rf_kwargs["real_e_func"] = funcs
 
             # Currently looking for the phi_0_rel matching phi_s
             case "phi_s", _:
+                funcs = field.partial_e_z(cavity_settings.k_e, phi_0_rel)
                 rf_kwargs = {
                     "omega0_rf": cavity_settings.omega0_rf,
-                    "complex_e_func": field.partial_e_z(
-                        cavity_settings.k_e, phi_0_rel
-                    ),
+                    "complex_e_func": funcs[0],
+                    "real_e_func": funcs[1],
                 }
 
             # Normal run
             case _, None:
                 phi_0_rel = _get_phi_0_rel(cavity_settings)
+                funcs = field.partial_e_z(cavity_settings.k_e, phi_0_rel)
                 rf_kwargs = {
                     "omega0_rf": cavity_settings.omega0_rf,
-                    "complex_e_func": field.partial_e_z(
-                        cavity_settings.k_e, phi_0_rel
-                    ),
+                    "complex_e_func": funcs[0],
+                    "real_e_func": funcs[1],
                 }
                 cavity_settings.set_cavity_parameters_arguments(
                     self.solver_id, w_kin, **rf_kwargs
