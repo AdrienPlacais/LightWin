@@ -634,10 +634,10 @@ class CavitySettings:
     ) -> None:
         r"""Adapt the cavity parameters methods to beam with ``w_kin``.
 
-        This function must be called every time the kinetic energy at the
-        entrance of the cavity is changed (like this occurs during optimisation
-        process) or when the synchronous phase must be calculated with another
-        solver.
+        This function must be called:
+        - When the kinetic energy at the entrance of the cavity is changed
+          (like this occurs during optimisation process)
+        - When the synchronous phase must be calculated with another solver.
 
         Parameters
         ----------
@@ -650,8 +650,8 @@ class CavitySettings:
         kwargs :
             Other keyword arguments that will be passed to the function that
             will compute propagation of the beam in the :class:`.FieldMap`.
-            Note that you should check that ``phi_0_rel`` key should be removed
-            in your :class:`.BeamCalculator`, to avoid a clash in the
+            Note that you should check that ``phi_0_rel`` key is removed in
+            your :class:`.BeamCalculator`, to avoid a clash in the
             `phi_0_rel_to_cavity_parameters` function.
 
         See Also
