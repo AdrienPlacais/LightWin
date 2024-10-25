@@ -145,8 +145,6 @@ class CavitySettings:
         self.phi_s_funcs: dict[str, Callable] = {}
         if phi_s_funcs is not None:
             self.phi_s_funcs = phi_s_funcs
-        self._phi_0_rel_to_cavity_parameters: Callable
-        self._phi_s_to_phi_0_rel: Callable
 
         self._freq_bunch_mhz = freq_bunch_mhz
         self.bunch_phase_to_rf_phase: Callable[[float], float]
@@ -163,6 +161,10 @@ class CavitySettings:
         self.field: Field
         if field is not None:
             self.field = field
+        # Used for cavity settings (phi_s) calculations:
+        self.phi_s_func: Callable
+        self.w_kin: float
+        self.transf_mat_kwargs: dict[str, Any]
 
     def __str__(self) -> str:
         """Print out the different phases/k_e, and which one is the reference.
@@ -509,7 +511,7 @@ class CavitySettings:
             )
             return None
 
-        phi_s_to_phi_0_rel = getattr(self, "_phi_s_to_phi_0_rel", None)
+        phi_s_to_phi_0_rel = getattr(self, "phi_s_to_phi_0_rel", None)
         if phi_s_to_phi_0_rel is None:
             logging.error(
                 f"{self = }: you must set a function to compute phi_0_rel from"
@@ -659,41 +661,94 @@ class CavitySettings:
         set_cavity_parameters_methods
 
         """
-        transf_mat_function_wrapper = _get_valid_func(
+        self.transf_mat_function_wrapper = _get_valid_func(
             self, "transf_mat_func_wrappers", solver_id
         )
-        phi_s_func = _get_valid_func(self, "phi_s_funcs", solver_id)
+        self.phi_s_func = _get_valid_func(self, "phi_s_funcs", solver_id)
+        self.w_kin = w_kin
+        self.transf_mat_kwargs = kwargs
 
-        def phi_0_rel_to_cavity_parameters(
-            phi_0_rel: float,
-        ) -> tuple[float, float]:
-            """Compute propagation of the beam, deduce v_cav and phi_s."""
-            results = transf_mat_function_wrapper(
-                w_kin=w_kin,
-                phi_0_rel=phi_0_rel,
-                cavity_settings=self,
-                **kwargs,
+    def phi_0_rel_to_cavity_parameters(
+        self, phi_0_rel: float
+    ) -> tuple[float, float]:
+        """Compute cavity parameters based on relative entry phase.
+
+        Parameters
+        ----------
+        phi_0_rel : float
+            Relative entry phase in radians.
+
+        Returns
+        -------
+        tuple[float, float]
+            A tuple containing (V_cav, phi_s).
+
+        Raises
+        ------
+        RuntimeError
+            If the transfer matrix function or phi_s function is not set.
+
+        """
+        if not hasattr(self, "transf_mat_function_wrapper") or not hasattr(
+            self, "phi_s_func"
+        ):
+            raise RuntimeError(
+                "Transfer matrix function or phi_s function not set."
             )
-            cavity_parameters = phi_s_func(**results)
-            return cavity_parameters
+        results = self.transf_mat_function_wrapper(
+            w_kin=self.w_kin,
+            phi_0_rel=phi_0_rel,
+            cavity_settings=self,
+            **self.transf_mat_kwargs,
+        )
+        cavity_parameters = self.phi_s_func(**results)
+        return cavity_parameters
 
-        def _residue_func(phi_0_rel: float, phi_s: float) -> float:
-            """Compute difference between given and calculated ``phi_s``."""
-            calculated_phi_s = phi_0_rel_to_cavity_parameters(phi_0_rel)[1]
-            residue = diff_angle(phi_s, calculated_phi_s)
-            return residue**2
+    def residue_func(self, phi_0_rel: float, phi_s: float) -> float:
+        """Calculate the squared difference between target and computed phi_s.
 
-        def phi_s_to_phi_0_rel(phi_s: float) -> float:
-            """Optimise to find ``phi_0_rel`` matching ``phi_s``."""
-            out = minimize_scalar(
-                _residue_func, bounds=(0.0, 2.0 * math.pi), args=(phi_s,)
-            )
-            if not out.success:
-                logging.error("Synch phase not found")
-            return out.x
+        Parameters
+        ----------
+        phi_0_rel : float
+            Relative entry phase in radians.
+        phi_s_target : float
+            Target synchronous phase in radians.
 
-        self._phi_0_rel_to_cavity_parameters = phi_0_rel_to_cavity_parameters
-        self._phi_s_to_phi_0_rel = phi_s_to_phi_0_rel
+        Returns
+        -------
+        float
+            The squared difference between the target and computed phi_s.
+
+        """
+        calculated_phi_s = self.phi_0_rel_to_cavity_parameters(phi_0_rel)[1]
+        residue = diff_angle(phi_s, calculated_phi_s)
+        return residue**2
+
+    def phi_s_to_phi_0_rel(self, phi_s: float) -> float:
+        """Find the relative entry phase that yields the target synchronous phase.
+
+        Parameters
+        ----------
+        phi_s : float
+            Target synchronous phase in radians.
+
+        Returns
+        -------
+        float
+            Relative entry phase in radians that achieves the target phi_s.
+
+        Raises
+        ------
+        RuntimeError
+            If the optimization fails to find a solution.
+
+        """
+        out = minimize_scalar(
+            self.residue_func, bounds=(0.0, 2.0 * math.pi), args=(phi_s,)
+        )
+        if not out.success:
+            logging.error("Synch phase not found")
+        return out.x
 
     @property
     def v_cav_mv(self) -> None:
