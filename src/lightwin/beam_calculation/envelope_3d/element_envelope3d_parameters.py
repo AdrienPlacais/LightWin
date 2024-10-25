@@ -28,7 +28,10 @@ from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
 from lightwin.core.em_fields.rf_field import compute_param_cav
-from lightwin.util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
+from lightwin.util.synchronous_phases import (
+    PHI_S_MODELS,
+    SYNCHRONOUS_PHASE_FUNCTIONS,
+)
 
 FIELD_MAP_INTEGRATION_METHOD_TO_FUNC = {
     "RK4": lambda transf_mat_module: transf_mat_module.field_map_rk4,
@@ -174,7 +177,7 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
         n_steps_per_cell: int,
         solver_id: str,
         beam_kwargs: dict[str, Any],
-        phi_s_model: str = "historical",
+        phi_s_model: PHI_S_MODELS = "historical",
         **kwargs: str,
     ) -> None:
         """Create the specific parameters for a drift."""

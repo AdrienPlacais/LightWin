@@ -7,9 +7,11 @@ This solver is fast, but should not be used at low energies.
 import logging
 from collections.abc import Collection
 from pathlib import Path
-from typing import Literal
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
+from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
+    ElementEnvelope1DParameters,
+)
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory import (
     ElementEnvelope1DParametersFactory,
 )
@@ -22,12 +24,12 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
-from lightwin.core.elements.field_maps.superposed_field_map import (
-    SuperposedFieldMap,
-)
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
+from lightwin.util.synchronous_phases import (
+    PHI_S_MODELS,
+    SYNCHRONOUS_PHASE_FUNCTIONS,
+)
 
 
 class Envelope1D(BeamCalculator):
@@ -42,7 +44,7 @@ class Envelope1D(BeamCalculator):
         method: ENVELOPE1D_METHODS_T,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
-        phi_s_definition: Literal["historical"] = "historical",
+        phi_s_definition: PHI_S_MODELS = "historical",
         **kwargs,
     ) -> None:
         """Set the proper motion integration function, according to inputs."""
@@ -73,9 +75,7 @@ class Envelope1D(BeamCalculator):
             _beam_kwargs=self._beam_kwargs,
             out_folder=self.out_folder,
         )
-        self.beam_calc_parameters_factory: (  # type: ignore
-            ElementEnvelope1DParametersFactory
-        ) = ElementEnvelope1DParametersFactory(
+        self.beam_calc_parameters_factory = ElementEnvelope1DParametersFactory(
             method=self.method,
             n_steps_per_cell=self.n_steps_per_cell,
             solver_id=self.id,
@@ -214,6 +214,7 @@ class Envelope1D(BeamCalculator):
                 return
             solver_param = self.beam_calc_parameters_factory.run(elt)
             elt.beam_calc_param[self.id] = solver_param
+            assert isinstance(solver_param, ElementEnvelope1DParameters)
             position, index = solver_param.set_absolute_meshes(position, index)
         logging.debug(f"Initialized solver param for {elts[0]} to {elts[-1]}")
         return

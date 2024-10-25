@@ -23,6 +23,7 @@ from lightwin.core.elements.field_maps.field_map_70 import FieldMap70
 from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
+from lightwin.util.synchronous_phases import PHI_S_MODELS
 
 PARAMETERS_3D = {
     Bend: BendEnvelope3DParameters,
@@ -46,7 +47,7 @@ class ElementEnvelope3DParametersFactory(
         solver_id: str,
         beam_kwargs: dict[str, Any],
         flag_cython: bool = False,
-        phi_s_definition: Literal["historical"] = "historical",
+        phi_s_definition: PHI_S_MODELS = "historical",
     ) -> None:
         """Prepare import of proper functions."""
         self.method = method

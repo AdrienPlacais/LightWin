@@ -3,6 +3,7 @@
 import cmath
 import logging
 import math
+from typing import Literal
 
 import numpy as np
 
@@ -83,4 +84,5 @@ SYNCHRONOUS_PHASE_FUNCTIONS = {
     "historical": phi_s_legacy,
     "lagniel": phi_s_lagniel,
     "tracewin": phi_s_from_tracewin_file,
-}  #:
+}
+PHI_S_MODELS = Literal["historical", "lagniel"]  #:

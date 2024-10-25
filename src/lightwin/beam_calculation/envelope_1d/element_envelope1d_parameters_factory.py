@@ -1,7 +1,7 @@
 """Create the solver parameters for :class:`.Envelope1D`."""
 
 import logging
-from typing import Any, Literal
+from typing import Any
 
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
     BendEnvelope1DParameters,
@@ -29,6 +29,7 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
 )
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
+from lightwin.util.synchronous_phases import PHI_S_MODELS
 
 PARAMETERS_1D = {
     Aperture: DriftEnvelope1DParameters,
@@ -55,7 +56,7 @@ class ElementEnvelope1DParametersFactory(
         solver_id: str,
         beam_kwargs: dict[str, Any],
         flag_cython: bool = False,
-        phi_s_definition: Literal["historical"] = "historical",
+        phi_s_definition: PHI_S_MODELS = "historical",
     ) -> None:
         """Prepare import of proper functions."""
         assert method in ENVELOPE1D_METHODS

@@ -29,7 +29,10 @@ from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
 )
-from lightwin.util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
+from lightwin.util.synchronous_phases import (
+    PHI_S_MODELS,
+    SYNCHRONOUS_PHASE_FUNCTIONS,
+)
 
 FIELD_MAP_INTEGRATION_METHOD_TO_FUNC = {
     "RK4": lambda module: module.z_field_map_rk4,
@@ -184,7 +187,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         n_steps_per_cell: int,
         solver_id: str,
         beam_kwargs: dict[str, Any],
-        phi_s_model: str = "historical",
+        phi_s_model: PHI_S_MODELS = "historical",
         **kwargs: str | int,
     ) -> None:
         """Create the specific parameters for a field map."""
@@ -343,7 +346,7 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         method: Literal["RK4"],
         n_steps_per_cell: int,
         solver_id: str,
-        phi_s_model: str = "historical",
+        phi_s_model: PHI_S_MODELS = "historical",
         **kwargs: str | int,
     ) -> None:
         """Create the specific parameters for a field map."""

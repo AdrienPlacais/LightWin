@@ -26,7 +26,10 @@ from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.util.synchronous_phases import SYNCHRONOUS_PHASE_FUNCTIONS
+from lightwin.util.synchronous_phases import (
+    PHI_S_MODELS,
+    SYNCHRONOUS_PHASE_FUNCTIONS,
+)
 
 
 class Envelope3D(BeamCalculator):
@@ -41,7 +44,7 @@ class Envelope3D(BeamCalculator):
         default_field_map_folder: Path | str,
         flag_cython: bool = False,
         method: ENVELOPE3D_METHODS_T = "RK4",
-        phi_s_definition: Literal["historical"] = "historical",
+        phi_s_definition: PHI_S_MODELS = "historical",
         **kwargs,
     ) -> None:
         """Set the proper motion integration function, according to inputs."""
