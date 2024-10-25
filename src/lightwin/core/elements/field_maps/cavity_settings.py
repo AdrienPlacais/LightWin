@@ -11,6 +11,7 @@
 See Also
 --------
 :class:`.RfField`
+:class:`.Field`
 
 """
 
@@ -23,6 +24,7 @@ from typing import Any, Literal, Self
 import numpy as np
 from scipy.optimize import minimize_scalar
 
+from lightwin.core.em_fields.field import Field
 from lightwin.core.em_fields.rf_field import RfField
 from lightwin.util.phases import (
     diff_angle,
@@ -85,6 +87,7 @@ class CavitySettings:
         transf_mat_func_wrappers: dict[str, Callable] | None = None,
         phi_s_funcs: dict[str, Callable] | None = None,
         rf_field: RfField | None = None,
+        field: Field | None = None,
     ) -> None:
         """Instantiate the object.
 
@@ -117,6 +120,8 @@ class CavitySettings:
             phase and accelerating voltage from the ouput of corresponding
             ``transf_mat_func_wrapper``. The default is None, in which case
             attribute is not set.
+        field : Field | None, optional
+            Holds the constant parameters, such as interpolated field maps.
 
         """
         self.k_e = k_e
@@ -151,10 +156,13 @@ class CavitySettings:
         if freq_cavity_mhz is not None:
             self.set_bunch_to_rf_freq_func(freq_cavity_mhz)
 
-        # NEW
         self.rf_field: RfField
         if rf_field is not None:
             self.rf_field = rf_field
+
+        self.field: Field
+        if field is not None:
+            self.field = field
 
     def __str__(self) -> str:
         """Print out the different phases/k_e, and which one is the reference.
@@ -205,6 +213,7 @@ class CavitySettings:
             transf_mat_func_wrappers=other.transf_mat_func_wrappers,
             phi_s_funcs=other.phi_s_funcs,
             rf_field=other.rf_field,
+            field=other.field,
         )
         return settings
 
@@ -253,6 +262,7 @@ class CavitySettings:
             base.transf_mat_func_wrappers,
             base.phi_s_funcs,
             rf_field=base.rf_field,
+            field=base.field,
         )
         return settings
 
