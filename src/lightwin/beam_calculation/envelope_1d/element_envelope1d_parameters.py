@@ -415,6 +415,13 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         }
 
 
+def _get_phi_0_rel(cavity_settings: CavitySettings) -> float:
+    """Get the phase from the object."""
+    phi_0_rel = cavity_settings.phi_0_rel
+    assert phi_0_rel is not None
+    return phi_0_rel
+
+
 class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
     """
     Hold properties to compute transfer matrix of :class:`.SuperposedFieldMap`.
@@ -629,13 +636,6 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
             "factor_2": self.factor_2,
             "factor_3": self.factor_3,
         }
-
-
-def _get_phi_0_rel(cavity_settings: CavitySettings) -> float:
-    """Get the phase from the object."""
-    phi_0_rel = cavity_settings.phi_0_rel
-    assert phi_0_rel is not None
-    return phi_0_rel
 
 
 def _add_cavities_phases(
