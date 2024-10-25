@@ -23,6 +23,7 @@ from lightwin.beam_calculation.envelope_1d.util import ENVELOPE1D_METHODS_T
 from lightwin.beam_calculation.parameters.element_parameters import (
     ElementBeamCalculatorParameters,
 )
+from lightwin.constants import NEW
 from lightwin.core.elements.bend import Bend
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
@@ -36,7 +37,9 @@ from lightwin.util.synchronous_phases import (
 )
 
 FIELD_MAP_INTEGRATION_METHOD_TO_FUNC = {
-    "RK4": lambda module: module.z_field_map_rk4,
+    "RK4": lambda module: (
+        module.z_field_map_rk4_new if NEW else module.z_field_map_rk4
+    ),
     "leapfrog": lambda module: module.z_field_map_leapfrog,
 }
 
@@ -250,6 +253,19 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
         """
         assert cavity_settings.status != "failed"
+        # if phi_0_rel is not None:
+        #     # Try to find phi_0 matching a phi_s
+        #     assert cavity_settings.reference == "phi_s"
+        #     # print(
+        #     #     f"Does {phi_0_rel = } matches phi_s = { cavity_settings.phi_s }?"
+        #     # )
+        # else:
+        #     if cavity_settings.reference == "phi_s":
+        #         print(f"Trying to find phi_s = { cavity_settings.phi_s }")
+        if NEW:
+            return self._new_transfer_matrix_kw(
+                w_kin, cavity_settings, *args, phi_0_rel=phi_0_rel, **kwargs
+            )
 
         geometry_kwargs = {
             "d_z": self.d_z,
@@ -265,12 +281,73 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
             "omega0_rf": cavity_settings.omega0_rf,
             "section_idx": rf_field.section_idx,
         }
+        match cavity_settings.reference, phi_0_rel:
+            case "phi_s", None:  # Prepare fit
+                cavity_settings.set_cavity_parameters_arguments(
+                    self.solver_id,
+                    w_kin,
+                    **rf_kwargs,  # no phi_0_rel in kwargs
+                )
+                # calls phi_0_rel and triggers phi_0_rel calculation (case just below)
+                phi_0_rel = _get_phi_0_rel(cavity_settings)
+                rf_kwargs["phi_0_rel"] = phi_0_rel
+            case "phi_s", _:  # Fitting phi_s
+                rf_kwargs["phi_0_rel"] = phi_0_rel
+            case _, None:  # Normal run
+                phi_0_rel = _get_phi_0_rel(cavity_settings)
+                rf_kwargs["phi_0_rel"] = phi_0_rel
+                cavity_settings.set_cavity_parameters_arguments(
+                    self.solver_id, w_kin, **rf_kwargs
+                )
+            case _, _:
+                raise ValueError
+        return self._beam_kwargs | rf_kwargs | geometry_kwargs
+
+    def _new_transfer_matrix_kw(
+        self,
+        w_kin: float,
+        cavity_settings: CavitySettings,
+        *args,
+        phi_0_rel: float | None = None,
+        **kwargs,
+    ) -> dict[str, Any]:
+        r"""Give the element parameters necessary to compute transfer matrix.
+
+        Parameters
+        ----------
+        w_kin : float
+            Kinetic energy at the entrance of cavity in :unit:`MeV`.
+        cavity_settings : CavitySettings
+            Object holding the cavity parameters that can be changed.
+        phi_0_rel : float | None
+            Relative entry phase of the cavity. When provided, it means that we
+            are trying to find the :math:`\phi_{0,\,\mathrm{rel}}` matching a
+            given :math:`\phi_s`. The default is None.
+
+        Returns
+        -------
+        dict[str, Any]
+            Keyword arguments that will be passed to the 1D transfer matrix
+            function defined in :mod:`.envelope_1d.transfer_matrices_p`.
+
+        """
+        assert cavity_settings.status != "failed"
+
+        geometry_kwargs = {
+            "d_z": self.d_z,
+            "n_steps": self.n_steps,
+            "filename": self.field_map_file_name,
+        }
+        field = cavity_settings.field
         if phi_0_rel is not None:
-            rf_kwargs["phi_0_rel"] = phi_0_rel
+            rf_kwargs = {
+                "omega0_rf": cavity_settings.omega0_rf,
+                "complex_e_func": field.partial_e_z(
+                    cavity_settings.k_e, phi_0_rel
+                ),
+            }
         else:
-            _add_cavity_phase(
-                self.solver_id, w_kin, cavity_settings, rf_kwargs
-            )
+            raise NotImplementedError
         return self._beam_kwargs | rf_kwargs | geometry_kwargs
 
     def _transfer_matrix_results_to_dict(
@@ -554,28 +631,11 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
         }
 
 
-def _add_cavity_phase(
-    solver_id: str,
-    w_kin_in: float,
-    cavity_settings: CavitySettings,
-    rf_kwargs: dict[str, Callable | int | float],
-) -> None:
-    r"""Set reference phase and function to compute :math:`\phi_s`."""
-    if cavity_settings.reference == "phi_s":
-        cavity_settings.set_cavity_parameters_arguments(
-            solver_id, w_kin_in, **rf_kwargs
-        )
-        phi_0_rel = cavity_settings.phi_0_rel
-        assert phi_0_rel is not None
-        rf_kwargs["phi_0_rel"] = phi_0_rel
-        return
-
+def _get_phi_0_rel(cavity_settings: CavitySettings) -> float:
+    """Get the phase from the object."""
     phi_0_rel = cavity_settings.phi_0_rel
     assert phi_0_rel is not None
-    rf_kwargs["phi_0_rel"] = phi_0_rel
-    cavity_settings.set_cavity_parameters_arguments(
-        solver_id, w_kin_in, **rf_kwargs
-    )
+    return phi_0_rel
 
 
 def _add_cavities_phases(
