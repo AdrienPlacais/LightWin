@@ -85,7 +85,9 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
 
     def re_set_for_broken_cavity(self) -> None:
         """Change solver parameters for efficiency purposes."""
-        raise IOError("Calling this method for a non-field map is incorrect.")
+        raise NotImplementedError(
+            "Calling this method for a non-field map is incorrect."
+        )
 
     def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
@@ -130,7 +132,8 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         integrated_field: float | None,
     ) -> dict:
         """Convert the results given by the transf_mat function to dict."""
-        assert integrated_field is None
+        if integrated_field is not None:
+            raise ValueError("Expected None integrated field.")
         w_kin = convert.energy(
             gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
         )
@@ -280,7 +283,8 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         Overrides the default method defined in the ABC.
 
         """
-        assert integrated_field is not None
+        if integrated_field is None:
+            raise ValueError("Expected non-None integrated field.")
         w_kin = convert.energy(
             gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
         )
