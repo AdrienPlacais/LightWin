@@ -123,4 +123,5 @@ class FieldFactory:
 
             for fm in field_maps:
                 fm.field = field
+                fm.cavity_settings.field = field
         return
