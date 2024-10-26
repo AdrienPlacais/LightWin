@@ -186,7 +186,6 @@ def z_field_map_rk4(
             :unit:`rad / m`.
 
         """
-        # v0 = k_k * e_func(z, e_spat, u[1], phi_0_rel)
         v0 = delta_gamma_norm * real_e_func(z, u[1])
         beta = np.sqrt(1.0 - u[0] ** -2)
         v1 = delta_phi_norm / beta
