@@ -6,14 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [0.?.??] 2024-??-?? -- branch under development
-
-### Changed
-
-- `evaluator` objects are more robust and can be configured from the `.toml`.
-- Plotting is now performed thanks to the `plotter` library.
-
-## [0.9.0]
+## [0.9.0] -- `superposed_field_map` branch
 
 ### Added
 
@@ -24,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Creation of `DatLine` object, holding a line of the ``.dat`` file. Solves several bugs, e.g. with hyphens in personalized names.
 - Makefile for docs is up-to-date. Instructions in README.
-- Changed location of `RfField` object, now in `core/em_field/rf_field`.
+- Replaced `RfField` object by `Field`. The latter is more generic and shared by all the `FieldMap` using it.
 
 ### Fixed
 

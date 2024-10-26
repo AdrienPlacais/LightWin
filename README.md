@@ -1,6 +1,14 @@
 # LightWin
 LightWin is a tool to automatically find compensation settings for cavity failures in linacs.
 
+## Important notice
+You are on a development branch, that will be released in `v0.9.0`.
+There are still several significant bugs to fix:
+- [ ] `Envelope1D` Cython no longer works.
+- [ ] `Envelope3D` no longer works (transfer matrix calculation in thin lense is broken)
+- [ ] +20% calculation time overhead in synchronous phase fit
+  - Note: to compare with branch `refactor_element_parameters`
+
 ## Installation
 The full installation instructions are detailed [here](https://adrienplacais.github.io/LightWin/html/main/manual/installation.html).
 The steps are straightforward and can be summarized as follows:
