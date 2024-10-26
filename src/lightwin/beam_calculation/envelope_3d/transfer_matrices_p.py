@@ -13,9 +13,6 @@ sixth line is ``dp/p``.
 .. todo::
     Will be necessary to separate this module into several sub-packages
 
-.. todo::
-    more math, less numpy. look at envelope 1d version
-
 """
 
 import math
@@ -25,25 +22,12 @@ import numpy as np
 
 from lightwin.beam_calculation.integrators.rk4 import rk4
 from lightwin.constants import c
+from lightwin.core.em_fields.types import (
+    FieldFuncComplexTimedComponent,
+    FieldFuncTimedComponent,
+)
 
 
-# =============================================================================
-# Electric field functions
-# =============================================================================
-def e_func(
-    z: float, e_spat: Callable[[float], float], phi: float, phi_0: float
-) -> float:
-    """Give the electric field at position z and phase phi.
-
-    The field is normalized and should be multiplied by k_e.
-
-    """
-    return e_spat(z) * math.cos(phi + phi_0)
-
-
-# =============================================================================
-# Transfer matrices
-# =============================================================================
 def drift(
     gamma_in: float,
     delta_s: float,
@@ -221,9 +205,9 @@ def field_map_rk4(
     d_z: float,
     n_steps: int,
     omega0_rf: float,
-    k_e: float,
-    phi_0_rel: float,
-    e_spat: Callable[[float], float],
+    complex_e_func: FieldFuncComplexTimedComponent,
+    real_e_func: FieldFuncTimedComponent,
+    e_func_no_time: Callable,  # without any cos, just the interpolated field
     q_adim: float,
     inv_e_rest_mev: float,
     omega_0_bunch: float,
@@ -237,7 +221,6 @@ def field_map_rk4(
     # Constants to speed up calculation
     delta_phi_norm = omega0_rf * d_z / c
     delta_gamma_norm = q_adim * d_z * inv_e_rest_mev
-    k_k = delta_gamma_norm * k_e
 
     transfer_matrix = np.empty((n_steps, 6, 6))
     gamma_phi = np.empty((n_steps + 1, 2))
@@ -263,48 +246,37 @@ def field_map_rk4(
             Second is delta phase / delta_z in rad / m.
 
         """
-        v0 = k_k * e_func(z, e_spat, u[1], phi_0_rel)
+        v0 = delta_gamma_norm * real_e_func(z, u[1])
         beta = np.sqrt(1.0 - u[0] ** -2)
         v1 = delta_phi_norm / beta
         return np.array([v0, v1])
 
     for i in range(n_steps):
-        # Compute gamma and phase changes
         delta_gamma_phi = rk4(u=gamma_phi[i, :], du=du, x=z_rel, dx=d_z)
-
-        # Update
         gamma_phi[i + 1, :] = gamma_phi[i, :] + delta_gamma_phi
 
-        # Update itg_field. Used to compute V_cav and phi_s.
-        itg_field += (
-            k_e
-            * e_func(z_rel, e_spat, gamma_phi[i, 1], phi_0_rel)
-            * (1.0 + 1j * np.tan(gamma_phi[i, 1] + phi_0_rel))
-            * d_z
-        )
+        itg_field += complex_e_func(z_rel, gamma_phi[i, 1]) * d_z
 
-        # Compute gamma and phi at the middle of the thin lense
         gamma_phi_middle = gamma_phi[i, :] + 0.5 * delta_gamma_phi
-
-        # To speed up (corresponds to the gamma_variation at the middle of the
-        # thin lense at cos(phi + phi_0) = 1
-        delta_gamma_middle_max = k_k * e_spat(z_rel + half_dz)
-
-        e_spat1 = e_spat
-        delta_e_max = (
-            k_k * (e_spat(z_rel + 0.9999998 * d_z) - e_spat1(z_rel)) / d_z
+        scaled_e_middle = delta_gamma_norm * complex_e_func(
+            z_rel + half_dz, gamma_phi_middle[1]
         )
-        # The term 0.9999998 to ensure the final step in inside the range for
-        # the interpolation
+        delta_e_max = (
+            delta_gamma_norm
+            * (
+                real_e_func(z_rel + 0.9999998 * d_z, gamma_phi_middle[1])
+                - real_e_func(z_rel, gamma_phi_middle[1])
+            )
+            / d_z
+        )
 
         # Compute thin lense transfer matrix
         transfer_matrix[i, :, :] = thin_lense(
+            scaled_e_middle,
             gamma_phi[i, 0],
             gamma_phi[i + 1, 0],
             gamma_phi_middle,
             half_dz,
-            delta_gamma_middle_max,
-            phi_0_rel,
             omega0_rf,
             delta_e_max,
             omega_0_bunch=omega_0_bunch,
@@ -316,36 +288,37 @@ def field_map_rk4(
 
 
 def thin_lense(
+    scaled_e_middle: complex,
     gamma_in: float,
     gamma_out: float,
-    gamma_phi_m: np.ndarray,
+    gamma_phi_middle: list[float],
     half_dz: float,
-    delta_gamma_m_max: float,
-    phi_0: float,
     omega0_rf: float,
     delta_e_max: float,
     omega_0_bunch: float,
+    **kwargs,
 ) -> np.ndarray:
-    """Thin lense approximation: drift-acceleration-drift.
+    """
+    Compute propagation in a slice of field map using thin lense approximation.
+
+    Thin lense approximation: drift-acceleration-drift.
 
     Parameters
     ----------
+    scaled_e_middle : complex
+        Complex electric field in the accelerating gap.
     gamma_in : float
         gamma at entrance of first drift.
     gamma_out : float
         gamma at exit of first drift.
-    gamma_phi_m : numpy.ndarray
-        gamma and phase at the thin acceleration drift.
+    gamma_phi_middle : list[float]
+        gamma and phi at the thin acceleration drift.
     half_dz : float
-        Half a spatial step in m.
-    delta_gamma_m_max : float
-        Max gamma increase if the cos(phi + phi_0) of the acc. field is 1.
-    phi_0 : float
-        Input phase of the cavity.
+        Half a spatial step in :unit:`m`.
     omega0_rf : float
         Pulsation of the cavity.
     delta_e_max : float
-        Derivative of the electric field.
+        [TODO:description]
     omega_0_bunch : float
         Pulsation of the beam.
 
@@ -355,27 +328,30 @@ def thin_lense(
         Transfer matrix of the thin lense.
 
     """
-    # Used for tm components
-    beta_m = np.sqrt(1.0 - gamma_phi_m[0] ** -2)
-    k_speed1 = delta_gamma_m_max / (gamma_phi_m[0] * beta_m**2)
-    k_speed2 = k_speed1 * np.cos(gamma_phi_m[1] + phi_0)
+    beta_m = math.sqrt(1.0 - gamma_phi_middle[0] ** -2)
+    scaled_e_middle /= gamma_phi_middle[0] * beta_m**2
+    k_1 = scaled_e_middle.imag * omega0_rf / (beta_m * c)
+    k_2 = 1.0 - (2.0 - beta_m**2) * scaled_e_middle.real
+    k_3 = (1.0 - scaled_e_middle.real) / k_2
 
-    # Thin lense transfer matrices components
-    k_1 = k_speed1 * omega0_rf / (beta_m * c) * np.sin(gamma_phi_m[1] + phi_0)
-    k_2 = 1.0 - (2.0 - beta_m**2) * k_speed2
-    k_3 = (1.0 - k_speed2) / k_2
+    # Faster than matmul or matprod_22
+    r_zz_array = drift(gamma_out, half_dz, omega_0_bunch=omega_0_bunch)[0][
+        0
+    ] @ (
+        np.array(([k_3, 0.0], [k_1, k_2]))
+        @ drift(gamma_in, half_dz, omega_0_bunch=omega_0_bunch)[0][0]
+    )
 
     # New terms
-    k_1a = (
-        delta_e_max
-        * np.cos(gamma_phi_m[1] + phi_0)
-        / (gamma_phi_m[0] * beta_m**2)
+    delta_e_max /= gamma_phi_middle[0] * beta_m**2
+    # k_1xy = -0.5 * delta_e_max + k_1 * beta_m * omega0_rf / (2 * c) * math.sin(
+    #     gamma_phi_m[1] + phi_0
+    # )
+    raise NotImplementedError(
+        "Thin lense transfer_matrix calculation to resee."
     )
-    k_1xy = -0.5 * k_1a + k_speed1 * beta_m * omega0_rf / (2 * c) * np.sin(
-        gamma_phi_m[1] + phi_0
-    )
-    k_2xy = 1.0 - k_speed2
-    k_3xy = (1.0 - k_speed2) / k_2xy
+    k_2xy = 1.0 - scaled_e_middle.real
+    k_3xy = (1.0 - scaled_e_middle.real) / k_2xy
 
     transfer_matrix = drift(
         gamma_in=gamma_out, delta_s=half_dz, omega_0_bunch=omega_0_bunch

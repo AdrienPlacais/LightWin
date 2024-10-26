@@ -28,6 +28,7 @@ from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
 from lightwin.core.em_fields.rf_field import compute_param_cav
+from lightwin.core.em_fields.types import FieldFuncComplexTimedComponent
 from lightwin.util.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
@@ -234,28 +235,61 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
             function defined in :mod:`.envelope_1d.transfer_matrices_p`.
 
         """
-        assert cavity_settings.status != "failed"
-
         geometry_kwargs = {
             "d_z": self.d_z,
             "n_steps": self.n_steps,
         }
-        rf_field = cavity_settings.rf_field
-        rf_kwargs = {
-            "bunch_to_rf": cavity_settings.bunch_phase_to_rf_phase,
-            "e_spat": rf_field.e_spat,
-            "k_e": cavity_settings.k_e,
-            "n_cell": rf_field.n_cell,
-            "omega0_rf": cavity_settings.omega0_rf,
-            "section_idx": rf_field.section_idx,
-        }
-        if phi_0_rel is not None:
-            rf_kwargs["phi_0_rel"] = phi_0_rel
-        else:
-            _add_cavity_phase(
-                self.solver_id, w_kin, cavity_settings, rf_kwargs
-            )
+
+        field = cavity_settings.field
+        rf_kwargs: dict[str, float | FieldFuncComplexTimedComponent]
+        match cavity_settings.reference, phi_0_rel:
+            # Prepare the phi_s fit
+            case "phi_s", None:
+                rf_kwargs = {
+                    "omega0_rf": cavity_settings.omega0_rf,
+                }
+                cavity_settings.set_cavity_parameters_arguments(
+                    self.solver_id,
+                    w_kin,
+                    **rf_kwargs,  # Note that phi_0_rel is not set
+                )
+                # phi_0_rel will be set when trying to access
+                # CavitySettings.phi_0_rel (this is the case #2)
+                phi_0_rel = _get_phi_0_rel(cavity_settings)
+                funcs = field.partial_e_z(cavity_settings.k_e, phi_0_rel)
+                rf_kwargs["complex_e_func"], rf_kwargs["real_e_func"] = funcs
+
+            # Currently looking for the phi_0_rel matching phi_s
+            case "phi_s", _:
+                funcs = field.partial_e_z(cavity_settings.k_e, phi_0_rel)
+                rf_kwargs = {
+                    "omega0_rf": cavity_settings.omega0_rf,
+                    "complex_e_func": funcs[0],
+                    "real_e_func": funcs[1],
+                }
+
+            # Normal run
+            case _, None:
+                phi_0_rel = _get_phi_0_rel(cavity_settings)
+                funcs = field.partial_e_z(cavity_settings.k_e, phi_0_rel)
+                rf_kwargs = {
+                    "omega0_rf": cavity_settings.omega0_rf,
+                    "complex_e_func": funcs[0],
+                    "real_e_func": funcs[1],
+                }
+                cavity_settings.set_cavity_parameters_arguments(
+                    self.solver_id, w_kin, **rf_kwargs
+                )
+            case _, _:
+                raise ValueError
         return self._beam_kwargs | rf_kwargs | geometry_kwargs
+
+
+def _get_phi_0_rel(cavity_settings: CavitySettings) -> float:
+    """Get the phase from the object."""
+    phi_0_rel = cavity_settings.phi_0_rel
+    assert phi_0_rel is not None
+    return phi_0_rel
 
     def _transfer_matrix_results_to_dict(
         self,
