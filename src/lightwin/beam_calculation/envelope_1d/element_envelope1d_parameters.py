@@ -436,6 +436,7 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         **kwargs,
     ) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
+        raise NotImplementedError("to do")
         geometry_kwargs = {
             "d_z": self.d_z,
             "n_steps": self.n_steps,
