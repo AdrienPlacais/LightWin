@@ -11,9 +11,6 @@ line is ``dp/p``.
     send beta as argument to avoid recomputing it each time
 
 .. todo::
-    Use :func:`e_func_complex` in :func:`z_field_map_rk4`?
-
-.. todo::
     electric field interpolated twice: a first time for acceleration, and a
     second time to iterate itg_field. Maybe this could be done only once.
 
@@ -79,7 +76,6 @@ def z_field_map_rk4(
     # Constants to speed up calculation
     delta_phi_norm = omega0_rf * d_z / c
     delta_gamma_norm = q_adim * d_z * inv_e_rest_mev
-    # k_k = delta_gamma_norm * k_e
 
     r_zz = np.empty((n_steps, 2, 2))
     gamma_phi = np.empty((n_steps + 1, 2))
@@ -284,6 +280,8 @@ def z_thin_lense(
 
     Parameters
     ----------
+    scaled_e_middle : complex
+        Complex electric field in the accelerating gap.
     gamma_in : float
         gamma at entrance of first drift.
     gamma_out : float
@@ -291,9 +289,11 @@ def z_thin_lense(
     gamma_middle : float
         gamma at the thin acceleration drift.
     half_dz : float
-        Half a spatial step in m.
+        Half a spatial step in :unit:`m`.
     omega0_rf : float
         Pulsation of the cavity.
+    omega_0_bunch : float
+        Pulsation of the beam.
 
     Return
     ------
