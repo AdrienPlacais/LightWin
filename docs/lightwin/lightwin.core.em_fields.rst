@@ -16,6 +16,7 @@ Submodules
    lightwin.core.em_fields.field100
    lightwin.core.em_fields.field70
    lightwin.core.em_fields.field_factory
+   lightwin.core.em_fields.field_helpers
    lightwin.core.em_fields.helper
    lightwin.core.em_fields.longitudinal
    lightwin.core.em_fields.rf_field

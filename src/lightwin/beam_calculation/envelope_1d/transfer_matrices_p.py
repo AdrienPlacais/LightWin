@@ -68,7 +68,19 @@ def z_field_map_rk4(
     omega_0_bunch: float,
     **kwargs,
 ) -> tuple[np.ndarray, np.ndarray, complex]:
-    """Calculate the transfer matrix of a FIELD_MAP using Runge-Kutta."""
+    r"""Calculate the transfer matrix of a :class:`.FieldMap` using Runge-Kutta.
+
+    We slice the field map in a serie of drift-thin acceleration gap-drift. We
+    pre-compute some constants to speed up the calculation:
+
+    .. math::
+        \Delta\gamma_{\mathrm{norm}} = \frac{q_{\mathrm{adim}} \Delta z}{mc^2}
+
+    .. math::
+        \Delta\phi_{\mathrm{norm}} = \frac{\omega_0 \Delta z}{c}
+
+
+    """
     z_rel = 0.0
     itg_field = 0.0
     half_dz = 0.5 * d_z
@@ -82,7 +94,6 @@ def z_field_map_rk4(
     gamma_phi[0, 0] = gamma_in
     gamma_phi[0, 1] = 0.0
 
-    # Define the motion function to integrate
     def du(z: float, u: np.ndarray) -> np.ndarray:
         r"""Compute variation of energy and phase.
 
@@ -273,10 +284,19 @@ def z_thin_lense(
     omega_0_bunch: float,
     **kwargs,
 ) -> np.ndarray:
-    """
+    r"""
     Compute propagation in a slice of field map using thin lense approximation.
 
-    Thin lense approximation: drift-acceleration-drift.
+    Thin lense approximation: drift-acceleration-drift. The transfer matrix of
+    the thin acceleration gap is:
+
+    .. math::
+
+        \begin{bmatrix}
+            k_3 & 1   \\
+            k_1 & k_2 \\
+        \end{bmatrix}
+        
 
     Parameters
     ----------

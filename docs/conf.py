@@ -49,6 +49,7 @@ extensions = [
     "sphinxcontrib.bibtex",  # Integrate citations
     "sphinx.ext.napoleon",  # handle numpy style
     "sphinx.ext.autodoc",
+    "sphinx.ext.mathjax",  # some math options such as matrix
     "sphinx_rtd_theme",  # ReadTheDocs theme
     "myst_parser",
     "sphinx.ext.intersphinx",  # interlink with other docs, such as numpy
