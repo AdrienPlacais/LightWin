@@ -27,7 +27,6 @@ import numpy as np
 
 from lightwin.beam_calculation.integrators.rk4 import rk4
 from lightwin.constants import c
-from lightwin.core.em_fields.types import FieldFuncComplexTimedComponent
 
 
 # =============================================================================
@@ -134,83 +133,6 @@ def z_drift(
     gamma_phi[:, 0] = gamma_in
     gamma_phi[:, 1] = np.arange(0.0, n_steps) * delta_phi + delta_phi
     return r_zz, gamma_phi, None
-
-
-def z_field_map_rk4_new(
-    gamma_in: float,
-    d_z: float,
-    n_steps: int,
-    omega0_rf: float,
-    complex_e_func: FieldFuncComplexTimedComponent,
-    q_adim: float,
-    inv_e_rest_mev: float,
-    omega_0_bunch: float,
-    **kwargs,
-) -> tuple[np.ndarray, np.ndarray, complex]:
-    """Calculate the transfer matrix of a FIELD_MAP using Runge-Kutta."""
-    z_rel = 0.0
-    itg_field = 0.0
-    half_dz = 0.5 * d_z
-
-    # Constants to speed up calculation
-    delta_phi_norm = omega0_rf * d_z / c
-    delta_gamma_norm = q_adim * d_z * inv_e_rest_mev
-    # k_k = delta_gamma_norm * k_e
-
-    r_zz = np.empty((n_steps, 2, 2))
-    gamma_phi = np.empty((n_steps + 1, 2))
-    gamma_phi[0, 0] = gamma_in
-    gamma_phi[0, 1] = 0.0
-
-    # Define the motion function to integrate
-    def du(z: float, u: np.ndarray) -> np.ndarray:
-        r"""Compute variation of energy and phase.
-
-        Parameters
-        ----------
-        z : float
-            Position where variation is calculated.
-        u : np.ndarray
-            First component is gamma. Second is phase in rad.
-
-        Return
-        ------
-        v : np.ndarray
-            First component is :math:`\Delta \gamma / \Delta z` in
-            :unit:`MeV / m`.
-            Second is :math:`\Delta \phi / \Delta z` in
-            :unit:`rad / m`.
-
-        """
-        # v0 = k_k * e_func(z, e_spat, u[1], phi_0_rel)
-        v0 = delta_gamma_norm * complex_e_func(z, u[1]).real
-        beta = np.sqrt(1.0 - u[0] ** -2)
-        v1 = delta_phi_norm / beta
-        return np.array([v0, v1])
-
-    for i in range(n_steps):
-        delta_gamma_phi = rk4(u=gamma_phi[i], du=du, x=z_rel, dx=d_z)
-        gamma_phi[i + 1] = gamma_phi[i] + delta_gamma_phi
-
-        itg_field += complex_e_func(z_rel, gamma_phi[i, 1]) * d_z
-
-        gamma_phi_middle = gamma_phi[i] + 0.5 * delta_gamma_phi
-        scaled_e_middle = delta_gamma_norm * complex_e_func(
-            z_rel + half_dz, gamma_phi_middle[1]
-        )
-        r_zz[i, :, :] = z_thin_lense_new(
-            scaled_e_middle,
-            gamma_phi[i, 0],
-            gamma_phi[i + 1, 0],
-            gamma_phi_middle[0],
-            half_dz,
-            omega0_rf,
-            omega_0_bunch=omega_0_bunch,
-        )
-
-        z_rel += d_z
-
-    return r_zz, gamma_phi[1:, :], itg_field
 
 
 def z_field_map_rk4(

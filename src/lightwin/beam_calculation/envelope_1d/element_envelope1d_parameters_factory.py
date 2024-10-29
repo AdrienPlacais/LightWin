@@ -31,23 +31,23 @@ from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
 from lightwin.util.synchronous_phases import PHI_S_MODELS
 
-PARAMETERS_1D = {
-    Aperture: DriftEnvelope1DParameters,
-    Bend: BendEnvelope1DParameters,
-    Diagnostic: DriftEnvelope1DParameters,
-    Drift: DriftEnvelope1DParameters,
-    Edge: DriftEnvelope1DParameters,
-    FieldMap: FieldMapEnvelope1DParameters,
-    Quad: DriftEnvelope1DParameters,
-    Solenoid: DriftEnvelope1DParameters,
-    SuperposedFieldMap: SuperposedFieldMapEnvelope1DParameters,
-}  #:
-
 
 class ElementEnvelope1DParametersFactory(
     ElementBeamCalculatorParametersFactory
 ):
     """Define a method to easily create the solver parameters."""
+
+    parameters = {
+        Aperture: DriftEnvelope1DParameters,
+        Bend: BendEnvelope1DParameters,
+        Diagnostic: DriftEnvelope1DParameters,
+        Drift: DriftEnvelope1DParameters,
+        Edge: DriftEnvelope1DParameters,
+        FieldMap: FieldMapEnvelope1DParameters,
+        Quad: DriftEnvelope1DParameters,
+        Solenoid: DriftEnvelope1DParameters,
+        SuperposedFieldMap: SuperposedFieldMapEnvelope1DParameters,
+    }  #:
 
     def __init__(
         self,
@@ -55,7 +55,6 @@ class ElementEnvelope1DParametersFactory(
         n_steps_per_cell: int,
         solver_id: str,
         beam_kwargs: dict[str, Any],
-        flag_cython: bool = False,
         phi_s_definition: PHI_S_MODELS = "historical",
     ) -> None:
         """Prepare import of proper functions."""
@@ -66,25 +65,12 @@ class ElementEnvelope1DParametersFactory(
         self.phi_s_definition = phi_s_definition
         self.beam_kwargs = beam_kwargs
 
-        if flag_cython:
-            try:
-                import lightwin.beam_calculation.envelope_1d.transfer_matrices_c as transf_mat_module
-            except ModuleNotFoundError:
-                logging.error(
-                    "Cython not found. Maybe it was not compilated. Check "
-                    "util/setup.py for information."
-                )
-                raise ModuleNotFoundError
-        else:
-            import lightwin.beam_calculation.envelope_1d.transfer_matrices_p as transf_mat_module
-        self.transf_mat_module = transf_mat_module
-
     def run(self, elt: Element) -> ElementEnvelope1DParameters:
         """Create the proper subclass of solver parameters, instantiate it.
 
         .. note::
-            If an Element type is not found in :const:``PARAMETERS_1D``, we
-            take its mother type.
+            If an Element type is not found in ``self.parameters``, we take its
+            mother type.
 
         Parameters
         ----------
@@ -110,7 +96,6 @@ class ElementEnvelope1DParametersFactory(
             "phi_s_definition": self.phi_s_definition,
         }
         single_element_envelope_1d_parameters = subclass(
-            self.transf_mat_module,
             elt=elt,
             beam_kwargs=self.beam_kwargs,
             **kwargs,
@@ -118,9 +103,7 @@ class ElementEnvelope1DParametersFactory(
 
         return single_element_envelope_1d_parameters
 
-    def _parameters_constructor(
-        self, elt: Element, default: type = PARAMETERS_1D[Drift]
-    ) -> type:
+    def _parameters_constructor(self, elt: Element) -> type:
         """Get the proper object constructor.
 
         Examples
@@ -133,7 +116,7 @@ class ElementEnvelope1DParametersFactory(
         >>> self._parameters_constructor(Quad())
         DriftEnvelope1DParameters
 
-        As DiagPosition is not in PARAMETERS_1D, we look for the mother
+        As DiagPosition is not in parameters, we look for the mother
         class Diagnostic.
 
         >>> self._parameters_constructor(DiagPosition())
@@ -147,15 +130,15 @@ class ElementEnvelope1DParametersFactory(
 
         """
         if isinstance(elt, FieldMap) and not elt.is_accelerating:
-            return default
+            return self.parameters[Drift]
 
         element_class = type(elt)
-        constructor = PARAMETERS_1D.get(element_class, None)
+        constructor = self.parameters.get(element_class, None)
         if constructor is not None:
             return constructor
 
         super_class = element_class.__base__
-        constructor = PARAMETERS_1D.get(super_class, None)
+        constructor = self.parameters.get(super_class, None)
         if constructor is not None:
             return constructor
 
@@ -167,4 +150,4 @@ class ElementEnvelope1DParametersFactory(
             "Note that you can use the elements_to_dump key in the "
             "Envelope1D.ListOfElementFactory class."
         )
-        return default
+        return self.parameters[Drift]

@@ -13,17 +13,16 @@ The :class:`.Element` objects with a transfer matrix are listed in
 
 import math
 from collections.abc import Collection, Sequence
-from types import ModuleType
 from typing import Any, Callable, Literal
 
 import numpy as np
 
 import lightwin.util.converters as convert
+from lightwin.beam_calculation.envelope_1d import transfer_matrices
 from lightwin.beam_calculation.envelope_1d.util import ENVELOPE1D_METHODS_T
 from lightwin.beam_calculation.parameters.element_parameters import (
     ElementBeamCalculatorParameters,
 )
-from lightwin.constants import NEW
 from lightwin.core.elements.bend import Bend
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
@@ -36,18 +35,6 @@ from lightwin.util.synchronous_phases import (
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
 
-FIELD_MAP_INTEGRATION_METHOD_TO_FUNC = {
-    "RK4": lambda module: (
-        module.z_field_map_rk4_new if NEW else module.z_field_map_rk4
-    ),
-    "leapfrog": lambda module: module.z_field_map_leapfrog,
-}
-
-
-SUPERPOSED_FIELD_MAP_INTEGRATION_METHOD_TO_FUNC = {
-    "RK4": lambda module: module.z_superposed_field_maps_rk4,
-}
-
 
 class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
     """Hold the parameters to compute beam propagation in an Element.
@@ -59,13 +46,15 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
 
     def __init__(
         self,
-        transf_mat_function: Callable,
         length_m: float,
         n_steps: int,
         beam_kwargs: dict[str, Any],
+        transf_mat_function: Callable | None = None,
         **kwargs: str | int,
     ) -> None:
         """Set the actually useful parameters."""
+        if transf_mat_function is None:
+            transf_mat_function = self._proper_transfer_matrix_func("Drift")
         self.transf_mat_function = transf_mat_function
         self.n_steps = n_steps
         self._beam_kwargs = beam_kwargs
@@ -150,6 +139,28 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         }
         return results
 
+    def _proper_transfer_matrix_func(
+        self,
+        element_nature: str,
+        method: ENVELOPE1D_METHODS_T | None = None,
+    ) -> Callable:
+        """Get the proper transfer matrix function."""
+        match method, element_nature:
+            case "RK4", "SuperposedFieldMap":
+                return transfer_matrices.z_superposed_field_maps_rk4
+            case "leapfrog", "SuperposedFieldMap":
+                raise NotImplementedError(
+                    "leapfrog not implemented for superposed field maps"
+                )
+            case "RK4", "FieldMap":
+                return transfer_matrices.z_field_map_rk4
+            case "leapfrog", "FieldMap":
+                return transfer_matrices.z_field_map_leapfrog
+            case _, "Bend":
+                return transfer_matrices.z_bend
+            case _:
+                return transfer_matrices.z_drift
+
 
 class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
     """Hold the properties to compute transfer matrix of a :class:`.Drift`.
@@ -161,19 +172,17 @@ class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def __init__(
         self,
-        transf_mat_module: ModuleType,
         elt: Element,
         beam_kwargs: dict[str, Any],
         n_steps: int = 1,
         **kwargs: str | int,
     ) -> None:
         """Create the specific parameters for a drift."""
-        transf_mat_function = transf_mat_module.z_drift
         return super().__init__(
-            transf_mat_function,
             length_m=elt.length_m,
             n_steps=n_steps,
             beam_kwargs=beam_kwargs,
+            transf_mat_function=None,
             **kwargs,
         )
 
@@ -188,7 +197,6 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def __init__(
         self,
-        transf_mat_module: ModuleType,
         elt: FieldMap,
         method: ENVELOPE1D_METHODS_T,
         n_steps_per_cell: int,
@@ -198,8 +206,8 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         **kwargs: str | int,
     ) -> None:
         """Create the specific parameters for a field map."""
-        transf_mat_function = FIELD_MAP_INTEGRATION_METHOD_TO_FUNC[method](
-            transf_mat_module
+        transf_mat_function = self._proper_transfer_matrix_func(
+            "FieldMap", method
         )
         self.compute_cavity_parameters = SYNCHRONOUS_PHASE_FUNCTIONS[
             phi_s_model
@@ -210,13 +218,12 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         self._rf_to_bunch = elt.cavity_settings.rf_phase_to_bunch_phase
         n_steps = self.n_cell * n_steps_per_cell
         super().__init__(
-            transf_mat_function,
             elt.length_m,
             n_steps,
             beam_kwargs=beam_kwargs,
+            transf_mat_function=transf_mat_function,
             **kwargs,
         )
-        self._transf_mat_module = transf_mat_module
         self.field_map_file_name = str(elt.field_map_file_name)
         elt.cavity_settings.set_cavity_parameters_methods(
             self.solver_id,
@@ -249,23 +256,10 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         -------
         dict[str, Any]
             Keyword arguments that will be passed to the 1D transfer matrix
-            function defined in :mod:`.envelope_1d.transfer_matrices_p`.
+            function defined in :mod:`.envelope_1d.transfer_matrices`.
 
         """
         assert cavity_settings.status != "failed"
-        # if phi_0_rel is not None:
-        #     # Try to find phi_0 matching a phi_s
-        #     assert cavity_settings.reference == "phi_s"
-        #     # print(
-        #     #     f"Does {phi_0_rel = } matches phi_s = { cavity_settings.phi_s }?"
-        #     # )
-        # else:
-        #     if cavity_settings.reference == "phi_s":
-        #         print(f"Trying to find phi_s = { cavity_settings.phi_s }")
-        if NEW:
-            return self._new_transfer_matrix_kw(
-                w_kin, cavity_settings, *args, phi_0_rel=phi_0_rel, **kwargs
-            )
 
         geometry_kwargs = {
             "d_z": self.d_z,
@@ -303,53 +297,6 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
                 raise ValueError
         return self._beam_kwargs | rf_kwargs | geometry_kwargs
 
-    def _new_transfer_matrix_kw(
-        self,
-        w_kin: float,
-        cavity_settings: CavitySettings,
-        *args,
-        phi_0_rel: float | None = None,
-        **kwargs,
-    ) -> dict[str, Any]:
-        r"""Give the element parameters necessary to compute transfer matrix.
-
-        Parameters
-        ----------
-        w_kin : float
-            Kinetic energy at the entrance of cavity in :unit:`MeV`.
-        cavity_settings : CavitySettings
-            Object holding the cavity parameters that can be changed.
-        phi_0_rel : float | None
-            Relative entry phase of the cavity. When provided, it means that we
-            are trying to find the :math:`\phi_{0,\,\mathrm{rel}}` matching a
-            given :math:`\phi_s`. The default is None.
-
-        Returns
-        -------
-        dict[str, Any]
-            Keyword arguments that will be passed to the 1D transfer matrix
-            function defined in :mod:`.envelope_1d.transfer_matrices_p`.
-
-        """
-        assert cavity_settings.status != "failed"
-
-        geometry_kwargs = {
-            "d_z": self.d_z,
-            "n_steps": self.n_steps,
-            "filename": self.field_map_file_name,
-        }
-        field = cavity_settings.field
-        if phi_0_rel is not None:
-            rf_kwargs = {
-                "omega0_rf": cavity_settings.omega0_rf,
-                "complex_e_func": field.partial_e_z(
-                    cavity_settings.k_e, phi_0_rel
-                ),
-            }
-        else:
-            raise NotImplementedError
-        return self._beam_kwargs | rf_kwargs | geometry_kwargs
-
     def _transfer_matrix_results_to_dict(
         self,
         r_zz: np.ndarray,
@@ -379,7 +326,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def re_set_for_broken_cavity(self) -> Callable:
         """Make beam calculator call Drift func instead of FieldMap."""
-        self.transf_mat_function = self._transf_mat_module.z_drift
+        self.transf_mat_function = self._proper_transfer_matrix_func("Drift")
         self._transfer_matrix_results_to_dict = (
             self._broken_transfer_matrix_results_to_dict
         )
@@ -430,48 +377,38 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def __init__(
         self,
-        transf_mat_module: ModuleType,
-        superposed: SuperposedFieldMap,
+        elt: SuperposedFieldMap,
         method: Literal["RK4"],
         n_steps_per_cell: int,
         solver_id: str,
+        beam_kwargs: dict[str, Any],
         phi_s_model: PHI_S_MODELS = "historical",
         **kwargs: str | int,
     ) -> None:
         """Create the specific parameters for a field map."""
-        if method == "leapfrog":
-            raise NotImplementedError(
-                "SUPERPOSE_MAP not implemented in leapfrog for now."
-            )
-        try:
-            transf_mat_function = (
-                SUPERPOSED_FIELD_MAP_INTEGRATION_METHOD_TO_FUNC[method](
-                    transf_mat_module
-                )
-            )
-        except ImportError:
-            raise NotImplementedError(
-                "SUPERPOSE_MAP not implemented in Cython for now."
-            )
+        transf_mat_function = self._proper_transfer_matrix_func(
+            "SuperposedFieldMap", method
+        )
         self.compute_cavity_parameters = SYNCHRONOUS_PHASE_FUNCTIONS[
             phi_s_model
         ]
 
         self.solver_id = solver_id
-        self.n_cell = superposed.rf_field.n_cell
-        self._rf_to_bunch = (
-            superposed.cavities_settings.rf_phase_to_bunch_phase
-        )
+        self.n_cell = elt.rf_field.n_cell
+        self._rf_to_bunch = elt.cavities_settings.rf_phase_to_bunch_phase
         n_steps = self.n_cell * n_steps_per_cell
         super().__init__(
-            transf_mat_function, superposed.length_m, n_steps, **kwargs
+            elt.length_m,
+            n_steps,
+            beam_kwargs=beam_kwargs,
+            transf_mat_function=transf_mat_function,
+            **kwargs,
         )
-        self._transf_mat_module = transf_mat_module
 
         self.field_map_file_names = [
-            str(name) for name in superposed.field_map_file_names
+            str(name) for name in elt.field_map_file_names
         ]
-        for settings in superposed.field_maps_settings:
+        for settings in elt.field_maps_settings:
             settings.set_cavity_parameters_methods(
                 self.solver_id,
                 self.transf_mat_function_wrapper,
@@ -548,7 +485,6 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def __init__(
         self,
-        transf_mat_module: ModuleType,
         elt: Bend,
         beam_kwargs: dict[str, Any],
         n_steps: int = 1,
@@ -568,13 +504,13 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
             Number of integration steps. The default is 1.
 
         """
-        transf_mat_function = transf_mat_module.z_bend
+        transf_mat_function = self._proper_transfer_matrix_func("Bend")
 
         super().__init__(
-            transf_mat_function,
             elt.length_m,
             n_steps=n_steps,
             beam_kwargs=beam_kwargs,
+            transf_mat_function=transf_mat_function,
             **kwargs,
         )
 

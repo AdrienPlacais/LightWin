@@ -20,6 +20,9 @@ from typing import Literal
 import numpy as np
 import pandas as pd
 
+from lightwin.beam_calculation.cy_envelope_1d.electromagnetic_fields import (
+    load_electromagnetic_fields_for_cython,
+)
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
@@ -29,13 +32,6 @@ from lightwin.core.em_fields.helper import (
     create_1d_field_func,
 )
 from lightwin.tracewin_utils.load import FIELD_MAP_LOADERS
-from lightwin.util import helper
-
-try:
-    import lightwin.beam_calculation.envelope_1d.transfer_matrices_c as tm_c
-except ImportError:
-    logging.error("Could not import the Cython version of transfer matrices.")
-
 
 FIELD_GEOMETRIES = {
     0: "no field",
@@ -97,28 +93,7 @@ def load_electromagnetic_fields(
         field_map.rf_field.n_z = args[1]
 
     if cython:
-        _load_electromagnetic_fields_for_cython(field_maps, loadable)
-
-
-def _load_electromagnetic_fields_for_cython(
-    field_maps: Collection[FieldMap], loadable: Collection[Path]
-) -> None:
-    """Load one electric field per section."""
-    files = [
-        field_map.field_map_file_name
-        for field_map in field_maps
-        if field_map.rf_field.is_loaded
-    ]
-    flattened_files = helper.flatten(files)
-    unique_files = helper.remove_duplicates(flattened_files)
-    loadable_files = list(
-        filter(lambda file: file.suffix in loadable, unique_files)
-    )
-
-    try:
-        tm_c.init_arrays(loadable_files)  # type: ignore
-    except:
-        raise ImportError("There is an error importing cythonized modules.")
+        load_electromagnetic_fields_for_cython(field_maps, loadable)
 
 
 def _geom_to_field_map_type(geom: int) -> dict[str, str]:

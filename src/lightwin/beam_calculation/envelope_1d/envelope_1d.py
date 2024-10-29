@@ -35,11 +35,12 @@ from lightwin.util.synchronous_phases import (
 class Envelope1D(BeamCalculator):
     """The fastest beam calculator, adapted to high energies."""
 
+    flag_cython = False
+
     def __init__(
         self,
         *,
         flag_phi_abs: bool,
-        flag_cython: bool,
         n_steps_per_cell: int,
         method: ENVELOPE1D_METHODS_T,
         out_folder: Path | str,
@@ -54,10 +55,8 @@ class Envelope1D(BeamCalculator):
             flag_phi_abs=flag_phi_abs,
             out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
-            flag_cython=flag_cython,
             **kwargs,
         )
-
         self._phi_s_definition = phi_s_definition
         self._phi_s_func = SYNCHRONOUS_PHASE_FUNCTIONS[self._phi_s_definition]
 
@@ -80,7 +79,6 @@ class Envelope1D(BeamCalculator):
             n_steps_per_cell=self.n_steps_per_cell,
             solver_id=self.id,
             beam_kwargs=self._beam_kwargs,
-            flag_cython=self.flag_cython,
         )
 
     def run(

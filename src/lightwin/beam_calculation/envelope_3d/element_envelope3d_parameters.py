@@ -11,8 +11,8 @@ The list of implemented transfer matrices is :data:`.PARAMETERS_3D`.
 
 """
 
-from collections.abc import Callable, Collection
-from types import ModuleType
+import logging
+from collections.abc import Callable
 from typing import Any
 
 import numpy as np
@@ -20,6 +20,9 @@ import numpy as np
 import lightwin.util.converters as convert
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
     ElementEnvelope1DParameters,
+)
+from lightwin.beam_calculation.envelope_3d import (
+    transfer_matrices_p as transfer_matrices,
 )
 from lightwin.core.elements.bend import Bend
 from lightwin.core.elements.drift import Drift
@@ -33,10 +36,6 @@ from lightwin.util.synchronous_phases import (
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
 
-FIELD_MAP_INTEGRATION_METHOD_TO_FUNC = {
-    "RK4": lambda transf_mat_module: transf_mat_module.field_map_rk4,
-}
-
 
 class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
     """Hold the parameters to compute beam propagation in an :class:`.Element`.
@@ -48,28 +47,34 @@ class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
 
     def __init__(
         self,
-        transf_mat_function: Callable,
         length_m: float,
         n_steps: int,
         beam_kwargs: dict[str, Any],
+        transf_mat_function: Callable | None = None,
         **kwargs,
     ) -> None:
         """Save useful parameters as attribute.
 
         Parameters
         ----------
-        transf_mat_function : Callable
-            transf_mat_function
         length_m : float
             length_m
         n_steps : int
             n_steps
         beam_kwargs : dict[str, Any]
             Configuration dict holding initial beam parameters.
+        transf_mat_function : Callable | None, optional
+            Function to compute transfer matrix of element. The default is
+            None, in which case we fall back on Drift transfer matrix.
 
         """
+        if transf_mat_function is None:
+            transf_mat_function = self._proper_transfer_matrix_func("Drift")
         super().__init__(
-            transf_mat_function, length_m, n_steps, beam_kwargs=beam_kwargs
+            length_m=length_m,
+            n_steps=n_steps,
+            beam_kwargs=beam_kwargs,
+            transf_mat_function=transf_mat_function,
         )
 
     def _transfer_matrix_results_to_dict(
@@ -93,25 +98,53 @@ class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
         }
         return results
 
+    def _proper_transfer_matrix_func(
+        self, element_nature: str, method: str | None = None
+    ) -> Callable:
+        """Get the proper transfer matrix function."""
+        if method is not None and method != "RK4":
+            logging.warning(
+                "Only RK4 integration method is implemented for Envelope3D."
+            )
+        match element_nature:
+            case "Drift":
+                return transfer_matrices.drift
+            case "Quad":
+                return transfer_matrices.quad
+            case "Solenoid":
+                raise NotImplementedError(
+                    "Solenoid transf mat not implemented in 3D."
+                )
+                return transfer_matrices.solenoid
+            case "FieldMap":
+                return transfer_matrices.field_map_rk4
+            case "Bend":
+                raise NotImplementedError(
+                    "Bend transf mat not implemented in 3D."
+                )
+                return transfer_matrices.bend
+            case _:
+                raise NotImplementedError(
+                    f"No parameters defined for {element_nature = }"
+                )
+
 
 class DriftEnvelope3DParameters(ElementEnvelope3DParameters):
     """Hold the properties to compute transfer matrix of a :class:`.Drift`."""
 
     def __init__(
         self,
-        transf_mat_module: ModuleType,
         elt: Drift | FieldMap,
         beam_kwargs: dict[str, Any],
         n_steps: int = 1,
         **kwargs: str,
     ) -> None:
         """Create the specific parameters for a drift."""
-        transf_mat_function = transf_mat_module.drift
         super().__init__(
-            transf_mat_function,
             elt.length_m,
-            beam_kwargs=beam_kwargs,
             n_steps=n_steps,
+            beam_kwargs=beam_kwargs,
+            transf_mat_function=self._proper_transfer_matrix_func("Drift"),
             **kwargs,
         )
 
@@ -121,19 +154,17 @@ class QuadEnvelope3DParameters(ElementEnvelope3DParameters):
 
     def __init__(
         self,
-        transf_mat_module: ModuleType,
         elt: Quad,
         beam_kwargs: dict[str, Any],
         n_steps: int = 1,
         **kwargs: str,
     ) -> None:
         """Create the specific parameters for a drift."""
-        transf_mat_function = transf_mat_module.quad
         super().__init__(
-            transf_mat_function=transf_mat_function,
             length_m=elt.length_m,
             beam_kwargs=beam_kwargs,
             n_steps=n_steps,
+            transf_mat_function=self._proper_transfer_matrix_func("Quad"),
             **kwargs,
         )
         self.gradient = elt.grad
@@ -147,11 +178,10 @@ class QuadEnvelope3DParameters(ElementEnvelope3DParameters):
 
 
 class SolenoidEnvelope3DParameters(ElementEnvelope3DParameters):
-    """Hold the properties to compute transfer matrix of a :class:`.Quad`."""
+    """Hold properties to compute transfer matrix of a :class:`.Solenoid`."""
 
     def __init__(
         self,
-        transf_mat_module: ModuleType,
         elt: Solenoid,
         beam_kwargs: dict[str, Any],
         n_steps: int = 1,
@@ -171,7 +201,6 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
 
     def __init__(
         self,
-        transf_mat_module: ModuleType,
         elt: FieldMap,
         method: str,
         n_steps_per_cell: int,
@@ -181,8 +210,8 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
         **kwargs: str,
     ) -> None:
         """Create the specific parameters for a drift."""
-        transf_mat_function = FIELD_MAP_INTEGRATION_METHOD_TO_FUNC[method](
-            transf_mat_module
+        transf_mat_function = self._proper_transfer_matrix_func(
+            "FieldMap", method
         )
         self.compute_cavity_parameters = SYNCHRONOUS_PHASE_FUNCTIONS[
             phi_s_model
@@ -193,13 +222,12 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
         self._rf_to_bunch = elt.cavity_settings.rf_phase_to_bunch_phase
         n_steps = self.n_cell * n_steps_per_cell
         super().__init__(
-            transf_mat_function,
             elt.length_m,
             n_steps,
             beam_kwargs=beam_kwargs,
+            transf_mat_function=transf_mat_function,
             **kwargs,
         )
-        self._transf_mat_module = transf_mat_module
         elt.cavity_settings.set_cavity_parameters_methods(
             self.solver_id,
             self.transf_mat_function_wrapper,
@@ -230,8 +258,8 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
         Returns
         -------
         dict[str, Any]
-            Keyword arguments that will be passed to the 1D transfer matrix
-            function defined in :mod:`.envelope_1d.transfer_matrices_p`.
+            Keyword arguments that will be passed to the 3D transfer matrix
+            function defined in :mod:`.envelope_3d.transfer_matrices_p`.
 
         """
         assert cavity_settings.status != "failed"
@@ -286,7 +314,7 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
 
     def re_set_for_broken_cavity(self) -> Callable:
         """Make beam calculator call Drift func instead of FieldMap."""
-        self.transf_mat_function = self._transf_mat_module.drift
+        self.transf_mat_function = self._proper_transfer_matrix_func("Drift")
         self.transfer_matrix_kw = self._broken_transfer_matrix_kw
         self._transfer_matrix_results_to_dict = (
             self._broken_transfer_matrix_results_to_dict
@@ -328,7 +356,6 @@ class BendEnvelope3DParameters(ElementEnvelope3DParameters):
 
     def __init__(
         self,
-        transf_mat_module: ModuleType,
         elt: Bend,
         beam_kwargs: dict[str, Any],
         n_steps: int = 1,
@@ -371,31 +398,3 @@ def _add_cavity_phase(
     cavity_settings.set_cavity_parameters_arguments(
         solver_id, w_kin_in, **rf_kwargs
     )
-
-
-def _add_cavities_phases(
-    solver_id: str,
-    w_kin_in: float,
-    cavities_settings: Collection[CavitySettings],
-    rf_parameters_as_dict: dict[
-        str, list[Callable] | int | float | list[float]
-    ],
-) -> None:
-    r"""Set reference phase and function to compute :math:`\phi_s`."""
-    assert isinstance(rf_parameters_as_dict["phi_0_rels"], list)
-    for cavity_settings in cavities_settings:
-        if cavity_settings.reference == "phi_s":
-            cavity_settings.set_cavity_parameters_arguments(
-                solver_id, w_kin_in, **rf_parameters_as_dict
-            )
-            phi_0_rel = cavity_settings.phi_0_rel
-            assert phi_0_rel is not None
-            rf_parameters_as_dict["phi_0_rels"].append(phi_0_rel)
-            return
-
-        phi_0_rel = cavity_settings.phi_0_rel
-        assert phi_0_rel is not None
-        rf_parameters_as_dict["phi_0_rels"].append(phi_0_rel)
-        cavity_settings.set_cavity_parameters_arguments(
-            solver_id, w_kin_in, **rf_parameters_as_dict
-        )
