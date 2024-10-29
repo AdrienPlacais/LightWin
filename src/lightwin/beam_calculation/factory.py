@@ -16,11 +16,7 @@ BEAM_CALCULATORS = (
     "TraceWin",
     "Envelope3D",
 )  #:
-BEAM_CALCULATORS_T = Literal[
-    "Envelope1D",
-    "TraceWin",
-    "Envelope3D",
-]
+BEAM_CALCULATORS_T = Literal["Envelope1D", "TraceWin", "Envelope3D"]
 
 
 def _get_beam_calculator(
@@ -121,7 +117,7 @@ class BeamCalculatorsFactory:
 
         Parameters
         ----------
-        tool : BEAM_CALCULATORS_T
+        tool : Literal["Envelope1D", "TraceWin", "Envelope3D"]
             The name of the beam calculator to construct.
 
         Returns

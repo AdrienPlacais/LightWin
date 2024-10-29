@@ -1,7 +1,5 @@
 """Create the solver parameters for :class:`.CyEnvelope1D`."""
 
-import logging
-
 from lightwin.beam_calculation.cy_envelope_1d.element_parameters import (
     BendCyEnvelope1DParameters,
     DriftCyEnvelope1DParameters,
@@ -60,10 +58,6 @@ class ElementCyEnvelope1DParametersFactory(ElementEnvelope1DParametersFactory):
         ElementCyEnvelope1DParameters
             Proper instantiated subclass of
             :class:`.ElementCyEnvelope1DParameters`.
-
-        See also
-        --------
-        _parameters_constructor
 
         """
         single_element_cy_envelope_1d_parameters = super().run(elt)
