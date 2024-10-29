@@ -3,7 +3,6 @@
 import logging
 from collections.abc import Collection
 from pathlib import Path
-from typing import Literal
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.envelope_3d.beam_parameters_factory import (
@@ -35,6 +34,8 @@ from lightwin.util.synchronous_phases import (
 class Envelope3D(BeamCalculator):
     """A 3D envelope solver."""
 
+    flag_cython = False
+
     def __init__(
         self,
         *,
@@ -42,7 +43,6 @@ class Envelope3D(BeamCalculator):
         n_steps_per_cell: int,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
-        flag_cython: bool = False,
         method: ENVELOPE3D_METHODS_T = "RK4",
         phi_s_definition: PHI_S_MODELS = "historical",
         **kwargs,
@@ -50,16 +50,14 @@ class Envelope3D(BeamCalculator):
         """Set the proper motion integration function, according to inputs."""
         self.n_steps_per_cell = n_steps_per_cell
         self.method = method
+        self._phi_s_definition = phi_s_definition
+        self._phi_s_func = SYNCHRONOUS_PHASE_FUNCTIONS[self._phi_s_definition]
         super().__init__(
             flag_phi_abs=flag_phi_abs,
             out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
-            flag_cython=flag_cython,
             **kwargs,
         )
-
-        self._phi_s_definition = phi_s_definition
-        self._phi_s_func = SYNCHRONOUS_PHASE_FUNCTIONS[self._phi_s_definition]
 
         self.beam_parameters_factory = BeamParametersFactoryEnvelope3D(
             self.is_a_3d_simulation,
@@ -69,10 +67,6 @@ class Envelope3D(BeamCalculator):
         self.transfer_matrix_factory = TransferMatrixFactoryEnvelope3D(
             self.is_a_3d_simulation
         )
-
-        import lightwin.beam_calculation.envelope_3d.transfer_matrices_p as transf_mat
-
-        self.transf_mat_module = transf_mat
 
     def _set_up_specific_factories(self) -> None:
         """Set up the factories specific to the :class:`.BeamCalculator`.
@@ -93,7 +87,7 @@ class Envelope3D(BeamCalculator):
             n_steps_per_cell=self.n_steps_per_cell,
             solver_id=self.id,
             beam_kwargs=self._beam_kwargs,
-            flag_cython=self.flag_cython,
+            phi_s_definition=self._phi_s_definition,
         )
 
     def run(

@@ -1,10 +1,5 @@
 """Define an equivalent to TraceWin's FIELD_MAP.
 
-
-See Also
---------
-:class:`.CavitySettings`
-
 .. note::
     For now, we expect that coordinates are always cartesian.
 
@@ -14,6 +9,10 @@ See Also
 
 .. todo::
     Should have a omega0_rf attribute
+
+See Also
+--------
+:class:`.CavitySettings`
 
 """
 
@@ -158,7 +157,7 @@ class Field(ABC):
         component_func : Callable[..., float]
             The spatial field component function (e.g., self._e_x_spat_rf).
             Must accept a tuple of 1 to 3 floats (position) and return a float.
-        pos : AnyDimFloat
+        pos : Any
             The position at which to evaluate the field.
         phi : float
             The phase angle.

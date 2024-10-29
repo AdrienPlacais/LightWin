@@ -32,7 +32,7 @@ params = [
     ),
     pytest.param(
         ("generic_envelope1d", True, True),
-        marks=pytest.mark.cython,
+        marks=(pytest.mark.envelope1d, pytest.mark.cython),
         id="Compensation with Envelope1D (Cython)",
     ),
     pytest.param(

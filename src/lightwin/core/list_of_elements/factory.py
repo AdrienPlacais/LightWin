@@ -84,9 +84,8 @@ class ListOfElementsFactory:
         ----------
         phi_s_definition : str, optional
             Definition for the synchronous phases that will be used. Allowed
-            values are in
-            :data:`.SYNCHRONOUS_PHASE_FUNCTIONS`. The
-            default is ``'historical'``.
+            values are in :data:`.PHI_S_MODELS`. The default is
+            ``'historical'``.
 
         """
         freq_bunch_mhz = beam_kwargs["f_bunch_mhz"]

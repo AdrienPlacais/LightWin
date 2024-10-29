@@ -3,18 +3,44 @@
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
+from lightwin.beam_calculation.cy_envelope_1d.envelope_1d import CyEnvelope1D
 from lightwin.beam_calculation.envelope_1d.envelope_1d import Envelope1D
 from lightwin.beam_calculation.envelope_3d.envelope_3d import Envelope3D
 from lightwin.beam_calculation.tracewin.tracewin import TraceWin
 
-BEAM_CALCULATORS = {
-    "Envelope1D": Envelope1D,
-    "TraceWin": TraceWin,
-    "Envelope3D": Envelope3D,
-}  #:
+BEAM_CALCULATORS = (
+    "Envelope1D",
+    "TraceWin",
+    "Envelope3D",
+)  #:
+BEAM_CALCULATORS_T = Literal["Envelope1D", "TraceWin", "Envelope3D"]
+
+
+def _get_beam_calculator(
+    tool: BEAM_CALCULATORS_T, flag_cython: bool = False, **kwargs
+) -> type:
+    """Get the proper :class:`.BeamCalculator` constructor."""
+    match tool, flag_cython:
+        case "Envelope1D", False:
+            return Envelope1D
+        case "Envelope1D", True:
+            return CyEnvelope1D
+        case "Envelope3D", False:
+            return Envelope3D
+        case "Envelope3D", True:
+            logging.warning(
+                "No Cython implementation for Envelope3D. Using Python implementation."
+            )
+            return Envelope3D
+        case "TraceWin", _:
+            return TraceWin
+        case _:
+            raise ValueError(
+                f"{tool = } and/or {flag_cython = } not understood."
+            )
 
 
 class BeamCalculatorsFactory:
@@ -84,20 +110,25 @@ class BeamCalculatorsFactory:
             if "simulation type" in beam_calculator_kw:
                 del beam_calculator_kw["simulation type"]
 
-    def run(self, tool: str, **beam_calculator_kw) -> BeamCalculator:
+    def run(
+        self, tool: BEAM_CALCULATORS_T, **beam_calculator_kw
+    ) -> BeamCalculator:
         """Create a single :class:`.BeamCalculator`.
 
         Parameters
         ----------
-        beam_calculator_class : abc.ABCMeta
-            The specific beam calculator.
+        tool : Literal["Envelope1D", "TraceWin", "Envelope3D"]
+            The name of the beam calculator to construct.
 
         Returns
         -------
         BeamCalculator
+            An instance of the proper beam calculator.
 
         """
-        beam_calculator_class = BEAM_CALCULATORS[tool]
+        beam_calculator_class = _get_beam_calculator(
+            tool, **beam_calculator_kw
+        )
         beam_calculator = beam_calculator_class(
             out_folder=self.out_folders.pop(0),
             default_field_map_folder=self._original_dat_dir,

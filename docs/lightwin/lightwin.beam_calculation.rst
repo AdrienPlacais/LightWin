@@ -12,6 +12,7 @@ Subpackages
 .. toctree::
    :maxdepth: 5
 
+   lightwin.beam_calculation.cy_envelope_1d
    lightwin.beam_calculation.envelope_1d
    lightwin.beam_calculation.envelope_3d
    lightwin.beam_calculation.integrators

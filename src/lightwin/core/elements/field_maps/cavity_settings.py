@@ -598,14 +598,14 @@ class CavitySettings:
     ) -> None:
         """Set the generic methods to compute beam propagation, cavity params.
 
-        This function is called within two contexts:
+        This function is called within two contexts.
 
-        - When initializing the :class:`.BeamCalculator` specific parameters
-          (:class:`.ElementBeamCalculatorParameters`).
-        - When re-initalizing the :class:`.ElementBeamCalculatorParameters`
-          because the ``status`` of the cavity changed, and in particular when
-          it switches to ``'failed'``. In this case, the ``phi_s_func`` is not
-          altered.
+         * When initializing the :class:`.BeamCalculator` specific parameters
+           (:class:`.ElementBeamCalculatorParameters`).
+         * When re-initalizing the :class:`.ElementBeamCalculatorParameters`
+           because the ``status`` of the cavity changed, and in particular when
+           it switches to ``'failed'``. In this case, the ``phi_s_func`` is not
+           altered.
 
         Parameters
         ----------
@@ -637,9 +637,10 @@ class CavitySettings:
         r"""Adapt the cavity parameters methods to beam with ``w_kin``.
 
         This function must be called:
-        - When the kinetic energy at the entrance of the cavity is changed
+
+        * When the kinetic energy at the entrance of the cavity is changed
           (like this occurs during optimisation process)
-        - When the synchronous phase must be calculated with another solver.
+        * When the synchronous phase must be calculated with another solver.
 
         Parameters
         ----------

@@ -101,12 +101,12 @@ def z_field_map_rk4(
         ----------
         z : float
             Position where variation is calculated.
-        u : np.ndarray
+        u : numpy.ndarray
             First component is gamma. Second is phase in rad.
 
         Return
         ------
-        v : np.ndarray
+        v : numpy.ndarray
             First component is :math:`\Delta \gamma / \Delta z` in
             :unit:`MeV / m`.
             Second is :math:`\Delta \phi / \Delta z` in
