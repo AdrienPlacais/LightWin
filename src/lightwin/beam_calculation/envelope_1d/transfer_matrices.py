@@ -32,6 +32,13 @@ from lightwin.core.em_fields.types import (
 )
 
 
+def z_dummy(
+    gamma_in: float, *args, **kwargs
+) -> tuple[np.ndarray, np.ndarray, None]:
+    """Return an eye transfer matrix."""
+    return (np.eye(2), np.array([gamma_in, 0.0]), None)
+
+
 def z_drift(
     gamma_in: float,
     delta_s: float,
