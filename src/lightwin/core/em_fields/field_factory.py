@@ -38,13 +38,16 @@ class FieldFactory:
     default_field_map_folder: Path
 
     def _gather_files_to_load(
-        self, field_maps: Collection[FieldMap]
+        self, field_maps: Collection[FieldMap | SuperposedFieldMap]
     ) -> dict[Path, list[FieldMap]]:
         """Associate :class:`.FieldMap` objects using the same fields.
 
+        :class:`.SuperposedFieldMap` are replaced by the list of
+        :class:`.FieldMap` they superpose.
+
         Parameters
         ----------
-        field_maps : Collection[FieldMap]
+        field_maps : Collection[FieldMap | SuperposedFieldMap]
             All the :class:`.FieldMap` instances requiring a :class:`.Field`.
 
         Returns
@@ -53,19 +56,11 @@ class FieldFactory:
             A dictionary where each key is a path to a field map file, and each
             value is a list of :class:`.FieldMap` instances that use that file.
 
-        Raises
-        ------
-        NotImplementedError
-            If a :class:`.SuperposedFieldMap` is encountered, as it's not yet
-            supported.
-
         """
+        unpacked = _unpack_superposed_field_maps(field_maps)
+
         to_load: dict[Path, list[FieldMap]] = {}
-        for field_map in field_maps:
-            if isinstance(field_map, SuperposedFieldMap):
-                raise NotImplementedError(
-                    "Loading of field maps not yet implemented for Superposed."
-                )
+        for field_map in unpacked:
             assert isinstance(field_map.field_map_file_name, Path)
             file_path = (
                 field_map.field_map_folder / field_map.field_map_file_name
@@ -125,3 +120,18 @@ class FieldFactory:
                 fm.field = field
                 fm.cavity_settings.field = field
         return
+
+
+def _unpack_superposed_field_maps(
+    packed: Collection[FieldMap | SuperposedFieldMap],
+) -> list[FieldMap]:
+    """Extract the :class:`.FieldMap` from :class:`.SuperposedFieldMap`."""
+    unpacked = [
+        elt
+        for obj in packed
+        for elt in (
+            obj.field_maps if isinstance(obj, SuperposedFieldMap) else [obj]
+        )
+    ]
+
+    return unpacked
