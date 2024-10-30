@@ -20,6 +20,8 @@ from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import 
     SuperposedFieldMapEnvelope1DParameters,
 )
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.util.synchronous_phases import PHI_S_MODELS
 
 try:
     from lightwin.beam_calculation.cy_envelope_1d import (
@@ -99,6 +101,28 @@ class FieldMapCyEnvelope1DParameters(
 
     """
 
+    def __init__(
+        self,
+        elt: FieldMap,
+        method: CY_ENVELOPE1D_METHODS_T,
+        n_steps_per_cell: int,
+        solver_id: str,
+        beam_kwargs: dict[str, Any],
+        phi_s_model: PHI_S_MODELS = "historical",
+        **kwargs: str | int,
+    ) -> None:
+        """Set the name of the field map and init base class."""
+        self.field_map_file_name = str(elt.field_map_file_name)
+        return super().__init__(
+            elt=elt,
+            method=method,
+            n_steps_per_cell=n_steps_per_cell,
+            solver_id=solver_id,
+            beam_kwargs=beam_kwargs,
+            phi_s_model=phi_s_model,
+            **kwargs,
+        )
+
     def transfer_matrix_kw(
         self,
         w_kin: float,
@@ -136,7 +160,7 @@ class FieldMapCyEnvelope1DParameters(
         rf_kwargs = {
             "bunch_to_rf": cavity_settings.bunch_phase_to_rf_phase,
             "k_e": cavity_settings.k_e,
-            "n_cell": rf_field.n_cell,
+            "n_cell": cavity_settings.field.n_cell,
             "omega0_rf": cavity_settings.omega0_rf,
             "section_idx": rf_field.section_idx,
         }

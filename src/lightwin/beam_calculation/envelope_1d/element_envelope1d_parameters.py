@@ -215,9 +215,9 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         ]
 
         self.solver_id = solver_id
-        self.n_cell = elt.rf_field.n_cell
+        n_cell = elt.cavity_settings.field.n_cell
         self._rf_to_bunch = elt.cavity_settings.rf_phase_to_bunch_phase
-        n_steps = self.n_cell * n_steps_per_cell
+        n_steps = n_cell * n_steps_per_cell
         super().__init__(
             elt.length_m,
             n_steps,
@@ -263,7 +263,6 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         geometry_kwargs = {
             "d_z": self.d_z,
             "n_steps": self.n_steps,
-            "filename": self.field_map_file_name,
         }
 
         field = cavity_settings.field
@@ -407,9 +406,13 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         ]
 
         self.solver_id = solver_id
-        self.n_cell = elt.rf_field.n_cell
-        self._rf_to_bunch = elt.cavities_settings.rf_phase_to_bunch_phase
-        n_steps = self.n_cell * n_steps_per_cell
+        field_maps = elt.field_maps
+
+        self._rf_to_bunch = field_maps[
+            0
+        ].cavity_settings.rf_phase_to_bunch_phase
+        n_cell = max((fm.cavity_settings.field.n_cell for fm in field_maps))
+        n_steps = n_cell * n_steps_per_cell
         super().__init__(
             elt.length_m,
             n_steps,
@@ -418,11 +421,8 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
             **kwargs,
         )
 
-        self.field_map_file_names = [
-            str(name) for name in elt.field_map_file_names
-        ]
-        for settings in elt.field_maps_settings:
-            settings.set_cavity_parameters_methods(
+        for fm in field_maps:
+            fm.cavity_settings.set_cavity_parameters_methods(
                 self.solver_id,
                 self.transf_mat_function_wrapper,
                 self.compute_cavity_parameters,
@@ -433,24 +433,33 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         w_kin: float,
         cavity_settings: Sequence[CavitySettings],
         *args,
+        phi_0_rels: Collection[float] | None = None,
         **kwargs,
     ) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
-        raise NotImplementedError("to do")
+        references = set([setting.reference for setting in cavity_settings])
+        if phi_0_rels is not None or "phi_s" in references:
+            raise RuntimeError(
+                "Not sure how I should handle synchronous phases in superposed"
+                " field maps..."
+            )
+
         geometry_kwargs = {
             "d_z": self.d_z,
             "n_steps": self.n_steps,
-            "filenames": self.field_map_file_names,
         }
-        rf_fields = [setting.rf_field for setting in cavity_settings]
+        raise NotImplementedError(
+            "Need a CavitiesSettings object to have SuperposedField attribute."
+        )
+        fields = [setting.field for setting in cavity_settings]
+        k_es = [setting.k_e for setting in cavity_settings]
+        phi_0_rels = [_get_phi_0_rel(setting) for setting in cavity_settings]
+        funcs = [
+            field.partial_e_z(k_e, phi_0_rel)
+            for k_e, phi_0_rel in zip(k_es, phi_0_rels, strict=True)
+        ]
         rf_kwargs = {
-            "bunch_to_rf": cavity_settings[0].bunch_phase_to_rf_phase,
-            "e_spats": [rf_field.e_spat for rf_field in rf_fields],
-            "k_es": [setting.k_e for setting in cavity_settings],
-            "n_cell": max([rf_field.n_cell for rf_field in rf_fields]),
             "omega0_rf": cavity_settings[0].omega0_rf,
-            "phi_0_rels": [],
-            "section_idx": None,  # Cython only (not implemented)
         }
         _add_cavities_phases(self.solver_id, w_kin, cavity_settings, kwargs)
         return self._beam_kwargs | rf_kwargs | geometry_kwargs
