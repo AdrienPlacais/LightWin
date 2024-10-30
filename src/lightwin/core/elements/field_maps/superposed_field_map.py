@@ -19,6 +19,7 @@ from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.em_fields.rf_field import RfField
+from lightwin.core.em_fields.superposed_fields import SuperposedFields
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
 
@@ -72,6 +73,7 @@ class SuperposedFieldMap(Element):
         self._can_be_retuned: bool = False
 
         self._is_accelerating = is_accelerating
+        self.field: SuperposedFields
 
     @property
     def __class__(self) -> type:  # type: ignore

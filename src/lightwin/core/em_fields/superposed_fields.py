@@ -11,7 +11,7 @@ from lightwin.core.em_fields.types import (
 )
 
 
-class SuperposedField(Field):
+class SuperposedFields(Field):
     """This object gathers several :class:`.Field` instances."""
 
     is_implemented = True
