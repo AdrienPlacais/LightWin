@@ -142,7 +142,7 @@ class Envelope1D(BeamCalculator):
 
         set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(
             set_of_cavity_settings,
-            elts.l_cav,
+            elts.cavities(superposed="remove"),
             use_a_copy_for_nominal_settings=use_a_copy_for_nominal_settings,
         )
 
