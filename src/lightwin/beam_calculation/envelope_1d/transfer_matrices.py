@@ -14,6 +14,9 @@ line is ``dp/p``.
     electric field interpolated twice: a first time for acceleration, and a
     second time to iterate itg_field. Maybe this could be done only once.
 
+.. todo::
+    Integrate my doc with demonstration of transfer matrix for field map form.
+
 """
 
 import math
@@ -74,11 +77,11 @@ def z_field_map_rk4(
     pre-compute some constants to speed up the calculation:
 
     .. math::
-        \Delta\gamma_{\mathrm{norm}} = \frac{q_{\mathrm{adim}} \Delta z}{mc^2}
+        \Delta\gamma_\mathrm{norm} = \frac{q_\mathrm{adim} \Delta z}
+        {E_\mathrm{rest}}
 
     .. math::
-        \Delta\phi_{\mathrm{norm}} = \frac{\omega_0 \Delta z}{c}
-
+        \Delta\phi_\mathrm{norm} = \frac{\omega_0 \Delta z}{c}
 
     """
     z_rel = 0.0
@@ -288,7 +291,7 @@ def z_thin_lense(
     Compute propagation in a slice of field map using thin lense approximation.
 
     Thin lense approximation: drift-acceleration-drift. The transfer matrix of
-    the thin acceleration gap is:
+    the thin accelerating gap is:
 
     .. math::
 
@@ -296,12 +299,55 @@ def z_thin_lense(
             k_3 & 1   \\
             k_1 & k_2 \\
         \end{bmatrix}
-        
+
+    :math:`E_{\mathrm{scaled}}` is the complex electric field at the middle of
+    the accelerating gap multiplied by the factor:
+
+    .. math::
+
+        k = \frac{\Delta\gamma_\mathrm{norm}}{\gamma_m\beta_m^2}
+
+    Where:
+
+    .. math::
+
+        k_1 = \Im(E_\mathrm{scaled}) \frac{\omega_0}{\beta_m c}
+
+    .. math::
+
+        k_2 = 1 - (2 - \beta_m^2)\Re(E_\mathrm{scaled})
+
+    .. math::
+
+        k_3 = \frac{1 - \Re(E_\mathrm{scaled})}{k_2}
+
+    Note that quantities with a :math:`m` subscript are taken in the middle of
+    the the accelerating gap. :math:`i` are in the first drift, :math:`i+1` in
+    the second.
+
+    In TraceWin documentation, our complex electric field :math:`E_\mathrm{LW}`
+    would be written:
+
+    .. math::
+
+        E_\mathrm{LW} = E_0
+            \sin{
+                \left( \frac{Kz}{\beta_c} \right)
+            }
+            \left[
+                \cos{(\omega t_s + \varphi_0)}
+                + j\sin{(\omega t_s + \varphi_0)}
+            \right]
+
+    A :math:`\Delta z` term is missing in the :math:`K_1` and :math:`K_2`
+    expressions in TraceWin documentation.
 
     Parameters
     ----------
     scaled_e_middle : complex
-        Complex electric field in the accelerating gap.
+        Complex electric field in the accelerating gap multiplied by
+        :math:`\Delta\gamma_\mathrm{norm}`. It is divided by
+        :math:`\gamma_m\beta_m^2` in the routine.
     gamma_in : float
         gamma at entrance of first drift.
     gamma_out : float
