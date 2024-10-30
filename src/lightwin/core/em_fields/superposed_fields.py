@@ -15,6 +15,7 @@ class SuperposedFields(Field):
     """This object gathers several :class:`.Field` instances."""
 
     is_implemented = True
+    extensions = ()
 
     def __init__(
         self,
@@ -149,8 +150,6 @@ class SuperposedFields(Field):
 
     def partial_e_z(  # type: ignore
         self,
-        pos: Any,
-        phi: float,
         amplitudes: Collection[float],
         phi_0_rels: Collection[float],
     ) -> tuple[FieldFuncComplexTimedComponent, FieldFuncTimedComponent]:
