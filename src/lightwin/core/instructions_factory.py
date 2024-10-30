@@ -140,7 +140,9 @@ class InstructionsFactory:
 
         if self._load_field_maps:
             field_maps = [elt for elt in elts if isinstance(elt, FieldMap)]
+            # New implementation
             self._field_factory.run_all(field_maps)
+            # Old implementation
             load_electromagnetic_fields(field_maps, cython=True)
 
         return instructions
