@@ -227,3 +227,18 @@ class SuperposedPlaceHolderElt(DummyElement):
 
 class SuperposedPlaceHolderCmd(DummyCommand):
     """Inserted in place of field maps and superpose map commands."""
+
+
+def unpack_superposed(
+    packed: Collection[FieldMap | SuperposedFieldMap],
+) -> list[FieldMap]:
+    """Extract the :class:`.FieldMap` from :class:`.SuperposedFieldMap`."""
+    unpacked = [
+        elt
+        for obj in packed
+        for elt in (
+            obj.field_maps if isinstance(obj, SuperposedFieldMap) else [obj]
+        )
+    ]
+
+    return unpacked

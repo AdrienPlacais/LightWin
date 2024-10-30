@@ -16,6 +16,7 @@ from lightwin.core.elements.field_maps.field_map_1100 import FieldMap1100
 from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
+    unpack_superposed,
 )
 from lightwin.core.em_fields.field70 import Field70
 from lightwin.core.em_fields.field100 import Field100
@@ -56,10 +57,10 @@ class FieldFactory:
             :class:`.FieldMap` instances that use those `Field.__init__` args.
 
         """
-        unpacked = _unpack_superposed_field_maps(field_maps)
+        all_field_maps = unpack_superposed(field_maps)
 
         to_load: dict[tuple[Path, float, float], list[FieldMap]] = {}
-        for field_map in unpacked:
+        for field_map in all_field_maps:
             assert isinstance(field_map.field_map_file_name, Path)
             file_path = (
                 field_map.field_map_folder / field_map.field_map_file_name
@@ -98,18 +99,3 @@ class FieldFactory:
             for fm in field_maps:
                 fm.cavity_settings.field = field
         return
-
-
-def _unpack_superposed_field_maps(
-    packed: Collection[FieldMap | SuperposedFieldMap],
-) -> list[FieldMap]:
-    """Extract the :class:`.FieldMap` from :class:`.SuperposedFieldMap`."""
-    unpacked = [
-        elt
-        for obj in packed
-        for elt in (
-            obj.field_maps if isinstance(obj, SuperposedFieldMap) else [obj]
-        )
-    ]
-
-    return unpacked
