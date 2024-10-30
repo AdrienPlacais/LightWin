@@ -27,7 +27,6 @@ from typing import Any
 from lightwin.core.em_fields.field_helpers import null_field_1d
 from lightwin.core.em_fields.types import (
     FieldFuncComplexTimedComponent,
-    FieldFuncPhisFit,
     FieldFuncTimedComponent,
 )
 
@@ -178,16 +177,14 @@ class Field(ABC):
         if complex_output:
             return field_value * (1.0 + 1j * math.tan(phase))
         return field_value
-        field_value = amplitude * component_func(pos)
-        phase = phi + phi_0_rel
-        if complex_output:
-            return field_value * (math.cos(phase) + 1j * math.sin(phase))
-
-        return field_value * math.cos(phase)
 
     def shift(self) -> None:
         """Shift the field maps. Used in SUPERPOSE_MAP."""
-        raise NotImplementedError("Not yet implemented!")
+        raise NotImplementedError(
+            "This should be implemented for every Field object. The idea is "
+            "simply to offset the z variable, which depends on the length of "
+            "the ``pos`` vector."
+        )
 
     def e_x(
         self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
