@@ -82,10 +82,10 @@ def e_1d_complex(
 
 
 def shifted_e_spat(
-    e_spat: FieldFuncComponent1D, z_shift: float, z_pos: float
-) -> float:
+    e_spat: FieldFuncComponent1D, z_shift: float
+) -> FieldFuncComponent1D:
     """Shift electric field by ``z_shift``."""
-    return e_spat(z_pos + z_shift)
+    return lambda z_pos: e_spat(z_pos - z_shift)
 
 
 # def superpose_longitudinal_e_spats(
