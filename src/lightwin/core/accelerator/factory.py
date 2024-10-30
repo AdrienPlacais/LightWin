@@ -9,6 +9,9 @@ from typing import Any, Sequence
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.core.elements.field_maps.superposed_field_map import (
+    unpack_superposed,
+)
 
 
 @dataclass
@@ -50,7 +53,9 @@ class AcceleratorFactory(ABC):
     def run(self, *args, **kwargs) -> Accelerator:
         """Create the object."""
         accelerator = Accelerator(*args, **kwargs)
-        self._check_consistency_absolute_phases(accelerator.l_cav)
+        self._check_consistency_absolute_phases(
+            unpack_superposed(accelerator.l_cav)
+        )
         return accelerator
 
     def _generate_folders_tree_structure(
