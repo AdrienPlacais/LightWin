@@ -6,6 +6,7 @@ from typing import Any
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
     BendEnvelope1DParameters,
     DriftEnvelope1DParameters,
+    DummyEnvelope1DParameters,
     ElementEnvelope1DParameters,
     FieldMapEnvelope1DParameters,
     SuperposedFieldMapEnvelope1DParameters,
@@ -26,6 +27,7 @@ from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
+    SuperposedPlaceHolderElt,
 )
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
@@ -47,6 +49,7 @@ class ElementEnvelope1DParametersFactory(
         Quad: DriftEnvelope1DParameters,
         Solenoid: DriftEnvelope1DParameters,
         SuperposedFieldMap: SuperposedFieldMapEnvelope1DParameters,
+        SuperposedPlaceHolderElt: DummyEnvelope1DParameters,
     }  #:
 
     def __init__(

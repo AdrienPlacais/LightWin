@@ -12,7 +12,7 @@ The :class:`.Element` objects with a transfer matrix are ``DRIFT``,
 """
 
 import math
-from collections.abc import Collection, Sequence
+from collections.abc import Collection
 from typing import Any, Callable, Literal
 
 import numpy as np
@@ -30,7 +30,10 @@ from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
 )
-from lightwin.core.em_fields.types import FieldFuncComplexTimedComponent
+from lightwin.core.em_fields.types import (
+    FieldFuncComplexTimedComponent,
+    FieldFuncTimedComponent,
+)
 from lightwin.util.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
@@ -110,8 +113,7 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
             **kwargs,
         )
         r_zz, gamma_phi, itg_field = self.transf_mat_function(
-            gamma_in=gamma_in,
-            **tm_kwargs,
+            gamma_in=gamma_in, **tm_kwargs
         )
 
         results = self._transfer_matrix_results_to_dict(
@@ -413,6 +415,12 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         ].cavity_settings.rf_phase_to_bunch_phase
         n_cell = max((fm.cavity_settings.field.n_cell for fm in field_maps))
         n_steps = n_cell * n_steps_per_cell
+
+        self.field_maps = field_maps
+        self.cavity_settings = [fm.cavity_settings for fm in field_maps]
+        self.fields = [setting.field for setting in self.cavity_settings]
+        self.field = elt.field
+
         super().__init__(
             elt.length_m,
             n_steps,
@@ -429,40 +437,39 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
             )
 
     def transfer_matrix_kw(
-        self,
-        w_kin: float,
-        cavity_settings: Sequence[CavitySettings],
-        *args,
-        phi_0_rels: Collection[float] | None = None,
-        **kwargs,
+        self, w_kin: float, *args, **kwargs
     ) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
-        references = set([setting.reference for setting in cavity_settings])
-        if phi_0_rels is not None or "phi_s" in references:
-            raise RuntimeError(
-                "Not sure how I should handle synchronous phases in superposed"
-                " field maps..."
-            )
-
         geometry_kwargs = {
             "d_z": self.d_z,
             "n_steps": self.n_steps,
         }
-        raise NotImplementedError(
-            "Need a CavitiesSettings object to have SuperposedField attribute."
-        )
-        fields = [setting.field for setting in cavity_settings]
-        k_es = [setting.k_e for setting in cavity_settings]
-        phi_0_rels = [_get_phi_0_rel(setting) for setting in cavity_settings]
-        funcs = [
-            field.partial_e_z(k_e, phi_0_rel)
-            for k_e, phi_0_rel in zip(k_es, phi_0_rels, strict=True)
-        ]
+        complex_e_func, real_e_func = self._set_field_functions()
         rf_kwargs = {
-            "omega0_rf": cavity_settings[0].omega0_rf,
+            "omega0_rf": self.cavity_settings[0].omega0_rf,
+            "complex_e_func": complex_e_func,
+            "real_e_func": real_e_func,
         }
-        _add_cavities_phases(self.solver_id, w_kin, cavity_settings, kwargs)
+
+        # What will happen when 1st cavity accelerates the beam, hence the
+        # given w_kin is bad? Problem for synchronous phases only
+        for cav in self.cavity_settings:
+            cav.set_cavity_parameters_arguments(
+                self.solver_id, w_kin, **rf_kwargs
+            )
         return self._beam_kwargs | rf_kwargs | geometry_kwargs
+
+    def _set_field_functions(
+        self,
+    ) -> tuple[FieldFuncComplexTimedComponent, FieldFuncTimedComponent]:
+        """Set the functions to compute electric fields."""
+        k_es = [setting.k_e for setting in self.cavity_settings]
+        phi_0_rels = [setting.phi_0_rel for setting in self.cavity_settings]
+        if None in phi_0_rels:
+            raise RuntimeError(
+                "A phi_0_rel was not set in the sublist of field maps"
+            )
+        return self.field.partial_e_z(k_es, phi_0_rels)
 
     def _transfer_matrix_results_to_dict(
         self,
@@ -595,6 +602,26 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
             "factor_2": self.factor_2,
             "factor_3": self.factor_3,
         }
+
+
+class DummyEnvelope1DParameters(ElementEnvelope1DParameters):
+    """Create dummy arguments for dummy element."""
+
+    def __init__(
+        self,
+        elt: Element,
+        beam_kwargs: dict[str, Any],
+        n_steps: int = 1,
+        **kwargs: str | int,
+    ) -> None:
+        """Create no specific parameters."""
+        return super().__init__(
+            length_m=elt.length_m,
+            n_steps=n_steps,
+            beam_kwargs=beam_kwargs,
+            transf_mat_function=transfer_matrices.z_dummy,
+            **kwargs,
+        )
 
 
 def _add_cavities_phases(
