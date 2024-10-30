@@ -20,6 +20,7 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
 )
 from lightwin.core.em_fields.field70 import Field70
 from lightwin.core.em_fields.field100 import Field100
+from lightwin.core.em_fields.superposed_fields import SuperposedFields
 
 FIELDS = {
     FieldMap: Field100,  # default, should not be used
@@ -36,7 +37,7 @@ class FieldFactory:
 
     default_field_map_folder: Path
 
-    def _gather_files_to_load(
+    def _gather_primary_files_to_load(
         self, field_maps: Collection[FieldMap | SuperposedFieldMap]
     ) -> dict[tuple[Path, float, float], list[FieldMap]]:
         """Associate :class:`.FieldMap` objects using the same fields.
@@ -88,14 +89,29 @@ class FieldFactory:
 
     def run_all(self, field_maps: Collection[FieldMap]) -> None:
         """Generate the :class:`.Field` objects and store it in field maps."""
-        to_load = self._gather_files_to_load(field_maps)
-        for (path, length_m, z_0), field_maps in to_load.items():
-            field_map = field_maps[0]
+        to_load = self._gather_primary_files_to_load(field_maps)
+        for (path, length_m, z_0), corresp_maps in to_load.items():
+            field_map = corresp_maps[0]
             constructor = FIELDS[field_map.__class__]
             field = constructor(
                 field_map_path=path, length_m=length_m, z_0=z_0
             )
 
-            for fm in field_maps:
+            for fm in corresp_maps:
                 fm.cavity_settings.field = field
+        self._create_superposed(field_maps)
         return
+
+    def _create_superposed(self, field_maps: Collection[FieldMap]) -> None:
+        """Create :class:`.SuperposedFieldMap` from :class:`FieldMap`.
+
+        Classic :class:`.FieldMap` remain untouched.
+
+        """
+        superposed = [
+            x for x in field_maps if isinstance(x, SuperposedFieldMap)
+        ]
+        for elt in superposed:
+            fields = [fm.cavity_settings.field for fm in elt.field_maps]
+            superposed_fields = SuperposedFields(fields)
+            elt.field = superposed_fields
