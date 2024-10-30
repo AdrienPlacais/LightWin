@@ -75,6 +75,8 @@ class FieldMap(Element):
         self.field_map_folder = default_field_map_folder
         self.field_map_file_name = Path(line.splitted[9])
 
+        self.z_0 = 0.0
+
         self._can_be_retuned: bool = True
         self.rf_field = RfField(section_idx=self.idx["section"])
         self.cavity_settings = cavity_settings
@@ -321,3 +323,19 @@ class FieldMap(Element):
             " Maybe the particle entry phase is not defined?"
         )
         return (math.degrees(phase), abs_phase_flag)
+
+    @property
+    def z_0(self) -> float:
+        """Shifting constant of the field map. Used in superposed maps."""
+        return self._z_0
+
+    @z_0.setter
+    def z_0(self, value: float) -> None:
+        """Change the value of z_0.
+
+        This method should be called once at the instantiation of the object,
+        and only be called from the ``apply`` method of :class:`.SuperposeMap`
+        after.
+
+        """
+        self._z_0 = value

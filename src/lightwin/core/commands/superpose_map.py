@@ -10,8 +10,6 @@ import logging
 from collections.abc import Collection, Sequence
 
 from lightwin.core.commands.command import Command
-from lightwin.core.commands.dummy_command import DummyCommand
-from lightwin.core.elements.dummy import DummyElement
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
@@ -19,7 +17,6 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedPlaceHolderCmd,
     SuperposedPlaceHolderElt,
 )
-from lightwin.core.em_fields.rf_field import RfField
 from lightwin.core.instruction import Comment, Instruction
 from lightwin.tracewin_utils.line import DatLine
 
@@ -121,15 +118,16 @@ class SuperposeMap(Command):
                 z_0 = instruction.z_0
                 continue
 
-            if isinstance(instruction, FieldMap):
+            if isinstance(field_map := instruction, FieldMap):
                 if z_0 is None:
                     logging.error(
                         "There is no SUPERPOSE_MAP for current FIELD_MAP.\n"
                         f"{instruction.line}"
                     )
                     z_0 = 0.0
+                field_map.z_0 = z_0
 
-                z_1 = z_0 + instruction.length_m
+                z_1 = z_0 + field_map.length_m
                 if z_1 > z_max:
                     z_max = z_1
                 z_0 = None
