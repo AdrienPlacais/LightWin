@@ -19,7 +19,7 @@ def load_electromagnetic_fields_for_cython(
     files = [
         field_map.field_map_file_name
         for field_map in field_maps
-        if field_map.rf_field.is_loaded
+        if hasattr(field_map, "rf_field") and field_map.rf_field.is_loaded
     ]
     flattened_files = helper.flatten(files)
     unique_files = helper.remove_duplicates(flattened_files)
