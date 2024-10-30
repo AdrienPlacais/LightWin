@@ -81,7 +81,6 @@ class FieldMap(Element):
         self.rf_field = RfField(section_idx=self.idx["section"])
         self.cavity_settings = cavity_settings
         self.cavity_settings.rf_field = self.rf_field
-        self.field: Field
 
     @property
     def status(self) -> str:
