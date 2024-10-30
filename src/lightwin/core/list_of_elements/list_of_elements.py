@@ -26,6 +26,10 @@ from lightwin.core.beam_parameters.initial_beam_parameters import (
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import REFERENCE_T
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.core.elements.field_maps.superposed_field_map import (
+    SuperposedFieldMap,
+    unpack_superposed,
+)
 from lightwin.core.instruction import Instruction
 from lightwin.core.list_of_elements.helper import (
     first,
@@ -133,6 +137,34 @@ class ListOfElements(list):
     def l_cav(self) -> list[FieldMap]:
         """Easy access to the list of cavities."""
         return self._l_cav
+
+    def cavities(
+        self, superposed: Literal["unpack", "remove", "keep"] = "unpack"
+    ) -> list[FieldMap]:
+        """Give the list of cavities, with special treatment for superposed.
+
+        Parameters
+        ----------
+        superposed : Literal["unpack", "remove", "keep"], optional
+            - If ``"unpack"``, we insert the :class:`.FieldMap` contained in
+              the :class:`.SuperposedFieldMap`.
+            - If ``"remove"``, we remove the :class:`.SuperposedFieldMap` from
+              the output.
+            - If ``"keep"``, we return the :class:`.SuperposedFieldMap` along
+              with the :class:`.FieldMap`.
+            The default is ``"unpack"``.
+
+        """
+        cavities = self._l_cav
+        if superposed == "keep":
+            return cavities
+        if superposed == "unpack":
+            return unpack_superposed(cavities)
+        return [
+            cavity
+            for cavity in cavities
+            if not isinstance(cavity, SuperposedFieldMap)
+        ]
 
     @property
     def tunable_cavities(self) -> list[FieldMap]:
