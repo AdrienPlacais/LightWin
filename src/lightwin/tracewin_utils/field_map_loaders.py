@@ -8,13 +8,13 @@ from pathlib import Path
 import numpy as np
 
 
-def electric_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
-    """Load a 1D electric field (``.edz`` extension).
+def field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
+    """Load a 1D field.
 
     Parameters
     ----------
     path : pathlib.Path
-        The path to the ``.edz`` file to load.
+        The path to the file to load.
 
     Returns
     -------
@@ -23,11 +23,11 @@ def electric_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
     zmax : float
         z position of the filemap end.
     norm : float
-        Electric field normalisation factor. It is different from k_e (6th
+        Electric field normalisation factor. It is different from ``k_e`` (6th
         argument of the FIELD_MAP command). Electric fields are normalised by
-        k_e/norm, hence norm should be unity by default.
+        ``k_e/norm``, hence norm should be unity by default.
     f_z : numpy.ndarray
-        Array of electric field in MV/m.
+        Array holding field. If electric, will be in :unit:`MV/m`.
     n_cell : int
         Number of cells in the cavity.
 
@@ -72,7 +72,91 @@ def electric_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
     assert zmax is not None
     assert norm is not None
     n_cell = _get_number_of_cells(f_z)
+    if abs(norm - 1.0) > 1e-6:
+        logging.warning(
+            f"The field in {path} as a {norm = } different from unity."
+        )
     return n_z, zmax, norm, np.array(f_z), n_cell
+
+
+def field_3d(
+    path: Path,
+) -> tuple[
+    int, float, int, float, float, int, float, float, float, np.ndarray
+]:
+    """Load a 3D field.
+
+    Parameters
+    ----------
+    path : pathlib.Path
+        The path to the file to load.
+
+    Returns
+    -------
+    n_z : int
+        Number of steps along the z-axis.
+    zmax : float
+        Maximum z position.
+    n_x : int
+        Number of steps along the x-axis.
+    xmin : float
+        Minimum x position.
+    xmax : float
+        Maximum x position.
+    n_y : int
+        Number of steps along the y-axis.
+    ymin : float
+        Minimum y position.
+    ymax : float
+        Maximum y position.
+    norm : float
+        Field normalization factor.
+    field : numpy.ndarray
+        3D array holding field values. If electric, will be in :unit:`MV/m`.
+
+    """
+    field_values = []
+    try:
+        with open(path, "r", encoding="utf-8") as file:
+            n_z, zmax = map(float, file.readline().split())
+            n_z = int(n_z)
+
+            n_x, xmin, xmax = map(float, file.readline().split())
+            n_x = int(n_x)
+
+            n_y, ymin, ymax = map(float, file.readline().split())
+            n_y = int(n_y)
+
+            norm = float(file.readline().strip())
+
+            field_values = np.zeros((n_z, n_y, n_x))
+
+            for k in range(n_z):
+                for j in range(n_y):
+                    for i in range(n_x):
+                        line = file.readline().strip()
+                        field_values[k, j, i] = float(line)
+
+    except UnicodeDecodeError as e:
+        logging.error(
+            f"File {path} could not be loaded. Ensure it is a valid text file."
+        )
+        raise RuntimeError(e)
+
+    except ValueError as e:
+        logging.error(
+            f"Error parsing field data from file {path}. Ensure format consistency."
+        )
+        raise RuntimeError(e)
+
+    assert norm is not None, "Normalization factor (norm) is missing."
+
+    if abs(norm - 1.0) > 1e-6:
+        logging.warning(
+            f"The field in {path} has a normalization factor of {norm}, different from unity."
+        )
+
+    return n_z, zmax, n_x, xmin, xmax, n_y, ymin, ymax, norm, field_values
 
 
 def _get_number_of_cells(f_z: Collection[float]) -> int:
@@ -87,4 +171,4 @@ def _get_number_of_cells(f_z: Collection[float]) -> int:
     return n_cell
 
 
-FIELD_MAP_LOADERS = {".edz": electric_field_1d}  #:
+FIELD_MAP_LOADERS = {".edz": field_1d}  #:
