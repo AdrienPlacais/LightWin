@@ -413,7 +413,7 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         self._rf_to_bunch = field_maps[
             0
         ].cavity_settings.rf_phase_to_bunch_phase
-        n_cell = max((fm.cavity_settings.field.n_cell for fm in field_maps))
+        n_cell = sum((fm.cavity_settings.field.n_cell for fm in field_maps))
         n_steps = n_cell * n_steps_per_cell
 
         self.field_maps = field_maps
