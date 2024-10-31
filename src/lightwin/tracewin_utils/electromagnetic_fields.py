@@ -20,13 +20,12 @@ from typing import Literal
 import numpy as np
 import pandas as pd
 
-import lightwin.tracewin_utils.load
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.em_fields.longitudinal import (
     create_e_spat,
     longitudinal_e_spat_t,
 )
-from lightwin.tracewin_utils.load import FIELD_MAP_LOADERS
+from lightwin.tracewin_utils.field_map_loaders import FIELD_MAP_LOADERS
 from lightwin.util import helper
 
 try:
