@@ -5,7 +5,12 @@ implemented, but can serve as a place holder for non-accelerating fields.
 
 """
 
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any
+
 from lightwin.core.em_fields.field import Field
+from lightwin.core.em_fields.field_helpers import null_field_1d
 
 
 class Field70(Field):
@@ -13,6 +18,14 @@ class Field70(Field):
 
     extensions = (".bsx", ".bsy", ".bsz")
     is_implemented = False
+
+    def _load_fieldmap(
+        self,
+        path: Path,
+        **validity_check_kwargs,
+    ) -> tuple[Callable[..., float], Any, int]:
+        """Return dummy fields."""
+        return null_field_1d, 60, 1
 
     def b_x(
         self,
