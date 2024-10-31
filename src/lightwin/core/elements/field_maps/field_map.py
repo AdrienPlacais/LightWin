@@ -28,7 +28,6 @@ import numpy as np
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.util import set_full_field_map_path
-from lightwin.core.em_fields.field import Field
 from lightwin.core.em_fields.rf_field import RfField
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter

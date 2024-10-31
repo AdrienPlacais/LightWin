@@ -88,7 +88,7 @@ class SuperposeMap(Command):
 
         """
         instructions_to_merge = instructions[self.influenced]
-        total_length = self._total_length(instructions_to_merge)
+        total_length = self._total_length_m(instructions_to_merge)
 
         new_instructions = self._generate_new_instructions(
             total_length, instructions_to_merge
@@ -109,7 +109,9 @@ class SuperposeMap(Command):
         # instructions[self.influenced] = instructions_to_merge
         return instructions
 
-    def _total_length(self, instructions_to_merge: list[Instruction]) -> float:
+    def _total_length_m(
+        self, instructions_to_merge: list[Instruction]
+    ) -> float:
         """Compute length of the superposed field maps."""
         z_max = 0.0
         z_0 = None
@@ -134,7 +136,7 @@ class SuperposeMap(Command):
         return z_max
 
     def _generate_new_instructions(
-        self, total_length: float, instructions_to_merge: list[Instruction]
+        self, total_length_m: float, instructions_to_merge: list[Instruction]
     ) -> list[Instruction]:
         """Create the instructions replacing superpose and field maps."""
         indexes = [x.idx["dat_idx"] for x in instructions_to_merge]
@@ -142,7 +144,7 @@ class SuperposeMap(Command):
         superposed = SuperposedFieldMap.from_field_maps(
             instructions_to_merge,
             dat_idx=indexes.pop(0),
-            total_length=total_length,
+            total_length_m=total_length_m,
             starting_positions=_starting_positions(instructions_to_merge),
         )
         idx_in_lattice = superposed.idx["idx_in_lattice"]

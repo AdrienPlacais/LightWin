@@ -5,7 +5,6 @@ implemented for now.
 
 """
 
-import functools
 from collections.abc import Callable
 from pathlib import Path
 
@@ -73,7 +72,5 @@ class Field100(Field):
         assert hasattr(
             self, "z_0"
         ), "You need to set the starting_position attribute of the Field."
-        shifted = functools.partial(
-            shifted_e_spat, e_spat=self._e_z_spat_rf, z_shift=self.z_0
-        )
+        shifted = shifted_e_spat(self._e_z_spat_rf, z_shift=self.z_0)
         self._e_z_spat_rf = shifted

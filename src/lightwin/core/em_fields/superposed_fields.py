@@ -164,11 +164,11 @@ class SuperposedFields(Field):
             rea_funcs.append(rea)
 
         # Combine the partial functions into one that sums all contributions
-        def compl_combined(*args, **kwargs):
-            return sum(func(*args, **kwargs) for func in compl_funcs)
+        def compl_combined(pos: Any, phase: float) -> complex:
+            return sum(func(pos, phase) for func in compl_funcs)
 
-        def rea_combined(*args, **kwargs):
-            return sum(func(*args, **kwargs) for func in rea_funcs)
+        def rea_combined(pos: Any, phase: float) -> float:
+            return sum(func(pos, phase) for func in rea_funcs)
 
         return compl_combined, rea_combined
 

@@ -90,7 +90,7 @@ class SuperposedFieldMap(Element):
         cls,
         field_maps_n_superpose: Collection[Instruction],
         dat_idx: int,
-        total_length: float,
+        total_length_m: float,
         starting_positions: Collection[float],
     ) -> Self:
         """Instantiate object from several field maps.
@@ -117,7 +117,7 @@ class SuperposedFieldMap(Element):
 
         return cls.from_args(
             dat_idx=dat_idx,
-            total_length=total_length,
+            total_length_m=total_length_m,
             cavities_settings=cavities_settings,
             rf_fields=rf_fields,
             is_accelerating=is_accelerating,
@@ -129,23 +129,23 @@ class SuperposedFieldMap(Element):
 
     @classmethod
     def from_args(
-        cls, dat_idx: int, total_length: float, *args, **kwargs
+        cls, dat_idx: int, total_length_m: float, *args, **kwargs
     ) -> Self:
         """Insantiate object from his properties."""
-        line = cls._args_to_line(total_length)
+        line = cls._args_to_line(total_length_m)
         dat_line = DatLine(line, dat_idx)
         return cls(
             dat_line,
             dat_idx=dat_idx,
-            total_length=total_length,
+            total_length_m=total_length_m,
             *args,
             **kwargs,
         )
 
     @classmethod
-    def _args_to_line(cls, total_length: float, *args, **kwargs) -> str:
+    def _args_to_line(cls, total_length_m: float, *args, **kwargs) -> str:
         """Generate hypothetical line."""
-        return f"SUPERPOSED_FIELD_MAP {total_length}"
+        return f"SUPERPOSED_FIELD_MAP {total_length_m * 1e3}"
 
     @classmethod
     def _extract_args_from_field_maps(
