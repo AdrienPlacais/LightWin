@@ -31,7 +31,10 @@ from lightwin.core.em_fields.helper import (
     FieldFuncComponent1D,
     create_1d_field_func,
 )
-from lightwin.tracewin_utils.field_map_loaders import FIELD_MAP_LOADERS
+from lightwin.tracewin_utils.field_map_loaders import (
+    FIELD_MAP_LOADERS,
+    is_a_valid_1d_electric_field,
+)
 
 FIELD_GEOMETRIES = {
     0: "no field",
@@ -326,32 +329,6 @@ def load_field_map_file(
         "Reached end of _load_field_map_file without loading anything."
     )
     return None
-
-
-def is_a_valid_1d_electric_field(
-    n_z: int,
-    zmax: float,
-    f_z: np.ndarray,
-    cavity_length: float,
-    tol: float = 1e-6,
-    **validity_check_kwargs,
-) -> bool:
-    """Assert that the electric field that we loaded is valid."""
-    if f_z.shape[0] != n_z + 1:
-        logging.error(
-            f"The electric field file should have {n_z + 1} lines, but it is "
-            f"{f_z.shape[0]} lines long. "
-        )
-        return False
-
-    if abs(zmax - cavity_length) > tol:
-        logging.error(
-            f"Mismatch between the length of the field map {zmax = } and "
-            f"{cavity_length = }."
-        )
-        return False
-
-    return True
 
 
 def rescale(f_z: np.ndarray, norm: float, tol: float = 1e-6) -> np.ndarray:

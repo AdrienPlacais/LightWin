@@ -86,20 +86,3 @@ def shifted_e_spat(
 ) -> FieldFuncComponent1D:
     """Shift electric field by ``z_shift``."""
     return lambda z_pos: e_spat(z_pos - z_shift)
-
-
-# def superpose_longitudinal_e_spats(
-#     e_spats: Collection[FieldFuncComponent1D], z_0s: Collection[float]
-# ) -> list[FieldFuncComponent1D]:
-#     """Superpose the given electric fields.
-#
-#     This is used by the ``SUPERPOSE_MAP`` command. We extend every electric
-#     field so that it spans over the whole range of positions, but electric
-#     fields are null outside of the range they were defined.
-#
-#     """
-#     shifted_e_spats = [
-#         partial(shifted_e_spat, e_spat=e_spat, z_shift=z_0)
-#         for e_spat, z_0 in zip(e_spats, z_0s, strict=True)
-#     ]
-#     return shifted_e_spats

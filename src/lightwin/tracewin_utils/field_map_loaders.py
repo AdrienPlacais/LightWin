@@ -71,12 +71,38 @@ def field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
     assert n_z is not None
     assert zmax is not None
     assert norm is not None
-    n_cell = _get_number_of_cells(f_z)
+    n_cell = get_number_of_cells(f_z)
     if abs(norm - 1.0) > 1e-6:
         logging.warning(
             f"The field in {path} as a {norm = } different from unity."
         )
     return n_z, zmax, norm, np.array(f_z), n_cell
+
+
+def is_a_valid_1d_electric_field(
+    n_z: int,
+    zmax: float,
+    f_z: np.ndarray,
+    cavity_length: float,
+    tol: float = 1e-6,
+    **validity_check_kwargs,
+) -> bool:
+    """Assert that the electric field that we loaded is valid."""
+    if f_z.shape[0] != n_z + 1:
+        logging.error(
+            f"The electric field file should have {n_z + 1} lines, but it is "
+            f"{f_z.shape[0]} lines long. "
+        )
+        return False
+
+    if abs(zmax - cavity_length) > tol:
+        logging.error(
+            f"Mismatch between the length of the field map {zmax = } and "
+            f"{cavity_length = }."
+        )
+        return False
+
+    return True
 
 
 def field_3d(
@@ -159,7 +185,61 @@ def field_3d(
     return n_z, zmax, n_x, xmin, xmax, n_y, ymin, ymax, norm, field_values
 
 
-def _get_number_of_cells(f_z: Collection[float]) -> int:
+def is_a_valid_3d_field(
+    zmax: float,
+    n_x: int,
+    n_y: int,
+    n_z: int,
+    field: np.ndarray,
+    cavity_length: float,
+    tol: float = 1e-6,
+    **validity_check_kwargs,
+) -> bool:
+    """Assert that the 3D field we loaded is valid.
+
+    Parameters
+    ----------
+    n_x, n_y, n_z : int
+        Number of steps along the three axis.
+    xmacx, ymax, zmax : float
+        Maximum z position.
+    ymin : float
+        Minimum y position.
+    ymax : float
+        Maximum y position.
+    xmin : float
+        Minimum x position.
+    xmax : float
+        Maximum x position.
+    field : np.ndarray
+        3D array holding field values.
+    cavity_length_z : float
+        Expected length along the z-axis.
+    tol : float, optional
+        Tolerance for length comparisons, by default 1e-6.
+
+    Returns
+    -------
+    bool
+        True if the field is valid, False otherwise.
+    """
+    if field.shape != (n_z, n_y, n_x):
+        logging.error(
+            f"Field array shape {field.shape} does not match expected shape "
+            f"({n_z}, {n_y}, {n_x})."
+        )
+        return False
+
+    if abs(zmax - cavity_length) > tol:
+        logging.error(
+            f"Mismatch between the z length of the field map {zmax = } and "
+            f"{cavity_length = }."
+        )
+        return False
+    return True
+
+
+def get_number_of_cells(f_z: Collection[float]) -> int:
     """Count number of times the array of z-electric field changes sign.
 
     See `SO`_.
@@ -169,6 +249,19 @@ def _get_number_of_cells(f_z: Collection[float]) -> int:
     """
     n_cell = len(list(itertools.groupby(f_z, lambda z: z > 0.0)))
     return n_cell
+
+
+def field_values_on_axis(
+    field_values: np.ndarray, n_x: int, n_y: int
+) -> np.ndarray:
+    """Give only values at ``x=y=0``.
+
+    For now, we just hope that the n_x/2 and n_y/2 axis correspond to the axis.
+
+    """
+    n_x0 = int((n_x + 1) / 2)
+    n_y0 = int((n_y + 1) / 2)
+    return field_values[:, n_x0, n_y0]
 
 
 FIELD_MAP_LOADERS = {".edz": field_1d}  #:

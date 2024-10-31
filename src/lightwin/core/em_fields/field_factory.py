@@ -20,14 +20,15 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
 )
 from lightwin.core.em_fields.field70 import Field70
 from lightwin.core.em_fields.field100 import Field100
+from lightwin.core.em_fields.field7700 import Field7700
 from lightwin.core.em_fields.superposed_fields import SuperposedFields
 
 FIELDS = {
     FieldMap: Field100,  # default, should not be used
     FieldMap70: Field70,
     FieldMap100: Field100,
-    FieldMap1100: Field100,
-    FieldMap7700: Field100,
+    FieldMap1100: Field100,  # TODO
+    FieldMap7700: Field7700,
 }
 
 

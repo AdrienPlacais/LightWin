@@ -1,4 +1,4 @@
-"""Define the rf field corresponding to ``FIELD_MAP 100``.
+"""Define the rf field corresponding to ``FIELD_MAP 7700``.
 
 This is 1D longitudinal field along ``z``. The only one that is completely
 implemented for now.
@@ -18,47 +18,57 @@ from lightwin.core.em_fields.field_helpers import (
 from lightwin.core.em_fields.types import Pos1D
 from lightwin.tracewin_utils.electromagnetic_fields import rescale
 from lightwin.tracewin_utils.field_map_loaders import (
-    field_1d,
-    is_a_valid_1d_electric_field,
+    field_3d,
+    field_values_on_axis,
+    get_number_of_cells,
+    is_a_valid_3d_field,
 )
 
 
-class Field100(Field):
+class Field7700(Field):
     """Define a RF field, 1D longitudinal."""
 
-    extensions = (".edz",)
+    extensions = (".edx", ".edy", ".edz", ".bdx", ".bdy", ".bdz")
     is_implemented = True
 
     def _load_fieldmap(
         self, path: Path, **validity_check_kwargs
     ) -> tuple[Callable[[Pos1D], float], tuple[int], int]:
-        r"""Load a 1D field (``.edz`` extension).
+        r"""Load a 3D field.
+
+        .. warning::
+            The field will be calculated on the axis only. We remove any
+            transverse component for now.
 
         Parameters
         ----------
         path : pathlib.Path
-            The path to the ``.edz`` file to load.
+            The path to the file to load.
 
         Returns
         -------
-        e_z : Callable[[Pos1D], float]
-            Function that takes in ``z`` position and returns corresponding
-            field, at null phase, for amplitude of :math:`1\,\mathrm{MV/m}`.
-        n_z : tuple[int]
-            Number of interpolation points.
+        field : Callable[[Pos3D], float]
+            Function that takes in position and returns corresponding field, at
+            null phase, for amplitude of :math:`1\,\mathrm{MV/m}`.
+        n_xyz : tuple[int, int, int]
+            Number of interpolation points in the three directions.
         n_cell : int
             Number of cell for cavities.
 
         """
-        n_z, zmax, norm, f_z, n_cell = field_1d(path)
+        n_z, zmax, n_x, xmin, xmax, n_y, ymin, ymax, norm, field_values = (
+            field_3d(path)
+        )
 
-        assert is_a_valid_1d_electric_field(
-            n_z, zmax, f_z, self._length_m
+        assert is_a_valid_3d_field(
+            zmax, n_x, n_y, n_z, field_values, self._length_m
         ), f"Error loading {path}'s field map."
 
-        f_z = rescale(f_z, norm)
+        field_values = rescale(field_values, norm)
+        on_axis = field_values_on_axis(field_values, n_x, n_y)
+        n_cell = get_number_of_cells(on_axis)
         z_positions = np.linspace(0.0, zmax, n_z + 1)
-        e_z = create_1d_field_func(f_z, z_positions)
+        e_z = create_1d_field_func(on_axis, z_positions)
         return e_z, (n_z,), n_cell
 
     def shift(self) -> None:
