@@ -20,7 +20,7 @@ from lightwin.tracewin_utils.electromagnetic_fields import (
     is_a_valid_1d_electric_field,
     rescale,
 )
-from lightwin.tracewin_utils.load import load_1d_field
+from lightwin.tracewin_utils.field_map_loaders import field_1d
 
 
 class Field100(Field):
@@ -50,7 +50,7 @@ class Field100(Field):
             Number of cell for cavities.
 
         """
-        n_z, zmax, norm, f_z, n_cell = load_1d_field(path)
+        n_z, zmax, norm, f_z, n_cell = field_1d(path)
 
         assert is_a_valid_1d_electric_field(
             n_z, zmax, f_z, self._length_m

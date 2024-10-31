@@ -31,7 +31,7 @@ from lightwin.core.em_fields.helper import (
     FieldFuncComponent1D,
     create_1d_field_func,
 )
-from lightwin.tracewin_utils.load import FIELD_MAP_LOADERS
+from lightwin.tracewin_utils.field_map_loaders import FIELD_MAP_LOADERS
 
 FIELD_GEOMETRIES = {
     0: "no field",
