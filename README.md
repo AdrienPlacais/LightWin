@@ -10,6 +10,7 @@ There are still several significant bugs to fix:
 - [ ] +20% calculation time overhead in synchronous phase fit
   - Note: to compare with branch `refactor_element_parameters`
 - [ ] `SUPERPOSE_MAP` will break if there is an empty line after it...
+- [ ] I do not understand how `phi_0` is handled in superposed field maps. Does not seem to be defined wrt to the entry of the current field map nor the first.
 
 ## Installation
 The full installation instructions are detailed [here](https://adrienplacais.github.io/LightWin/html/main/manual/installation.html).
