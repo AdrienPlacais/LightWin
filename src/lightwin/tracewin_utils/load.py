@@ -236,16 +236,19 @@ def electric_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
                     continue
 
                 if i == 1:
-                    norm = float(line)
+                    try:
+                        norm = float(line)
+                    except ValueError as e:
+                        logging.error(f"Error reading {line = } in {path}.")
                     continue
 
                 f_z.append(float(line))
-    except UnicodeDecodeError:
+    except UnicodeDecodeError as e:
         logging.error(
-            "File could not be loaded. Check that it is non-binary."
+            f"File {path} could not be loaded. Check that it is non-binary."
             "Returning nothing and trying to continue without it."
         )
-        raise IOError()
+        raise RuntimeError(e)
 
     assert n_z is not None
     assert zmax is not None
