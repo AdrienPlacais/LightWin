@@ -9,6 +9,7 @@ There are still several significant bugs to fix:
 - [ ] `Envelope3D` no longer works (transfer matrix calculation in thin lense is broken)
 - [ ] +20% calculation time overhead in synchronous phase fit
   - Note: to compare with branch `refactor_element_parameters`
+- [ ] `SUPERPOSE_MAP` will break if there is an empty line after it...
 
 ## Installation
 The full installation instructions are detailed [here](https://adrienplacais.github.io/LightWin/html/main/manual/installation.html).
