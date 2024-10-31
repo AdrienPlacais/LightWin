@@ -36,7 +36,9 @@ def z_dummy(
     gamma_in: float, *args, **kwargs
 ) -> tuple[np.ndarray, np.ndarray, None]:
     """Return an eye transfer matrix."""
-    return (np.eye(2), np.array([gamma_in, 0.0]), None)
+    r_zz = [[[1, 0], [0, 1]]]
+    gamma_phi = [[gamma_in, 0.0]]
+    return np.array(r_zz), np.array(gamma_phi), None
 
 
 def z_drift(
@@ -167,15 +169,15 @@ def z_superposed_field_maps_rk4(
 ) -> tuple[np.ndarray, np.ndarray, complex]:
     """Calculate the transfer matrix of superposed FIELD_MAP using RK."""
     return z_field_map_rk4(
-        gamma_in,
-        d_z,
-        n_steps,
-        omega0_rf,
-        complex_e_func,
-        real_e_func,
-        q_adim,
-        inv_e_rest_mev,
-        omega_0_bunch,
+        gamma_in=gamma_in,
+        d_z=d_z,
+        n_steps=n_steps,
+        omega0_rf=omega0_rf,
+        complex_e_func=complex_e_func,
+        real_e_func=real_e_func,
+        q_adim=q_adim,
+        inv_e_rest_mev=inv_e_rest_mev,
+        omega_0_bunch=omega_0_bunch,
         **kwargs,
     )
 
