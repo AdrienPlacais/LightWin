@@ -20,19 +20,18 @@ from typing import Literal
 import numpy as np
 import pandas as pd
 
+from lightwin.beam_calculation.cy_envelope_1d.electromagnetic_fields import (
+    load_electromagnetic_fields_for_cython,
+)
 from lightwin.core.elements.field_maps.field_map import FieldMap
-from lightwin.core.em_fields.longitudinal import (
-    create_e_spat,
-    longitudinal_e_spat_t,
+from lightwin.core.elements.field_maps.superposed_field_map import (
+    SuperposedFieldMap,
+)
+from lightwin.core.em_fields.helper import (
+    FieldFuncComponent1D,
+    create_1d_field_func,
 )
 from lightwin.tracewin_utils.field_map_loaders import FIELD_MAP_LOADERS
-from lightwin.util import helper
-
-try:
-    import lightwin.beam_calculation.envelope_1d.transfer_matrices_c as tm_c
-except ImportError:
-    logging.error("Could not import the Cython version of transfer matrices.")
-
 
 FIELD_GEOMETRIES = {
     0: "no field",
@@ -73,12 +72,20 @@ def load_electromagnetic_fields(
 
     """
     for field_map in field_maps:
+        if isinstance(superposed := field_map, SuperposedFieldMap):
+            load_electromagnetic_fields(
+                superposed.field_maps, cython, loadable
+            )
+            for rf_field in superposed.rf_fields:
+                rf_field.shift()
+            continue
+
         field_map_types = _geom_to_field_map_type(field_map.geometry)
         extensions = _get_filemaps_extensions(field_map_types)
 
         field_map.set_full_path(extensions)
 
-        args = _load_field_map_file(field_map, loadable)
+        args = load_field_map_file(field_map, loadable)
         if args is None:
             continue
 
@@ -86,28 +93,7 @@ def load_electromagnetic_fields(
         field_map.rf_field.n_z = args[1]
 
     if cython:
-        _load_electromagnetic_fields_for_cython(field_maps, loadable)
-
-
-def _load_electromagnetic_fields_for_cython(
-    field_maps: Collection[FieldMap], loadable: Collection[Path]
-) -> None:
-    """Load one electric field per section."""
-    files = [
-        field_map.field_map_file_name
-        for field_map in field_maps
-        if field_map.rf_field.is_loaded
-    ]
-    flattened_files = helper.flatten(files)
-    unique_files = helper.remove_duplicates(flattened_files)
-    loadable_files = list(
-        filter(lambda file: file.suffix in loadable, unique_files)
-    )
-
-    try:
-        tm_c.init_arrays(loadable_files)
-    except:
-        raise ImportError("There is an error importing cythonized modules.")
+        load_electromagnetic_fields_for_cython(field_maps, loadable)
 
 
 def _geom_to_field_map_type(geom: int) -> dict[str, str]:
@@ -291,9 +277,9 @@ def _get_field_components(first_words_field_geometry: str) -> list[str]:
     return third_characters
 
 
-def _load_field_map_file(
+def load_field_map_file(
     field_map: FieldMap, loadable: Collection[str]
-) -> tuple[longitudinal_e_spat_t, int, int] | None:
+) -> tuple[FieldFuncComponent1D, int, int] | None:
     """Go across the field map file names and load the first recognized.
 
     For now, only ``.edz`` files (1D electric RF) are implemented. This will be
@@ -321,13 +307,15 @@ def _load_field_map_file(
         # extensions
         n_z, zmax, norm, f_z, n_cell = import_function(file_name)
 
-        assert _is_a_valid_electric_field(
+        assert is_a_valid_1d_electric_field(
             n_z, zmax, f_z, field_map.length_m
         ), f"Error loading {field_map}'s field map."
-        f_z = _rescale(f_z, norm)
+        f_z = rescale(f_z, norm)
         z_cavity_array = np.linspace(0.0, zmax, n_z + 1)
 
-        e_spat = create_e_spat(e_z=f_z, z_positions=z_cavity_array)
+        e_spat = create_1d_field_func(
+            field_values=f_z, corresponding_positions=z_cavity_array
+        )
 
         # Patch to keep one filepath per FieldMap. Will require an update in
         # the future...
@@ -340,12 +328,13 @@ def _load_field_map_file(
     return None
 
 
-def _is_a_valid_electric_field(
+def is_a_valid_1d_electric_field(
     n_z: int,
     zmax: float,
     f_z: np.ndarray,
     cavity_length: float,
     tol: float = 1e-6,
+    **validity_check_kwargs,
 ) -> bool:
     """Assert that the electric field that we loaded is valid."""
     if f_z.shape[0] != n_z + 1:
@@ -365,7 +354,7 @@ def _is_a_valid_electric_field(
     return True
 
 
-def _rescale(f_z: np.ndarray, norm: float, tol: float = 1e-6) -> np.ndarray:
+def rescale(f_z: np.ndarray, norm: float, tol: float = 1e-6) -> np.ndarray:
     """Rescale the array if it was given scaled."""
     if abs(norm - 1.0) < tol:
         return f_z

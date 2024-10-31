@@ -1,7 +1,7 @@
 """Create the solver parameters for :class:`.Envelope3D`."""
 
 import logging
-from typing import Any, Literal
+from typing import Any
 
 from lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters import (
     BendEnvelope3DParameters,
@@ -11,6 +11,7 @@ from lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters import 
     QuadEnvelope3DParameters,
     SolenoidEnvelope3DParameters,
 )
+from lightwin.beam_calculation.envelope_3d.util import ENVELOPE3D_METHODS_T
 from lightwin.beam_calculation.parameters.factory import (
     ElementBeamCalculatorParametersFactory,
 )
@@ -23,6 +24,7 @@ from lightwin.core.elements.field_maps.field_map_70 import FieldMap70
 from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
+from lightwin.util.synchronous_phases import PHI_S_MODELS
 
 PARAMETERS_3D = {
     Bend: BendEnvelope3DParameters,
@@ -41,12 +43,11 @@ class ElementEnvelope3DParametersFactory(
 
     def __init__(
         self,
-        method: Literal["RK4"],
+        method: ENVELOPE3D_METHODS_T,
         n_steps_per_cell: int,
         solver_id: str,
         beam_kwargs: dict[str, Any],
-        flag_cython: bool = False,
-        phi_s_definition: Literal["historical"] = "historical",
+        phi_s_definition: PHI_S_MODELS = "historical",
     ) -> None:
         """Prepare import of proper functions."""
         self.method = method
@@ -54,12 +55,6 @@ class ElementEnvelope3DParametersFactory(
         self.solver_id = solver_id
         self.beam_kwargs = beam_kwargs
         self.phi_s_definition = phi_s_definition
-
-        if flag_cython:
-            raise NotImplementedError
-        import lightwin.beam_calculation.envelope_3d.transfer_matrices_p as transf_mat_module
-
-        self.transf_mat_module = transf_mat_module
 
     def run(self, elt: Element) -> ElementEnvelope3DParameters:
         """Create the proper subclass of solver parameters, instantiate it.
@@ -76,16 +71,16 @@ class ElementEnvelope3DParametersFactory(
             :class:`.ElementEnvelope3DParameters`.
 
         """
+        subclass = self._parameters_constructor(elt)
         kwargs = {
             "method": self.method,
             "n_steps_per_cell": self.n_steps_per_cell,
             "solver_id": self.solver_id,
             "phi_s_definition": self.phi_s_definition,
         }
-        subclass = self._parameters_constructor(elt)
 
         single_element_envelope_3d_parameters = subclass(
-            self.transf_mat_module, elt, beam_kwargs=self.beam_kwargs, **kwargs
+            elt=elt, beam_kwargs=self.beam_kwargs, **kwargs
         )
 
         return single_element_envelope_3d_parameters

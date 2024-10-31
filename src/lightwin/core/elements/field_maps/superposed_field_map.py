@@ -49,6 +49,7 @@ class SuperposedFieldMap(Element):
         lattice: int,
         section: int,
         field_maps: Collection[FieldMap],
+        rf_fields: Collection[RfField],
         **kwargs,
     ) -> None:
         """Save length of the superposed field maps."""
@@ -67,7 +68,7 @@ class SuperposedFieldMap(Element):
         # self.aperture_flag: int   # useless
         self.cavities_settings = list(cavities_settings)
 
-        self.rf_fields: list[RfField]
+        self.rf_fields = list(rf_fields)
         self._can_be_retuned: bool = False
 
         self._is_accelerating = is_accelerating

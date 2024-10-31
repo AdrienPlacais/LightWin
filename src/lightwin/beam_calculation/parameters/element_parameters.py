@@ -10,6 +10,7 @@ Currently, it is used by :class:`.Envelope1D` and :class:`.Envelope3D` only, as
 """
 
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from typing import Any
 
 import numpy as np
@@ -55,5 +56,5 @@ class ElementBeamCalculatorParameters(ABC):
         return tuple(out)
 
     @abstractmethod
-    def re_set_for_broken_cavity(self) -> None:
+    def re_set_for_broken_cavity(self) -> None | Callable:
         """Update solver after a cavity is broken."""

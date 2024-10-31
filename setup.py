@@ -20,8 +20,8 @@ Options.annotate = False
 # Define the modules to be compiled
 extensions = [
     Extension(
-        "lightwin.beam_calculation.envelope_1d.transfer_matrices_c",
-        ["src/lightwin/beam_calculation/envelope_1d/transfer_matrices_c.pyx"],
+        "lightwin.beam_calculation.cy_envelope_1d.transfer_matrices",
+        ["src/lightwin/beam_calculation/cy_envelope_1d/transfer_matrices.pyx"],
         include_dirs=[np.get_include()],
     )
 ]

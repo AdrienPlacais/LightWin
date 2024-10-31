@@ -430,6 +430,54 @@ def z_field_map_leapfrog(
     return r_zz, gamma_phi[1:, :], itg_field
 
 
+def z_thin_lense_new(
+    scaled_e_middle: complex,
+    gamma_in: float,
+    gamma_out: float,
+    gamma_middle: float,
+    half_dz: float,
+    omega0_rf: float,
+    omega_0_bunch: float,
+    **kwargs,
+) -> np.ndarray:
+    """
+    Thin lense approximation: drift-acceleration-drift.
+
+    Parameters
+    ----------
+    gamma_in : float
+        gamma at entrance of first drift.
+    gamma_out : float
+        gamma at exit of first drift.
+    gamma_middle : float
+        gamma at the thin acceleration drift.
+    half_dz : float
+        Half a spatial step in m.
+    omega0_rf : float
+        Pulsation of the cavity.
+
+    Return
+    ------
+    r_zz_array : numpy.ndarray
+        Transfer matrix of the thin lense.
+
+    """
+    beta_m = math.sqrt(1.0 - gamma_middle**-2)
+    scaled_e_middle /= gamma_middle * beta_m**2
+    k_1 = scaled_e_middle.imag * omega0_rf / (beta_m * c)
+    k_2 = 1.0 - (2.0 - beta_m**2) * scaled_e_middle.real
+    k_3 = (1.0 - scaled_e_middle.real) / k_2
+
+    # Faster than matmul or matprod_22
+    r_zz_array = z_drift(gamma_out, half_dz, omega_0_bunch=omega_0_bunch)[0][
+        0
+    ] @ (
+        np.array(([k_3, 0.0], [k_1, k_2]))
+        @ z_drift(gamma_in, half_dz, omega_0_bunch=omega_0_bunch)[0][0]
+    )
+    return r_zz_array
+
+
 def z_thin_lense(
     gamma_in: float,
     gamma_out: float,
@@ -439,6 +487,7 @@ def z_thin_lense(
     phi_0: float,
     omega0_rf: float,
     omega_0_bunch: float,
+    **kwargs,
 ) -> np.ndarray:
     """
     Thin lense approximation: drift-acceleration-drift.

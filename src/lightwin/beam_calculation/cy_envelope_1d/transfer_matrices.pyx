@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 #cython: language_level=3
 # -*- coding: utf-8 -*-
-"""Define the same functions as ``transfer_matrices_p``, but in Cython.
+"""Define same functions as :mod:`.envelope_1d.transfer_matrices`, but Cython.
 
 Cython needs to be compiled to work. Check the instructions in
-``util/setup.py``.
+:file:`util/setup.py`.
 
 .. todo::
     I think that this module could be greatly enhanced. I am not a Cython

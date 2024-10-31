@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Creation of `DatLine` object, holding a line of the ``.dat`` file. Solves several bugs, e.g. with hyphens in personalized names.
 - Makefile for docs is up-to-date. Instructions in README.
 - Changed location of `RfField` object, now in `core/em_field/rf_field`.
+- The solver `Envelope1D` is now `CyEnvelope1D` when user wants Cython.
 
 ### Fixed
 

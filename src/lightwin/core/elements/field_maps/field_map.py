@@ -28,6 +28,7 @@ import numpy as np
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.util import set_full_field_map_path
+from lightwin.core.em_fields.field import Field
 from lightwin.core.em_fields.rf_field import RfField
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter
@@ -70,13 +71,15 @@ class FieldMap(Element):
         self.geometry = int(line.splitted[1])
         self.length_m = 1e-3 * float(line.splitted[2])
         self.aperture_flag = int(line.splitted[8])  # K_a
-        self.cavity_settings = cavity_settings
 
         self.field_map_folder = default_field_map_folder
         self.field_map_file_name = Path(line.splitted[9])
 
-        self.rf_field: RfField
         self._can_be_retuned: bool = True
+        self.rf_field = RfField(section_idx=self.idx["section"])
+        self.cavity_settings = cavity_settings
+        self.cavity_settings.rf_field = self.rf_field
+        self.field: Field
 
     @property
     def status(self) -> str:

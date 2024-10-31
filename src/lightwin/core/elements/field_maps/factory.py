@@ -14,7 +14,6 @@ become very complex in the future: 3D, superposed fields...
 
 import logging
 from abc import ABCMeta
-from collections.abc import Collection, Sequence
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Literal
@@ -27,12 +26,6 @@ from lightwin.core.elements.field_maps.field_map_70 import FieldMap70
 from lightwin.core.elements.field_maps.field_map_100 import FieldMap100
 from lightwin.core.elements.field_maps.field_map_1100 import FieldMap1100
 from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
-from lightwin.core.elements.field_maps.superposed_field_map import (
-    SuperposedFieldMap,
-    SuperposedPlaceHolderCmd,
-    SuperposedPlaceHolderElt,
-)
-from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
 
 IMPLEMENTED_FIELD_MAPS = {
