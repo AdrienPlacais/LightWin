@@ -50,9 +50,9 @@ class Freq(Command):
 
         .. note::
             We should not encounter any :class:`.SuperposedFieldMap`, as the
-            :class:`.SuperposeFieldMaps` commands should be *after* this
-            :class:`.Freq` hence the :class:`.FieldMap` instances are not yet
-            superposed.
+            :class:`.SuperposeMap` commands should be *after* this
+            :class:`.Freq`. In other words, the :class:`.FieldMap` instances
+            are not superposed yet.
 
         """
         if freq_bunch is None:
