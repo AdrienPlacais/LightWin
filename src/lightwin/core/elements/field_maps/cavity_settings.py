@@ -106,9 +106,9 @@ class CavitySettings:
         freq_bunch_mhz : float
             Bunch frequency in MHz.
         freq_cavity_mhz : float | None, optional
-            Frequency of the cavity in MHz. The default is None, which happens
-            when the :class:`.ListOfElements` is under creation and we did not
-            process the ``FREQ`` commands yet.
+            Frequency of the cavity in :unit:`MHz`. The default is None, which
+            happens when the :class:`.ListOfElements` is under creation and we
+            did not process the ``FREQ`` commands yet.
         transf_mat_func_wrappers : dict[str, Callable] | None, optional
             A dictionary which keys are the different :class:`.BeamCalculator`
             ids, and values are corresponding functions to compute propagation
