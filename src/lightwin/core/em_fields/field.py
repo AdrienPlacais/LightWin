@@ -104,9 +104,11 @@ class Field(ABC):
     def load_fieldmaps(self) -> None:
         """Load all field components for class :attr:`extensions`."""
         for ext in self.extensions:
-            path = self.field_map_path.parent / (
-                self.field_map_path.name + ext
-            )
+            path = self.field_map_path
+            if not path.is_file:
+                path = self.field_map_path.parent / (
+                    self.field_map_path.name + ext
+                )
             func, n_interp, n_cell = self._load_fieldmap(path)
             attribute_name = EXTENSION_TO_COMPONENT[ext]
             setattr(self, attribute_name, func)
