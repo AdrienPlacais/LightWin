@@ -64,7 +64,8 @@ class ListOfElementsFactory:
         is_multipart: bool,
         default_field_map_folder: Path,
         beam_kwargs: dict[str, Any],
-        load_field_maps: bool = True,
+        load_rf_field: bool,
+        load_field: bool,
         field_maps_in_3d: bool = False,
         load_cython_field_maps: bool = False,
         elements_to_dump: ABCMeta | tuple[ABCMeta, ...] = (),
@@ -82,10 +83,27 @@ class ListOfElementsFactory:
 
         Parameters
         ----------
-        phi_s_definition : str, optional
-            Definition for the synchronous phases that will be used. Allowed
-            values are in :data:`.PHI_S_MODELS`. The default is
-            ``'historical'``.
+        is_3d : bool
+            If the simulation is in 3D.
+        is_multipart : bool
+            If the simulation is a multiparticle simulation.
+        default_field_map_folder : Path
+            Where field map files are stored.
+        beam_kwargs : dict[str, Any]
+            Content of the ``beam`` section in the TOML configuration file.
+        load_rf_field : bool
+            If the :class:`.RfField` should be loaded and used.
+        load_field : bool
+            If the :class:`.Field` should be loaded and used. Will replace
+            :class:`.RfField` in the future.
+        field_maps_in_3d : bool, optional
+            If the field maps should be loaded in 3D -- which is not yet
+            supported, btw. The default is False.
+        load_cython_field_maps : bool, optional
+            If the field maps should be loaded in a Cython-compatible way. The
+            default is False.
+        elements_to_dump : ABCMeta | tuple[ABCMeta, ...]
+            All the elements that should be completely skipped.
 
         """
         freq_bunch_mhz = beam_kwargs["f_bunch_mhz"]
@@ -102,9 +120,10 @@ class ListOfElementsFactory:
         self.instructions_factory = InstructionsFactory(
             freq_bunch_mhz,
             default_field_map_folder,
-            load_field_maps,
-            field_maps_in_3d,
-            load_cython_field_maps,
+            load_field=load_field,
+            load_rf_field=load_rf_field,
+            field_maps_in_3d=field_maps_in_3d,
+            load_cython_field_maps=load_cython_field_maps,
             elements_to_dump=elements_to_dump,
         )
 

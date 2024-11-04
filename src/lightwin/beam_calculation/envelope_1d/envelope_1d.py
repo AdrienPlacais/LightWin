@@ -27,6 +27,7 @@ from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
 )
+from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.util.synchronous_phases import (
@@ -69,6 +70,12 @@ class Envelope1D(BeamCalculator):
         This method is called in the :meth:`.BeamCalculator.__init__`, hence it
         appears only in the base :class:`.BeamCalculator`.
 
+        .. todo::
+            ``default_field_map_folder`` has a wrong default value. Should take
+            path to the ``.dat`` file, that is not known at this point. Maybe
+            handle this directly in the :class:`.InstructionsFactory` or
+            whatever.
+
         """
         self.simulation_output_factory = SimulationOutputFactoryEnvelope1D(
             _is_3d=self.is_a_3d_simulation,
@@ -82,6 +89,17 @@ class Envelope1D(BeamCalculator):
             n_steps_per_cell=self.n_steps_per_cell,
             solver_id=self.id,
             beam_kwargs=self._beam_kwargs,
+        )
+        self.list_of_elements_factory = ListOfElementsFactory(
+            self.is_a_3d_simulation,
+            self.is_a_multiparticle_simulation,
+            beam_kwargs=self._beam_kwargs,
+            default_field_map_folder=self.default_field_map_folder,
+            load_rf_field=False,
+            load_field=True,
+            load_cython_field_maps=False,
+            field_maps_in_3d=False,  # not implemented anyway
+            elements_to_dump=(),
         )
 
     def run(

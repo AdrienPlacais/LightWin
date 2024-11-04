@@ -23,6 +23,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.util.synchronous_phases import (
@@ -88,6 +89,17 @@ class Envelope3D(BeamCalculator):
             solver_id=self.id,
             beam_kwargs=self._beam_kwargs,
             phi_s_definition=self._phi_s_definition,
+        )
+        self.list_of_elements_factory = ListOfElementsFactory(
+            self.is_a_3d_simulation,
+            self.is_a_multiparticle_simulation,
+            beam_kwargs=self._beam_kwargs,
+            default_field_map_folder=self.default_field_map_folder,
+            load_rf_field=True,
+            load_field=True,
+            load_cython_field_maps=False,
+            field_maps_in_3d=False,  # not implemented anyway
+            elements_to_dump=(),
         )
 
     def run(

@@ -37,6 +37,7 @@ from lightwin.beam_calculation.tracewin.simulation_output_factory import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.tracewin_utils.interface import (
@@ -115,6 +116,17 @@ class TraceWin(BeamCalculator):
 
         """
         self.beam_calc_parameters_factory = ElementTraceWinParametersFactory()
+        self.list_of_elements_factory = ListOfElementsFactory(
+            self.is_a_3d_simulation,
+            self.is_a_multiparticle_simulation,
+            beam_kwargs=self._beam_kwargs,
+            default_field_map_folder=self.default_field_map_folder,
+            load_rf_field=True,
+            load_field=True,
+            load_cython_field_maps=False,
+            field_maps_in_3d=False,  # not implemented anyway
+            elements_to_dump=(),
+        )
 
         self.simulation_output_factory = SimulationOutputFactoryTraceWin(
             _is_3d=self.is_a_3d_simulation,

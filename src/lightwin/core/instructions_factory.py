@@ -51,7 +51,8 @@ class InstructionsFactory:
         self,
         freq_bunch_mhz: float,
         default_field_map_folder: Path,
-        load_field_maps: bool,
+        load_rf_field: bool,
+        load_field: bool,
         field_maps_in_3d: bool,
         load_cython_field_maps: bool,
         elements_to_dump: ABCMeta | tuple[ABCMeta, ...] = (),
@@ -66,9 +67,14 @@ class InstructionsFactory:
         default_field_map_folder : pathlib.Path
             Where to look for field maps when no ``FIELD_MAP_PATH`` is
             precised. This is also the folder where the ``.dat`` is.
-        load_field_maps : bool
-            To load or not the field maps (useless to do it with
-            :class:`.TraceWin`).
+        load_rf_field : bool
+            To create or not the :class:`.RfField`. This is still necessary for
+            :class:`.CyEnvelope1D` and :class:`.Envelope3D`, but not for
+            :class:`.Envelope1D` and :class:`.TraceWin`.
+        load_field : bool
+            To create or not the :class:`.Field`. This is not yer supported for
+            :class:`.CyEnvelope1D` and :class:`.Envelope3D`, but it is
+            mandatory for :class:`.Envelope1D`.
         field_maps_in_3d : bool
             To load or not the field maps in 3D (useful only with
             :class:`.Envelope3D`... Except that this is not supported yet, so
@@ -88,7 +94,7 @@ class InstructionsFactory:
         # arguments for commands
         self._freq_bunch_mhz = freq_bunch_mhz
 
-        if load_field_maps:
+        if load_field or load_rf_field:
             assert default_field_map_folder.is_dir()
 
         # factories
@@ -102,7 +108,8 @@ class InstructionsFactory:
         )
         self._elements_to_dump = elements_to_dump
 
-        self._load_field_maps = load_field_maps
+        self._load_rf_field = load_rf_field
+        self._load_field = load_field
         if field_maps_in_3d:
             raise NotImplementedError(
                 "No solver can handle 3D field maps yet. Except TraceWin, but "
@@ -138,17 +145,13 @@ class InstructionsFactory:
         self._check_last_lattice_of_every_lattice_is_complete(elts)
         self._filter_out_elements_to_dump(elts)
 
-        if self._load_field_maps:
+        if self._load_rf_field:
             field_maps = [elt for elt in elts if isinstance(elt, FieldMap)]
-            # New implementation
+            load_electromagnetic_fields(field_maps, cython=True)
+
+        if self._load_field:
+            field_maps = [elt for elt in elts if isinstance(elt, FieldMap)]
             self._field_factory.run_all(field_maps)
-            # Old implementation
-            # load_electromagnetic_fields(field_maps, cython=True)
-            logging.warning(
-                "Manually deactivated the old loading of field map files. "
-                "Should be OK with Envelope1D and TraceWin BeamCalculators, "
-                "but will cause issues with CyEnvelope1D and Envelope3D."
-            )
 
         return instructions
 
