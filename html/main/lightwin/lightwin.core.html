@@ -67,10 +67,10 @@
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">beam_parameters package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.html">commands package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.html">elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.em_fields.html">em_fields package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">list_of_elements package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.html">transfer_matrix package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_specs.html">beam_specs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">electric_field module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.files_specs.html">files_specs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">instruction module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">instructions_factory module</a></li>
@@ -567,11 +567,12 @@ of the beam.</p>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">SuperposeMap.set_influenced_elements()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap.apply"><code class="docutils literal notranslate"><span class="pre">SuperposeMap.apply()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap._total_length"><code class="docutils literal notranslate"><span class="pre">SuperposeMap._total_length()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap._update_class"><code class="docutils literal notranslate"><span class="pre">SuperposeMap._update_class()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap._decrement_lattice_indexes"><code class="docutils literal notranslate"><span class="pre">SuperposeMap._decrement_lattice_indexes()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap._generate_new_instructions"><code class="docutils literal notranslate"><span class="pre">SuperposeMap._generate_new_instructions()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap._re_set_indexes"><code class="docutils literal notranslate"><span class="pre">SuperposeMap._re_set_indexes()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap._abc_impl"><code class="docutils literal notranslate"><span class="pre">SuperposeMap._abc_impl</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map._starting_positions"><code class="docutils literal notranslate"><span class="pre">_starting_positions()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -590,6 +591,8 @@ of the beam.</p>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_1100.html">field_map_1100 module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_70.html">field_map_70 module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.field_map_7700.html">field_map_7700 module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.superposed_field_map.html">superposed_field_map module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.field_maps.util.html">util module</a></li>
 </ul>
 </li>
 </ul>
@@ -889,16 +892,7 @@ of the beam.</p>
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html">superposed_field_map module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html#lightwin.core.elements.superposed_field_map.SuperposedFieldMap"><code class="docutils literal notranslate"><span class="pre">SuperposedFieldMap</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html#lightwin.core.elements.superposed_field_map.SuperposedFieldMap.is_implemented"><code class="docutils literal notranslate"><span class="pre">SuperposedFieldMap.is_implemented</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html#lightwin.core.elements.superposed_field_map.SuperposedFieldMap.n_attributes"><code class="docutils literal notranslate"><span class="pre">SuperposedFieldMap.n_attributes</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html#lightwin.core.elements.superposed_field_map.SuperposedFieldMap.__init__"><code class="docutils literal notranslate"><span class="pre">SuperposedFieldMap.__init__()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html#lightwin.core.elements.superposed_field_map.SuperposedFieldMap._abc_impl"><code class="docutils literal notranslate"><span class="pre">SuperposedFieldMap._abc_impl</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.superposed_field_map.html">superposed_field_map module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.thin_steering.html">thin_steering module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.thin_steering.html#lightwin.core.elements.thin_steering.ThinSteering"><code class="docutils literal notranslate"><span class="pre">ThinSteering</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.core.elements.thin_steering.html#lightwin.core.elements.thin_steering.ThinSteering.base_name"><code class="docutils literal notranslate"><span class="pre">ThinSteering.base_name</span></code></a></li>
@@ -910,6 +904,116 @@ of the beam.</p>
 </li>
 </ul>
 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.em_fields.html">em_fields package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.em_fields.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.em_fields.field.html">field module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.extensions"><code class="docutils literal notranslate"><span class="pre">Field.extensions</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.is_implemented"><code class="docutils literal notranslate"><span class="pre">Field.is_implemented</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.__init__"><code class="docutils literal notranslate"><span class="pre">Field.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.load_fieldmaps"><code class="docutils literal notranslate"><span class="pre">Field.load_fieldmaps()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field._load_fieldmap"><code class="docutils literal notranslate"><span class="pre">Field._load_fieldmap()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field._calculate_field"><code class="docutils literal notranslate"><span class="pre">Field._calculate_field()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.shift"><code class="docutils literal notranslate"><span class="pre">Field.shift()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.e_x"><code class="docutils literal notranslate"><span class="pre">Field.e_x()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.e_y"><code class="docutils literal notranslate"><span class="pre">Field.e_y()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.e_z"><code class="docutils literal notranslate"><span class="pre">Field.e_z()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.b_x"><code class="docutils literal notranslate"><span class="pre">Field.b_x()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.b_y"><code class="docutils literal notranslate"><span class="pre">Field.b_y()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.b_z"><code class="docutils literal notranslate"><span class="pre">Field.b_z()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.partial_e_z"><code class="docutils literal notranslate"><span class="pre">Field.partial_e_z()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field._abc_impl"><code class="docutils literal notranslate"><span class="pre">Field._abc_impl</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.partial_e_z_phis_fit"><code class="docutils literal notranslate"><span class="pre">Field.partial_e_z_phis_fit()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field._patch_to_keep_consistency"><code class="docutils literal notranslate"><span class="pre">Field._patch_to_keep_consistency()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.em_fields.field100.html">field100 module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.field100.html#lightwin.core.em_fields.field100.Field100"><code class="docutils literal notranslate"><span class="pre">Field100</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field100.html#lightwin.core.em_fields.field100.Field100.extensions"><code class="docutils literal notranslate"><span class="pre">Field100.extensions</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field100.html#lightwin.core.em_fields.field100.Field100.is_implemented"><code class="docutils literal notranslate"><span class="pre">Field100.is_implemented</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field100.html#lightwin.core.em_fields.field100.Field100._load_fieldmap"><code class="docutils literal notranslate"><span class="pre">Field100._load_fieldmap()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field100.html#lightwin.core.em_fields.field100.Field100.shift"><code class="docutils literal notranslate"><span class="pre">Field100.shift()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field100.html#lightwin.core.em_fields.field100.Field100.e_z"><code class="docutils literal notranslate"><span class="pre">Field100.e_z()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field100.html#lightwin.core.em_fields.field100.Field100._abc_impl"><code class="docutils literal notranslate"><span class="pre">Field100._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.em_fields.field70.html">field70 module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.field70.html#lightwin.core.em_fields.field70.Field70"><code class="docutils literal notranslate"><span class="pre">Field70</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field70.html#lightwin.core.em_fields.field70.Field70.extensions"><code class="docutils literal notranslate"><span class="pre">Field70.extensions</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field70.html#lightwin.core.em_fields.field70.Field70.is_implemented"><code class="docutils literal notranslate"><span class="pre">Field70.is_implemented</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field70.html#lightwin.core.em_fields.field70.Field70.b_x"><code class="docutils literal notranslate"><span class="pre">Field70.b_x()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field70.html#lightwin.core.em_fields.field70.Field70.b_y"><code class="docutils literal notranslate"><span class="pre">Field70.b_y()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field70.html#lightwin.core.em_fields.field70.Field70.b_z"><code class="docutils literal notranslate"><span class="pre">Field70.b_z()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field70.html#lightwin.core.em_fields.field70.Field70._abc_impl"><code class="docutils literal notranslate"><span class="pre">Field70._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.em_fields.field_factory.html">field_factory module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.field_factory.html#lightwin.core.em_fields.field_factory.FieldFactory"><code class="docutils literal notranslate"><span class="pre">FieldFactory</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field_factory.html#lightwin.core.em_fields.field_factory.FieldFactory.default_field_map_folder"><code class="docutils literal notranslate"><span class="pre">FieldFactory.default_field_map_folder</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field_factory.html#lightwin.core.em_fields.field_factory.FieldFactory._gather_files_to_load"><code class="docutils literal notranslate"><span class="pre">FieldFactory._gather_files_to_load()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field_factory.html#lightwin.core.em_fields.field_factory.FieldFactory._check_uniformity_of_types"><code class="docutils literal notranslate"><span class="pre">FieldFactory._check_uniformity_of_types()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field_factory.html#lightwin.core.em_fields.field_factory.FieldFactory._run"><code class="docutils literal notranslate"><span class="pre">FieldFactory._run()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field_factory.html#lightwin.core.em_fields.field_factory.FieldFactory._run_kwargs"><code class="docutils literal notranslate"><span class="pre">FieldFactory._run_kwargs()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field_factory.html#lightwin.core.em_fields.field_factory.FieldFactory.run_all"><code class="docutils literal notranslate"><span class="pre">FieldFactory.run_all()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.field_factory.html#lightwin.core.em_fields.field_factory.FieldFactory.__init__"><code class="docutils literal notranslate"><span class="pre">FieldFactory.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.em_fields.field_helpers.html">field_helpers module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.field_helpers.html#lightwin.core.em_fields.field_helpers.null_field_1d"><code class="docutils literal notranslate"><span class="pre">null_field_1d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.field_helpers.html#lightwin.core.em_fields.field_helpers.create_1d_field_func"><code class="docutils literal notranslate"><span class="pre">create_1d_field_func()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.field_helpers.html#lightwin.core.em_fields.field_helpers._evaluate_1d_field"><code class="docutils literal notranslate"><span class="pre">_evaluate_1d_field()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.field_helpers.html#lightwin.core.em_fields.field_helpers.normalized_e_1d"><code class="docutils literal notranslate"><span class="pre">normalized_e_1d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.field_helpers.html#lightwin.core.em_fields.field_helpers.normalized_e_1d_complex"><code class="docutils literal notranslate"><span class="pre">normalized_e_1d_complex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.field_helpers.html#lightwin.core.em_fields.field_helpers.e_1d"><code class="docutils literal notranslate"><span class="pre">e_1d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.field_helpers.html#lightwin.core.em_fields.field_helpers.e_1d_complex"><code class="docutils literal notranslate"><span class="pre">e_1d_complex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.field_helpers.html#lightwin.core.em_fields.field_helpers.shifted_e_spat"><code class="docutils literal notranslate"><span class="pre">shifted_e_spat()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.em_fields.helper.html">helper module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.helper.html#lightwin.core.em_fields.helper.null_field_1d"><code class="docutils literal notranslate"><span class="pre">null_field_1d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.helper.html#lightwin.core.em_fields.helper.create_1d_field_func"><code class="docutils literal notranslate"><span class="pre">create_1d_field_func()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.helper.html#lightwin.core.em_fields.helper._evaluate_1d_field"><code class="docutils literal notranslate"><span class="pre">_evaluate_1d_field()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.helper.html#lightwin.core.em_fields.helper.normalized_e_1d"><code class="docutils literal notranslate"><span class="pre">normalized_e_1d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.helper.html#lightwin.core.em_fields.helper.normalized_e_1d_complex"><code class="docutils literal notranslate"><span class="pre">normalized_e_1d_complex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.helper.html#lightwin.core.em_fields.helper.e_1d"><code class="docutils literal notranslate"><span class="pre">e_1d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.helper.html#lightwin.core.em_fields.helper.e_1d_complex"><code class="docutils literal notranslate"><span class="pre">e_1d_complex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.helper.html#lightwin.core.em_fields.helper.shifted_e_spat"><code class="docutils literal notranslate"><span class="pre">shifted_e_spat()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.em_fields.longitudinal.html">longitudinal module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.em_fields.rf_field.html">rf_field module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.rf_field.html#lightwin.core.em_fields.rf_field.compute_param_cav"><code class="docutils literal notranslate"><span class="pre">compute_param_cav()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.rf_field.html#lightwin.core.em_fields.rf_field.RfField"><code class="docutils literal notranslate"><span class="pre">RfField</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.rf_field.html#lightwin.core.em_fields.rf_field.RfField.__init__"><code class="docutils literal notranslate"><span class="pre">RfField.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.rf_field.html#lightwin.core.em_fields.rf_field.RfField.has"><code class="docutils literal notranslate"><span class="pre">RfField.has()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.rf_field.html#lightwin.core.em_fields.rf_field.RfField.get"><code class="docutils literal notranslate"><span class="pre">RfField.get()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.rf_field.html#lightwin.core.em_fields.rf_field.RfField.set_e_spat"><code class="docutils literal notranslate"><span class="pre">RfField.set_e_spat()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.rf_field.html#lightwin.core.em_fields.rf_field.RfField.shift"><code class="docutils literal notranslate"><span class="pre">RfField.shift()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.em_fields.superposed_fields.html">superposed_fields module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.em_fields.superposed_fields.html#lightwin.core.em_fields.superposed_fields.SuperposedFields"><code class="docutils literal notranslate"><span class="pre">SuperposedFields</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.superposed_fields.html#lightwin.core.em_fields.superposed_fields.SuperposedFields.e_z"><code class="docutils literal notranslate"><span class="pre">SuperposedFields.e_z()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.core.em_fields.superposed_fields.html#lightwin.core.em_fields.superposed_fields.SuperposedFields.generate_e_z_with_settings"><code class="docutils literal notranslate"><span class="pre">SuperposedFields.generate_e_z_with_settings()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.em_fields.types.html">types module</a></li>
 </ul>
 </li>
 </ul>
@@ -1027,17 +1131,6 @@ of the beam.</p>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.beam_specs.html#lightwin.core.beam_specs.BeamTableConfSpec"><code class="docutils literal notranslate"><span class="pre">BeamTableConfSpec</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_specs.html#lightwin.core.beam_specs.BeamTableConfSpec._pre_treat"><code class="docutils literal notranslate"><span class="pre">BeamTableConfSpec._pre_treat()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_specs.html#lightwin.core.beam_specs.BeamTableConfSpec._validate"><code class="docutils literal notranslate"><span class="pre">BeamTableConfSpec._validate()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="lightwin.core.electric_field.html">electric_field module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.compute_param_cav"><code class="docutils literal notranslate"><span class="pre">compute_param_cav()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField"><code class="docutils literal notranslate"><span class="pre">RfField</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.__init__"><code class="docutils literal notranslate"><span class="pre">RfField.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.has"><code class="docutils literal notranslate"><span class="pre">RfField.has()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.get"><code class="docutils literal notranslate"><span class="pre">RfField.get()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.set_e_spat"><code class="docutils literal notranslate"><span class="pre">RfField.set_e_spat()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1169,7 +1262,7 @@ of the beam.</p>
       <dl>
          <dt>Tags</dt>
          <dd><a href="../../v0.7.0/lightwin/lightwin.core.html">v0.7.0</a></dd>
-         <dd><a href="../../v0.8.0b0/lightwin/lightwin.core.html">v0.8.0b0</a></dd>
+         <dd><a href="../../v0.8.0b1/lightwin/lightwin.core.html">v0.8.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

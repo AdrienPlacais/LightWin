@@ -19,6 +19,8 @@
         <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -68,6 +70,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">tracewin_utils package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.dat_files.html">dat_files module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html">electromagnetic_fields module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.field_map_loaders.html">field_map_loaders module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.interface.html">interface module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html">line module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.load.html">load module</a></li>
@@ -133,17 +136,23 @@ TraceWin.</p>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.FIELD_TYPES"><code class="docutils literal notranslate"><span class="pre">FIELD_TYPES</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.LOADABLE"><code class="docutils literal notranslate"><span class="pre">LOADABLE</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.load_electromagnetic_fields"><code class="docutils literal notranslate"><span class="pre">load_electromagnetic_fields()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._load_electromagnetic_fields_for_cython"><code class="docutils literal notranslate"><span class="pre">_load_electromagnetic_fields_for_cython()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._geom_to_field_map_type"><code class="docutils literal notranslate"><span class="pre">_geom_to_field_map_type()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._get_filemaps_extensions"><code class="docutils literal notranslate"><span class="pre">_get_filemaps_extensions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._get_filemap_extensions"><code class="docutils literal notranslate"><span class="pre">_get_filemap_extensions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._get_field_nature"><code class="docutils literal notranslate"><span class="pre">_get_field_nature()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._get_type"><code class="docutils literal notranslate"><span class="pre">_get_type()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._get_field_components"><code class="docutils literal notranslate"><span class="pre">_get_field_components()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._load_field_map_file"><code class="docutils literal notranslate"><span class="pre">_load_field_map_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._is_a_valid_electric_field"><code class="docutils literal notranslate"><span class="pre">_is_a_valid_electric_field()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._rescale"><code class="docutils literal notranslate"><span class="pre">_rescale()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.load_field_map_file"><code class="docutils literal notranslate"><span class="pre">load_field_map_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.is_a_valid_1d_electric_field"><code class="docutils literal notranslate"><span class="pre">is_a_valid_1d_electric_field()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.rescale"><code class="docutils literal notranslate"><span class="pre">rescale()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.output_data_in_tw_fashion"><code class="docutils literal notranslate"><span class="pre">output_data_in_tw_fashion()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.tracewin_utils.field_map_loaders.html">field_map_loaders module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.field_map_loaders.html#lightwin.tracewin_utils.field_map_loaders.field_1d"><code class="docutils literal notranslate"><span class="pre">field_1d()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.field_map_loaders.html#lightwin.tracewin_utils.field_map_loaders.field_3d"><code class="docutils literal notranslate"><span class="pre">field_3d()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.field_map_loaders.html#lightwin.tracewin_utils.field_map_loaders._get_number_of_cells"><code class="docutils literal notranslate"><span class="pre">_get_number_of_cells()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.field_map_loaders.html#lightwin.tracewin_utils.field_map_loaders.FIELD_MAP_LOADERS"><code class="docutils literal notranslate"><span class="pre">FIELD_MAP_LOADERS</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.tracewin_utils.interface.html">interface module</a><ul>
@@ -175,6 +184,7 @@ TraceWin.</p>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.splitted_full"><code class="docutils literal notranslate"><span class="pre">DatLine.splitted_full</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.n_args"><code class="docutils literal notranslate"><span class="pre">DatLine.n_args</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.change_argument"><code class="docutils literal notranslate"><span class="pre">DatLine.change_argument()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.append_argument"><code class="docutils literal notranslate"><span class="pre">DatLine.append_argument()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line._split_named_elements"><code class="docutils literal notranslate"><span class="pre">_split_named_elements()</span></code></a></li>
@@ -191,11 +201,8 @@ TraceWin.</p>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load.slice_dat_line"><code class="docutils literal notranslate"><span class="pre">slice_dat_line()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load.table_structure_file"><code class="docutils literal notranslate"><span class="pre">table_structure_file()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load.results"><code class="docutils literal notranslate"><span class="pre">results()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load.electric_field_1d"><code class="docutils literal notranslate"><span class="pre">electric_field_1d()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load._get_number_of_cells"><code class="docutils literal notranslate"><span class="pre">_get_number_of_cells()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load.transfer_matrices"><code class="docutils literal notranslate"><span class="pre">transfer_matrices()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load._transfer_matrix"><code class="docutils literal notranslate"><span class="pre">_transfer_matrix()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load.FIELD_MAP_LOADERS"><code class="docutils literal notranslate"><span class="pre">FIELD_MAP_LOADERS</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -239,7 +246,7 @@ TraceWin.</p>
       <dl>
          <dt>Tags</dt>
          <dd><a href="../../v0.7.0/lightwin/lightwin.tracewin_utils.html">v0.7.0</a></dd>
-         <dd><a href="../../v0.8.0b0/lightwin/lightwin.tracewin_utils.html">v0.8.0b0</a></dd>
+         <dd><a href="../../v0.8.0b1/lightwin/lightwin.tracewin_utils.html">v0.8.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

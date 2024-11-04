@@ -200,6 +200,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html">factory module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BEAM_CALCULATORS"><code class="docutils literal notranslate"><span class="pre">BEAM_CALCULATORS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory._get_beam_calculator"><code class="docutils literal notranslate"><span class="pre">_get_beam_calculator()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory"><code class="docutils literal notranslate"><span class="pre">BeamCalculatorsFactory</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory.__init__"><code class="docutils literal notranslate"><span class="pre">BeamCalculatorsFactory.__init__()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory._set_out_folders"><code class="docutils literal notranslate"><span class="pre">BeamCalculatorsFactory._set_out_folders()</span></code></a></li>
@@ -327,17 +328,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.core.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">electric_field module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.compute_param_cav"><code class="docutils literal notranslate"><span class="pre">compute_param_cav()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField"><code class="docutils literal notranslate"><span class="pre">RfField</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.__init__"><code class="docutils literal notranslate"><span class="pre">RfField.__init__()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.has"><code class="docutils literal notranslate"><span class="pre">RfField.has()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.get"><code class="docutils literal notranslate"><span class="pre">RfField.get()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="lightwin.core.electric_field.html#lightwin.core.electric_field.RfField.set_e_spat"><code class="docutils literal notranslate"><span class="pre">RfField.set_e_spat()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">electric_field module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">instruction module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction"><code class="docutils literal notranslate"><span class="pre">Instruction</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction.n_attributes"><code class="docutils literal notranslate"><span class="pre">Instruction.n_attributes</span></code></a></li>
@@ -684,16 +675,15 @@
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.FIELD_TYPES"><code class="docutils literal notranslate"><span class="pre">FIELD_TYPES</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.LOADABLE"><code class="docutils literal notranslate"><span class="pre">LOADABLE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.load_electromagnetic_fields"><code class="docutils literal notranslate"><span class="pre">load_electromagnetic_fields()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._load_electromagnetic_fields_for_cython"><code class="docutils literal notranslate"><span class="pre">_load_electromagnetic_fields_for_cython()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._geom_to_field_map_type"><code class="docutils literal notranslate"><span class="pre">_geom_to_field_map_type()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._get_filemaps_extensions"><code class="docutils literal notranslate"><span class="pre">_get_filemaps_extensions()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._get_filemap_extensions"><code class="docutils literal notranslate"><span class="pre">_get_filemap_extensions()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._get_field_nature"><code class="docutils literal notranslate"><span class="pre">_get_field_nature()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._get_type"><code class="docutils literal notranslate"><span class="pre">_get_type()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._get_field_components"><code class="docutils literal notranslate"><span class="pre">_get_field_components()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._load_field_map_file"><code class="docutils literal notranslate"><span class="pre">_load_field_map_file()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._is_a_valid_electric_field"><code class="docutils literal notranslate"><span class="pre">_is_a_valid_electric_field()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._rescale"><code class="docutils literal notranslate"><span class="pre">_rescale()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.load_field_map_file"><code class="docutils literal notranslate"><span class="pre">load_field_map_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.is_a_valid_1d_electric_field"><code class="docutils literal notranslate"><span class="pre">is_a_valid_1d_electric_field()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.rescale"><code class="docutils literal notranslate"><span class="pre">rescale()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields.output_data_in_tw_fashion"><code class="docutils literal notranslate"><span class="pre">output_data_in_tw_fashion()</span></code></a></li>
 </ul>
 </li>
@@ -719,11 +709,8 @@
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load.slice_dat_line"><code class="docutils literal notranslate"><span class="pre">slice_dat_line()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load.table_structure_file"><code class="docutils literal notranslate"><span class="pre">table_structure_file()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load.results"><code class="docutils literal notranslate"><span class="pre">results()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load.electric_field_1d"><code class="docutils literal notranslate"><span class="pre">electric_field_1d()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load._get_number_of_cells"><code class="docutils literal notranslate"><span class="pre">_get_number_of_cells()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load.transfer_matrices"><code class="docutils literal notranslate"><span class="pre">transfer_matrices()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load._transfer_matrix"><code class="docutils literal notranslate"><span class="pre">_transfer_matrix()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.tracewin_utils.load.html#lightwin.tracewin_utils.load.FIELD_MAP_LOADERS"><code class="docutils literal notranslate"><span class="pre">FIELD_MAP_LOADERS</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -820,7 +807,7 @@
 <li class="toctree-l4"><a class="reference internal" href="lightwin.util.synchronous_phases.html#lightwin.util.synchronous_phases.phi_s_legacy"><code class="docutils literal notranslate"><span class="pre">phi_s_legacy()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.util.synchronous_phases.html#lightwin.util.synchronous_phases.phi_s_lagniel"><code class="docutils literal notranslate"><span class="pre">phi_s_lagniel()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.util.synchronous_phases.html#lightwin.util.synchronous_phases.phi_s_from_tracewin_file"><code class="docutils literal notranslate"><span class="pre">phi_s_from_tracewin_file()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.util.synchronous_phases.html#lightwin.util.synchronous_phases.SYNCHRONOUS_PHASE_FUNCTIONS"><code class="docutils literal notranslate"><span class="pre">SYNCHRONOUS_PHASE_FUNCTIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.util.synchronous_phases.html#lightwin.util.synchronous_phases.PHI_S_MODELS"><code class="docutils literal notranslate"><span class="pre">PHI_S_MODELS</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -935,7 +922,7 @@
       <dl>
          <dt>Tags</dt>
          <dd><a href="lightwin.html">v0.7.0</a></dd>
-         <dd><a href="../../v0.8.0b0/lightwin/lightwin.html">v0.8.0b0</a></dd>
+         <dd><a href="../../v0.8.0b1/lightwin/lightwin.html">v0.8.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

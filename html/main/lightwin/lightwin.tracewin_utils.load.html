@@ -68,6 +68,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.dat_files.html">dat_files module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html">electromagnetic_fields module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.field_map_loaders.html">field_map_loaders module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.interface.html">interface module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html">line module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">load module</a></li>
@@ -151,13 +152,13 @@ that you want to add. The default is an empty tuple.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="lightwin.tracewin_utils.load._split_weighted_elements">
 <span class="sig-name descname"><span class="pre">_split_weighted_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.load._split_weighted_elements" title="Link to this definition"></a></dt>
-<dd><p>Split weighted elements from a line.</p>
+<dd><p>Split elements with parentheses into separate parts.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="lightwin.tracewin_utils.load.slice_dat_line">
 <span class="sig-name descname"><span class="pre">slice_dat_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.load.slice_dat_line" title="Link to this definition"></a></dt>
-<dd><p>Slices a .dat line into its components.</p>
+<dd><p>Slice a .dat line into its components.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -188,36 +189,6 @@ that you want to add. The default is an empty tuple.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="lightwin.tracewin_utils.load.electric_field_1d">
-<span class="sig-name descname"><span class="pre">electric_field_1d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.load.electric_field_1d" title="Link to this definition"></a></dt>
-<dd><p>Load a 1D electric field (<code class="docutils literal notranslate"><span class="pre">.edz</span></code> extension).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>pathlib.Path</em></a>) – The path to the <code class="docutils literal notranslate"><span class="pre">.edz</span></code> file to load.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>n_z</strong> (<em>int</em>) – Number of steps in the array.</p></li>
-<li><p><strong>zmax</strong> (<em>float</em>) – z position of the filemap end.</p></li>
-<li><p><strong>norm</strong> (<em>float</em>) – Electric field normalisation factor. It is different from k_e (6th
-argument of the FIELD_MAP command). Electric fields are normalised by
-k_e/norm, hence norm should be unity by default.</p></li>
-<li><p><strong>f_z</strong> (<em>numpy.ndarray</em>) – Array of electric field in MV/m.</p></li>
-<li><p><strong>n_cell</strong> (<em>int</em>) – Number of cells in the cavity.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="lightwin.tracewin_utils.load._get_number_of_cells">
-<span class="sig-name descname"><span class="pre">_get_number_of_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#lightwin.tracewin_utils.load._get_number_of_cells" title="Link to this definition"></a></dt>
-<dd><p>Count number of times the array of z-electric field changes sign.</p>
-<p>See <a class="reference external" href="https://stackoverflow.com/a/2936859/12188681">SO</a>.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="lightwin.tracewin_utils.load.transfer_matrices">
 <span class="sig-name descname"><span class="pre">transfer_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.load.transfer_matrices" title="Link to this definition"></a></dt>
 <dd><p>Load the transfer matrix as calculated by TraceWin.</p>
@@ -228,11 +199,6 @@ k_e/norm, hence norm should be unity by default.</p></li>
 <span class="sig-name descname"><span class="pre">_transfer_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.1)"><span class="pre">ndarray</span></a></span></span><a class="headerlink" href="#lightwin.tracewin_utils.load._transfer_matrix" title="Link to this definition"></a></dt>
 <dd><p>Load a single element transfer matrix.</p>
 </dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="lightwin.tracewin_utils.load.FIELD_MAP_LOADERS">
-<span class="sig-name descname"><span class="pre">FIELD_MAP_LOADERS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'.edz':</span> <span class="pre">&lt;function</span> <span class="pre">electric_field_1d</span> <span class="pre">at</span> <span class="pre">0x7fd0fca30ad0&gt;}</span></em><a class="headerlink" href="#lightwin.tracewin_utils.load.FIELD_MAP_LOADERS" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 </section>
 
@@ -272,7 +238,7 @@ k_e/norm, hence norm should be unity by default.</p></li>
       <dl>
          <dt>Tags</dt>
          <dd><a href="../../v0.7.0/lightwin/lightwin.tracewin_utils.load.html">v0.7.0</a></dd>
-         <dd><a href="../../v0.8.0b0/lightwin/lightwin.tracewin_utils.load.html">v0.8.0b0</a></dd>
+         <dd><a href="../../v0.8.0b1/lightwin/lightwin.tracewin_utils.load.html">v0.8.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

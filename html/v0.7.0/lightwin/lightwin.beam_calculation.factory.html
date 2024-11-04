@@ -118,10 +118,14 @@
 <p>This module holds a factory to create the <a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a>.</p>
 <dl class="py data">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.factory.BEAM_CALCULATORS">
-<span class="sig-name descname"><span class="pre">BEAM_CALCULATORS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{</span>&#160;&#160; <span class="pre">'Envelope1D':</span> <span class="pre">&lt;class</span> <span class="pre">'lightwin.beam_calculation.envelope_1d.envelope_1d.Envelope1D'&gt;,</span>
-&#160;&#160;&#160; <span class="pre">'Envelope3D':</span> <span class="pre">&lt;class</span> <span class="pre">'lightwin.beam_calculation.envelope_3d.envelope_3d.Envelope3D'&gt;,</span>
-&#160;&#160;&#160; <span class="pre">'TraceWin':</span> <span class="pre">&lt;class</span> <span class="pre">'lightwin.beam_calculation.tracewin.tracewin.TraceWin'&gt;}</span></em><a class="headerlink" href="#lightwin.beam_calculation.factory.BEAM_CALCULATORS" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">BEAM_CALCULATORS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('Envelope1D',</span> <span class="pre">'TraceWin',</span> <span class="pre">'Envelope3D')</span></em><a class="headerlink" href="#lightwin.beam_calculation.factory.BEAM_CALCULATORS" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.beam_calculation.factory._get_beam_calculator">
+<span class="sig-name descname"><span class="pre">_get_beam_calculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'Envelope1D'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'TraceWin'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Envelope3D'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_cython</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.13)"><span class="pre">type</span></a></span></span><a class="headerlink" href="#lightwin.beam_calculation.factory._get_beam_calculator" title="Link to this definition"></a></dt>
+<dd><p>Get the proper <a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a> constructor.</p>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.factory.BeamCalculatorsFactory">
@@ -166,14 +170,17 @@ the beam propagation once the compensation settings are found.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="lightwin.beam_calculation.factory.BeamCalculatorsFactory.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">beam_calculator_kw</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator"><span class="pre">BeamCalculator</span></a></span></span><a class="headerlink" href="#lightwin.beam_calculation.factory.BeamCalculatorsFactory.run" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'Envelope1D'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'TraceWin'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'Envelope3D'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">beam_calculator_kw</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator"><span class="pre">BeamCalculator</span></a></span></span><a class="headerlink" href="#lightwin.beam_calculation.factory.BeamCalculatorsFactory.run" title="Link to this definition"></a></dt>
 <dd><p>Create a single <a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BeamCalculator</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>beam_calculator_class</strong> (<a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABCMeta" title="(in Python v3.13)"><em>abc.ABCMeta</em></a>) – The specific beam calculator.</p>
+<dd class="field-odd"><p><strong>tool</strong> (<em>Literal</em><em>[</em><em>&quot;Envelope1D&quot;</em><em>, </em><em>&quot;TraceWin&quot;</em><em>, </em><em>&quot;Envelope3D&quot;</em><em>]</em>) – The name of the beam calculator to construct.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator">BeamCalculator</a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of the proper beam calculator.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator" title="lightwin.beam_calculation.beam_calculator.BeamCalculator">BeamCalculator</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -230,7 +237,7 @@ the beam propagation once the compensation settings are found.</p></li>
       <dl>
          <dt>Tags</dt>
          <dd><a href="lightwin.beam_calculation.factory.html">v0.7.0</a></dd>
-         <dd><a href="../../v0.8.0b0/lightwin/lightwin.beam_calculation.factory.html">v0.8.0b0</a></dd>
+         <dd><a href="../../v0.8.0b1/lightwin/lightwin.beam_calculation.factory.html">v0.8.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

@@ -81,10 +81,10 @@
 <li class="toctree-l4"><a class="reference internal" href="lightwin.core.elements.thin_steering.html">thin_steering module</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.em_fields.html">em_fields package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">list_of_elements package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.html">transfer_matrix package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_specs.html">beam_specs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">electric_field module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.files_specs.html">files_specs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">instruction module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">instructions_factory module</a></li>
@@ -136,44 +136,6 @@
              
   <section id="module-lightwin.core.elements.superposed_field_map">
 <span id="superposed-field-map-module"></span><h1>superposed_field_map module<a class="headerlink" href="#module-lightwin.core.elements.superposed_field_map" title="Link to this heading"></a></h1>
-<p>Define a <a class="reference internal" href="#lightwin.core.elements.superposed_field_map.SuperposedFieldMap" title="lightwin.core.elements.superposed_field_map.SuperposedFieldMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SuperposedFieldMap</span></code></a>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The initialisation of this class is particular, as it does not correspond
-to a specific line of the <code class="docutils literal notranslate"><span class="pre">.dat</span></code> file.</p>
-</div>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>Maybe move this to the field_map package once it is implemented</p>
-</div>
-<dl class="py class">
-<dt class="sig sig-object py" id="lightwin.core.elements.superposed_field_map.SuperposedFieldMap">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SuperposedFieldMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lightwin.core.elements.superposed_field_map.SuperposedFieldMap" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
-<p>A single element holding several field maps.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.elements.superposed_field_map.SuperposedFieldMap.is_implemented">
-<span class="sig-name descname"><span class="pre">is_implemented</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#lightwin.core.elements.superposed_field_map.SuperposedFieldMap.is_implemented" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.elements.superposed_field_map.SuperposedFieldMap.n_attributes">
-<span class="sig-name descname"><span class="pre">n_attributes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#range" title="(in Python v3.13)"><span class="pre">range</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Collection</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#lightwin.core.elements.superposed_field_map.SuperposedFieldMap.n_attributes" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lightwin.core.elements.superposed_field_map.SuperposedFieldMap.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lightwin.core.elements.superposed_field_map.SuperposedFieldMap.__init__" title="Link to this definition"></a></dt>
-<dd><p>Save length of the superposed field maps.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lightwin.core.elements.superposed_field_map.SuperposedFieldMap._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7fd0fcb025d0&gt;</span></em><a class="headerlink" href="#lightwin.core.elements.superposed_field_map.SuperposedFieldMap._abc_impl" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </section>
 
 
@@ -212,7 +174,7 @@ to a specific line of the <code class="docutils literal notranslate"><span class
       <dl>
          <dt>Tags</dt>
          <dd><a href="../../v0.7.0/lightwin/lightwin.core.elements.superposed_field_map.html">v0.7.0</a></dd>
-         <dd><a href="../../v0.8.0b0/lightwin/lightwin.core.elements.superposed_field_map.html">v0.8.0b0</a></dd>
+         <dd><a href="../../v0.8.0b1/lightwin/lightwin.core.elements.superposed_field_map.html">v0.8.0b1</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>
