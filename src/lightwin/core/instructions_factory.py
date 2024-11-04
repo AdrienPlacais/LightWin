@@ -143,7 +143,12 @@ class InstructionsFactory:
             # New implementation
             self._field_factory.run_all(field_maps)
             # Old implementation
-            load_electromagnetic_fields(field_maps, cython=True)
+            # load_electromagnetic_fields(field_maps, cython=True)
+            logging.warning(
+                "Manually deactivated the old loading of field map files. "
+                "Should be OK with Envelope1D and TraceWin BeamCalculators, "
+                "but will cause issues with CyEnvelope1D and Envelope3D."
+            )
 
         return instructions
 
