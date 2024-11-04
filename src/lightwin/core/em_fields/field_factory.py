@@ -66,10 +66,10 @@ class FieldFactory:
                 raise NotImplementedError(
                     "Loading of field maps not yet implemented for Superposed."
                 )
-            assert isinstance(field_map.field_map_file_name, Path)
-            file_path = (
-                field_map.field_map_folder / field_map.field_map_file_name
-            )
+            fp = field_map.field_map_file_name
+            if not isinstance(fp, Path):
+                fp = Path(fp)
+            file_path = field_map.field_map_folder / fp
             if file_path not in to_load:
                 to_load[file_path] = []
 

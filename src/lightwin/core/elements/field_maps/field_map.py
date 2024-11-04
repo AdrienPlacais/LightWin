@@ -19,6 +19,7 @@
 
 """
 
+import logging
 import math
 from pathlib import Path
 from typing import Any, Literal
@@ -73,7 +74,7 @@ class FieldMap(Element):
         self.aperture_flag = int(line.splitted[8])  # K_a
 
         self.field_map_folder = default_field_map_folder
-        self.field_map_file_name = Path(line.splitted[9])
+        self.field_map_file_name: str | list[Path] = line.splitted[9]
 
         self._can_be_retuned: bool = True
         self.rf_field = RfField(section_idx=self.idx["section"])
