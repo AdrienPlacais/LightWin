@@ -2,15 +2,8 @@
 LightWin is a tool to automatically find compensation settings for cavity failures in linacs.
 
 ## Important notice
-You are on a development branch, that will be released in `v0.9.0`.
-There are still several significant bugs to fix:
-- [x] `Envelope1D` Cython no longer works.
-  - The implementation of Cython `Envelope1D` is now separated from the base `Envelope1D`, thanks to the new `CyEnvelope1D`.
-- [ ] `Envelope3D` no longer works (transfer matrix calculation in thin lense is broken)
-- [ ] +20% calculation time overhead in synchronous phase fit
-  - Note: to compare with branch `refactor_element_parameters`
-- [ ] `SUPERPOSE_MAP` will break if there is an empty line after it...
-- [ ] I do not understand how `phi_0` is handled in superposed field maps. Does not seem to be defined wrt to the entry of the current field map nor the first.
+You are on a development branch, based on `superpose_field_map`.
+The objective is to make SPIRAL2 linac work.
 
 ## Installation
 The full installation instructions are detailed [here](https://adrienplacais.github.io/LightWin/html/main/manual/installation.html).
