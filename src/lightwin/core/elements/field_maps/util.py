@@ -10,7 +10,7 @@ def set_full_field_map_path(
 ) -> list[Path]:
     """Set all the full field map file names with extension."""
     field_map_file_names = [
-        Path(field_map_folder, field_map_filename).with_suffix("." + ext)
+        field_map_folder / (field_map_filename + "." + ext)
         for extension in extensions.values()
         for ext in extension
     ]
