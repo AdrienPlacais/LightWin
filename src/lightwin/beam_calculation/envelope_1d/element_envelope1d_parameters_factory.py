@@ -147,7 +147,7 @@ class ElementEnvelope1DParametersFactory(
 
         logging.error(
             f"Element {elt} of {element_class = } not added to the Envelope1D "
-            "dict linking every Element class to its specific parameters"
+            "dict linking every Element class to its specific parameters "
             "(transfer matrix in particular). Neither was found its "
             f"{super_class = }. "
             "Note that you can use the elements_to_dump key in the "
