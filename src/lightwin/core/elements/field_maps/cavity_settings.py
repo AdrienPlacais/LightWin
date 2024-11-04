@@ -328,14 +328,15 @@ class CavitySettings:
             assert self.reference == "phi_0_rel"
 
     def set_bunch_to_rf_freq_func(self, freq_cavity_mhz: float) -> None:
-        """Use cavity frequency to set a bunch -> rf freq function.
+        """
+        Set the rf frequency, and methods to switch between freq definitions.
 
         This method is called by the :class:`.Freq`.
 
         Parameters
         ----------
         freq_cavity_mhz : float
-            Frequency in the cavity in MHz.
+            Frequency in the cavity in :unit:`MHz`.
 
         """
         self.freq_cavity_mhz = freq_cavity_mhz
