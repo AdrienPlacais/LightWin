@@ -151,8 +151,7 @@ class CavitySettings:
         self.rf_phase_to_bunch_phase: Callable[[float], float]
         self.freq_cavity_mhz: float
         self.omega0_rf: float
-        if freq_cavity_mhz is not None:
-            self.set_bunch_to_rf_freq_func(freq_cavity_mhz)
+        self.set_bunch_to_rf_freq_func(freq_cavity_mhz)
 
         self.rf_field: RfField
         if rf_field is not None:
@@ -327,18 +326,24 @@ class CavitySettings:
         if "rephased" in self.status:
             assert self.reference == "phi_0_rel"
 
-    def set_bunch_to_rf_freq_func(self, freq_cavity_mhz: float) -> None:
+    def set_bunch_to_rf_freq_func(
+        self, freq_cavity_mhz: float | None = None
+    ) -> None:
         """
         Set the rf frequency, and methods to switch between freq definitions.
 
-        This method is called by the :class:`.Freq`.
+        This method is called a first time at the instantiation of ``self``;
+        it will be called once again if a :class:`.Freq` command is found.
 
         Parameters
         ----------
-        freq_cavity_mhz : float
-            Frequency in the cavity in :unit:`MHz`.
+        freq_cavity_mhz : float | None, optional
+            Frequency in the cavity in :unit:`MHz`. If it is not provided, we
+            set it to the bunch frequency.
 
         """
+        if freq_cavity_mhz is None:
+            freq_cavity_mhz = self._freq_bunch_mhz
         self.freq_cavity_mhz = freq_cavity_mhz
         bunch_phase_to_rf_phase = partial(
             phi_bunch_to_phi_rf, freq_cavity_mhz / self._freq_bunch_mhz
