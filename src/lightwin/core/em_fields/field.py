@@ -87,8 +87,9 @@ class Field(ABC):
         self._b_z_dc: Callable[[Any], float] = null_field_1d
 
         if not self.is_implemented:
-            logging.warning(
-                "Initializing a non-implemented Field. Not loading anything."
+            logging.info(
+                "Initializing a non-implemented Field. Not loading anything.\n"
+                f"{repr(self)}"
             )
             return
 
@@ -103,7 +104,9 @@ class Field(ABC):
     def load_fieldmaps(self) -> None:
         """Load all field components for class :attr:`extensions`."""
         for ext in self.extensions:
-            path = self.field_map_path.parent / (self.field_map_path.name + ext)
+            path = self.field_map_path.parent / (
+                self.field_map_path.name + ext
+            )
             func, n_interp, n_cell = self._load_fieldmap(path)
             attribute_name = EXTENSION_TO_COMPONENT[ext]
             setattr(self, attribute_name, func)
