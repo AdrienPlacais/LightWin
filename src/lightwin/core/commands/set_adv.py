@@ -10,9 +10,9 @@ class SetAdv(DummyCommand):
 
     def __init__(self, *args, **kwargs) -> None:
         """Raise an error."""
+        super().__init__(*args, **kwargs)
         logging.error(
             "The SET_ADV is not implemented in LightWin. As this command will "
             "influence the design of the linac, you should set the design and "
             f"comment this command out.\n{self}"
         )
-        return super().__init__(*args, **kwargs)
