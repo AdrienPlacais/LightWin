@@ -50,12 +50,12 @@ This command compiles the Cython files and places the compiled modules (`.pyd` o
 After compilation, the compiled files should be automatically places in the correct locations.
 If not, manually move the created files:
 
-   * Unix (Linux/macOS): `build/lib.linux-XXX-cpython=3XX/beam_calculation/envelope_1d/transfer_matrices_c.cpython-3XX-XXXX-linux-gnu.so`
-   * Windows: `build/lib.win-XXXX-cpython-3XX/beam_calculation/envelope_1d/transfer_matrices_c.cp3XX-win_XXXX.pyd`
+   * Unix (Linux/macOS): `build/lib.linux-XXX-cpython=3XX/beam_calculation/cy_envelope_1d/transfer_matrices.cpython-3XX-XXXX-linux-gnu.so`
+   * Windows: `build/lib.win-XXXX-cpython-3XX/beam_calculation/cy_envelope_1d/transfer_matrices.cp3XX-win_XXXX.pyd`
 
 To:
 
-   * `/path/to/LightWin/src/lightwin/beam_calculation/envelope_1d/`.
+   * `/path/to/LightWin/src/lightwin/beam_calculation/cy_envelope_1d/`.
 
 `Microsoft Visual C++ 14.0 or greater is required` error is covered in the :ref:`troubleshooting section<troubleshooting>`.
 
@@ -78,7 +78,3 @@ This will check if the Cython modules are properly integrated:
 .. seealso::
 
    `Cython documentation <https://cython.readthedocs.io/>`_.
-
-.. todo::
-   * Revise integration so that a missing Cython does not lead to import errors.
-   * Specific Cython tests
