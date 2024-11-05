@@ -71,8 +71,8 @@ _WTF_BASE_AUTOMATIC = _WTF_BASE + (
             "How to select the compensating elements when several are "
             "equidistant to the failure."
         ),
-        allowed_values=("upstream_first", "downstream_first"),
-        default_value="downstream_first",
+        allowed_values=("upstream first", "downstream first"),
+        default_value="downstream first",
         is_mandatory=False,
     ),
     KeyValConfSpec(
