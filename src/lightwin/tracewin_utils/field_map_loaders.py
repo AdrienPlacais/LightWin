@@ -3,9 +3,23 @@
 import itertools
 import logging
 from collections.abc import Collection
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
+
+
+@lru_cache(100)
+def warn_norm(path: Path, norm: float):
+    """Raise this warning only once.
+
+    https://stackoverflow.com/questions/31953272/logging-print-message-only-once
+
+    """
+    logging.warning(
+        f"The field in {path} has a normalization factor of {norm}, different "
+        "from unity."
+    )
 
 
 def field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
@@ -73,9 +87,7 @@ def field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
     assert norm is not None
     n_cell = _get_number_of_cells(f_z)
     if abs(norm - 1.0) > 1e-6:
-        logging.warning(
-            f"The field in {path} as a {norm = } different from unity."
-        )
+        warn_norm(path, norm)
     return n_z, zmax, norm, np.array(f_z), n_cell
 
 
@@ -152,9 +164,7 @@ def field_3d(
     assert norm is not None, "Normalization factor (norm) is missing."
 
     if abs(norm - 1.0) > 1e-6:
-        logging.warning(
-            f"The field in {path} has a normalization factor of {norm}, different from unity."
-        )
+        warn_norm(path, norm)
 
     return n_z, zmax, n_x, xmin, xmax, n_y, ymin, ymax, norm, field_values
 
