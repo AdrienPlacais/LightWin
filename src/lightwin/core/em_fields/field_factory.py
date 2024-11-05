@@ -40,7 +40,7 @@ class FieldFactory:
 
     def _gather_primary_files_to_load(
         self, field_maps: Collection[FieldMap | SuperposedFieldMap]
-    ) -> dict[tuple[Path, float, float], list[FieldMap]]:
+    ) -> dict[tuple[Path, str, float, float], list[FieldMap]]:
         """Associate :class:`.FieldMap` objects using the same fields.
 
         :class:`.SuperposedFieldMap` are replaced by the list of
@@ -53,21 +53,22 @@ class FieldFactory:
 
         Returns
         -------
-        dict[tuple[pathlib.Path, float, float], list[FieldMap]]
-            A dictionary where each key is a path to a field map file, a field
-            map length, a z_0 shift and each value is a list of
-            :class:`.FieldMap` instances that use those `Field.__init__` args.
+        dict[tuple[pathlib.Path, str, float, float], list[FieldMap]]
+            A dictionary where each key is the tuple of arguments to
+            instantiate a :class:`.Field`, and value is the list of
+            :class:`.FieldMap` that will share this object.
 
         """
         all_field_maps = unpack_superposed(field_maps)
 
-        to_load: dict[tuple[Path, float, float], list[FieldMap]] = {}
+        to_load: dict[tuple[Path, str, float, float], list[FieldMap]] = {}
         for field_map in all_field_maps:
-            assert isinstance(field_map.field_map_file_name, Path)
-            file_path = (
-                field_map.field_map_folder / field_map.field_map_file_name
+            args = (
+                field_map.field_map_folder,
+                field_map.filename,
+                field_map.length_m,
+                field_map.z_0,
             )
-            args = (file_path, field_map.length_m, field_map.z_0)
             if args not in to_load:
                 to_load[args] = []
 
@@ -77,25 +78,25 @@ class FieldFactory:
         return to_load
 
     def _check_uniformity_of_types(
-        self, to_load: dict[tuple[Path, float, float], list[FieldMap]]
+        self, to_load: dict[tuple[Path, str, float, float], list[FieldMap]]
     ) -> None:
         """Check that for a file name, all corresp. object have same geom."""
-        for (path, _, _), field_maps in to_load.items():
+        for (_, filename, _, _), field_maps in to_load.items():
             different_types = set([type(x) for x in field_maps])
             if len(different_types) != 1:
                 raise NotImplementedError(
                     "Several FIELD_MAP with different types use the same "
-                    f"filename = {path}, which is not supported for now."
+                    f"{filename = }, which is not supported for now."
                 )
 
     def run_all(self, field_maps: Collection[FieldMap]) -> None:
         """Generate the :class:`.Field` objects and store it in field maps."""
         to_load = self._gather_primary_files_to_load(field_maps)
-        for (path, length_m, z_0), corresp_maps in to_load.items():
+        for (folder, filename, length_m, z_0), corresp_maps in to_load.items():
             field_map = corresp_maps[0]
             constructor = FIELDS[field_map.__class__]
             field = constructor(
-                field_map_path=path, length_m=length_m, z_0=z_0
+                folder=folder, filename=filename, length_m=length_m, z_0=z_0
             )
 
             for fm in corresp_maps:

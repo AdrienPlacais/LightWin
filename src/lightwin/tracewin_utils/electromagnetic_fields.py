@@ -14,7 +14,6 @@
 import logging
 import os.path
 from collections.abc import Collection
-from pathlib import Path
 from typing import Literal
 
 import numpy as np
@@ -289,10 +288,9 @@ def load_field_map_file(
     a problem with :class:`.Envelope1D`, but :class:`.TraceWin` does not care.
 
     """
-    files = field_map.field_map_file_name
-    if isinstance(files, Path):
-        files = (files,)
-    loadable_files = list(filter(lambda x: x.suffix in loadable, files))
+    loadable_files = list(
+        filter(lambda x: x.suffix in loadable, field_map.filepaths)
+    )
     if len(loadable_files) > 1:
         logging.info("Loading of several field_maps not handled")
         return None
@@ -319,11 +317,6 @@ def load_field_map_file(
         e_spat = create_1d_field_func(
             field_values=f_z, corresponding_positions=z_cavity_array
         )
-
-        # Patch to keep one filepath per FieldMap. Will require an update in
-        # the future...
-        field_map.field_map_file_name = file_name
-
         return e_spat, n_z, n_cell
     logging.error(
         "Reached end of _load_field_map_file without loading anything."

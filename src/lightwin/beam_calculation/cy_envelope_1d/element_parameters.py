@@ -112,7 +112,7 @@ class FieldMapCyEnvelope1DParameters(
         **kwargs: str | int,
     ) -> None:
         """Set the name of the field map and init base class."""
-        self.field_map_file_name = str(elt.field_map_file_name)
+        self.first_filepath_as_str = str(elt.filepaths[0])
         return super().__init__(
             elt=elt,
             method=method,
@@ -154,7 +154,7 @@ class FieldMapCyEnvelope1DParameters(
         geometry_kwargs = {
             "d_z": self.d_z,
             "n_steps": self.n_steps,
-            "filename": self.field_map_file_name,
+            "filename": self.first_filepath_as_str,
         }
         rf_field = cavity_settings.rf_field
         rf_kwargs = {

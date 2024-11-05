@@ -1,9 +1,6 @@
 """Hold a ``FIELD_MAP``.
 
 .. todo::
-    Handle the different kind of field_maps...
-
-.. todo::
     Completely handle the SET_SYNCH_PHASE command
 
 .. todo::
@@ -27,7 +24,6 @@ import numpy as np
 
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
-from lightwin.core.elements.field_maps.util import set_full_field_map_path
 from lightwin.core.em_fields.rf_field import RfField
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter
@@ -72,7 +68,8 @@ class FieldMap(Element):
         self.aperture_flag = int(line.splitted[8])  # K_a
 
         self.field_map_folder = default_field_map_folder
-        self.field_map_file_name = Path(line.splitted[9])
+        self.filename = line.splitted[9]
+        self.filepaths: list[Path]
 
         self.z_0 = 0.0
 
@@ -141,9 +138,11 @@ class FieldMap(Element):
         :func:`.electromagnetic_fields._get_filemaps_extensions`
 
         """
-        self.field_map_file_name = set_full_field_map_path(
-            self.field_map_folder, self.field_map_file_name, extensions
-        )
+        self.filepaths = [
+            Path(self.field_map_folder, self.filename).with_suffix("." + ext)
+            for extension in extensions.values()
+            for ext in extension
+        ]
 
     def keep_cavity_settings(self, cavity_settings: CavitySettings) -> None:
         """Keep the cavity settings that were found."""

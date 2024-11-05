@@ -58,10 +58,25 @@ class Field(ABC):
     is_implemented: bool
 
     def __init__(
-        self, field_map_path: Path, length_m: float, z_0: float = 0.0
+        self, folder: Path, filename: str, length_m: float, z_0: float = 0.0
     ) -> None:
-        """Instantiate object."""
-        self.field_map_path = field_map_path
+        """Instantiate object.
+
+        Parameters
+        ----------
+        folder : Path
+            Where the field map files are.
+        filename : str
+            The base name of the field map file(s), without extension (as
+            in the ``FIELD_MAP`` command).
+        length_m : float
+            Length of the field map.
+        z_0 : float
+            Position of the field map. Used with superpose.
+
+        """
+        self.folder = folder
+        self.filename = filename
         self._length_m = length_m
         self.n_cell: int
         self.n_z: int
@@ -99,17 +114,13 @@ class Field(ABC):
 
     def __repr__(self) -> str:
         """Print out class name and associated field map path."""
-        return f"{self.__class__.__name__:>10} | {self.field_map_path.name}"
+        return f"{self.__class__.__name__:>10} | {self.folder.name}"
 
     def load_fieldmaps(self) -> None:
         """Load all field components for class :attr:`extensions`."""
         for ext in self.extensions:
-            path = self.field_map_path
-            if not path.is_file:
-                path = self.field_map_path.parent / (
-                    self.field_map_path.name + ext
-                )
-            func, n_interp, n_cell = self._load_fieldmap(path)
+            filepath = self.folder / (self.filename + ext)
+            func, n_interp, n_cell = self._load_fieldmap(filepath)
             attribute_name = EXTENSION_TO_COMPONENT[ext]
             setattr(self, attribute_name, func)
 

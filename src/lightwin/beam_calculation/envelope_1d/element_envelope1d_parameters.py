@@ -227,7 +227,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
             transf_mat_function=transf_mat_function,
             **kwargs,
         )
-        self.field_map_file_name = str(elt.field_map_file_name)
+        self.field_map_file_name = str(elt.filename)
         elt.cavity_settings.set_cavity_parameters_methods(
             self.solver_id,
             self.transf_mat_function_wrapper,

@@ -36,8 +36,10 @@ class SuperposedFields(Field):
             The initial z-position. Defaults to 0.0.
 
         """
-        dummy_path = Path("dummy")
-        super().__init__(field_map_path=dummy_path, length_m=length_m, z_0=z_0)
+        folder, filename = Path("dummy"), "dummy"
+        super().__init__(
+            folder=folder, filename=filename, length_m=length_m, z_0=z_0
+        )
         self._fields = tuple(fields)
         self.is_loaded = True  # No field maps to load in SuperposedField
 
