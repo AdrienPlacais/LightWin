@@ -78,7 +78,7 @@ class Field(ABC):
         self.folder = folder
         self.filename = filename
         self._length_m = length_m
-        self.n_cell: int
+        self.n_cell: int = 1
         self.n_z: int
         self.is_loaded = False
 
