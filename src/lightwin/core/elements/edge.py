@@ -6,9 +6,23 @@
 """
 
 import logging
+from functools import lru_cache
 
 from lightwin.core.elements.element import Element
 from lightwin.tracewin_utils.line import DatLine
+
+
+@lru_cache(1)
+def warn_edge() -> None:
+    """Raise this warning only once.
+
+    https://stackoverflow.com/questions/31953272/logging-print-message-only-once
+
+    """
+    logging.warning(
+        "Documentation does not mention that EDGE element should be ignored by"
+        " LATTICE. So why did I set increment_lattice_idx to False?"
+    )
 
 
 class Edge(Element):
@@ -27,8 +41,4 @@ class Edge(Element):
         """Force an element with null-length, with no index."""
         super().__init__(line, dat_idx, **kwargs)
         self.length_m = 0.0
-        logging.warning(
-            "Documentation does not mention that EDGE element should be "
-            "ignored by LATTICE. So why did I set increment_lattice_idx to "
-            "False?"
-        )
+        warn_edge()

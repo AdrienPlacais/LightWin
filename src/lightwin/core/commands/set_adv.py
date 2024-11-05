@@ -1,4 +1,4 @@
-"""Define a useless command; raise warning as influences the linac design."""
+"""Define a useless command; raise error as influences the linac design."""
 
 import logging
 
@@ -13,6 +13,6 @@ class SetAdv(DummyCommand):
         logging.error(
             "The SET_ADV is not implemented in LightWin. As this command will "
             "influence the design of the linac, you should set the design and "
-            "comment this command out."
+            f"comment this command out.\n{self}"
         )
         return super().__init__(*args, **kwargs)

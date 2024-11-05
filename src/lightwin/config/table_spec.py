@@ -11,6 +11,7 @@ from lightwin.config.key_val_conf_spec import KeyValConfSpec
 CONFIGURABLE_OBJECTS = (
     "beam",
     "beam_calculator",
+    "beam_calculator_post",
     "design_space",
     "evaluators",
     "files",
@@ -33,6 +34,7 @@ class TableConfSpec:
         configured_object: Literal[
             "beam",
             "beam_calculator",
+            "beam_calculator_post",
             "design_space",
             "evaluators",
             "files",

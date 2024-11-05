@@ -11,7 +11,7 @@ from lightwin.config.key_val_conf_spec import KeyValConfSpec
 EVALUATORS_CONFIG = (
     KeyValConfSpec(
         key="beam_calc_post",
-        types=(list[str],),
+        types=(list,),
         description="The names of the evaluators.",
         default_value=["mismatch factor at end"],
         is_mandatory=False,

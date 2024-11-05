@@ -195,7 +195,7 @@ def _get_phi_0_rel(cavity_settings: CavitySettings) -> float:
 
 
 class SuperposedFieldMapCyEnvelope1DParameters(
-    ElementCyEnvelope1DParameters, SuperposedFieldMapEnvelope1DParameters
+    SuperposedFieldMapEnvelope1DParameters, ElementCyEnvelope1DParameters
 ):
     """
     Hold properties to compute transfer matrix of :class:`.SuperposedFieldMap`.
@@ -208,7 +208,7 @@ class SuperposedFieldMapCyEnvelope1DParameters(
 
 
 class BendCyEnvelope1DParameters(
-    ElementCyEnvelope1DParameters, BendEnvelope1DParameters
+    BendEnvelope1DParameters, ElementCyEnvelope1DParameters
 ):
     """Hold the specific parameters to compute :class:`.Bend` transfer matrix.
 

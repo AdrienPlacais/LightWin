@@ -8,19 +8,19 @@ To test your installation, navigate to the base directory (where the `pyproject.
 
 .. code-block:: bash
 
-   pytest
+   pytest -m "not implementation"
 
 If TraceWin is not installed, you can skip tests requiring it by running:
 
 .. code-block:: bash
 
-   pytest -m not tracewin
+   pytest -m "not tracewin and not implementation"
 
 If Cython is not installed or Cython modules not compiled, you can skip corresponding tests with:
 
 .. code-block:: bash
 
-   pytest -m not cython
+   pytest -m "not cython and not implementation"
 
 You can also combine test markers as defined in `pyproject.toml`. For example, to run only fast smoke tests, use:
 
@@ -31,3 +31,6 @@ You can also combine test markers as defined in `pyproject.toml`. For example, t
 .. note::
    `xfailed` errors: `xfailed` stands for "expected to fail" and these errors are usually intended for developers to track issues. They are not necessarily problematic for users.
 
+.. note::
+   Test with the `implementation` mark are for features under not yet implemented.
+   Do not expect them to work!

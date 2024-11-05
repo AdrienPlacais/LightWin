@@ -20,7 +20,7 @@ def give_name_to_elements(
                 continue
             nth = civil_register[name] + 1
             elt._personalized_name = f"{name}_{nth}"
-            logging.warning(
+            logging.info(
                 f"Duplicate personalized name found: {name}. Renaming to "
                 f"{elt._personalized_name}."
             )

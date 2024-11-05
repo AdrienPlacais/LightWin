@@ -8,10 +8,10 @@ The objective is to make SPIRAL2 linac work.
 ## Installation
 The full installation instructions are detailed [here](https://adrienplacais.github.io/LightWin/html/main/manual/installation.html).
 The steps are straightforward and can be summarized as follows:
-1. Clone the repository:
-`git clone git@github.com:AdrienPlacais/LightWin.git`
-2. Navigate to the `LightWin` and install it with all dependencies: `pip install -e .`
-3. Test that everything is working with `pytest -m "not tracewin"`
+1. Clone the repository: `git clone git@github.com:AdrienPlacais/LightWin.git`
+2. Navigate to the `LightWin` directory, and switch to the last released version: `git checkout v0.7.0`.
+3. Install LightWin with all its dependencies: `pip install -e .`
+4. Test that everything is working with `pytest -m "not tracewin and not implementation"`
 
 Note that the TraceWin module will not work out of the box.
 You will need to tell LightWin were to find your TraceWin executables.

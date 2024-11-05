@@ -71,6 +71,8 @@ class FilesTableConfSpec(TableConfSpec):
         super()._pre_treat(toml_subdict, **kwargs)
         project_path = _create_project_folders(**kwargs, **toml_subdict)
         _set_up_logging(project_path=project_path, **toml_subdict)
+        if "project_folder" not in toml_subdict:
+            toml_subdict["project_folder"] = project_path
 
 
 def _set_up_logging(

@@ -6,7 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [0.9.0] -- `superposed_field_map` branch
+## [0.?.??] 2024-??-?? -- branch under development
+
+### Changed
+
+- `evaluator` objects are more robust and can be configured from the `.toml`.
+- Plotting is now performed thanks to the `plotter` library.
+
+## [0.9.0] -- unreleased
 
 ### Added
 
@@ -24,6 +31,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - When several `Element` objects have the same `_personalized_name`, a fallback name and a warning is raised instead of raising an `AssertionError`.
+
+## [0.8.0b2] 2024-11-05
+
+### Fixed
+
+- Fixed several bugs that were outside the scope of my pytests.
+  - `beam_calc_post` configuration key was no longer recognized.
+  - Not providing the `project_folder` key in the `[files]` TOML table led to bug.
+  - Some elements created bugs in `CyEnvelope1D`.
+
+## [0.8.0b1] 2024-11-04
+
+### Fixed
+
+- Dot characters in field map file names do not throw an error anymore.
 
 ## [0.8.0b0] 2024-10-22
 

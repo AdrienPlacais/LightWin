@@ -34,7 +34,7 @@ class ConfSpec:
         files: str = "",
         beam: str = "",
         beam_calculator: str = "",
-        post_beam_calculator: str = "",
+        beam_calculator_post: str = "",
         plots: str = "",
         evaluators: str = "",
         design_space: str = "",
@@ -59,11 +59,11 @@ class ConfSpec:
                     monkey_patches=BEAM_CALCULATOR_MONKEY_PATCHES,
                 )
             )
-        if post_beam_calculator:
+        if beam_calculator_post:
             table_of_specs.append(
                 TableConfSpec(
-                    "beam_calculator",
-                    post_beam_calculator,
+                    "beam_calculator_post",
+                    beam_calculator_post,
                     BEAM_CALCULATORS_CONFIGS,
                     selectkey_n_default=("tool", "Envelope1D"),
                     monkey_patches=BEAM_CALCULATOR_MONKEY_PATCHES,
