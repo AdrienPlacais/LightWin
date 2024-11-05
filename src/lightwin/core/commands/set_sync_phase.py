@@ -7,12 +7,25 @@
 
 import logging
 from collections.abc import Sequence
+from functools import lru_cache
 from typing import Literal
 
 from lightwin.core.commands.command import Command
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
+
+
+@lru_cache(1)
+def warn_set_sync_phase() -> None:
+    """Raise this warning only once.
+
+    https://stackoverflow.com/questions/31953272/logging-print-message-only-once
+
+    """
+    logging.warning(
+        "The SET_SYNC_PHASE command is still under testing, be cautious."
+    )
 
 
 class SetSyncPhase(Command):
@@ -25,9 +38,7 @@ class SetSyncPhase(Command):
         self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Instantiate command."""
-        logging.warning(
-            "The SET_SYNC_PHASE command is still under testing, be cautious."
-        )
+        warn_set_sync_phase()
         return super().__init__(line, dat_idx)
 
     def set_influenced_elements(
