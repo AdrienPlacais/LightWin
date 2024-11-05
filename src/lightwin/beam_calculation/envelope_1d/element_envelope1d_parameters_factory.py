@@ -31,6 +31,7 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
 )
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
+from lightwin.core.elements.thin_steering import ThinSteering
 from lightwin.util.synchronous_phases import PHI_S_MODELS
 
 
@@ -50,6 +51,7 @@ class ElementEnvelope1DParametersFactory(
         Solenoid: DriftEnvelope1DParameters,
         SuperposedFieldMap: SuperposedFieldMapEnvelope1DParameters,
         SuperposedPlaceHolderElt: DummyEnvelope1DParameters,
+        ThinSteering: DriftEnvelope1DParameters,
     }  #:
 
     def __init__(
