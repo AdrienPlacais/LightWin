@@ -233,9 +233,9 @@ class SuperposeMap(Command):
                 continue
             set_sync_phase.set_influenced_elements(instructions)
             instructions = set_sync_phase.apply(instructions)
-        raise NotImplementedError(
-            "SET_SYNC_PHASE in SUPERPOSE_MAP not yet supported."
-        )
+            raise NotImplementedError(
+                "SET_SYNC_PHASE in SUPERPOSE_MAP not yet supported."
+            )
         return instructions
 
 
