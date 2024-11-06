@@ -283,7 +283,7 @@ class TraceWin(BeamCalculator):
 
         set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(
             set_of_cavity_settings,
-            elts.l_cav,
+            elts.cavities(superposed="remove"),
             use_a_copy_for_nominal_settings=use_a_copy_for_nominal_settings,
         )
 
@@ -301,7 +301,9 @@ class TraceWin(BeamCalculator):
             set_of_cavity_settings=set_of_cavity_settings,
         )
         self._save_cavities_entry_phases(
-            set_of_cavity_settings, elts.l_cav, simulation_output
+            set_of_cavity_settings,
+            elts.cavities(superposed="remove"),
+            simulation_output,
         )
         return simulation_output
 
