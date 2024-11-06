@@ -916,6 +916,9 @@ class CavitySettings:
     #     * - ``'compensate (not ok)'``
     #       - new ``k_e`` and ``phi_0`` were found, optimisation algorithm is
     #         not happy with it
+    def plot(self) -> None:
+        """Plot the profile of the electric field."""
+        return self.field.plot(self.k_e, self.phi_0_rel)
 
 
 def _get_valid_func(obj: object, func_name: str, solver_id: str) -> Callable:

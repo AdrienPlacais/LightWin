@@ -14,9 +14,9 @@ from lightwin.tracewin_utils.field_map_loaders import (
 @pytest.fixture
 def sample_field_3d(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """Create a temporary sample field file for testing."""
-    sample_data = """3 10.0
-2 0.0 5.0
-2 0.0 5.0
+    sample_data = """2 10.0
+1 0.0 5.0
+1 0.0 5.0
 1.0
 1.1
 1.2
@@ -56,12 +56,12 @@ def sample_field_1d_file(tmp_path_factory: pytest.TempPathFactory) -> Path:
 @pytest.mark.smoke
 def test_field_3d(sample_field_3d: Path) -> None:
     """Test ``field_3d`` with a sample 3D field file."""
-    expected_nz = 3
+    expected_nz = 2
     expected_zmax = 10.0
-    expected_nx = 2
+    expected_nx = 1
     expected_xmin = 0.0
     expected_xmax = 5.0
-    expected_ny = 2
+    expected_ny = 1
     expected_ymin = 0.0
     expected_ymax = 5.0
     expected_norm = 1.0

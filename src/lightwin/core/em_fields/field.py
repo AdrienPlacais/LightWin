@@ -24,6 +24,9 @@ from collections.abc import Callable, Collection
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+import pandas as pd
+
 from lightwin.core.em_fields.field_helpers import null_field_1d
 from lightwin.core.em_fields.types import (
     FieldFuncComplexTimedComponent,
@@ -309,3 +312,13 @@ class Field(ABC):
             raise ValueError(f"{n_interp = } but should be a 1D tuple.")
         self.n_z = n_interp[0]
         self.n_cell = n_cell
+
+    def plot(self, amplitude: float = 1.0, phi_0_rel: float = 0.0) -> None:
+        """Plot the profile of the electric field."""
+        positions = np.linspace(0, self._length_m, self.n_z + 1)
+        field_func = self.partial_e_z(
+            amplitude=amplitude, phi_0_rel=phi_0_rel
+        )[1]
+        field_values = [field_func(pos, 0.0) for pos in positions]
+        df = pd.DataFrame({"pos": positions, "field": field_values})
+        df.plot(x="pos", grid=True)

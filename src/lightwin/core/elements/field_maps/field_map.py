@@ -16,7 +16,6 @@
 
 """
 
-import logging
 import math
 from pathlib import Path
 from typing import Any, Literal
@@ -337,3 +336,7 @@ class FieldMap(Element):
 
         """
         self._z_0 = value
+
+    def plot(self) -> None:
+        """Plot the profile of the electric field."""
+        return self.cavity_settings.plot()

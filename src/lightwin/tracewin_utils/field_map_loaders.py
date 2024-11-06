@@ -167,11 +167,11 @@ def load_field_3d(
 
             norm = float(file.readline().strip())
 
-            field_values = np.zeros((n_z, n_y, n_x))
+            field_values = np.zeros((n_z + 1, n_y + 1, n_x + 1))
 
-            for k in range(n_z):
-                for j in range(n_y):
-                    for i in range(n_x):
+            for k in range(n_z + 1):
+                for j in range(n_y + 1):
+                    for i in range(n_x + 1):
                         line = file.readline().strip()
                         field_values[k, j, i] = float(line)
 
@@ -233,10 +233,10 @@ def is_a_valid_3d_field(
     bool
         True if the field is valid, False otherwise.
     """
-    if field.shape != (n_z, n_y, n_x):
+    if field.shape != (n_z + 1, n_y + 1, n_x + 1):
         logging.error(
             f"Field array shape {field.shape} does not match expected shape "
-            f"({n_z}, {n_y}, {n_x})."
+            f"({n_z + 1}, {n_y + 1}, {n_x + 1})."
         )
         return False
 
