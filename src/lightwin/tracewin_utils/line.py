@@ -8,7 +8,7 @@ from typing import Any
 class DatLine:
     """Hold a single line of the ``.dat`` file.
 
-    Attributes
+    Parameters
     ----------
     _original_line : str
         Line in the ``.dat`` given as a user-input.
@@ -26,9 +26,26 @@ class DatLine:
 
     """
 
-    def __init__(self, line: str, idx: int) -> None:
-        """Instantiate the object."""
+    def __init__(
+        self, line: str, idx: int, original_line: str | None = None
+    ) -> None:
+        """Instantiate the object.
+
+        Parameters
+        ----------
+        line : str
+            The corresponding line in the DAT file.
+        idx : int
+            The corresponding position in the DAT file.
+        original_line : str | None
+            The corresponding line in the DAT file. Should be provided only
+            when creating a fake element. CUrrently, this is used only for the
+            :class:`.SuperposeMap`. The default is None
+
+        """
         self.original_line = line
+        if original_line is not None:
+            self.original_line = original_line
         self.idx = idx
 
         self.personalized_name: str | None = None
