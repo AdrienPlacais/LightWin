@@ -18,7 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `FIELD_MAP 70` does not raise error (warning issued with `Envelope3D`: no transverse tracking).
+- `FIELD_MAP 7700` is handled for longitudinal tracking.
 - `SUPERPOSE_MAP` will be implemented for 1D maps (warning issued with `Envelope3D`: no transverse tracking).
+- Possible to export `FIELD_MAP` with `SET_SYNC_PHASE` in the DAT file.
 
 ### Changed
 
