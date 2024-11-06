@@ -10,6 +10,7 @@ import logging
 from collections.abc import Collection, Sequence
 
 from lightwin.core.commands.command import Command
+from lightwin.core.commands.set_sync_phase import SetSyncPhase
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
@@ -88,6 +89,7 @@ class SuperposeMap(Command):
 
         """
         instructions_to_merge = instructions[self.influenced]
+        self._apply_set_sync_phase(instructions, instructions_to_merge)
         total_length = self._total_length_m(instructions_to_merge)
 
         new_instructions = self._generate_new_instructions(
@@ -97,16 +99,13 @@ class SuperposeMap(Command):
         instructions[self.influenced] = new_instructions
         number_of_superposed = int(len(new_instructions) / 2)
 
-        elts_after_self = list(
+        elts_after_self: list[Element] = list(  # type: ignore
             filter(
                 lambda elt: isinstance(elt, Element),
-                # instructions[self.idx["dat_idx"] + 1 :],
                 instructions[new_instructions[-1].idx["dat_idx"] + 1 :],
             )
         )
         self._re_set_indexes(elts_after_self, number_of_superposed)
-
-        # instructions[self.influenced] = instructions_to_merge
         return instructions
 
     def _total_length_m(
@@ -222,6 +221,22 @@ class SuperposeMap(Command):
 
                 elt.idx["idx_in_lattice"] += number_of_elements_in_lattice
                 elt.idx["lattice"] -= 1
+
+    def _apply_set_sync_phase(
+        self,
+        instructions: list[Instruction],
+        instructions_to_merge: list[Instruction],
+    ) -> list[Instruction]:
+        """Apply the SET_SYNC_PHASE before the SUPERPOSE_MAP."""
+        for instruction in instructions_to_merge:
+            if not isinstance(set_sync_phase := instruction, SetSyncPhase):
+                continue
+            set_sync_phase.set_influenced_elements(instructions)
+            instructions = set_sync_phase.apply(instructions)
+        raise NotImplementedError(
+            "SET_SYNC_PHASE in SUPERPOSE_MAP not yet supported."
+        )
+        return instructions
 
 
 def _starting_positions(

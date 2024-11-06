@@ -58,7 +58,7 @@ class SetSyncPhase(Command):
         )
 
     def apply(
-        self, instructions: list[Instruction], **kwargs: float
+        self, instructions: Sequence[Instruction], **kwargs: float
     ) -> list[Instruction]:
         """Modify reference of cavity."""
         for cavity in instructions[self.influenced]:
@@ -70,7 +70,7 @@ class SetSyncPhase(Command):
             assert phi_s is not None
             settings.reference = "phi_s"
             settings.phi_ref = phi_s
-        return instructions
+        return list(instructions)
 
     def to_line(
         self,
