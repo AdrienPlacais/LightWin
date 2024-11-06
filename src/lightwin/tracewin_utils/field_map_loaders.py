@@ -149,7 +149,7 @@ def load_field_3d(
         Maximum y position.
     norm : float
         Field normalization factor.
-    field : numpy.ndarray
+    field_values : numpy.ndarray
         3D array holding field values. If electric, will be in :unit:`MV/m`.
 
     """
