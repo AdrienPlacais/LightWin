@@ -28,7 +28,7 @@ class DatLine:
 
     def __init__(self, line: str, idx: int) -> None:
         """Instantiate the object."""
-        self._original_line = line
+        self.original_line = line
         self.idx = idx
 
         self.personalized_name: str | None = None
