@@ -372,7 +372,9 @@ class TraceWin(BeamCalculator):
         self.path_cal = Path(
             accelerator.get("accelerator_path"), self.out_folder
         )
-        assert self.path_cal.is_dir()
+
+        if not self.path_cal.is_dir():
+            self.path_cal.mkdir()
 
         self._tracewin_command = None
 
