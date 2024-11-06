@@ -327,13 +327,9 @@ class ListOfElements(list):
         ------
         NotImplementedError
             If ``which_phase`` is different from ``"phi_0_abs"`` or
-            ``"phi_0_rel"``.
+            ``"phi_0_rel"`` or ``"phi_s"``.
 
         """
-        if which_phase == "phi_s":
-            raise NotImplementedError(
-                "Output with SET_SYNC_PHASE not implemented yet."
-            )
         if which_phase in ("as_in_settings", "as_in_original_dat"):
             raise NotImplementedError
         self.files["dat_file"] = dat_file

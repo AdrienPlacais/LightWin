@@ -287,15 +287,9 @@ class FieldMap(Element):
         """Give the phase to put in ``.dat`` line, with abs phase flag."""
         settings = self.cavity_settings
         match which_phase:
-            case "phi_0_abs" | "phi_0_rel":
+            case "phi_0_abs" | "phi_0_rel" | "phi_s":
                 phase = getattr(settings, which_phase)
                 abs_phase_flag = int(which_phase == "phi_0_abs")
-
-            case "phi_s":
-                raise NotImplementedError(
-                    "Output of phi_s (SET_SYNC_PHASE) in the .dat not "
-                    "implemented (yet)."
-                )
 
             case "as_in_settings":
                 assert (
