@@ -18,10 +18,10 @@ from lightwin.core.em_fields.field_helpers import (
 from lightwin.core.em_fields.types import Pos1D
 from lightwin.tracewin_utils.electromagnetic_fields import rescale
 from lightwin.tracewin_utils.field_map_loaders import (
-    field_3d,
     field_values_on_axis,
     get_number_of_cells,
     is_a_valid_3d_field,
+    load_field_3d,
 )
 
 
@@ -57,7 +57,7 @@ class Field7700(Field):
 
         """
         n_z, zmax, n_x, xmin, xmax, n_y, ymin, ymax, norm, field_values = (
-            field_3d(path)
+            load_field_3d(path)
         )
 
         assert is_a_valid_3d_field(

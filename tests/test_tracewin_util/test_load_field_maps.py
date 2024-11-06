@@ -5,7 +5,10 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from lightwin.tracewin_utils.field_map_loaders import field_1d, field_3d
+from lightwin.tracewin_utils.field_map_loaders import (
+    load_field_1d,
+    load_field_3d,
+)
 
 
 @pytest.fixture
@@ -70,7 +73,7 @@ def test_field_3d(sample_field_3d: Path) -> None:
         ]
     )
 
-    n_z, zmax, n_x, xmin, xmax, n_y, ymin, ymax, norm, field = field_3d(
+    n_z, zmax, n_x, xmin, xmax, n_y, ymin, ymax, norm, field = load_field_3d(
         sample_field_3d
     )
 
@@ -97,7 +100,7 @@ def test_field_1d(sample_field_1d_file: Path) -> None:
     expected_field = np.array([1.1, 1.2, 1.3])
     expected_n_cell = 1
 
-    n_z, zmax, norm, f_z, n_cell = field_1d(sample_field_1d_file)
+    n_z, zmax, norm, f_z, n_cell = load_field_1d(sample_field_1d_file)
     assert n_z == expected_nz
     assert zmax == expected_zmax
     assert norm == expected_norm

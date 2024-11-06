@@ -22,7 +22,7 @@ def warn_norm(path: Path, norm: float):
     )
 
 
-def field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
+def load_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
     """Load a 1D field.
 
     Parameters
@@ -117,7 +117,7 @@ def is_a_valid_1d_electric_field(
     return True
 
 
-def field_3d(
+def load_field_3d(
     path: Path,
 ) -> tuple[
     int, float, int, float, float, int, float, float, float, np.ndarray
@@ -274,4 +274,4 @@ def field_values_on_axis(
     return field_values[:, n_x0, n_y0]
 
 
-FIELD_MAP_LOADERS = {".edz": field_1d}  #:
+FIELD_MAP_LOADERS = {".edz": load_field_1d}  #:
