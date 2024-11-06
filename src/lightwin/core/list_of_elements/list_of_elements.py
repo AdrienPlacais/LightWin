@@ -326,11 +326,14 @@ class ListOfElements(list):
         Raises
         ------
         NotImplementedError
-            If ``which_phase`` is different from ``"phi_0_abs"`` or
-            ``"phi_0_rel"`` or ``"phi_s"``.
+            If ``which_phase`` is ``"as_in_original_dat"``.
+
+        .. todo::
+            There will be no SET_SYNC_PHASE if it was absent in the original
+            file (when which_phase is phi_s)
 
         """
-        if which_phase in ("as_in_settings", "as_in_original_dat"):
+        if which_phase in ("as_in_original_dat",):
             raise NotImplementedError
         self.files["dat_file"] = dat_file
         dat_filecontent = [

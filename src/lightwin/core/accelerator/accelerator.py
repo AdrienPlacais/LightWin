@@ -208,7 +208,7 @@ class Accelerator:
 
         logging.warning("Manually set which_phase")
         self.elts.store_settings_in_dat(
-            dat_file, which_phase="phi_0_rel", save=True
+            dat_file, which_phase="as_in_settings", save=True
         )
 
     def keep_simulation_output(
