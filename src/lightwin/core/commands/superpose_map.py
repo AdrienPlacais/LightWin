@@ -157,7 +157,11 @@ class SuperposeMap(Command):
                 new_instructions.append(instruction)
                 continue
 
-            dat_line = DatLine("SUPERPOSED_MAP_PLACE_HOLDER 0", dat_idx)
+            dat_line = DatLine(
+                "SUPERPOSED_MAP_PLACE_HOLDER 0",
+                dat_idx,
+                original_line=instruction.line.original_line,
+            )
             if isinstance(instruction, Element):
                 new_instructions.append(
                     SuperposedPlaceHolderElt(

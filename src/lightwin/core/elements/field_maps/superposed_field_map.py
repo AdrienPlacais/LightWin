@@ -10,7 +10,7 @@
 """
 
 import logging
-from collections.abc import Collection
+from collections.abc import Collection, Sequence
 from typing import Self, override
 
 from lightwin.core.commands.dummy_command import DummyCommand
@@ -87,7 +87,7 @@ class SuperposedFieldMap(Element):
     @classmethod
     def from_field_maps(
         cls,
-        field_maps_n_superpose: Collection[Instruction],
+        field_maps_n_superpose: Sequence[Instruction],
         dat_idx: int,
         total_length_m: float,
         starting_positions: Collection[float],
@@ -104,6 +104,9 @@ class SuperposedFieldMap(Element):
         args = cls._extract_args_from_field_maps(field_maps)
         cavities_settings, rf_fields, is_accelerating = args
 
+        original_line = field_maps_n_superpose[0].line.original_line
+        assert "SUPERPOSE_MAP" in original_line
+
         for rf_field, starting_position in zip(
             rf_fields, starting_positions, strict=True
         ):
@@ -117,6 +120,7 @@ class SuperposedFieldMap(Element):
         return cls.from_args(
             dat_idx=dat_idx,
             total_length_m=total_length_m,
+            original_line=original_line,
             cavities_settings=cavities_settings,
             rf_fields=rf_fields,
             is_accelerating=is_accelerating,
@@ -128,11 +132,16 @@ class SuperposedFieldMap(Element):
 
     @classmethod
     def from_args(
-        cls, dat_idx: int, total_length_m: float, *args, **kwargs
+        cls,
+        dat_idx: int,
+        total_length_m: float,
+        original_line: str,
+        *args,
+        **kwargs,
     ) -> Self:
         """Insantiate object from his properties."""
         line = cls._args_to_line(total_length_m)
-        dat_line = DatLine(line, dat_idx)
+        dat_line = DatLine(line, dat_idx, original_line=original_line)
         return cls(
             dat_line,
             dat_idx=dat_idx,
@@ -195,10 +204,9 @@ class SuperposedFieldMap(Element):
         """Raise an error."""
         raise NotImplementedError
 
-    def to_line(self, *args, **kwargs):
+    def to_line(self, *args, **kwargs) -> list[str]:
         """Convert the object back into a line in the ``.dat`` file."""
-        logging.warning("Calling the to_line for superpose")
-        return super().to_line(*args, **kwargs)
+        return self.line.original_line.split()
 
 
 class SuperposedPlaceHolderElt(DummyElement):
@@ -223,9 +231,17 @@ class SuperposedPlaceHolderElt(DummyElement):
             **kwargs,
         )
 
+    def to_line(self, *args, **kwargs) -> list[str]:
+        """Convert the object back into a line in the ``.dat`` file."""
+        return self.line.original_line.split()
+
 
 class SuperposedPlaceHolderCmd(DummyCommand):
     """Inserted in place of field maps and superpose map commands."""
+
+    def to_line(self, *args, **kwargs) -> list[str]:
+        """Convert the object back into a line in the ``.dat`` file."""
+        return self.line.original_line.split()
 
 
 def unpack_superposed(
