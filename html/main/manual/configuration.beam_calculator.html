@@ -121,31 +121,37 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>flag_cython</p></td>
+<tr class="row-even"><td><p>export_phase</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>The type of phases that should be exported in the final DAT file. Note that <code class="docutils literal notranslate"><span class="pre">'as_in_original_dat'</span></code> is not implemented yet, but <code class="docutils literal notranslate"><span class="pre">'as_in_settings'</span></code> should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.</p></td>
+<td><p>(‘phi_0_abs’, ‘phi_0_rel’, ‘phi_s’, ‘as_in_settings’, ‘as_in_original_dat’)</p></td>
+<td><p>❌</p></td>
+</tr>
+<tr class="row-odd"><td><p>flag_cython</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>If we should use the Cython implementation (faster).</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>flag_phi_abs</p></td>
+<tr class="row-even"><td><p>flag_phi_abs</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>If the field maps phases should be absolute (no implicit rephasing after a failure).</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>method</p></td>
+<tr class="row-odd"><td><p>method</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Integration method.</p></td>
 <td><p>(‘RK4’, ‘leapfrog’)</p></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>n_steps_per_cell</p></td>
+<tr class="row-even"><td><p>n_steps_per_cell</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Number of integrating steps per cavity cell. Recommended values are 40 for RK4 and 20 for leapfrog.</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>tool</p></td>
+<tr class="row-odd"><td><p>tool</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Name of the tool.</p></td>
 <td><p>(‘Envelope1D’, ‘envelope1d’, ‘Envelope_1D’, ‘envelope_1d’)</p></td>
@@ -171,31 +177,37 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>flag_cython</p></td>
+<tr class="row-even"><td><p>export_phase</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>The type of phases that should be exported in the final DAT file. Note that <code class="docutils literal notranslate"><span class="pre">'as_in_original_dat'</span></code> is not implemented yet, but <code class="docutils literal notranslate"><span class="pre">'as_in_settings'</span></code> should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.</p></td>
+<td><p>(‘phi_0_abs’, ‘phi_0_rel’, ‘phi_s’, ‘as_in_settings’, ‘as_in_original_dat’)</p></td>
+<td><p>❌</p></td>
+</tr>
+<tr class="row-odd"><td><p>flag_cython</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>Not implemented yet. If we should use the Cython implementation (faster).</p></td>
 <td><p>(False,)</p></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>flag_phi_abs</p></td>
+<tr class="row-even"><td><p>flag_phi_abs</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>If the field maps phases should be absolute (no implicit rephasing after a failure).</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>method</p></td>
+<tr class="row-odd"><td><p>method</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Integration method.</p></td>
 <td><p>(‘RK4’,)</p></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>n_steps_per_cell</p></td>
+<tr class="row-even"><td><p>n_steps_per_cell</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Number of integrating steps per cavity cell. Recommended value is 40.</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>tool</p></td>
+<tr class="row-odd"><td><p>tool</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Name of the tool.</p></td>
 <td><p>(‘Envelope3D’, ‘envelope3d’, ‘Envelope_3D’, ‘envelope_3d’)</p></td>
@@ -431,295 +443,301 @@
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>freq1</p></td>
+<tr class="row-odd"><td><p>export_phase</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>The type of phases that should be exported in the final DAT file. Note that <code class="docutils literal notranslate"><span class="pre">'as_in_original_dat'</span></code> is not implemented yet, but <code class="docutils literal notranslate"><span class="pre">'as_in_settings'</span></code> should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.</p></td>
+<td><p>(‘phi_0_abs’, ‘phi_0_rel’, ‘phi_s’, ‘as_in_settings’, ‘as_in_original_dat’)</p></td>
+<td><p>❌</p></td>
+</tr>
+<tr class="row-even"><td><p>freq1</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input beam frequency (MHz) of main beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>freq2</p></td>
+<tr class="row-odd"><td><p>freq2</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input beam frequency (MHz) of second beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>hide</p></td>
+<tr class="row-even"><td><p>hide</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>Hide the GUI, or cancel console output (no parameter).</p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p>input_dist_type</p></td>
+<tr class="row-odd"><td><p>input_dist_type</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Input distribution type from 1 to 5, see GUI menu</p></td>
 <td><p>range(1, 6)</p></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>long_dist_mask</p></td>
+<tr class="row-even"><td><p>long_dist_mask</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Mask of the longitudinal input distribution from 1 to 7, see GUI menu</p></td>
 <td><p>range(1, 8)</p></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>lost_e_limit</p></td>
+<tr class="row-odd"><td><p>lost_e_limit</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Particle is lost if |W-Ws| &gt; lost_e_limit</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>lost_p_limit</p></td>
+<tr class="row-even"><td><p>lost_p_limit</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Particle is lost if |Ф- Ф s| &gt; lost_p_limit</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>mass1</p></td>
+<tr class="row-odd"><td><p>mass1</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input beam mass (eV) of main beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>mass2</p></td>
+<tr class="row-even"><td><p>mass2</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input beam mass (eV) of second beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>nbr_part1</p></td>
+<tr class="row-odd"><td><p>nbr_part1</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Number of particle of main beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>nbr_part2</p></td>
+<tr class="row-even"><td><p>nbr_part2</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Number of particle of second beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>nbr_thread</p></td>
+<tr class="row-odd"><td><p>nbr_thread</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Set the max. number of core/thread used</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>partran</p></td>
+<tr class="row-even"><td><p>partran</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code> or <code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>To activate/deactivate partran tracking.</p></td>
 <td><p>(0, 1, True, False)</p></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>part_step</p></td>
+<tr class="row-odd"><td><p>part_step</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Partran calculation step per meter (per beta.lambda if &lt; 0)</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>picnic_2d</p></td>
+<tr class="row-even"><td><p>picnic_2d</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>Space-charge routine is defined as picnic2D</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>picnic_3d</p></td>
+<tr class="row-odd"><td><p>picnic_3d</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>Space-charge routine is defined as picnic3D</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>picnic_r_mesh</p></td>
+<tr class="row-even"><td><p>picnic_r_mesh</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>R mesh of picnic 2D</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>picnic_xy_mesh</p></td>
+<tr class="row-odd"><td><p>picnic_xy_mesh</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>X&amp;Y mesh of picnic 3D</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>picnic_z_mesh</p></td>
+<tr class="row-even"><td><p>picnic_z_mesh</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Z mesh of picnic 3D</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>picnir_z_mesh</p></td>
+<tr class="row-odd"><td><p>picnir_z_mesh</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Z mesh of picnir 2D</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>random_seed</p></td>
+<tr class="row-even"><td><p>random_seed</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Set the random seed</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>spreadw1</p></td>
+<tr class="row-odd"><td><p>spreadw1</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input spread energy for CW beam of main beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>spreadw2</p></td>
+<tr class="row-even"><td><p>spreadw2</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input spread energy for CW beam of second beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>synoptic_file</p></td>
+<tr class="row-odd"><td><p>synoptic_file</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></td>
 <td><p>Save the geometric layout at (entance (=1), middle (=2), exit (=3) of elements. (See “Synoptic” tools for file name).</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>tab_file</p></td>
+<tr class="row-even"><td><p>tab_file</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></td>
 <td><p>Save to file the data sheet at the end of calcul (by default in calculation directory).</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>toutatis</p></td>
+<tr class="row-odd"><td><p>toutatis</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code> or <code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>Force or avoid Toutatis simulation (1 / 0)</p></td>
 <td><p>(0, 1, True, False)</p></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>trans_dist_mask</p></td>
+<tr class="row-even"><td><p>trans_dist_mask</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Mask of the transverse input distribution from 1 to 7, see GUI menu</p></td>
 <td><p>range(1, 8)</p></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>upgrade</p></td>
+<tr class="row-odd"><td><p>upgrade</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>To update LightWin</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>use_dst_file</p></td>
+<tr class="row-even"><td><p>use_dst_file</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>dst file is used as input beam distribution</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>vfac</p></td>
+<tr class="row-odd"><td><p>vfac</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Change RFQ Ucav (ex : “vfac 0.5”, half reduce of Ucav)</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>x1</p></td>
+<tr class="row-even"><td><p>x1</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input X position of main beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>x2</p></td>
+<tr class="row-odd"><td><p>x2</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input X position of second beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>xp1</p></td>
+<tr class="row-even"><td><p>xp1</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input X angle of main beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>xp2</p></td>
+<tr class="row-odd"><td><p>xp2</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input X angle of second beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>y1</p></td>
+<tr class="row-even"><td><p>y1</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input Y position of main beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>y2</p></td>
+<tr class="row-odd"><td><p>y2</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input Y position of second beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>yp1</p></td>
+<tr class="row-even"><td><p>yp1</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input Y angle of main beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>yp2</p></td>
+<tr class="row-odd"><td><p>yp2</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input Y angle of second beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>z1</p></td>
+<tr class="row-even"><td><p>z1</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input Z position of main beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>z2</p></td>
+<tr class="row-odd"><td><p>z2</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input Z position of second beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>zp1</p></td>
+<tr class="row-even"><td><p>zp1</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input Z angle of main beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>zp2</p></td>
+<tr class="row-odd"><td><p>zp2</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p></td>
 <td><p>Input Z angle of second beam</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>executable</p></td>
+<tr class="row-even"><td><p>executable</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></td>
 <td><p>Direct path to the TraceWin executable. If given, will override the definition in the machine_config_file.</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>flag_phi_abs</p></td>
+<tr class="row-odd"><td><p>flag_phi_abs</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
 <td><p>If the field maps phases should be absolute (no implicit rephasing after a failure).</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>ini_path</p></td>
+<tr class="row-even"><td><p>ini_path</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></td>
 <td><p>Path to the <code class="docutils literal notranslate"><span class="pre">.ini</span></code> TraceWin file.</p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p>machine_config_file</p></td>
+<tr class="row-odd"><td><p>machine_config_file</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Path</span></code></p></td>
 <td><p>Path to a file holding the paths to TW executables</p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p>machine_name</p></td>
+<tr class="row-even"><td><p>machine_name</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Name of current machine. Must be a table name in <code class="docutils literal notranslate"><span class="pre">machine_config_file</span></code>. By default, do not provide it and let LightWin handle this part.</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>simulation_type</p></td>
+<tr class="row-odd"><td><p>simulation_type</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>A key in the machine_config.toml file</p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p>tool</p></td>
+<tr class="row-even"><td><p>tool</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Name of the tool.</p></td>
 <td><p>(‘TraceWin’, ‘tracewin’)</p></td>
@@ -771,7 +789,7 @@ This is mainly useful for defining a more precise – but more time-consuming �
       <dl>
          <dt>Tags</dt>
          <dd><a href="../../v0.7.0/manual/configuration.beam_calculator.html">v0.7.0</a></dd>
-         <dd><a href="../../v0.8.0b2/manual/configuration.beam_calculator.html">v0.8.0b2</a></dd>
+         <dd><a href="../../v0.8.0b3/manual/configuration.beam_calculator.html">v0.8.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

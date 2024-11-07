@@ -564,6 +564,27 @@ the <code class="docutils literal notranslate"><span class="pre">_pre_treat</spa
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">error_message=None,</span>
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">overrides_previously_defined=False,</span>
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">derived=False),</span>
+&#160;&#160;&#160; <span class="pre">KeyValConfSpec(key='export_phase',</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">types=(&lt;class</span> <span class="pre">'str'&gt;,),</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">description='The</span> <span class="pre">type</span> <span class="pre">of</span> <span class="pre">phases</span> <span class="pre">that</span> <span class="pre">should</span> <span class="pre">be</span> <span class="pre">exported</span> <span class="pre">in</span> <span class="pre">'</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">'the</span> <span class="pre">final</span> <span class="pre">DAT</span> <span class="pre">file.</span> <span class="pre">Note</span> <span class="pre">that</span> <span class="pre">'</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">&quot;``'as_in_original_dat'``</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">implemented</span> <span class="pre">&quot;</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">&quot;yet,</span> <span class="pre">but</span> <span class="pre">``'as_in_settings'``</span> <span class="pre">should</span> <span class="pre">behave</span> <span class="pre">&quot;</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">'the</span> <span class="pre">same</span> <span class="pre">way,</span> <span class="pre">provided</span> <span class="pre">that</span> <span class="pre">you</span> <span class="pre">alter</span> <span class="pre">no</span> <span class="pre">'</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">'FieldMap.CavitySettings.reference</span> <span class="pre">attribute.',</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">default_value='as_in_settings',</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">allowed_values=(</span>&#160;&#160; <span class="pre">'phi_0_abs',</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">'phi_0_rel',</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">'phi_s',</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">'as_in_settings',</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">'as_in_original_dat'),</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">is_mandatory=False,</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">is_a_path_that_must_exists=False,</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">action=None,</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">warning_message=None,</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">error_message=None,</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">overrides_previously_defined=False,</span>
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">derived=False),</span>
 &#160;&#160;&#160; <span class="pre">KeyValConfSpec(key='freq1',</span>
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">types=(&lt;class</span> <span class="pre">'float'&gt;,),</span>
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">description='Input</span> <span class="pre">beam</span> <span class="pre">frequency</span> <span class="pre">(MHz)</span> <span class="pre">of</span> <span class="pre">main</span> <span class="pre">beam',</span>
@@ -1249,7 +1270,7 @@ the <code class="docutils literal notranslate"><span class="pre">_pre_treat</spa
       <dl>
          <dt>Tags</dt>
          <dd><a href="../../v0.7.0/index.html">v0.7.0</a></dd>
-         <dd><a href="../../v0.8.0b2/lightwin/lightwin.beam_calculation.tracewin.specs.html">v0.8.0b2</a></dd>
+         <dd><a href="../../v0.8.0b3/lightwin/lightwin.beam_calculation.tracewin.specs.html">v0.8.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

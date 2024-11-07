@@ -105,7 +105,7 @@
 <li class="toctree-l1"><a class="reference internal" href="manual/usage.html">Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="manual/usage.general_structure.html">General structure of the code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manual/usage.breaking_and_fixing.html">Breaking and fixing a linac</a></li>
-<li class="toctree-l2"><a class="reference internal" href="manual/usage.compatibility_with_tracewin.html">Compatibility with TraceWin <code class="docutils literal notranslate"><span class="pre">.dat</span></code> files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual/usage.compatibility_with_tracewin.html">Compatibility with TraceWin DAT files</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
@@ -163,7 +163,6 @@
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.simulation_output_factory.html">simulation_output_factory module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.specs.html">specs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.transfer_matrices.html">transfer_matrices module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.transfer_matrices_c.html">transfer_matrices_c module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.transfer_matrix_factory.html">transfer_matrix_factory module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.beam_calculation.envelope_1d.util.html">util module</a></li>
 </ul>
@@ -623,11 +622,6 @@ at the end</p>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.accelerator.accelerator.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/accelerator/accelerator.py:docstring of lightwin.core.accelerator.accelerator, line 9.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
-<p>Should I reset the sync particle entry phase?</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.accelerator.accelerator.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/accelerator/accelerator.py:docstring of lightwin.core.accelerator.accelerator.Accelerator.keep_settings, line 3.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
 <p>Remove tracewin command from BeamParameters</p>
 </div>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.core.beam_parameters.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/core/beam_parameters/__init__.py:docstring of lightwin.core.beam_parameters, line 6.)</p>
@@ -889,15 +883,9 @@ compute_constraints</p>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.failures.fault_scenario.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/failures/fault_scenario.py:docstring of lightwin.failures.fault_scenario.FaultScenario.__init__, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
-<p>At this step I do not save the <code class="docutils literal notranslate"><span class="pre">.dat</span></code> anymore. Was it useful for
-something?</p>
-</div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.failures.fault_scenario.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/failures/fault_scenario.py:docstring of lightwin.failures.fault_scenario.FaultScenario._break_cavities, line 3.)</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">Todo</p>
 <p>make this more readable</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.failures.fault_scenario.html#id3"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/failures/fault_scenario.py:docstring of lightwin.failures.fault_scenario.FaultScenario.fix_all, line 3.)</p>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.failures.fault_scenario.html#id2"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/failures/fault_scenario.py:docstring of lightwin.failures.fault_scenario.FaultScenario.fix_all, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>I should create a <a class="reference internal" href="lightwin/lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings" title="lightwin.failures.set_of_cavity_settings.SetOfCavitySettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">SetOfCavitySettings</span></code></a> with
@@ -1099,33 +1087,33 @@ accelerates or not (ex when quadrupole defined by a field map)</p>
 <p class="admonition-title">Todo</p>
 <p>A Jupyter Notebook would be better to show with examples.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/get_method.html#id1"><em>original entry</em></a> is located in /tmp/tmpzqqbnlbu/26644c59600e01dae166436f6d59e876f88683a9/docs/manual/get_method.rst, line 6.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/get_method.html#id1"><em>original entry</em></a> is located in /tmp/tmp9fj3s5p0/6ded0a301d8c90d561bcee0fad85a8595e851275/docs/manual/get_method.rst, line 6.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Consider providing more detailed instructions for setting the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.
 For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online for additional guidance.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.python.html#id1"><em>original entry</em></a> is located in /tmp/tmpzqqbnlbu/26644c59600e01dae166436f6d59e876f88683a9/docs/manual/installation.python.rst, line 43.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/installation.python.html#id1"><em>original entry</em></a> is located in /tmp/tmp9fj3s5p0/6ded0a301d8c90d561bcee0fad85a8595e851275/docs/manual/installation.python.rst, line 43.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Allow for an easy way to skip Cython compilation.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.troubleshooting.html#id2"><em>original entry</em></a> is located in /tmp/tmpzqqbnlbu/26644c59600e01dae166436f6d59e876f88683a9/docs/manual/installation.troubleshooting.rst, line 25.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/installation.troubleshooting.html#id2"><em>original entry</em></a> is located in /tmp/tmp9fj3s5p0/6ded0a301d8c90d561bcee0fad85a8595e851275/docs/manual/installation.troubleshooting.rst, line 25.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Consistency between font size of normal text and math text. Not aesthetic when I have text and units side to side.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id1"><em>original entry</em></a> is located in /tmp/tmpzqqbnlbu/26644c59600e01dae166436f6d59e876f88683a9/docs/manual/units.rst, line 8.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id1"><em>original entry</em></a> is located in /tmp/tmp9fj3s5p0/6ded0a301d8c90d561bcee0fad85a8595e851275/docs/manual/units.rst, line 8.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>General units: MeV etc</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id2"><em>original entry</em></a> is located in /tmp/tmpzqqbnlbu/26644c59600e01dae166436f6d59e876f88683a9/docs/manual/units.rst, line 11.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id2"><em>original entry</em></a> is located in /tmp/tmp9fj3s5p0/6ded0a301d8c90d561bcee0fad85a8595e851275/docs/manual/units.rst, line 11.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Ease re-usage of old simulations. Very easy to implement, just use the <code class="docutils literal notranslate"><span class="pre">recompute</span></code> flag, override the <code class="docutils literal notranslate"><span class="pre">run_with_this</span></code> method, and user must provide a <code class="docutils literal notranslate"><span class="pre">results</span></code> directory.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/usage.html#id1"><em>original entry</em></a> is located in /tmp/tmpzqqbnlbu/26644c59600e01dae166436f6d59e876f88683a9/docs/manual/usage.rst, line 11.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/usage.html#id1"><em>original entry</em></a> is located in /tmp/tmp9fj3s5p0/6ded0a301d8c90d561bcee0fad85a8595e851275/docs/manual/usage.rst, line 11.)</p>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
@@ -1171,7 +1159,7 @@ For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online
       <dl>
          <dt>Tags</dt>
          <dd><a href="../v0.7.0/index.html">v0.7.0</a></dd>
-         <dd><a href="../v0.8.0b2/index.html">v0.8.0b2</a></dd>
+         <dd><a href="../v0.8.0b3/index.html">v0.8.0b3</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>
