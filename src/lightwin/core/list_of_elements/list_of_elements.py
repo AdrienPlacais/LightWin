@@ -24,7 +24,7 @@ from lightwin.core.beam_parameters.initial_beam_parameters import (
     InitialBeamParameters,
 )
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.cavity_settings import REFERENCE_T
+from lightwin.core.elements.field_maps.cavity_settings import EXPORT_PHASES_T
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.instruction import Instruction
 from lightwin.core.list_of_elements.helper import (
@@ -267,20 +267,23 @@ class ListOfElements(list):
     def store_settings_in_dat(
         self,
         dat_file: Path,
-        which_phase: (
-            REFERENCE_T | Literal["as_in_settings", "as_in_original_dat"]
-        ) = "phi_0_abs",
+        exported_phase: EXPORT_PHASES_T,
         save: bool = True,
     ) -> None:
-        r"""Update the ``dat`` file, save it if asked.
+        r"""Update the DAT file, save it if asked.
+
+        This method is called by the :class:`.FaultScenario` ``fix_all``
+        method several times:
+            - Once per :class:`.Fault` (only the compensation zone is saved).
+            - When all the :class:`.Fault` were dealt with.
+        It is also called by :class:`.Accelerator` ``keep_settings`` method.
 
         Parameters
         ----------
         dat_file : pathlib.Path
             Where the output ``.dat`` should be saved.
-        which_phase : Literal['phi_0_abs', 'phi_0_rel', 'phi_s', \
-                'as_in_settings', 'as_in_original_dat']
-            Which phase should be put in the output ``.dat``.
+        exported_phase : EXPORT_PHASES_T
+            Which phase should be put in the output DAT file.
         save : bool, optional
             If the output file should be created. The default is True.
 
@@ -297,11 +300,11 @@ class ListOfElements(list):
             If ``which_phase`` is ``"as_in_original_dat"``.
 
         """
-        if which_phase in ("as_in_original_dat",):
+        if exported_phase in ("as_in_original_dat",):
             raise NotImplementedError
         self.files["dat_file"] = dat_file
         dat_filecontent = [
-            instruction.to_line(which_phase=which_phase, inplace=False)
+            instruction.to_line(which_phase=exported_phase, inplace=False)
             for instruction in self.files["elts_n_cmds"]
         ]
         if save:

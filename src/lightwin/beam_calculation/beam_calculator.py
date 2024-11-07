@@ -28,7 +28,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.accelerator.accelerator import Accelerator
-from lightwin.core.elements.field_maps.cavity_settings import REFERENCE_T
+from lightwin.core.elements.field_maps.cavity_settings import REFERENCE_PHASES
 from lightwin.core.elements.field_maps.cavity_settings_factory import (
     CavitySettingsFactory,
 )
@@ -220,7 +220,7 @@ class BeamCalculator(ABC):
         return self.simulation_output_factory.run(*args, **kwargs)
 
     @property
-    def reference_phase(self) -> REFERENCE_T:
+    def reference_phase(self) -> REFERENCE_PHASES:
         """Give the reference phase.
 
         .. todo::
@@ -285,7 +285,7 @@ class BeamCalculator(ABC):
         if keep_settings:
             accelerator.keep_simulation_output(simulation_output, self.id)
             accelerator.keep_settings(
-                simulation_output, output_phase=self.reference_phase
+                simulation_output, exported_phase=self.reference_phase
             )
 
         end_time = time.monotonic()

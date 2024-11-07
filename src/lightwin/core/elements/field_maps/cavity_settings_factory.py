@@ -6,7 +6,7 @@ from collections.abc import Sequence
 import numpy as np
 
 from lightwin.core.elements.field_maps.cavity_settings import (
-    REFERENCE_T,
+    REFERENCE_PHASES,
     CavitySettings,
 )
 from lightwin.tracewin_utils.line import DatLine
@@ -81,7 +81,7 @@ class CavitySettingsFactory:
         self,
         absolute_phase_flag: bool,
         set_sync_phase: bool,
-    ) -> REFERENCE_T:
+    ) -> REFERENCE_PHASES:
         """Determine which phase will be the reference one."""
         if set_sync_phase:
             return "phi_s"

@@ -34,8 +34,13 @@ from lightwin.util.phases import (
     phi_rf_to_phi_bunch,
 )
 
-REFERENCE_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
-ALLOWED_REFERENCES = ("phi_0_abs", "phi_0_rel", "phi_s")  #:
+REFERENCE_PHASES_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
+REFERENCE_PHASES = ("phi_0_abs", "phi_0_rel", "phi_s")  #:
+
+EXPORT_PHASES_T = (
+    REFERENCE_PHASES_T | Literal["as_in_settings", "as_in_original_dat"]
+)
+
 # warning: doublon with field_map.IMPLEMENTED_STATUS
 STATUS_T = Literal[
     "nominal",
@@ -80,7 +85,7 @@ class CavitySettings:
         self,
         k_e: float,
         phi: float,
-        reference: REFERENCE_T,
+        reference: REFERENCE_PHASES,
         status: STATUS_T,
         freq_bunch_mhz: float,
         freq_cavity_mhz: float | None = None,
@@ -125,7 +130,7 @@ class CavitySettings:
 
         """
         self.k_e = k_e
-        self._reference: REFERENCE_T
+        self._reference: REFERENCE_PHASES
         self.reference = reference
         self.phi_ref = phi
 
@@ -199,7 +204,7 @@ class CavitySettings:
     def from_other_cavity_settings(
         cls,
         other: Self,
-        reference: REFERENCE_T | None = None,
+        reference: REFERENCE_PHASES | None = None,
     ) -> Self:
         """Create settings with same settings as provided."""
         if reference is None:
@@ -226,7 +231,7 @@ class CavitySettings:
         k_e: float,
         phi: float,
         status: STATUS_T,
-        reference: REFERENCE_T | None = None,
+        reference: REFERENCE_PHASES | None = None,
     ) -> Self:
         """Create settings based on ``base`` with different ``k_e``, ``phi_0``.
 
@@ -355,7 +360,7 @@ class CavitySettings:
     # Reference
     # =============================================================================
     @property
-    def reference(self) -> REFERENCE_T:
+    def reference(self) -> REFERENCE_PHASES:
         """Say what is the reference phase.
 
         .. list-table:: Equivalents of ``reference`` in TraceWin's \
@@ -376,9 +381,9 @@ class CavitySettings:
         return self._reference
 
     @reference.setter
-    def reference(self, value: REFERENCE_T) -> None:
+    def reference(self, value: REFERENCE_PHASES) -> None:
         """Set the value of reference, check that it is valid."""
-        assert value in ALLOWED_REFERENCES
+        assert value in REFERENCE_PHASES
         self._reference = value
 
     @property
@@ -405,7 +410,7 @@ class CavitySettings:
 
     def _delete_non_reference_phases(self) -> None:
         """Reset the phases that are not the reference to None."""
-        for phase in ALLOWED_REFERENCES:
+        for phase in REFERENCE_PHASES:
             if phase == self.reference:
                 continue
             delattr(self, phase)
