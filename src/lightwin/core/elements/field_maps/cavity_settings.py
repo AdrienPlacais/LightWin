@@ -467,15 +467,34 @@ class CavitySettings:
         if self._phi_0_abs is not None:
             return self._phi_0_abs
 
-        if not hasattr(self, "_phi_rf"):
-            return None
-
         if self._phi_0_rel is not None:
+            if not hasattr(self, "phi_rf"):
+                logging.error(
+                    f"{self = }: cannot compute phi_0_abs from phi_0_rel if "
+                    "phi_rf is not defined. Returning None..."
+                )
+                return None
             self.phi_0_abs = phi_0_rel_to_abs(self._phi_0_rel, self._phi_rf)
             return self._phi_0_abs
 
-        logging.error("The phase was not initialized. Returning None...")
-        return None
+        if not hasattr(self, "_phi_s"):
+            logging.error(
+                f"{self = }: phi_0_abs, phi_0_rel, phi_s are all uninitialized"
+                ". Returning None..."
+            )
+            return None
+
+        phi_s_to_phi_0_abs = getattr(self, "phi_s_to_phi_0_abs", None)
+        if phi_s_to_phi_0_abs is None:
+            logging.error(
+                f"{self = }: you must set a function to compute phi_0_abs from"
+                " phi_s with CavitySettings.set_cavity_parameters_methods"
+                " method."
+            )
+            return None
+
+        self.phi_0_abs = phi_s_to_phi_0_abs(self._phi_s)
+        return self._phi_0_abs
 
     @phi_0_abs.deleter
     def phi_0_abs(self) -> None:
