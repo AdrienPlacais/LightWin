@@ -274,15 +274,18 @@ class ListOfElements(list):
 
         This method is called by the :class:`.FaultScenario` ``fix_all``
         method several times:
-            - Once per :class:`.Fault` (only the compensation zone is saved).
-            - When all the :class:`.Fault` were dealt with.
+
+        * Once per :class:`.Fault` (only the compensation zone is saved).
+        * When all the :class:`.Fault` were dealt with.
+
         It is also called by :class:`.Accelerator` ``keep_settings`` method.
 
         Parameters
         ----------
         dat_file : pathlib.Path
             Where the output ``.dat`` should be saved.
-        exported_phase : EXPORT_PHASES_T
+        export_phase : Literal["phi_0_abs", "phi_0_rel", "phi_s",
+                "as_in_settings", "as_in_original_dat"], optional
             Which phase should be put in the output DAT file.
         save : bool, optional
             If the output file should be created. The default is True.

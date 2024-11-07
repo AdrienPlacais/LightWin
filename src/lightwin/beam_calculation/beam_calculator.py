@@ -73,7 +73,8 @@ class BeamCalculator(ABC):
             default is False.
         beam_kwargs : dict[str, Any]
             The config dictionary holding all the initial beam properties.
-        export_phase : EXPORT_PHASES_T, optional
+        export_phase : Literal["phi_0_abs", "phi_0_rel", "phi_s",
+                "as_in_settings", "as_in_original_dat"], optional
             The type of phase you want to export for your ``FIELD_MAP``. The
             default is ``"as_in_settings"``, which should be the same phases
             as in the original DAT file.
