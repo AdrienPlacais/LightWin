@@ -621,31 +621,3 @@ class DummyEnvelope1DParameters(ElementEnvelope1DParameters):
             transf_mat_function=transfer_matrices.z_dummy,
             **kwargs,
         )
-
-
-def _add_cavities_phases(
-    solver_id: str,
-    w_kin_in: float,
-    cavities_settings: Collection[CavitySettings],
-    rf_parameters_as_dict: dict[
-        str, list[Callable] | int | float | list[float]
-    ],
-) -> None:
-    r"""Set reference phase and function to compute :math:`\phi_s`."""
-    assert isinstance(rf_parameters_as_dict["phi_0_rels"], list)
-    for cavity_settings in cavities_settings:
-        if cavity_settings.reference == "phi_s":
-            cavity_settings.set_cavity_parameters_arguments(
-                solver_id, w_kin_in, **rf_parameters_as_dict
-            )
-            phi_0_rel = cavity_settings.phi_0_rel
-            assert phi_0_rel is not None
-            rf_parameters_as_dict["phi_0_rels"].append(phi_0_rel)
-            return
-
-        phi_0_rel = cavity_settings.phi_0_rel
-        assert phi_0_rel is not None
-        rf_parameters_as_dict["phi_0_rels"].append(phi_0_rel)
-        cavity_settings.set_cavity_parameters_arguments(
-            solver_id, w_kin_in, **rf_parameters_as_dict
-        )
