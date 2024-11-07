@@ -165,6 +165,7 @@ class FieldMapCyEnvelope1DParameters(
             "section_idx": rf_field.section_idx,
         }
         match cavity_settings.reference, phi_0_rel:
+
             case "phi_s", None:  # Prepare fit
                 cavity_settings.set_cavity_parameters_arguments(
                     self.solver_id,
@@ -174,16 +175,20 @@ class FieldMapCyEnvelope1DParameters(
                 # calls phi_0_rel and triggers phi_0_rel calculation (case just below)
                 phi_0_rel = _get_phi_0_rel(cavity_settings)
                 rf_kwargs["phi_0_rel"] = phi_0_rel
+
             case "phi_s", _:  # Fitting phi_s
                 rf_kwargs["phi_0_rel"] = phi_0_rel
+
             case _, None:  # Normal run
                 phi_0_rel = _get_phi_0_rel(cavity_settings)
                 rf_kwargs["phi_0_rel"] = phi_0_rel
                 cavity_settings.set_cavity_parameters_arguments(
                     self.solver_id, w_kin, **rf_kwargs
                 )
+
             case _, _:
                 raise ValueError
+
         return self._beam_kwargs | rf_kwargs | geometry_kwargs
 
 
