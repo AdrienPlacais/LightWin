@@ -349,7 +349,7 @@ def _proper_type(
     )
     try:
         value = my_type(value)
-        logging.info(f"Succesful type conversion: {value = }")
+        logging.info(f"Successful type conversion: {value = }")
         return value
 
     except ValueError:
