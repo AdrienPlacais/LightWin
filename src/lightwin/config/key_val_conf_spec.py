@@ -99,7 +99,10 @@ class KeyValConfSpec:
         """Check that the value has the proper typing."""
         if isinstance(toml_value, self.types):
             return True
-        logging.error(f"{toml_value = } type not in {self.types = }")
+        logging.warning(
+            f"Type error in {self.key}. {toml_value = } type not in "
+            f"{self.types = }"
+        )
         return False
 
     def is_valid_value(self, toml_value: Any, **kwargs) -> bool:
