@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dat_files module &mdash; LightWin  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="electromagnetic_fields module" href="lightwin.tracewin_utils.electromagnetic_fields.html" />
+    <link rel="prev" title="tracewin_utils package" href="lightwin.tracewin_utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LightWin
+          </a>
+              <div class="version">
+                0.8.0b2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">dat_files module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.electromagnetic_fields.html">electromagnetic_fields module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.field_map_loaders.html">field_map_loaders module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.interface.html">interface module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.line.html">line module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.tracewin_utils.load.html">load module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LightWin</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+      <li class="breadcrumb-item active">dat_files module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/lightwin/lightwin.tracewin_utils.dat_files.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="module-lightwin.tracewin_utils.dat_files">
+<span id="dat-files-module"></span><h1>dat_files module<a class="headerlink" href="#module-lightwin.tracewin_utils.dat_files" title="Link to this heading"></a></h1>
+<p>Define functions to load, modify and create <code class="docutils literal notranslate"><span class="pre">.dat</span></code> structure files.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Insert line skip at each section change in the output.dat</p>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.dat_files.dat_filecontent_from_file">
+<span class="sig-name descname"><span class="pre">dat_filecontent_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dat_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'comments'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'all'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'none'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.13)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instructions_to_insert</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Collection" title="(in Python v3.13)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction" title="lightwin.core.instruction.Instruction"><span class="pre">Instruction</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.dat_files.dat_filecontent_from_file" title="Link to this definition"></a></dt>
+<dd><p>Load the dat file and convert it into a list of lines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dat_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>pathlib.Path</em></a>) – Filepath to the <code class="docutils literal notranslate"><span class="pre">.dat</span></code> file, as understood by TraceWin.</p></li>
+<li><p><strong>keep</strong> (<em>Literal</em><em>[</em><em>&quot;none&quot;</em><em>, </em><em>&quot;comments&quot;</em><em>, </em><em>&quot;all&quot;</em><em>]</em><em>, </em><em>optional</em>) – To determine which un-necessary lines in the dat file should be kept.
+The default is <code class="docutils literal notranslate"><span class="pre">'none'</span></code>.</p></li>
+<li><p><strong>filter_func</strong> (<em>Callable</em>) – You can provide your own filters here. Takes precedence over <code class="docutils literal notranslate"><span class="pre">keep</span></code>.</p></li>
+<li><p><strong>instructions_to_insert</strong> (<em>Collection</em><em>[</em><a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction" title="lightwin.core.instruction.Instruction"><em>Instruction</em></a><em> | </em><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><em>DatLine</em></a><em>]</em><em>, </em><em>optional</em>) – Some elements or commands that are not present in the <code class="docutils literal notranslate"><span class="pre">.dat</span></code> file but
+that you want to add. The default is an empty tuple.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>dat_filecontent</strong> – List containing all the lines of dat_path.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>[<a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine">DatLine</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.dat_files._filter_lines">
+<span class="sig-name descname"><span class="pre">_filter_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dat_filecontent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.13)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'none'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'comments'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'all'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'none'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.13)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.dat_files._filter_lines" title="Link to this definition"></a></dt>
+<dd><p>Remove some <a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatLine</span></code></a> from <code class="docutils literal notranslate"><span class="pre">dat_filecontent</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dat_filecontent</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><em>DatLine</em></a><em>]</em>) – Content loaded from the <code class="docutils literal notranslate"><span class="pre">.dat</span></code> file.</p></li>
+<li><p><strong>keep</strong> (<em>Literal</em><em>[</em><em>&quot;none&quot;</em><em>, </em><em>&quot;comments&quot;</em><em>, </em><em>&quot;all&quot;</em><em>]</em><em>, </em><em>optional</em>) – To determine which un-necessary lines in the dat file should be kept.
+The default is <code class="docutils literal notranslate"><span class="pre">'none'</span></code>.</p></li>
+<li><p><strong>filter_func</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><em>DatLine</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em><em>, </em><em>optional</em>) – You can provide your own filters here. Takes precedence over <code class="docutils literal notranslate"><span class="pre">keep</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Content of the <code class="docutils literal notranslate"><span class="pre">.dat</span></code> file without undesirable content.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>[<a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine">DatLine</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.dat_files._insert_instructions">
+<span class="sig-name descname"><span class="pre">_insert_instructions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dat_filecontent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instructions_to_insert</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Collection" title="(in Python v3.13)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction" title="lightwin.core.instruction.Instruction"><span class="pre">Instruction</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lightwin.tracewin_utils.dat_files._insert_instructions" title="Link to this definition"></a></dt>
+<dd><p>Insert the desired instructions in the <code class="docutils literal notranslate"><span class="pre">dat_filecontent</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.dat_files.dat_filecontent_from_smaller_list_of_elements">
+<span class="sig-name descname"><span class="pre">dat_filecontent_from_smaller_list_of_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_instructions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.13)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction" title="lightwin.core.instruction.Instruction"><span class="pre">Instruction</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Collection" title="(in Python v3.13)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.elements.element.html#lightwin.core.elements.element.Element" title="lightwin.core.elements.element.Element"><span class="pre">Element</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction" title="lightwin.core.instruction.Instruction"><span class="pre">Instruction</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#lightwin.tracewin_utils.dat_files.dat_filecontent_from_smaller_list_of_elements" title="Link to this definition"></a></dt>
+<dd><p>Create a <code class="docutils literal notranslate"><span class="pre">.dat</span></code> with only elements of <code class="docutils literal notranslate"><span class="pre">elts</span></code> (and concerned commands).</p>
+<p>Properties of the FIELD_MAP, i.e. amplitude and phase, remain untouched.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.dat_files._is_needed_element">
+<span class="sig-name descname"><span class="pre">_is_needed_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instruction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction" title="lightwin.core.instruction.Instruction"><span class="pre">Instruction</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexes_to_keep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Container" title="(in Python v3.13)"><span class="pre">Container</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#lightwin.tracewin_utils.dat_files._is_needed_element" title="Link to this definition"></a></dt>
+<dd><p>Tell if the instruction is an element that we must keep.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.dat_files._is_useful_command">
+<span class="sig-name descname"><span class="pre">_is_useful_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instruction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="lightwin.core.instruction.html#lightwin.core.instruction.Instruction" title="lightwin.core.instruction.Instruction"><span class="pre">Instruction</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexes_to_keep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#lightwin.tracewin_utils.dat_files._is_useful_command" title="Link to this definition"></a></dt>
+<dd><p>Tell if the current command has an influence on our elements.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lightwin.tracewin_utils.dat_files.export_dat_filecontent">
+<span class="sig-name descname"><span class="pre">export_dat_filecontent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dat_filecontent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Collection" title="(in Python v3.13)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Collection" title="(in Python v3.13)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Collection" title="(in Python v3.13)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine" title="lightwin.tracewin_utils.line.DatLine"><span class="pre">DatLine</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dat_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#lightwin.tracewin_utils.dat_files.export_dat_filecontent" title="Link to this definition"></a></dt>
+<dd><p>Save the content of the updated dat to a <code class="docutils literal notranslate"><span class="pre">.dat</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dat_filecontent</strong> (<em>Collection</em><em>[</em><em>Collection</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>]</em><em>]</em>) – Content of the <code class="docutils literal notranslate"><span class="pre">.dat</span></code>, line per line, word per word.</p></li>
+<li><p><strong>dat_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><em>pathlib.Path</em></a>) – Where to save the <code class="docutils literal notranslate"><span class="pre">.dat</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.tracewin_utils.html" class="btn btn-neutral float-left" title="tracewin_utils package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.tracewin_utils.electromagnetic_fields.html" class="btn btn-neutral float-right" title="electromagnetic_fields module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+   <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Other Versions</span>
+      v: main
+      <span class="fa fa-caret-down"></span>
+   </span>
+   <div class="rst-other-versions">
+      <dl>
+         <dt>Tags</dt>
+         <dd><a href="../../v0.7.0/lightwin/lightwin.tracewin_utils.dat_files.html">v0.7.0</a></dd>
+         <dd><a href="../../v0.8.0b2/lightwin/lightwin.tracewin_utils.dat_files.html">v0.8.0b2</a></dd>
+      </dl>
+      <dl>
+         <dt>Branches</dt>
+         <dd><a href="lightwin.tracewin_utils.dat_files.html">main</a></dd>
+      </dl>
+   </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

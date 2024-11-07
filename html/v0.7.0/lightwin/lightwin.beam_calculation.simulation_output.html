@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>simulation_output package &mdash; LightWin  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="factory module" href="lightwin.beam_calculation.simulation_output.factory.html" />
+    <link rel="prev" title="factory module" href="lightwin.beam_calculation.parameters.factory.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LightWin
+          </a>
+              <div class="version">
+                0.8.0b2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_1d.html">envelope_1d package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.envelope_3d.html">envelope_3d package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.integrators.html">integrators package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.parameters.html">parameters package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">simulation_output package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html">factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html">simulation_output module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.tracewin.html">tracewin package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.beam_calculator.html">beam_calculator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.factory.html">factory module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LightWin</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+      <li class="breadcrumb-item active">simulation_output package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/lightwin/lightwin.beam_calculation.simulation_output.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="module-lightwin.beam_calculation.simulation_output">
+<span id="simulation-output-package"></span><h1>simulation_output package<a class="headerlink" href="#module-lightwin.beam_calculation.simulation_output" title="Link to this heading"></a></h1>
+<p>This subpacakge holds a class to store outputs of beam calculators.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html">factory module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactory</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory._is_3d"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactory._is_3d</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory._is_multipart"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactory._is_multipart</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory._solver_id"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactory._solver_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory._beam_kwargs"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactory._beam_kwargs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory.__post_init__"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactory.__post_init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory._transfer_matrix_factory_class"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactory._transfer_matrix_factory_class</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory._beam_parameters_factory_class"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactory._beam_parameters_factory_class</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory.run"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactory.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory._generate_element_to_index_func"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactory._generate_element_to_index_func()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory.__init__"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactory.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory.SimulationOutputFactory._abc_impl"><code class="docutils literal notranslate"><span class="pre">SimulationOutputFactory._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory._element_to_index"><code class="docutils literal notranslate"><span class="pre">_element_to_index()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html">simulation_output module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput"><code class="docutils literal notranslate"><span class="pre">SimulationOutput</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.out_folder"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.out_folder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.is_multiparticle"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.is_multiparticle</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.is_3d"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.is_3d</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.synch_trajectory"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.synch_trajectory</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.cav_params"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.cav_params</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.beam_parameters"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.beam_parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.element_to_index"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.element_to_index</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.set_of_cavity_settings"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.set_of_cavity_settings</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.transfer_matrix"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.transfer_matrix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.z_abs"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.z_abs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.in_tw_fashion"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.in_tw_fashion</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.r_zz_elt"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.r_zz_elt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.__post_init__"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.__post_init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.__str__"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.__str__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.beam_calculator_information"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.beam_calculator_information</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.has"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.has()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.get"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.compute_complementary_data"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.compute_complementary_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.pickle"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.pickle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.from_pickle"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.from_pickle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.__init__"><code class="docutils literal notranslate"><span class="pre">SimulationOutput.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output._to_deg"><code class="docutils literal notranslate"><span class="pre">_to_deg()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.beam_calculation.parameters.factory.html" class="btn btn-neutral float-left" title="factory module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.beam_calculation.simulation_output.factory.html" class="btn btn-neutral float-right" title="factory module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+   <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Other Versions</span>
+      v: v0.7.0
+      <span class="fa fa-caret-down"></span>
+   </span>
+   <div class="rst-other-versions">
+      <dl>
+         <dt>Tags</dt>
+         <dd><a href="lightwin.beam_calculation.simulation_output.html">v0.7.0</a></dd>
+         <dd><a href="../../v0.8.0b2/lightwin/lightwin.beam_calculation.simulation_output.html">v0.8.0b2</a></dd>
+      </dl>
+      <dl>
+         <dt>Branches</dt>
+         <dd><a href="../../main/lightwin/lightwin.beam_calculation.simulation_output.html">main</a></dd>
+      </dl>
+   </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

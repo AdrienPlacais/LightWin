@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>commands package &mdash; LightWin  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="adjust module" href="lightwin.core.commands.adjust.html" />
+    <link rel="prev" title="initial_beam_parameters module" href="lightwin.core.beam_parameters.initial_beam_parameters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LightWin
+          </a>
+              <div class="version">
+                0.8.0b2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="lightwin.core.html">core package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.accelerator.html">accelerator package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.beam_parameters.html">beam_parameters package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">commands package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.adjust.html">adjust module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.command.html">command module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.dummy_command.html">dummy_command module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.end.html">end module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.error.html">error module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.factory.html">factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.field_map_path.html">field_map_path module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.freq.html">freq module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.helper.html">helper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.lattice.html">lattice module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.marker.html">marker module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html">repeat_ele module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.set_adv.html">set_adv module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html">set_sync_phase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.shift.html">shift module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.steerer.html">steerer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.core.commands.superpose_map.html">superpose_map module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.elements.html">elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.list_of_elements.html">list_of_elements package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.transfer_matrix.html">transfer_matrix package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.electric_field.html">electric_field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instruction.html">instruction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.instructions_factory.html">instructions_factory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.particle.html">particle module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LightWin</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+          <li class="breadcrumb-item"><a href="lightwin.core.html">core package</a></li>
+      <li class="breadcrumb-item active">commands package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/lightwin/lightwin.core.commands.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="module-lightwin.core.commands">
+<span id="commands-package"></span><h1>commands package<a class="headerlink" href="#module-lightwin.core.commands" title="Link to this heading"></a></h1>
+<p>In this package we define the different commands (TraceWin syntax).</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.adjust.html">adjust module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.adjust.html#lightwin.core.commands.adjust.Adjust"><code class="docutils literal notranslate"><span class="pre">Adjust</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.adjust.html#lightwin.core.commands.adjust.Adjust.is_implemented"><code class="docutils literal notranslate"><span class="pre">Adjust.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.adjust.html#lightwin.core.commands.adjust.Adjust.n_attributes"><code class="docutils literal notranslate"><span class="pre">Adjust.n_attributes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.adjust.html#lightwin.core.commands.adjust.Adjust.__init__"><code class="docutils literal notranslate"><span class="pre">Adjust.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.adjust.html#lightwin.core.commands.adjust.Adjust._args_to_line"><code class="docutils literal notranslate"><span class="pre">Adjust._args_to_line()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.adjust.html#lightwin.core.commands.adjust.Adjust.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">Adjust.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.adjust.html#lightwin.core.commands.adjust.Adjust.apply"><code class="docutils literal notranslate"><span class="pre">Adjust.apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.adjust.html#lightwin.core.commands.adjust.Adjust._abc_impl"><code class="docutils literal notranslate"><span class="pre">Adjust._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.command.html">command module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.command.html#lightwin.core.commands.command.Command"><code class="docutils literal notranslate"><span class="pre">Command</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.command.html#lightwin.core.commands.command.Command.__init__"><code class="docutils literal notranslate"><span class="pre">Command.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.command.html#lightwin.core.commands.command.Command.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">Command.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.command.html#lightwin.core.commands.command.Command.apply"><code class="docutils literal notranslate"><span class="pre">Command.apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.command.html#lightwin.core.commands.command.Command.concerns_one_of"><code class="docutils literal notranslate"><span class="pre">Command.concerns_one_of()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.command.html#lightwin.core.commands.command.Command._indexes_between_this_command_and"><code class="docutils literal notranslate"><span class="pre">Command._indexes_between_this_command_and()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.command.html#lightwin.core.commands.command.Command.increment_dat_position"><code class="docutils literal notranslate"><span class="pre">Command.increment_dat_position()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.command.html#lightwin.core.commands.command.Command._abc_impl"><code class="docutils literal notranslate"><span class="pre">Command._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.dummy_command.html">dummy_command module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.dummy_command.html#lightwin.core.commands.dummy_command.DummyCommand"><code class="docutils literal notranslate"><span class="pre">DummyCommand</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.dummy_command.html#lightwin.core.commands.dummy_command.DummyCommand.is_implemented"><code class="docutils literal notranslate"><span class="pre">DummyCommand.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.dummy_command.html#lightwin.core.commands.dummy_command.DummyCommand.__init__"><code class="docutils literal notranslate"><span class="pre">DummyCommand.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.dummy_command.html#lightwin.core.commands.dummy_command.DummyCommand.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">DummyCommand.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.dummy_command.html#lightwin.core.commands.dummy_command.DummyCommand.apply"><code class="docutils literal notranslate"><span class="pre">DummyCommand.apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.dummy_command.html#lightwin.core.commands.dummy_command.DummyCommand.concerns_one_of"><code class="docutils literal notranslate"><span class="pre">DummyCommand.concerns_one_of()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.dummy_command.html#lightwin.core.commands.dummy_command.DummyCommand._abc_impl"><code class="docutils literal notranslate"><span class="pre">DummyCommand._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.end.html">end module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.end.html#lightwin.core.commands.end.End"><code class="docutils literal notranslate"><span class="pre">End</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.end.html#lightwin.core.commands.end.End.is_implemented"><code class="docutils literal notranslate"><span class="pre">End.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.end.html#lightwin.core.commands.end.End.n_attributes"><code class="docutils literal notranslate"><span class="pre">End.n_attributes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.end.html#lightwin.core.commands.end.End.__init__"><code class="docutils literal notranslate"><span class="pre">End.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.end.html#lightwin.core.commands.end.End.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">End.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.end.html#lightwin.core.commands.end.End.apply"><code class="docutils literal notranslate"><span class="pre">End.apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.end.html#lightwin.core.commands.end.End._abc_impl"><code class="docutils literal notranslate"><span class="pre">End._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.error.html">error module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.Error"><code class="docutils literal notranslate"><span class="pre">Error</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.Error.__init__"><code class="docutils literal notranslate"><span class="pre">Error.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.Error._abc_impl"><code class="docutils literal notranslate"><span class="pre">Error._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorBeamDyn"><code class="docutils literal notranslate"><span class="pre">ErrorBeamDyn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorBeamDyn._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorBeamDyn._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorBeamStat"><code class="docutils literal notranslate"><span class="pre">ErrorBeamStat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorBeamStat._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorBeamStat._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorBendCPLDyn"><code class="docutils literal notranslate"><span class="pre">ErrorBendCPLDyn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorBendCPLDyn._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorBendCPLDyn._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorBendCPLStat"><code class="docutils literal notranslate"><span class="pre">ErrorBendCPLStat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorBendCPLStat._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorBendCPLStat._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorBendNCPLDyn"><code class="docutils literal notranslate"><span class="pre">ErrorBendNCPLDyn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorBendNCPLDyn._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorBendNCPLDyn._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorBendNCPLStat"><code class="docutils literal notranslate"><span class="pre">ErrorBendNCPLStat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorBendNCPLStat._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorBendNCPLStat._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorCavCPLDyn"><code class="docutils literal notranslate"><span class="pre">ErrorCavCPLDyn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorCavCPLDyn._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorCavCPLDyn._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorCavCPLStat"><code class="docutils literal notranslate"><span class="pre">ErrorCavCPLStat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorCavCPLStat._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorCavCPLStat._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorCavNCPLDyn"><code class="docutils literal notranslate"><span class="pre">ErrorCavNCPLDyn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorCavNCPLDyn._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorCavNCPLDyn._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorCavNCPLStat"><code class="docutils literal notranslate"><span class="pre">ErrorCavNCPLStat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorCavNCPLStat._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorCavNCPLStat._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorCavNCPLStatFile"><code class="docutils literal notranslate"><span class="pre">ErrorCavNCPLStatFile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorCavNCPLStatFile._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorCavNCPLStatFile._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorDynFile"><code class="docutils literal notranslate"><span class="pre">ErrorDynFile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorDynFile._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorDynFile._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorGaussianCutOff"><code class="docutils literal notranslate"><span class="pre">ErrorGaussianCutOff</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorGaussianCutOff._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorGaussianCutOff._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorQuadNCPLDyn"><code class="docutils literal notranslate"><span class="pre">ErrorQuadNCPLDyn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorQuadNCPLDyn._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorQuadNCPLDyn._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorQuadNCPLStat"><code class="docutils literal notranslate"><span class="pre">ErrorQuadNCPLStat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorQuadNCPLStat._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorQuadNCPLStat._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorRFQCelNCPLStat"><code class="docutils literal notranslate"><span class="pre">ErrorRFQCelNCPLStat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorRFQCelNCPLStat._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorRFQCelNCPLStat._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorRFQCelNCPLDyn"><code class="docutils literal notranslate"><span class="pre">ErrorRFQCelNCPLDyn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorRFQCelNCPLDyn._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorRFQCelNCPLDyn._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorStatFile"><code class="docutils literal notranslate"><span class="pre">ErrorStatFile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorStatFile._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorStatFile._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorSetRatio"><code class="docutils literal notranslate"><span class="pre">ErrorSetRatio</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.error.html#lightwin.core.commands.error.ErrorSetRatio._abc_impl"><code class="docutils literal notranslate"><span class="pre">ErrorSetRatio._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.factory.html">factory module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.factory.html#lightwin.core.commands.factory.IMPLEMENTED_COMMANDS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_COMMANDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.factory.html#lightwin.core.commands.factory.CommandFactory"><code class="docutils literal notranslate"><span class="pre">CommandFactory</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.factory.html#lightwin.core.commands.factory.CommandFactory.__init__"><code class="docutils literal notranslate"><span class="pre">CommandFactory.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.factory.html#lightwin.core.commands.factory.CommandFactory.run"><code class="docutils literal notranslate"><span class="pre">CommandFactory.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.field_map_path.html">field_map_path module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.field_map_path.html#lightwin.core.commands.field_map_path.FieldMapPath"><code class="docutils literal notranslate"><span class="pre">FieldMapPath</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.field_map_path.html#lightwin.core.commands.field_map_path.FieldMapPath.is_implemented"><code class="docutils literal notranslate"><span class="pre">FieldMapPath.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.field_map_path.html#lightwin.core.commands.field_map_path.FieldMapPath.n_attributes"><code class="docutils literal notranslate"><span class="pre">FieldMapPath.n_attributes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.field_map_path.html#lightwin.core.commands.field_map_path.FieldMapPath.__init__"><code class="docutils literal notranslate"><span class="pre">FieldMapPath.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.field_map_path.html#lightwin.core.commands.field_map_path.FieldMapPath._abc_impl"><code class="docutils literal notranslate"><span class="pre">FieldMapPath._abc_impl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.field_map_path.html#lightwin.core.commands.field_map_path.FieldMapPath.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">FieldMapPath.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.field_map_path.html#lightwin.core.commands.field_map_path.FieldMapPath.apply"><code class="docutils literal notranslate"><span class="pre">FieldMapPath.apply()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.freq.html">freq module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.freq.html#lightwin.core.commands.freq.Freq"><code class="docutils literal notranslate"><span class="pre">Freq</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.freq.html#lightwin.core.commands.freq.Freq.is_implemented"><code class="docutils literal notranslate"><span class="pre">Freq.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.freq.html#lightwin.core.commands.freq.Freq.n_attributes"><code class="docutils literal notranslate"><span class="pre">Freq.n_attributes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.freq.html#lightwin.core.commands.freq.Freq.__init__"><code class="docutils literal notranslate"><span class="pre">Freq.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.freq.html#lightwin.core.commands.freq.Freq.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">Freq.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.freq.html#lightwin.core.commands.freq.Freq.apply"><code class="docutils literal notranslate"><span class="pre">Freq.apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.freq.html#lightwin.core.commands.freq.Freq._abc_impl"><code class="docutils literal notranslate"><span class="pre">Freq._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.helper.html">helper module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.helper.html#lightwin.core.commands.helper.apply_commands"><code class="docutils literal notranslate"><span class="pre">apply_commands()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.lattice.html">lattice module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.Lattice"><code class="docutils literal notranslate"><span class="pre">Lattice</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.Lattice.is_implemented"><code class="docutils literal notranslate"><span class="pre">Lattice.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.Lattice.n_attributes"><code class="docutils literal notranslate"><span class="pre">Lattice.n_attributes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.Lattice.__init__"><code class="docutils literal notranslate"><span class="pre">Lattice.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.Lattice.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">Lattice.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.Lattice.apply"><code class="docutils literal notranslate"><span class="pre">Lattice.apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.Lattice._current_section_number"><code class="docutils literal notranslate"><span class="pre">Lattice._current_section_number()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.Lattice._current_lattice_number"><code class="docutils literal notranslate"><span class="pre">Lattice._current_lattice_number()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.Lattice._abc_impl"><code class="docutils literal notranslate"><span class="pre">Lattice._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.LatticeEnd"><code class="docutils literal notranslate"><span class="pre">LatticeEnd</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.LatticeEnd.is_implemented"><code class="docutils literal notranslate"><span class="pre">LatticeEnd.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.LatticeEnd.n_attributes"><code class="docutils literal notranslate"><span class="pre">LatticeEnd.n_attributes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.LatticeEnd.__init__"><code class="docutils literal notranslate"><span class="pre">LatticeEnd.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.LatticeEnd.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">LatticeEnd.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.LatticeEnd._abc_impl"><code class="docutils literal notranslate"><span class="pre">LatticeEnd._abc_impl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.lattice.html#lightwin.core.commands.lattice.LatticeEnd.apply"><code class="docutils literal notranslate"><span class="pre">LatticeEnd.apply()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.marker.html">marker module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.marker.html#lightwin.core.commands.marker.Marker"><code class="docutils literal notranslate"><span class="pre">Marker</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.marker.html#lightwin.core.commands.marker.Marker.is_implemented"><code class="docutils literal notranslate"><span class="pre">Marker.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.marker.html#lightwin.core.commands.marker.Marker.__init__"><code class="docutils literal notranslate"><span class="pre">Marker.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.marker.html#lightwin.core.commands.marker.Marker.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">Marker.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.marker.html#lightwin.core.commands.marker.Marker.apply"><code class="docutils literal notranslate"><span class="pre">Marker.apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.marker.html#lightwin.core.commands.marker.Marker.concerns_one_of"><code class="docutils literal notranslate"><span class="pre">Marker.concerns_one_of()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.marker.html#lightwin.core.commands.marker.Marker._abc_impl"><code class="docutils literal notranslate"><span class="pre">Marker._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html">repeat_ele module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html#lightwin.core.commands.repeat_ele.RepeatEle"><code class="docutils literal notranslate"><span class="pre">RepeatEle</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html#lightwin.core.commands.repeat_ele.RepeatEle.is_implemented"><code class="docutils literal notranslate"><span class="pre">RepeatEle.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html#lightwin.core.commands.repeat_ele.RepeatEle.n_attributes"><code class="docutils literal notranslate"><span class="pre">RepeatEle.n_attributes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html#lightwin.core.commands.repeat_ele.RepeatEle.__init__"><code class="docutils literal notranslate"><span class="pre">RepeatEle.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html#lightwin.core.commands.repeat_ele.RepeatEle.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">RepeatEle.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html#lightwin.core.commands.repeat_ele.RepeatEle.apply"><code class="docutils literal notranslate"><span class="pre">RepeatEle.apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.repeat_ele.html#lightwin.core.commands.repeat_ele.RepeatEle._abc_impl"><code class="docutils literal notranslate"><span class="pre">RepeatEle._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.set_adv.html">set_adv module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.set_adv.html#lightwin.core.commands.set_adv.SetAdv"><code class="docutils literal notranslate"><span class="pre">SetAdv</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_adv.html#lightwin.core.commands.set_adv.SetAdv.__init__"><code class="docutils literal notranslate"><span class="pre">SetAdv.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_adv.html#lightwin.core.commands.set_adv.SetAdv._abc_impl"><code class="docutils literal notranslate"><span class="pre">SetAdv._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html">set_sync_phase module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html#lightwin.core.commands.set_sync_phase.warn_set_sync_phase"><code class="docutils literal notranslate"><span class="pre">warn_set_sync_phase()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html#lightwin.core.commands.set_sync_phase.SetSyncPhase"><code class="docutils literal notranslate"><span class="pre">SetSyncPhase</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html#lightwin.core.commands.set_sync_phase.SetSyncPhase.is_implemented"><code class="docutils literal notranslate"><span class="pre">SetSyncPhase.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html#lightwin.core.commands.set_sync_phase.SetSyncPhase.n_attributes"><code class="docutils literal notranslate"><span class="pre">SetSyncPhase.n_attributes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html#lightwin.core.commands.set_sync_phase.SetSyncPhase.__init__"><code class="docutils literal notranslate"><span class="pre">SetSyncPhase.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html#lightwin.core.commands.set_sync_phase.SetSyncPhase.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">SetSyncPhase.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html#lightwin.core.commands.set_sync_phase.SetSyncPhase.apply"><code class="docutils literal notranslate"><span class="pre">SetSyncPhase.apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html#lightwin.core.commands.set_sync_phase.SetSyncPhase.to_line"><code class="docutils literal notranslate"><span class="pre">SetSyncPhase.to_line()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.set_sync_phase.html#lightwin.core.commands.set_sync_phase.SetSyncPhase._abc_impl"><code class="docutils literal notranslate"><span class="pre">SetSyncPhase._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.shift.html">shift module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.shift.html#lightwin.core.commands.shift.Shift"><code class="docutils literal notranslate"><span class="pre">Shift</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.shift.html#lightwin.core.commands.shift.Shift.is_implemented"><code class="docutils literal notranslate"><span class="pre">Shift.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.shift.html#lightwin.core.commands.shift.Shift.__init__"><code class="docutils literal notranslate"><span class="pre">Shift.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.shift.html#lightwin.core.commands.shift.Shift.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">Shift.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.shift.html#lightwin.core.commands.shift.Shift.apply"><code class="docutils literal notranslate"><span class="pre">Shift.apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.shift.html#lightwin.core.commands.shift.Shift._abc_impl"><code class="docutils literal notranslate"><span class="pre">Shift._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.steerer.html">steerer module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.steerer.html#lightwin.core.commands.steerer.Steerer"><code class="docutils literal notranslate"><span class="pre">Steerer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.steerer.html#lightwin.core.commands.steerer.Steerer.is_implemented"><code class="docutils literal notranslate"><span class="pre">Steerer.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.steerer.html#lightwin.core.commands.steerer.Steerer.__init__"><code class="docutils literal notranslate"><span class="pre">Steerer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.steerer.html#lightwin.core.commands.steerer.Steerer.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">Steerer.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.steerer.html#lightwin.core.commands.steerer.Steerer.apply"><code class="docutils literal notranslate"><span class="pre">Steerer.apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.steerer.html#lightwin.core.commands.steerer.Steerer._abc_impl"><code class="docutils literal notranslate"><span class="pre">Steerer._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.core.commands.superpose_map.html">superpose_map module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap"><code class="docutils literal notranslate"><span class="pre">SuperposeMap</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap.is_implemented"><code class="docutils literal notranslate"><span class="pre">SuperposeMap.is_implemented</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap.n_attributes"><code class="docutils literal notranslate"><span class="pre">SuperposeMap.n_attributes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap.__init__"><code class="docutils literal notranslate"><span class="pre">SuperposeMap.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap.set_influenced_elements"><code class="docutils literal notranslate"><span class="pre">SuperposeMap.set_influenced_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap.apply"><code class="docutils literal notranslate"><span class="pre">SuperposeMap.apply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap._total_length"><code class="docutils literal notranslate"><span class="pre">SuperposeMap._total_length()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap._generate_new_instructions"><code class="docutils literal notranslate"><span class="pre">SuperposeMap._generate_new_instructions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap._re_set_indexes"><code class="docutils literal notranslate"><span class="pre">SuperposeMap._re_set_indexes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map.SuperposeMap._abc_impl"><code class="docutils literal notranslate"><span class="pre">SuperposeMap._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.commands.superpose_map.html#lightwin.core.commands.superpose_map._starting_positions"><code class="docutils literal notranslate"><span class="pre">_starting_positions()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.core.beam_parameters.initial_beam_parameters.html" class="btn btn-neutral float-left" title="initial_beam_parameters module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.core.commands.adjust.html" class="btn btn-neutral float-right" title="adjust module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+   <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Other Versions</span>
+      v: v0.7.0
+      <span class="fa fa-caret-down"></span>
+   </span>
+   <div class="rst-other-versions">
+      <dl>
+         <dt>Tags</dt>
+         <dd><a href="lightwin.core.commands.html">v0.7.0</a></dd>
+         <dd><a href="../../v0.8.0b2/lightwin/lightwin.core.commands.html">v0.8.0b2</a></dd>
+      </dl>
+      <dl>
+         <dt>Branches</dt>
+         <dd><a href="../../main/lightwin/lightwin.core.commands.html">main</a></dd>
+      </dl>
+   </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
