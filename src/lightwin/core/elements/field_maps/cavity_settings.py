@@ -40,6 +40,13 @@ REFERENCE_PHASES = ("phi_0_abs", "phi_0_rel", "phi_s")  #:
 EXPORT_PHASES_T = (
     REFERENCE_PHASES_T | Literal["as_in_settings", "as_in_original_dat"]
 )
+EXPORT_PHASES = (
+    "phi_0_abs",
+    "phi_0_rel",
+    "phi_s",
+    "as_in_settings",
+    "as_in_original_dat",
+)  #:
 
 # warning: doublon with field_map.IMPLEMENTED_STATUS
 STATUS_T = Literal[

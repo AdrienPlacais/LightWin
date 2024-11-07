@@ -2,8 +2,23 @@
 
 from lightwin.beam_calculation.envelope_1d.util import ENVELOPE1D_METHODS
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
+from lightwin.core.elements.field_maps.cavity_settings import EXPORT_PHASES
 
 ENVELOPE1D_CONFIG = (
+    KeyValConfSpec(
+        key="export_phase",
+        types=(str,),
+        description=(
+            "The type of phases that should be exported in the final DAT "
+            "file. Note that ``'as_in_original_dat'`` is not implemented "
+            "yet, but ``'as_in_settings'`` should behave the same way, "
+            "provided that you alter no FieldMap.CavitySettings.reference "
+            "attribute."
+        ),
+        default_value="as_in_settings",
+        allowed_values=EXPORT_PHASES,
+        is_mandatory=False,
+    ),
     KeyValConfSpec(
         key="flag_cython",
         types=(bool,),

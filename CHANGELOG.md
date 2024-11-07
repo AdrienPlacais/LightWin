@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `SET_SYNC_PHASE` commands are now handled for export in DAT file.
+- It is now possible to use the `export_phase` in the `[beam_calculator]` table to choose the type of phase to put in the output DAT file.
 
 ### Changed
 
