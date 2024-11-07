@@ -23,6 +23,7 @@ from typing import Any, Callable, Literal, Self
 
 import numpy as np
 import pandas as pd
+from matplotlib.axes import Axes
 
 from lightwin.core.beam_parameters.beam_parameters import BeamParameters
 from lightwin.core.elements.element import Element
@@ -30,6 +31,7 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.core.particle import ParticleFullTrajectory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
+from lightwin.util.dicts_output import markdown
 from lightwin.util.helper import range_vals, recursive_getter, recursive_items
 from lightwin.util.pickling import MyPickler
 
@@ -306,6 +308,19 @@ class SimulationOutput:
         """Instantiate object from previously pickled file."""
         simulation_output = pickler.unpickle(path)
         return simulation_output  # type: ignore
+
+    def plot(
+        self, key: str, to_deg: bool = True, grid: bool = True, **kwargs
+    ) -> Axes | np.ndarray:
+        """Plot the key."""
+        x_axis = markdown["z_abs"]
+        df = pd.DataFrame(
+            {
+                x_axis: self.z_abs,
+                markdown[key]: self.get(key, to_deg=to_deg, **kwargs),
+            }
+        )
+        return df.plot(x=x_axis, grid=grid, **kwargs)
 
 
 def _to_deg(
