@@ -125,8 +125,7 @@ def eps_from_sigma(
     beta_kin: np.ndarray | float,
     beam_kwargs: dict[str, Any],
 ) -> tuple[np.ndarray | float, np.ndarray | float]:
-    r"""
-    Compute emittance from :math:`\sigma` beam matrix.
+    r"""Compute emittance from :math:`\sigma` beam matrix.
 
     In the :math:`[z-\delta]` phase space, emittance is in :unit:`\\pi.mm.\\%`.
     In the transverse phase spaces, emittance is in :unit:`\\pi.mm.mrad`.
