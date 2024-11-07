@@ -28,7 +28,10 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.accelerator.accelerator import Accelerator
-from lightwin.core.elements.field_maps.cavity_settings import REFERENCE_T
+from lightwin.core.elements.field_maps.cavity_settings import (
+    EXPORT_PHASES_T,
+    REFERENCE_PHASES,
+)
 from lightwin.core.elements.field_maps.cavity_settings_factory import (
     CavitySettingsFactory,
 )
@@ -49,6 +52,7 @@ class BeamCalculator(ABC):
         default_field_map_folder: Path | str,
         beam_kwargs: dict[str, Any],
         flag_cython: bool = False,
+        export_phase: EXPORT_PHASES_T = "as_in_settings",
         **kwargs,
     ) -> None:
         r"""Set ``id``, some generic parameters such as results folders.
@@ -69,11 +73,17 @@ class BeamCalculator(ABC):
             default is False.
         beam_kwargs : dict[str, Any]
             The config dictionary holding all the initial beam properties.
+        export_phase : Literal["phi_0_abs", "phi_0_rel", "phi_s",
+                "as_in_settings", "as_in_original_dat"], optional
+            The type of phase you want to export for your ``FIELD_MAP``. The
+            default is ``"as_in_settings"``, which should be the same phases
+            as in the original DAT file.
 
         """
         self.flag_phi_abs = flag_phi_abs
         self.flag_cython = flag_cython
         self.id: str = f"{self.__class__.__name__}_{next(self._ids)}"
+        self._export_phase: EXPORT_PHASES_T = export_phase
 
         if isinstance(out_folder, str):
             out_folder = Path(out_folder)
@@ -209,7 +219,7 @@ class BeamCalculator(ABC):
         return self.simulation_output_factory.run(*args, **kwargs)
 
     @property
-    def reference_phase(self) -> REFERENCE_T:
+    def reference_phase(self) -> REFERENCE_PHASES:
         """Give the reference phase.
 
         .. todo::
@@ -274,7 +284,7 @@ class BeamCalculator(ABC):
         if keep_settings:
             accelerator.keep_simulation_output(simulation_output, self.id)
             accelerator.keep_settings(
-                simulation_output, output_phase=self.reference_phase
+                simulation_output, exported_phase=self._export_phase
             )
 
         end_time = time.monotonic()

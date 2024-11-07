@@ -20,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FIELD_MAP 70` does not raise error (warning issued with `Envelope3D`: no transverse tracking).
 - `FIELD_MAP 7700` is handled for longitudinal tracking.
 - `SUPERPOSE_MAP` will be implemented for 1D maps (warning issued with `Envelope3D`: no transverse tracking).
-- Possible to export `FIELD_MAP` with `SET_SYNC_PHASE` in the DAT file.
 
 ### Changed
 
@@ -33,6 +32,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - When several `Element` objects have the same `_personalized_name`, a fallback name and a warning is raised instead of raising an `AssertionError`.
+
+## [0.8.0b3] 2024-11-07
+
+### Added
+
+- `SET_SYNC_PHASE` commands are now handled for export in DAT file.
+- It is now possible to use the `export_phase` in the `[beam_calculator]` table to choose the type of phase to put in the output DAT file.
+
+### Changed
+
+- Display of cavity parameters in `cav.png`, so that 2nd solver does not hide 1st.
+
+### Fixed
+
+- Calculating `phi_0_abs` of a cavity when the reference was `phi_s` raised error.
+- `path_cal` not existing in `TraceWin` raised error instead of just creating the folder.
 
 ## [0.8.0b2] 2024-11-05
 

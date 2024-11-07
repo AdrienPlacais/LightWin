@@ -1,7 +1,5 @@
 """Hold a ``FIELD_MAP``.
 
-.. todo::
-    Completely handle the SET_SYNCH_PHASE command
 
 .. todo::
     Hande phi_s fitting with :class:`.TraceWin`.

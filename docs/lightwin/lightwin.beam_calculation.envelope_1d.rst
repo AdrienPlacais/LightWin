@@ -19,6 +19,5 @@ Submodules
    lightwin.beam_calculation.envelope_1d.simulation_output_factory
    lightwin.beam_calculation.envelope_1d.specs
    lightwin.beam_calculation.envelope_1d.transfer_matrices
-   lightwin.beam_calculation.envelope_1d.transfer_matrices_c
    lightwin.beam_calculation.envelope_1d.transfer_matrix_factory
    lightwin.beam_calculation.envelope_1d.util

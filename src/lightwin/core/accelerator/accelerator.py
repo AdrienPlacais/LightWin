@@ -23,6 +23,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.cavity_settings import EXPORT_PHASES_T
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.helper import (
     elt_at_this_s_idx,
@@ -187,14 +188,11 @@ class Accelerator:
         return _special_getters
 
     def keep_settings(
-        self, simulation_output: SimulationOutput, output_phase: str
+        self,
+        simulation_output: SimulationOutput,
+        exported_phase: EXPORT_PHASES_T,
     ) -> None:
-        """Save cavity parameters in Elements and new .dat file.
-
-        .. todo::
-            Should I reset the sync particle entry phase?
-
-        """
+        """Save cavity parameters in Elements and new .dat file."""
         set_of_cavity_settings = simulation_output.set_of_cavity_settings
         for cavity, settings in set_of_cavity_settings.items():
             cavity.cavity_settings = settings
@@ -206,9 +204,8 @@ class Accelerator:
             self.accelerator_path / simulation_output.out_folder / filename
         )
 
-        logging.warning("Manually set which_phase")
         self.elts.store_settings_in_dat(
-            dat_file, which_phase="as_in_settings", save=True
+            dat_file, exported_phase=exported_phase, save=True
         )
 
     def keep_simulation_output(

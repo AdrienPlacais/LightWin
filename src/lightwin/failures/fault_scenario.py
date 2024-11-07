@@ -19,7 +19,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.beam_calculation.tracewin.tracewin import TraceWin
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.cavity_settings import REFERENCE_T
+from lightwin.core.elements.field_maps.cavity_settings import REFERENCE_PHASES
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.evaluator.list_of_simulation_output_evaluators import (
@@ -209,19 +209,9 @@ class FaultScenario(list):
         return optimisation_algorithms
 
     def _break_cavities(self) -> None:
-        """Break the cavities.
-
-        .. todo ::
-            At this step I do not save the ``.dat`` anymore. Was it useful for
-            something?
-
-        """
+        """Break the cavities."""
         for fault in self:
             fault.update_elements_status(optimisation="not started")
-        logging.warning("Not storing elements in dat")
-        # self.elts.store_settings_in_dat(
-        #     self.elts.files["dat_file"], which_phase="phi_0_rel", save=True
-        # )
 
     def fix_all(self) -> None:
         """Fix all the :class:`.Fault` objects in self.
@@ -258,14 +248,15 @@ class FaultScenario(list):
 
         self._evaluate_fit_quality(save=True)
 
+        exported_phase = self.wtf.get("exported_phase", "phi_0_abs")
         self.fix_acc.elts.store_settings_in_dat(
             self.fix_acc.elts.files_info["dat_file"],
-            which_phase=self._reference_phase,
+            exported_phase=exported_phase,
             save=True,
         )
         end_time = time.monotonic()
         delta_t = datetime.timedelta(seconds=end_time - start_time)
-        logging.info(f"Elapsed time in optimisation: {delta_t}")
+        logging.info(f"Elapsed time for optimization: {delta_t}")
 
         self.optimisation_time = delta_t
         # Legacy, does not work anymore with the new implementation
@@ -290,7 +281,7 @@ class FaultScenario(list):
         )
 
         self.fix_acc.keep_settings(
-            simulation_output, output_phase=self._reference_phase
+            simulation_output, exported_phase=self._reference_phase
         )
         self.fix_acc.keep_simulation_output(
             simulation_output, self.beam_calculator.id
@@ -299,7 +290,7 @@ class FaultScenario(list):
         fault.update_elements_status(optimisation="finished", success=True)
         fault.elts.store_settings_in_dat(
             fault.elts.files_info["dat_file"],
-            which_phase=self._reference_phase,
+            exported_phase=self._reference_phase,
             save=True,
         )
 
@@ -360,7 +351,7 @@ class FaultScenario(list):
             fix.phi_ref = phi_0_ref
 
     @property
-    def _reference_phase(self) -> REFERENCE_T:
+    def _reference_phase(self) -> REFERENCE_PHASES:
         """Give the reference phase ``"phi_0_rel"`` or ``"phi_0_abs"``."""
         return self.beam_calculator.reference_phase
 

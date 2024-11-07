@@ -1,6 +1,6 @@
 .. _TraceWin-compatibility-note:
 
-Compatibility with TraceWin `.dat` files
+Compatibility with TraceWin DAT files
 ----------------------------------------
 
 LightWin uses the same format as TraceWin for the linac structure.
@@ -15,17 +15,16 @@ As an example, if you use :class:`.Envelope1D`, transverse dynamics are not cons
 "Useful" commands and elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You should clean the `.dat` to remove any command that influences the design of the linac.
-In particular: `SET_ADV`, `SET_SYNC_PHASE`, `ADJUST` commands.
+You should clean the DAT to remove any command that influences the design of the linac.
+In particular: `SET_ADV`, `ADJUST` commands.
 Warnings may not always appear, so be careful that :class:`.Envelope1D` or :class:`.Envelope3D` match with TraceWin.
 If you choose :class:`.TraceWin` solver for the optimization, both LightWin and TraceWin could modify the design of the linac at the same time, so unexpected side effects may appear.
 
 .. note::
-   Since `0.6.21`, `SET_SYNC_PHASE` commands can be kept in the original `.dat`.
-   The output `.dat` will contain relative or absolute phase, according to the corresponding :attr:`.BeamCalculator.reference_phase`.
-   In the future, it will be possible to export `.dat` with `SET_SYNC_PHASE` for all cavities, or to keep the phase definitions of the original `.dat`.
+   Since `0.6.21`, `SET_SYNC_PHASE` commands can be kept in the original DAT.
+   Since `0.8.0b3`, the `SET_SYNC_PHASE` can be exported in the output DAT file.
 
-   See also: :meth:`.ListOfElements.store_settings_in_dat` (the method which is actually called to create the `.dat`).
+   See also: :meth:`.ListOfElements.store_settings_in_dat` (the method which is actually called to create the DAT).
 
 How to implement commands or elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

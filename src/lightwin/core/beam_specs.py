@@ -38,7 +38,11 @@ BEAM_CONFIG = (
     KeyValConfSpec(
         key="i_milli_a",
         types=(float,),
-        description=r"Beam current in :unit:`mA`",
+        description=(
+            r"Beam current in :unit:`mA`. Warning: this key is not used. "
+            "EnvelopeiD solvers do not model space-charge, and the current "
+            "in TraceWin solver is controlled by the `current1` key."
+        ),
         default_value=0.0,
         is_mandatory=False,
     ),
