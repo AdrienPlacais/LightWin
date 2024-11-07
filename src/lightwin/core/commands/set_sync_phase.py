@@ -81,10 +81,12 @@ class SetSyncPhase(Command):
         """Return the command, commented if output phase should not be phi_s.
 
         .. note::
-            ``which_phase == 'phi_s'`` should never happen for now, the
-            :meth:`.ListOfElements.store_settings_in_dat` should not allow it.
+            We keep old implementation for now. But this method returns nothing
+            because the ``to_line`` method of :class:`.FieldMap` already
+            handles adding a ``SET_SYNC_PHASE`` when necessary.
 
         """
+        return []
         line = super().to_line(*args, **kwargs)
         if which_phase == "phi_s":
             return line

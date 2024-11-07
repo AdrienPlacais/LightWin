@@ -33,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.8.0b3] 2024-11-07
 
+### Added
+
+- `SET_SYNC_PHASE` commands are now handled for export in DAT file.
+
 ### Changed
 
 - Display of cavity parameters in `cav.png`, so that 2nd solver does not hide 1st.

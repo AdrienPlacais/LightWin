@@ -19,7 +19,6 @@
 
 """
 
-import logging
 import math
 from pathlib import Path
 from typing import Any, Literal
@@ -244,17 +243,6 @@ class FieldMap(Element):
         line = super().to_line(*args, **kwargs)
 
         _phases = self._phase_for_line(which_phase)
-        # from main:
-        # new_values = {
-        #     "phase": _phases[0],
-        #     "k_e": self.cavity_settings.k_e,
-        #     "abs_phase_flag": _phases[1],
-        # }
-        # for key, val in new_values.items():
-        #     idx = self._indexes_in_line[key]
-        #     line[idx] = str(val)
-
-        # from implement_field_map_70:
         new_values = {
             3: _phases[0],
             6: self.cavity_settings.k_e,
@@ -262,6 +250,8 @@ class FieldMap(Element):
         }
         for key, val in new_values.items():
             self.line.change_argument(val, key)
+        if _phases[2] == "phi_s":
+            line.insert(0, "SET_SYNC_PHASE\n")
         return line
 
     # May be useless, depending on to_line implementation
@@ -285,28 +275,22 @@ class FieldMap(Element):
             "as_in_settings",
             "as_in_original_dat",
         ],
-    ) -> tuple[float, int]:
+    ) -> tuple[float, int, str]:
         """Give the phase to put in ``.dat`` line, with abs phase flag."""
         settings = self.cavity_settings
         match which_phase:
-            case "phi_0_abs" | "phi_0_rel":
+            case "phi_0_abs" | "phi_0_rel" | "phi_s":
                 phase = getattr(settings, which_phase)
                 abs_phase_flag = int(which_phase == "phi_0_abs")
-
-            case "phi_s":
-                raise NotImplementedError(
-                    "Output of phi_s (SET_SYNC_PHASE) in the .dat not "
-                    "implemented (yet)."
-                )
+                reference = which_phase
 
             case "as_in_settings":
-                assert (
-                    settings.reference != "phi_s"
-                ), "The SET_SYNC_PHASE is not implemented yet."
-                phase = getattr(settings, "reference")
+                phase = settings.phi_ref
                 abs_phase_flag = int(settings.reference == "phi_0_abs")
+                reference = settings.reference
 
             case "as_in_original_dat":
+                raise NotImplementedError
                 abs_phase_flag = int(self.line.splitted[-1])
                 if abs_phase_flag == 0:
                     to_get = "phi_0_rel"
@@ -315,10 +299,11 @@ class FieldMap(Element):
                 else:
                     raise ValueError
                 phase = getattr(settings, to_get)
+                reference = to_get
             case _:
                 raise IOError("{which_phase = } not understood.")
         assert phase is not None, (
             f"In {self}, the required phase ({which_phase = }) is not defined."
             " Maybe the particle entry phase is not defined?"
         )
-        return (math.degrees(phase), abs_phase_flag)
+        return math.degrees(phase), abs_phase_flag, reference
