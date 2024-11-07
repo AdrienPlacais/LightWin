@@ -75,7 +75,7 @@ PLOT_PRESETS = {
     },
     "emittance": {
         "x_axis": "z_abs",
-        "all_y_axis": ["eps_z", "struct"],
+        "all_y_axis": ["eps_phiw", "struct"],
         "num": 24,
     },
     "twiss": {
