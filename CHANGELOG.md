@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Calculating `phi_0_abs` of a cavity when the reference was `phi_s` raised error.
 
 ## [0.8.0b1] 2024-11-04
 
