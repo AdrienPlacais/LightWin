@@ -111,7 +111,9 @@ class KeyValConfSpec:
             return True
         if toml_value in self.allowed_values:
             return True
-        logging.error(f"{toml_value = } is not in {self.allowed_values = }")
+        logging.error(
+            f"{self.key}: {toml_value = } is not in {self.allowed_values = }"
+        )
         return False
 
     def path_exists(
