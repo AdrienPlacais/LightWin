@@ -40,6 +40,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Not providing the `project_folder` key in the `[files]` TOML table led to bug.
   - Some elements created bugs in `CyEnvelope1D`.
 
+## [0.8.0b3] 2024-11-07
+
+### Changed
+
+- Display of cavity parameters in `cav.png`, so that 2nd solver does not hide 1st.
+
+### Fixed
+
+
 ## [0.8.0b1] 2024-11-04
 
 ### Fixed

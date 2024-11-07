@@ -27,6 +27,7 @@ import numpy as np
 from cycler import cycler
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
+from matplotlib.typing import ColorType
 from palettable.colorbrewer.qualitative import Dark2_8
 
 import lightwin.util.dicts_output as dic
@@ -49,8 +50,6 @@ from lightwin.util import helper
 font = {"family": "serif"}  # , 'size': 25}
 plt.rc("font", **font)
 plt.rcParams["axes.prop_cycle"] = cycler(color=Dark2_8.mpl_colors)
-# plt.rcParams["figure.figsize"] = (13.64, 25.6)
-# plt.rcParams["figure.dpi"] = 100
 
 FALLBACK_PRESETS = {
     "x_axis": "z_abs",
@@ -119,7 +118,9 @@ ERROR_REFERENCE = "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)"
 # Front end
 # =============================================================================
 def factory(
-    accelerators: Sequence[Accelerator], plots: dict[str, bool], **kwargs: bool
+    accelerators: Sequence[Accelerator],
+    plots: dict[str, bool],
+    **kwargs,
 ) -> list[Figure]:
     """Create all the desired plots."""
     if (
@@ -157,7 +158,7 @@ def _plot_preset(
     x_axis: str = "z_abs",
     all_y_axis: list[str] | None = None,
     save_fig: bool = True,
-    **kwargs: bool | str | int,
+    **kwargs,
 ) -> Figure:
     """
     Plot a preset.
@@ -175,7 +176,7 @@ def _plot_preset(
         Name of all the y axis. The default is None.
     save_fig : bool, optional
         To save Figures or not. The default is True.
-    **kwargs : bool | str | int
+    **kwargs :
         Holds all complementary data on the plots.
 
     """
@@ -197,14 +198,12 @@ def _plot_preset(
 
 
 # Plot style
-def _proper_kwargs(
-    preset: str, kwargs: dict[str, bool]
-) -> dict[str, bool | int | str]:
+def _proper_kwargs(preset: str, kwargs: dict[str, bool]) -> dict:
     """Merge dicts, priority kwargs > PLOT_PRESETS > FALLBACK_PRESETS."""
     return FALLBACK_PRESETS | PLOT_PRESETS[preset] | kwargs
 
 
-def _keep_colors(axe: Axes) -> dict[str, str]:
+def _keep_colors(axe: Axes) -> dict[object, ColorType]:
     """Keep track of the color associated with each SimulationOutput."""
     lines = axe.get_lines()
     colors = {line.get_label(): line.get_color() for line in lines}
@@ -226,6 +225,7 @@ def _single_simulation_data(
     axis: str, simulation_output: SimulationOutput
 ) -> list[float] | None:
     """lightwin.Get single data array from single SimulationOutput."""
+    kwargs: dict[str, Any]
     kwargs = {"to_numpy": False, "to_deg": True}
 
     # patch to avoid envelopes being converted again to degrees
@@ -237,7 +237,7 @@ def _single_simulation_data(
 
 def _single_simulation_all_data(
     x_axis: str, y_axis: str, simulation_output: SimulationOutput
-) -> tuple[np.ndarray, np.ndarray, dict | None]:
+) -> tuple[np.ndarray, np.ndarray, dict[str, Any]]:
     """Get x data, y data, kwargs from a SimulationOutput."""
     x_data = _single_simulation_data(x_axis, simulation_output)
     y_data = _single_simulation_data(y_axis, simulation_output)
@@ -248,7 +248,7 @@ def _single_simulation_all_data(
         logging.warning(
             f"{x_axis} or {y_axis} not found in {simulation_output}"
         )
-        return x_data, y_data, None
+        return x_data, y_data, {}
 
     x_data = np.array(x_data)
     y_data = np.array(y_data)
@@ -351,7 +351,7 @@ def _error_calculation_function(
 def _compute_error(
     x_data: list[np.ndarray],
     y_data: list[np.ndarray],
-    plt_kwargs: dict[str, int | bool | str],
+    plt_kwargs: dict[str, Any],
     fun_error: Callable[[np.ndarray, np.ndarray], np.ndarray],
 ) -> tuple[list[np.ndarray], list[np.ndarray]]:
     """Compute error with proper reference and proper function."""
@@ -415,9 +415,19 @@ def _make_a_subplot(
         return
 
     all_my_data = _all_accelerators_data(x_axis, y_axis, *accelerators)
+
+    # Alternate markers for the "cav" preset
+    markers = ("o", "^")
+    marker_index = 0
+
     for x_data, y_data, plt_kwargs in zip(
         all_my_data[0], all_my_data[1], all_my_data[2]
     ):
+        # Check if we are in the "cav" preset and assign markers alternately
+        if y_axis in ("v_cav_mv", "phi_s"):
+            plt_kwargs["marker"] = markers[marker_index]
+            marker_index = (marker_index + 1) % len(markers)
+
         if colors is not None and plt_kwargs["label"] in colors:
             plt_kwargs["color"] = colors[plt_kwargs["label"]]
 
@@ -432,9 +442,6 @@ def _make_a_subplot(
 
     axe.grid(True)
     axe.set_ylabel(_y_label(y_axis))
-
-    # Legacy. Was used to ignore the limits from the Broken linac plots
-    # _autoscale_based_on(axe, to_ignore='Broken')
 
 
 # =============================================================================
