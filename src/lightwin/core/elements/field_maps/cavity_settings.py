@@ -85,7 +85,7 @@ class CavitySettings:
         self,
         k_e: float,
         phi: float,
-        reference: REFERENCE_PHASES,
+        reference: REFERENCE_PHASES_T,
         status: STATUS_T,
         freq_bunch_mhz: float,
         freq_cavity_mhz: float | None = None,
@@ -130,7 +130,7 @@ class CavitySettings:
 
         """
         self.k_e = k_e
-        self._reference: REFERENCE_PHASES
+        self._reference: REFERENCE_PHASES_T
         self.reference = reference
         self.phi_ref = phi
 
@@ -204,7 +204,7 @@ class CavitySettings:
     def from_other_cavity_settings(
         cls,
         other: Self,
-        reference: REFERENCE_PHASES | None = None,
+        reference: REFERENCE_PHASES_T | None = None,
     ) -> Self:
         """Create settings with same settings as provided."""
         if reference is None:
@@ -231,7 +231,7 @@ class CavitySettings:
         k_e: float,
         phi: float,
         status: STATUS_T,
-        reference: REFERENCE_PHASES | None = None,
+        reference: REFERENCE_PHASES_T | None = None,
     ) -> Self:
         """Create settings based on ``base`` with different ``k_e``, ``phi_0``.
 
@@ -360,7 +360,7 @@ class CavitySettings:
     # Reference
     # =============================================================================
     @property
-    def reference(self) -> REFERENCE_PHASES:
+    def reference(self) -> REFERENCE_PHASES_T:
         """Say what is the reference phase.
 
         .. list-table:: Equivalents of ``reference`` in TraceWin's \
