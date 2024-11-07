@@ -2,6 +2,6 @@ Entry,Type,Description,Allowed values,Mandatory?
 e_mev,``float``,Energy of particle at entrance in :unit:`MeV`,,✅
 e_rest_mev,``float``,Rest energy of particle in :unit:`MeV`,,✅
 f_bunch_mhz,``float``,Beam bunch frequency in :unit:`MHz`,,✅
-i_milli_a,``float``,Beam current in :unit:`mA`,,❌
+i_milli_a,``float``,"Beam current in :unit:`mA`. Warning: this key is not used. EnvelopeiD solvers do not model space-charge, and the current in TraceWin solver is controlled by the `current1` key.",,❌
 q_adim,``float``,Adimensioned charge of particle,,✅
 sigma,``list`` or ``ndarray``,Input :math:`\sigma` beam matrix in :unit:`m`; :unit:`rad`. Must be a list of lists of floats that can be transformed to a 6*6 matrix.,,✅
