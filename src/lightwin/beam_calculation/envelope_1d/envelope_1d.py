@@ -204,7 +204,6 @@ class Envelope1D(BeamCalculator):
         the regular :meth:`run_with_this` method.
 
         """
-        logging.critical("========== post opti ==============")
         simulation_output = self.run_with_this(
             optimized_cavity_settings,
             full_elts,
