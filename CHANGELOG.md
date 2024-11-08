@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - When several `Element` objects have the same `_personalized_name`, a fallback name and a warning is raised instead of raising an `AssertionError`.
+
 ## [0.8.0b3] 2024-11-07
 
 ### Added
@@ -47,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Calculating `phi_0_abs` of a cavity when the reference was `phi_s` raised error.
 - `path_cal` not existing in `TraceWin` raised error instead of just creating the folder.
+- Interpolation of Twiss to compute mismatch factor was bugged.
 
 ## [0.8.0b4] 2024-??-??
 

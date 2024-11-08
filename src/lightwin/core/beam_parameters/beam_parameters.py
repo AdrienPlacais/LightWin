@@ -295,7 +295,7 @@ class BeamParameters(InitialBeamParameters):
             if reference_phase_space is None or phase_space is None:
                 continue
             phase_space.set_mismatch(
-                reference_phase_space, z_abs, reference_z_abs, **mismatch_kw
+                reference_phase_space, reference_z_abs, z_abs, **mismatch_kw
             )
 
     def _get_phase_spaces(

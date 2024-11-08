@@ -526,18 +526,23 @@ def mismatch_from_arrays(
 
 
 def resample_twiss_on_fix(
-    z_ref: np.ndarray, twiss_ref: np.ndarray, z_fix: np.ndarray
+    reference_z_abs: np.ndarray, reference_twiss: np.ndarray, z_abs: np.ndarray
 ) -> np.ndarray:
     """Interpolate ref Twiss on fix Twiss to compute mismatch afterwards."""
-    n_points = z_fix.shape[0]
-    out = np.empty((n_points, 3))
+    n_points = z_abs.shape[0]
+    out_shape = (n_points, 3)
+    out = np.empty(out_shape)
+
+    if reference_z_abs.shape[0] != reference_twiss.shape[0]:
+        logging.critical(
+            f"Mismatch between the shapes of the reference arrays, returnin "
+            f"NaN.\n{reference_z_abs.shape = }\n{reference_twiss.shape = }\n"
+            f"{z_abs.shape = }"
+        )
+        return np.full(out_shape, np.nan)
 
     for axis in range(out.shape[1]):
-        try:
-            out[:, axis] = np.interp(z_fix, z_ref, twiss_ref[:, axis])
-        except ValueError:
-            logging.critical(
-                "Interpolation error, setting twiss ref == fix (FIXME)"
-            )
-            out[:, axis] = np.nan
+        out[:, axis] = np.interp(
+            z_abs, reference_z_abs, reference_twiss[:, axis]
+        )
     return out

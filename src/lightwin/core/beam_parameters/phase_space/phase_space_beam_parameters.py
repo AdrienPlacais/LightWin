@@ -226,25 +226,42 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
         raise_missing_twiss_error: bool = True,
         **mismatch_kw: bool,
     ) -> None:
-        """Compute and set the mismatch with ``reference_phase_space``."""
+        """Compute and set the mismatch with ``reference_phase_space``.
+
+        Parameters
+        ----------
+        reference_phase_space : PhaseSpaceBeamParameters
+            Beam parameters in the same phase space, corresponding to the
+            reference linac.
+        reference_z_abs : numpy.ndarray
+            Positions corresponding to ``reference_phase_space``.
+        z_abs : np.ndarray
+            Positions in the linac under study.
+        raise_missing_twiss_error : bool
+            If set to True and the Twiss parameters were not calculated in
+            current phase space, raise an error.
+        mismatch_kw : bool
+            Keyword arguments passed to the function computing mismatch factor.
+
+        """
         assert self.phase_space_name == reference_phase_space.phase_space_name
 
         if self.twiss is None:
-            if raise_missing_twiss_error:
-                raise IOError(
-                    "Fixed linac Twiss not calculated in phase space"
-                    f" {self.phase_space_name}. Cannot compute mismatch."
-                )
-            return None
+            if not raise_missing_twiss_error:
+                return None
+            raise RuntimeError(
+                "Fixed linac Twiss not calculated in phase space"
+                f" {self.phase_space_name}. Cannot compute mismatch."
+            )
 
         reference_twiss = reference_phase_space.twiss
         if reference_twiss is None:
-            if raise_missing_twiss_error:
-                raise IOError(
-                    "Reference Twiss not calculated in phase space "
-                    f"{self.phase_space_name}. Cannot compute mismatch."
-                )
-            return None
+            if not raise_missing_twiss_error:
+                return None
+            raise RuntimeError(
+                "Reference Twiss not calculated in phase space "
+                f"{self.phase_space_name}. Cannot compute mismatch."
+            )
 
         assert reference_twiss is not None and self.twiss is not None
 
