@@ -24,7 +24,7 @@ import logging
 from abc import ABC, abstractmethod
 from collections.abc import Collection
 from pathlib import Path
-from typing import Any, Callable, Literal, TypedDict
+from typing import Any, Callable, TypedDict
 
 import numpy as np
 
@@ -142,7 +142,9 @@ class OptimisationAlgorithm(ABC):
 
         if history_kwargs is None:
             history_kwargs = {}
-        self.history = OptimizationHistory(**history_kwargs)
+        self.history = OptimizationHistory(
+            [obj.name for obj in objectives], **history_kwargs
+        )
 
     @property
     def variable_names(self) -> list[str]:
@@ -285,10 +287,6 @@ class OptimizationHistory:
     """Keep all the settings that were tried.
 
     .. todo::
-        Init the files with proper headers.
-        idx | id | obj1 | obj2 | obj3 | elt1qty1 | elt1qty2 ...
-
-    .. todo::
         Add the reference SimulationOutput data. Would always be printed in
         first idx, with id + _ref
 
@@ -300,6 +298,7 @@ class OptimizationHistory:
 
     def __init__(
         self,
+        objectives_names: Collection[str],
         get_args: tuple[str, ...] = (),
         get_kwargs: dict[str, Any] | None = None,
         folder: Path | str | None = None,
@@ -338,7 +337,9 @@ class OptimizationHistory:
         self._rename_previous_files()
 
         self._settings: list[np.ndarray] = []
-        self._objectives: list[list[float] | np.ndarray] = []
+        self._objectives: list[list[float] | list[str]] = [
+            self._objective_header(objectives_names)
+        ]
         self._constraints: list[list[float] | np.ndarray | None] = []
 
         self._start_idx = 0
@@ -356,6 +357,18 @@ class OptimizationHistory:
     def add_settings(self, var: np.ndarray) -> None:
         """Add a new set of cavity settings."""
         self._settings.append(var)
+
+    def _objective_header(
+        self, objectives_names: Collection[str]
+    ) -> list[str]:
+        """Get the objective headers."""
+        header_objective = list(objectives_names)
+        header_outputs = [
+            f"{qty} @ {elt}"
+            for elt in self._get_kwargs.get("elt", ())
+            for qty in self._get_args
+        ]
+        return header_objective + header_outputs
 
     def add_objective_values(
         self, objectives: list, simulation_output: SimulationOutput
