@@ -320,7 +320,7 @@ class SimulationOutput:
                 markdown[key]: self.get(key, to_deg=to_deg, **kwargs),
             }
         )
-        return df.plot(x=x_axis, grid=grid, **kwargs)
+        return df.plot(x=x_axis, grid=grid, ylabel=markdown[key], **kwargs)
 
 
 def _to_deg(
