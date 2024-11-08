@@ -291,16 +291,17 @@ class OptimizationHistory:
 
     def __init__(
         self,
-        history_folder: Path | None = None,
+        folder: Path | None = None,
         save_interval: int = 50,
         run_id: str = "dummy",
         mode: Literal["append", "overwrite"] = "overwrite",
+        **kwargs,
     ) -> None:
         """Instantiate the object.
 
         Parameters
         ----------
-        history_folder : Path | None, optional
+        folder : Path | None, optional
             Where the histories will be saved. If not provided or None is
             given, this class will not have any effect and every public method
             wil be overriden with dummy methods.
@@ -313,21 +314,23 @@ class OptimizationHistory:
             If we should happen data to previous files or overwrite them.
 
         """
-        if history_folder is None:
+        if folder is None:
             self._make_public_methods_useless()
             return
-        self.history_folder = history_folder
+        self._folder = folder
+
         if mode == "overwrite":
             self._remove_previous_files()
+        self._mode = mode
 
-        self.settings: list[SetOfCavitySettings] = []
-        self.objectives: list[list[float] | np.ndarray] = []
-        self.constraints: list[list[float] | np.ndarray | None] = []
+        self._settings: list[SetOfCavitySettings] = []
+        self._objectives: list[list[float] | np.ndarray] = []
+        self._constraints: list[list[float] | np.ndarray | None] = []
 
-        self.start_idx = self._determine_start_idx()
-        self.iteration_count: int = 0
-        self.save_interval = save_interval
-        self.run_id = run_id
+        self._start_idx = self._determine_start_idx()
+        self._iteration_count: int = 0
+        self._save_interval = save_interval
+        self._run_id = run_id
 
     def _determine_start_idx(self) -> int:
         """Open ``variables.csv`` to determine at which position we should start writing.
@@ -335,7 +338,7 @@ class OptimizationHistory:
         Used when ``mode`` is ``"append"``.
 
         """
-        if self.mode == "overwrite":
+        if self._mode == "overwrite":
             return 0
         raise NotImplementedError
 
@@ -350,17 +353,17 @@ class OptimizationHistory:
         self, set_of_cavity_settings: SetOfCavitySettings
     ) -> None:
         """Add a new set of cavity settings, update number of iterations."""
-        self.settings.append(set_of_cavity_settings)
+        self._settings.append(set_of_cavity_settings)
 
     def add_objective_values(self, objectives: list | np.ndarray) -> None:
         """Add some objective values."""
-        self.objectives.append(objectives)
+        self._objectives.append(objectives)
 
     def add_constraint_values(
         self, constraints: list | np.ndarray | None
     ) -> None:
         """Add some constraint values."""
-        self.constraints.append(constraints)
+        self._constraints.append(constraints)
 
     def save(self) -> None:
         """Save the three histories in their respective files.
@@ -373,12 +376,12 @@ class OptimizationHistory:
             (_save_settings, _save_values, _save_values),
         ):
             filename = getattr(self, property + "_filename")
-            filepath = self.history_folder / filename
+            filepath = self._folder / filename
             values = getattr(self, property)
-            save_func(filepath, self.run_id, self.start_idx, values)
+            save_func(filepath, self._run_id, self._start_idx, values)
 
-        delta_i = len(self.settings)
-        self.start_idx += delta_i
+        delta_i = len(self._settings)
+        self._start_idx += delta_i
         self._empty_histories()
 
     def _remove_previous_files(self) -> None:
@@ -391,17 +394,17 @@ class OptimizationHistory:
 
     def _empty_histories(self) -> None:
         """Empty the histories."""
-        self.settings = []
-        self.objectives = []
-        self.constraints = []
+        self._settings = []
+        self._objectives = []
+        self._constraints = []
 
     def checkpoint(self) -> None:
         """Save periodically based on the defined interval."""
-        self.iteration_count += 1
-        if self.iteration_count % self.save_interval == 0:
+        self._iteration_count += 1
+        if self._iteration_count % self._save_interval == 0:
             self.save()
             logging.debug(
-                f"Checkpoint saved at iteration {self.iteration_count}."
+                f"Checkpoint saved at iteration {self._iteration_count}."
             )
 
 
