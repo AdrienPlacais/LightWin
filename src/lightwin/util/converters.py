@@ -1,4 +1,10 @@
-"""All functions to change units."""
+"""All functions to change units.
+
+.. todo::
+    The eps_phiw is not correct. Does not match TraceWin (even if what I
+    compute seems right). Check the zdelta -> phiw conversion.
+
+"""
 
 import numpy as np
 
