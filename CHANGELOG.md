@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `SimulationOutput.plot()` method, that calls `.get` under the hood and takes in the same arguments.
-- Non-normalized emittance is stored under `non_norm_eps`. Ex: `SimulationOutput.get(non_norm_eps_phiW)`.
+- Non-normalized emittance is stored under `non_norm_eps`. Ex: `SimulationOutput.get("non_norm_eps_phiw")`.
 
 ### Changed
 
