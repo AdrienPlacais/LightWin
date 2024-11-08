@@ -81,6 +81,7 @@ class DownhillSimplex(OptimisationAlgorithm):
             "F": self.solution.fun.tolist(),
             "objectives_values": objectives_values,
         }
+        self._finalize()
         return success, optimized_cavity_settings, info
 
     @property

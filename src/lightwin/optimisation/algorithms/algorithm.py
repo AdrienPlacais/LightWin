@@ -110,8 +110,8 @@ class OptimisationAlgorithm(ABC):
         cavity_settings_factory: CavitySettingsFactory,
         constraints: Collection[Constraint] | None = None,
         compute_constraints: ComputeConstraintsT | None = None,
-        folder: Path | None = None,
         optimisation_algorithm_kwargs: dict[str, Any] | None = None,
+        optimization_history_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ) -> None:
         """Instantiate the object."""
@@ -128,7 +128,6 @@ class OptimisationAlgorithm(ABC):
         if self.supports_constraints:
             assert compute_constraints is not None
         self.compute_constraints = compute_constraints
-        self.folder = folder
         self.cavity_settings_factory = cavity_settings_factory
 
         self.solution: OptiSol
@@ -139,6 +138,10 @@ class OptimisationAlgorithm(ABC):
         self.optimisation_algorithm_kwargs = (
             self._default_kwargs | optimisation_algorithm_kwargs
         )
+
+        if optimization_history_kwargs is None:
+            optimization_history_kwargs = {}
+        self.history = OptimizationHistory(**optimization_history_kwargs)
 
     @property
     def variable_names(self) -> list[str]:
@@ -209,10 +212,17 @@ class OptimisationAlgorithm(ABC):
 
     def _wrapper_residuals(self, var: np.ndarray) -> np.ndarray:
         """Compute residuals from an array of variable values."""
+        self.history.add_settings(var)
         cav_settings = self._create_set_of_cavity_settings(var)
         simulation_output = self.compute_beam_propagation(cav_settings)
         residuals = self.compute_residuals(simulation_output)
+        self.history.add_objective_values(list(residuals), simulation_output)
+        self.history.checkpoint()
         return residuals
+
+    def _finalize(self) -> None:
+        """End the optimization process."""
+        self.history.save()
 
     def _norm_wrapper_residuals(self, var: np.ndarray) -> float:
         """Compute norm of residues vector from an array of variable values."""
@@ -285,22 +295,32 @@ class OptimisationAlgorithm(ABC):
 class OptimizationHistory:
     """Keep all the settings that were tried."""
 
-    settings_filename = "settings.csv"
-    objectives_filename = "objectives.csv"
-    constraints_filename = "constraints.csv"
+    _settings_filename = "settings.csv"
+    _objectives_filename = "objectives.csv"
+    _constraints_filename = "constraints.csv"
 
     def __init__(
         self,
+        get_args: tuple[str, ...] = (),
+        get_kwargs: dict[str, Any] | None = None,
         folder: Path | None = None,
-        save_interval: int = 50,
+        save_interval: int = 100,
         run_id: str = "dummy",
         mode: Literal["append", "overwrite"] = "overwrite",
         **kwargs,
     ) -> None:
         """Instantiate the object.
 
+        .. todo::
+            Init the files with proper headers.
+
         Parameters
         ----------
+        get_args, get_kwargs : tuple[str, ...], dict[str, Any], optional
+            args and kwargs passed to the ``SimulationOutput.get`` method. Used
+            to add some values to the output files.
+        get_kwargs : dict[str, Any] | None, optionaltuple
+            Keyword arguments for the SimulationOutput.get method.
         folder : Path | None, optional
             Where the histories will be saved. If not provided or None is
             given, this class will not have any effect and every public method
@@ -314,16 +334,24 @@ class OptimizationHistory:
             If we should happen data to previous files or overwrite them.
 
         """
+        # folder = Path("/home/placais/Downloads/")
+        # get_args = ("w_kin", "eps_zdelta")
+        # get_kwargs = {"elt": "last", "pos": "out"}
         if folder is None:
             self._make_public_methods_useless()
             return
         self._folder = folder
 
+        self._get_args = get_args
+        if get_kwargs is None:
+            get_kwargs = {}
+        self._get_kwargs = get_kwargs
+
         if mode == "overwrite":
             self._remove_previous_files()
         self._mode = mode
 
-        self._settings: list[SetOfCavitySettings] = []
+        self._settings: list[np.ndarray] = []
         self._objectives: list[list[float] | np.ndarray] = []
         self._constraints: list[list[float] | np.ndarray | None] = []
 
@@ -344,19 +372,26 @@ class OptimizationHistory:
 
     def _make_public_methods_useless(self) -> None:
         """Override some methods so that they do not do anything."""
-        self.add_settings = lambda set_of_cavity_settings: None
-        self.add_objective_values = lambda objectives: None
+        self.add_settings = lambda var: None
+        self.add_objective_values = lambda objectives, simulation_output: None
         self.add_constraint_values = lambda constraints: None
         self.save = lambda: None
+        self.checkpoint = lambda: None
 
-    def add_settings(
-        self, set_of_cavity_settings: SetOfCavitySettings
+    def add_settings(self, var: np.ndarray) -> None:
+        """Add a new set of cavity settings."""
+        self._settings.append(var)
+
+    def add_objective_values(
+        self, objectives: list, simulation_output: SimulationOutput
     ) -> None:
-        """Add a new set of cavity settings, update number of iterations."""
-        self._settings.append(set_of_cavity_settings)
-
-    def add_objective_values(self, objectives: list | np.ndarray) -> None:
         """Add some objective values."""
+        new_vals: tuple[float]
+        new_vals = simulation_output.get(
+            *self._get_args, to_numpy=False, **self._get_kwargs
+        )
+        objectives.append(new_vals)
+
         self._objectives.append(objectives)
 
     def add_constraint_values(
@@ -371,18 +406,18 @@ class OptimizationHistory:
         All files will be in ``self.history_folder``.
 
         """
-        for property, save_func in zip(
-            ("settings", "objectives", "constraints"),
-            (_save_settings, _save_values, _save_values),
-        ):
+        for property in ("_settings", "_objectives", "_constraints"):
             filename = getattr(self, property + "_filename")
             filepath = self._folder / filename
             values = getattr(self, property)
-            save_func(filepath, self._run_id, self._start_idx, values)
+            _save_values(filepath, self._run_id, self._start_idx, values)
 
         delta_i = len(self._settings)
         self._start_idx += delta_i
         self._empty_histories()
+        logging.critical(
+            f"Saved optimization hist at iteration {self._start_idx}."
+        )
 
     def _remove_previous_files(self) -> None:
         """Remove the previous history files.
@@ -391,6 +426,14 @@ class OptimizationHistory:
         is ``"overwrite"``.
 
         """
+        for filename in (
+            self._settings_filename,
+            self._objectives_filename,
+            self._constraints_filename,
+        ):
+            filepath = self._folder / filename
+            if filepath.is_file():
+                filepath.unlink()
 
     def _empty_histories(self) -> None:
         """Empty the histories."""
@@ -403,37 +446,6 @@ class OptimizationHistory:
         self._iteration_count += 1
         if self._iteration_count % self._save_interval == 0:
             self.save()
-            logging.debug(
-                f"Checkpoint saved at iteration {self._iteration_count}."
-            )
-
-
-def _save_settings(
-    filepath: Path,
-    run_id: str,
-    start_idx: int,
-    settings: list[SetOfCavitySettings],
-) -> None:
-    """Save the ``settings`` to ``filepath``.
-
-    Parameters
-    ----------
-    filepath : Path
-       Where to save ``filepath``.
-    start_idx : int
-        The position at which the first :class:`.SetOfCavitySettings` should be
-        saved. Also stored in the first column.
-    run_id : str
-        An ID to discriminate runs; useful when several optimization are kept
-        in the same file. Stored in second column.
-    settings : list[SetOfCavitySettings]
-        The settings that will be saved, in third column and onwards.
-
-    """
-    with filepath.open("w", encoding="utf-8") as file:
-        for idx, setting in enumerate(settings, start=start_idx):
-            row = f"{idx},{run_id},{setting}\n"
-            file.write(row)
 
 
 def _save_values(
@@ -459,7 +471,7 @@ def _save_values(
         the file.
 
     """
-    with filepath.open("w") as file:
+    with filepath.open("a", encoding="utf-8") as file:
         for idx, value_set in enumerate(values, start=start_idx):
             if value_set is None:
                 value_str = "None"
