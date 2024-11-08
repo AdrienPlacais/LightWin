@@ -24,9 +24,15 @@ class LeastSquaresPenalty(LeastSquares):
 
     supports_constraints = True
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(
+        self, *args, history_kwargs: dict | None = None, **kwargs
+    ) -> None:
         """Set additional information."""
-        super().__init__(*args, **kwargs)
+        if history_kwargs is not None:
+            logging.warning(
+                "History recording not implemented for DownhillSimplexPenalty."
+            )
+        super().__init__(*args, history_kwargs=history_kwargs, **kwargs)
         self.compute_constraints: ComputeConstraintsT
 
         if "phi_s" in self.variable_names:

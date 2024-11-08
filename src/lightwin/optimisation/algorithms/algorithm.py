@@ -53,7 +53,9 @@ class OptiInfo(TypedDict):
 class OptiSol(TypedDict):
     """Hold information on the solution."""
 
-    x: np.ndarray
+    X: list[float]
+    F: list[float]
+    objectives_values: dict[str, float]
 
 
 ComputeBeamPropagationT = Callable[[SetOfCavitySettings], SimulationOutput]
@@ -91,7 +93,7 @@ class OptimisationAlgorithm(ABC):
     cavity_settings_factory : CavitySettingsFactory
         A factory to easily create the cavity settings to try at each iteration
         of the optimisation algorithm.
-    history_kwargs : dict
+    history_kwargs : dict | None, optional
         kwargs for the :class:`.OptimizationHistory` creation.
 
     """
@@ -172,20 +174,8 @@ class OptimisationAlgorithm(ABC):
         return {}
 
     @abstractmethod
-    def optimise(
-        self,
-        keep_history: bool = False,
-        save_history: bool = False,
-    ) -> tuple[bool, SetOfCavitySettings | None, OptiInfo]:
+    def optimise(self) -> tuple[bool, SetOfCavitySettings | None, OptiSol]:
         """Set up optimisation parameters and solve the problem.
-
-        Parameters
-        ----------
-        keep_history : bool, optional
-            To keep all the variables that were tried as well as the associated
-            objective and constraint violation values.
-        save_history : bool, optional
-            To save the history.
 
         Returns
         -------
@@ -194,7 +184,7 @@ class OptimisationAlgorithm(ABC):
         optimized_cavity_settings : SetOfCavitySettings
             Best solution found by the optimization algorithm. None if no
             satisfactory solution was found.
-        info : OptiInfo
+        info : OptiSol
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 
