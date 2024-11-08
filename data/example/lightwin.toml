@@ -49,13 +49,20 @@ strategy = "k out of n"
 
 [save_wtf]
 failed = [["FM11"]]
-history_kwargs = { get_args = ["w_kin", "eps_zdelta"], get_kwargs = { elt = "last", pos = "out" }, folder = "/home/placais/Downloads/", save_interval = 512, run_id = "ohlala", mode = "overwrite" }
 id_nature = "name"
 k = 3
 objective_preset = "simple_ADS"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
+
+[save_wtf.history_kwargs]
+folder = "/home/placais/Downloads/"
+get_args = ["w_kin", "eps_zdelta"]
+get_kwargs = { elt = "last", pos = "out" }
+mode = "overwrite"
+run_id = "huho"
+save_interval = 512
 
 [wtf_l_neighboring_lattices]
 failed = [["FM11"]]
