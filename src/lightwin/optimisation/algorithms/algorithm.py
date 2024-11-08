@@ -282,7 +282,17 @@ class OptimisationAlgorithm(ABC):
 
 
 class OptimizationHistory:
-    """Keep all the settings that were tried."""
+    """Keep all the settings that were tried.
+
+    .. todo::
+        Init the files with proper headers.
+        idx | id | obj1 | obj2 | obj3 | elt1qty1 | elt1qty2 ...
+
+    .. todo::
+        Add the reference SimulationOutput data. Would always be printed in
+        first idx, with id + _ref
+
+    """
 
     _settings_filename = "settings.csv"
     _objectives_filename = "objectives.csv"
@@ -294,14 +304,9 @@ class OptimizationHistory:
         get_kwargs: dict[str, Any] | None = None,
         folder: Path | str | None = None,
         save_interval: int = 100,
-        run_id: str = "dummy",
-        mode: Literal["append", "overwrite"] = "overwrite",
         **kwargs,
     ) -> None:
         """Instantiate the object.
-
-        .. todo::
-            Init the files with proper headers.
 
         Parameters
         ----------
@@ -316,11 +321,6 @@ class OptimizationHistory:
             wil be overriden with dummy methods.
         save_interval : int, optional
             Files will be saved every ``save_interval`` iteration.
-        run_id : str, optional
-            An ID to keep track of the optimization parameters in the output
-            files.
-        mode : Literal["append", "overwrite"], optional
-            If we should happen data to previous files or overwrite them.
 
         """
         if folder is None:
@@ -335,28 +335,15 @@ class OptimizationHistory:
             get_kwargs = {}
         self._get_kwargs = get_kwargs
 
-        if mode == "overwrite":
-            self._remove_previous_files()
-        self._mode = mode
+        self._rename_previous_files()
 
         self._settings: list[np.ndarray] = []
         self._objectives: list[list[float] | np.ndarray] = []
         self._constraints: list[list[float] | np.ndarray | None] = []
 
-        self._start_idx = self._determine_start_idx()
+        self._start_idx = 0
         self._iteration_count: int = 0
         self._save_interval = save_interval
-        self._run_id = run_id
-
-    def _determine_start_idx(self) -> int:
-        """Open ``variables.csv`` to determine at which position we should start writing.
-
-        Used when ``mode`` is ``"append"``.
-
-        """
-        if self._mode == "overwrite":
-            return 0
-        raise NotImplementedError
 
     def _make_public_methods_useless(self) -> None:
         """Override some methods so that they do not do anything."""
@@ -399,7 +386,7 @@ class OptimizationHistory:
             filename = getattr(self, property + "_filename")
             filepath = self._folder / filename
             values = getattr(self, property)
-            _save_values(filepath, self._run_id, self._start_idx, values)
+            _save_values(filepath, values)
 
         delta_i = len(self._settings)
         self._start_idx += delta_i
@@ -408,13 +395,8 @@ class OptimizationHistory:
             f"Saved optimization hist at iteration {self._start_idx}."
         )
 
-    def _remove_previous_files(self) -> None:
-        """Remove the previous history files.
-
-        This is not the default behavior, it is only called when ``self.mode``
-        is ``"overwrite"``.
-
-        """
+    def _rename_previous_files(self) -> None:
+        """Rename the previous history files."""
         for filename in (
             self._settings_filename,
             self._objectives_filename,
@@ -422,7 +404,7 @@ class OptimizationHistory:
         ):
             filepath = self._folder / filename
             if filepath.is_file():
-                filepath.unlink()
+                filepath.rename(filepath.with_suffix(".csv.old"))
 
     def _empty_histories(self) -> None:
         """Empty the histories."""
@@ -438,10 +420,7 @@ class OptimizationHistory:
 
 
 def _save_values(
-    filepath: Path,
-    run_id: str,
-    start_idx: int,
-    values: list[list[float] | np.ndarray | None],
+    filepath: Path, values: list[list[float] | np.ndarray | None]
 ) -> None:
     """Save the ``values`` to ``filepath`` (can be objectives or constraints).
 
@@ -449,11 +428,6 @@ def _save_values(
     ----------
     filepath : Path
        Where to save the values.
-    start_idx : int
-        The position at which the first entry should be saved.
-    run_id : str
-        An ID to discriminate runs; useful when several optimizations are kept
-        in the same file.
     values : list[list[float] | np.ndarray | None]
         The list of values to save (objectives or constraints), starting in
         the third column. If a value is None, it is represented as 'None' in
@@ -461,10 +435,10 @@ def _save_values(
 
     """
     with filepath.open("a", encoding="utf-8") as file:
-        for idx, value_set in enumerate(values, start=start_idx):
+        for idx, value_set in enumerate(values):
             if value_set is None:
                 value_str = "None"
             else:
                 value_str = ",".join(map(str, value_set))
-            row = f"{idx},{run_id},{value_str}\n"
+            row = f"{value_str}\n"
             file.write(row)
