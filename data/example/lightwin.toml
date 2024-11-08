@@ -58,7 +58,7 @@ strategy = "k out of n"
 
 [save_wtf.history_kwargs]
 folder = "/home/placais/Downloads/"
-get_args = ["w_kin", "phi_abs", "eps_zdelta", "non_norm_eps_zelta", "phi_s", "v_cav", "mismatch_factor_zdelta", "alpha_zdelta", "beta_zdelta", "gamma_zdelta"]
+get_args = ["w_kin", "phi_abs", "eps_zdelta", "non_norm_eps_zdelta", "phi_s", "v_cav_mv", "mismatch_factor_zdelta", "alpha_zdelta", "beta_zdelta", "gamma_zdelta"]
 get_kwargs = { elt = ["FM9", "FM10", "FM11", "FM12"], pos = "out" }
 save_interval = 512
 
