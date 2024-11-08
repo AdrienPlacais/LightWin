@@ -235,7 +235,7 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
             reference linac.
         reference_z_abs : numpy.ndarray
             Positions corresponding to ``reference_phase_space``.
-        z_abs : np.ndarray
+        z_abs : numpy.ndarray
             Positions in the linac under study.
         raise_missing_twiss_error : bool
             If set to True and the Twiss parameters were not calculated in
