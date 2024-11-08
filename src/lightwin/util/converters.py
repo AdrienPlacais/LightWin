@@ -1,4 +1,10 @@
-"""All functions to change units."""
+"""All functions to change units.
+
+.. todo::
+    The eps_phiw is not correct. Does not match TraceWin (even if what I
+    compute seems right). Check the zdelta -> phiw conversion.
+
+"""
 
 import numpy as np
 
@@ -82,18 +88,18 @@ def emittance(
     k_3 = k_2 * gamma_kin**2
 
     conversion_constants = {
+        "z to zdelta": 0.1,
+        "zdelta to z": 10.0,
         "phiw to z": 1.0 / k_1,
         "z to phiw": k_1,
         "phiw to zdelta": 0.1 / k_1,
         "zdelta to phiw": 10 * k_1,
-        "z to zdelta": 0.1,
-        "zdelta to z": 10.0,
         "normalize zdelta": k_2,
         "de-normalize zdelta": 1.0 / k_2,
-        "normalize phiw": k_2,
-        "de-normalize phiw": 1.0 / k_2,
-        "normalize z": k_3,
-        "de-normalize z": 1.0 / k_3,
+        "normalize z": k_2,
+        "de-normalize z": 1.0 / k_2,
+        "normalize phiw": k_3,
+        "de-normalize phiw": 1.0 / k_3,
         "normalize x": k_2,
         "de-normalize x": 1.0 / k_2,
         "normalize y": k_2,

@@ -28,7 +28,7 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
     """Hold Twiss, emittance, envelopes of a single phase-space."""
 
     # Override some types from mother class
-    eps_no_normalisation: np.ndarray
+    eps_no_normalization: np.ndarray
     eps_normalized: np.ndarray
     mismatch_factor: np.ndarray | None = None
 
@@ -114,8 +114,8 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
         eps_normalized = 0.5 * (
             x_space.eps_normalized + y_space.eps_normalized
         )
-        eps_no_normalisation = 0.5 * (
-            x_space.eps_no_normalisation + y_space.eps_no_normalisation
+        eps_no_normalization = 0.5 * (
+            x_space.eps_no_normalization + y_space.eps_no_normalization
         )
         envelopes = 0.5 * (x_space.envelopes + y_space.envelopes)
 
@@ -130,7 +130,7 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
 
         phase_space = cls(
             phase_space_name=phase_space_name,
-            eps_no_normalisation=eps_no_normalisation,
+            eps_no_normalization=eps_no_normalization,
             eps_normalized=eps_normalized,
             envelopes=envelopes,
             mismatch_factor=mismatch_factor,
@@ -206,6 +206,11 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
     def eps(self) -> np.ndarray:
         """Return the normalized emittance."""
         return self.eps_normalized
+
+    @property
+    def non_norm_eps(self) -> np.ndarray:
+        """Return the non-normalized emittance."""
+        return self.eps_no_normalization
 
     @property
     def sigma_in(self) -> np.ndarray:
