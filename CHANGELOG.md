@@ -20,16 +20,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FIELD_MAP 70` does not raise error (warning issued with `Envelope3D`: no transverse tracking).
 - `SUPERPOSE_MAP` will be implemented for 1D maps (warning issued with `Envelope3D`: no transverse tracking).
 
+
+## [0.8.0b4] 2024-11-08
+
+### Added
+
+- `SimulationOutput.plot()` method, that calls `.get` under the hood and takes in the same arguments.
+- Non-normalized emittance is stored under `non_norm_eps`. Ex: `SimulationOutput.get(non_norm_eps_phiW)`.
+
 ### Changed
 
-- Creation of `DatLine` object, holding a line of the ``.dat`` file. Solves several bugs, e.g. with hyphens in personalized names.
-- Makefile for docs is up-to-date. Instructions in README.
-- Changed location of `RfField` object, now in `core/em_field/rf_field`.
-- The solver `Envelope1D` is now `CyEnvelope1D` when user wants Cython.
-
-### Fixed
-
-- When several `Element` objects have the same `_personalized_name`, a fallback name and a warning is raised instead of raising an `AssertionError`.
+- Normalized emittances are explicitly marked as normalized in the output.
 
 ## [0.8.0b3] 2024-11-07
 
@@ -48,17 +49,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `path_cal` not existing in `TraceWin` raised error instead of just creating the folder.
 - Interpolation of Twiss to compute mismatch factor was bugged.
 
-## [0.8.0b4] 2024-??-??
-
-### Added
-
-- `SimulationOutput.plot()` method, that calls `.get` under the hood and takes in the same arguments.
-- Non-normalized emittance is stored under `non_norm_eps`. Ex: `SimulationOutput.get(non_norm_eps_phiW)`.
-
-### Changed
-
-- Normalized emittances are explicitly marked as normalized in the output.
-
 ## [0.8.0b2] 2024-11-05
 
 ### Fixed
@@ -73,6 +63,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Dot characters in field map file names do not throw an error anymore.
+- When several `Element` objects have the same `_personalized_name`, a fallback name and a warning is raised instead of raising an `AssertionError`.
+
+### Changed
+
+- Creation of `DatLine` object, holding a line of the ``.dat`` file. Solves several bugs, e.g. with hyphens in personalized names.
+- Makefile for docs is up-to-date. Instructions in README.
+- Changed location of `RfField` object, now in `core/em_field/rf_field`.
+- The solver `Envelope1D` is now `CyEnvelope1D` when user wants Cython.
 
 ## [0.8.0b0] 2024-10-22
 
