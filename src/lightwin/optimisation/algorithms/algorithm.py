@@ -374,13 +374,14 @@ class OptimizationHistory:
         self, objectives: list, simulation_output: SimulationOutput
     ) -> None:
         """Add some objective values."""
-        new_vals: tuple[float]
-        new_vals = simulation_output.get(
-            *self._get_args, to_numpy=False, **self._get_kwargs
+        new_vals: list[float]
+        new_vals = list(
+            simulation_output.get(
+                *self._get_args, to_numpy=False, **self._get_kwargs
+            )
         )
-        objectives.append(new_vals)
 
-        self._objectives.append(objectives)
+        self._objectives.append(objectives + new_vals)
 
     def add_constraint_values(
         self, constraints: list | np.ndarray | None
