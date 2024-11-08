@@ -88,12 +88,11 @@ class OptimisationAlgorithm(ABC):
         Method to compute residuals from a :class:`.SimulationOutput`.
     compute_constraints : ComputeConstraintsT | None, optional
         Method to compute constraint violation. The default is None.
-    folder : str | None, optional
-        Where history, phase space and other optimisation information will be
-        saved if necessary. The default is None.
     cavity_settings_factory : CavitySettingsFactory
         A factory to easily create the cavity settings to try at each iteration
         of the optimisation algorithm.
+    history_kwargs : dict
+        kwargs for the :class:`.OptimizationHistory` creation.
 
     """
 
@@ -111,7 +110,7 @@ class OptimisationAlgorithm(ABC):
         constraints: Collection[Constraint] | None = None,
         compute_constraints: ComputeConstraintsT | None = None,
         optimisation_algorithm_kwargs: dict[str, Any] | None = None,
-        optimization_history_kwargs: dict[str, Any] | None = None,
+        history_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ) -> None:
         """Instantiate the object."""
@@ -139,9 +138,9 @@ class OptimisationAlgorithm(ABC):
             self._default_kwargs | optimisation_algorithm_kwargs
         )
 
-        if optimization_history_kwargs is None:
-            optimization_history_kwargs = {}
-        self.history = OptimizationHistory(**optimization_history_kwargs)
+        if history_kwargs is None:
+            history_kwargs = {}
+        self.history = OptimizationHistory(**history_kwargs)
 
     @property
     def variable_names(self) -> list[str]:
@@ -303,7 +302,7 @@ class OptimizationHistory:
         self,
         get_args: tuple[str, ...] = (),
         get_kwargs: dict[str, Any] | None = None,
-        folder: Path | None = None,
+        folder: Path | str | None = None,
         save_interval: int = 100,
         run_id: str = "dummy",
         mode: Literal["append", "overwrite"] = "overwrite",
@@ -321,7 +320,7 @@ class OptimizationHistory:
             to add some values to the output files.
         get_kwargs : dict[str, Any] | None, optionaltuple
             Keyword arguments for the SimulationOutput.get method.
-        folder : Path | None, optional
+        folder : Path | str | None, optional
             Where the histories will be saved. If not provided or None is
             given, this class will not have any effect and every public method
             wil be overriden with dummy methods.
@@ -334,12 +333,11 @@ class OptimizationHistory:
             If we should happen data to previous files or overwrite them.
 
         """
-        # folder = Path("/home/placais/Downloads/")
-        # get_args = ("w_kin", "eps_zdelta")
-        # get_kwargs = {"elt": "last", "pos": "out"}
         if folder is None:
             self._make_public_methods_useless()
             return
+        if isinstance(folder, str):
+            folder = Path(folder)
         self._folder = folder
 
         self._get_args = get_args
@@ -415,7 +413,7 @@ class OptimizationHistory:
         delta_i = len(self._settings)
         self._start_idx += delta_i
         self._empty_histories()
-        logging.critical(
+        logging.debug(
             f"Saved optimization hist at iteration {self._start_idx}."
         )
 
