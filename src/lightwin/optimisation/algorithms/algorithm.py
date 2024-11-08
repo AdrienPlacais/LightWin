@@ -20,10 +20,11 @@ list of implemented algorithms in the :mod:`.algorithm` module.
 
 """
 
+import logging
 from abc import ABC, abstractmethod
 from collections.abc import Collection
 from pathlib import Path
-from typing import Any, Callable, TypedDict
+from typing import Any, Callable, Literal, TypedDict
 
 import numpy as np
 
@@ -279,3 +280,187 @@ class OptimisationAlgorithm(ABC):
             hist_G=constraints_values,
         )
         return opti_info
+
+
+class OptimizationHistory:
+    """Keep all the settings that were tried."""
+
+    settings_filename = "settings.csv"
+    objectives_filename = "objectives.csv"
+    constraints_filename = "constraints.csv"
+
+    def __init__(
+        self,
+        history_folder: Path | None = None,
+        save_interval: int = 50,
+        run_id: str = "dummy",
+        mode: Literal["append", "overwrite"] = "overwrite",
+    ) -> None:
+        """Instantiate the object.
+
+        Parameters
+        ----------
+        history_folder : Path | None, optional
+            Where the histories will be saved. If not provided or None is
+            given, this class will not have any effect and every public method
+            wil be overriden with dummy methods.
+        save_interval : int, optional
+            Files will be saved every ``save_interval`` iteration.
+        run_id : str, optional
+            An ID to keep track of the optimization parameters in the output
+            files.
+        mode : Literal["append", "overwrite"], optional
+            If we should happen data to previous files or overwrite them.
+
+        """
+        if history_folder is None:
+            self._make_public_methods_useless()
+            return
+        self.history_folder = history_folder
+        if mode == "overwrite":
+            self._remove_previous_files()
+
+        self.settings: list[SetOfCavitySettings] = []
+        self.objectives: list[list[float] | np.ndarray] = []
+        self.constraints: list[list[float] | np.ndarray | None] = []
+
+        self.start_idx = self._determine_start_idx()
+        self.iteration_count: int = 0
+        self.save_interval = save_interval
+        self.run_id = run_id
+
+    def _determine_start_idx(self) -> int:
+        """Open ``variables.csv`` to determine at which position we should start writing.
+
+        Used when ``mode`` is ``"append"``.
+
+        """
+        if self.mode == "overwrite":
+            return 0
+        raise NotImplementedError
+
+    def _make_public_methods_useless(self) -> None:
+        """Override some methods so that they do not do anything."""
+        self.add_settings = lambda set_of_cavity_settings: None
+        self.add_objective_values = lambda objectives: None
+        self.add_constraint_values = lambda constraints: None
+        self.save = lambda: None
+
+    def add_settings(
+        self, set_of_cavity_settings: SetOfCavitySettings
+    ) -> None:
+        """Add a new set of cavity settings, update number of iterations."""
+        self.settings.append(set_of_cavity_settings)
+
+    def add_objective_values(self, objectives: list | np.ndarray) -> None:
+        """Add some objective values."""
+        self.objectives.append(objectives)
+
+    def add_constraint_values(
+        self, constraints: list | np.ndarray | None
+    ) -> None:
+        """Add some constraint values."""
+        self.constraints.append(constraints)
+
+    def save(self) -> None:
+        """Save the three histories in their respective files.
+
+        All files will be in ``self.history_folder``.
+
+        """
+        for property, save_func in zip(
+            ("settings", "objectives", "constraints"),
+            (_save_settings, _save_values, _save_values),
+        ):
+            filename = getattr(self, property + "_filename")
+            filepath = self.history_folder / filename
+            values = getattr(self, property)
+            save_func(filepath, self.run_id, self.start_idx, values)
+
+        delta_i = len(self.settings)
+        self.start_idx += delta_i
+        self._empty_histories()
+
+    def _remove_previous_files(self) -> None:
+        """Remove the previous history files.
+
+        This is not the default behavior, it is only called when ``self.mode``
+        is ``"overwrite"``.
+
+        """
+
+    def _empty_histories(self) -> None:
+        """Empty the histories."""
+        self.settings = []
+        self.objectives = []
+        self.constraints = []
+
+    def checkpoint(self) -> None:
+        """Save periodically based on the defined interval."""
+        self.iteration_count += 1
+        if self.iteration_count % self.save_interval == 0:
+            self.save()
+            logging.debug(
+                f"Checkpoint saved at iteration {self.iteration_count}."
+            )
+
+
+def _save_settings(
+    filepath: Path,
+    run_id: str,
+    start_idx: int,
+    settings: list[SetOfCavitySettings],
+) -> None:
+    """Save the ``settings`` to ``filepath``.
+
+    Parameters
+    ----------
+    filepath : Path
+       Where to save ``filepath``.
+    start_idx : int
+        The position at which the first :class:`.SetOfCavitySettings` should be
+        saved. Also stored in the first column.
+    run_id : str
+        An ID to discriminate runs; useful when several optimization are kept
+        in the same file. Stored in second column.
+    settings : list[SetOfCavitySettings]
+        The settings that will be saved, in third column and onwards.
+
+    """
+    with filepath.open("w", encoding="utf-8") as file:
+        for idx, setting in enumerate(settings, start=start_idx):
+            row = f"{idx},{run_id},{setting}\n"
+            file.write(row)
+
+
+def _save_values(
+    filepath: Path,
+    run_id: str,
+    start_idx: int,
+    values: list[list[float] | np.ndarray | None],
+) -> None:
+    """Save the ``values`` to ``filepath`` (can be objectives or constraints).
+
+    Parameters
+    ----------
+    filepath : Path
+       Where to save the values.
+    start_idx : int
+        The position at which the first entry should be saved.
+    run_id : str
+        An ID to discriminate runs; useful when several optimizations are kept
+        in the same file.
+    values : list[list[float] | np.ndarray | None]
+        The list of values to save (objectives or constraints), starting in
+        the third column. If a value is None, it is represented as 'None' in
+        the file.
+
+    """
+    with filepath.open("w") as file:
+        for idx, value_set in enumerate(values, start=start_idx):
+            if value_set is None:
+                value_str = "None"
+            else:
+                value_str = ",".join(map(str, value_set))
+            row = f"{idx},{run_id},{value_str}\n"
+            file.write(row)
