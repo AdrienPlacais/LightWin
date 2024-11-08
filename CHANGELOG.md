@@ -30,7 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - When several `Element` objects have the same `_personalized_name`, a fallback name and a warning is raised instead of raising an `AssertionError`.
-
 ## [0.8.0b3] 2024-11-07
 
 ### Added
@@ -46,6 +45,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Calculating `phi_0_abs` of a cavity when the reference was `phi_s` raised error.
 - `path_cal` not existing in `TraceWin` raised error instead of just creating the folder.
+
+## [0.8.0b4] 2024-??-??
+
+### Added
+
+- `SimulationOutput.plot()` method, that calls `.get` under the hood and takes in the same arguments.
+- Non-normalized emittance is stored under `non_norm_eps`. Ex: `SimulationOutput.get(non_norm_eps_phiW)`.
+
+### Changed
+
+- Normalized emittances are explicitly marked as normalized in the output.
 
 ## [0.8.0b2] 2024-11-05
 
@@ -117,7 +127,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `outfolder` argument in `combine-solutions` script is automatically created if it does not exist.
 - Documentation includes the API reference again.
 - Most of the errors raised during documentation compilation were fixed.
-
 
 ## [0.7.0b0] 2024-09-26
 
