@@ -146,7 +146,7 @@ def eps_from_sigma(
 
     Returns
     -------
-    eps_no_normalisation : numpy.ndarray | float
+    eps_no_normalization : numpy.ndarray | float
         ``(n, )`` array (or float) of emittance, not normalized.
     eps_normalized : numpy.ndarray float
         ``(n, )`` array (or float) of emittance, normalized.
@@ -165,31 +165,31 @@ def eps_from_sigma(
     dets = np.linalg.det(sigma)
     invalid_idx = np.where(dets < 0.0)
     dets[invalid_idx] = np.nan
-    eps_no_normalisation = np.sqrt(dets)
+    eps_no_normalization = np.sqrt(dets)
 
     if phase_space_name in ("zdelta",):
-        eps_no_normalisation *= 1e5
+        eps_no_normalization *= 1e5
     elif phase_space_name in ("x", "y", "x99", "y99"):
-        eps_no_normalisation *= 1e6
+        eps_no_normalization *= 1e6
 
     eps_normalized = converters.emittance(
-        eps_no_normalisation,
+        eps_no_normalization,
         f"normalize {phase_space_name}",
         gamma_kin=gamma_kin,
         beta_kin=beta_kin,
         **beam_kwargs,
     )
     if is_initials:
-        return eps_no_normalisation[0], eps_normalized[0]
+        return eps_no_normalization[0], eps_normalized[0]
 
     assert isinstance(eps_normalized, np.ndarray)
-    return eps_no_normalisation, eps_normalized
+    return eps_no_normalization, eps_normalized
 
 
 def twiss_from_sigma(
     phase_space_name: str,
     sigma: np.ndarray,
-    eps_no_normalisation: np.ndarray | float,
+    eps_no_normalization: np.ndarray | float,
     tol: float = 1e-8,
 ) -> np.ndarray:
     r"""Compute the Twiss parameters using the :math:`\sigma` matrix.
@@ -210,10 +210,10 @@ def twiss_from_sigma(
         Name of the phase space, used to set the proper normalization.
     sigma : numpy.ndarray
         ``(n, 2, 2)`` array (or ``(2, 2)``) holding :math:`\sigma` beam matrix.
-    eps_no_normalisation : numpy.ndarray | float
+    eps_no_normalization : numpy.ndarray | float
         ``(n, )`` array (or float) of unnormalized emittance.
     tol : float, optional
-        ``eps_no_normalisation`` is set to np.nan where it is under ``tol``
+        ``eps_no_normalization`` is set to np.nan where it is under ``tol``
         to avoid ``RuntimeWarning``. The default is ``1e-8``.
 
     Returns
@@ -225,7 +225,7 @@ def twiss_from_sigma(
     assert phase_space_name in ("zdelta", "x", "y", "x99", "y99")
 
     is_initial = False
-    if isinstance(eps_no_normalisation, float):
+    if isinstance(eps_no_normalization, float):
         is_initial = True
         sigma = sigma[np.newaxis, :, :]
 
@@ -233,7 +233,7 @@ def twiss_from_sigma(
     twiss = np.full((n_points, 3), np.nan)
 
     for i in range(n_points):
-        divisor = np.atleast_1d(eps_no_normalisation)[i]
+        divisor = np.atleast_1d(eps_no_normalization)[i]
         if np.abs(divisor) < tol:
             divisor = np.nan
 
@@ -424,7 +424,7 @@ def eps_from_other_phase_space(
 
     Returns
     -------
-    eps_no_normalisation : numpy.ndarray | float
+    eps_no_normalization : numpy.ndarray | float
         ``(n, )`` array (or float) of emittance, not normalized.
     eps_normalized : numpy.ndarray | float
         ``(n, )`` array (or float) of emittance, normalized.
@@ -439,14 +439,14 @@ def eps_from_other_phase_space(
         **beam_kwargs,
     )
 
-    eps_no_normalisation = converters.emittance(
+    eps_no_normalization = converters.emittance(
         eps_normalized,
         f"de-normalize {phase_space_name}",
         gamma_kin,
         beta_kin,
         **beam_kwargs,
     )
-    return eps_no_normalisation, eps_normalized
+    return eps_no_normalization, eps_normalized
 
 
 def twiss_from_other_phase_space(

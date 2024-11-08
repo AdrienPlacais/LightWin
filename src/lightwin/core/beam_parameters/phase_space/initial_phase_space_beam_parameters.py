@@ -24,7 +24,7 @@ class InitialPhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
     """Hold Twiss, emittance, envelopes of single phase-space @ single pos."""
 
     # Override some types from mother class
-    eps_no_normalisation: float
+    eps_no_normalization: float
     eps_normalized: float
     mismatch_factor: float | None = None
 
@@ -149,3 +149,8 @@ class InitialPhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
     def eps(self) -> float:
         """Return the normalized emittance."""
         return self.eps_normalized
+
+    @property
+    def non_norm_eps(self) -> float:
+        """Return the normalized emittance."""
+        return self.eps_no_normalization

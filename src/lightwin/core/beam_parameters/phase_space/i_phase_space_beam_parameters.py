@@ -42,7 +42,7 @@ class IPhaseSpaceBeamParameters(ABC):
     """Hold Twiss, emittance, envelopes of single phase-space @ single pos."""
 
     phase_space_name: str
-    eps_no_normalisation: np.ndarray | float
+    eps_no_normalization: np.ndarray | float
     eps_normalized: np.ndarray | float
     # _beam_kwargs: dict[str, Any]
     envelopes: np.ndarray | None = None
@@ -66,18 +66,18 @@ class IPhaseSpaceBeamParameters(ABC):
         **kwargs: np.ndarray,
     ) -> Self:
         """Compute Twiss, eps, envelopes just from sigma matrix."""
-        eps_no_normalisation, eps_normalized = eps_from_sigma(
+        eps_no_normalization, eps_normalized = eps_from_sigma(
             phase_space_name,
             sigma,
             gamma_kin,
             beta_kin,
             beam_kwargs=beam_kwargs,
         )
-        twiss = twiss_from_sigma(phase_space_name, sigma, eps_no_normalisation)
+        twiss = twiss_from_sigma(phase_space_name, sigma, eps_no_normalization)
         envelopes = envelopes_from_sigma(phase_space_name, sigma)
         phase_space = cls(
             phase_space_name=phase_space_name,
-            eps_no_normalisation=eps_no_normalisation,
+            eps_no_normalization=eps_no_normalization,
             eps_normalized=eps_normalized,
             sigma=sigma,
             twiss=twiss,
@@ -103,7 +103,7 @@ class IPhaseSpaceBeamParameters(ABC):
         twiss_other = other_phase_space.twiss
         assert twiss_other is not None
 
-        eps_no_normalisation, eps_normalized = eps_from_other_phase_space(
+        eps_no_normalization, eps_normalized = eps_from_other_phase_space(
             other_phase_space_name=other_phase_space_name,
             phase_space_name=phase_space_name,
             eps_other=eps_other,
@@ -120,13 +120,13 @@ class IPhaseSpaceBeamParameters(ABC):
             **beam_kwargs,
         )
 
-        eps_for_envelope = eps_no_normalisation
+        eps_for_envelope = eps_no_normalization
         if phase_space_name == "phiw":
             eps_for_envelope = eps_normalized
         envelopes = envelopes_from_twiss_eps(twiss, eps_for_envelope)
         phase_space = cls(
             phase_space_name=phase_space_name,
-            eps_no_normalisation=eps_no_normalisation,
+            eps_no_normalization=eps_no_normalization,
             eps_normalized=eps_normalized,
             twiss=twiss,
             envelopes=envelopes,
@@ -217,4 +217,10 @@ class IPhaseSpaceBeamParameters(ABC):
     @abstractmethod
     def eps(self) -> np.ndarray | float:
         """Return the normalized emittance."""
+        pass
+
+    @property
+    @abstractmethod
+    def non_norm_eps(self) -> np.ndarray | float:
+        """Return the non-normalized emittance."""
         pass

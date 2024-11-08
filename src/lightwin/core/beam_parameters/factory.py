@@ -150,7 +150,7 @@ class BeamParametersFactory(ABC):
         for phase_space_name, eps in zip(phase_space_names, emittances):
             phase_space = PhaseSpaceBeamParameters(
                 phase_space_name,
-                eps_no_normalisation=eps,
+                eps_no_normalization=eps,
                 eps_normalized=eps,
             )
             setattr(beam_parameters, phase_space_name, phase_space)
@@ -430,7 +430,7 @@ class InitialBeamParametersFactory(ABC):
 
         """
         args = (
-            "eps_no_normalisation",
+            "eps_no_normalization",
             "eps_normalized",
             "envelopes",
             "twiss",
