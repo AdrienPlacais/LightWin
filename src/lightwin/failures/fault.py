@@ -117,6 +117,7 @@ class Fault:
         self.variables = design_space.variables
         self.constraints = design_space.constraints
         self.compute_constraints = design_space.compute_constraints
+        self.reference_simulation_output = reference_simulation_output
 
         objective_preset = wtf["objective_preset"]
         assert isinstance(objective_preset, str)

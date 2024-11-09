@@ -9,8 +9,8 @@ from scipy.optimize import Bounds, minimize
 
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.algorithms.algorithm import (
-    OptiInfo,
     OptimisationAlgorithm,
+    OptiSol,
 )
 
 
@@ -33,11 +33,7 @@ class DownhillSimplex(OptimisationAlgorithm):
         """Instantiate object."""
         return super().__init__(*args, **kwargs)
 
-    def optimise(
-        self,
-        keep_history: bool = False,
-        save_history: bool = False,
-    ) -> tuple[bool, SetOfCavitySettings | None, OptiInfo]:
+    def optimise(self) -> tuple[bool, SetOfCavitySettings | None, OptiSol]:
         """Set up the optimisation and solve the problem.
 
         Returns
@@ -46,13 +42,11 @@ class DownhillSimplex(OptimisationAlgorithm):
             Tells if the optimisation algorithm managed to converge.
         optimized_cavity_settings : SetOfCavitySettings
             Best solution found by the optimization algorithm.
-        info : dict[str, list[float]]] | None
+        info : OptiSol
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 
         """
-        if keep_history or save_history:
-            raise NotImplementedError
         x_0, bounds = self._format_variables()
 
         solution = minimize(
@@ -76,11 +70,12 @@ class DownhillSimplex(OptimisationAlgorithm):
         objectives_values = self._get_objective_values()
         self._output_some_info(objectives_values)
 
-        info = {
+        info: OptiSol = {
             "X": self.solution.x.tolist(),
             "F": self.solution.fun.tolist(),
             "objectives_values": objectives_values,
         }
+        self._finalize()
         return success, optimized_cavity_settings, info
 
     @property
