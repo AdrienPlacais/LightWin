@@ -121,6 +121,7 @@ def _default_kwargs(
         "constraints": fault.constraints,
         "compute_constraints": fault.compute_constraints,
         "cavity_settings_factory": cavity_settings_factory,
+        "reference_simulation_output": fault.reference_simulation_output,
     }
     return default_kwargs
 

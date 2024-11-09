@@ -95,6 +95,8 @@ class OptimisationAlgorithm(ABC):
         of the optimisation algorithm.
     history_kwargs : dict | None, optional
         kwargs for the :class:`.OptimizationHistory` creation.
+    reference_simulation_output : SimulationOutput
+        Used for the :class:`.OptimizationHistory`.
 
     """
 
@@ -102,6 +104,7 @@ class OptimisationAlgorithm(ABC):
 
     def __init__(
         self,
+        *,
         compensating_elements: Collection[Element],
         elts: ListOfElements,
         objectives: Collection[Objective],
@@ -109,6 +112,7 @@ class OptimisationAlgorithm(ABC):
         compute_beam_propagation: ComputeBeamPropagationT,
         compute_residuals: ComputeResidualsT,
         cavity_settings_factory: CavitySettingsFactory,
+        reference_simulation_output: SimulationOutput,
         constraints: Collection[Constraint] | None = None,
         compute_constraints: ComputeConstraintsT | None = None,
         optimisation_algorithm_kwargs: dict[str, Any] | None = None,
@@ -143,7 +147,9 @@ class OptimisationAlgorithm(ABC):
         if history_kwargs is None:
             history_kwargs = {}
         self.history = OptimizationHistory(
-            [obj.name for obj in objectives], **history_kwargs
+            reference_simulation_output,
+            [obj.name for obj in objectives],
+            **history_kwargs,
         )
 
     @property
@@ -268,29 +274,9 @@ class OptimisationAlgorithm(ABC):
         }
         return objectives_values
 
-    def _generate_optimisation_history(
-        self,
-        variables_values: np.ndarray,
-        objectives_values: np.ndarray,
-        constraints_values: np.ndarray,
-    ) -> OptiInfo:
-        """Create optimisation history."""
-        opti_info = OptiInfo(
-            hist_X=variables_values,
-            hist_F=objectives_values,
-            hist_G=constraints_values,
-        )
-        return opti_info
-
 
 class OptimizationHistory:
-    """Keep all the settings that were tried.
-
-    .. todo::
-        Add the reference SimulationOutput data. Would always be printed in
-        first idx, with id + _ref
-
-    """
+    """Keep all the settings that were tried."""
 
     _settings_filename = "settings.csv"
     _objectives_filename = "objectives.csv"
@@ -298,6 +284,7 @@ class OptimizationHistory:
 
     def __init__(
         self,
+        reference_simulation_output: SimulationOutput,
         objectives_names: Collection[str],
         get_args: tuple[str, ...] = (),
         get_kwargs: dict[str, Any] | None = None,
@@ -337,9 +324,11 @@ class OptimizationHistory:
         self._rename_previous_files()
 
         self._settings: list[np.ndarray] = []
-        self._objectives: list[list[float] | list[str]] = [
-            self._objective_header(objectives_names)
-        ]
+        self._objectives: list[list[float | None] | list[str]] = list(
+            self._init_objective_hist(
+                objectives_names, reference_simulation_output
+            )
+        )
         self._constraints: list[list[float] | np.ndarray | None] = []
 
         self._start_idx = 0
@@ -358,9 +347,41 @@ class OptimizationHistory:
         """Add a new set of cavity settings."""
         self._settings.append(var)
 
-    def _objective_header(
+    def _init_objective_hist(
+        self,
+        objectives_names: Collection[str],
+        reference_simulation_output: SimulationOutput,
+    ) -> tuple[list[str], list[None | float]]:
+        """Create the objective history, with header and reference values."""
+        header_objective, header_outputs = self._objective_headers(
+            objectives_names
+        )
+
+        reference_objective = [None for _ in header_objective]
+        reference_outputs = self._simulation_output_to_objectives(
+            reference_simulation_output
+        )
+
+        objectives = (
+            header_objective + header_outputs,
+            reference_objective + reference_outputs,
+        )
+        return objectives
+
+    def _simulation_output_to_objectives(
+        self, simulation_output: SimulationOutput
+    ) -> list[float]:
+        """Extract and format desired values from ``simulation_output``."""
+        values = list(
+            simulation_output.get(
+                *self._get_args, to_numpy=False, **self._get_kwargs
+            )
+        )
+        return values
+
+    def _objective_headers(
         self, objectives_names: Collection[str]
-    ) -> list[str]:
+    ) -> tuple[list[str], list[str]]:
         """Get the objective headers."""
         header_objective = list(objectives_names)
         header_outputs = [
@@ -368,20 +389,16 @@ class OptimizationHistory:
             for elt in self._get_kwargs.get("elt", ())
             for qty in self._get_args
         ]
-        return header_objective + header_outputs
+        return header_objective, header_outputs
 
     def add_objective_values(
         self, objectives: list, simulation_output: SimulationOutput
     ) -> None:
         """Add some objective values."""
-        new_vals: list[float]
-        new_vals = list(
-            simulation_output.get(
-                *self._get_args, to_numpy=False, **self._get_kwargs
-            )
+        sim_output_vals = self._simulation_output_to_objectives(
+            simulation_output
         )
-
-        self._objectives.append(objectives + new_vals)
+        self._objectives.append(objectives + sim_output_vals)
 
     def add_constraint_values(
         self, constraints: list | np.ndarray | None
@@ -448,7 +465,7 @@ def _save_values(
 
     """
     with filepath.open("a", encoding="utf-8") as file:
-        for idx, value_set in enumerate(values):
+        for value_set in values:
             if value_set is None:
                 value_str = "None"
             else:
