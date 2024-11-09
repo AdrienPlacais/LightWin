@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Provide functions to study optimization history."""
-
 from pathlib import Path
 from typing import Literal
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.axis import Axis
@@ -61,6 +61,36 @@ def plot_optimization_objectives(
     return axis
 
 
+def plot_additional_objectives(
+    objectives: pd.DataFrame,
+    simulation_output_cols: list[str],
+    subplots: bool = False,
+    logy: bool | Literal["sym"] | None = None,
+    **kwargs,
+) -> Axis | np.ndarray | list:
+    """Plot evolution of additional objectives."""
+    to_plot = objectives[simulation_output_cols]
+    ylabel = "SimOut"
+    if isinstance(logy, bool) and logy:
+        to_plot = abs(objectives[simulation_output_cols])
+
+    quantities = set(col.split("@")[0] for col in simulation_output_cols)
+    axis = []
+    for qty in quantities:
+        cols = [col for col in simulation_output_cols if qty in col]
+        axis.append(
+            to_plot.plot(
+                y=cols,
+                xlabel="Iteration",
+                ylabel=ylabel,
+                subplots=subplots,
+                logy=logy,
+                **kwargs,
+            )
+        )
+    return axis
+
+
 def main(folder: Path) -> pd.DataFrame:
     """Provide an example of complete study."""
     variables, objectives, constants = load(folder)
@@ -72,9 +102,13 @@ def main(folder: Path) -> pd.DataFrame:
     plot_optimization_objectives(
         objectives, opti_cols, subplots=True, logy=True, **kwargs
     )
+    plot_additional_objectives(
+        objectives, simulation_output_cols, logy=True, **kwargs
+    )
     return objectives
 
 
 if __name__ == "__main__":
+    plt.close("all")
     folder = Path("/home/placais/Downloads/")
     objectives = main(folder)
