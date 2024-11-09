@@ -149,7 +149,7 @@ def main(folder: Path) -> pd.DataFrame:
         objectives
     )
     plot_optimization_objectives(
-        objectives, opti_cols, subplots=True, logy=True, **kwargs
+        objectives, opti_cols, subplots=False, logy=True, **kwargs
     )
     plot_additional_objectives(
         objectives,
@@ -163,5 +163,5 @@ def main(folder: Path) -> pd.DataFrame:
 
 if __name__ == "__main__":
     plt.close("all")
-    folder = Path("/home/placais/Downloads/")
+    folder = Path("/home/placais/Documents/projects/compensation/spiral2/lightwin_project/optimization_history/")
     objectives = main(folder)
