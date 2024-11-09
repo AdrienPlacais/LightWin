@@ -58,7 +58,20 @@ def plot_optimization_objectives(
         logy=logy,
         **kwargs,
     )
+    fig = plt.gcf()
+    fig.canvas.manager.set_window_title("objectives")
     return axis
+
+
+def _qty_sim_output(column_name: str) -> str:
+    """Get the quantity that is stored in the column ``column_name``.
+
+    It is expected that the header of the column is ``qty @ position``; it only
+    works for the quantites taken from :class:`.SimulationOutput` and written
+    in the ``objectives.csv``.
+
+    """
+    return column_name.split("@")[0].strip()
 
 
 def plot_additional_objectives(
@@ -71,23 +84,35 @@ def plot_additional_objectives(
     """Plot evolution of additional objectives."""
     to_plot = objectives[simulation_output_cols]
     ylabel = "SimOut"
-    if isinstance(logy, bool) and logy:
-        to_plot = abs(objectives[simulation_output_cols])
 
-    quantities = set(col.split("@")[0] for col in simulation_output_cols)
+    do_not_logify = ("phi_s", "v_cav_mv")
+    quantities = set(_qty_sim_output(col) for col in simulation_output_cols)
     axis = []
     for qty in quantities:
-        cols = [col for col in simulation_output_cols if qty in col]
+        cols = [
+            col
+            for col in simulation_output_cols
+            if _qty_sim_output(col) == qty
+        ]
+        this_logy = logy if qty not in do_not_logify else None
+
+        to_plot = objectives[cols]
+        if isinstance(this_logy, bool) and this_logy:
+            to_plot = abs(objectives[cols])
+
         axis.append(
             to_plot.plot(
                 y=cols,
                 xlabel="Iteration",
                 ylabel=ylabel,
                 subplots=subplots,
-                logy=logy,
+                logy=this_logy,
+                title=qty,
                 **kwargs,
             )
         )
+        fig = plt.gcf()
+        fig.canvas.manager.set_window_title(qty)
     return axis
 
 
