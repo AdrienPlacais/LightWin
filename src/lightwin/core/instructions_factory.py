@@ -257,8 +257,8 @@ class InstructionsFactory:
                 f"lattice of this section has {ultim} elements, while "
                 f"penultimate has {penult} elements. This may create problems "
                 "if you rely on lattices identification to compensate faults. "
-                f"\n{joined}"
             )
+            logging.debug(f"{joined}")
 
     def _filter_out_elements_to_dump(self, elts: list[Element]) -> None:
         """Remove the desired elements."""

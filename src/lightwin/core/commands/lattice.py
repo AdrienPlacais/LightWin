@@ -60,8 +60,8 @@ class Lattice(Command):
         index_in_current_lattice = 0
         for instruction in instructions[self.influenced]:
             if isinstance(instruction, SuperposeMap):
-                logging.error(
-                    "SuperposeMap not implemented. Will mess with indexes..."
+                logging.info(
+                    "SuperposeMap not checked. May mess mess with indexes..."
                 )
 
             if isinstance(instruction, (Command, Comment)):

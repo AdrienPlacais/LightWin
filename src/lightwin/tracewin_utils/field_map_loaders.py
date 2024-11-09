@@ -16,7 +16,7 @@ def warn_norm(path: Path, norm: float):
     https://stackoverflow.com/questions/31953272/logging-print-message-only-once
 
     """
-    logging.warning(
+    logging.info(
         f"The field in {path} has a normalization factor of {norm}, different "
         "from unity."
     )
