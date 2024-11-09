@@ -74,45 +74,69 @@ def _qty_sim_output(column_name: str) -> str:
     return column_name.split("@")[0].strip()
 
 
+def _post_treat(
+    df: pd.DataFrame,
+    post_treat: Literal["relative difference", "difference"] | None = None,
+    make_absolute: bool = False,
+) -> tuple[pd.DataFrame, str]:
+    """Post-treat the SimulationOutput data."""
+    if post_treat == "relative difference":
+        treated_df = (df.iloc[0] - df.iloc[1:]) / df.iloc[0]
+        ylabel = "SimOut (relative difference)"
+    elif post_treat == "difference":
+        treated_df = df.iloc[0] - df.iloc[1:]
+        ylabel = "SimOut (difference)"
+    else:
+        treated_df = df.iloc[1:]
+        ylabel = "SimOut"
+
+    if make_absolute:
+        treated_df = abs(treated_df)
+
+    return treated_df, ylabel
+
+
 def plot_additional_objectives(
     objectives: pd.DataFrame,
     simulation_output_cols: list[str],
     subplots: bool = False,
     logy: bool | Literal["sym"] | None = None,
+    post_treat: Literal["relative difference", "difference"] | None = None,
     **kwargs,
 ) -> Axis | np.ndarray | list:
     """Plot evolution of additional objectives."""
-    to_plot = objectives[simulation_output_cols]
-    ylabel = "SimOut"
-
     do_not_logify = ("phi_s", "v_cav_mv")
-    quantities = set(_qty_sim_output(col) for col in simulation_output_cols)
+    set_of_quantities = set(
+        _qty_sim_output(col) for col in simulation_output_cols
+    )
     axis = []
-    for qty in quantities:
-        cols = [
+    for quantity in set_of_quantities:
+        cols_to_plot = [
             col
             for col in simulation_output_cols
-            if _qty_sim_output(col) == qty
+            if _qty_sim_output(col) == quantity
         ]
-        this_logy = logy if qty not in do_not_logify else None
+        actual_logy = logy if quantity not in do_not_logify else None
 
-        to_plot = objectives[cols]
-        if isinstance(this_logy, bool) and this_logy:
-            to_plot = abs(objectives[cols])
+        to_plot, ylabel = _post_treat(
+            objectives[cols_to_plot],
+            post_treat=post_treat,
+            make_absolute=actual_logy == True,
+        )
 
         axis.append(
             to_plot.plot(
-                y=cols,
+                y=cols_to_plot,
                 xlabel="Iteration",
                 ylabel=ylabel,
                 subplots=subplots,
-                logy=this_logy,
-                title=qty,
+                logy=actual_logy,
+                title=quantity,
                 **kwargs,
             )
         )
         fig = plt.gcf()
-        fig.canvas.manager.set_window_title(qty)
+        fig.canvas.manager.set_window_title(quantity)
     return axis
 
 
@@ -128,7 +152,11 @@ def main(folder: Path) -> pd.DataFrame:
         objectives, opti_cols, subplots=True, logy=True, **kwargs
     )
     plot_additional_objectives(
-        objectives, simulation_output_cols, logy=True, **kwargs
+        objectives,
+        simulation_output_cols,
+        logy=False,
+        post_treat="relative difference",
+        **kwargs,
     )
     return objectives
 
