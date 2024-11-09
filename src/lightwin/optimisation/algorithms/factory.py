@@ -8,7 +8,7 @@
 import logging
 from abc import ABCMeta
 from functools import partial
-from typing import Any, Callable
+from typing import Any, Callable, Literal
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.core.elements.field_maps.cavity_settings_factory import (
@@ -42,10 +42,22 @@ ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
     "explorator": Explorator,
     "experimental": Explorator,
 }  #:
+ALGORITHMS_T = Literal[
+    "least_squares",
+    "least_squares_penalty",
+    "nsga",
+    "downhill_simplex",
+    "downhill_simplex_penalty",
+    "nelder_mead",
+    "nelder_mead_penalty",
+    "differential_evolution",
+    "explorator",
+    "experimental",
+]
 
 
 def optimisation_algorithm_factory(
-    opti_method: str,
+    opti_method: ALGORITHMS_T,
     fault: Fault,
     beam_calculator: BeamCalculator,
     **wtf: Any,

@@ -29,6 +29,7 @@ from lightwin.failures import strategy
 from lightwin.failures.fault import Fault
 from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
 from lightwin.optimisation.algorithms.factory import (
+    ALGORITHMS_T,
     optimisation_algorithm_factory,
 )
 from lightwin.optimisation.design_space.factory import (
@@ -197,8 +198,8 @@ class FaultScenario(list):
             The optimisation algorithm for each fault in ``self``.
 
         """
+        opti_method: ALGORITHMS_T
         opti_method = self.wtf["optimisation_algorithm"]
-        assert isinstance(opti_method, str)
 
         optimisation_algorithms = [
             optimisation_algorithm_factory(
