@@ -2,21 +2,43 @@
 
 from collections.abc import Collection
 
+import matplotlib.patches as pat
 import numpy as np
 from matplotlib.axes import Axes
 
 from lightwin.optimisation.objective.helper import by_element
 from lightwin.optimisation.objective.objective import Objective
 from lightwin.visualization.helper import X_AXIS_T, create_fig_if_not_exists
+from lightwin.visualization.structure import patch_kwargs
 
 
-def mark_objective_position(
-    axis: Axes,
+def mark_objectives_position(
+    ax: Axes,
     objectives: Collection[Objective],
+    y_axis: str = "struct",
     x_axis: X_AXIS_T = "z_abs",
 ) -> None:
-    """Show where objectives are evaluated."""
+    """Show where objectives are evaluated.
+
+    In a first time, we only put a lil start or something on the structure
+    plot.
+
+    """
+    if y_axis != "struct":
+        return
+
     objectives_by_element = by_element(objectives)
+    for elt in objectives_by_element:
+        kwargs = patch_kwargs(elt, x_axis)
+        ax.add_patch(_plot_objective(**kwargs))
+
+
+def _plot_objective(x_0: float, width: float, **kwargs) -> pat.Circle:
+    """Add a marker at the exit of provided element."""
+    height = 1.0
+    y_0 = -height * 0.5
+    patch = pat.Circle((x_0 + width, y_0), radius=0.5, fill=True, lw=0.5)
+    return patch
 
 
 def plot_fit_progress(hist_f, l_label, nature="Relative"):
