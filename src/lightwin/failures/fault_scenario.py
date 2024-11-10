@@ -458,9 +458,10 @@ class FaultScenario(list):
 
 def fault_scenario_factory(
     accelerators: list[Accelerator],
-    beam_calculator: BeamCalculator,
+    beam_calc: BeamCalculator,
     wtf: dict[str, Any],
-    design_space_kw: dict[str, str | bool | float],
+    design_space: dict[str, Any],
+    **kwargs,
 ) -> list[FaultScenario]:
     """Create the :class:`FaultScenario` objects (factory template).
 
@@ -469,12 +470,12 @@ def fault_scenario_factory(
     accelerators : list[Accelerator]
         Holds all the linacs. The first one must be the reference linac,
         while all the others will be to be fixed.
-    beam_calculator : BeamCalculator
+    beam_calc : BeamCalculator
         The solver that will be called during the optimisation process.
-    wtf : dict[str, str | int | bool | list[str] | list[float]]
-        What To Fit dictionary. Holds information on the fixing method.
-    design_space_kw : dict[str, str | bool | float]
-        The ``[design_space]`` entries from the ``.ini`` file.
+    wtf : dict[str, Any]
+        The WhatToFit table of the TOML configuration file.
+    design_space_kw : dict[str, Any]
+        The design space table from the TOML configuration file.
 
     Returns
     -------
@@ -485,10 +486,8 @@ def fault_scenario_factory(
     """
     # TODO may be better to move this to beam_calculator.init_solver_parameters
     need_to_force_element_to_index_creation = (TraceWin,)
-    if isinstance(beam_calculator, *need_to_force_element_to_index_creation):
-        _force_element_to_index_method_creation(
-            accelerators[1], beam_calculator
-        )
+    if isinstance(beam_calc, *need_to_force_element_to_index_creation):
+        _force_element_to_index_method_creation(accelerators[1], beam_calc)
     scenarios_fault_idx = wtf.pop("failed")
 
     scenarios_comp_idx = [None for _ in accelerators[1:]]
@@ -496,18 +495,18 @@ def fault_scenario_factory(
         scenarios_comp_idx = wtf.pop("compensating_manual")
 
     _ = [
-        beam_calculator.init_solver_parameters(accelerator)
+        beam_calc.init_solver_parameters(accelerator)
         for accelerator in accelerators
     ]
 
     design_space_factory: DesignSpaceFactory
-    design_space_factory = get_design_space_factory(**design_space_kw)
+    design_space_factory = get_design_space_factory(**design_space)
 
     fault_scenarios = [
         FaultScenario(
             ref_acc=accelerators[0],
             fix_acc=accelerator,
-            beam_calculator=beam_calculator,
+            beam_calculator=beam_calc,
             wtf=wtf,
             design_space_factory=design_space_factory,
             fault_idx=fault_idx,
