@@ -23,7 +23,7 @@ class QuantityIsBetween(Objective):
         weight: float,
         get_key: str,
         get_kwargs: dict[str, Element | str | bool],
-        limits: tuple[float],
+        limits: tuple[float, float],
         descriptor: str | None = None,
         loss_function: str | None = None,
     ) -> None:
@@ -41,7 +41,7 @@ class QuantityIsBetween(Objective):
             the keys ``elt`` and ``pos``. If objective concerns a phase, you
             may want to precise the ``to_deg`` key. You also should explicit
             the ``to_numpy`` key.
-        limits : tuple[float]
+        limits : tuple[float, float]
             Lower and upper bound for the value.
         loss_function : str | None, optional
             Indicates how the residues are handled whe the quantity is outside

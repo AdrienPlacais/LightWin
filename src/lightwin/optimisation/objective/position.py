@@ -23,21 +23,30 @@ cavities, as well as the place where objectives are evaluated.
 
 import logging
 from collections.abc import Collection, Iterable
-from typing import Any
+from typing import Any, Literal
 
 from lightwin.core.elements.element import Element
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 
+POSITION_TO_INDEX_T = Literal[
+    "end of last altered lattice",
+    "one lattice after last altered lattice",
+    "end of last failed lattice",
+    "one lattice after last failed lattice",
+    "end of linac",
+    "end of every altered lattice",
+]
+
 
 def zone_to_recompute(
     broken_elts: ListOfElements,
-    objective_position_preset: Collection[str],
+    objective_position_preset: Collection[POSITION_TO_INDEX_T],
     fault_idx: Iterable[int],
     comp_idx: Iterable[int],
     full_lattices: bool = False,
     full_linac: bool = False,
     start_at_beginning_of_linac: bool = False,
-) -> list[Element]:
+) -> tuple[list[Element], list[Element]]:
     """Determine the elements from the zone to recompute.
 
     We use in this routine *element* indexes, not cavity indexes.
@@ -69,12 +78,16 @@ def zone_to_recompute(
     -------
     elts_of_compensation_zone : list[Element]
         :class:`.Element` objects of the compensation zone.
+    objective_elements : list[Element]
+        Where objectives are evaluated.
 
     """
     objectives_positions_idx = [
-        _zone(preset, broken_elts, fault_idx, comp_idx)
+        i
         for preset in objective_position_preset
+        for i in _zone(preset, broken_elts, fault_idx, comp_idx)
     ]
+    objective_elements = [broken_elts[i] for i in objectives_positions_idx]
 
     idx_start_compensation_zone = min([*fault_idx, *comp_idx])
 
@@ -100,15 +113,18 @@ def zone_to_recompute(
     elts_of_compensation_zone = broken_elts[
         idx_start_compensation_zone : idx_end_compensation_zone + 1
     ]
-    return elts_of_compensation_zone
+    return elts_of_compensation_zone, objective_elements
 
 
-def _zone(preset: str, *args) -> int:
+def _zone(preset: POSITION_TO_INDEX_T, *args) -> list[int]:
     """Give compensation zone, and position where objectives are checked."""
     if preset not in POSITION_TO_INDEX:
         logging.error(f"Position {preset} not recognized.")
         raise IOError(f"Position {preset} not recognized.")
-    return POSITION_TO_INDEX[preset](*args)
+    index = POSITION_TO_INDEX[preset](*args)
+    if isinstance(index, int):
+        index = [index]
+    return index
 
 
 def _end_last_altered_lattice(
@@ -181,10 +197,27 @@ def _reduce_idx_start_to_include_full_lattice(
     return idx
 
 
+def _end_of_every_altered_lattice(
+    elts: ListOfElements, fault_idx: Collection[int], comp_idx: Collection[int]
+) -> list[int]:
+    idx_first = min([*fault_idx, *comp_idx])
+    idx_lattice_first = elts[idx_first].get("lattice")
+
+    idx_last = max([*fault_idx, *comp_idx])
+    idx_lattice_last = elts[idx_last].get("lattice")
+
+    indexes_eval = [
+        elts.by_lattice[i][-1].get("elt_idx", to_numpy=False)
+        for i in range(idx_lattice_first, idx_lattice_last + 1)
+    ]
+    return indexes_eval
+
+
 POSITION_TO_INDEX = {
     "end of last altered lattice": _end_last_altered_lattice,
     "one lattice after last altered lattice": _one_lattice_after_last_altered_lattice,
     "end of last failed lattice": _end_last_failed_lattice,
     "one lattice after last failed lattice": _one_lattice_after_last_failed_lattice,
     "end of linac": _end_linac,
+    "end of every altered lattice": _end_of_every_altered_lattice,
 }  #:

@@ -28,7 +28,7 @@ class Objective(ABC):
     name: str
     weight: float
     descriptor: str | None = None
-    ideal_value: tuple[float] | float | None = None
+    ideal_value: tuple[float, float] | float | None = None
 
     def __post_init__(self) -> None:
         """Avoid line jumps in the descriptor."""

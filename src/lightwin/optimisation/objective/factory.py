@@ -15,7 +15,7 @@ from collections.abc import Collection
 from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
-from typing import Any, Callable, Sequence
+from typing import Any, Callable
 
 import numpy as np
 
@@ -33,7 +33,11 @@ from lightwin.optimisation.objective.minimize_difference_with_ref import (
 )
 from lightwin.optimisation.objective.minimize_mismatch import MinimizeMismatch
 from lightwin.optimisation.objective.objective import Objective
-from lightwin.optimisation.objective.position import zone_to_recompute
+from lightwin.optimisation.objective.position import (
+    POSITION_TO_INDEX,
+    POSITION_TO_INDEX_T,
+    zone_to_recompute,
+)
 from lightwin.optimisation.objective.quantity_is_between import (
     QuantityIsBetween,
 )
@@ -82,11 +86,9 @@ class ObjectiveFactory(ABC):
     def __post_init__(self):
         """Determine the compensation zone."""
         assert all([elt.can_be_retuned for elt in self.compensating_elements])
-        self.elts_of_compensation_zone = self._set_zone_to_recompute()
-
-    @abstractmethod
-    def _elements_where_objective_are_evaluated(self) -> list[Element]:
-        """Determine where objectives will be evaluated."""
+        self.elts_of_compensation_zone, self.objective_elements = (
+            self._set_zone_to_recompute()
+        )
 
     @abstractmethod
     def get_objectives(self) -> list[Objective]:
@@ -94,9 +96,8 @@ class ObjectiveFactory(ABC):
 
     @property
     @abstractmethod
-    def objective_position_preset(self) -> list[str]:
-        """
-        Give a preset for :func:`.zone_to_recompute`.
+    def objective_position_preset(self) -> list[POSITION_TO_INDEX_T]:
+        """Give a preset for :func:`.zone_to_recompute`.
 
         The returned values must be in the :data:`.POSITION_TO_INDEX`
         dictionary, defined in :mod:`.position`.
@@ -107,8 +108,7 @@ class ObjectiveFactory(ABC):
     @property
     @abstractmethod
     def compensation_zone_override_settings(self) -> dict[str, bool]:
-        """
-        Give flags for :func:`.zone_to_recompute`.
+        """Give flags for :func:`.zone_to_recompute`.
 
         The returned dictionary may have three flags:
             - full_lattices
@@ -118,8 +118,12 @@ class ObjectiveFactory(ABC):
         """
         pass
 
-    def _set_zone_to_recompute(self, **wtf: Any) -> Sequence[Element]:
+    def _set_zone_to_recompute(
+        self, **wtf: Any
+    ) -> tuple[list[Element], list[Element]]:
         """Determine which (sub)list of elements should be recomputed.
+
+        Also gives the elements where objectives are evaluated.
 
         You can override this method for your specific preset.
 
@@ -137,14 +141,14 @@ class ObjectiveFactory(ABC):
                 "anymore. Its role is now fulfilled by the objective preset."
             )
 
-        elts_of_compensation_zone = zone_to_recompute(
+        elts_of_compensation_zone, objective_elements = zone_to_recompute(
             self.broken_elts,
             self.objective_position_preset,
             fault_idx,
             comp_idx,
             **self.compensation_zone_override_settings,
         )
-        return elts_of_compensation_zone
+        return elts_of_compensation_zone, objective_elements
 
     @staticmethod
     def _output_objectives(objectives: list[Objective]) -> None:
@@ -172,8 +176,9 @@ class EnergyMismatch(ObjectiveFactory):
     """
 
     @property
-    def objective_position_preset(self) -> list[str]:
+    def objective_position_preset(self) -> list[POSITION_TO_INDEX_T]:
         """Set objective evaluation at end of last altered lattice."""
+        objective_position_preset: list[POSITION_TO_INDEX_T]
         objective_position_preset = ["end of last altered lattice"]
         return objective_position_preset
 
@@ -187,13 +192,9 @@ class EnergyMismatch(ObjectiveFactory):
         }
         return compensation_zone_override_settings
 
-    def _elements_where_objective_are_evaluated(self) -> list[Element]:
-        """Give element at end of compensation zone."""
-        return [self.elts_of_compensation_zone[-1]]
-
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
-        last_element = self._elements_where_objective_are_evaluated()[0]
+        last_element = self.objective_elements[0]
         objectives = [
             self._get_w_kin(elt=last_element),
             self._get_mismatch(elt=last_element),
@@ -247,8 +248,9 @@ class EnergyPhaseMismatch(ObjectiveFactory):
     """
 
     @property
-    def objective_position_preset(self) -> list[str]:
+    def objective_position_preset(self) -> list[POSITION_TO_INDEX_T]:
         """Set objective evaluation at end of last altered lattice."""
+        objective_position_preset: list[POSITION_TO_INDEX_T]
         objective_position_preset = ["end of last altered lattice"]
         return objective_position_preset
 
@@ -262,13 +264,9 @@ class EnergyPhaseMismatch(ObjectiveFactory):
         }
         return compensation_zone_override_settings
 
-    def _elements_where_objective_are_evaluated(self) -> list[Element]:
-        """Give element at end of compensation zone."""
-        return [self.elts_of_compensation_zone[-1]]
-
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
-        last_element = self._elements_where_objective_are_evaluated()[0]
+        last_element = self.objective_elements[0]
         objectives = [
             self._get_w_kin(elt=last_element),
             self._get_phi_abs(elt=last_element),
@@ -339,8 +337,9 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
     """
 
     @property
-    def objective_position_preset(self) -> list[str]:
+    def objective_position_preset(self) -> list[POSITION_TO_INDEX_T]:
         """Set objective evaluation at end of last altered lattice."""
+        objective_position_preset: list[POSITION_TO_INDEX_T]
         objective_position_preset = ["end of last altered lattice"]
         return objective_position_preset
 
@@ -354,13 +353,9 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
         }
         return compensation_zone_override_settings
 
-    def _elements_where_objective_are_evaluated(self) -> list[Element]:
-        """Give element at end of compensation zone."""
-        return [self.elts_of_compensation_zone[-1]]
-
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
-        last_element = self._elements_where_objective_are_evaluated()[0]
+        last_element = self.objective_elements[0]
         objectives = [
             self._get_w_kin(elt=last_element),
             self._get_phi_abs(elt=last_element),
@@ -472,8 +467,9 @@ class EnergySeveralMismatches(ObjectiveFactory):
     """
 
     @property
-    def objective_position_preset(self) -> list[str]:
+    def objective_position_preset(self) -> list[POSITION_TO_INDEX_T]:
         """Set where objective are evaluated."""
+        objective_position_preset: list[POSITION_TO_INDEX_T]
         objective_position_preset = [
             "end of last altered lattice",
             "one lattice after last altered lattice",
@@ -490,19 +486,10 @@ class EnergySeveralMismatches(ObjectiveFactory):
         }
         return compensation_zone_override_settings
 
-    def _elements_where_objective_are_evaluated(self) -> list[Element]:
-        """Give element at end of compensation zone."""
-        last_element = self.elts_of_compensation_zone[-1]
-        elements_per_lattice = last_element.idx["lattice"]
-        return [
-            self.elts_of_compensation_zone[-1 - elements_per_lattice],
-            last_element,
-        ]
-
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy and mismatch factor."""
-        last_element = self._elements_where_objective_are_evaluated()[-1]
-        one_lattice_before = self._elements_where_objective_are_evaluated()[0]
+        last_element = self.objective_elements[-1]
+        one_lattice_before = self.objective_elements[-2]
         objectives = [
             self._get_w_kin(elt=one_lattice_before),
             self._get_mismatch(elt=one_lattice_before),
@@ -543,6 +530,82 @@ class EnergySeveralMismatches(ObjectiveFactory):
         return objective
 
 
+class Spiral2(ObjectiveFactory):
+    """Try something."""
+
+    @property
+    def objective_position_preset(self) -> list[POSITION_TO_INDEX_T]:
+        """Set objective evaluation at end of last altered lattice."""
+        objective_position_preset: list[POSITION_TO_INDEX_T]
+        objective_position_preset = ["end of every altered lattice"]
+        return objective_position_preset
+
+    @property
+    def compensation_zone_override_settings(self) -> dict[str, bool]:
+        """Select end of last altered lattice."""
+        compensation_zone_override_settings = {
+            "full_lattices": True,
+            "full_linac": False,
+            "start_at_beginning_of_linac": False,
+        }
+        return compensation_zone_override_settings
+
+    def get_objectives(self) -> list[Objective]:
+        """Return twiss and energy at end of lattices after failure."""
+        objectives = []
+        for elt in self.objective_elements:
+            objectives += [
+                self._get_twiss_alpha(elt),
+                self._get_twiss_beta(elt),
+                self._get_w_kin(elt),
+            ]
+        self._output_objectives(objectives)
+        return objectives
+
+    def _get_twiss_alpha(self, elt: Element) -> Objective:
+        """Return object to match spread."""
+        objective = MinimizeDifferenceWithRef(
+            name=markdown["alpha_zdelta"],
+            weight=1.0,
+            get_key="alpha_zdelta",
+            get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
+            reference=self.reference_simulation_output,
+            descriptor="""Minimize diff. of alpha between ref and fix at the
+            end of the lattice.
+            """,
+        )
+        return objective
+
+    def _get_twiss_beta(self, elt: Element) -> Objective:
+        """Return object to match envelope."""
+        objective = MinimizeDifferenceWithRef(
+            name=markdown["beta_zdelta"],
+            weight=1.0,
+            get_key="beta_zdelta",
+            get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
+            reference=self.reference_simulation_output,
+            descriptor="""Minimize diff. of envelope between ref and fix at the
+            end of the lattice.
+            """,
+        )
+        return objective
+
+    def _get_w_kin(self, elt: Element) -> Objective:
+        """Return object to keep energy reasonable."""
+        get_key = "w_kin"
+        get_kwargs = {"elt": elt, "pos": "out", "to_numpy": False}
+        ref = self.reference_simulation_output.get(get_key, **get_kwargs)
+        objective = QuantityIsBetween(
+            name=markdown["w_kin"],
+            weight=1.0,
+            get_key=get_key,
+            get_kwargs=get_kwargs,
+            limits=(ref - 5.0, ref + 5.0),
+            descriptor="Energy stays within +/- 5MeV wrt nominal tuning.",
+        )
+        return objective
+
+
 # =============================================================================
 # Interface with LightWin
 # =============================================================================
@@ -553,7 +616,7 @@ OBJECTIVE_PRESETS = {
     "rephased_ADS": EnergyMismatch,
     "EnergySyncPhaseMismatch": EnergySyncPhaseMismatch,
     "sync_phase_as_objective_ADS": EnergySyncPhaseMismatch,
-    "experimental": EnergySeveralMismatches,
+    "experimental": Spiral2,
 }  #:
 
 
