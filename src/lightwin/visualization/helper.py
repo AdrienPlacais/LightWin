@@ -6,8 +6,6 @@ from pathlib import Path
 from typing import Literal
 
 import matplotlib.pyplot as plt
-import matplotlib.transforms as mtransforms
-import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure, SubFigure
 
