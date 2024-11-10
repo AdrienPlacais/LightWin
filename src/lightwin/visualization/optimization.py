@@ -1,20 +1,35 @@
 """Define functions related to optimization and failures plotting."""
 
-from collections.abc import Collection
+import logging
+from collections.abc import Sequence
 
 import matplotlib.patches as pat
 import numpy as np
 from matplotlib.axes import Axes
 
+from lightwin.failures.fault import Fault
 from lightwin.optimisation.objective.helper import by_element
 from lightwin.optimisation.objective.objective import Objective
 from lightwin.visualization.helper import X_AXIS_T, create_fig_if_not_exists
 from lightwin.visualization.structure import patch_kwargs
 
 
+def _get_objectives(fault_scenario: list[Fault] | None) -> list[Objective]:
+    """Get the objectives stored in ``fault_scenario``."""
+    if fault_scenario is None or len(fault_scenario) == 0:
+        return []
+    if len(fault_scenario) > 1:
+        logging.info(
+            "There are several failures, so I'll plot only the objectives "
+            "corresponding to the first one."
+        )
+    fault = fault_scenario[0]
+    return fault.objectives
+
+
 def mark_objectives_position(
     ax: Axes,
-    objectives: Collection[Objective],
+    fault_scenarios: Sequence[list[Fault]] | None,
     y_axis: str = "struct",
     x_axis: X_AXIS_T = "z_abs",
 ) -> None:
@@ -24,9 +39,11 @@ def mark_objectives_position(
     plot.
 
     """
+    if fault_scenarios is None:
+        return
     if y_axis != "struct":
         return
-
+    objectives = _get_objectives(fault_scenarios[0])
     objectives_by_element = by_element(objectives)
     for elt in objectives_by_element:
         kwargs = patch_kwargs(elt, x_axis)

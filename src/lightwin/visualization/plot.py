@@ -33,6 +33,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.accelerator.accelerator import Accelerator
+from lightwin.failures.fault import Fault
 from lightwin.util import helper
 from lightwin.visualization import structure
 from lightwin.visualization.helper import (
@@ -40,17 +41,13 @@ from lightwin.visualization.helper import (
     create_fig_if_not_exists,
     savefig,
 )
+from lightwin.visualization.optimization import mark_objectives_position
 
 font = {"family": "serif"}  # , 'size': 25}
 plt.rc("font", **font)
 plt.rcParams["axes.prop_cycle"] = cycler(color=Dark2_8.mpl_colors)
 
-FALLBACK_PRESETS = {
-    "x_axis": "z_abs",
-    "plot_section": True,
-    "clean_fig": False,
-    "sharex": True,
-}
+FALLBACK_PRESETS = {"x_axis": "z_abs", "plot_section": True, "sharex": True}
 PLOT_PRESETS = {
     "energy": {
         "x_axis": "z_abs",
@@ -113,15 +110,43 @@ ERROR_REFERENCE = "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)"
 # =============================================================================
 def factory(
     accelerators: Sequence[Accelerator],
-    plots: dict[str, bool],
+    plots: dict[str, Any],
+    save_fig: bool = True,
+    clean_fig: bool = True,
+    fault_scenarios: Sequence[list[Fault]] | None = None,
     **kwargs,
 ) -> list[Figure]:
-    """Create all the desired plots."""
-    if (
-        kwargs["clean_fig"]
-        and not kwargs["save_fig"]
-        and len(accelerators) > 2
-    ):
+    """Create all the desired plots.
+
+    Parameters
+    ----------
+    accelerators : Sequence[Accelerator]
+        The accelerators holding relatable data. Due to bad implementation, the
+        following accelerators are expected:
+        - Reference linac, first solver
+        - Reference linac, second solver
+        - Fixed linac, first solver
+        - Fixed linac, second solver
+        If you provide only the two first linacs, the function will still work
+        but they will be plotted twice.
+    plots : dict[str, Any]
+        The plot TOML table.
+    save_fig : bool, optional
+        If Figures should be saved; the default is True.
+    clean_fig : bool
+        If Figures should be cleaned between two calls of this function; the
+        default is True.
+    fault_scenarios : Sequence[FaultScenario] | None = None
+        If provided, the position of the :class:`.Objective` will also appear
+        on plots.
+
+    Returns
+    -------
+    list[Figure]
+        The created figures.
+
+    """
+    if clean_fig and not save_fig and len(accelerators) > 2:
         logging.warning(
             "You will only see the plots of the last accelerators,"
             " previous will be erased without saving."
@@ -133,7 +158,12 @@ def factory(
         accelerators = (ref_acc, ref_acc)
     figs = [
         _plot_preset(
-            preset, *(ref_acc, fix_acc), **_proper_kwargs(preset, kwargs)
+            preset,
+            *(ref_acc, fix_acc),
+            save_fig=save_fig,
+            clean_fig=clean_fig,
+            fault_scenarios=fault_scenarios,
+            **_proper_kwargs(preset, kwargs),
         )
         for fix_acc in accelerators[1:]
         for preset, plot_me in plots.items()
@@ -142,16 +172,14 @@ def factory(
     return figs
 
 
-# =============================================================================
-# Used in factory
-# =============================================================================
-# Main func
 def _plot_preset(
-    str_preset: str,
+    preset: str,
     *args: Accelerator,
+    all_y_axis: list[str],
     x_axis: X_AXIS_T = "z_abs",
-    all_y_axis: list[str] | None = None,
     save_fig: bool = True,
+    clean_fig: bool = True,
+    fault_scenarios: Sequence[list[Fault]] | None = None,
     **kwargs,
 ) -> Figure:
     """Plot a preset.
@@ -162,36 +190,41 @@ def _plot_preset(
         Key of PLOT_PRESETS.
     *args : Accelerator
         Accelerators to plot. In typical usage, args = (Working, Fixed)
-        (previously: (Working, Broken, Fixed). Useful to reimplement?)
     x_axis : str, optional
         Name of the x axis. The default is 'z_abs'.
-    all_y_axis : list[str] | None, optional
-        Name of all the y axis. The default is None.
+    all_y_axis : list[str]
+        Name of all the y axis.
     save_fig : bool, optional
         To save Figures or not. The default is True.
+    fault_scenarios : Sequence[FaultScenario] | None = None
+        If provided, the position of the :class:`.Objective` will also appear
+        on plots.
     **kwargs :
         Holds all complementary data on the plots.
 
     """
-    fig, axx = create_fig_if_not_exists(len(all_y_axis), **kwargs)
+    fig, axx = create_fig_if_not_exists(
+        len(all_y_axis), clean_fig=clean_fig, **kwargs
+    )
 
     colors = None
-    for i, (axe, y_axis) in enumerate(zip(axx, all_y_axis)):
-        _make_a_subplot(axe, x_axis, y_axis, colors, *args, **kwargs)
+    for i, (ax, y_axis) in enumerate(zip(axx, all_y_axis)):
+        _make_a_subplot(ax, x_axis, y_axis, colors, *args, **kwargs)
         if i == 0:
-            colors = _keep_colors(axe)
+            colors = _keep_colors(ax)
+        mark_objectives_position(ax, fault_scenarios, y_axis, x_axis)
+
     axx[0].legend()
     axx[-1].set_xlabel(dic.markdown[x_axis])
 
     if save_fig:
-        file = Path(args[-1].get("accelerator_path"), f"{str_preset}.png")
+        file = Path(args[-1].get("accelerator_path"), f"{preset}.png")
         savefig(fig, file)
 
     return fig
 
 
-# Plot style
-def _proper_kwargs(preset: str, kwargs: dict[str, bool]) -> dict:
+def _proper_kwargs(preset: str, kwargs: dict[str, Any]) -> dict[str, Any]:
     """Merge dicts, priority kwargs > PLOT_PRESETS > FALLBACK_PRESETS."""
     return FALLBACK_PRESETS | PLOT_PRESETS[preset] | kwargs
 
