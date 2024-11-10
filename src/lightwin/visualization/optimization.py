@@ -13,6 +13,8 @@ from lightwin.optimisation.objective.objective import Objective
 from lightwin.visualization.helper import X_AXIS_T, create_fig_if_not_exists
 from lightwin.visualization.structure import patch_kwargs
 
+OBJECTIVE_COLOR = "blue"
+
 
 def _get_objectives(fault_scenario: list[Fault] | None) -> list[Objective]:
     """Get the objectives stored in ``fault_scenario``."""
@@ -50,11 +52,20 @@ def mark_objectives_position(
         ax.add_patch(_plot_objective(**kwargs))
 
 
-def _plot_objective(x_0: float, width: float, **kwargs) -> pat.Circle:
+def _plot_objective(
+    x_0: float, width: float, color: str = OBJECTIVE_COLOR, **kwargs
+) -> pat.Arrow:
     """Add a marker at the exit of provided element."""
-    height = 1.0
-    y_0 = -height * 0.5
-    patch = pat.Circle((x_0 + width, y_0), radius=0.5, fill=True, lw=0.5)
+    starting_height = 0.75
+    ending_height = 0.05
+    patch = pat.Arrow(
+        x=x_0,
+        y=starting_height,
+        dx=0,
+        dy=ending_height - starting_height,
+        color=color,
+        width=2 * width,
+    )
     return patch
 
 

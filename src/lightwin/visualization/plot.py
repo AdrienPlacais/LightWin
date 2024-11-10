@@ -471,9 +471,6 @@ def _make_a_subplot(
     axe.set_ylabel(_y_label(y_axis))
 
 
-# =============================================================================
-# General plots
-# =============================================================================
 def plot_pty_with_data_tags(ax, x, y, idx_list, tags=True):
     """Plot y vs x.
 
