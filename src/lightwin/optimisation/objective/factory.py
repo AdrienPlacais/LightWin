@@ -12,7 +12,6 @@ implemented presets in :data:`.OBJECTIVE_PRESETS` and
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Collection
-from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
 from typing import Any, Callable
@@ -34,7 +33,6 @@ from lightwin.optimisation.objective.minimize_difference_with_ref import (
 from lightwin.optimisation.objective.minimize_mismatch import MinimizeMismatch
 from lightwin.optimisation.objective.objective import Objective
 from lightwin.optimisation.objective.position import (
-    POSITION_TO_INDEX,
     POSITION_TO_INDEX_T,
     zone_to_recompute,
 )
@@ -44,10 +42,6 @@ from lightwin.optimisation.objective.quantity_is_between import (
 from lightwin.util.dicts_output import markdown
 
 
-# =============================================================================
-# Factories / presets
-# =============================================================================
-@dataclass
 class ObjectiveFactory(ABC):
     """A base class to create :class:`.Objective`.
 
@@ -55,36 +49,56 @@ class ObjectiveFactory(ABC):
     :class:`EnergyPhaseMismatch` or :class:`EnergySyncPhaseMismatch` for
     examples.
 
-    Parameters
-    ----------
-    reference_elts : ListOfElements
-        All the reference elements.
-    reference_simulation_output : SimulationOutput
-        The reference simulation of the reference linac.
-    broken_elts : ListOfElements
-        List containing all the elements of the broken linac.
-    failed_elements : list[Element]
-        Cavities that failed.
-    compensating_elements : list[Element]
-        Cavities that will be used for the compensation.
-    design_space_kw : dict[str, str | bool | pathlib.Path | float]
-        Holds information on variables/constraints limits/initial values. Used
-        to compute the limits that ``phi_s`` must respect when the synchronous
-        phase is defined as an objective.
 
     """
 
-    reference_elts: ListOfElements
-    reference_simulation_output: SimulationOutput
+    objective_position_preset: list[POSITION_TO_INDEX_T]
+    compensation_zone_override_settings = (
+        {  # Give flags for :func:`.zone_to_recompute`.
+            "full_lattices": False,
+            "full_linac": False,
+            "start_at_beginning_of_linac": False,
+        }
+    )
 
-    broken_elts: ListOfElements
-    failed_elements: list[Element]
-    compensating_elements: list[Element]
+    def __init__(
+        self,
+        reference_elts: ListOfElements,
+        reference_simulation_output: SimulationOutput,
+        broken_elts: ListOfElements,
+        failed_elements: list[Element],
+        compensating_elements: list[Element],
+        design_space_kw: dict[str, Any],
+    ) -> None:
+        """Create the object.
 
-    design_space_kw: dict[str, str | bool | Path | float]
+        Parameters
+        ----------
+        reference_elts : ListOfElements
+            All the reference elements.
+        reference_simulation_output : SimulationOutput
+            The reference simulation of the reference linac.
+        broken_elts : ListOfElements
+            List containing all the elements of the broken linac.
+        failed_elements : list[Element]
+            Cavities that failed.
+        compensating_elements : list[Element]
+            Cavities that will be used for the compensation.
+        design_space_kw : dict[str, str | bool | pathlib.Path | float]
+            Holds information on variables/constraints limits/initial values.
+            Used to compute the limits that ``phi_s`` must respect when the
+            synchronous phase is defined as an objective.
 
-    def __post_init__(self):
-        """Determine the compensation zone."""
+        """
+        self.reference_elts = reference_elts
+        self.reference_simulation_output = reference_simulation_output
+
+        self.broken_elts = broken_elts
+        self.failed_elements = failed_elements
+        self.compensating_elements = compensating_elements
+
+        self.design_space_kw = design_space_kw
+
         assert all([elt.can_be_retuned for elt in self.compensating_elements])
         self.elts_of_compensation_zone, self.objective_elements = (
             self._set_zone_to_recompute()
@@ -93,30 +107,6 @@ class ObjectiveFactory(ABC):
     @abstractmethod
     def get_objectives(self) -> list[Objective]:
         """Create the :class:`.Objective` instances."""
-
-    @property
-    @abstractmethod
-    def objective_position_preset(self) -> list[POSITION_TO_INDEX_T]:
-        """Give a preset for :func:`.zone_to_recompute`.
-
-        The returned values must be in the :data:`.POSITION_TO_INDEX`
-        dictionary, defined in :mod:`.position`.
-
-        """
-        pass
-
-    @property
-    @abstractmethod
-    def compensation_zone_override_settings(self) -> dict[str, bool]:
-        """Give flags for :func:`.zone_to_recompute`.
-
-        The returned dictionary may have three flags:
-            - full_lattices
-            - full_linac
-            - start_at_beginning_of_linac
-
-        """
-        pass
 
     def _set_zone_to_recompute(
         self, **wtf: Any
@@ -175,22 +165,7 @@ class EnergyMismatch(ObjectiveFactory):
 
     """
 
-    @property
-    def objective_position_preset(self) -> list[POSITION_TO_INDEX_T]:
-        """Set objective evaluation at end of last altered lattice."""
-        objective_position_preset: list[POSITION_TO_INDEX_T]
-        objective_position_preset = ["end of last altered lattice"]
-        return objective_position_preset
-
-    @property
-    def compensation_zone_override_settings(self) -> dict[str, bool]:
-        """Set no particular overridings."""
-        compensation_zone_override_settings = {
-            "full_lattices": False,
-            "full_linac": False,
-            "start_at_beginning_of_linac": False,
-        }
-        return compensation_zone_override_settings
+    objective_position_preset = ["end of last altered lattice"]
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
@@ -247,22 +222,7 @@ class EnergyPhaseMismatch(ObjectiveFactory):
 
     """
 
-    @property
-    def objective_position_preset(self) -> list[POSITION_TO_INDEX_T]:
-        """Set objective evaluation at end of last altered lattice."""
-        objective_position_preset: list[POSITION_TO_INDEX_T]
-        objective_position_preset = ["end of last altered lattice"]
-        return objective_position_preset
-
-    @property
-    def compensation_zone_override_settings(self) -> dict[str, bool]:
-        """Set no particular overridings."""
-        compensation_zone_override_settings = {
-            "full_lattices": False,
-            "full_linac": False,
-            "start_at_beginning_of_linac": False,
-        }
-        return compensation_zone_override_settings
+    objective_position_preset = ["end of last altered lattice"]
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
@@ -336,22 +296,7 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
 
     """
 
-    @property
-    def objective_position_preset(self) -> list[POSITION_TO_INDEX_T]:
-        """Set objective evaluation at end of last altered lattice."""
-        objective_position_preset: list[POSITION_TO_INDEX_T]
-        objective_position_preset = ["end of last altered lattice"]
-        return objective_position_preset
-
-    @property
-    def compensation_zone_override_settings(self) -> dict[str, bool]:
-        """Set no particular overridings."""
-        compensation_zone_override_settings = {
-            "full_lattices": False,
-            "full_linac": False,
-            "start_at_beginning_of_linac": False,
-        }
-        return compensation_zone_override_settings
+    objective_position_preset = ["end of last altered lattice"]
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
@@ -466,25 +411,10 @@ class EnergySeveralMismatches(ObjectiveFactory):
 
     """
 
-    @property
-    def objective_position_preset(self) -> list[POSITION_TO_INDEX_T]:
-        """Set where objective are evaluated."""
-        objective_position_preset: list[POSITION_TO_INDEX_T]
-        objective_position_preset = [
-            "end of last altered lattice",
-            "one lattice after last altered lattice",
-        ]
-        return objective_position_preset
-
-    @property
-    def compensation_zone_override_settings(self) -> dict[str, bool]:
-        """Set no particular overridings."""
-        compensation_zone_override_settings = {
-            "full_lattices": False,
-            "full_linac": False,
-            "start_at_beginning_of_linac": False,
-        }
-        return compensation_zone_override_settings
+    objective_position_preset = [
+        "end of last altered lattice",
+        "one lattice after last altered lattice",
+    ]
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy and mismatch factor."""
@@ -533,22 +463,12 @@ class EnergySeveralMismatches(ObjectiveFactory):
 class Spiral2(ObjectiveFactory):
     """Try something."""
 
-    @property
-    def objective_position_preset(self) -> list[POSITION_TO_INDEX_T]:
-        """Set objective evaluation at end of last altered lattice."""
-        objective_position_preset: list[POSITION_TO_INDEX_T]
-        objective_position_preset = ["end of every altered lattice"]
-        return objective_position_preset
-
-    @property
-    def compensation_zone_override_settings(self) -> dict[str, bool]:
-        """Select end of last altered lattice."""
-        compensation_zone_override_settings = {
-            "full_lattices": True,
-            "full_linac": False,
-            "start_at_beginning_of_linac": False,
-        }
-        return compensation_zone_override_settings
+    objective_position_preset = ["end of every altered lattice"]
+    compensation_zone_override_settings = {
+        "full_lattices": True,
+        "full_linac": False,
+        "start_at_beginning_of_linac": False,
+    }
 
     def get_objectives(self) -> list[Objective]:
         """Return twiss and energy at end of lattices after failure."""
