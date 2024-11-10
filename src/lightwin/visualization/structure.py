@@ -20,8 +20,13 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.visualization.helper import X_AXIS_T
 
 
-def _patch_kwargs(elt: Element, idx: int, x_axis: X_AXIS_T) -> dict:
+def patch_kwargs(
+    elt: Element, x_axis: X_AXIS_T, idx: int | None = None
+) -> dict:
     """Give kwargs for the patch function."""
+    if idx is None:
+        idx = elt.idx["dat_idx"]
+
     kwargs = {"x_0": idx, "width": 1, "elt": elt}
     if x_axis == "z_abs":
         kwargs["x_0"] = elt.get("abs_mesh")[0]
@@ -43,7 +48,7 @@ def plot_structure(
     """Plot structure of the linac under study."""
     for i, elt in enumerate(elts):
         patcher = PLOTTABLE_ELEMENTS.get(type(elt), _plot_drift)
-        kwargs = _patch_kwargs(elt, i, x_axis)
+        kwargs = patch_kwargs(elt, x_axis, i)
         ax.add_patch(patcher(**kwargs))
 
     ax.set(
