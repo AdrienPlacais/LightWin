@@ -10,6 +10,7 @@ from lightwin.core.elements.aperture import Aperture
 from lightwin.core.elements.bend import Bend
 from lightwin.core.elements.drift import Drift
 from lightwin.core.elements.edge import Edge
+from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.field_map_100 import FieldMap100
 from lightwin.core.elements.field_maps.field_map_1100 import FieldMap1100
@@ -19,37 +20,41 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.visualization.helper import X_AXIS_T
 
 
+def _patch_kwargs(elt: Element, idx: int, x_axis: X_AXIS_T) -> dict:
+    """Give kwargs for the patch function."""
+    kwargs = {"x_0": idx, "width": 1, "elt": elt}
+    if x_axis == "z_abs":
+        kwargs["x_0"] = elt.get("abs_mesh")[0]
+        kwargs["width"] = elt.length_m
+    return kwargs
+
+
+def _limits(elts: ListOfElements, x_axis: X_AXIS_T) -> tuple[float, float]:
+    """Give the limits of the plot."""
+    x_limits = (0, len(elts))
+    if x_axis == "z_abs":
+        x_limits = (elts[0].get("abs_mesh")[0], elts[-1].get("abs_mesh")[-1])
+    return x_limits
+
+
 def plot_structure(
     elts: ListOfElements, ax: Axes, x_axis: X_AXIS_T = "z_abs"
 ) -> None:
     """Plot structure of the linac under study."""
-
-    patch_kw = {
-        "z_abs": lambda elt, _: {
-            "x_0": elt.get("abs_mesh")[0],
-            "width": elt.length_m,
-        },
-        "elt_idx": lambda _, idx: {"x_0": idx, "width": 1},
-    }
-    x_limits = {
-        "z_abs": [elts[0].get("abs_mesh")[0], elts[-1].get("abs_mesh")[-1]],
-        "elt_idx": [0, len(elts)],
-    }
-
     for i, elt in enumerate(elts):
-        kwargs = patch_kw[x_axis](elt, i)
-        plot_func = PLOTTABLE_ELEMENTS.get(type(elt), _plot_drift)
-        ax.add_patch(plot_func(elt, **kwargs))
+        patcher = PLOTTABLE_ELEMENTS.get(type(elt), _plot_drift)
+        kwargs = _patch_kwargs(elt, i, x_axis)
+        ax.add_patch(patcher(**kwargs))
 
-    ax.set_xlim(x_limits[x_axis])
-    ax.set_yticklabels(())
-    ax.set_yticks(())
-    ax.set_ylim((-0.55, 0.55))
+    ax.set(
+        xlim=_limits(elts, x_axis),
+        yticklabels=(),
+        yticks=(),
+        ylim=(-0.55, 0.55),
+    )
 
 
-def _plot_aperture(
-    aperture: Aperture, x_0: float, width: float
-) -> pat.Rectangle:
+def _plot_aperture(x_0: float, width: float, **kwargs) -> pat.Rectangle:
     """Add a thin line to show an aperture."""
     height = 1.0
     y_0 = -height * 0.5
@@ -57,7 +62,7 @@ def _plot_aperture(
     return patch
 
 
-def _plot_bend(bend: Bend, x_0: float, width: float) -> pat.Rectangle:
+def _plot_bend(x_0: float, width: float, **kwargs) -> pat.Rectangle:
     """Add a greyed rectangle to show a bend."""
     height = 0.7
     y_0 = -height * 0.5
@@ -67,7 +72,7 @@ def _plot_bend(bend: Bend, x_0: float, width: float) -> pat.Rectangle:
     return patch
 
 
-def _plot_drift(drift: Drift, x_0: float, width: float) -> pat.Rectangle:
+def _plot_drift(x_0: float, width: float, **kwargs) -> pat.Rectangle:
     """Add a little rectangle to show a drift."""
     height = 0.4
     y_0 = -height * 0.5
@@ -76,7 +81,7 @@ def _plot_drift(drift: Drift, x_0: float, width: float) -> pat.Rectangle:
 
 
 def _plot_field_map(
-    field_map: FieldMap, x_0: float, width: float
+    x_0: float, width: float, field_map: FieldMap, **kwargs
 ) -> pat.Ellipse:
     """Add an ellipse to show a field_map."""
     height = 1.0
@@ -103,7 +108,7 @@ def _plot_field_map(
     return patch
 
 
-def _plot_edge(edge: Edge, x_0: float, width: float) -> pat.Rectangle:
+def _plot_edge(x_0: float, width: float, **kwargs) -> pat.Rectangle:
     """Add a thin line to show an edge."""
     height = 1.0
     y_0 = -height * 0.5
@@ -111,7 +116,7 @@ def _plot_edge(edge: Edge, x_0: float, width: float) -> pat.Rectangle:
     return patch
 
 
-def _plot_quad(quad: Quad, x_0: float, width: float) -> pat.Polygon:
+def _plot_quad(x_0: float, width: float, **kwargs) -> pat.Polygon:
     """Add a crossed large rectangle to show a quad."""
     height = 1.0
     y_0 = -height * 0.5
