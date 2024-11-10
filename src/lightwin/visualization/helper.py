@@ -78,18 +78,6 @@ def remove_artists(axe: Axes) -> None:
     axe.set_prop_cycle(None)  # type: ignore
 
 
-def _autoscale_based_on(axx: Axes, to_ignore: str) -> None:
-    """Rescale axis, ignoring Lines with to_ignore in their label."""
-    lines = [
-        line for line in axx.get_lines() if to_ignore not in line.get_label()
-    ]
-    axx.dataLim = mtransforms.Bbox.unit()
-    for line in lines:
-        datxy = np.vstack(line.get_data()).T
-        axx.dataLim.update_from_data_xy(datxy, ignore=False)
-    axx.autoscale_view()
-
-
 def savefig(fig: Figure, filepath: Path) -> None:
     """Save the figure."""
     fig.set_size_inches(25.6, 13.64)
