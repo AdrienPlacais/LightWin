@@ -17,6 +17,9 @@ from lightwin.core.beam_parameters.initial_beam_parameters import (
     phase_space_name_hidden_in_key,
     separate_var_from_phase_space,
 )
+from lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters import (
+    PHASE_SPACE_T,
+)
 from lightwin.core.beam_parameters.phase_space.phase_space_beam_parameters import (
     PhaseSpaceBeamParameters,
 )
@@ -87,7 +90,7 @@ class BeamParameters(InitialBeamParameters):
         none_to_nan: bool = False,
         elt: Element | None = None,
         pos: Literal["in", "out"] | None = None,
-        phase_space_name: str | None = None,
+        phase_space_name: PHASE_SPACE_T | None = None,
         **kwargs: Any,
     ) -> Any:
         """Get attributes from this class or its attributes.
@@ -277,7 +280,7 @@ class BeamParameters(InitialBeamParameters):
     def set_mismatches(
         self,
         reference_beam_parameters: Self,
-        *phase_space_names: str,
+        *phase_space_names: PHASE_SPACE_T,
         **mismatch_kw: bool,
     ) -> None:
         """Compute and set mismatch in every possible phase space."""
@@ -301,7 +304,7 @@ class BeamParameters(InitialBeamParameters):
     def _get_phase_spaces(
         self,
         reference_beam_parameters: Self,
-        phase_space_name: str,
+        phase_space_name: PHASE_SPACE_T,
         raise_missing_phase_space_error: bool,
         **mismatch_kw: bool,
     ) -> tuple[

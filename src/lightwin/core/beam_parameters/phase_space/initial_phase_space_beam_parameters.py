@@ -8,13 +8,13 @@ For a list of the units associated with every parameter, see
 
 """
 
-import logging
 from dataclasses import dataclass
 from typing import Any, Self
 
 import numpy as np
 
 from lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters import (
+    PHASE_SPACE_T,
     IPhaseSpaceBeamParameters,
 )
 
@@ -43,7 +43,7 @@ class InitialPhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
     @classmethod
     def from_sigma(
         cls,
-        phase_space_name: str,
+        phase_space_name: PHASE_SPACE_T,
         sigma: np.ndarray,
         gamma_kin: float,
         beta_kin: float,
@@ -64,7 +64,7 @@ class InitialPhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
     def from_other_phase_space(
         cls,
         other_phase_space: Self,
-        phase_space_name: str,
+        phase_space_name: PHASE_SPACE_T,
         gamma_kin: float,
         beta_kin: float,
         beam_kwargs: dict[str, Any],

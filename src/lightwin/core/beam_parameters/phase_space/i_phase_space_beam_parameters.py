@@ -10,7 +10,7 @@ For a list of the units associated with every parameter, see
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Self
+from typing import Any, Literal, Self
 
 import numpy as np
 
@@ -24,7 +24,7 @@ from lightwin.core.beam_parameters.helper import (
 )
 from lightwin.util.helper import range_vals_object
 
-IMPLEMENTED_PHASE_SPACES = (
+PHASE_SPACES = (
     "zdelta",
     "z",
     "phiw",
@@ -35,13 +35,16 @@ IMPLEMENTED_PHASE_SPACES = (
     "x99",
     "y99",
 )  #:
+PHASE_SPACE_T = Literal[
+    "zdelta", "z", "phiw", "x", "y", "t", "phiw99", "x99", "y99"
+]
 
 
 @dataclass
 class IPhaseSpaceBeamParameters(ABC):
     """Hold Twiss, emittance, envelopes of single phase-space @ single pos."""
 
-    phase_space_name: str
+    phase_space_name: PHASE_SPACE_T
     eps_no_normalization: np.ndarray | float
     eps_normalized: np.ndarray | float
     # _beam_kwargs: dict[str, Any]
@@ -53,12 +56,12 @@ class IPhaseSpaceBeamParameters(ABC):
 
     def __post_init__(self) -> None:
         """Ensure that the phase space exists."""
-        assert self.phase_space_name in IMPLEMENTED_PHASE_SPACES
+        assert self.phase_space_name in PHASE_SPACES
 
     @classmethod
     def from_sigma(
         cls,
-        phase_space_name: str,
+        phase_space_name: PHASE_SPACE_T,
         sigma: np.ndarray,
         gamma_kin: np.ndarray | float,
         beta_kin: np.ndarray | float,
@@ -91,7 +94,7 @@ class IPhaseSpaceBeamParameters(ABC):
     def from_other_phase_space(
         cls,
         other_phase_space: Self,
-        phase_space_name: str,
+        phase_space_name: PHASE_SPACE_T,
         gamma_kin: np.ndarray | float,
         beta_kin: np.ndarray | float,
         beam_kwargs: dict[str, Any],
