@@ -86,7 +86,7 @@ def _plot_drift(x_0: float, width: float, **kwargs) -> pat.Rectangle:
 
 
 def _plot_field_map(
-    x_0: float, width: float, field_map: FieldMap, **kwargs
+    x_0: float, width: float, elt: FieldMap, **kwargs
 ) -> pat.Ellipse:
     """Add an ellipse to show a field_map."""
     height = 1.0
@@ -100,7 +100,7 @@ def _plot_field_map(
         "compensate (ok)": "orange",
         "compensate (not ok)": "orange",
     }
-    color = colors[field_map.get("status", to_numpy=False)]
+    color = colors[elt.get("status", to_numpy=False)]
     patch = pat.Ellipse(
         (x_0 + 0.5 * width, y_0),
         width,
