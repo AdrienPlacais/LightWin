@@ -30,11 +30,17 @@ class NSGA(OptimisationAlgorithm):
 
     supports_constraints = True
 
-    def optimise(
-        self,
-        keep_history: bool = False,
-        save_history: bool = False,
-    ) -> tuple[bool, SetOfCavitySettings | None, OptiInfo]:
+    def __init__(
+        self, *args, history_kwargs: dict | None = None, **kwargs
+    ) -> None:
+        """Set additional information."""
+        if history_kwargs is not None:
+            logging.warning(
+                "History recording not implemented for DownhillSimplexPenalty."
+            )
+        super().__init__(*args, history_kwargs=history_kwargs, **kwargs)
+
+    def optimise(self) -> tuple[bool, SetOfCavitySettings | None, OptiInfo]:
         """Set up the optimisation and solve the problem.
 
         Returns
@@ -48,8 +54,6 @@ class NSGA(OptimisationAlgorithm):
             violation if applicable, etc.
 
         """
-        if keep_history or save_history:
-            raise NotImplementedError
         problem: Problem = MyElementwiseProblem(
             _wrapper_residuals=self._wrapper_residuals,
             **self._problem_arguments,
@@ -85,6 +89,7 @@ class NSGA(OptimisationAlgorithm):
         # result.G.append(g)
 
         set_of_cavity_settings, info = self._best_solution(result)
+        self._finalize()
         return success, set_of_cavity_settings, info
 
     @property

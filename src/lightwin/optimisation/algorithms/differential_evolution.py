@@ -7,7 +7,10 @@ import numpy as np
 from scipy.optimize import Bounds, differential_evolution
 
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
+from lightwin.optimisation.algorithms.algorithm import (
+    OptimisationAlgorithm,
+    OptiSol,
+)
 
 
 @dataclass
@@ -20,14 +23,13 @@ class DifferentialEvolution(OptimisationAlgorithm):
 
     """
 
-    def __post_init__(self) -> None:
-        """Set additional information."""
-        super().__post_init__()
-        self.supports_constraints = False
+    supports_constraints = False
 
-    def optimise(
-        self,
-    ) -> tuple[bool, SetOfCavitySettings, dict[str, list[float]]]:
+    def __init__(self, *args, **kwargs) -> None:
+        """Instantiate object."""
+        return super().__init__(*args, **kwargs)
+
+    def optimise(self) -> tuple[bool, SetOfCavitySettings, OptiSol]:
         """Set up the optimisation and solve the problem.
 
         Returns
@@ -36,7 +38,7 @@ class DifferentialEvolution(OptimisationAlgorithm):
             Tells if the optimisation algorithm managed to converge.
         optimized_cavity_settings : SetOfCavitySettings
             Best solution found by the optimization algorithm.
-        info : dict[str, list[float]]] | None
+        info : OptiSol | None
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 
@@ -58,10 +60,12 @@ class DifferentialEvolution(OptimisationAlgorithm):
         self._output_some_info()
 
         success = self.solution.success
-        info = {
+        info: OptiSol = {
             "X": self.solution.x.tolist(),
             "F": self.solution.fun.tolist(),
+            "objectives_values": {},
         }
+        self._finalize()
         return success, optimized_cavity_settings, info
 
     def _algorithm_parameters(self) -> dict:

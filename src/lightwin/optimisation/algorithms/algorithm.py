@@ -20,6 +20,7 @@ list of implemented algorithms in the :mod:`.algorithm` module.
 
 """
 
+import logging
 from abc import ABC, abstractmethod
 from collections.abc import Collection
 from pathlib import Path
@@ -52,7 +53,9 @@ class OptiInfo(TypedDict):
 class OptiSol(TypedDict):
     """Hold information on the solution."""
 
-    x: np.ndarray
+    X: list[float]
+    F: list[float]
+    objectives_values: dict[str, float]
 
 
 ComputeBeamPropagationT = Callable[[SetOfCavitySettings], SimulationOutput]
@@ -87,12 +90,13 @@ class OptimisationAlgorithm(ABC):
         Method to compute residuals from a :class:`.SimulationOutput`.
     compute_constraints : ComputeConstraintsT | None, optional
         Method to compute constraint violation. The default is None.
-    folder : str | None, optional
-        Where history, phase space and other optimisation information will be
-        saved if necessary. The default is None.
     cavity_settings_factory : CavitySettingsFactory
         A factory to easily create the cavity settings to try at each iteration
         of the optimisation algorithm.
+    history_kwargs : dict | None, optional
+        kwargs for the :class:`.OptimizationHistory` creation.
+    reference_simulation_output : SimulationOutput
+        Used for the :class:`.OptimizationHistory`.
 
     """
 
@@ -100,6 +104,7 @@ class OptimisationAlgorithm(ABC):
 
     def __init__(
         self,
+        *,
         compensating_elements: Collection[Element],
         elts: ListOfElements,
         objectives: Collection[Objective],
@@ -107,10 +112,11 @@ class OptimisationAlgorithm(ABC):
         compute_beam_propagation: ComputeBeamPropagationT,
         compute_residuals: ComputeResidualsT,
         cavity_settings_factory: CavitySettingsFactory,
+        reference_simulation_output: SimulationOutput,
         constraints: Collection[Constraint] | None = None,
         compute_constraints: ComputeConstraintsT | None = None,
-        folder: Path | None = None,
         optimisation_algorithm_kwargs: dict[str, Any] | None = None,
+        history_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ) -> None:
         """Instantiate the object."""
@@ -127,7 +133,6 @@ class OptimisationAlgorithm(ABC):
         if self.supports_constraints:
             assert compute_constraints is not None
         self.compute_constraints = compute_constraints
-        self.folder = folder
         self.cavity_settings_factory = cavity_settings_factory
 
         self.solution: OptiSol
@@ -137,6 +142,14 @@ class OptimisationAlgorithm(ABC):
             optimisation_algorithm_kwargs = {}
         self.optimisation_algorithm_kwargs = (
             self._default_kwargs | optimisation_algorithm_kwargs
+        )
+
+        if history_kwargs is None:
+            history_kwargs = {}
+        self.history = OptimizationHistory(
+            reference_simulation_output,
+            [obj.name for obj in objectives],
+            **history_kwargs,
         )
 
     @property
@@ -169,20 +182,8 @@ class OptimisationAlgorithm(ABC):
         return {}
 
     @abstractmethod
-    def optimise(
-        self,
-        keep_history: bool = False,
-        save_history: bool = False,
-    ) -> tuple[bool, SetOfCavitySettings | None, OptiInfo]:
+    def optimise(self) -> tuple[bool, SetOfCavitySettings | None, OptiSol]:
         """Set up optimisation parameters and solve the problem.
-
-        Parameters
-        ----------
-        keep_history : bool, optional
-            To keep all the variables that were tried as well as the associated
-            objective and constraint violation values.
-        save_history : bool, optional
-            To save the history.
 
         Returns
         -------
@@ -191,7 +192,7 @@ class OptimisationAlgorithm(ABC):
         optimized_cavity_settings : SetOfCavitySettings
             Best solution found by the optimization algorithm. None if no
             satisfactory solution was found.
-        info : OptiInfo
+        info : OptiSol
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 
@@ -208,10 +209,17 @@ class OptimisationAlgorithm(ABC):
 
     def _wrapper_residuals(self, var: np.ndarray) -> np.ndarray:
         """Compute residuals from an array of variable values."""
+        self.history.add_settings(var)
         cav_settings = self._create_set_of_cavity_settings(var)
         simulation_output = self.compute_beam_propagation(cav_settings)
         residuals = self.compute_residuals(simulation_output)
+        self.history.add_objective_values(list(residuals), simulation_output)
+        self.history.checkpoint()
         return residuals
+
+    def _finalize(self) -> None:
+        """End the optimization process."""
+        self.history.save()
 
     def _norm_wrapper_residuals(self, var: np.ndarray) -> float:
         """Compute norm of residues vector from an array of variable values."""
@@ -266,16 +274,201 @@ class OptimisationAlgorithm(ABC):
         }
         return objectives_values
 
-    def _generate_optimisation_history(
+
+class OptimizationHistory:
+    """Keep all the settings that were tried."""
+
+    _settings_filename = "settings.csv"
+    _objectives_filename = "objectives.csv"
+    _constraints_filename = "constraints.csv"
+
+    def __init__(
         self,
-        variables_values: np.ndarray,
-        objectives_values: np.ndarray,
-        constraints_values: np.ndarray,
-    ) -> OptiInfo:
-        """Create optimisation history."""
-        opti_info = OptiInfo(
-            hist_X=variables_values,
-            hist_F=objectives_values,
-            hist_G=constraints_values,
+        reference_simulation_output: SimulationOutput,
+        objectives_names: Collection[str],
+        get_args: tuple[str, ...] = (),
+        get_kwargs: dict[str, Any] | None = None,
+        folder: Path | str | None = None,
+        save_interval: int = 100,
+        **kwargs,
+    ) -> None:
+        """Instantiate the object.
+
+        Parameters
+        ----------
+        get_args, get_kwargs : tuple[str, ...], dict[str, Any], optional
+            args and kwargs passed to the ``SimulationOutput.get`` method. Used
+            to add some values to the output files.
+        get_kwargs : dict[str, Any] | None, optionaltuple
+            Keyword arguments for the SimulationOutput.get method.
+        folder : Path | str | None, optional
+            Where the histories will be saved. If not provided or None is
+            given, this class will not have any effect and every public method
+            wil be overriden with dummy methods.
+        save_interval : int, optional
+            Files will be saved every ``save_interval`` iteration.
+
+        """
+        if folder is None:
+            self._make_public_methods_useless()
+            return
+        if isinstance(folder, str):
+            folder = Path(folder)
+        self._folder = folder
+
+        self._get_args = get_args
+        if get_kwargs is None:
+            get_kwargs = {}
+        self._get_kwargs = get_kwargs
+
+        self._rename_previous_files()
+
+        self._settings: list[np.ndarray] = []
+        self._objectives: list[list[float | None] | list[str]] = list(
+            self._init_objective_hist(
+                objectives_names, reference_simulation_output
+            )
         )
-        return opti_info
+        self._constraints: list[list[float] | np.ndarray | None] = []
+
+        self._start_idx = 0
+        self._iteration_count: int = 0
+        self._save_interval = save_interval
+
+    def _make_public_methods_useless(self) -> None:
+        """Override some methods so that they do not do anything."""
+        self.add_settings = lambda var: None
+        self.add_objective_values = lambda objectives, simulation_output: None
+        self.add_constraint_values = lambda constraints: None
+        self.save = lambda: None
+        self.checkpoint = lambda: None
+
+    def add_settings(self, var: np.ndarray) -> None:
+        """Add a new set of cavity settings."""
+        self._settings.append(var)
+
+    def _init_objective_hist(
+        self,
+        objectives_names: Collection[str],
+        reference_simulation_output: SimulationOutput,
+    ) -> tuple[list[str], list[None | float]]:
+        """Create the objective history, with header and reference values."""
+        header_objective, header_outputs = self._objective_headers(
+            objectives_names
+        )
+
+        reference_objective = [None for _ in header_objective]
+        reference_outputs = self._simulation_output_to_objectives(
+            reference_simulation_output
+        )
+
+        objectives = (
+            header_objective + header_outputs,
+            reference_objective + reference_outputs,
+        )
+        return objectives
+
+    def _simulation_output_to_objectives(
+        self, simulation_output: SimulationOutput
+    ) -> list[float]:
+        """Extract and format desired values from ``simulation_output``."""
+        values = list(
+            simulation_output.get(
+                *self._get_args, to_numpy=False, **self._get_kwargs
+            )
+        )
+        return values
+
+    def _objective_headers(
+        self, objectives_names: Collection[str]
+    ) -> tuple[list[str], list[str]]:
+        """Get the objective headers."""
+        header_objective = list(objectives_names)
+        header_outputs = [
+            f"{qty} @ {elt}"
+            for elt in self._get_kwargs.get("elt", ())
+            for qty in self._get_args
+        ]
+        return header_objective, header_outputs
+
+    def add_objective_values(
+        self, objectives: list, simulation_output: SimulationOutput
+    ) -> None:
+        """Add some objective values."""
+        sim_output_vals = self._simulation_output_to_objectives(
+            simulation_output
+        )
+        self._objectives.append(objectives + sim_output_vals)
+
+    def add_constraint_values(
+        self, constraints: list | np.ndarray | None
+    ) -> None:
+        """Add some constraint values."""
+        self._constraints.append(constraints)
+
+    def save(self) -> None:
+        """Save the three histories in their respective files.
+
+        All files will be in ``self.history_folder``.
+
+        """
+        for property in ("_settings", "_objectives", "_constraints"):
+            filename = getattr(self, property + "_filename")
+            filepath = self._folder / filename
+            values = getattr(self, property)
+            _save_values(filepath, values)
+
+        delta_i = len(self._settings)
+        self._start_idx += delta_i
+        self._empty_histories()
+        logging.debug(
+            f"Saved optimization hist at iteration {self._start_idx}."
+        )
+
+    def _rename_previous_files(self) -> None:
+        """Rename the previous history files."""
+        for filename in (
+            self._settings_filename,
+            self._objectives_filename,
+            self._constraints_filename,
+        ):
+            filepath = self._folder / filename
+            if filepath.is_file():
+                filepath.rename(filepath.with_suffix(".csv.old"))
+
+    def _empty_histories(self) -> None:
+        """Empty the histories."""
+        self._settings = []
+        self._objectives = []
+        self._constraints = []
+
+    def checkpoint(self) -> None:
+        """Save periodically based on the defined interval."""
+        self._iteration_count += 1
+        if self._iteration_count % self._save_interval == 0:
+            self.save()
+
+
+def _save_values(
+    filepath: Path, values: list[list[float] | np.ndarray | None]
+) -> None:
+    """Save the ``values`` to ``filepath`` (can be objectives or constraints).
+
+    Parameters
+    ----------
+    filepath : Path
+       Where to save the values.
+    values : list[list[float] | np.ndarray | None]
+        The list of values to save (objectives or constraints), starting in
+        the third column. If a value is None, it is represented as 'None' in
+        the file.
+
+    """
+    with filepath.open("a", encoding="utf-8") as file:
+        for value_set in values:
+            if value_set is None:
+                value_str = "None"
+            else:
+                value_str = ",".join(map(str, value_set))
+            row = f"{value_str}\n"
+            file.write(row)
