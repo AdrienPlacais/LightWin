@@ -68,6 +68,7 @@
 <li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.html">optimisation package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.ui.html">ui package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">util package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
@@ -707,6 +708,7 @@
 <li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.objective.html">objective package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.html#submodules">Submodules</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html">factory module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.helper.html">helper module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_difference_with_ref.html">minimize_difference_with_ref module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_mismatch.html">minimize_mismatch module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html">objective module</a></li>
@@ -885,6 +887,22 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.ui.html">ui package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.ui.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.ui.workflow_setup.html">workflow_setup module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.set_up_solvers"><code class="docutils literal notranslate"><span class="pre">set_up_solvers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.set_up_accelerators"><code class="docutils literal notranslate"><span class="pre">set_up_accelerators()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.set_up_faults"><code class="docutils literal notranslate"><span class="pre">set_up_faults()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.set_up"><code class="docutils literal notranslate"><span class="pre">set_up()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.fix"><code class="docutils literal notranslate"><span class="pre">fix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.recompute"><code class="docutils literal notranslate"><span class="pre">recompute()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.run_simulation"><code class="docutils literal notranslate"><span class="pre">run_simulation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="lightwin.util.html">util package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="lightwin.util.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.util.converters.html">converters module</a><ul>
@@ -994,8 +1012,48 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.visualization.ellipse.html">ellipse module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams"><code class="docutils literal notranslate"><span class="pre">EllipseEqParams</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams.A"><code class="docutils literal notranslate"><span class="pre">EllipseEqParams.A</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams.B"><code class="docutils literal notranslate"><span class="pre">EllipseEqParams.B</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams.C"><code class="docutils literal notranslate"><span class="pre">EllipseEqParams.C</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams.D"><code class="docutils literal notranslate"><span class="pre">EllipseEqParams.D</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams.E"><code class="docutils literal notranslate"><span class="pre">EllipseEqParams.E</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams.F"><code class="docutils literal notranslate"><span class="pre">EllipseEqParams.F</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseParams"><code class="docutils literal notranslate"><span class="pre">EllipseParams</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseParams.a"><code class="docutils literal notranslate"><span class="pre">EllipseParams.a</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseParams.b"><code class="docutils literal notranslate"><span class="pre">EllipseParams.b</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseParams.x0"><code class="docutils literal notranslate"><span class="pre">EllipseParams.x0</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseParams.y0"><code class="docutils literal notranslate"><span class="pre">EllipseParams.y0</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseParams.theta"><code class="docutils literal notranslate"><span class="pre">EllipseParams.theta</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse._compute_ellipse_parameters"><code class="docutils literal notranslate"><span class="pre">_compute_ellipse_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.plot_ellipse"><code class="docutils literal notranslate"><span class="pre">plot_ellipse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.plot_ellipse_emittance"><code class="docutils literal notranslate"><span class="pre">plot_ellipse_emittance()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.visualization.helper.html">helper module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.helper.html#lightwin.visualization.helper.create_fig_if_not_exists"><code class="docutils literal notranslate"><span class="pre">create_fig_if_not_exists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.helper.html#lightwin.visualization.helper.clean_figures"><code class="docutils literal notranslate"><span class="pre">clean_figures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.helper.html#lightwin.visualization.helper.clean_axes"><code class="docutils literal notranslate"><span class="pre">clean_axes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.helper.html#lightwin.visualization.helper.remove_artists"><code class="docutils literal notranslate"><span class="pre">remove_artists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.helper.html#lightwin.visualization.helper.savefig"><code class="docutils literal notranslate"><span class="pre">savefig()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.visualization.optimization.html">optimization module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.optimization.html#lightwin.visualization.optimization._get_objectives"><code class="docutils literal notranslate"><span class="pre">_get_objectives()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.optimization.html#lightwin.visualization.optimization.mark_objectives_position"><code class="docutils literal notranslate"><span class="pre">mark_objectives_position()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.optimization.html#lightwin.visualization.optimization._line_objective"><code class="docutils literal notranslate"><span class="pre">_line_objective()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.optimization.html#lightwin.visualization.optimization._patch_objective"><code class="docutils literal notranslate"><span class="pre">_patch_objective()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.optimization.html#lightwin.visualization.optimization.plot_fit_progress"><code class="docutils literal notranslate"><span class="pre">plot_fit_progress()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.visualization.plot.html">plot module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot.factory"><code class="docutils literal notranslate"><span class="pre">factory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._separate_plot_presets_from_plot_modificators"><code class="docutils literal notranslate"><span class="pre">_separate_plot_presets_from_plot_modificators()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._plot_preset"><code class="docutils literal notranslate"><span class="pre">_plot_preset()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._proper_kwargs"><code class="docutils literal notranslate"><span class="pre">_proper_kwargs()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._keep_colors"><code class="docutils literal notranslate"><span class="pre">_keep_colors()</span></code></a></li>
@@ -1008,28 +1066,23 @@
 <li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._error_calculation_function"><code class="docutils literal notranslate"><span class="pre">_error_calculation_function()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._compute_error"><code class="docutils literal notranslate"><span class="pre">_compute_error()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._make_a_subplot"><code class="docutils literal notranslate"><span class="pre">_make_a_subplot()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot.create_fig_if_not_exists"><code class="docutils literal notranslate"><span class="pre">create_fig_if_not_exists()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot.clean_figure"><code class="docutils literal notranslate"><span class="pre">clean_figure()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot.clean_axes"><code class="docutils literal notranslate"><span class="pre">clean_axes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot.remove_artists"><code class="docutils literal notranslate"><span class="pre">remove_artists()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._autoscale_based_on"><code class="docutils literal notranslate"><span class="pre">_autoscale_based_on()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._savefig"><code class="docutils literal notranslate"><span class="pre">_savefig()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot.plot_pty_with_data_tags"><code class="docutils literal notranslate"><span class="pre">plot_pty_with_data_tags()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._plot_structure"><code class="docutils literal notranslate"><span class="pre">_plot_structure()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._plot_aperture"><code class="docutils literal notranslate"><span class="pre">_plot_aperture()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._plot_bend"><code class="docutils literal notranslate"><span class="pre">_plot_bend()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._plot_drift"><code class="docutils literal notranslate"><span class="pre">_plot_drift()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._plot_field_map"><code class="docutils literal notranslate"><span class="pre">_plot_field_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._plot_edge"><code class="docutils literal notranslate"><span class="pre">_plot_edge()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._plot_quad"><code class="docutils literal notranslate"><span class="pre">_plot_quad()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._plot_section"><code class="docutils literal notranslate"><span class="pre">_plot_section()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot._compute_ellipse_parameters"><code class="docutils literal notranslate"><span class="pre">_compute_ellipse_parameters()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot.plot_ellipse"><code class="docutils literal notranslate"><span class="pre">plot_ellipse()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot.plot_ellipse_emittance"><code class="docutils literal notranslate"><span class="pre">plot_ellipse_emittance()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.plot.html#lightwin.visualization.plot.plot_fit_progress"><code class="docutils literal notranslate"><span class="pre">plot_fit_progress()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin.visualization.specs.html">specs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.visualization.structure.html">structure module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.structure.html#lightwin.visualization.structure.patch_kwargs"><code class="docutils literal notranslate"><span class="pre">patch_kwargs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.structure.html#lightwin.visualization.structure._limits"><code class="docutils literal notranslate"><span class="pre">_limits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.structure.html#lightwin.visualization.structure.plot_structure"><code class="docutils literal notranslate"><span class="pre">plot_structure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.structure.html#lightwin.visualization.structure._plot_aperture"><code class="docutils literal notranslate"><span class="pre">_plot_aperture()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.structure.html#lightwin.visualization.structure._plot_bend"><code class="docutils literal notranslate"><span class="pre">_plot_bend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.structure.html#lightwin.visualization.structure._plot_drift"><code class="docutils literal notranslate"><span class="pre">_plot_drift()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.structure.html#lightwin.visualization.structure._plot_field_map"><code class="docutils literal notranslate"><span class="pre">_plot_field_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.structure.html#lightwin.visualization.structure._plot_edge"><code class="docutils literal notranslate"><span class="pre">_plot_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.structure.html#lightwin.visualization.structure._plot_quad"><code class="docutils literal notranslate"><span class="pre">_plot_quad()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.visualization.structure.html#lightwin.visualization.structure.outline_sections"><code class="docutils literal notranslate"><span class="pre">outline_sections()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1091,7 +1144,6 @@
       <dl>
          <dt>Tags</dt>
          <dd><a href="../../v0.7.0/lightwin/lightwin.html">v0.7.0</a></dd>
-         <dd><a href="../../v0.8.0b4/lightwin/lightwin.html">v0.8.0b4</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

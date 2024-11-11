@@ -13,6 +13,7 @@ Submodules
    :maxdepth: 5
 
    lightwin.optimisation.objective.factory
+   lightwin.optimisation.objective.helper
    lightwin.optimisation.objective.minimize_difference_with_ref
    lightwin.optimisation.objective.minimize_mismatch
    lightwin.optimisation.objective.objective

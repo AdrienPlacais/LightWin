@@ -111,6 +111,7 @@
  | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
  | <a href="#X"><strong>X</strong></a>
+ | <a href="#Y"><strong>Y</strong></a>
  | <a href="#Z"><strong>Z</strong></a>
  
 </div>
@@ -417,8 +418,6 @@
         <li><a href="lightwin/lightwin.config.key_val_conf_spec.html#lightwin.config.key_val_conf_spec.KeyValConfSpec.__post_init__">(KeyValConfSpec method)</a>
 </li>
         <li><a href="lightwin/lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective.__post_init__">(Objective method)</a>
-</li>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.__post_init__">(ObjectiveFactory method)</a>
 </li>
         <li><a href="lightwin/lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory.__post_init__">(ParticleFullTrajectory method)</a>
 </li>
@@ -790,6 +789,8 @@
 </li>
         <li><a href="lightwin/lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.SolenoidEnvelope3DParameters._abc_impl">(SolenoidEnvelope3DParameters attribute)</a>
 </li>
+        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2._abc_impl">(Spiral2 attribute)</a>
+</li>
         <li><a href="lightwin/lightwin.core.commands.steerer.html#lightwin.core.commands.steerer.Steerer._abc_impl">(Steerer attribute)</a>
 </li>
         <li><a href="lightwin/lightwin.core.accelerator.factory.html#lightwin.core.accelerator.factory.StudyWithoutFaultsAcceleratorFactory._abc_impl">(StudyWithoutFaultsAcceleratorFactory attribute)</a>
@@ -882,8 +883,6 @@
       <li><a href="lightwin/lightwin.core.instruction.html#lightwin.core.instruction.Instruction._assert_correct_number_of_args">_assert_correct_number_of_args() (Instruction method)</a>
 </li>
       <li><a href="lightwin/lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings._attr_to_str">_attr_to_str() (CavitySettings method)</a>
-</li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._autoscale_based_on">_autoscale_based_on() (in module lightwin.visualization.plot)</a>
 </li>
       <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._avoid_similar_labels">_avoid_similar_labels() (in module lightwin.visualization.plot)</a>
 </li>
@@ -981,7 +980,7 @@
       </ul></li>
       <li><a href="lightwin/lightwin.core.transfer_matrix.transfer_matrix.html#lightwin.core.transfer_matrix.transfer_matrix.TransferMatrix._compute_cumulated">_compute_cumulated() (TransferMatrix method)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._compute_ellipse_parameters">_compute_ellipse_parameters() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse._compute_ellipse_parameters">_compute_ellipse_parameters() (in module lightwin.visualization.ellipse)</a>
 </li>
       <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._compute_error">_compute_error() (in module lightwin.visualization.plot)</a>
 </li>
@@ -1053,23 +1052,13 @@
 </li>
       <li><a href="lightwin/lightwin.beam_calculation.simulation_output.factory.html#lightwin.beam_calculation.simulation_output.factory._element_to_index">_element_to_index() (in module lightwin.beam_calculation.simulation_output.factory)</a>
 </li>
-      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyMismatch._elements_where_objective_are_evaluated">_elements_where_objective_are_evaluated() (EnergyMismatch method)</a>
-
-      <ul>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyPhaseMismatch._elements_where_objective_are_evaluated">(EnergyPhaseMismatch method)</a>
-</li>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySeveralMismatches._elements_where_objective_are_evaluated">(EnergySeveralMismatches method)</a>
-</li>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch._elements_where_objective_are_evaluated">(EnergySyncPhaseMismatch method)</a>
-</li>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory._elements_where_objective_are_evaluated">(ObjectiveFactory method)</a>
-</li>
-      </ul></li>
       <li><a href="lightwin/lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position._end_last_altered_lattice">_end_last_altered_lattice() (in module lightwin.optimisation.objective.position)</a>
 </li>
       <li><a href="lightwin/lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position._end_last_failed_lattice">_end_last_failed_lattice() (in module lightwin.optimisation.objective.position)</a>
 </li>
       <li><a href="lightwin/lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position._end_linac">_end_linac() (in module lightwin.optimisation.objective.position)</a>
+</li>
+      <li><a href="lightwin/lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position._end_of_every_altered_lattice">_end_of_every_altered_lattice() (in module lightwin.optimisation.objective.position)</a>
 </li>
       <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._error_calculation_function">_error_calculation_function() (in module lightwin.visualization.plot)</a>
 </li>
@@ -1195,6 +1184,8 @@
 </li>
       <li><a href="lightwin/lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm._get_objective_values">_get_objective_values() (OptimisationAlgorithm method)</a>
 </li>
+      <li><a href="lightwin/lightwin.visualization.optimization.html#lightwin.visualization.optimization._get_objectives">_get_objectives() (in module lightwin.visualization.optimization)</a>
+</li>
       <li><a href="lightwin/lightwin.scripts.compute_lost_power_per_meter.html#lightwin.scripts.compute_lost_power_per_meter._get_partran1_filepath">_get_partran1_filepath() (in module lightwin.scripts.compute_lost_power_per_meter)</a>
 </li>
       <li><a href="lightwin/lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters._get_phase_spaces">_get_phase_spaces() (BeamParameters method)</a>
@@ -1227,6 +1218,10 @@
 </li>
       <li><a href="lightwin/lightwin.beam_calculation.tracewin.specs.html#lightwin.beam_calculation.tracewin.specs._get_tracewin_executable">_get_tracewin_executable() (in module lightwin.beam_calculation.tracewin.specs)</a>
 </li>
+      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2._get_twiss_alpha">_get_twiss_alpha() (Spiral2 method)</a>
+</li>
+      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2._get_twiss_beta">_get_twiss_beta() (Spiral2 method)</a>
+</li>
       <li><a href="lightwin/lightwin.tracewin_utils.electromagnetic_fields.html#lightwin.tracewin_utils.electromagnetic_fields._get_type">_get_type() (in module lightwin.tracewin_utils.electromagnetic_fields)</a>
 </li>
       <li><a href="lightwin/lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings._get_valid_func">_get_valid_func() (in module lightwin.core.elements.field_maps.cavity_settings)</a>
@@ -1239,6 +1234,8 @@
         <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySeveralMismatches._get_w_kin">(EnergySeveralMismatches method)</a>
 </li>
         <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch._get_w_kin">(EnergySyncPhaseMismatch method)</a>
+</li>
+        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2._get_w_kin">(Spiral2 method)</a>
 </li>
       </ul></li>
       <li><a href="lightwin/lightwin.core.instructions_factory.html#lightwin.core.instructions_factory.InstructionsFactory._handle_lattice_and_section">_handle_lattice_and_section() (InstructionsFactory method)</a>
@@ -1287,7 +1284,11 @@
 </li>
       <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._keep_colors">_keep_colors() (in module lightwin.visualization.plot)</a>
 </li>
+      <li><a href="lightwin/lightwin.visualization.structure.html#lightwin.visualization.structure._limits">_limits() (in module lightwin.visualization.structure)</a>
+</li>
       <li><a href="lightwin/lightwin.evaluator.simulation_output.simulation_output_evaluator.html#lightwin.evaluator.simulation_output.simulation_output_evaluator._limits_given_in_functoolspartial_args">_limits_given_in_functoolspartial_args() (in module lightwin.evaluator.simulation_output.simulation_output_evaluator)</a>
+</li>
+      <li><a href="lightwin/lightwin.visualization.optimization.html#lightwin.visualization.optimization._line_objective">_line_objective() (in module lightwin.visualization.optimization)</a>
 </li>
       <li><a href="lightwin/lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory._load_cavity_parameters">_load_cavity_parameters() (in module lightwin.beam_calculation.tracewin.simulation_output_factory)</a>
 </li>
@@ -1373,6 +1374,8 @@
 </li>
       <li><a href="lightwin/lightwin.util.pass_beauty.html#lightwin.util.pass_beauty._pass_beauty_instructions">_pass_beauty_instructions() (in module lightwin.util.pass_beauty)</a>
 </li>
+      <li><a href="lightwin/lightwin.visualization.optimization.html#lightwin.visualization.optimization._patch_objective">_patch_objective() (in module lightwin.visualization.optimization)</a>
+</li>
       <li><a href="lightwin/lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field._patch_to_keep_consistency">_patch_to_keep_consistency() (Field method)</a>
 </li>
       <li><a href="lightwin/lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BeamCalculatorsFactory._patch_to_remove_misunderstood_key">_patch_to_remove_misunderstood_key() (BeamCalculatorsFactory method)</a>
@@ -1389,29 +1392,25 @@
 </li>
       <li><a href="lightwin/lightwin.scripts.save_cavity_settings.html#lightwin.scripts.save_cavity_settings._phases_in_deg">_phases_in_deg() (in module lightwin.scripts.save_cavity_settings)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._plot_aperture">_plot_aperture() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.structure.html#lightwin.visualization.structure._plot_aperture">_plot_aperture() (in module lightwin.visualization.structure)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._plot_bend">_plot_bend() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.structure.html#lightwin.visualization.structure._plot_bend">_plot_bend() (in module lightwin.visualization.structure)</a>
 </li>
       <li><a href="lightwin/lightwin.optimisation.algorithms.explorator.html#lightwin.optimisation.algorithms.explorator.Explorator._plot_design_space">_plot_design_space() (Explorator method)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._plot_drift">_plot_drift() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.structure.html#lightwin.visualization.structure._plot_drift">_plot_drift() (in module lightwin.visualization.structure)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._plot_edge">_plot_edge() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.structure.html#lightwin.visualization.structure._plot_edge">_plot_edge() (in module lightwin.visualization.structure)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._plot_field_map">_plot_field_map() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.structure.html#lightwin.visualization.structure._plot_field_map">_plot_field_map() (in module lightwin.visualization.structure)</a>
 </li>
       <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._plot_preset">_plot_preset() (in module lightwin.visualization.plot)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._plot_quad">_plot_quad() (in module lightwin.visualization.plot)</a>
-</li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._plot_section">_plot_section() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.structure.html#lightwin.visualization.structure._plot_quad">_plot_quad() (in module lightwin.visualization.structure)</a>
 </li>
       <li><a href="lightwin/lightwin.scripts.compute_lost_power_per_meter.html#lightwin.scripts.compute_lost_power_per_meter._plot_several">_plot_several() (in module lightwin.scripts.compute_lost_power_per_meter)</a>
 </li>
       <li><a href="lightwin/lightwin.scripts.compute_lost_power_per_meter.html#lightwin.scripts.compute_lost_power_per_meter._plot_single">_plot_single() (in module lightwin.scripts.compute_lost_power_per_meter)</a>
-</li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._plot_structure">_plot_structure() (in module lightwin.visualization.plot)</a>
 </li>
       <li><a href="lightwin/lightwin.config.table_spec.html#lightwin.config.table_spec.TableConfSpec._post_treat">_post_treat() (TableConfSpec method)</a>
 </li>
@@ -1497,9 +1496,9 @@
 </li>
       <li><a href="lightwin/lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory.SimulationOutputFactoryTraceWin._save_tracewin_meshing_in_elements">_save_tracewin_meshing_in_elements() (SimulationOutputFactoryTraceWin method)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._savefig">_savefig() (in module lightwin.visualization.plot)</a>
-</li>
       <li><a href="lightwin/lightwin.scripts.combine_solutions.html#lightwin.scripts.combine_solutions._select_best_simulations">_select_best_simulations() (in module lightwin.scripts.combine_solutions)</a>
+</li>
+      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot._separate_plot_presets_from_plot_modificators">_separate_plot_presets_from_plot_modificators() (in module lightwin.visualization.plot)</a>
 </li>
       <li><a href="lightwin/lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA._set_algorithm">_set_algorithm() (NSGA method)</a>
 </li>
@@ -1709,6 +1708,10 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams.A">A (EllipseEqParams attribute)</a>
+</li>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseParams.a">a (EllipseParams attribute)</a>
+</li>
       <li><a href="lightwin/lightwin.evaluator.post_treaters.html#lightwin.evaluator.post_treaters.absolute">absolute() (in module lightwin.evaluator.post_treaters)</a>
 </li>
       <li><a href="lightwin/lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.AbsPhaseAmplitude">AbsPhaseAmplitude (class in lightwin.optimisation.design_space.factory)</a>
@@ -1743,10 +1746,10 @@
 </li>
       <li><a href="lightwin/lightwin.core.elements.aperture.html#lightwin.core.elements.aperture.Aperture">Aperture (class in lightwin.core.elements.aperture)</a>
 </li>
-      <li><a href="lightwin/lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.append_argument">append_argument() (DatLine method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lightwin/lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.append_argument">append_argument() (DatLine method)</a>
+</li>
       <li><a href="lightwin/lightwin.core.commands.adjust.html#lightwin.core.commands.adjust.Adjust.apply">apply() (Adjust method)</a>
 
       <ul>
@@ -1789,6 +1792,10 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams.B">B (EllipseEqParams attribute)</a>
+</li>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseParams.b">b (EllipseParams attribute)</a>
+</li>
       <li><a href="lightwin/lightwin.core.em_fields.field.html#lightwin.core.em_fields.field.Field.b_x">b_x() (Field method)</a>
 
       <ul>
@@ -1837,10 +1844,10 @@
 </li>
       <li><a href="lightwin/lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.beam_calculator_information">beam_calculator_information (SimulationOutput property)</a>
 </li>
-      <li><a href="lightwin/lightwin.tracewin_utils.interface.html#lightwin.tracewin_utils.interface.beam_calculator_to_command">beam_calculator_to_command() (in module lightwin.tracewin_utils.interface)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lightwin/lightwin.tracewin_utils.interface.html#lightwin.tracewin_utils.interface.beam_calculator_to_command">beam_calculator_to_command() (in module lightwin.tracewin_utils.interface)</a>
+</li>
       <li><a href="lightwin/lightwin.beam_calculation.factory.html#lightwin.beam_calculation.factory.BEAM_CALCULATORS">BEAM_CALCULATORS (in module lightwin.beam_calculation.factory)</a>
 </li>
       <li><a href="lightwin/lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.beam_parameters">beam_parameters (SimulationOutput attribute)</a>
@@ -1887,7 +1894,7 @@
         <li><a href="lightwin/lightwin.core.beam_parameters.initial_beam_parameters.html#lightwin.core.beam_parameters.initial_beam_parameters.InitialBeamParameters.beta_kin">(InitialBeamParameters attribute)</a>
 </li>
       </ul></li>
-      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.broken_elts">broken_elts (ObjectiveFactory attribute)</a>
+      <li><a href="lightwin/lightwin.optimisation.objective.helper.html#lightwin.optimisation.objective.helper.by_element">by_element() (in module lightwin.optimisation.objective.helper)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1895,6 +1902,8 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams.C">C (EllipseEqParams attribute)</a>
+</li>
       <li><a href="lightwin/lightwin.core.elements.element.html#lightwin.core.elements.element.Element.can_be_retuned">can_be_retuned (Element property)</a>
 
       <ul>
@@ -1921,9 +1930,9 @@
 </li>
       <li><a href="lightwin/lightwin.util.helper.html#lightwin.util.helper.chunks">chunks() (in module lightwin.util.helper)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot.clean_axes">clean_axes() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.helper.html#lightwin.visualization.helper.clean_axes">clean_axes() (in module lightwin.visualization.helper)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot.clean_figure">clean_figure() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.helper.html#lightwin.visualization.helper.clean_figures">clean_figures() (in module lightwin.visualization.helper)</a>
 </li>
       <li><a href="lightwin/lightwin.util.log_manager.html#lightwin.util.log_manager.LogFormatter.COLOR_CODES">COLOR_CODES (LogFormatter attribute)</a>
 </li>
@@ -1939,20 +1948,12 @@
 </li>
       <li><a href="lightwin/lightwin.scripts.compare_runs.html#lightwin.scripts.compare_runs.compare_simulations">compare_simulations() (in module lightwin.scripts.compare_runs)</a>
 </li>
-      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.compensating_elements">compensating_elements (ObjectiveFactory attribute)</a>
-</li>
       <li><a href="lightwin/lightwin.failures.strategy.html#lightwin.failures.strategy.COMPENSATING_SELECTOR">COMPENSATING_SELECTOR (in module lightwin.failures.strategy)</a>
 </li>
-      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyMismatch.compensation_zone_override_settings">compensation_zone_override_settings (EnergyMismatch property)</a>
+      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.compensation_zone_override_settings">compensation_zone_override_settings (ObjectiveFactory attribute)</a>
 
       <ul>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyPhaseMismatch.compensation_zone_override_settings">(EnergyPhaseMismatch property)</a>
-</li>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySeveralMismatches.compensation_zone_override_settings">(EnergySeveralMismatches property)</a>
-</li>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch.compensation_zone_override_settings">(EnergySyncPhaseMismatch property)</a>
-</li>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.compensation_zone_override_settings">(ObjectiveFactory property)</a>
+        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2.compensation_zone_override_settings">(Spiral2 attribute)</a>
 </li>
       </ul></li>
       <li><a href="lightwin/lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.compute">compute() (BeamCalculator method)</a>
@@ -1961,10 +1962,10 @@
         <li><a href="lightwin/lightwin.scripts.compute_lost_power_per_meter.html#lightwin.scripts.compute_lost_power_per_meter.compute">(in module lightwin.scripts.compute_lost_power_per_meter)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lightwin/lightwin.scripts.scripts_shorthands.html#lightwin.scripts.scripts_shorthands.compute_beam">compute_beam() (in module lightwin.scripts.scripts_shorthands)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lightwin/lightwin.scripts.scripts_shorthands.html#lightwin.scripts.scripts_shorthands.compute_beams">compute_beams() (in module lightwin.scripts.scripts_shorthands)</a>
 </li>
       <li><a href="lightwin/lightwin.core.particle.html#lightwin.core.particle.ParticleFullTrajectory.compute_complementary_data">compute_complementary_data() (ParticleFullTrajectory method)</a>
@@ -2013,7 +2014,7 @@
         <li><a href="lightwin/lightwin.core.em_fields.helper.html#lightwin.core.em_fields.helper.create_1d_field_func">(in module lightwin.core.em_fields.helper)</a>
 </li>
       </ul></li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot.create_fig_if_not_exists">create_fig_if_not_exists() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.helper.html#lightwin.visualization.helper.create_fig_if_not_exists">create_fig_if_not_exists() (in module lightwin.visualization.helper)</a>
 </li>
       <li><a href="lightwin/lightwin.optimisation.objective.minimize_difference_with_ref.html#lightwin.optimisation.objective.minimize_difference_with_ref.MinimizeDifferenceWithRef.current_value">current_value() (MinimizeDifferenceWithRef method)</a>
 
@@ -2037,6 +2038,8 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams.D">D (EllipseEqParams attribute)</a>
+</li>
       <li><a href="lightwin/lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.FilesInfo.dat_file">dat_file (FilesInfo attribute)</a>
 </li>
       <li><a href="lightwin/lightwin.core.list_of_elements.list_of_elements.html#lightwin.core.list_of_elements.list_of_elements.FilesInfo.dat_filecontent">dat_filecontent (FilesInfo attribute)</a>
@@ -2066,11 +2069,7 @@
       <li><a href="lightwin/lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DESIGN_SPACE_FACTORY_PRESETS">DESIGN_SPACE_FACTORY_PRESETS (in module lightwin.optimisation.design_space.factory)</a>
 </li>
       <li><a href="lightwin/lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory.design_space_kw">design_space_kw (DesignSpaceFactory attribute)</a>
-
-      <ul>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.design_space_kw">(ObjectiveFactory attribute)</a>
 </li>
-      </ul></li>
       <li><a href="lightwin/lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace">DesignSpace (class in lightwin.optimisation.design_space.design_space)</a>
 </li>
       <li><a href="lightwin/lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory">DesignSpaceFactory (class in lightwin.optimisation.design_space.factory)</a>
@@ -2195,6 +2194,8 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams.E">E (EllipseEqParams attribute)</a>
+</li>
       <li><a href="lightwin/lightwin.core.em_fields.field_helpers.html#lightwin.core.em_fields.field_helpers.e_1d">e_1d() (in module lightwin.core.em_fields.field_helpers)</a>
 
       <ul>
@@ -2264,6 +2265,10 @@
       <li><a href="lightwin/lightwin.beam_calculation.tracewin.element_tracewin_parameters.html#lightwin.beam_calculation.tracewin.element_tracewin_parameters.ElementTraceWinParameters">ElementTraceWinParameters (class in lightwin.beam_calculation.tracewin.element_tracewin_parameters)</a>
 </li>
       <li><a href="lightwin/lightwin.beam_calculation.tracewin.element_tracewin_parameters_factory.html#lightwin.beam_calculation.tracewin.element_tracewin_parameters_factory.ElementTraceWinParametersFactory">ElementTraceWinParametersFactory (class in lightwin.beam_calculation.tracewin.element_tracewin_parameters_factory)</a>
+</li>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams">EllipseEqParams (class in lightwin.visualization.ellipse)</a>
+</li>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseParams">EllipseParams (class in lightwin.visualization.ellipse)</a>
 </li>
       <li><a href="lightwin/lightwin.core.accelerator.accelerator.html#lightwin.core.accelerator.accelerator.Accelerator.elt_at_this_s_idx">elt_at_this_s_idx() (Accelerator method)</a>
 
@@ -2431,6 +2436,8 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseEqParams.F">F (EllipseEqParams attribute)</a>
+</li>
       <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot.factory">factory() (in module lightwin.visualization.plot)</a>
 </li>
       <li><a href="lightwin/lightwin.core.beam_parameters.factory.html#lightwin.core.beam_parameters.factory.BeamParametersFactory.factory_method">factory_method() (BeamParametersFactory method)</a>
@@ -2450,8 +2457,6 @@
       <li><a href="lightwin/lightwin.failures.strategy.html#lightwin.failures.strategy.failed_and_compensating">failed_and_compensating() (in module lightwin.failures.strategy)</a>
 </li>
       <li><a href="lightwin/lightwin.tracewin_utils.interface.html#lightwin.tracewin_utils.interface.failed_cavities_to_command">failed_cavities_to_command() (in module lightwin.tracewin_utils.interface)</a>
-</li>
-      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.failed_elements">failed_elements (ObjectiveFactory attribute)</a>
 </li>
       <li><a href="lightwin/lightwin.failures.fault.html#lightwin.failures.fault.Fault">Fault (class in lightwin.failures.fault)</a>
 </li>
@@ -2519,14 +2524,18 @@
 </li>
       <li><a href="lightwin/lightwin.config.helper.html#lightwin.config.helper.find_folder">find_folder() (in module lightwin.config.helper)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lightwin/lightwin.config.helper.html#lightwin.config.helper.find_path">find_path() (in module lightwin.config.helper)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lightwin/lightwin.core.list_of_elements.helper.html#lightwin.core.list_of_elements.helper.first">first() (in module lightwin.core.list_of_elements.helper)</a>
 </li>
       <li><a href="lightwin/lightwin.failures.fault.html#lightwin.failures.fault.Fault.fix">fix() (Fault method)</a>
+
+      <ul>
+        <li><a href="lightwin/lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.fix">(in module lightwin.ui.workflow_setup)</a>
 </li>
+      </ul></li>
       <li><a href="lightwin/lightwin.failures.fault_scenario.html#lightwin.failures.fault_scenario.FaultScenario.fix_all">fix_all() (FaultScenario method)</a>
 </li>
       <li><a href="lightwin/lightwin.beam_calculation.cy_envelope_1d.envelope_1d.html#lightwin.beam_calculation.cy_envelope_1d.envelope_1d.CyEnvelope1D.flag_cython">flag_cython (CyEnvelope1D attribute)</a>
@@ -2704,6 +2713,8 @@
 </li>
         <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.get_objectives">(ObjectiveFactory method)</a>
 </li>
+        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2.get_objectives">(Spiral2 method)</a>
+</li>
       </ul></li>
       <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.get_objectives_and_residuals_function">get_objectives_and_residuals_function() (in module lightwin.optimisation.objective.factory)</a>
 </li>
@@ -2786,8 +2797,6 @@
       <li><a href="lightwin/lightwin.core.elements.factory.html#lightwin.core.elements.factory.implemented_elements">implemented_elements (in module lightwin.core.elements.factory)</a>
 </li>
       <li><a href="lightwin/lightwin.core.elements.field_maps.factory.html#lightwin.core.elements.field_maps.factory.IMPLEMENTED_FIELD_MAPS">IMPLEMENTED_FIELD_MAPS (in module lightwin.core.elements.field_maps.factory)</a>
-</li>
-      <li><a href="lightwin/lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters.html#lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters.IMPLEMENTED_PHASE_SPACES">IMPLEMENTED_PHASE_SPACES (in module lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters)</a>
 </li>
       <li><a href="lightwin/lightwin.core.elements.field_maps.field_map.html#lightwin.core.elements.field_maps.field_map.IMPLEMENTED_STATUS">IMPLEMENTED_STATUS (in module lightwin.core.elements.field_maps.field_map)</a>
 </li>
@@ -3800,8 +3809,6 @@
         <li><a href="lightwin/lightwin.core.elements.field_maps.field_map_1100.html#module-lightwin.core.elements.field_maps.field_map_1100">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     lightwin.core.elements.field_maps.field_map_70
 
@@ -3830,6 +3837,8 @@
         <li><a href="lightwin/lightwin.core.elements.field_maps.util.html#module-lightwin.core.elements.field_maps.util">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     lightwin.core.elements.helper
 
@@ -4279,6 +4288,13 @@
 </li>
       </ul></li>
       <li>
+    lightwin.optimisation.objective.helper
+
+      <ul>
+        <li><a href="lightwin/lightwin.optimisation.objective.helper.html#module-lightwin.optimisation.objective.helper">module</a>
+</li>
+      </ul></li>
+      <li>
     lightwin.optimisation.objective.minimize_difference_with_ref
 
       <ul>
@@ -4433,6 +4449,20 @@
 </li>
       </ul></li>
       <li>
+    lightwin.ui
+
+      <ul>
+        <li><a href="lightwin/lightwin.ui.html#module-lightwin.ui">module</a>
+</li>
+      </ul></li>
+      <li>
+    lightwin.ui.workflow_setup
+
+      <ul>
+        <li><a href="lightwin/lightwin.ui.workflow_setup.html#module-lightwin.ui.workflow_setup">module</a>
+</li>
+      </ul></li>
+      <li>
     lightwin.util
 
       <ul>
@@ -4524,6 +4554,27 @@
 </li>
       </ul></li>
       <li>
+    lightwin.visualization.ellipse
+
+      <ul>
+        <li><a href="lightwin/lightwin.visualization.ellipse.html#module-lightwin.visualization.ellipse">module</a>
+</li>
+      </ul></li>
+      <li>
+    lightwin.visualization.helper
+
+      <ul>
+        <li><a href="lightwin/lightwin.visualization.helper.html#module-lightwin.visualization.helper">module</a>
+</li>
+      </ul></li>
+      <li>
+    lightwin.visualization.optimization
+
+      <ul>
+        <li><a href="lightwin/lightwin.visualization.optimization.html#module-lightwin.visualization.optimization">module</a>
+</li>
+      </ul></li>
+      <li>
     lightwin.visualization.plot
 
       <ul>
@@ -4535,6 +4586,13 @@
 
       <ul>
         <li><a href="lightwin/lightwin.visualization.specs.html#module-lightwin.visualization.specs">module</a>
+</li>
+      </ul></li>
+      <li>
+    lightwin.visualization.structure
+
+      <ul>
+        <li><a href="lightwin/lightwin.visualization.structure.html#module-lightwin.visualization.structure">module</a>
 </li>
       </ul></li>
       <li><a href="lightwin/lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.limits">limits (DesignSpaceParameter attribute)</a>
@@ -4602,6 +4660,8 @@
 </li>
       </ul></li>
       <li><a href="lightwin/lightwin.failures.strategy.html#lightwin.failures.strategy.manual">manual() (in module lightwin.failures.strategy)</a>
+</li>
+      <li><a href="lightwin/lightwin.visualization.optimization.html#lightwin.visualization.optimization.mark_objectives_position">mark_objectives_position() (in module lightwin.visualization.optimization)</a>
 </li>
       <li><a href="lightwin/lightwin.evaluator.simulation_output.simulation_output_evaluator.html#lightwin.evaluator.simulation_output.simulation_output_evaluator.SimulationOutputEvaluator.markdown">markdown (SimulationOutputEvaluator attribute)</a>
 </li>
@@ -4987,6 +5047,8 @@
 </li>
         <li><a href="lightwin/lightwin.optimisation.objective.factory.html#module-lightwin.optimisation.objective.factory">lightwin.optimisation.objective.factory</a>
 </li>
+        <li><a href="lightwin/lightwin.optimisation.objective.helper.html#module-lightwin.optimisation.objective.helper">lightwin.optimisation.objective.helper</a>
+</li>
         <li><a href="lightwin/lightwin.optimisation.objective.minimize_difference_with_ref.html#module-lightwin.optimisation.objective.minimize_difference_with_ref">lightwin.optimisation.objective.minimize_difference_with_ref</a>
 </li>
         <li><a href="lightwin/lightwin.optimisation.objective.minimize_mismatch.html#module-lightwin.optimisation.objective.minimize_mismatch">lightwin.optimisation.objective.minimize_mismatch</a>
@@ -5031,6 +5093,10 @@
 </li>
         <li><a href="lightwin/lightwin.tracewin_utils.load.html#module-lightwin.tracewin_utils.load">lightwin.tracewin_utils.load</a>
 </li>
+        <li><a href="lightwin/lightwin.ui.html#module-lightwin.ui">lightwin.ui</a>
+</li>
+        <li><a href="lightwin/lightwin.ui.workflow_setup.html#module-lightwin.ui.workflow_setup">lightwin.ui.workflow_setup</a>
+</li>
         <li><a href="lightwin/lightwin.util.html#module-lightwin.util">lightwin.util</a>
 </li>
         <li><a href="lightwin/lightwin.util.converters.html#module-lightwin.util.converters">lightwin.util.converters</a>
@@ -5057,9 +5123,17 @@
 </li>
         <li><a href="lightwin/lightwin.visualization.anim.html#module-lightwin.visualization.anim">lightwin.visualization.anim</a>
 </li>
+        <li><a href="lightwin/lightwin.visualization.ellipse.html#module-lightwin.visualization.ellipse">lightwin.visualization.ellipse</a>
+</li>
+        <li><a href="lightwin/lightwin.visualization.helper.html#module-lightwin.visualization.helper">lightwin.visualization.helper</a>
+</li>
+        <li><a href="lightwin/lightwin.visualization.optimization.html#module-lightwin.visualization.optimization">lightwin.visualization.optimization</a>
+</li>
         <li><a href="lightwin/lightwin.visualization.plot.html#module-lightwin.visualization.plot">lightwin.visualization.plot</a>
 </li>
         <li><a href="lightwin/lightwin.visualization.specs.html#module-lightwin.visualization.specs">lightwin.visualization.specs</a>
+</li>
+        <li><a href="lightwin/lightwin.visualization.structure.html#module-lightwin.visualization.structure">lightwin.visualization.structure</a>
 </li>
       </ul></li>
   </ul></td>
@@ -5218,16 +5292,18 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lightwin/lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective">Objective (class in lightwin.optimisation.objective.objective)</a>
 </li>
-      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyMismatch.objective_position_preset">objective_position_preset (EnergyMismatch property)</a>
+      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyMismatch.objective_position_preset">objective_position_preset (EnergyMismatch attribute)</a>
 
       <ul>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyPhaseMismatch.objective_position_preset">(EnergyPhaseMismatch property)</a>
+        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyPhaseMismatch.objective_position_preset">(EnergyPhaseMismatch attribute)</a>
 </li>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySeveralMismatches.objective_position_preset">(EnergySeveralMismatches property)</a>
+        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySeveralMismatches.objective_position_preset">(EnergySeveralMismatches attribute)</a>
 </li>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch.objective_position_preset">(EnergySyncPhaseMismatch property)</a>
+        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch.objective_position_preset">(EnergySyncPhaseMismatch attribute)</a>
 </li>
-        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.objective_position_preset">(ObjectiveFactory property)</a>
+        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.objective_position_preset">(ObjectiveFactory attribute)</a>
+</li>
+        <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2.objective_position_preset">(Spiral2 attribute)</a>
 </li>
       </ul></li>
       <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.OBJECTIVE_PRESETS">OBJECTIVE_PRESETS (in module lightwin.optimisation.objective.factory)</a>
@@ -5268,6 +5344,8 @@
         <li><a href="lightwin/lightwin.beam_calculation.tracewin.simulation_output_factory.html#lightwin.beam_calculation.tracewin.simulation_output_factory.SimulationOutputFactoryTraceWin.out_folder">(SimulationOutputFactoryTraceWin attribute)</a>
 </li>
       </ul></li>
+      <li><a href="lightwin/lightwin.visualization.structure.html#lightwin.visualization.structure.outline_sections">outline_sections() (in module lightwin.visualization.structure)</a>
+</li>
       <li><a href="lightwin/lightwin.util.debug.html#lightwin.util.debug.output_cavities">output_cavities() (in module lightwin.util.debug)</a>
 </li>
       <li><a href="lightwin/lightwin.scripts.compare_beam_calculators.html#lightwin.scripts.compare_beam_calculators.output_comparison">output_comparison() (in module lightwin.scripts.compare_beam_calculators)</a>
@@ -5306,6 +5384,8 @@
 </li>
       <li><a href="lightwin/lightwin.util.helper.html#lightwin.util.helper.pascal_case">pascal_case() (in module lightwin.util.helper)</a>
 </li>
+      <li><a href="lightwin/lightwin.visualization.structure.html#lightwin.visualization.structure.patch_kwargs">patch_kwargs() (in module lightwin.visualization.structure)</a>
+</li>
       <li><a href="lightwin/lightwin.config.key_val_conf_spec.html#lightwin.config.key_val_conf_spec.KeyValConfSpec.path_exists">path_exists() (KeyValConfSpec method)</a>
 </li>
       <li><a href="lightwin/lightwin.util.helper.html#lightwin.util.helper.pd_output">pd_output() (in module lightwin.util.helper)</a>
@@ -5315,6 +5395,8 @@
       <li><a href="lightwin/lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters.html#lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters.IPhaseSpaceBeamParameters.phase_space_name">phase_space_name (IPhaseSpaceBeamParameters attribute)</a>
 </li>
       <li><a href="lightwin/lightwin.core.beam_parameters.initial_beam_parameters.html#lightwin.core.beam_parameters.initial_beam_parameters.phase_space_name_hidden_in_key">phase_space_name_hidden_in_key() (in module lightwin.core.beam_parameters.initial_beam_parameters)</a>
+</li>
+      <li><a href="lightwin/lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters.html#lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters.PHASE_SPACES">PHASE_SPACES (in module lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters)</a>
 </li>
       <li><a href="lightwin/lightwin.core.beam_parameters.phase_space.phase_space_beam_parameters.html#lightwin.core.beam_parameters.phase_space.phase_space_beam_parameters.PhaseSpaceBeamParameters">PhaseSpaceBeamParameters (class in lightwin.core.beam_parameters.phase_space.phase_space_beam_parameters)</a>
 </li>
@@ -5382,13 +5464,15 @@
       </ul></li>
       <li><a href="lightwin/lightwin.beam_calculation.simulation_output.simulation_output.html#lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.plot">plot() (SimulationOutput method)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot.plot_ellipse">plot_ellipse() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.plot_ellipse">plot_ellipse() (in module lightwin.visualization.ellipse)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot.plot_ellipse_emittance">plot_ellipse_emittance() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.plot_ellipse_emittance">plot_ellipse_emittance() (in module lightwin.visualization.ellipse)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot.plot_fit_progress">plot_fit_progress() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.optimization.html#lightwin.visualization.optimization.plot_fit_progress">plot_fit_progress() (in module lightwin.visualization.optimization)</a>
 </li>
       <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot.plot_pty_with_data_tags">plot_pty_with_data_tags() (in module lightwin.visualization.plot)</a>
+</li>
+      <li><a href="lightwin/lightwin.visualization.structure.html#lightwin.visualization.structure.plot_structure">plot_structure() (in module lightwin.visualization.structure)</a>
 </li>
       <li><a href="lightwin/lightwin.evaluator.simulation_output.simulation_output_evaluator.html#lightwin.evaluator.simulation_output.simulation_output_evaluator.SimulationOutputEvaluator.plt_kwargs">plt_kwargs (SimulationOutputEvaluator attribute)</a>
 </li>
@@ -5480,6 +5564,8 @@
         <li><a href="lightwin/lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.html#lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters.SuperposedFieldMapEnvelope1DParameters.re_set_for_broken_cavity">(SuperposedFieldMapEnvelope1DParameters method)</a>
 </li>
       </ul></li>
+      <li><a href="lightwin/lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.recompute">recompute() (in module lightwin.ui.workflow_setup)</a>
+</li>
       <li><a href="lightwin/lightwin.core.beam_parameters.helper.html#lightwin.core.beam_parameters.helper.reconstruct_sigma">reconstruct_sigma() (in module lightwin.core.beam_parameters.helper)</a>
 </li>
       <li><a href="lightwin/lightwin.util.helper.html#lightwin.util.helper.recursive_getter">recursive_getter() (in module lightwin.util.helper)</a>
@@ -5492,13 +5578,9 @@
 </li>
       <li><a href="lightwin/lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.CavitySettings.reference">reference (CavitySettings property)</a>
 </li>
-      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.reference_elts">reference_elts (ObjectiveFactory attribute)</a>
-</li>
       <li><a href="lightwin/lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.reference_phase">reference_phase (BeamCalculator property)</a>
 </li>
       <li><a href="lightwin/lightwin.core.elements.field_maps.cavity_settings.html#lightwin.core.elements.field_maps.cavity_settings.REFERENCE_PHASES">REFERENCE_PHASES (in module lightwin.core.elements.field_maps.cavity_settings)</a>
-</li>
-      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.reference_simulation_output">reference_simulation_output (ObjectiveFactory attribute)</a>
 </li>
       <li><a href="lightwin/lightwin.evaluator.post_treaters.html#lightwin.evaluator.post_treaters.relative_difference">relative_difference() (in module lightwin.evaluator.post_treaters)</a>
 </li>
@@ -5506,7 +5588,7 @@
 </li>
       <li><a href="lightwin/lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.RelPhaseAmplitudeWithConstrainedSyncPhase">RelPhaseAmplitudeWithConstrainedSyncPhase (class in lightwin.optimisation.design_space.factory)</a>
 </li>
-      <li><a href="lightwin/lightwin.visualization.plot.html#lightwin.visualization.plot.remove_artists">remove_artists() (in module lightwin.visualization.plot)</a>
+      <li><a href="lightwin/lightwin.visualization.helper.html#lightwin.visualization.helper.remove_artists">remove_artists() (in module lightwin.visualization.helper)</a>
 </li>
       <li><a href="lightwin/lightwin.util.helper.html#lightwin.util.helper.remove_duplicates">remove_duplicates() (in module lightwin.util.helper)</a>
 </li>
@@ -5532,10 +5614,10 @@
 </li>
       <li><a href="lightwin/lightwin.beam_calculation.integrators.rk4.html#lightwin.beam_calculation.integrators.rk4.rk4">rk4() (in module lightwin.beam_calculation.integrators.rk4)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lightwin/lightwin.evaluator.post_treaters.html#lightwin.evaluator.post_treaters.rms_error">rms_error() (in module lightwin.evaluator.post_treaters)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lightwin/lightwin.core.accelerator.factory.html#lightwin.core.accelerator.factory.AcceleratorFactory.run">run() (AcceleratorFactory method)</a>
 
       <ul>
@@ -5612,6 +5694,8 @@
 </li>
       <li><a href="lightwin/lightwin.evaluator.simulation_output.factory.html#lightwin.evaluator.simulation_output.factory.SimulationOutputEvaluatorFactory.run_from_preset">run_from_preset() (SimulationOutputEvaluatorFactory method)</a>
 </li>
+      <li><a href="lightwin/lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.run_simulation">run_simulation() (in module lightwin.ui.workflow_setup)</a>
+</li>
       <li><a href="lightwin/lightwin.beam_calculation.beam_calculator.html#lightwin.beam_calculation.beam_calculator.BeamCalculator.run_with_this">run_with_this() (BeamCalculator method)</a>
 
       <ul>
@@ -5635,6 +5719,8 @@
       <li><a href="lightwin/lightwin.util.helper.html#lightwin.util.helper.save_energy_phase_tm">save_energy_phase_tm() (in module lightwin.util.helper)</a>
 </li>
       <li><a href="lightwin/lightwin.util.helper.html#lightwin.util.helper.save_vcav_and_phis">save_vcav_and_phis() (in module lightwin.util.helper)</a>
+</li>
+      <li><a href="lightwin/lightwin.visualization.helper.html#lightwin.visualization.helper.savefig">savefig() (in module lightwin.visualization.helper)</a>
 </li>
       <li><a href="lightwin/lightwin.evaluator.post_treaters.html#lightwin.evaluator.post_treaters.scale_by">scale_by() (in module lightwin.evaluator.post_treaters)</a>
 </li>
@@ -5702,6 +5788,14 @@
 </li>
       <li><a href="lightwin/lightwin.tracewin_utils.interface.html#lightwin.tracewin_utils.interface.set_of_cavity_settings_to_command">set_of_cavity_settings_to_command() (in module lightwin.tracewin_utils.interface)</a>
 </li>
+      <li><a href="lightwin/lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.set_up">set_up() (in module lightwin.ui.workflow_setup)</a>
+</li>
+      <li><a href="lightwin/lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.set_up_accelerators">set_up_accelerators() (in module lightwin.ui.workflow_setup)</a>
+</li>
+      <li><a href="lightwin/lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.set_up_faults">set_up_faults() (in module lightwin.ui.workflow_setup)</a>
+</li>
+      <li><a href="lightwin/lightwin.ui.workflow_setup.html#lightwin.ui.workflow_setup.set_up_solvers">set_up_solvers() (in module lightwin.ui.workflow_setup)</a>
+</li>
       <li><a href="lightwin/lightwin.core.commands.set_adv.html#lightwin.core.commands.set_adv.SetAdv">SetAdv (class in lightwin.core.commands.set_adv)</a>
 </li>
       <li><a href="lightwin/lightwin.failures.set_of_cavity_settings.html#lightwin.failures.set_of_cavity_settings.SetOfCavitySettings">SetOfCavitySettings (class in lightwin.failures.set_of_cavity_settings)</a>
@@ -5728,6 +5822,8 @@
         <li><a href="lightwin/lightwin.core.em_fields.helper.html#lightwin.core.em_fields.helper.shifted_e_spat">(in module lightwin.core.em_fields.helper)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lightwin/lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters.sigma">sigma (BeamParameters property)</a>
 
       <ul>
@@ -5736,8 +5832,6 @@
         <li><a href="lightwin/lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters.html#lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters.IPhaseSpaceBeamParameters.sigma">(IPhaseSpaceBeamParameters attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lightwin/lightwin.core.beam_parameters.helper.html#lightwin.core.beam_parameters.helper.sigma_from_transfer_matrices">sigma_from_transfer_matrices() (in module lightwin.core.beam_parameters.helper)</a>
 </li>
       <li><a href="lightwin/lightwin.core.beam_parameters.beam_parameters.html#lightwin.core.beam_parameters.beam_parameters.BeamParameters.sigma_in">sigma_in (BeamParameters attribute)</a>
@@ -5775,6 +5869,8 @@
       <li><a href="lightwin/lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.html#lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters.SolenoidEnvelope3DParameters">SolenoidEnvelope3DParameters (class in lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters)</a>
 </li>
       <li><a href="lightwin/lightwin.failures.helper.html#lightwin.failures.helper.sort_by_position">sort_by_position() (in module lightwin.failures.helper)</a>
+</li>
+      <li><a href="lightwin/lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2">Spiral2 (class in lightwin.optimisation.objective.factory)</a>
 </li>
       <li><a href="lightwin/lightwin.tracewin_utils.line.html#lightwin.tracewin_utils.line.DatLine.splitted">splitted (DatLine attribute)</a>
 </li>
@@ -5859,6 +5955,8 @@
       <li><a href="lightwin/lightwin.evaluator.post_treaters.html#lightwin.evaluator.post_treaters.take_last">take_last() (in module lightwin.evaluator.post_treaters)</a>
 </li>
       <li><a href="lightwin/lightwin.evaluator.simulation_output.simulation_output_evaluator.html#lightwin.evaluator.simulation_output.simulation_output_evaluator.SimulationOutputEvaluator.tester">tester (SimulationOutputEvaluator attribute)</a>
+</li>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseParams.theta">theta (EllipseParams attribute)</a>
 </li>
       <li><a href="lightwin/lightwin.beam_calculation.envelope_3d.transfer_matrices_p.html#lightwin.beam_calculation.envelope_3d.transfer_matrices_p.thin_lense">thin_lense() (in module lightwin.beam_calculation.envelope_3d.transfer_matrices_p)</a>
 </li>
@@ -6086,6 +6184,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="lightwin/lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptiSol.x">x (OptiSol attribute)</a>
 </li>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseParams.x0">x0 (EllipseParams attribute)</a>
+</li>
       <li><a href="lightwin/lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA.x_0">x_0 (NSGA property)</a>
 
       <ul>
@@ -6099,6 +6199,14 @@
       <li><a href="lightwin/lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA.x_max_k_e">x_max_k_e (NSGA property)</a>
 </li>
       <li><a href="lightwin/lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.x_min">x_min (DesignSpaceParameter property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Y">Y</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="lightwin/lightwin.visualization.ellipse.html#lightwin.visualization.ellipse.EllipseParams.y0">y0 (EllipseParams attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -6189,7 +6297,6 @@
       <dl>
          <dt>Tags</dt>
          <dd><a href="../v0.7.0/index.html">v0.7.0</a></dd>
-         <dd><a href="../v0.8.0b4/index.html">v0.8.0b4</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>

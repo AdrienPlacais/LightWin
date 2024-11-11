@@ -365,6 +365,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.html">objective package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.factory.html">factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.helper.html">helper module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.minimize_difference_with_ref.html">minimize_difference_with_ref module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.minimize_mismatch.html">minimize_mismatch module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lightwin/lightwin.optimisation.objective.objective.html">objective module</a></li>
@@ -396,6 +397,10 @@
 <li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.tracewin_utils.load.html">load module</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.ui.html">ui package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.ui.workflow_setup.html">workflow_setup module</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.util.html">util package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.util.converters.html">converters module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.util.debug.html">debug module</a></li>
@@ -411,8 +416,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.visualization.html">visualization package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.visualization.anim.html">anim module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.visualization.ellipse.html">ellipse module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.visualization.helper.html">helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.visualization.optimization.html">optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.visualization.plot.html">plot module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.visualization.specs.html">specs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin/lightwin.visualization.structure.html">structure module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="lightwin/lightwin.config_manager.html">config_manager module</a></li>
@@ -567,6 +576,11 @@ function for when the index element is desired.</p>
 <p>Maybe the synchronous phase model should appear somewhere in here?</p>
 </div>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.simulation_output.simulation_output.html#id4"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/simulation_output/simulation_output.py:docstring of lightwin.beam_calculation.simulation_output.simulation_output, line 13.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
+<p>Fix output_data_in_tw_fashion</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.beam_calculation.simulation_output.simulation_output.html#id5"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/beam_calculation/simulation_output/simulation_output.py:docstring of lightwin.beam_calculation.simulation_output.simulation_output.SimulationOutput.compute_complementary_data, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>normalized or not???</p>
@@ -1072,6 +1086,18 @@ compute seems right). Check the zdelta -&gt; phiw conversion.</p>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.visualization.anim.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/visualization/anim.py:docstring of lightwin.visualization.anim, line 3.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
+<p>Isometric view of emittance along the linac.
+Possibility to visualize a single particle trajectory along the emittance.
+Visualization of the acceptance.</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.visualization.ellipse.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/visualization/ellipse.py:docstring of lightwin.visualization.ellipse, line 3.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
+<p>Information on the element under the cursor (hover).</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.visualization.optimization.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/visualization/optimization.py:docstring of lightwin.visualization.optimization, line 3.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
 <p>better detection of what is a multiparticle simulation and what is not.
 Currently looking for “‘partran’: 0” in the name of the solver, making the
 assumption that multipart is the default. But it depends on the .ini…
@@ -1091,35 +1117,40 @@ accelerates or not (ex when quadrupole defined by a field map)</p>
 <p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.visualization.plot.html#id3"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/visualization/plot.py:docstring of lightwin.visualization.plot, line 12.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
+<p>Information on the objective under the cursor (hover).</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="lightwin/lightwin.visualization.structure.html#id1"><em>original entry</em></a> is located in /home/placais/LightWin/src/lightwin/visualization/structure.py:docstring of lightwin.visualization.structure, line 3.)</p>
+<div class="admonition-todo admonition">
+<p class="admonition-title">Todo</p>
 <p>A Jupyter Notebook would be better to show with examples.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/get_method.html#id1"><em>original entry</em></a> is located in /tmp/tmpyik01xdl/4bdf32d97390093c1d0027743af28508f6847f41/docs/manual/get_method.rst, line 6.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/get_method.html#id1"><em>original entry</em></a> is located in /tmp/tmp7s47y76f/6681417a90bcdf9dc8ee5a10b33218023ac37313/docs/manual/get_method.rst, line 6.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Consider providing more detailed instructions for setting the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.
 For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online for additional guidance.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.python.html#id1"><em>original entry</em></a> is located in /tmp/tmpyik01xdl/4bdf32d97390093c1d0027743af28508f6847f41/docs/manual/installation.python.rst, line 43.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/installation.python.html#id1"><em>original entry</em></a> is located in /tmp/tmp7s47y76f/6681417a90bcdf9dc8ee5a10b33218023ac37313/docs/manual/installation.python.rst, line 43.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Allow for an easy way to skip Cython compilation.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/installation.troubleshooting.html#id2"><em>original entry</em></a> is located in /tmp/tmpyik01xdl/4bdf32d97390093c1d0027743af28508f6847f41/docs/manual/installation.troubleshooting.rst, line 25.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/installation.troubleshooting.html#id2"><em>original entry</em></a> is located in /tmp/tmp7s47y76f/6681417a90bcdf9dc8ee5a10b33218023ac37313/docs/manual/installation.troubleshooting.rst, line 25.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Consistency between font size of normal text and math text. Not aesthetic when I have text and units side to side.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id1"><em>original entry</em></a> is located in /tmp/tmpyik01xdl/4bdf32d97390093c1d0027743af28508f6847f41/docs/manual/units.rst, line 8.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id1"><em>original entry</em></a> is located in /tmp/tmp7s47y76f/6681417a90bcdf9dc8ee5a10b33218023ac37313/docs/manual/units.rst, line 8.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>General units: MeV etc</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id2"><em>original entry</em></a> is located in /tmp/tmpyik01xdl/4bdf32d97390093c1d0027743af28508f6847f41/docs/manual/units.rst, line 11.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/units.html#id2"><em>original entry</em></a> is located in /tmp/tmp7s47y76f/6681417a90bcdf9dc8ee5a10b33218023ac37313/docs/manual/units.rst, line 11.)</p>
 <div class="admonition-todo admonition">
 <p class="admonition-title">Todo</p>
 <p>Ease re-usage of old simulations. Very easy to implement, just use the <code class="docutils literal notranslate"><span class="pre">recompute</span></code> flag, override the <code class="docutils literal notranslate"><span class="pre">run_with_this</span></code> method, and user must provide a <code class="docutils literal notranslate"><span class="pre">results</span></code> directory.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="manual/usage.html#id1"><em>original entry</em></a> is located in /tmp/tmpyik01xdl/4bdf32d97390093c1d0027743af28508f6847f41/docs/manual/usage.rst, line 11.)</p>
+<p class="todo-source">(The <a class="reference internal" href="manual/usage.html#id1"><em>original entry</em></a> is located in /tmp/tmp7s47y76f/6681417a90bcdf9dc8ee5a10b33218023ac37313/docs/manual/usage.rst, line 11.)</p>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
@@ -1165,7 +1196,6 @@ For now, you can search for “PYTHONPATH” or “ModuleNotFoundError” online
       <dl>
          <dt>Tags</dt>
          <dd><a href="../v0.7.0/index.html">v0.7.0</a></dd>
-         <dd><a href="../v0.8.0b4/index.html">v0.8.0b4</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>
