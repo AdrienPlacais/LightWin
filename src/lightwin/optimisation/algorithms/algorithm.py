@@ -299,9 +299,9 @@ class OptimizationHistory:
         get_args, get_kwargs : tuple[str, ...], dict[str, Any], optional
             args and kwargs passed to the ``SimulationOutput.get`` method. Used
             to add some values to the output files.
-        get_kwargs : dict[str, Any] | None, optionaltuple
+        get_kwargs : dict[str, Any] | None, optional
             Keyword arguments for the SimulationOutput.get method.
-        folder : Path | str | None, optional
+        folder : pathlib.Path | str | None, optional
             Where the histories will be saved. If not provided or None is
             given, this class will not have any effect and every public method
             wil be overriden with dummy methods.
@@ -456,9 +456,9 @@ def _save_values(
 
     Parameters
     ----------
-    filepath : Path
+    filepath : pathlib.Path
        Where to save the values.
-    values : list[list[float] | np.ndarray | None]
+    values : list[list[float] | numpy.ndarray | None]
         The list of values to save (objectives or constraints), starting in
         the third column. If a value is None, it is represented as 'None' in
         the file.
