@@ -74,5 +74,5 @@ if __name__ == "__main__":
     config = process_config(toml_filepath, toml_keys)
     fault_scenarios = run_simulation(
         config,
-        # objective_factory_class=MyObjectiveFactory
+        # objective_factory_class=MyObjectiveFactory,
     )
