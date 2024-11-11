@@ -139,6 +139,8 @@ def factory(
     fault_scenarios : Sequence[FaultScenario] | None = None
         If provided, the position of the :class:`.Objective` will also appear
         on plots.
+    kwargs :
+        Other tables from the TOML configuration file.
 
     Returns
     -------
@@ -156,6 +158,12 @@ def factory(
     # Dirty patch to force plot even when only one accelerator
     if len(accelerators) == 1:
         accelerators = (ref_acc, ref_acc)
+
+    plots_presets, plots_kwargs = (
+        _separate_plot_presets_from_plot_modificators(plots)
+    )
+
+    figs: list[Figure]
     figs = [
         _plot_preset(
             preset,
@@ -163,13 +171,27 @@ def factory(
             save_fig=save_fig,
             clean_fig=clean_fig,
             fault_scenarios=fault_scenarios,
-            **_proper_kwargs(preset, kwargs),
+            **_proper_kwargs(preset, kwargs | plots_kwargs),
         )
         for fix_acc in accelerators[1:]
-        for preset, plot_me in plots.items()
+        for preset, plot_me in plots_presets.items()
         if plot_me
     ]
     return figs
+
+
+def _separate_plot_presets_from_plot_modificators(
+    plots: dict[str, Any]
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Separate the config entries corresponding to the name of a plot."""
+    plot_presets: dict[str, bool] = {}
+    plot_kwargs: dict[str, bool] = {}
+    for key, flag in plots.items():
+        if key in PLOT_PRESETS:
+            plot_presets[key] = flag
+            continue
+        plot_kwargs[key] = flag
+    return plot_presets, plot_kwargs
 
 
 def _plot_preset(
@@ -179,6 +201,7 @@ def _plot_preset(
     x_axis: X_AXIS_T = "z_abs",
     save_fig: bool = True,
     clean_fig: bool = True,
+    add_objectives: bool = False,
     fault_scenarios: Sequence[list[Fault]] | None = None,
     **kwargs,
 ) -> Figure:
@@ -196,9 +219,11 @@ def _plot_preset(
         Name of all the y axis.
     save_fig : bool, optional
         To save Figures or not. The default is True.
+    add_objectives : bool, optional
+        To add the position of objectives to the plots; if True, the
+        ``fault_scenarios`` must be provided.
     fault_scenarios : Sequence[FaultScenario] | None = None
-        If provided, the position of the :class:`.Objective` will also appear
-        on plots.
+        To plot the objectives, if ``add_objectives == True``.
     **kwargs :
         Holds all complementary data on the plots.
 
@@ -212,7 +237,9 @@ def _plot_preset(
         _make_a_subplot(ax, x_axis, y_axis, colors, *args, **kwargs)
         if i == 0:
             colors = _keep_colors(ax)
-        mark_objectives_position(ax, fault_scenarios, y_axis, x_axis)
+
+        if add_objectives:
+            mark_objectives_position(ax, fault_scenarios, y_axis, x_axis)
 
     axx[0].legend()
     axx[-1].set_xlabel(dic.markdown[x_axis])

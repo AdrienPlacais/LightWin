@@ -11,7 +11,10 @@ from collections.abc import Sequence
 import matplotlib.patches as pat
 import numpy as np
 from matplotlib.axes import Axes
+from matplotlib.lines import Line2D
+from matplotlib.typing import ColorType
 
+from lightwin.core.elements.element import Element
 from lightwin.failures.fault import Fault
 from lightwin.optimisation.objective.helper import by_element
 from lightwin.optimisation.objective.objective import Objective
@@ -39,26 +42,43 @@ def mark_objectives_position(
     fault_scenarios: Sequence[list[Fault]] | None,
     y_axis: str = "struct",
     x_axis: X_AXIS_T = "z_abs",
+    color: ColorType = OBJECTIVE_COLOR,
+    alpha: float = 0.5,
 ) -> None:
-    """Show where objectives are evaluated.
+    """Show where objectives are evaluated."""
+    if fault_scenarios is None:
+        logging.info(
+            "The ``fault_scenarios`` must be give to plot.factory for the "
+            "objectives to be displayed."
+        )
+        return
 
-    In a first time, we only put a lil start or something on the structure
-    plot.
+    objectives_by_element: dict[Element, list[Objective]]
+    objectives_by_element = by_element(_get_objectives(fault_scenarios[0]))
+    for elt in objectives_by_element:
+        kwargs = patch_kwargs(elt, x_axis, color=color, alpha=alpha)
+
+        if y_axis != "struct":
+            _line_objective(ax, **kwargs)
+            continue
+
+        ax.add_patch(_patch_objective(**kwargs))
+
+
+def _line_objective(
+    ax: Axes, x_0: float, color: ColorType, alpha: float, **kwargs
+) -> Line2D:
+    """Give a vertical line to add to a plot.
+
+    This function is mainly to intercept the kwargs axvline would not
+    understand, such as x_0 or width.
 
     """
-    if fault_scenarios is None:
-        return
-    if y_axis != "struct":
-        return
-    objectives = _get_objectives(fault_scenarios[0])
-    objectives_by_element = by_element(objectives)
-    for elt in objectives_by_element:
-        kwargs = patch_kwargs(elt, x_axis)
-        ax.add_patch(_plot_objective(**kwargs))
+    return ax.axvline(x=x_0, color=color, alpha=alpha)
 
 
-def _plot_objective(
-    x_0: float, width: float, color: str = OBJECTIVE_COLOR, **kwargs
+def _patch_objective(
+    x_0: float, width: float, color: ColorType, alpha: float, **kwargs
 ) -> pat.Arrow:
     """Add a marker at the exit of provided element."""
     starting_height = 0.75
@@ -68,8 +88,9 @@ def _plot_objective(
         y=starting_height,
         dx=0,
         dy=ending_height - starting_height,
-        color=color,
         width=2 * width,
+        color=color,
+        alpha=alpha,
     )
     return patch
 

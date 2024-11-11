@@ -10,6 +10,7 @@ from typing import Literal
 import matplotlib.patches as pat
 import numpy as np
 from matplotlib.axes import Axes
+from matplotlib.typing import ColorType
 
 from lightwin.core.elements.aperture import Aperture
 from lightwin.core.elements.bend import Bend
@@ -26,13 +27,23 @@ from lightwin.visualization.helper import X_AXIS_T
 
 
 def patch_kwargs(
-    elt: Element, x_axis: X_AXIS_T, idx: int | None = None
+    elt: Element,
+    x_axis: X_AXIS_T,
+    idx: int | None = None,
+    color: ColorType | None = None,
+    alpha: float | None = None,
 ) -> dict:
     """Give kwargs for the patch function."""
     if idx is None:
         idx = elt.idx["dat_idx"]
 
-    kwargs = {"x_0": idx, "width": 1, "elt": elt}
+    kwargs = {
+        "x_0": idx,
+        "width": 1,
+        "elt": elt,
+        "color": color,
+        "alpha": alpha,
+    }
     if x_axis == "z_abs":
         kwargs["x_0"] = elt.get("abs_mesh")[0]
         kwargs["width"] = elt.length_m
