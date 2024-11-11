@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>optimisation package &mdash; LightWin  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="algorithms package" href="lightwin.optimisation.algorithms.html" />
+    <link rel="prev" title="strategy module" href="lightwin.failures.strategy.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LightWin
+          </a>
+              <div class="version">
+                0.8.0b2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">LightWin</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/get_method.html">The <code class="docutils literal notranslate"><span class="pre">get</span></code> method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/units.html">Units and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/scripts.html">Utility scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lightwin.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lightwin.beam_calculation.html">beam_calculation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config.html">config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.core.html">core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.evaluator.html">evaluator package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.failures.html">failures package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">optimisation package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.algorithms.html">algorithms package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.design_space.html">design_space package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.objective.html">objective package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.design_space_specs.html">design_space_specs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.wtf_specs.html">wtf_specs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.scripts.html">scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.tracewin_utils.html">tracewin_utils package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.ui.html">ui package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.util.html">util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.visualization.html">visualization package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.config_manager.html">config_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.constants.html">constants module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LightWin</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="lightwin.html">lightwin package</a></li>
+      <li class="breadcrumb-item active">optimisation package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/lightwin/lightwin.optimisation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="module-lightwin.optimisation">
+<span id="optimisation-package"></span><h1>optimisation package<a class="headerlink" href="#module-lightwin.optimisation" title="Link to this heading"></a></h1>
+<p>This folder holds all the optimisation related modules.</p>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.optimisation.algorithms.html">algorithms package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.algorithms.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html">algorithm module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptiInfo"><code class="docutils literal notranslate"><span class="pre">OptiInfo</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptiInfo.hist_X"><code class="docutils literal notranslate"><span class="pre">OptiInfo.hist_X</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptiInfo.hist_F"><code class="docutils literal notranslate"><span class="pre">OptiInfo.hist_F</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptiInfo.hist_G"><code class="docutils literal notranslate"><span class="pre">OptiInfo.hist_G</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptiSol"><code class="docutils literal notranslate"><span class="pre">OptiSol</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptiSol.X"><code class="docutils literal notranslate"><span class="pre">OptiSol.X</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptiSol.F"><code class="docutils literal notranslate"><span class="pre">OptiSol.F</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptiSol.objectives_values"><code class="docutils literal notranslate"><span class="pre">OptiSol.objectives_values</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm.__init__"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm.supports_constraints"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm.supports_constraints</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm.variable_names"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm.variable_names</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm.n_var"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm.n_var</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm.n_obj"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm.n_obj</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm.n_constr"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm.n_constr</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm._default_kwargs"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm._default_kwargs</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm.optimise"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm.optimise()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm._format_variables"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm._format_variables()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm._format_objectives"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm._format_objectives()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm._format_constraints"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm._format_constraints()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm._wrapper_residuals"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm._wrapper_residuals()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm._finalize"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm._finalize()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm._norm_wrapper_residuals"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm._norm_wrapper_residuals()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm._create_set_of_cavity_settings"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm._create_set_of_cavity_settings()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm._get_objective_values"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm._get_objective_values()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimisationAlgorithm._abc_impl"><code class="docutils literal notranslate"><span class="pre">OptimisationAlgorithm._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory._settings_filename"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory._settings_filename</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory._objectives_filename"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory._objectives_filename</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory._constraints_filename"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory._constraints_filename</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory.__init__"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory._make_public_methods_useless"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory._make_public_methods_useless()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory.add_settings"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory.add_settings()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory._init_objective_hist"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory._init_objective_hist()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory._simulation_output_to_objectives"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory._simulation_output_to_objectives()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory._objective_headers"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory._objective_headers()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory.add_objective_values"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory.add_objective_values()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory.add_constraint_values"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory.add_constraint_values()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory.save"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory.save()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory._rename_previous_files"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory._rename_previous_files()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory._empty_histories"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory._empty_histories()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory.checkpoint"><code class="docutils literal notranslate"><span class="pre">OptimizationHistory.checkpoint()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm._save_values"><code class="docutils literal notranslate"><span class="pre">_save_values()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.algorithms.differential_evolution.html">differential_evolution module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.differential_evolution.html#lightwin.optimisation.algorithms.differential_evolution.DifferentialEvolution"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolution</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.differential_evolution.html#lightwin.optimisation.algorithms.differential_evolution.DifferentialEvolution.supports_constraints"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolution.supports_constraints</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.differential_evolution.html#lightwin.optimisation.algorithms.differential_evolution.DifferentialEvolution.__init__"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolution.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.differential_evolution.html#lightwin.optimisation.algorithms.differential_evolution.DifferentialEvolution.optimise"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolution.optimise()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.differential_evolution.html#lightwin.optimisation.algorithms.differential_evolution.DifferentialEvolution._algorithm_parameters"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolution._algorithm_parameters()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.differential_evolution.html#lightwin.optimisation.algorithms.differential_evolution.DifferentialEvolution._format_variables"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolution._format_variables()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.differential_evolution.html#lightwin.optimisation.algorithms.differential_evolution.DifferentialEvolution._output_some_info"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolution._output_some_info()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.differential_evolution.html#lightwin.optimisation.algorithms.differential_evolution.DifferentialEvolution._abc_impl"><code class="docutils literal notranslate"><span class="pre">DifferentialEvolution._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex.html">downhill_simplex module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex.html#lightwin.optimisation.algorithms.downhill_simplex.DownhillSimplex"><code class="docutils literal notranslate"><span class="pre">DownhillSimplex</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex.html#lightwin.optimisation.algorithms.downhill_simplex.DownhillSimplex.supports_constraints"><code class="docutils literal notranslate"><span class="pre">DownhillSimplex.supports_constraints</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex.html#lightwin.optimisation.algorithms.downhill_simplex.DownhillSimplex.__init__"><code class="docutils literal notranslate"><span class="pre">DownhillSimplex.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex.html#lightwin.optimisation.algorithms.downhill_simplex.DownhillSimplex.optimise"><code class="docutils literal notranslate"><span class="pre">DownhillSimplex.optimise()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex.html#lightwin.optimisation.algorithms.downhill_simplex.DownhillSimplex._default_kwargs"><code class="docutils literal notranslate"><span class="pre">DownhillSimplex._default_kwargs</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex.html#lightwin.optimisation.algorithms.downhill_simplex.DownhillSimplex._format_variables"><code class="docutils literal notranslate"><span class="pre">DownhillSimplex._format_variables()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex.html#lightwin.optimisation.algorithms.downhill_simplex.DownhillSimplex._output_some_info"><code class="docutils literal notranslate"><span class="pre">DownhillSimplex._output_some_info()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex.html#lightwin.optimisation.algorithms.downhill_simplex.DownhillSimplex._abc_impl"><code class="docutils literal notranslate"><span class="pre">DownhillSimplex._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex_penalty.html">downhill_simplex_penalty module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex_penalty.html#lightwin.optimisation.algorithms.downhill_simplex_penalty.DownhillSimplexPenalty"><code class="docutils literal notranslate"><span class="pre">DownhillSimplexPenalty</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex_penalty.html#lightwin.optimisation.algorithms.downhill_simplex_penalty.DownhillSimplexPenalty.supports_constraints"><code class="docutils literal notranslate"><span class="pre">DownhillSimplexPenalty.supports_constraints</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex_penalty.html#lightwin.optimisation.algorithms.downhill_simplex_penalty.DownhillSimplexPenalty.__init__"><code class="docutils literal notranslate"><span class="pre">DownhillSimplexPenalty.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex_penalty.html#lightwin.optimisation.algorithms.downhill_simplex_penalty.DownhillSimplexPenalty._default_kwargs"><code class="docutils literal notranslate"><span class="pre">DownhillSimplexPenalty._default_kwargs</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex_penalty.html#lightwin.optimisation.algorithms.downhill_simplex_penalty.DownhillSimplexPenalty._norm_wrapper_residuals"><code class="docutils literal notranslate"><span class="pre">DownhillSimplexPenalty._norm_wrapper_residuals()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex_penalty.html#lightwin.optimisation.algorithms.downhill_simplex_penalty.DownhillSimplexPenalty._penalty"><code class="docutils literal notranslate"><span class="pre">DownhillSimplexPenalty._penalty()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.downhill_simplex_penalty.html#lightwin.optimisation.algorithms.downhill_simplex_penalty.DownhillSimplexPenalty._abc_impl"><code class="docutils literal notranslate"><span class="pre">DownhillSimplexPenalty._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.algorithms.explorator.html">explorator module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.explorator.html#lightwin.optimisation.algorithms.explorator.Explorator"><code class="docutils literal notranslate"><span class="pre">Explorator</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.explorator.html#lightwin.optimisation.algorithms.explorator.Explorator.supports_constraints"><code class="docutils literal notranslate"><span class="pre">Explorator.supports_constraints</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.explorator.html#lightwin.optimisation.algorithms.explorator.Explorator.compute_constraints"><code class="docutils literal notranslate"><span class="pre">Explorator.compute_constraints</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.explorator.html#lightwin.optimisation.algorithms.explorator.Explorator.__init__"><code class="docutils literal notranslate"><span class="pre">Explorator.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.explorator.html#lightwin.optimisation.algorithms.explorator.Explorator.optimise"><code class="docutils literal notranslate"><span class="pre">Explorator.optimise()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.explorator.html#lightwin.optimisation.algorithms.explorator.Explorator._algorithm_parameters"><code class="docutils literal notranslate"><span class="pre">Explorator._algorithm_parameters()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.explorator.html#lightwin.optimisation.algorithms.explorator.Explorator._generate_combinations"><code class="docutils literal notranslate"><span class="pre">Explorator._generate_combinations()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.explorator.html#lightwin.optimisation.algorithms.explorator.Explorator._array_of_values_to_mesh"><code class="docutils literal notranslate"><span class="pre">Explorator._array_of_values_to_mesh()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.explorator.html#lightwin.optimisation.algorithms.explorator.Explorator._take_best_solution"><code class="docutils literal notranslate"><span class="pre">Explorator._take_best_solution()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.explorator.html#lightwin.optimisation.algorithms.explorator.Explorator._abc_impl"><code class="docutils literal notranslate"><span class="pre">Explorator._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.algorithms.factory.html">factory module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.factory.html#lightwin.optimisation.algorithms.factory.ALGORITHM_SELECTOR"><code class="docutils literal notranslate"><span class="pre">ALGORITHM_SELECTOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.factory.html#lightwin.optimisation.algorithms.factory.optimisation_algorithm_factory"><code class="docutils literal notranslate"><span class="pre">optimisation_algorithm_factory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.factory.html#lightwin.optimisation.algorithms.factory._default_kwargs"><code class="docutils literal notranslate"><span class="pre">_default_kwargs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.factory.html#lightwin.optimisation.algorithms.factory._check_common_keys"><code class="docutils literal notranslate"><span class="pre">_check_common_keys()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares.html">least_squares module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares.html#lightwin.optimisation.algorithms.least_squares.LeastSquares"><code class="docutils literal notranslate"><span class="pre">LeastSquares</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares.html#lightwin.optimisation.algorithms.least_squares.LeastSquares.supports_constraints"><code class="docutils literal notranslate"><span class="pre">LeastSquares.supports_constraints</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares.html#lightwin.optimisation.algorithms.least_squares.LeastSquares.__init__"><code class="docutils literal notranslate"><span class="pre">LeastSquares.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares.html#lightwin.optimisation.algorithms.least_squares.LeastSquares.optimise"><code class="docutils literal notranslate"><span class="pre">LeastSquares.optimise()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares.html#lightwin.optimisation.algorithms.least_squares.LeastSquares._default_kwargs"><code class="docutils literal notranslate"><span class="pre">LeastSquares._default_kwargs</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares.html#lightwin.optimisation.algorithms.least_squares.LeastSquares._format_variables"><code class="docutils literal notranslate"><span class="pre">LeastSquares._format_variables()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares.html#lightwin.optimisation.algorithms.least_squares.LeastSquares._output_some_info"><code class="docutils literal notranslate"><span class="pre">LeastSquares._output_some_info()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares.html#lightwin.optimisation.algorithms.least_squares.LeastSquares._abc_impl"><code class="docutils literal notranslate"><span class="pre">LeastSquares._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares_penalty.html">least_squares_penalty module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares_penalty.html#lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty"><code class="docutils literal notranslate"><span class="pre">LeastSquaresPenalty</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares_penalty.html#lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty.supports_constraints"><code class="docutils literal notranslate"><span class="pre">LeastSquaresPenalty.supports_constraints</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares_penalty.html#lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty.__init__"><code class="docutils literal notranslate"><span class="pre">LeastSquaresPenalty.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares_penalty.html#lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty._norm_wrapper_residuals"><code class="docutils literal notranslate"><span class="pre">LeastSquaresPenalty._norm_wrapper_residuals()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares_penalty.html#lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty._penalty"><code class="docutils literal notranslate"><span class="pre">LeastSquaresPenalty._penalty()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.least_squares_penalty.html#lightwin.optimisation.algorithms.least_squares_penalty.LeastSquaresPenalty._abc_impl"><code class="docutils literal notranslate"><span class="pre">LeastSquaresPenalty._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html">nsga module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA"><code class="docutils literal notranslate"><span class="pre">NSGA</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA.supports_constraints"><code class="docutils literal notranslate"><span class="pre">NSGA.supports_constraints</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA.__init__"><code class="docutils literal notranslate"><span class="pre">NSGA.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA.optimise"><code class="docutils literal notranslate"><span class="pre">NSGA.optimise()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA._problem_arguments"><code class="docutils literal notranslate"><span class="pre">NSGA._problem_arguments</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA._format_variables"><code class="docutils literal notranslate"><span class="pre">NSGA._format_variables()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA.x_0"><code class="docutils literal notranslate"><span class="pre">NSGA.x_0</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA.x_max_k_e"><code class="docutils literal notranslate"><span class="pre">NSGA.x_max_k_e</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA._wrapper_residuals"><code class="docutils literal notranslate"><span class="pre">NSGA._wrapper_residuals()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA._set_algorithm"><code class="docutils literal notranslate"><span class="pre">NSGA._set_algorithm()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA._set_termination"><code class="docutils literal notranslate"><span class="pre">NSGA._set_termination()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA._set_population"><code class="docutils literal notranslate"><span class="pre">NSGA._set_population()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA._best_solution"><code class="docutils literal notranslate"><span class="pre">NSGA._best_solution()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.NSGA._abc_impl"><code class="docutils literal notranslate"><span class="pre">NSGA._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.MyElementwiseProblem"><code class="docutils literal notranslate"><span class="pre">MyElementwiseProblem</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.MyElementwiseProblem.__init__"><code class="docutils literal notranslate"><span class="pre">MyElementwiseProblem.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga.MyElementwiseProblem._evaluate"><code class="docutils literal notranslate"><span class="pre">MyElementwiseProblem._evaluate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.algorithms.nsga.html#lightwin.optimisation.algorithms.nsga._characteristic_points"><code class="docutils literal notranslate"><span class="pre">_characteristic_points()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.algorithms.pso.html">pso module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.optimisation.design_space.html">design_space package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.design_space.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.design_space.constraint.html">constraint module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.constraint.html#lightwin.optimisation.design_space.constraint.IMPLEMENTED_CONSTRAINTS"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_CONSTRAINTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.constraint.html#lightwin.optimisation.design_space.constraint.Constraint"><code class="docutils literal notranslate"><span class="pre">Constraint</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.constraint.html#lightwin.optimisation.design_space.constraint.Constraint.__post_init__"><code class="docutils literal notranslate"><span class="pre">Constraint.__post_init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.constraint.html#lightwin.optimisation.design_space.constraint.Constraint.kwargs"><code class="docutils literal notranslate"><span class="pre">Constraint.kwargs</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.constraint.html#lightwin.optimisation.design_space.constraint.Constraint.n_constraints"><code class="docutils literal notranslate"><span class="pre">Constraint.n_constraints</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.constraint.html#lightwin.optimisation.design_space.constraint.Constraint.get_value"><code class="docutils literal notranslate"><span class="pre">Constraint.get_value()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.constraint.html#lightwin.optimisation.design_space.constraint.Constraint.evaluate"><code class="docutils literal notranslate"><span class="pre">Constraint.evaluate()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.constraint.html#lightwin.optimisation.design_space.constraint.Constraint.__init__"><code class="docutils literal notranslate"><span class="pre">Constraint.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.constraint.html#lightwin.optimisation.design_space.constraint.Constraint._abc_impl"><code class="docutils literal notranslate"><span class="pre">Constraint._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html">design_space module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace"><code class="docutils literal notranslate"><span class="pre">DesignSpace</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace.variables"><code class="docutils literal notranslate"><span class="pre">DesignSpace.variables</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace.constraints"><code class="docutils literal notranslate"><span class="pre">DesignSpace.constraints</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace.__post_init__"><code class="docutils literal notranslate"><span class="pre">DesignSpace.__post_init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace.from_files"><code class="docutils literal notranslate"><span class="pre">DesignSpace.from_files()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace.compute_constraints"><code class="docutils literal notranslate"><span class="pre">DesignSpace.compute_constraints()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace.__str__"><code class="docutils literal notranslate"><span class="pre">DesignSpace.__str__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace._str_variables"><code class="docutils literal notranslate"><span class="pre">DesignSpace._str_variables()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace._str_constraints"><code class="docutils literal notranslate"><span class="pre">DesignSpace._str_constraints()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace.to_pandas_dataframe"><code class="docutils literal notranslate"><span class="pre">DesignSpace.to_pandas_dataframe()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace.to_files"><code class="docutils literal notranslate"><span class="pre">DesignSpace.to_files()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace._to_file"><code class="docutils literal notranslate"><span class="pre">DesignSpace._to_file()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace._parameters_to_single_file_line"><code class="docutils literal notranslate"><span class="pre">DesignSpace._parameters_to_single_file_line()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace._check_dimensions"><code class="docutils literal notranslate"><span class="pre">DesignSpace._check_dimensions()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space.DesignSpace.__init__"><code class="docutils literal notranslate"><span class="pre">DesignSpace.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space._gather_dicts_by_key"><code class="docutils literal notranslate"><span class="pre">_gather_dicts_by_key()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space._parameters_to_dict"><code class="docutils literal notranslate"><span class="pre">_parameters_to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space._merge"><code class="docutils literal notranslate"><span class="pre">_merge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.design_space.html#lightwin.optimisation.design_space.design_space._from_file"><code class="docutils literal notranslate"><span class="pre">_from_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html">design_space_parameter module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.name"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.name</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.element_name"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.element_name</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.limits"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.limits</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.from_floats"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.from_floats()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.from_pd_series"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.from_pd_series()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.__post_init__"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.__post_init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.x_min"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.x_min</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.x_max"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.x_max</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.change_limits"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.change_limits()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter._fmt_x_min"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter._fmt_x_min</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter._fmt_x_max"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter._fmt_x_max</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter._fmt_x_0"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter._fmt_x_0</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.__str__"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.__str__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.header_of__str__"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.header_of__str__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.to_dict"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.to_dict()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter.__init__"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.design_space_parameter.html#lightwin.optimisation.design_space.design_space_parameter.DesignSpaceParameter._abc_impl"><code class="docutils literal notranslate"><span class="pre">DesignSpaceParameter._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html">factory module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory.design_space_kw"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory.design_space_kw</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory.__post_init__"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory.__post_init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory._check_can_be_retuned"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory._check_can_be_retuned()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory.use_files"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory.use_files()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory._run_variables"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory._run_variables()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory._run_constraints"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory._run_constraints()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory.run"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory.run()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory._get_initial_value_from_kw"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory._get_initial_value_from_kw()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory._get_limits_from_kw"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory._get_limits_from_kw()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory._run_from_file"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory._run_from_file()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory.__init__"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DesignSpaceFactory._abc_impl"><code class="docutils literal notranslate"><span class="pre">DesignSpaceFactory._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.AbsPhaseAmplitude"><code class="docutils literal notranslate"><span class="pre">AbsPhaseAmplitude</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.AbsPhaseAmplitude.variables_names"><code class="docutils literal notranslate"><span class="pre">AbsPhaseAmplitude.variables_names</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.AbsPhaseAmplitude.__init__"><code class="docutils literal notranslate"><span class="pre">AbsPhaseAmplitude.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.AbsPhaseAmplitude._abc_impl"><code class="docutils literal notranslate"><span class="pre">AbsPhaseAmplitude._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.RelPhaseAmplitude"><code class="docutils literal notranslate"><span class="pre">RelPhaseAmplitude</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.RelPhaseAmplitude.variables_names"><code class="docutils literal notranslate"><span class="pre">RelPhaseAmplitude.variables_names</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.RelPhaseAmplitude.__init__"><code class="docutils literal notranslate"><span class="pre">RelPhaseAmplitude.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.RelPhaseAmplitude._abc_impl"><code class="docutils literal notranslate"><span class="pre">RelPhaseAmplitude._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.SyncPhaseAmplitude"><code class="docutils literal notranslate"><span class="pre">SyncPhaseAmplitude</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.SyncPhaseAmplitude.variables_names"><code class="docutils literal notranslate"><span class="pre">SyncPhaseAmplitude.variables_names</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.SyncPhaseAmplitude.__init__"><code class="docutils literal notranslate"><span class="pre">SyncPhaseAmplitude.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.SyncPhaseAmplitude._abc_impl"><code class="docutils literal notranslate"><span class="pre">SyncPhaseAmplitude._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.AbsPhaseAmplitudeWithConstrainedSyncPhase"><code class="docutils literal notranslate"><span class="pre">AbsPhaseAmplitudeWithConstrainedSyncPhase</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.AbsPhaseAmplitudeWithConstrainedSyncPhase.variables_names"><code class="docutils literal notranslate"><span class="pre">AbsPhaseAmplitudeWithConstrainedSyncPhase.variables_names</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.AbsPhaseAmplitudeWithConstrainedSyncPhase.constraints_names"><code class="docutils literal notranslate"><span class="pre">AbsPhaseAmplitudeWithConstrainedSyncPhase.constraints_names</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.AbsPhaseAmplitudeWithConstrainedSyncPhase.__init__"><code class="docutils literal notranslate"><span class="pre">AbsPhaseAmplitudeWithConstrainedSyncPhase.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.AbsPhaseAmplitudeWithConstrainedSyncPhase._abc_impl"><code class="docutils literal notranslate"><span class="pre">AbsPhaseAmplitudeWithConstrainedSyncPhase._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.RelPhaseAmplitudeWithConstrainedSyncPhase"><code class="docutils literal notranslate"><span class="pre">RelPhaseAmplitudeWithConstrainedSyncPhase</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.RelPhaseAmplitudeWithConstrainedSyncPhase.variables_names"><code class="docutils literal notranslate"><span class="pre">RelPhaseAmplitudeWithConstrainedSyncPhase.variables_names</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.RelPhaseAmplitudeWithConstrainedSyncPhase.constraints_names"><code class="docutils literal notranslate"><span class="pre">RelPhaseAmplitudeWithConstrainedSyncPhase.constraints_names</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.RelPhaseAmplitudeWithConstrainedSyncPhase.__init__"><code class="docutils literal notranslate"><span class="pre">RelPhaseAmplitudeWithConstrainedSyncPhase.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.RelPhaseAmplitudeWithConstrainedSyncPhase._abc_impl"><code class="docutils literal notranslate"><span class="pre">RelPhaseAmplitudeWithConstrainedSyncPhase._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.Everything"><code class="docutils literal notranslate"><span class="pre">Everything</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.Everything.variables_names"><code class="docutils literal notranslate"><span class="pre">Everything.variables_names</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.Everything.constraints_names"><code class="docutils literal notranslate"><span class="pre">Everything.constraints_names</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.Everything.run"><code class="docutils literal notranslate"><span class="pre">Everything.run()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.Everything.__init__"><code class="docutils literal notranslate"><span class="pre">Everything.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.Everything._abc_impl"><code class="docutils literal notranslate"><span class="pre">Everything._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.Unconstrained"><code class="docutils literal notranslate"><span class="pre">Unconstrained</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.Unconstrained.__init__"><code class="docutils literal notranslate"><span class="pre">Unconstrained.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.Unconstrained._abc_impl"><code class="docutils literal notranslate"><span class="pre">Unconstrained._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.UnconstrainedRel"><code class="docutils literal notranslate"><span class="pre">UnconstrainedRel</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.UnconstrainedRel.__init__"><code class="docutils literal notranslate"><span class="pre">UnconstrainedRel.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.UnconstrainedRel._abc_impl"><code class="docutils literal notranslate"><span class="pre">UnconstrainedRel._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.SyncPhaseAsVariable"><code class="docutils literal notranslate"><span class="pre">SyncPhaseAsVariable</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.SyncPhaseAsVariable.__init__"><code class="docutils literal notranslate"><span class="pre">SyncPhaseAsVariable.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.SyncPhaseAsVariable._abc_impl"><code class="docutils literal notranslate"><span class="pre">SyncPhaseAsVariable._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.ConstrainedSyncPhase"><code class="docutils literal notranslate"><span class="pre">ConstrainedSyncPhase</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.ConstrainedSyncPhase.__init__"><code class="docutils literal notranslate"><span class="pre">ConstrainedSyncPhase.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.ConstrainedSyncPhase._abc_impl"><code class="docutils literal notranslate"><span class="pre">ConstrainedSyncPhase._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.DESIGN_SPACE_FACTORY_PRESETS"><code class="docutils literal notranslate"><span class="pre">DESIGN_SPACE_FACTORY_PRESETS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.factory.html#lightwin.optimisation.design_space.factory.get_design_space_factory"><code class="docutils literal notranslate"><span class="pre">get_design_space_factory()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.design_space.helper.html">helper module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.helper.html#lightwin.optimisation.design_space.helper.same_value_as_nominal"><code class="docutils literal notranslate"><span class="pre">same_value_as_nominal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.helper.html#lightwin.optimisation.design_space.helper.phi_s_limits"><code class="docutils literal notranslate"><span class="pre">phi_s_limits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.helper.html#lightwin.optimisation.design_space.helper.phi_0_limits"><code class="docutils literal notranslate"><span class="pre">phi_0_limits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.helper.html#lightwin.optimisation.design_space.helper.k_e_limits"><code class="docutils literal notranslate"><span class="pre">k_e_limits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.helper.html#lightwin.optimisation.design_space.helper._get_maximum_k_e_of_section"><code class="docutils literal notranslate"><span class="pre">_get_maximum_k_e_of_section()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.design_space.variable.html">variable module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.variable.html#lightwin.optimisation.design_space.variable.IMPLEMENTED_VARIABLES"><code class="docutils literal notranslate"><span class="pre">IMPLEMENTED_VARIABLES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.design_space.variable.html#lightwin.optimisation.design_space.variable.Variable"><code class="docutils literal notranslate"><span class="pre">Variable</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.variable.html#lightwin.optimisation.design_space.variable.Variable.x_0"><code class="docutils literal notranslate"><span class="pre">Variable.x_0</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.variable.html#lightwin.optimisation.design_space.variable.Variable.from_floats"><code class="docutils literal notranslate"><span class="pre">Variable.from_floats()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.variable.html#lightwin.optimisation.design_space.variable.Variable.from_pd_series"><code class="docutils literal notranslate"><span class="pre">Variable.from_pd_series()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.variable.html#lightwin.optimisation.design_space.variable.Variable.__post_init__"><code class="docutils literal notranslate"><span class="pre">Variable.__post_init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.variable.html#lightwin.optimisation.design_space.variable.Variable.__init__"><code class="docutils literal notranslate"><span class="pre">Variable.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.design_space.variable.html#lightwin.optimisation.design_space.variable.Variable._abc_impl"><code class="docutils literal notranslate"><span class="pre">Variable._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.optimisation.objective.html">objective package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lightwin.optimisation.objective.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.objective.factory.html">factory module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory"><code class="docutils literal notranslate"><span class="pre">ObjectiveFactory</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.objective_position_preset"><code class="docutils literal notranslate"><span class="pre">ObjectiveFactory.objective_position_preset</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.compensation_zone_override_settings"><code class="docutils literal notranslate"><span class="pre">ObjectiveFactory.compensation_zone_override_settings</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.__init__"><code class="docutils literal notranslate"><span class="pre">ObjectiveFactory.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory.get_objectives"><code class="docutils literal notranslate"><span class="pre">ObjectiveFactory.get_objectives()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory._set_zone_to_recompute"><code class="docutils literal notranslate"><span class="pre">ObjectiveFactory._set_zone_to_recompute()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory._output_objectives"><code class="docutils literal notranslate"><span class="pre">ObjectiveFactory._output_objectives()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.ObjectiveFactory._abc_impl"><code class="docutils literal notranslate"><span class="pre">ObjectiveFactory._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyMismatch"><code class="docutils literal notranslate"><span class="pre">EnergyMismatch</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyMismatch.objective_position_preset"><code class="docutils literal notranslate"><span class="pre">EnergyMismatch.objective_position_preset</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyMismatch.get_objectives"><code class="docutils literal notranslate"><span class="pre">EnergyMismatch.get_objectives()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyMismatch._get_w_kin"><code class="docutils literal notranslate"><span class="pre">EnergyMismatch._get_w_kin()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyMismatch._get_mismatch"><code class="docutils literal notranslate"><span class="pre">EnergyMismatch._get_mismatch()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyMismatch._abc_impl"><code class="docutils literal notranslate"><span class="pre">EnergyMismatch._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyPhaseMismatch"><code class="docutils literal notranslate"><span class="pre">EnergyPhaseMismatch</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyPhaseMismatch.objective_position_preset"><code class="docutils literal notranslate"><span class="pre">EnergyPhaseMismatch.objective_position_preset</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyPhaseMismatch.get_objectives"><code class="docutils literal notranslate"><span class="pre">EnergyPhaseMismatch.get_objectives()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyPhaseMismatch._get_w_kin"><code class="docutils literal notranslate"><span class="pre">EnergyPhaseMismatch._get_w_kin()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyPhaseMismatch._get_phi_abs"><code class="docutils literal notranslate"><span class="pre">EnergyPhaseMismatch._get_phi_abs()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyPhaseMismatch._get_mismatch"><code class="docutils literal notranslate"><span class="pre">EnergyPhaseMismatch._get_mismatch()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergyPhaseMismatch._abc_impl"><code class="docutils literal notranslate"><span class="pre">EnergyPhaseMismatch._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch"><code class="docutils literal notranslate"><span class="pre">EnergySyncPhaseMismatch</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch.objective_position_preset"><code class="docutils literal notranslate"><span class="pre">EnergySyncPhaseMismatch.objective_position_preset</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch.get_objectives"><code class="docutils literal notranslate"><span class="pre">EnergySyncPhaseMismatch.get_objectives()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch._get_w_kin"><code class="docutils literal notranslate"><span class="pre">EnergySyncPhaseMismatch._get_w_kin()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch._get_phi_abs"><code class="docutils literal notranslate"><span class="pre">EnergySyncPhaseMismatch._get_phi_abs()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch._get_mismatch"><code class="docutils literal notranslate"><span class="pre">EnergySyncPhaseMismatch._get_mismatch()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch._get_phi_s"><code class="docutils literal notranslate"><span class="pre">EnergySyncPhaseMismatch._get_phi_s()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySyncPhaseMismatch._abc_impl"><code class="docutils literal notranslate"><span class="pre">EnergySyncPhaseMismatch._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySeveralMismatches"><code class="docutils literal notranslate"><span class="pre">EnergySeveralMismatches</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySeveralMismatches.objective_position_preset"><code class="docutils literal notranslate"><span class="pre">EnergySeveralMismatches.objective_position_preset</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySeveralMismatches.get_objectives"><code class="docutils literal notranslate"><span class="pre">EnergySeveralMismatches.get_objectives()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySeveralMismatches._get_w_kin"><code class="docutils literal notranslate"><span class="pre">EnergySeveralMismatches._get_w_kin()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySeveralMismatches._get_mismatch"><code class="docutils literal notranslate"><span class="pre">EnergySeveralMismatches._get_mismatch()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.EnergySeveralMismatches._abc_impl"><code class="docutils literal notranslate"><span class="pre">EnergySeveralMismatches._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2"><code class="docutils literal notranslate"><span class="pre">Spiral2</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2.objective_position_preset"><code class="docutils literal notranslate"><span class="pre">Spiral2.objective_position_preset</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2.compensation_zone_override_settings"><code class="docutils literal notranslate"><span class="pre">Spiral2.compensation_zone_override_settings</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2.get_objectives"><code class="docutils literal notranslate"><span class="pre">Spiral2.get_objectives()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2._get_twiss_alpha"><code class="docutils literal notranslate"><span class="pre">Spiral2._get_twiss_alpha()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2._get_twiss_beta"><code class="docutils literal notranslate"><span class="pre">Spiral2._get_twiss_beta()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2._get_w_kin"><code class="docutils literal notranslate"><span class="pre">Spiral2._get_w_kin()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.Spiral2._abc_impl"><code class="docutils literal notranslate"><span class="pre">Spiral2._abc_impl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.OBJECTIVE_PRESETS"><code class="docutils literal notranslate"><span class="pre">OBJECTIVE_PRESETS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory.get_objectives_and_residuals_function"><code class="docutils literal notranslate"><span class="pre">get_objectives_and_residuals_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.factory.html#lightwin.optimisation.objective.factory._compute_residuals"><code class="docutils literal notranslate"><span class="pre">_compute_residuals()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.objective.helper.html">helper module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.helper.html#lightwin.optimisation.objective.helper.by_element"><code class="docutils literal notranslate"><span class="pre">by_element()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.objective.minimize_difference_with_ref.html">minimize_difference_with_ref module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.minimize_difference_with_ref.html#lightwin.optimisation.objective.minimize_difference_with_ref.MinimizeDifferenceWithRef"><code class="docutils literal notranslate"><span class="pre">MinimizeDifferenceWithRef</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_difference_with_ref.html#lightwin.optimisation.objective.minimize_difference_with_ref.MinimizeDifferenceWithRef.__init__"><code class="docutils literal notranslate"><span class="pre">MinimizeDifferenceWithRef.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_difference_with_ref.html#lightwin.optimisation.objective.minimize_difference_with_ref.MinimizeDifferenceWithRef._base_str"><code class="docutils literal notranslate"><span class="pre">MinimizeDifferenceWithRef._base_str()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_difference_with_ref.html#lightwin.optimisation.objective.minimize_difference_with_ref.MinimizeDifferenceWithRef.__str__"><code class="docutils literal notranslate"><span class="pre">MinimizeDifferenceWithRef.__str__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_difference_with_ref.html#lightwin.optimisation.objective.minimize_difference_with_ref.MinimizeDifferenceWithRef.current_value"><code class="docutils literal notranslate"><span class="pre">MinimizeDifferenceWithRef.current_value()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_difference_with_ref.html#lightwin.optimisation.objective.minimize_difference_with_ref.MinimizeDifferenceWithRef._value_getter"><code class="docutils literal notranslate"><span class="pre">MinimizeDifferenceWithRef._value_getter()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_difference_with_ref.html#lightwin.optimisation.objective.minimize_difference_with_ref.MinimizeDifferenceWithRef._check_ideal_value"><code class="docutils literal notranslate"><span class="pre">MinimizeDifferenceWithRef._check_ideal_value()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_difference_with_ref.html#lightwin.optimisation.objective.minimize_difference_with_ref.MinimizeDifferenceWithRef.evaluate"><code class="docutils literal notranslate"><span class="pre">MinimizeDifferenceWithRef.evaluate()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_difference_with_ref.html#lightwin.optimisation.objective.minimize_difference_with_ref.MinimizeDifferenceWithRef._compute_residues"><code class="docutils literal notranslate"><span class="pre">MinimizeDifferenceWithRef._compute_residues()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_difference_with_ref.html#lightwin.optimisation.objective.minimize_difference_with_ref.MinimizeDifferenceWithRef._abc_impl"><code class="docutils literal notranslate"><span class="pre">MinimizeDifferenceWithRef._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.objective.minimize_mismatch.html">minimize_mismatch module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.minimize_mismatch.html#lightwin.optimisation.objective.minimize_mismatch.MinimizeMismatch"><code class="docutils literal notranslate"><span class="pre">MinimizeMismatch</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_mismatch.html#lightwin.optimisation.objective.minimize_mismatch.MinimizeMismatch.__init__"><code class="docutils literal notranslate"><span class="pre">MinimizeMismatch.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_mismatch.html#lightwin.optimisation.objective.minimize_mismatch.MinimizeMismatch._base_str"><code class="docutils literal notranslate"><span class="pre">MinimizeMismatch._base_str()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_mismatch.html#lightwin.optimisation.objective.minimize_mismatch.MinimizeMismatch.__str__"><code class="docutils literal notranslate"><span class="pre">MinimizeMismatch.__str__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_mismatch.html#lightwin.optimisation.objective.minimize_mismatch.MinimizeMismatch.current_value"><code class="docutils literal notranslate"><span class="pre">MinimizeMismatch.current_value()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_mismatch.html#lightwin.optimisation.objective.minimize_mismatch.MinimizeMismatch._twiss_getter"><code class="docutils literal notranslate"><span class="pre">MinimizeMismatch._twiss_getter()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_mismatch.html#lightwin.optimisation.objective.minimize_mismatch.MinimizeMismatch.evaluate"><code class="docutils literal notranslate"><span class="pre">MinimizeMismatch.evaluate()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_mismatch.html#lightwin.optimisation.objective.minimize_mismatch.MinimizeMismatch._compute_residues"><code class="docutils literal notranslate"><span class="pre">MinimizeMismatch._compute_residues()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.minimize_mismatch.html#lightwin.optimisation.objective.minimize_mismatch.MinimizeMismatch._abc_impl"><code class="docutils literal notranslate"><span class="pre">MinimizeMismatch._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.objective.objective.html">objective module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective"><code class="docutils literal notranslate"><span class="pre">Objective</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective.name"><code class="docutils literal notranslate"><span class="pre">Objective.name</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective.weight"><code class="docutils literal notranslate"><span class="pre">Objective.weight</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective.descriptor"><code class="docutils literal notranslate"><span class="pre">Objective.descriptor</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective.ideal_value"><code class="docutils literal notranslate"><span class="pre">Objective.ideal_value</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective.__post_init__"><code class="docutils literal notranslate"><span class="pre">Objective.__post_init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective.__str__"><code class="docutils literal notranslate"><span class="pre">Objective.__str__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective.str_header"><code class="docutils literal notranslate"><span class="pre">Objective.str_header()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective.current_value"><code class="docutils literal notranslate"><span class="pre">Objective.current_value()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective.current_value_header"><code class="docutils literal notranslate"><span class="pre">Objective.current_value_header()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective.evaluate"><code class="docutils literal notranslate"><span class="pre">Objective.evaluate()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective.__init__"><code class="docutils literal notranslate"><span class="pre">Objective.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.objective.html#lightwin.optimisation.objective.objective.Objective._abc_impl"><code class="docutils literal notranslate"><span class="pre">Objective._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.objective.position.html">position module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position.zone_to_recompute"><code class="docutils literal notranslate"><span class="pre">zone_to_recompute()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position._zone"><code class="docutils literal notranslate"><span class="pre">_zone()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position._end_last_altered_lattice"><code class="docutils literal notranslate"><span class="pre">_end_last_altered_lattice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position._one_lattice_after_last_altered_lattice"><code class="docutils literal notranslate"><span class="pre">_one_lattice_after_last_altered_lattice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position._end_last_failed_lattice"><code class="docutils literal notranslate"><span class="pre">_end_last_failed_lattice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position._one_lattice_after_last_failed_lattice"><code class="docutils literal notranslate"><span class="pre">_one_lattice_after_last_failed_lattice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position._end_linac"><code class="docutils literal notranslate"><span class="pre">_end_linac()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position._reduce_idx_start_to_include_full_lattice"><code class="docutils literal notranslate"><span class="pre">_reduce_idx_start_to_include_full_lattice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position._end_of_every_altered_lattice"><code class="docutils literal notranslate"><span class="pre">_end_of_every_altered_lattice()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.position.html#lightwin.optimisation.objective.position.POSITION_TO_INDEX"><code class="docutils literal notranslate"><span class="pre">POSITION_TO_INDEX</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lightwin.optimisation.objective.quantity_is_between.html">quantity_is_between module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="lightwin.optimisation.objective.quantity_is_between.html#lightwin.optimisation.objective.quantity_is_between.QuantityIsBetween"><code class="docutils literal notranslate"><span class="pre">QuantityIsBetween</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.quantity_is_between.html#lightwin.optimisation.objective.quantity_is_between.QuantityIsBetween.__init__"><code class="docutils literal notranslate"><span class="pre">QuantityIsBetween.__init__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.quantity_is_between.html#lightwin.optimisation.objective.quantity_is_between.QuantityIsBetween._base_str"><code class="docutils literal notranslate"><span class="pre">QuantityIsBetween._base_str()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.quantity_is_between.html#lightwin.optimisation.objective.quantity_is_between.QuantityIsBetween.__str__"><code class="docutils literal notranslate"><span class="pre">QuantityIsBetween.__str__()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.quantity_is_between.html#lightwin.optimisation.objective.quantity_is_between.QuantityIsBetween.current_value"><code class="docutils literal notranslate"><span class="pre">QuantityIsBetween.current_value()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.quantity_is_between.html#lightwin.optimisation.objective.quantity_is_between.QuantityIsBetween._value_getter"><code class="docutils literal notranslate"><span class="pre">QuantityIsBetween._value_getter()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.quantity_is_between.html#lightwin.optimisation.objective.quantity_is_between.QuantityIsBetween.evaluate"><code class="docutils literal notranslate"><span class="pre">QuantityIsBetween.evaluate()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.quantity_is_between.html#lightwin.optimisation.objective.quantity_is_between.QuantityIsBetween._compute_residues"><code class="docutils literal notranslate"><span class="pre">QuantityIsBetween._compute_residues()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="lightwin.optimisation.objective.quantity_is_between.html#lightwin.optimisation.objective.quantity_is_between.QuantityIsBetween._abc_impl"><code class="docutils literal notranslate"><span class="pre">QuantityIsBetween._abc_impl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.optimisation.design_space_specs.html">design_space_specs module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lightwin.optimisation.wtf_specs.html">wtf_specs module</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lightwin.failures.strategy.html" class="btn btn-neutral float-left" title="strategy module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lightwin.optimisation.algorithms.html" class="btn btn-neutral float-right" title="algorithms package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+   <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Other Versions</span>
+      v: v0.8.2
+      <span class="fa fa-caret-down"></span>
+   </span>
+   <div class="rst-other-versions">
+      <dl>
+         <dt>Tags</dt>
+         <dd><a href="../../v0.7.0/lightwin/lightwin.optimisation.html">v0.7.0</a></dd>
+         <dd><a href="lightwin.optimisation.html">v0.8.2</a></dd>
+      </dl>
+      <dl>
+         <dt>Branches</dt>
+         <dd><a href="../../main/lightwin/lightwin.optimisation.html">main</a></dd>
+      </dl>
+   </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

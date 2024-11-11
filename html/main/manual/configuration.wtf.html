@@ -129,49 +129,55 @@ This section parametrizes the failed cavities, as well as how they are fixed.</p
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p>id_nature</p></td>
+<tr class="row-odd"><td><p>history_kwargs</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p>kwargs for the <a class="reference internal" href="../lightwin/lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory" title="lightwin.optimisation.algorithms.algorithm.OptimizationHistory"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationHistory</span></code></a>.</p></td>
+<td></td>
+<td><p>❌</p></td>
+</tr>
+<tr class="row-even"><td><p>id_nature</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Indicates if failed is element index/cavity index/name, <code class="docutils literal notranslate"><span class="pre">element</span></code> or <code class="docutils literal notranslate"><span class="pre">cavity</span></code> or <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p></td>
 <td><p>(‘element’, ‘cavity’, ‘name’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p>objective_preset</p></td>
+<tr class="row-odd"><td><p>objective_preset</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Objectives for the optimisation algorithm.</p></td>
 <td><p>(‘EnergyPhaseMismatch’, ‘simple_ADS’, ‘EnergyMismatch’, ‘rephased_ADS’, ‘EnergySyncPhaseMismatch’, ‘sync_phase_as_objective_ADS’, ‘experimental’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p>optimisation_algorithm</p></td>
+<tr class="row-even"><td><p>optimisation_algorithm</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Name of optimisation algorithm.</p></td>
 <td><p>(‘least_squares’, ‘least_squares_penalty’, ‘nsga’, ‘downhill_simplex’, ‘downhill_simplex_penalty’, ‘nelder_mead’, ‘nelder_mead_penalty’, ‘differential_evolution’, ‘explorator’, ‘experimental’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p>optimisation_algorithm_kwargs</p></td>
+<tr class="row-odd"><td><p>optimisation_algorithm_kwargs</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
 <td><p>Keyword arguments passed to the optimisation algorithm.</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>strategy</p></td>
+<tr class="row-even"><td><p>strategy</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>How compensating cavities are selected.</p></td>
 <td><p>(‘k out of n’, ‘l neighboring lattices’, ‘global’, ‘global_downstream’, ‘manual’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p>tie_politics</p></td>
+<tr class="row-odd"><td><p>tie_politics</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>How to select the compensating elements when several are equidistant to the failure.</p></td>
 <td><p>(‘upstream first’, ‘downstream first’)</p></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>shift</p></td>
+<tr class="row-even"><td><p>shift</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Distance increase for downstream elements (<code class="docutils literal notranslate"><span class="pre">shift</span> <span class="pre">&lt;</span> <span class="pre">0</span></code>) or upstream elements (<code class="docutils literal notranslate"><span class="pre">shift</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>). Used to have a window of compensating cavities which is not centered around the failed elements.</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>k</p></td>
+<tr class="row-odd"><td><p>k</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Number of compensating cavities per failed cavity.</p></td>
 <td></td>
@@ -203,55 +209,61 @@ This section parametrizes the failed cavities, as well as how they are fixed.</p
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p>id_nature</p></td>
+<tr class="row-odd"><td><p>history_kwargs</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p>kwargs for the <a class="reference internal" href="../lightwin/lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory" title="lightwin.optimisation.algorithms.algorithm.OptimizationHistory"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationHistory</span></code></a>.</p></td>
+<td></td>
+<td><p>❌</p></td>
+</tr>
+<tr class="row-even"><td><p>id_nature</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Indicates if failed is element index/cavity index/name, <code class="docutils literal notranslate"><span class="pre">element</span></code> or <code class="docutils literal notranslate"><span class="pre">cavity</span></code> or <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p></td>
 <td><p>(‘element’, ‘cavity’, ‘name’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p>objective_preset</p></td>
+<tr class="row-odd"><td><p>objective_preset</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Objectives for the optimisation algorithm.</p></td>
 <td><p>(‘EnergyPhaseMismatch’, ‘simple_ADS’, ‘EnergyMismatch’, ‘rephased_ADS’, ‘EnergySyncPhaseMismatch’, ‘sync_phase_as_objective_ADS’, ‘experimental’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p>optimisation_algorithm</p></td>
+<tr class="row-even"><td><p>optimisation_algorithm</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Name of optimisation algorithm.</p></td>
 <td><p>(‘least_squares’, ‘least_squares_penalty’, ‘nsga’, ‘downhill_simplex’, ‘downhill_simplex_penalty’, ‘nelder_mead’, ‘nelder_mead_penalty’, ‘differential_evolution’, ‘explorator’, ‘experimental’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p>optimisation_algorithm_kwargs</p></td>
+<tr class="row-odd"><td><p>optimisation_algorithm_kwargs</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
 <td><p>Keyword arguments passed to the optimisation algorithm.</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>strategy</p></td>
+<tr class="row-even"><td><p>strategy</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>How compensating cavities are selected.</p></td>
 <td><p>(‘k out of n’, ‘l neighboring lattices’, ‘global’, ‘global_downstream’, ‘manual’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p>tie_politics</p></td>
+<tr class="row-odd"><td><p>tie_politics</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>How to select the compensating elements when several are equidistant to the failure.</p></td>
 <td><p>(‘upstream first’, ‘downstream first’)</p></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>shift</p></td>
+<tr class="row-even"><td><p>shift</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Distance increase for downstream elements (<code class="docutils literal notranslate"><span class="pre">shift</span> <span class="pre">&lt;</span> <span class="pre">0</span></code>) or upstream elements (<code class="docutils literal notranslate"><span class="pre">shift</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>). Used to have a window of compensating cavities which is not centered around the failed elements.</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-even"><td><p>l</p></td>
+<tr class="row-odd"><td><p>l</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Number of compensating lattices per failed cavity.</p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p>min_number_of_cavities_in_lattice</p></td>
+<tr class="row-even"><td><p>min_number_of_cavities_in_lattice</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
 <td><p>Minimum number of compensating cavities in the lattice; when a lattice does not reach this number, we use it anyway for compensation, but we also take another lattice. Designed to remove the lattices that do not have any cavity.</p></td>
 <td></td>
@@ -283,43 +295,49 @@ This section parametrizes the failed cavities, as well as how they are fixed.</p
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p>id_nature</p></td>
+<tr class="row-odd"><td><p>history_kwargs</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p>kwargs for the <a class="reference internal" href="../lightwin/lightwin.optimisation.algorithms.algorithm.html#lightwin.optimisation.algorithms.algorithm.OptimizationHistory" title="lightwin.optimisation.algorithms.algorithm.OptimizationHistory"><code class="xref py py-class docutils literal notranslate"><span class="pre">OptimizationHistory</span></code></a>.</p></td>
+<td></td>
+<td><p>❌</p></td>
+</tr>
+<tr class="row-even"><td><p>id_nature</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Indicates if failed is element index/cavity index/name, <code class="docutils literal notranslate"><span class="pre">element</span></code> or <code class="docutils literal notranslate"><span class="pre">cavity</span></code> or <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p></td>
 <td><p>(‘element’, ‘cavity’, ‘name’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p>objective_preset</p></td>
+<tr class="row-odd"><td><p>objective_preset</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Objectives for the optimisation algorithm.</p></td>
 <td><p>(‘EnergyPhaseMismatch’, ‘simple_ADS’, ‘EnergyMismatch’, ‘rephased_ADS’, ‘EnergySyncPhaseMismatch’, ‘sync_phase_as_objective_ADS’, ‘experimental’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p>optimisation_algorithm</p></td>
+<tr class="row-even"><td><p>optimisation_algorithm</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>Name of optimisation algorithm.</p></td>
 <td><p>(‘least_squares’, ‘least_squares_penalty’, ‘nsga’, ‘downhill_simplex’, ‘downhill_simplex_penalty’, ‘nelder_mead’, ‘nelder_mead_penalty’, ‘differential_evolution’, ‘explorator’, ‘experimental’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p>optimisation_algorithm_kwargs</p></td>
+<tr class="row-odd"><td><p>optimisation_algorithm_kwargs</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
 <td><p>Keyword arguments passed to the optimisation algorithm.</p></td>
 <td></td>
 <td><p>❌</p></td>
 </tr>
-<tr class="row-odd"><td><p>strategy</p></td>
+<tr class="row-even"><td><p>strategy</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
 <td><p>How compensating cavities are selected.</p></td>
 <td><p>(‘k out of n’, ‘l neighboring lattices’, ‘global’, ‘global_downstream’, ‘manual’)</p></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-even"><td><p>failed</p></td>
+<tr class="row-odd"><td><p>failed</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">list</span></code></p></td>
 <td><p>Index/name of failed cavities. Must be a list[list[list[int]]] or list[list[list[str]]].</p></td>
 <td></td>
 <td><p>✅</p></td>
 </tr>
-<tr class="row-odd"><td><p>compensating_manual</p></td>
+<tr class="row-even"><td><p>compensating_manual</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">list</span></code></p></td>
 <td><p>Index/name of compensating cavities cavities. Must be a list[list[list[int]]] or list[list[list[str]]]. The number of FaultScenarios (length of most outer list) must match <code class="docutils literal notranslate"><span class="pre">failed</span></code>. The number of groups of compensating cavities (second level) must match <code class="docutils literal notranslate"><span class="pre">failed</span></code>.</p></td>
 <td></td>
@@ -379,6 +397,7 @@ This section parametrizes the failed cavities, as well as how they are fixed.</p
       <dl>
          <dt>Tags</dt>
          <dd><a href="../../v0.7.0/manual/configuration.wtf.html">v0.7.0</a></dd>
+         <dd><a href="../../v0.8.2/manual/configuration.wtf.html">v0.8.2</a></dd>
       </dl>
       <dl>
          <dt>Branches</dt>
