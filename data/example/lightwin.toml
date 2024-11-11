@@ -47,7 +47,16 @@ optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
 
-[generic_wtf.history_kwargs]
+[save_wtf]
+failed = [["FM11"]]
+id_nature = "name"
+k = 3
+objective_preset = "simple_ADS"
+optimisation_algorithm = "downhill_simplex"
+optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
+strategy = "k out of n"
+
+[save_wtf.history_kwargs]
 folder = "optimization_history/"
 get_args = ["w_kin", "phi_abs", "eps_zdelta", "non_norm_eps_zdelta", "mismatch_factor_zdelta", "alpha_zdelta", "beta_zdelta", "gamma_zdelta"]
 get_kwargs = { elt = ["FM9", "FM10", "FM11", "FM12"], pos = "out", to_deg = true }
