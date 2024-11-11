@@ -166,6 +166,7 @@ archives/
 data/from_tracewin_examples/
 data/example/*.py
 data/example/example_new.ini
+data/example/optimization_history/
 data/example/results/
 data/example/results_tests/
 data/test_instructions/results/*
