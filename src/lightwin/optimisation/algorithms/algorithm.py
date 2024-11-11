@@ -32,6 +32,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.cavity_settings import STATUS_T
 from lightwin.core.elements.field_maps.cavity_settings_factory import (
     CavitySettingsFactory,
 )
@@ -42,20 +43,14 @@ from lightwin.optimisation.design_space.variable import Variable
 from lightwin.optimisation.objective.objective import Objective
 
 
-class OptiInfo(TypedDict):
-    """Hold information on how optimisation went."""
-
-    hist_X: np.ndarray
-    hist_F: np.ndarray
-    hist_G: np.ndarray
-
-
 class OptiSol(TypedDict):
     """Hold information on the solution."""
 
-    X: list[float]
-    F: list[float]
-    objectives_values: dict[str, float]
+    var: np.ndarray | list[float]  # Value of variables
+    cavity_settings: SetOfCavitySettings  # Value of var, but more logical
+    fun: np.ndarray | list[float]  # Value of objectives
+    objectives: dict[str, float]  # Value of objectives, but more logical
+    success: bool  # If optimization was successful
 
 
 ComputeBeamPropagationT = Callable[[SetOfCavitySettings], SimulationOutput]
@@ -64,7 +59,7 @@ ComputeConstraintsT = Callable[[SimulationOutput], np.ndarray]
 
 
 class OptimisationAlgorithm(ABC):
-    """Holds the optimisation parameters, the methods to optimize.
+    """Holds the optimization parameters, the methods to optimize.
 
     Parameters
     ----------
@@ -78,7 +73,7 @@ class OptimisationAlgorithm(ABC):
         Holds variables, their initial values, their limits.
     constraints : list[Constraint] | None, optional
         Holds constraints and their limits. The default is None.
-    solution : dict
+    opti_sol : OptiSol
         Holds information on the solution that was found.
     supports_constraints : bool
         If the method handles constraints or not.
@@ -135,7 +130,7 @@ class OptimisationAlgorithm(ABC):
         self.compute_constraints = compute_constraints
         self.cavity_settings_factory = cavity_settings_factory
 
-        self.solution: OptiSol
+        self.opti_sol: OptiSol
         self.supports_constraints: bool
 
         if optimisation_algorithm_kwargs is None:
@@ -182,21 +177,21 @@ class OptimisationAlgorithm(ABC):
         return {}
 
     @abstractmethod
-    def optimise(self) -> tuple[bool, SetOfCavitySettings | None, OptiSol]:
-        """Set up optimisation parameters and solve the problem.
+    def optimize(self) -> OptiSol:
+        """Set up optimization parameters and solve the problem.
 
         Returns
         -------
-        success : bool
-            Tells if the optimisation algorithm managed to converge.
-        optimized_cavity_settings : SetOfCavitySettings
-            Best solution found by the optimization algorithm. None if no
-            satisfactory solution was found.
         info : OptiSol
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 
         """
+
+    @abstractmethod
+    def _generate_opti_sol(self, *args, **kwargs) -> OptiSol:
+        """Takes the results of the optimization in any form, returns dict."""
+        pass
 
     def _format_variables(self) -> Any:
         """Adapt all :class:`.Variable` to this optimisation algorithm."""
@@ -217,18 +212,19 @@ class OptimisationAlgorithm(ABC):
         self.history.checkpoint()
         return residuals
 
-    def _finalize(self) -> None:
-        """End the optimization process."""
-        self.history.save()
-
     def _norm_wrapper_residuals(self, var: np.ndarray) -> float:
         """Compute norm of residues vector from an array of variable values."""
         return float(np.linalg.norm(self._wrapper_residuals(var)))
 
+    def _finalize(self, opti_sol: OptiSol, *complementary_info: str) -> None:
+        """End the optimization process."""
+        self.history.save()
+        self._output_some_info(opti_sol, *complementary_info)
+
     def _create_set_of_cavity_settings(
         self,
         var: np.ndarray,
-        status: str = "compensate (in progress)",
+        status: STATUS_T = "compensate (in progress)",
     ) -> SetOfCavitySettings:
         """Transform ``var`` into generic :class:`.SetOfCavitySettings`.
 
@@ -262,17 +258,38 @@ class OptimisationAlgorithm(ABC):
             several_cavity_settings, self.compensating_elements
         )
 
-    def _get_objective_values(self) -> dict[str, float]:
+    def _get_objective_values(self, var: np.ndarray) -> dict[str, float]:
         """Save the full array of objective values."""
-        sol = self.solution
-        objectives_values = self._wrapper_residuals(sol.x)
+        values = self._wrapper_residuals(var)
         objectives_values = {
-            objective.name: objective_value
-            for objective, objective_value in zip(
-                self.objectives, objectives_values
-            )
+            str(objective): value
+            for objective, value in zip(self.objectives, values, strict=True)
         }
         return objectives_values
+
+    def _output_some_info(
+        self, opti_sol: OptiSol, *complementary_info: str
+    ) -> None:
+        """Show the most useful data from optimization."""
+        objectives_values = opti_sol["objectives"]
+
+        width_objective = len(Objective.str_header())
+        header = (
+            f"{'#':>3} | "
+            + Objective.str_header()
+            + f" | {'final val.': ^21}\n"
+        )
+        info_string = "Objective functions results:\n" + header
+        for i, (str_objective, value) in enumerate(objectives_values.items()):
+            info_string += f"{i:>3} | {str_objective} | {value:+.14e}\n"
+
+        info_string += f"Norm: {opti_sol["fun"]}"
+
+        logging.info(info_string)
+
+        for m in complementary_info:
+            info_string += m + "\n"
+        logging.debug(info_string)
 
 
 class OptimizationHistory:

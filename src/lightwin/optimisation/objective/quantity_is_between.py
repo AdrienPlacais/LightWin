@@ -70,16 +70,7 @@ class QuantityIsBetween(Objective):
     def __str__(self) -> str:
         """Give objective information value."""
         message = self._base_str()
-        message += f"{self.ideal_value[0]:>4} | {self.ideal_value[1]:>4}"
-        return message
-
-    def current_value(self, simulation_output: SimulationOutput) -> str:
-        value = self._value_getter(simulation_output)
-        message = self._base_str()
-        if isinstance(value, float):
-            message += f"{value:>10} | {self._compute_residues(value):>10}"
-            return message
-        message += f"{value} | {self._compute_residues(value):>10}"
+        message += f"{self.ideal_value[0]:+.2e} ~ {self.ideal_value[1]:+.2e}"  # type: ignore
         return message
 
     def _value_getter(self, simulation_output: SimulationOutput) -> float:

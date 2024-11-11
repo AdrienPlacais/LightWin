@@ -71,13 +71,7 @@ class MinimizeMismatch(Objective):
 
     def __str__(self) -> str:
         """Give objective information value."""
-        return self._base_str() + f"{self.ideal_value:>10}"
-
-    def current_value(self, simulation_output: SimulationOutput) -> str:
-        raise IOError("wtf? wrong call of _compute_residues")
-        res = self._compute_residues(simulation_output)
-        message = self._base_str() + f"{'NA':>10} | {res:>10}"
-        return message
+        return self._base_str() + f"{self.ideal_value:+.14e}"
 
     def _twiss_getter(self, simulation_output: SimulationOutput) -> np.ndarray:
         """Get desired value using :meth:`.SimulationOutput.get` method."""

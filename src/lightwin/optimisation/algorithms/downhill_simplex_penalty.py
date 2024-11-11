@@ -6,7 +6,6 @@ residues grow when the constraints are not respected.
 """
 
 import logging
-from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
@@ -15,7 +14,6 @@ from lightwin.optimisation.algorithms.algorithm import ComputeConstraintsT
 from lightwin.optimisation.algorithms.downhill_simplex import DownhillSimplex
 
 
-@dataclass
 class DownhillSimplexPenalty(DownhillSimplex):
     """
     A Downhill Simplex method, with a penalty function to consider constraints.

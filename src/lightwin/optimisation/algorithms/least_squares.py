@@ -1,29 +1,13 @@
-"""Define :class:`LeastSquares`, a simple and fast optimisation method."""
+"""Define :class:`LeastSquares`, a simple and fast optimization method."""
 
-import logging
-from dataclasses import dataclass
+from scipy.optimize import least_squares
 
-import numpy as np
-from scipy.optimize import Bounds, least_squares
-
-from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.optimisation.algorithms.algorithm import (
-    OptimisationAlgorithm,
-    OptiSol,
-)
+from lightwin.optimisation.algorithms.algorithm import OptiSol
+from lightwin.optimisation.algorithms.downhill_simplex import DownhillSimplex
 
 
-@dataclass
-class LeastSquares(OptimisationAlgorithm):
+class LeastSquares(DownhillSimplex):
     """Plain least-squares method, efficient for small problems.
-
-    Notes
-    -----
-    Works very well with :class:`.Envelope1D`, has issues converging with
-    :class:`.TraceWin`.
-
-    All the attributes but ``solution`` are inherited from the Abstract Base
-    Class :class:`.OptimisationAlgorithm`.
 
     See also
     --------
@@ -33,51 +17,27 @@ class LeastSquares(OptimisationAlgorithm):
 
     supports_constraints = False
 
-    def __init__(self, *args, **kwargs) -> None:
-        """Instantiate object."""
-        return super().__init__(*args, **kwargs)
-
-    def optimise(self) -> tuple[bool, SetOfCavitySettings | None, OptiSol]:
-        """Set up the optimisation and solve the problem.
+    def optimize(self) -> OptiSol:
+        """Set up the optimization and solve the problem.
 
         Returns
         -------
-        success : bool
-            Tells if the optimisation algorithm managed to converge.
-        optimized_cavity_settings : SetOfCavitySettings
-            Best solution found by the optimization algorithm.
         info : OptiSol
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 
         """
         x_0, bounds = self._format_variables()
-
-        solution = least_squares(
+        result = least_squares(
             fun=self._wrapper_residuals,
             x0=x_0,
             bounds=bounds,
             **self.optimisation_algorithm_kwargs,
         )
-
-        self.solution = solution
-        optimized_cavity_settings = self._create_set_of_cavity_settings(
-            solution.x
-        )
-        # TODO: output some info could be much more clear by using the __str__
-        # methods of the various objects.
-
-        objectives_values = self._get_objective_values()
-        self._output_some_info(objectives_values)
-
-        success = self.solution.success
-        info: OptiSol = {
-            "X": self.solution.x.tolist(),
-            "F": self.solution.fun.tolist(),
-            "objectives_values": objectives_values,
-        }
-        self._finalize()
-        return success, optimized_cavity_settings, info
+        self.opti_sol = self._generate_opti_sol(result)
+        complementary_info = ("Least-Squares algorithm", result.message)
+        self._finalize(self.opti_sol, *complementary_info)
+        return self.opti_sol
 
     @property
     def _default_kwargs(self) -> dict:
@@ -99,25 +59,3 @@ class LeastSquares(OptimisationAlgorithm):
             "verbose": 0,
         }
         return kwargs
-
-    def _format_variables(self) -> tuple[np.ndarray, Bounds]:
-        """Convert the :class:`.Variable` to an array and ``Bounds``."""
-        x_0 = np.array([var.x_0 for var in self.variables])
-        _bounds = np.array([var.limits for var in self.variables])
-        bounds = Bounds(_bounds[:, 0], _bounds[:, 1])
-        return x_0, bounds
-
-    def _output_some_info(self, objectives_values: dict[str, float]) -> None:
-        """Show the most useful data from scipy's `least_squares`."""
-        sol = self.solution
-        info_string = "Objective functions results:\n"
-        for i, fun in enumerate(objectives_values.values()):
-            info_string += f"{i}: {' ':>35} | {fun}\n"
-        info_string += f"Norm: {sol.fun}"
-        logging.info(info_string)
-        info_string = "least_squares algorithm output:"
-        info_string += f"\nmessage: {sol.message}\n"
-        info_string += f"nfev: {sol.nfev}\tnjev: {sol.njev}\n"
-        info_string += f"optimality: {sol.optimality}\nstatus: {sol.status}\n"
-        info_string += f"success: {sol.success}\nsolution: {sol.x}\n"
-        logging.debug(info_string)
