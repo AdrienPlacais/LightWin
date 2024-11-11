@@ -64,7 +64,6 @@ def load_toml(
 ) -> dict[str, dict[str, Any]]:
     """Load the ``.toml`` and extract the dicts asked by user.
 
-
     Parameters
     ----------
     config_path : pathlib.Path

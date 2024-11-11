@@ -14,7 +14,10 @@ import numpy as np
 from lightwin.tracewin_utils.interface import beam_parameters_to_command
 from lightwin.util.helper import recursive_items
 
-from .phase_space.i_phase_space_beam_parameters import IMPLEMENTED_PHASE_SPACES
+from .phase_space.i_phase_space_beam_parameters import (
+    PHASE_SPACE_T,
+    PHASE_SPACES,
+)
 from .phase_space.initial_phase_space_beam_parameters import (
     InitialPhaseSpaceBeamParameters,
 )
@@ -63,7 +66,7 @@ class InitialBeamParameters:
     def __str__(self) -> str:
         """Give compact information on the data that is stored."""
         out = "\tBeamParameters:\n"
-        for phase_space_name in IMPLEMENTED_PHASE_SPACES:
+        for phase_space_name in PHASE_SPACES:
             if not hasattr(self, phase_space_name):
                 continue
 
@@ -101,11 +104,10 @@ class InitialBeamParameters:
         *keys: str,
         to_numpy: bool = True,
         none_to_nan: bool = False,
-        phase_space_name: str | None = None,
+        phase_space_name: PHASE_SPACE_T | None = None,
         **kwargs: Any,
     ) -> Any:
-        """
-        Shorthand to get attributes from this class or its attributes.
+        """Get attributes from this class or its attributes.
 
         Notes
         -----
@@ -115,9 +117,8 @@ class InitialBeamParameters:
         ``envelope_pos`` and ``envelope_energy``.
 
         Hence, you must provide either a ``phase_space`` argument which shall
-        be in :data:`.IMPLEMENTED_PHASE_SPACES`, either you must append the
-        name of the phase space to the name of the desired variable with an
-        underscore.
+        be in :data:`.PHASE_SPACES`, either you must append the name of the
+        phase space to the name of the desired variable with an underscore.
 
         See Also
         --------
@@ -135,7 +136,7 @@ class InitialBeamParameters:
         phase_space_name : str | None, optional
             Phase space in which you want the key. The default is None. In this
             case, the quantities from the ``zdelta`` phase space are taken.
-            Otherwise, it must be in :data:`.IMPLEMENTED_PHASE_SPACES`.
+            Otherwise, it must be in :data:`.PHASE_SPACES`.
         **kwargs: Any
             Other arguments passed to recursive getter.
 
@@ -256,14 +257,15 @@ def phase_space_name_hidden_in_key(key: str) -> bool:
         return False
 
     to_test = key.split("_")
-    if to_test[-1] in IMPLEMENTED_PHASE_SPACES:
+    if to_test[-1] in PHASE_SPACES:
         return True
     return False
 
 
-def separate_var_from_phase_space(key: str) -> tuple[str, str]:
+def separate_var_from_phase_space(key: str) -> tuple[str, PHASE_SPACE_T]:
     """Separate variable name from phase space name."""
     splitted = key.split("_")
     key = "_".join(splitted[:-1])
     phase_space = splitted[-1]
+    assert phase_space in PHASE_SPACES
     return key, phase_space

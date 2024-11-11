@@ -20,6 +20,7 @@ Subpackages
    lightwin.optimisation
    lightwin.scripts
    lightwin.tracewin_utils
+   lightwin.ui
    lightwin.util
    lightwin.visualization
 

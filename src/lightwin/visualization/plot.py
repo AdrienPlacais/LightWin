@@ -20,43 +20,34 @@ import logging
 from pathlib import Path
 from typing import Any, Callable, Sequence
 
-import matplotlib.patches as pat
 import matplotlib.pyplot as plt
-import matplotlib.transforms as mtransforms
 import numpy as np
 from cycler import cycler
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.typing import ColorType
-from palettable.colorbrewer.qualitative import Dark2_8
+from palettable.colorbrewer.qualitative import Dark2_8  # type: ignore
 
 import lightwin.util.dicts_output as dic
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.accelerator.accelerator import Accelerator
-from lightwin.core.elements.aperture import Aperture
-from lightwin.core.elements.bend import Bend
-from lightwin.core.elements.drift import Drift
-from lightwin.core.elements.edge import Edge
-from lightwin.core.elements.field_maps.field_map import FieldMap
-from lightwin.core.elements.field_maps.field_map_100 import FieldMap100
-from lightwin.core.elements.field_maps.field_map_1100 import FieldMap1100
-from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
-from lightwin.core.elements.quad import Quad
-from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.failures.fault import Fault
 from lightwin.util import helper
+from lightwin.visualization import structure
+from lightwin.visualization.helper import (
+    X_AXIS_T,
+    create_fig_if_not_exists,
+    savefig,
+)
+from lightwin.visualization.optimization import mark_objectives_position
 
 font = {"family": "serif"}  # , 'size': 25}
 plt.rc("font", **font)
 plt.rcParams["axes.prop_cycle"] = cycler(color=Dark2_8.mpl_colors)
 
-FALLBACK_PRESETS = {
-    "x_axis": "z_abs",
-    "plot_section": True,
-    "clean_fig": False,
-    "sharex": True,
-}
+FALLBACK_PRESETS = {"x_axis": "z_abs", "plot_section": True, "sharex": True}
 PLOT_PRESETS = {
     "energy": {
         "x_axis": "z_abs",
@@ -119,15 +110,45 @@ ERROR_REFERENCE = "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)"
 # =============================================================================
 def factory(
     accelerators: Sequence[Accelerator],
-    plots: dict[str, bool],
+    plots: dict[str, Any],
+    save_fig: bool = True,
+    clean_fig: bool = True,
+    fault_scenarios: Sequence[list[Fault]] | None = None,
     **kwargs,
 ) -> list[Figure]:
-    """Create all the desired plots."""
-    if (
-        kwargs["clean_fig"]
-        and not kwargs["save_fig"]
-        and len(accelerators) > 2
-    ):
+    """Create all the desired plots.
+
+    Parameters
+    ----------
+    accelerators : Sequence[Accelerator]
+        The accelerators holding relatable data. Due to bad implementation, the
+        following accelerators are expected:
+        - Reference linac, first solver
+        - Reference linac, second solver
+        - Fixed linac, first solver
+        - Fixed linac, second solver
+        If you provide only the two first linacs, the function will still work
+        but they will be plotted twice.
+    plots : dict[str, Any]
+        The plot TOML table.
+    save_fig : bool, optional
+        If Figures should be saved; the default is True.
+    clean_fig : bool
+        If Figures should be cleaned between two calls of this function; the
+        default is True.
+    fault_scenarios : Sequence[FaultScenario] | None, optional
+        If provided, the position of the :class:`.Objective` will also appear
+        on plots.
+    kwargs :
+        Other tables from the TOML configuration file.
+
+    Returns
+    -------
+    list[matplotlib.figure.Figure]
+        The created figures.
+
+    """
+    if clean_fig and not save_fig and len(accelerators) > 2:
         logging.warning(
             "You will only see the plots of the last accelerators,"
             " previous will be erased without saving."
@@ -137,31 +158,54 @@ def factory(
     # Dirty patch to force plot even when only one accelerator
     if len(accelerators) == 1:
         accelerators = (ref_acc, ref_acc)
+
+    plots_presets, plots_kwargs = (
+        _separate_plot_presets_from_plot_modificators(plots)
+    )
+
+    figs: list[Figure]
     figs = [
         _plot_preset(
-            preset, *(ref_acc, fix_acc), **_proper_kwargs(preset, kwargs)
+            preset,
+            *(ref_acc, fix_acc),
+            save_fig=save_fig,
+            clean_fig=clean_fig,
+            fault_scenarios=fault_scenarios,
+            **_proper_kwargs(preset, kwargs | plots_kwargs),
         )
         for fix_acc in accelerators[1:]
-        for preset, plot_me in plots.items()
+        for preset, plot_me in plots_presets.items()
         if plot_me
     ]
     return figs
 
 
-# =============================================================================
-# Used in factory
-# =============================================================================
-# Main func
+def _separate_plot_presets_from_plot_modificators(
+    plots: dict[str, Any]
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Separate the config entries corresponding to the name of a plot."""
+    plot_presets: dict[str, bool] = {}
+    plot_kwargs: dict[str, bool] = {}
+    for key, flag in plots.items():
+        if key in PLOT_PRESETS:
+            plot_presets[key] = flag
+            continue
+        plot_kwargs[key] = flag
+    return plot_presets, plot_kwargs
+
+
 def _plot_preset(
-    str_preset: str,
+    preset: str,
     *args: Accelerator,
-    x_axis: str = "z_abs",
-    all_y_axis: list[str] | None = None,
+    all_y_axis: list[str],
+    x_axis: X_AXIS_T = "z_abs",
     save_fig: bool = True,
+    clean_fig: bool = True,
+    add_objectives: bool = False,
+    fault_scenarios: Sequence[list[Fault]] | None = None,
     **kwargs,
 ) -> Figure:
-    """
-    Plot a preset.
+    """Plot a preset.
 
     Parameters
     ----------
@@ -169,36 +213,45 @@ def _plot_preset(
         Key of PLOT_PRESETS.
     *args : Accelerator
         Accelerators to plot. In typical usage, args = (Working, Fixed)
-        (previously: (Working, Broken, Fixed). Useful to reimplement?)
     x_axis : str, optional
         Name of the x axis. The default is 'z_abs'.
-    all_y_axis : list[str] | None, optional
-        Name of all the y axis. The default is None.
+    all_y_axis : list[str]
+        Name of all the y axis.
     save_fig : bool, optional
         To save Figures or not. The default is True.
+    add_objectives : bool, optional
+        To add the position of objectives to the plots; if True, the
+        ``fault_scenarios`` must be provided.
+    fault_scenarios : Sequence[FaultScenario] | None, optional
+        To plot the objectives, if ``add_objectives == True``.
     **kwargs :
         Holds all complementary data on the plots.
 
     """
-    fig, axx = create_fig_if_not_exists(len(all_y_axis), **kwargs)
+    fig, axx = create_fig_if_not_exists(
+        len(all_y_axis), clean_fig=clean_fig, **kwargs
+    )
 
     colors = None
-    for i, (axe, y_axis) in enumerate(zip(axx, all_y_axis)):
-        _make_a_subplot(axe, x_axis, y_axis, colors, *args, **kwargs)
+    for i, (ax, y_axis) in enumerate(zip(axx, all_y_axis)):
+        _make_a_subplot(ax, x_axis, y_axis, colors, *args, **kwargs)
         if i == 0:
-            colors = _keep_colors(axe)
+            colors = _keep_colors(ax)
+
+        if add_objectives:
+            mark_objectives_position(ax, fault_scenarios, y_axis, x_axis)
+
     axx[0].legend()
     axx[-1].set_xlabel(dic.markdown[x_axis])
 
     if save_fig:
-        file = Path(args[-1].get("accelerator_path"), f"{str_preset}.png")
-        _savefig(fig, file)
+        file = Path(args[-1].get("accelerator_path"), f"{preset}.png")
+        savefig(fig, file)
 
     return fig
 
 
-# Plot style
-def _proper_kwargs(preset: str, kwargs: dict[str, bool]) -> dict:
+def _proper_kwargs(preset: str, kwargs: dict[str, Any]) -> dict[str, Any]:
     """Merge dicts, priority kwargs > PLOT_PRESETS > FALLBACK_PRESETS."""
     return FALLBACK_PRESETS | PLOT_PRESETS[preset] | kwargs
 
@@ -236,7 +289,7 @@ def _single_simulation_data(
 
 
 def _single_simulation_all_data(
-    x_axis: str, y_axis: str, simulation_output: SimulationOutput
+    x_axis: X_AXIS_T, y_axis: str, simulation_output: SimulationOutput
 ) -> tuple[np.ndarray, np.ndarray, dict[str, Any]]:
     """Get x data, y data, kwargs from a SimulationOutput."""
     x_data = _single_simulation_data(x_axis, simulation_output)
@@ -257,7 +310,7 @@ def _single_simulation_all_data(
 
 
 def _single_accelerator_all_simulations_data(
-    x_axis: str, y_axis: str, accelerator: Accelerator
+    x_axis: X_AXIS_T, y_axis: str, accelerator: Accelerator
 ) -> tuple[list[np.ndarray], list[np.ndarray], list[dict[str, Any]]]:
     """Get x_data, y_data, kwargs from all SimulationOutputs of Accelerator."""
     x_data, y_data, plt_kwargs = [], [], []
@@ -282,7 +335,7 @@ def _single_accelerator_all_simulations_data(
 
 
 def _all_accelerators_data(
-    x_axis: str, y_axis: str, *accelerators: Accelerator
+    x_axis: X_AXIS_T, y_axis: str, *accelerators: Accelerator
 ) -> tuple[list[np.ndarray], list[np.ndarray], list[dict[str, Any]]]:
     """Get x_data, y_data, kwargs from all Accelerators (<=> for 1 subplot)."""
     x_data, y_data, plt_kwargs = [], [], []
@@ -398,21 +451,22 @@ def _compute_error(
 # Actual interface with matplotlib
 def _make_a_subplot(
     axe: Axes,
-    x_axis: str,
+    x_axis: X_AXIS_T,
     y_axis: str,
     colors: dict[str, str] | None,
     *accelerators: Accelerator,
     plot_section: bool = True,
     symetric_plot: bool = False,
-    **kwargs: bool | int | str,
+    **kwargs,
 ) -> None:
     """Get proper data and plot it on an Axe."""
     if plot_section:
-        _plot_section(accelerators[0], axe, x_axis=x_axis)
+        structure.outline_sections(accelerators[0].elts, axe, x_axis=x_axis)
 
     if y_axis == "struct":
-        _plot_structure(accelerators[-1].elts, axe, x_axis=x_axis)
-        return
+        return structure.plot_structure(
+            accelerators[-1].elts, axe, x_axis=x_axis
+        )
 
     all_my_data = _all_accelerators_data(x_axis, y_axis, *accelerators)
 
@@ -444,100 +498,11 @@ def _make_a_subplot(
     axe.set_ylabel(_y_label(y_axis))
 
 
-# =============================================================================
-# Basic helpers
-# =============================================================================
-def create_fig_if_not_exists(
-    axnum: int | list[int],
-    sharex: bool = False,
-    num: int = 1,
-    clean_fig: bool = False,
-    **kwargs: bool | str | int,
-) -> tuple[Figure, list[Axes]]:
-    """
-    Check if figures were already created, create it if not.
-
-    Parameters
-    ----------
-    axnum : int | list[int]
-        Axes indexes as understood by fig.add_subplot or number of desired
-        axes.
-    sharex : bool, optional
-        If x axis should be shared. The default is False.
-    num : int, optional
-        Fig number. The default is 1.
-    clean_fig: bool, optional
-        If the previous plot should be erased from Figure. The default is
-        False.
-
-    """
-    if isinstance(axnum, int):
-        # We make a one-column, `axnum` rows figure
-        axnum = range(100 * axnum + 11, 101 * axnum + 11)
-
-    if plt.fignum_exists(num):
-        fig = plt.figure(num)
-        axlist = fig.get_axes()
-        if clean_fig:
-            clean_figure([num])
-        return fig, axlist
-    fig = plt.figure(num)
-    axlist = [fig.add_subplot(axnum[0])]
-    shared_ax = None
-    if sharex:
-        shared_ax = axlist[0]
-    axlist += [fig.add_subplot(num, sharex=shared_ax) for num in axnum[1:]]
-    return fig, axlist
-
-
-def clean_figure(fignumlist: Sequence[Figure]) -> None:
-    """Clean axis of Figs in fignumlist."""
-    for fignum in fignumlist:
-        fig = plt.figure(fignum)
-        clean_axes(fig.get_axes())
-
-
-def clean_axes(axlist: Sequence[Axes]) -> None:
-    """Clean given axis."""
-    for axx in axlist:
-        axx.cla()
-
-
-def remove_artists(axe: Axes) -> None:
-    """Remove lines and plots, but keep labels and grids."""
-    for artist in axe.lines:
-        artist.remove()
-    axe.set_prop_cycle(None)
-
-
-def _autoscale_based_on(axx: Axes, to_ignore: str) -> None:
-    """Rescale axis, ignoring Lines with to_ignore in their label."""
-    lines = [
-        line for line in axx.get_lines() if to_ignore not in line.get_label()
-    ]
-    axx.dataLim = mtransforms.Bbox.unit()
-    for line in lines:
-        datxy = np.vstack(line.get_data()).T
-        axx.dataLim.update_from_data_xy(datxy, ignore=False)
-    axx.autoscale_view()
-
-
-def _savefig(fig: Figure, filepath: Path) -> None:
-    """Save the figure."""
-    fig.set_size_inches(25.6, 13.64)
-    fig.tight_layout()
-    fig.savefig(filepath)
-    logging.debug(f"Fig. saved in {filepath}")
-
-
-# =============================================================================
-# General plots
-# =============================================================================
 def plot_pty_with_data_tags(ax, x, y, idx_list, tags=True):
-    """
-    Plot y vs x.
+    """Plot y vs x.
 
     Data at idx_list are magnified with bigger points and data tags.
+
     """
     (line,) = ax.plot(x, y)
     ax.scatter(x[idx_list], y[idx_list], color=line.get_color())
@@ -551,331 +516,3 @@ def plot_pty_with_data_tags(ax, x, y, idx_list, tags=True):
                 + str(np.round(y[idx_list][i], 4))
             )
             ax.annotate(txt, (x[idx_list][i], y[idx_list[i]]), size=8)
-
-
-# =============================================================================
-# Specific plots: structure
-# =============================================================================
-def _plot_structure(
-    elts: ListOfElements, ax: Axes, x_axis: str = "z_abs"
-) -> None:
-    """Plot structure of the linac under study."""
-    type_to_plot_func = {
-        Aperture: _plot_aperture,
-        Bend: _plot_bend,
-        Drift: _plot_drift,
-        Edge: _plot_edge,
-        FieldMap: _plot_field_map,
-        FieldMap100: _plot_field_map,
-        FieldMap1100: _plot_field_map,
-        FieldMap7700: _plot_field_map,
-        Quad: _plot_quad,
-    }
-
-    patch_kw = {
-        "z_abs": lambda elt, _: {
-            "x_0": elt.get("abs_mesh")[0],
-            "width": elt.length_m,
-        },
-        "elt_idx": lambda _, idx: {"x_0": idx, "width": 1},
-    }
-    x_limits = {
-        "z_abs": [elts[0].get("abs_mesh")[0], elts[-1].get("abs_mesh")[-1]],
-        "elt_idx": [0, len(elts)],
-    }
-
-    for i, elt in enumerate(elts):
-        kwargs = patch_kw[x_axis](elt, i)
-        plot_func = type_to_plot_func.get(type(elt), _plot_drift)
-        ax.add_patch(plot_func(elt, **kwargs))
-
-    ax.set_xlim(x_limits[x_axis])
-    ax.set_yticklabels([])
-    ax.set_yticks([])
-    ax.set_ylim([-0.55, 0.55])
-
-
-def _plot_aperture(
-    aperture: Aperture, x_0: float, width: float
-) -> pat.Rectangle:
-    """Add a thin line to show an aperture."""
-    height = 1.0
-    y_0 = -height * 0.5
-    patch = pat.Rectangle((x_0, y_0), width, height, fill=False, lw=0.5)
-    return patch
-
-
-def _plot_bend(bend: Bend, x_0: float, width: float) -> pat.Rectangle:
-    """Add a greyed rectangle to show a bend."""
-    height = 0.7
-    y_0 = -height * 0.5
-    patch = pat.Rectangle(
-        (x_0, y_0), width, height, fill=True, fc="gray", lw=0.5
-    )
-    return patch
-
-
-def _plot_drift(drift: Drift, x_0: float, width: float) -> pat.Rectangle:
-    """Add a little rectangle to show a drift."""
-    height = 0.4
-    y_0 = -height * 0.5
-    patch = pat.Rectangle((x_0, y_0), width, height, fill=False, lw=0.5)
-    return patch
-
-
-def _plot_field_map(
-    field_map: FieldMap, x_0: float, width: float
-) -> pat.Ellipse:
-    """Add an ellipse to show a field_map."""
-    height = 1.0
-    y_0 = 0.0
-    colors = {
-        "nominal": "green",
-        "rephased (in progress)": "olive",
-        "rephased (ok)": "olive",
-        "failed": "red",
-        "compensate (in progress)": "green",
-        "compensate (ok)": "orange",
-        "compensate (not ok)": "orange",
-    }
-    color = colors[field_map.get("status", to_numpy=False)]
-    patch = pat.Ellipse(
-        (x_0 + 0.5 * width, y_0),
-        width,
-        height,
-        fill=True,
-        lw=0.5,
-        fc=color,
-        ec="k",
-    )
-    return patch
-
-
-def _plot_edge(edge: Edge, x_0: float, width: float) -> pat.Rectangle:
-    """Add a thin line to show an edge."""
-    height = 1.0
-    y_0 = -height * 0.5
-    patch = pat.Rectangle((x_0, y_0), width, height, fill=False, lw=0.5)
-    return patch
-
-
-def _plot_quad(quad: Quad, x_0: float, width: float) -> pat.Polygon:
-    """Add a crossed large rectangle to show a quad."""
-    height = 1.0
-    y_0 = -height * 0.5
-    path = np.array(
-        (
-            [x_0, y_0],
-            [x_0 + width, y_0],
-            [x_0 + width, y_0 + height],
-            [x_0, y_0 + height],
-            [x_0, y_0],
-            [x_0 + width, y_0 + height],
-            [np.nan, np.nan],
-            [x_0, y_0 + height],
-            [x_0 + width, y_0],
-        )
-    )
-    patch = pat.Polygon(path, closed=False, fill=False, lw=0.5)
-    return patch
-
-
-def _plot_section(linac, ax, x_axis="z_abs"):
-    """Add light grey rectangles behind the plot to show the sections."""
-    dict_x_axis = {
-        "last_elt_of_sec": lambda sec: sec[-1][-1],
-        "z_abs": lambda elt: linac.get("z_abs", elt=elt, pos="out"),
-        "elt_idx": lambda elt: elt.get("elt_idx") + 1,
-    }
-    x_ax = [0]
-    for i, section in enumerate(linac.elts.by_section_and_lattice):
-        elt = dict_x_axis["last_elt_of_sec"](section)
-        x_ax.append(dict_x_axis[x_axis](elt))
-
-    for i in range(len(x_ax) - 1):
-        if i % 2 == 1:
-            ax.axvspan(
-                x_ax[i],
-                x_ax[i + 1],
-                ymin=-1e8,
-                ymax=1e8,
-                fill=True,
-                alpha=0.1,
-                fc="k",
-            )
-
-
-# =============================================================================
-# Specific plots: emittance ellipse
-# =============================================================================
-def _compute_ellipse_parameters(d_eq):
-    """
-    Compute the ellipse parameters so as to plot the ellipse.
-
-    Parameters
-    ----------
-    d_eq : dict
-        Holds ellipe equations parameters, defined as:
-            Ax**2 + Bxy + Cy**2 + Dx + Ey + F = 0
-
-    Return
-    ------
-    d_plot : dict
-        Holds semi axis, center of ellipse, angle.
-    """
-    delta = d_eq["B"] ** 2 - 4.0 * d_eq["A"] * d_eq["C"]
-    tmp1 = (
-        d_eq["A"] * d_eq["E"] ** 2
-        - d_eq["C"] * d_eq["D"] ** 2
-        - d_eq["B"] * d_eq["D"] * d_eq["E"]
-        + delta * d_eq["F"]
-    )
-    tmp2 = np.sqrt((d_eq["A"] - d_eq["C"]) ** 2 + d_eq["B"] ** 2)
-
-    if np.abs(d_eq["B"]) < 1e-8:
-        if d_eq["A"] < d_eq["C"]:
-            theta = 0.0
-        else:
-            theta = np.pi / 2.0
-    else:
-        theta = np.arctan((d_eq["C"] - d_eq["A"] - tmp2) / d_eq["B"])
-
-    d_plot = {
-        "a": -np.sqrt(2.0 * tmp1 * (d_eq["A"] + d_eq["C"] + tmp2)) / delta,
-        "b": -np.sqrt(2.0 * tmp1 * (d_eq["A"] + d_eq["C"] - tmp2)) / delta,
-        "x0": (2.0 * d_eq["C"] * d_eq["D"] - d_eq["B"] * d_eq["E"]) / delta,
-        "y0": (2.0 * d_eq["A"] * d_eq["E"] - d_eq["B"] * d_eq["D"]) / delta,
-        "theta": theta,
-    }
-    return d_plot
-
-
-def plot_ellipse(axx, d_eq, **plot_kwargs):
-    """Perform the proper ellipse plotting."""
-    d_plot = _compute_ellipse_parameters(d_eq)
-    n_points = 10001
-    var = np.linspace(0.0, 2.0 * np.pi, n_points)
-    ellipse = np.array([d_plot["a"] * np.cos(var), d_plot["b"] * np.sin(var)])
-    rotation = np.array(
-        [
-            [np.cos(d_plot["theta"]), -np.sin(d_plot["theta"])],
-            [np.sin(d_plot["theta"]), np.cos(d_plot["theta"])],
-        ]
-    )
-    ellipse_rot = np.empty((2, n_points))
-
-    for i in range(n_points):
-        ellipse_rot[:, i] = np.dot(rotation, ellipse[:, i])
-
-    axx.plot(
-        d_plot["x0"] + ellipse_rot[0, :],
-        d_plot["y0"] + ellipse_rot[1, :],
-        lw=0.0,
-        marker="o",
-        ms=0.5,
-        **plot_kwargs,
-    )
-
-
-# TODO: move dicts into the function dedicated to dicts creation
-def plot_ellipse_emittance(axx, accelerator, idx, phase_space="w"):
-    """Plot the emittance ellipse and highlight interesting data."""
-    # Extract Twiss and emittance at the index idx
-    twi = accelerator.get("twiss_" + phase_space)[idx]
-    eps = accelerator.get("eps_ " + phase_space)[idx]
-
-    # Compute ellipse dimensions; ellipse equation:
-    # Ax**2 + Bxy + Cy**2 + Dx + Ey + F = 0
-    d_eq = {
-        "A": twi[2],
-        "B": 2.0 * twi[0],
-        "C": twi[1],
-        "D": 0.0,
-        "E": 0.0,
-        "F": -eps,
-    }
-
-    # Plot ellipse
-    colors = {"Working": "k", "Broken": "r", "Fixed": "g"}
-    color = colors[accelerator.name.split(" ")[0]]
-    plot_kwargs = {"c": color}
-    plot_ellipse(axx, d_eq, **plot_kwargs)
-
-    # Set proper labels
-    d_xlabel = {
-        "z": r"Position $z$ [mm]",
-        "zdelta": r"Position $z$ [mm]",
-        "w": r"Phase $\phi$ [deg]",
-    }
-    axx.set_xlabel(d_xlabel[phase_space])
-
-    d_ylabel = {
-        "z": r"Speed $z'$ [%]",
-        "zdelta": r"Speed $\delta p/p$ [mrad]",
-        "w": r"Energy $W$ [MeV]",
-    }
-    axx.set_ylabel(d_ylabel[phase_space])
-
-    form = "{:.3g}"
-    # Max phase
-    maxi_phi = np.sqrt(eps * twi[1])
-    line = axx.axvline(maxi_phi, c="b")
-    axx.axhline(-twi[0] * np.sqrt(eps / twi[1]), c=line.get_color())
-    axx.get_xticklabels().append(
-        plt.text(
-            1.005 * maxi_phi,
-            0.05,
-            form.format(maxi_phi),
-            va="bottom",
-            rotation=90.0,
-            transform=axx.get_xaxis_transform(),
-            c=line.get_color(),
-        )
-    )
-
-    # Max energy
-    maxi_w = np.sqrt(eps * twi[2])
-    line = axx.axhline(maxi_w)
-    axx.axvline(-twi[0] * np.sqrt(eps / twi[2]), c=line.get_color())
-    axx.get_yticklabels().append(
-        plt.text(
-            0.005,
-            0.95 * maxi_w,
-            form.format(maxi_w),
-            va="top",
-            rotation=0.0,
-            transform=axx.get_yaxis_transform(),
-            c=line.get_color(),
-        )
-    )
-
-    axx.grid(True)
-
-
-def plot_fit_progress(hist_f, l_label, nature="Relative"):
-    """Plot the evolution of the objective functions w/ each iteration."""
-    _, axx = create_fig_if_not_exists(1, num=32)
-    axx = axx[0]
-
-    scales = {
-        "Relative": lambda x: x / x[0],
-        "Absolute": lambda x: x,
-    }
-
-    # Number of objectives, number of evaluations
-    n_f = len(l_label)
-    n_iter = len(hist_f)
-    iteration = np.linspace(0, n_iter - 1, n_iter)
-
-    __f = np.empty([n_f, n_iter])
-    for i in range(n_iter):
-        __f[:, i] = scales[nature](hist_f)[i]
-
-    for j, label in enumerate(l_label):
-        axx.plot(iteration, __f[j], label=label)
-
-    axx.grid(True)
-    axx.legend()
-    axx.set_xlabel("Iteration #")
-    axx.set_ylabel(f"{nature} variation of error")
-    axx.set_yscale("log")

@@ -123,13 +123,15 @@ min_absolute_sync_phase_in_deg = -90.0
 
 
 [plots_minimal]
-cav = false
+add_objectives = true
+cav = true
 emittance = false
-energy = false
+energy = true
 envelopes = false
-phase = false
+phase = true
 transfer_matrices = false
-twiss = false
+twiss = true
+
 [evaluators]
 simulation_output = [
    # { name = "LongitudinalEmittance", max_percentage_rel_increase = 0.005 },

@@ -1,4 +1,5 @@
 Entry,Type,Description,Allowed values,Mandatory?
+add_objectives,``bool``,Add objectives position to plots?,,❌
 energy,``bool``,Plot evolution of kinetic energy?,,❌
 phase,``bool``,Plot evolution of absolute phase?,,❌
 cav,``bool``,Plot cavity parameters?,,❌

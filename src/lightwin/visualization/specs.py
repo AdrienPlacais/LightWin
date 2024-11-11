@@ -4,6 +4,13 @@ from lightwin.config.key_val_conf_spec import KeyValConfSpec
 
 PLOTS_CONFIG = (
     KeyValConfSpec(
+        key="add_objectives",
+        types=(bool,),
+        description="Add objectives position to plots?",
+        default_value=False,
+        is_mandatory=False,
+    ),
+    KeyValConfSpec(
         key="energy",
         types=(bool,),
         description="Plot evolution of kinetic energy?",
