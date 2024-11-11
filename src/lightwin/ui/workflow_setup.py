@@ -31,7 +31,7 @@ def set_up_solvers(
 
     Returns
     -------
-    beam_calculators : tuple[BeamCalculator, ..]
+    beam_calculators : tuple[BeamCalculator, ...]
         The objects that will compute the beam propagation.
 
     """
@@ -50,7 +50,7 @@ def set_up_accelerators(
     ----------
     config : dict[str, dict[str, Any]]
         The full TOML configuration dictionary.
-    beam_calculators : tuple[BeamCalculator, ..]
+    beam_calculators : tuple[BeamCalculator, ...]
         The objects that will compute the beam propagation.
 
     Returns

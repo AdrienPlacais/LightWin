@@ -51,7 +51,7 @@ class ObjectiveFactory(ABC):
 
     Parameters
     ----------
-    objective_position_preset : list[POSITION_TO_INDEX_T]
+    objective_position_preset : list[str]
         List of keys to dynamically select where the objectives should be
         matched.
     compensation_zone_override_settings : dict[str, bool]

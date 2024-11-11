@@ -136,7 +136,7 @@ def factory(
     clean_fig : bool
         If Figures should be cleaned between two calls of this function; the
         default is True.
-    fault_scenarios : Sequence[FaultScenario] | None = None
+    fault_scenarios : Sequence[FaultScenario] | None, optional
         If provided, the position of the :class:`.Objective` will also appear
         on plots.
     kwargs :
@@ -144,7 +144,7 @@ def factory(
 
     Returns
     -------
-    list[Figure]
+    list[matplotlib.figure.Figure]
         The created figures.
 
     """
@@ -222,7 +222,7 @@ def _plot_preset(
     add_objectives : bool, optional
         To add the position of objectives to the plots; if True, the
         ``fault_scenarios`` must be provided.
-    fault_scenarios : Sequence[FaultScenario] | None = None
+    fault_scenarios : Sequence[FaultScenario] | None, optional
         To plot the objectives, if ``add_objectives == True``.
     **kwargs :
         Holds all complementary data on the plots.
