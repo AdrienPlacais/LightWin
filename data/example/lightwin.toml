@@ -109,13 +109,13 @@ min_absolute_sync_phase_in_deg = -90.0
 
 [plots_minimal]
 add_objectives = true
-cav = false
+cav = true
 emittance = false
 energy = true
 envelopes = false
-phase = false
+phase = true
 transfer_matrices = false
-twiss = false
+twiss = true
 
 [evaluators]
 simulation_output = [

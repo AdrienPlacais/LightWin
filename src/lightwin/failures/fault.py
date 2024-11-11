@@ -26,6 +26,7 @@ from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
 from lightwin.optimisation.design_space.factory import DesignSpaceFactory
 from lightwin.optimisation.objective.factory import (
+    ObjectiveFactory,
     get_objectives_and_residuals_function,
 )
 from lightwin.util.pickling import MyPickler
@@ -71,6 +72,7 @@ class Fault:
         failed_elements: list[Element],
         compensating_elements: list[Element],
         list_of_elements_factory: ListOfElementsFactory,
+        objective_factory_class: type[ObjectiveFactory] | None = None,
     ) -> None:
         """Create the Fault object.
 
@@ -97,6 +99,10 @@ class Fault:
             again in the optimisation process. It is as short as possible, but
             must contain all altered elements as well as the elements where
             objectives will be evaluated.
+        objective_factory_class : type[ObjectiveFactory] | None, optional
+            If provided, will override the ``objective_preset``. Used to let
+            user define it's own :class:`.ObjectiveFactory` without altering
+            the source code.
 
         """
         assert all([element.can_be_retuned for element in failed_elements])
@@ -129,6 +135,7 @@ class Fault:
                 failed_elements=failed_elements,
                 compensating_elements=compensating_elements,
                 design_space_kw=design_space_factory.design_space_kw,
+                objective_factory_class=objective_factory_class,
             )
         )
 

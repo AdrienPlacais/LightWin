@@ -15,6 +15,7 @@ from lightwin.failures.fault_scenario import (
     FaultScenario,
     fault_scenario_factory,
 )
+from lightwin.optimisation.objective.factory import ObjectiveFactory
 from lightwin.visualization import plot
 
 
@@ -74,6 +75,8 @@ def set_up_faults(
     config: dict[str, dict[str, Any]],
     beam_calculator: BeamCalculator,
     accelerators: list[Accelerator],
+    objective_factory_class: type[ObjectiveFactory] | None = None,
+    **kwargs,
 ) -> list[FaultScenario]:
     """Create all the :class:`.Fault`, gather them in :class:`.FaultScenario`.
 
@@ -87,6 +90,10 @@ def set_up_faults(
     accelerators : list[Accelerator]
         First object is the reference linac; second object is the one we will
         break and fix.
+    objective_factory_class : type[ObjectiveFactory] | None, optional
+        If provided, will override the ``objective_preset``. Used to let user
+        define it's own :class:`.ObjectiveFactory` without altering the source
+        code.
 
     Returns
     -------
@@ -94,15 +101,21 @@ def set_up_faults(
         The instantiated fault scenarios.
 
     """
+    if objective_factory_class is None:
+        logging.critical("aca")
     beam_calculator.compute(accelerators[0])
     fault_scenarios = fault_scenario_factory(
-        accelerators, beam_calculator, **config
+        accelerators,
+        beam_calculator,
+        objective_factory_class=objective_factory_class,
+        **config,
     )
     return fault_scenarios
 
 
 def set_up(
     config: dict[str, dict[str, Any]],
+    **kwargs,
 ) -> tuple[
     tuple[BeamCalculator, ...],
     list[Accelerator],
@@ -138,7 +151,7 @@ def set_up(
     fault_scenarios = None
     if "wtf" in config:
         fault_scenarios = set_up_faults(
-            config, beam_calculators[0], accelerators
+            config, beam_calculators[0], accelerators, **kwargs
         )
 
     ref_simulations_outputs = [
@@ -208,6 +221,7 @@ def recompute(
 
 def run_simulation(
     config: dict[str, Any],
+    **kwargs,
 ) -> list[FaultScenario] | list[Accelerator]:
     """Compute propagation of beam; if failures are defined, fix them.
 
@@ -226,7 +240,7 @@ def run_simulation(
 
     """
     beam_calculators, accelerators, fault_scenarios, ref_simulation_output = (
-        set_up(config)
+        set_up(config, **kwargs)
     )
     if fault_scenarios is None:
         plot.factory(accelerators, **config)

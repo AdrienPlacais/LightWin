@@ -35,6 +35,7 @@ from lightwin.optimisation.design_space.factory import (
     DesignSpaceFactory,
     get_design_space_factory,
 )
+from lightwin.optimisation.objective.factory import ObjectiveFactory
 from lightwin.util import debug
 from lightwin.util.pickling import MyPickler
 
@@ -54,6 +55,8 @@ class FaultScenario(list):
         fault_idx: list[int] | list[list[int]],
         comp_idx: list[list[int]] | None = None,
         info_other_sol: list[dict] | None = None,
+        objective_factory_class: type[ObjectiveFactory] | None = None,
+        **kwargs,
     ) -> None:
         """Create the :class:`FaultScenario` and the :class:`.Fault` objects.
 
@@ -84,6 +87,10 @@ class FaultScenario(list):
         info_other_sol : list[dict], optional
             Contains information on another fit, for comparison purposes. The
             default is None.
+        objective_factory_class : type[ObjectiveFactory] | None, optional
+            If provided, will override the ``objective_preset``. Used to let
+            user define it's own :class:`.ObjectiveFactory` without altering
+            the source code.
 
         """
         self.ref_acc = ref_acc
@@ -104,6 +111,7 @@ class FaultScenario(list):
             beam_calculator.list_of_elements_factory,
             design_space_factory,
             *cavities,
+            objective_factory_class=objective_factory_class,
         )
         super().__init__(faults)
         self._set_optimisation_algorithms()
@@ -122,6 +130,7 @@ class FaultScenario(list):
         list_of_elements_factory: ListOfElementsFactory,
         design_space_factory: DesignSpaceFactory,
         *cavities: Sequence[Sequence[FieldMap]],
+        objective_factory_class: type[ObjectiveFactory] | None = None,
     ) -> list[Fault]:
         """Create the :class:`.Fault` objects.
 
@@ -136,6 +145,10 @@ class FaultScenario(list):
         *cavities : Sequence[Sequence[FieldMap]]
             First if the list of gathered failed cavities. Second is the list
             of corresponding compensating cavities.
+        objective_factory_class : type[ObjectiveFactory] | None, optional
+            If provided, will override the ``objective_preset``. Used to let
+            user define it's own :class:`.ObjectiveFactory` without altering
+            the source code.
 
         Returns
         -------
@@ -158,6 +171,7 @@ class FaultScenario(list):
                 failed_elements=faulty_cavities,
                 compensating_elements=compensating_cavities,
                 list_of_elements_factory=list_of_elements_factory,
+                objective_factory_class=objective_factory_class,
             )
             faults.append(fault)
         return faults
@@ -461,6 +475,7 @@ def fault_scenario_factory(
     beam_calc: BeamCalculator,
     wtf: dict[str, Any],
     design_space: dict[str, Any],
+    objective_factory_class: type[ObjectiveFactory] | None = None,
     **kwargs,
 ) -> list[FaultScenario]:
     """Create the :class:`FaultScenario` objects (factory template).
@@ -476,6 +491,10 @@ def fault_scenario_factory(
         The WhatToFit table of the TOML configuration file.
     design_space_kw : dict[str, Any]
         The design space table from the TOML configuration file.
+    objective_factory_class : type[ObjectiveFactory] | None, optional
+        If provided, will override the ``objective_preset``. Used to let user
+        define it's own :class:`.ObjectiveFactory` without altering the source
+        code.
 
     Returns
     -------
@@ -511,6 +530,7 @@ def fault_scenario_factory(
             design_space_factory=design_space_factory,
             fault_idx=fault_idx,
             comp_idx=comp_idx,
+            objective_factory_class=objective_factory_class,
         )
         for accelerator, fault_idx, comp_idx in zip(
             accelerators[1:], scenarios_fault_idx, scenarios_comp_idx

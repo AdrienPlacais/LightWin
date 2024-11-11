@@ -49,17 +49,24 @@ class ObjectiveFactory(ABC):
     :class:`EnergyPhaseMismatch` or :class:`EnergySyncPhaseMismatch` for
     examples.
 
+    Parameters
+    ----------
+    objective_position_preset : list[POSITION_TO_INDEX_T]
+        List of keys to dynamically select where the objectives should be
+        matched.
+    compensation_zone_override_settings : dict[str, bool]
+        Keyword arguments that are passed to :func:`.zone_to_recompute`. By
+        default, the list of elements in which we propagate the beam is as
+        small as possible, but you may want to override this behavior.
 
     """
 
-    objective_position_preset: list[POSITION_TO_INDEX_T]
-    compensation_zone_override_settings = (
-        {  # Give flags for :func:`.zone_to_recompute`.
-            "full_lattices": False,
-            "full_linac": False,
-            "start_at_beginning_of_linac": False,
-        }
-    )
+    objective_position_preset: list[POSITION_TO_INDEX_T]  #:
+    compensation_zone_override_settings = {
+        "full_lattices": False,
+        "full_linac": False,
+        "start_at_beginning_of_linac": False,
+    }  #:
 
     def __init__(
         self,
@@ -113,9 +120,8 @@ class ObjectiveFactory(ABC):
     ) -> tuple[list[Element], list[Element]]:
         """Determine which (sub)list of elements should be recomputed.
 
-        Also gives the elements where objectives are evaluated.
-
-        You can override this method for your specific preset.
+        Also gives the elements where objectives are evaluated. You can
+        override this method for your specific preset.
 
         """
         fault_idx = [
@@ -124,12 +130,6 @@ class ObjectiveFactory(ABC):
         comp_idx = [
             element.idx["elt_idx"] for element in self.compensating_elements
         ]
-
-        if "position" in wtf:
-            logging.warning(
-                "position key should not be present in the .toml config file "
-                "anymore. Its role is now fulfilled by the objective preset."
-            )
 
         elts_of_compensation_zone, objective_elements = zone_to_recompute(
             self.broken_elts,
@@ -548,6 +548,7 @@ def get_objectives_and_residuals_function(
     failed_elements: list[Element],
     compensating_elements: list[Element],
     design_space_kw: dict[str, float | bool | str | Path],
+    objective_factory_class: type[ObjectiveFactory] | None = None,
 ) -> tuple[
     list[Element], list[Objective], Callable[[SimulationOutput], np.ndarray]
 ]:
@@ -568,6 +569,10 @@ def get_objectives_and_residuals_function(
     design_space_kw : dict | None, optional
         Used when we need to determine the limits for ``phi_s``. Those limits
         are defined in the ``.ini`` configuration file.
+    objective_factory_class : type[ObjectiveFactory] | None, optional
+        If provided, will override the ``objective_preset``. Used to let user
+        define it's own :class:`.ObjectiveFactory` without altering the source
+        code.
 
     Returns
     -------
@@ -582,7 +587,16 @@ def get_objectives_and_residuals_function(
 
     """
     assert isinstance(objective_preset, str)
-    objective_factory_class = OBJECTIVE_PRESETS[objective_preset]
+
+    if objective_factory_class is None:
+        objective_factory_class = OBJECTIVE_PRESETS[objective_preset]
+    else:
+        logging.info(
+            "A user-defined ObjectiveFactory was provided, so the key "
+            f"{objective_preset = } will be disregarded.\n"
+            f"{objective_factory_class = }"
+        )
+    assert objective_factory_class is not None
 
     objective_factory = objective_factory_class(
         reference_elts=reference_elts,
