@@ -101,8 +101,6 @@ def set_up_faults(
         The instantiated fault scenarios.
 
     """
-    if objective_factory_class is None:
-        logging.critical("aca")
     beam_calculator.compute(accelerators[0])
     fault_scenarios = fault_scenario_factory(
         accelerators,
