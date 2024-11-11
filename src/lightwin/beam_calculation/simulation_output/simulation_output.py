@@ -17,6 +17,7 @@
 
 import logging
 import math
+from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Literal, Self
@@ -32,7 +33,12 @@ from lightwin.core.particle import ParticleFullTrajectory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.util.dicts_output import markdown
-from lightwin.util.helper import range_vals, recursive_getter, recursive_items
+from lightwin.util.helper import (
+    flatten,
+    range_vals,
+    recursive_getter,
+    recursive_items,
+)
 from lightwin.util.pickling import MyPickler
 
 
@@ -149,7 +155,9 @@ class SimulationOutput:
         *keys: str,
         to_numpy: bool = True,
         to_deg: bool = False,
-        elt: Element | str | None = None,
+        elt: (
+            Element | str | Collection[Element] | Collection[str] | None
+        ) = None,
         pos: Literal["in", "out"] | None = None,
         none_to_nan: bool = False,
         **kwargs: str | bool | None,
@@ -167,8 +175,9 @@ class SimulationOutput:
         to_deg : bool, optional
             To apply np.rad2deg function over every ``key`` containing the
             string.
-        elt : Element | str | None, optional
-            If provided, return the attributes only at the considered element.
+        elt : Element | str | Collection[Element] | Collection[str] | None, optional
+            If provided, return the attributes only at the considered
+            element(s).
         pos : Literal["in", "out"] | None, optional
             If you want the attribute at the entry, exit, or in the whole
             element.
@@ -183,6 +192,20 @@ class SimulationOutput:
             Attribute(s) value(s).
 
         """
+        if not isinstance(elt, str) and isinstance(elt, Collection):
+            out = [
+                self.get(
+                    *keys,
+                    to_numpy=to_numpy,
+                    to_deg=to_deg,
+                    elt=x,
+                    pos=pos,
+                    none_to_nan=none_to_nan,
+                    **kwargs,
+                )
+                for x in elt
+            ]
+            return list(flatten(out))
         val = {key: [] for key in keys}
 
         for key in keys:
