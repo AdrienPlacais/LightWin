@@ -1,4 +1,9 @@
-"""Define helper functions to visualize elements."""
+"""Define helper functions to visualize elements.
+
+.. todo::
+    Information on the objective under the cursor (hover).
+
+"""
 
 from typing import Literal
 

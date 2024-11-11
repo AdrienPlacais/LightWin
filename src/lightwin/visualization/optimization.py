@@ -1,4 +1,9 @@
-"""Define functions related to optimization and failures plotting."""
+"""Define functions related to optimization and failures plotting.
+
+.. todo::
+    Information on the element under the cursor (hover).
+
+"""
 
 import logging
 from collections.abc import Sequence
