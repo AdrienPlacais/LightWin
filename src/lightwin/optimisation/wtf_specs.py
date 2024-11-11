@@ -24,6 +24,13 @@ _WTF_BASE = (
         default_value=[[5]],
     ),
     KeyValConfSpec(
+        key="history_kwargs",
+        types=(dict,),
+        description=("kwargs for the :class:`.OptimizationHistory`."),
+        default_value={"folder": None},
+        is_mandatory=False,
+    ),
+    KeyValConfSpec(
         key="id_nature",
         types=(str,),
         description=(
