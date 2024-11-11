@@ -20,6 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FIELD_MAP 70` does not raise error (warning issued with `Envelope3D`: no transverse tracking).
 - `SUPERPOSE_MAP` will be implemented for 1D maps (warning issued with `Envelope3D`: no transverse tracking).
 
+## [0.8.0] 2024-11-11
+
+### Added
+
+- Utility scripts in `ui/workflow_setup.py` defining generic LightWin workflows.
+- User can provide `fault_scenario_factory` with a `ObjectivesFactory` to define objectives without altering the source code.
+- The `add_objective` in the [plots] TOML table to show position of objective.
+
 
 ## [0.8.0b4] 2024-11-08
 
