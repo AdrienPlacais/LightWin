@@ -246,6 +246,9 @@ class SimulationOutput:
     ) -> None:
         """Compute some other indirect quantities.
 
+        .. todo::
+            Fix output_data_in_tw_fashion
+
         Parameters
         ----------
         elts : ListOfElements
@@ -261,8 +264,6 @@ class SimulationOutput:
         self.synch_trajectory.compute_complementary_data()
 
         # self.in_tw_fashion = tracewin.interface.output_data_in_tw_fashion()
-        # FIXME
-        logging.warning("data_in_tw_fashion is bugged")
         if ref_simulation_output is None:
             return
 

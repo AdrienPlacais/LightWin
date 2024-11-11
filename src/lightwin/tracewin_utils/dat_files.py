@@ -189,4 +189,4 @@ def export_dat_filecontent(
                 file.write(line.line + "\n")
                 continue
             file.write(" ".join(line) + "\n")
-    logging.info(f"New dat saved in {dat_path}.")
+    logging.debug(f"New dat saved in {dat_path}.")
