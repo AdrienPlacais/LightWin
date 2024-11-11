@@ -1,4 +1,11 @@
-"""Define specific functions to plot emittance ellipses."""
+"""Define specific functions to plot emittance ellipses.
+
+.. todo::
+    Isometric view of emittance along the linac.
+    Possibility to visualize a single particle trajectory along the emittance.
+    Visualization of the acceptance.
+
+"""
 
 from typing import TypedDict
 
