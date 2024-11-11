@@ -41,6 +41,10 @@ class Objective(ABC):
     def __str__(self) -> str:
         """Output info on what is this objective about."""
 
+    @abstractmethod
+    def base_str(self) -> str:
+        """Tell nature and position of objective."""
+
     @staticmethod
     def str_header() -> str:
         """Give a header to explain what :meth:`__str__` returns."""

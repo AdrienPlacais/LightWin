@@ -143,7 +143,7 @@ class OptimisationAlgorithm(ABC):
             history_kwargs = {}
         self.history = OptimizationHistory(
             reference_simulation_output,
-            [obj.name for obj in objectives],
+            [obj.base_str().strip() for obj in objectives],
             **history_kwargs,
         )
 

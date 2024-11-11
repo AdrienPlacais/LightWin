@@ -58,8 +58,8 @@ class MinimizeMismatch(Objective):
         super().__init__(name, weight, descriptor=descriptor, ideal_value=0.0)
         self._twiss_ref = self._twiss_getter(reference)
 
-    def _base_str(self) -> str:
-        """Return a base text for output."""
+    def base_str(self) -> str:
+        """Tell nature and position of objective."""
         message = f"{self.name:>23}"
 
         elt = str(self.get_kwargs.get("elt", "NA"))
@@ -71,7 +71,7 @@ class MinimizeMismatch(Objective):
 
     def __str__(self) -> str:
         """Give objective information value."""
-        return self._base_str() + f"{self.ideal_value:+.14e}"
+        return self.base_str() + f"{self.ideal_value:+.14e}"
 
     def _twiss_getter(self, simulation_output: SimulationOutput) -> np.ndarray:
         """Get desired value using :meth:`.SimulationOutput.get` method."""

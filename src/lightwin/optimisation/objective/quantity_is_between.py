@@ -56,8 +56,8 @@ class QuantityIsBetween(Objective):
         if loss_function is not None:
             logging.warning("Loss functions not implemented.")
 
-    def _base_str(self) -> str:
-        """Return a base text for output."""
+    def base_str(self) -> str:
+        """Tell nature and position of objective."""
         message = f"{self.get_key:>23}"
 
         elt = str(self.get_kwargs.get("elt", "NA"))
@@ -69,7 +69,7 @@ class QuantityIsBetween(Objective):
 
     def __str__(self) -> str:
         """Give objective information value."""
-        message = self._base_str()
+        message = self.base_str()
         message += f"{self.ideal_value[0]:+.2e} ~ {self.ideal_value[1]:+.2e}"  # type: ignore
         return message
 
