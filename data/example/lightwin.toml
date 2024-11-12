@@ -3,7 +3,7 @@ dat_file = "example.dat"
 project_folder = "results_tests/"
 
 [generic_envelope1d]
-export_phase = "phi_s"
+export_phase = "phi_0_abs"
 flag_cython = false
 flag_phi_abs = true
 method = "RK4"
@@ -57,9 +57,9 @@ optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
 
 [save_wtf.history_kwargs]
-folder = "/home/placais/Downloads/"
-get_args = ["w_kin", "phi_abs", "eps_zdelta", "non_norm_eps_zdelta", "phi_s", "v_cav_mv", "mismatch_factor_zdelta", "alpha_zdelta", "beta_zdelta", "gamma_zdelta"]
-get_kwargs = { elt = ["FM9", "FM10", "FM11", "FM12"], pos = "out", to_deg = true }
+folder = "optimization_history/"
+get_args = ["w_kin", "phi_abs", "eps_zdelta", "non_norm_eps_zdelta", "mismatch_factor_zdelta", "alpha_zdelta", "beta_zdelta", "gamma_zdelta"]
+get_kwargs = { elt = ["FM8", "FM10", "FM12", "FM14", "FM16", "FM18"], pos = "out", to_deg = true }
 save_interval = 512
 
 [wtf_l_neighboring_lattices]

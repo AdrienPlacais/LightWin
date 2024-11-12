@@ -41,24 +41,15 @@ class Objective(ABC):
     def __str__(self) -> str:
         """Output info on what is this objective about."""
 
+    @abstractmethod
+    def base_str(self) -> str:
+        """Tell nature and position of objective."""
+
     @staticmethod
     def str_header() -> str:
         """Give a header to explain what :meth:`__str__` returns."""
-        header = f"{'What, where, etc':>40} | {'wgt.':>5} | "
-        header += f"{'ideal val':>10}"
-        return header
-
-    @abstractmethod
-    def current_value(
-        self, simulation_output: SimulationOutput | float
-    ) -> str:
-        """Give value of current objective and residue."""
-
-    @staticmethod
-    def current_value_header() -> str:
-        """Give a header to explain what :meth:`current_value` returns."""
-        header = f"{'What, where, etc':>40} | {'wgt.':>5} | "
-        header += f"{'current val':>10} | {'residue':>10}"
+        header = f"{'What, where, etc': ^40} | {'wgt.':>5} | "
+        header += f"{'ideal value': ^21}"
         return header
 
     @abstractmethod

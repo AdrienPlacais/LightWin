@@ -1,7 +1,11 @@
-"""Define :class:`NSGA`, a genetic algorithm for optimisation."""
+"""Define :class:`NSGA`, a genetic algorithm for optimisation.
+
+.. warning::
+    Implementation not modified since v0.0.0.0.0.1 or so
+
+"""
 
 import logging
-from dataclasses import dataclass
 from typing import Callable
 
 import numpy as np
@@ -19,12 +23,11 @@ from pymoo.termination.default import DefaultMultiObjectiveTermination
 
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.algorithms.algorithm import (
-    OptiInfo,
     OptimisationAlgorithm,
+    OptiSol,
 )
 
 
-@dataclass
 class NSGA(OptimisationAlgorithm):
     """Non-dominated Sorted Genetic Algorithm."""
 
@@ -40,8 +43,8 @@ class NSGA(OptimisationAlgorithm):
             )
         super().__init__(*args, history_kwargs=history_kwargs, **kwargs)
 
-    def optimise(self) -> tuple[bool, SetOfCavitySettings | None, OptiInfo]:
-        """Set up the optimisation and solve the problem.
+    def optimize(self) -> OptiSol:
+        """Set up the optimization and solve the problem.
 
         Returns
         -------

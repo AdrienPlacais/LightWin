@@ -17,6 +17,7 @@ Submodules
    lightwin.scripts.compare_runs
    lightwin.scripts.compute_lost_power_per_meter
    lightwin.scripts.generate_design_space_files
+   lightwin.scripts.optimization_history
    lightwin.scripts.reorder_output_figures
    lightwin.scripts.save_cavity_settings
    lightwin.scripts.scripts_shorthands

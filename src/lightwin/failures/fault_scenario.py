@@ -27,7 +27,10 @@ from lightwin.evaluator.list_of_simulation_output_evaluators import (
 )
 from lightwin.failures import strategy
 from lightwin.failures.fault import Fault
-from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
+from lightwin.optimisation.algorithms.algorithm import (
+    OptimisationAlgorithm,
+    OptiSol,
+)
 from lightwin.optimisation.algorithms.factory import (
     ALGORITHMS_T,
     optimisation_algorithm_factory,
@@ -237,7 +240,6 @@ class FaultScenario(list):
         """
         start_time = time.monotonic()
 
-        success, info = [], []
         ref_simulation_output = self.ref_acc.simulation_outputs[
             self.beam_calculator.id
         ]
@@ -246,17 +248,17 @@ class FaultScenario(list):
         for fault, optimisation_algorithm in zip(
             self, optimisation_algorithms
         ):
-            args = self._wrap_single_fix(
+            self._wrap_single_fix(
                 fault, optimisation_algorithm, ref_simulation_output
             )
-            success.append(args[0])
-            info.append(args[1])
+        successes = [fault.success for fault in self]
 
         self.fix_acc.name = (
-            f"Fixed ({str(success.count(True))}" + f" of {str(len(success))})"
+            f"Fixed ({str(successes.count(True))}"
+            + f" of {str(len(successes))})"
         )
 
-        for linac in [self.ref_acc, self.fix_acc]:
+        for linac in (self.ref_acc, self.fix_acc):
             self.info[linac.name + " cav"] = debug.output_cavities(
                 linac, DISPLAY_CAVITIES_INFO
             )
@@ -274,17 +276,15 @@ class FaultScenario(list):
         logging.info(f"Elapsed time for optimization: {delta_t}")
 
         self.optimisation_time = delta_t
-        # Legacy, does not work anymore with the new implementation
-        # self.info['fit'] = debug.output_fit(self, FIT_COMPLETE, FIT_COMPACT)
 
     def _wrap_single_fix(
         self,
         fault: Fault,
         optimisation_algorithm: OptimisationAlgorithm,
         ref_simulation_output: SimulationOutput,
-    ) -> tuple[bool, dict]:
+    ) -> OptiSol:
         """Fix a fault and recompute propagation with new settings."""
-        success, info = fault.fix(optimisation_algorithm)
+        opti_sol = fault.fix(optimisation_algorithm)
 
         simulation_output = (
             self.beam_calculator.post_optimisation_run_with_this(
@@ -312,7 +312,7 @@ class FaultScenario(list):
         if self._reference_phase == "phi_0_rel":
             self._update_rephased_cavities_status(fault)
 
-        return success, info
+        return opti_sol
 
     def _update_rephased_cavities_status(self, fault: Fault) -> None:
         """Modify the status of the cavities that were already rephased.
@@ -376,8 +376,7 @@ class FaultScenario(list):
         id_solver_ref: str | None = None,
         id_solver_fix: str | None = None,
     ) -> None:
-        """
-        Compute some quantities on the whole linac to see if fit is good.
+        """Compute some quantities on the whole linac to see if fit is good.
 
         Parameters
         ----------

@@ -21,7 +21,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FIELD_MAP 7700` is handled for longitudinal tracking.
 - `SUPERPOSE_MAP` will be implemented for 1D maps (warning issued with `Envelope3D`: no transverse tracking).
 
-## [0.8.0] 2024-11-11
+## [0.8.3] 2024
+
+### Fixed
+
+- Properly handle opening/closing log files.
+
+
+## [0.8.2] 2024-11-11
+
+### Added
+
+- Possibility to save optimization history. Check `[save_wtf]` table in `data/example/lightwin.toml`.
+
+## [0.8.1] 2024-11-11
 
 ### Added
 

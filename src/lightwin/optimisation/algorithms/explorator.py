@@ -15,12 +15,11 @@ a "brute-force" optimisation algorithm.
 
 """
 
-from dataclasses import dataclass
+import logging
 from typing import Literal
 
 import numpy as np
 
-from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.algorithms.algorithm import (
     ComputeConstraintsT,
     OptimisationAlgorithm,
@@ -28,13 +27,12 @@ from lightwin.optimisation.algorithms.algorithm import (
 )
 
 
-@dataclass
 class Explorator(OptimisationAlgorithm):
     """Method that tries all the possible solutions.
 
     Notes
     -----
-    Very inefficient for optimisation. It is however useful to study a specific
+    Very inefficient for optimization. It is however useful to study a specific
     case.
 
     All the attributes but ``solution`` are inherited from the Abstract Base
@@ -45,25 +43,18 @@ class Explorator(OptimisationAlgorithm):
     supports_constraints = True
     compute_constraints: ComputeConstraintsT
 
-    def __init__(self, *args, **kwargs) -> None:
-        """Instantiate object."""
-        return super().__init__(*args, **kwargs)
-
-    def optimise(self) -> tuple[bool, SetOfCavitySettings | None, OptiSol]:
-        """
-        Set up the optimisation and solve the problem.
+    def optimize(self) -> OptiSol:
+        """Set up the optimization and solve the problem.
 
         Returns
         -------
-        success : bool
-            Tells if the optimisation algorithm managed to converge.
-        optimized_cavity_settings : SetOfCavitySettings | None
-            Best solution found by the optimization algorithm.
-        info : OptiSol
+        opti_sol : OptiSol
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 
         """
+        if self.n_var != 2:
+            logging.warning("I think this algo only works with 2 vars")
         kwargs = self._algorithm_parameters()
 
         _, variables_values = self._generate_combinations(**kwargs)
@@ -78,24 +69,13 @@ class Explorator(OptimisationAlgorithm):
         #     constraints_values, **kwargs
         # )
 
-        best_solution, best_objective = self._take_best_solution(
+        self.opti_sol = self._generate_opti_sol(
             variables_values,
             objectives_values,
             criterion="minimize norm of objective",
         )
-        assert best_solution is not None
-        assert best_objective is not None
-        info: OptiSol = {
-            "X": best_solution.tolist(),
-            "F": best_objective.tolist(),
-            "objectives_values": {},
-        }
-
-        optimized_cavity_settings = self._create_set_of_cavity_settings(
-            np.array(info["X"])
-        )
-        self._finalize()
-        return True, optimized_cavity_settings, info
+        self._finalize(self.opti_sol)
+        return self.opti_sol
 
     def _algorithm_parameters(self) -> dict:
         """Create the ``kwargs`` for the optimisation."""
@@ -128,6 +108,31 @@ class Explorator(OptimisationAlgorithm):
     ) -> np.ndarray:
         """Reformat the results for plotting purposes."""
         return objectives_values.reshape((n_points, n_points)).T
+
+    def _generate_opti_sol(
+        self,
+        variables_values: np.ndarray,
+        objectives_values: np.ndarray,
+        criterion: Literal["minimize norm of objective",],
+    ) -> OptiSol:
+        """Create the dictionary holding all relatable information."""
+        var, fun = self._take_best_solution(
+            variables_values, objectives_values, criterion
+        )
+        assert var is not None
+        assert fun is not None
+
+        cavity_settings = self._create_set_of_cavity_settings(
+            var, "compensate (ok)"
+        )
+        opti_sol: OptiSol = {
+            "var": var,
+            "cavity_settings": cavity_settings,
+            "fun": fun,
+            "objectives": self._get_objective_values(var),
+            "success": True,
+        }
+        return opti_sol
 
     def _take_best_solution(
         self,

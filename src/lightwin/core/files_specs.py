@@ -89,6 +89,7 @@ def _set_up_logging(
     """Set up the logging."""
     logfile_file = project_path / log_file
     set_up_logging(
+        package_name="LightWin",
         logfile_file=logfile_file,
         logfile_log_level=logfile_log_level,
         console_log_level=console_log_level,

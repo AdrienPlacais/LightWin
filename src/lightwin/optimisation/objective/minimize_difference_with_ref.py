@@ -55,8 +55,8 @@ class MinimizeDifferenceWithRef(Objective):
         )
         self._check_ideal_value()
 
-    def _base_str(self) -> str:
-        """Return a base text for output."""
+    def base_str(self) -> str:
+        """Tell nature and position of objective."""
         message = f"{self.get_key:>23}"
 
         elt = str(self.get_kwargs.get("elt", "NA"))
@@ -68,20 +68,19 @@ class MinimizeDifferenceWithRef(Objective):
 
     def __str__(self) -> str:
         """Give objective information value."""
-        message = self._base_str()
+        message = self.base_str()
         if isinstance(self.ideal_value, float):
-            message += f"{self.ideal_value:>10}"
+            message += f"{self.ideal_value:+.14e}"
             return message
-        message += f"{self.ideal_value}"
-        return message
+        if isinstance(self.ideal_value, tuple):
+            message += (
+                f"{self.ideal_value[0]:+.2e} ~ {self.ideal_value[1]:+.2e}"
+            )
+            return message
+        if self.ideal_value is None:
+            message += f"{'None': ^21}"
+            return message
 
-    def current_value(self, simulation_output: SimulationOutput) -> str:
-        value = self._value_getter(simulation_output)
-        message = self._base_str()
-        if isinstance(value, float):
-            message += f"{value:>10} | {self._compute_residues(value):>10}"
-            return message
-        message += f"{value} | {self._compute_residues(value):>10}"
         return message
 
     def _value_getter(self, simulation_output: SimulationOutput) -> float:

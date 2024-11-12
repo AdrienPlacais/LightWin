@@ -23,7 +23,10 @@ from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.helper import equivalent_elt
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
+from lightwin.optimisation.algorithms.algorithm import (
+    OptimisationAlgorithm,
+    OptiSol,
+)
 from lightwin.optimisation.design_space.factory import DesignSpaceFactory
 from lightwin.optimisation.objective.factory import (
     ObjectiveFactory,
@@ -43,13 +46,13 @@ class Fault:
         Holds the compensating elements.
     elts : ListOfElements
         Holds the portion of the linac that will be computed again and again in
-        the optimisation process. It is as short as possible, but must contain
+        the optimization process. It is as short as possible, but must contain
         all `failed_elements`, `compensating_elements` and
         `elt_eval_objectives`.
     variables : list[Variable]
-        Holds information on the optimisation variables.
+        Holds information on the optimization variables.
     constraints : list[Constraint] | None
-        Holds infomation on the optimisation constraints.
+        Holds infomation on the optimization constraints.
 
     Methods
     -------
@@ -96,7 +99,7 @@ class Fault:
             Holds the compensating elements.
         elts : list[Element]
             Holds the portion of the linac that will be computed again and
-            again in the optimisation process. It is as short as possible, but
+            again in the optimization process. It is as short as possible, but
             must contain all altered elements as well as the elements where
             objectives will be evaluated.
         objective_factory_class : type[ObjectiveFactory] | None, optional
@@ -145,32 +148,35 @@ class Fault:
             reference_simulation_output,
             files_from_full_list_of_elements,
         )
-        self.optimized_cavity_settings: SetOfCavitySettings
+        self.opti_sol: OptiSol
         return
 
-    def fix(
-        self, optimisation_algorithm: OptimisationAlgorithm
-    ) -> tuple[bool, dict]:
+    def fix(self, optimisation_algorithm: OptimisationAlgorithm) -> OptiSol:
         """Fix the :class:`Fault`. Set ``self.optimized_cavity_settings``.
 
         Parameters
         ----------
         optimisation_algorithm : OptimisationAlgorithm
-            The optimisation algorithm to be used, already initialized.
+            The optimization algorithm to be used, already initialized.
 
         Returns
         -------
-        success : bool
-            Indicates convergence of the :class:`.OptimisationAlgorithm`.
-        self.info : dict
+        self.opti_sol : OptiSol
             Useful information, such as the best solution.
 
         """
-        outputs = optimisation_algorithm.optimise()
-        success, optimized_cavity_settings, self.info = outputs
-        assert optimized_cavity_settings is not None
-        self.optimized_cavity_settings = optimized_cavity_settings
-        return success, self.info
+        self.opti_sol = optimisation_algorithm.optimize()
+        return self.opti_sol
+
+    @property
+    def optimized_cavity_settings(self) -> SetOfCavitySettings:
+        """Get the best settings."""
+        return self.opti_sol["cavity_settings"]
+
+    @property
+    def success(self) -> bool:
+        """Get the success status."""
+        return self.opti_sol["success"]
 
     def update_elements_status(
         self, optimisation: str, success: bool | None = None

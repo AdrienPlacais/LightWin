@@ -31,8 +31,8 @@ def get_optimization_objective_names(
 
     """
     cols = objectives.columns
-    opti_cols = [col for col in cols if "@" not in col]
-    simulation_output_cols = [col for col in cols if "@" in col]
+    opti_cols = [col for col in cols if "|" not in col]
+    simulation_output_cols = [col for col in cols if col not in opti_cols]
     return opti_cols, simulation_output_cols
 
 
@@ -163,5 +163,7 @@ def main(folder: Path) -> pd.DataFrame:
 
 if __name__ == "__main__":
     plt.close("all")
-    folder = Path("/home/placais/Documents/projects/compensation/spiral2/lightwin_project/optimization_history/")
+    folder = Path(
+        "/home/placais/Documents/projects/compensation/spiral2/lightwin_project/optimization_history/"
+    )
     objectives = main(folder)
