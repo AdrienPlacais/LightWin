@@ -5,7 +5,10 @@ from collections.abc import Collection, Sequence
 from pathlib import Path
 
 import pandas as pd
-from my_own_objectives import MyObjectiveFactory
+from my_own_objectives import (
+    EnergyPhaseMismatchMoreElements,
+    MyObjectiveFactory,
+)
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.config_manager import process_config
@@ -72,7 +75,9 @@ if __name__ == "__main__":
     NEW_EVALUATIONS = True
     BEAUTY_PASS = False
     config = process_config(toml_filepath, toml_keys)
+    # my_objective_factory = MyObjectiveFactory
+    my_objective_factory = EnergyPhaseMismatchMoreElements
     fault_scenarios = run_simulation(
         config,
-        # objective_factory_class=MyObjectiveFactory,
+        objective_factory_class=my_objective_factory,
     )

@@ -15,7 +15,10 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.elements.element import Element
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
-from lightwin.optimisation.objective.factory import ObjectiveFactory
+from lightwin.optimisation.objective.factory import (
+    EnergyPhaseMismatch,
+    ObjectiveFactory,
+)
 from lightwin.optimisation.objective.minimize_difference_with_ref import (
     MinimizeDifferenceWithRef,
 )
@@ -178,3 +181,17 @@ class MyObjectiveFactory(ObjectiveFactory):
         )
         # Of course, you can also define your own :class:`.Objective`.
         return objective
+
+
+class EnergyPhaseMismatchMoreElements(EnergyPhaseMismatch):
+    """Same objectives, but more elements in calculation."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        """Override some defaults."""
+        super().__init__(*args, **kwargs)
+        last_element_to_compute = "FM18"
+        self.elts_of_compensation_zone = []
+        for elt in self.broken_elts:
+            self.elts_of_compensation_zone.append(elt)
+            if elt.name == last_element_to_compute:
+                return
