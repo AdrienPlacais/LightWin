@@ -66,8 +66,8 @@ if __name__ == "__main__":
         "beam_calculator_post": "generic_tracewin",
         "beam": "beam",
         "wtf": "save_wtf",
-        # "design_space": "fit_phi_s_design_space",
-        "design_space": "tiny_design_space",
+        "design_space": "fit_phi_s_design_space",
+        # "design_space": "tiny_design_space",
     }
     NEW_EVALUATIONS = True
     BEAUTY_PASS = False
