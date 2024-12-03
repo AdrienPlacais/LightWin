@@ -169,6 +169,18 @@ class Fault:
         return self.opti_sol
 
     @property
+    def info(self) -> dict:
+        """Return the dictionary holding information on the solution.
+
+        .. deprecated :: 0.8.2
+            Prefer using the ``opti_sol`` attribute.
+
+        """
+        info = dict(self.opti_sol)
+        info["objectives_values"] = self.opti_sol["objectives"]
+        return info
+
+    @property
     def optimized_cavity_settings(self) -> SetOfCavitySettings:
         """Get the best settings."""
         return self.opti_sol["cavity_settings"]
