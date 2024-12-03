@@ -29,7 +29,12 @@ def _get_package_version(package_name: str) -> str:
 
 
 def _get_last_commit_hash() -> str:
-    """Get the last Git commit hash."""
+    """Get the last Git commit hash.
+
+    .. todo::
+        Will look for the script commit number, not for the LW commit number!
+
+    """
     try:
         return (
             subprocess.check_output(["git", "rev-parse", "HEAD"])
