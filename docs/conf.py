@@ -31,7 +31,7 @@ sys.path.append(os.path.abspath("./_ext"))
 
 project = "LightWin"
 copyright = (
-    "2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
+    "2025, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
 )
 author = "A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
 
