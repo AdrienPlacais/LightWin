@@ -20,11 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FIELD_MAP 70` does not raise error (warning issued with `Envelope3D`: no transverse tracking).
 - `SUPERPOSE_MAP` will be implemented for 1D maps (warning issued with `Envelope3D`: no transverse tracking).
 
-## [0.8.3] 2024
+## [0.8.3] 2025-01-13
+
+### Added
+
+- Version number and commit number are written in the log file.
 
 ### Fixed
 
 - Properly handle opening/closing log files.
+- Display of some objective values.
 
 
 ## [0.8.2] 2024-11-11
