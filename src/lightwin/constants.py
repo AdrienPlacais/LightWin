@@ -6,7 +6,7 @@ from pathlib import Path
 c = 2.99792458e8
 
 # Folders
-_lw_base_folder = Path(__file__).absolute().parents[2]
+_lw_base_folder = Path.cwd()
 doc_folder = _lw_base_folder / "docs/"
 example_folder = _lw_base_folder / "data/example/"
 example_results = example_folder / "results"
