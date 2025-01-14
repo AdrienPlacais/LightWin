@@ -7,7 +7,7 @@ Navigate to the directory where you want to store LightWin and run:
 
    git clone git@github.com:AdrienPlacais/LightWin.git
 
-It is recommended to use the last released version; avoid beta versions (eg prefer `v0.7.0` over `v0.8.0b2`).
+It is recommended to download the last tagged version; avoid beta versions (e.g. prefer `v0.7.0` over `v0.8.0b2`).
 You can switch between versions with:
 
 .. code-block:: bash
