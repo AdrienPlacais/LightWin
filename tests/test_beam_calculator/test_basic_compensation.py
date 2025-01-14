@@ -6,6 +6,7 @@ to work.
 """
 
 import logging
+import os
 from pathlib import Path
 from typing import Any
 
@@ -81,6 +82,7 @@ def config(
         },
     }
     proper_example_config = example_config
+    logging.critical(f"We are at {os.getcwd()}")
     logging.critical(f"{example_config = }. {example_config.exists() = }")
     if not example_config.exists():
         proper_example_config = Path("data/example/lightwin.toml")
