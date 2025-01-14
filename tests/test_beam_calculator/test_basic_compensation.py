@@ -5,6 +5,8 @@ to work.
 
 """
 
+import logging
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -78,8 +80,15 @@ def config(
             if v is not None
         },
     }
+    proper_example_config = example_config
+    logging.critical(f"{example_config = }. {example_config.exists() = }")
+    if not example_config.exists():
+        proper_example_config = Path("data/example/lightwin.toml")
+        logging.critical(
+            f"{proper_example_config = }. {proper_example_config.exists() = }"
+        )
     my_config = process_config(
-        example_config,
+        proper_example_config,
         config_keys,
         warn_mismatch=True,
         override=override,
