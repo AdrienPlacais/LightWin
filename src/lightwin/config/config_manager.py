@@ -27,23 +27,23 @@ def process_config(
     Parameters
     ----------
     toml_path : pathlib.Path
-        Path to the configuration file. It must be a ```.toml`` file.
+        Path to the configuration file. It must be a ``TOML`` file.
     config_keys : dict[str, str]
         Associate the name of LightWin's group of parameters to the entry in
         the configuration file.
     warn_mismatch : bool, optional
         Raise a warning if a key in a ``override`` sub-dict is not found.
     override : dict[str, dict[str, Any]] | None, optional
-        To override entries in the ``.toml``. If not provided, we keep
+        To override entries in the ``TOML``. If not provided, we keep
         defaults.
     conf_specs_t : type[ConfSpec], optional
-        The specifications that the ``.toml`` must match to be accepted. If not
+        The specifications that the ``TOML`` must match to be accepted. If not
         provided, we take a default.
 
     Returns
     -------
     toml_fulldict : dict[str, dict[str, Any]]
-        A dictonary holding all the keyword arguments that will be passed to
+        A dictionary holding all the keyword arguments that will be passed to
         LightWin objects, eg ``beam_calculator`` will be passed to
         :class:`.BeamCalculator`.
 
@@ -62,7 +62,7 @@ def load_toml(
     warn_mismatch: bool,
     override: dict[str, dict[str, Any]] | None,
 ) -> dict[str, dict[str, Any]]:
-    """Load the ``.toml`` and extract the dicts asked by user.
+    """Load the ``TOML`` and extract the dicts asked by user.
 
     Parameters
     ----------
@@ -132,7 +132,7 @@ def dict_to_toml(
     original_toml_folder: Path | None = None,
     **kwargs,
 ) -> None:
-    """Write the provided configuration dict to a ``.toml`` file.
+    """Write the provided configuration dict to a ``TOML`` file.
 
     Parameters
     ----------
@@ -140,15 +140,15 @@ def dict_to_toml(
         The configuration as a nested dictionary. The keys will be used as
         table entries.
     toml_path : pathlib.Path
-        Where to save the ``.toml``.
+        Where to save the ``TOML``.
     conf_specs : ConfSpec
         Holds the template to be respected. In particular, the type of the
         values in the different tables.
     allow_overwrite : bool, optional
-        If a pre-existing ``.toml`` can be overwritten. The default is False,
+        If a pre-existing ``TOML`` can be overwritten. The default is False,
         in which case an error will be raised.
     original_toml_folder : pathlib.Path | None, optional
-        Where the original ``.toml`` was; this is used to resolve paths
+        Where the original ``TOML`` was; this is used to resolve paths
         relative to this location.
 
     """
@@ -163,7 +163,7 @@ def dict_to_toml(
             f.write(dict_entry_string)
             f.write("\n")
 
-    logging.info(f"New ``.toml`` written in {toml_path}")
+    logging.info(f"New ``TOML`` written in {toml_path}")
     return
 
 
@@ -171,7 +171,7 @@ def _indue_overwritting(
     toml_path: Path,
     allow_overwrite: bool = False,
 ) -> bool:
-    """Ensure that ``.toml`` will not be overwritten if not wanted."""
+    """Ensure that ``TOML`` will not be overwritten if not wanted."""
     if not toml_path.exists():
         return False
 
