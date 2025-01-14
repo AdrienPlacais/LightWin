@@ -54,18 +54,13 @@ Following packages are optional
 * `pytest` - To run tests and ensure everything is working as expected.
 * `cloudpickle` - To pickle/unpickle some objects (see the `util.pickling` documentation).
 
-.. _cython integration documentation: https://adrienplacais.github.io/LightWin/html/manual/installation.cython.html
+.. _cython integration documentation: https://lightwin.readthedocs.io/en/latest/manual/installation.cython.html
 
 For developers
 """"""""""""""
 
-To compile the documentation, the following packages are necessary:
-
-* `sphinx_rtd_theme`
-* `myst-parser`
-* `nbsphinx`
-
-The files are formatted with `black`.
+The files are formatted with `black` (text width: 79 characters) and `isort`.
+The docstrings must adhere to the `numpy` style.
 
 Reminders
 ^^^^^^^^^
