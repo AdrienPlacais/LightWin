@@ -14,7 +14,7 @@ You will need to tell LightWin were to find your TraceWin executables.
 See [dedicated instructions](https://adrienplacais.github.io/LightWin/html/main/manual/installation.tracewin.html).
 
 ## Documentation
-Documentation is now automatically built and hosted on [Read the docs](https://lightwin.readthedocs.io/en/latest/)
+Documentation is now automatically built and hosted on [Read the docs](https://lightwin.readthedocs.io/en/latest/).
 
 ## How to run
 See [here](https://adrienplacais.github.io/LightWin/html/main/manual/usage.html).
