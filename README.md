@@ -14,12 +14,7 @@ You will need to tell LightWin were to find your TraceWin executables.
 See [dedicated instructions](https://adrienplacais.github.io/LightWin/html/main/manual/installation.tracewin.html).
 
 ## Documentation
-Documentation is available [here](https://adrienplacais.github.io/LightWin/html/main/index.html).
-To build the documentation from scratch:
-1. Build the source files `make -C docs/ apidoc`
-2. Build the CSV files used for documenting configuration `make -C docs/ generate_csv`
-3. Build the documentation `make -C docs/ multiversion`
-Note that for quick tests, you can also build the unversioned documentation with `make -C docs/ html`
+Documentation is now automatically built and hosted on [Read the docs](https://lightwin.readthedocs.io/en/latest/)
 
 ## How to run
 See [here](https://adrienplacais.github.io/LightWin/html/main/manual/usage.html).
