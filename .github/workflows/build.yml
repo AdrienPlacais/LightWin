@@ -25,6 +25,10 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install "cibuildwheel>=2.0,<3.0"
           python -m pip install "pytest>=8.3.2,<9.0.0"
+      
+      - name: List directory files
+        run: |
+          ls -R
 
       - name: Build Wheels
         run: cibuildwheel --output-dir dist
