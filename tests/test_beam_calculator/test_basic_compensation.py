@@ -55,6 +55,10 @@ def config(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration."""
+    logging.critical(f"{test_config.exists() = }")
+    logging.critical(f"{test_config.parent.exists() = }")
+    logging.critical(f"{test_config.parents[2].exists() = }")
+    logging.critical(f"{test_config.parents[3].exists() = }")
     out_folder = tmp_path_factory.mktemp("tmp")
     (solver_key, flag_phi_abs, flag_cython) = request.param
 
