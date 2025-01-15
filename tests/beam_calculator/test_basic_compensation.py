@@ -8,7 +8,7 @@ to work.
 from typing import Any
 
 import pytest
-from tests.reference import compare_with_other
+from tests.pytest_helpers.simulation_output import wrap_approx
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.factory import BeamCalculatorsFactory
@@ -27,7 +27,7 @@ from lightwin.failures.fault_scenario import (
 params = [
     pytest.param(
         ("generic_envelope1d", True, False),
-        marks=(pytest.mark.smoke, pytest.mark.envelope1d),
+        marks=(pytest.mark.smoke, pytest.mark.envelope1d, pytest.mark.tmp),
         id="Compensation with Envelope1D",
     ),
     pytest.param(
@@ -134,48 +134,32 @@ def simulation_outputs(
     ]
     fault_scenario.fix_all()
     fix_simulation_output = solver.compute(accelerators[1])
-    return ref_simulation_output, fix_simulation_output
+    return fix_simulation_output, ref_simulation_output
 
 
 class TestAllBeamCalculatorCanCompensate:
-
-    _w_kin_tol = 1e-3
-    _phi_abs_tol = 1e-2
-    _phi_s_tol = 1e-2
-    _v_cav_tol = 1e-3
-    _r_zdelta_tol = 5e-3
+    """Compensate a failure with every beam calculator."""
 
     def test_w_kin(
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
     ) -> None:
-        """Test the initialisation."""
-        return compare_with_other(
-            *simulation_outputs, key="w_kin", tol=self._w_kin_tol
-        )
+        """Check the beam energy at the exit of the linac."""
+        assert wrap_approx("w_kin", *simulation_outputs)
 
     def test_phi_abs(
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
     ) -> None:
-        """Test the initialisation."""
-        return compare_with_other(
-            *simulation_outputs, key="phi_abs", tol=self._phi_abs_tol
-        )
+        """Check the beam phase at the exit of the linac."""
+        assert wrap_approx("phi_abs", *simulation_outputs)
 
     def test_phi_s(
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
     ) -> None:
-        """Test the initialisation."""
-        return compare_with_other(
-            *simulation_outputs, key="phi_s", tol=self._phi_s_tol, elt="FM142"
-        )
+        """Check the synchronous phase of the cavity 142."""
+        assert wrap_approx("phi_s", *simulation_outputs, abs=1e-3, elt="FM142")
 
     def test_v_cav(
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
     ) -> None:
-        """Test the initialisation."""
-        return compare_with_other(
-            *simulation_outputs,
-            key="v_cav_mv",
-            tol=self._v_cav_tol,
-            elt="FM142",
-        )
+        """Check the accelerating voltage of the cavity 142."""
+        assert wrap_approx("v_cav_mv", *simulation_outputs, elt="FM142")

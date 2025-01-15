@@ -8,7 +8,7 @@
 from typing import Any
 
 import pytest
-from tests.reference import compare_with_reference
+from tests.pytest_helpers.simulation_output import wrap_approx
 
 import lightwin.config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
@@ -117,40 +117,26 @@ def simulation_output(
 
 @pytest.mark.envelope1d
 class TestSolver1D:
-    """Gater all the tests in a single class."""
-
-    _w_kin_tol = 1e-3
-    _phi_abs_tol = 1e-2
-    _phi_s_tol = 1e-2
-    _v_cav_tol = 1e-3
-    _r_zdelta_tol = 5e-3
+    """Gather all the tests in a single class."""
 
     def test_w_kin(self, simulation_output: SimulationOutput) -> None:
-        """Verify that final energy is correct."""
-        return compare_with_reference(
-            simulation_output, "w_kin", tol=self._w_kin_tol
-        )
+        """Check the beam energy at the exit of the linac."""
+        assert wrap_approx("w_kin", simulation_output, abs=1e-3)
 
     def test_phi_abs(self, simulation_output: SimulationOutput) -> None:
-        """Verify that final absolute phase is correct."""
-        return compare_with_reference(
-            simulation_output, "phi_abs", tol=self._phi_abs_tol
-        )
+        """Check the beam phase at the exit of the linac."""
+        assert wrap_approx("phi_abs", simulation_output, abs=1e-2)
 
     def test_phi_s(self, simulation_output: SimulationOutput) -> None:
-        """Verify that synchronous phase in last cavity is correct."""
-        return compare_with_reference(
-            simulation_output, "phi_s", elt="FM142", tol=self._phi_s_tol
-        )
+        """Check the synchronous phase of the cavity 142."""
+        assert wrap_approx("phi_s", simulation_output, abs=1e-2, elt="FM142")
 
     def test_v_cav(self, simulation_output: SimulationOutput) -> None:
-        """Verify that accelerating voltage in last cavity is correct."""
-        return compare_with_reference(
-            simulation_output, "v_cav_mv", elt="FM142", tol=self._v_cav_tol
+        """Check the accelerating voltage of the cavity 142."""
+        assert wrap_approx(
+            "v_cav_mv", simulation_output, abs=1e-3, elt="FM142"
         )
 
     def test_r_zdelta(self, simulation_output: SimulationOutput) -> None:
-        """Verify that final longitudinal transfer matrix is correct."""
-        return compare_with_reference(
-            simulation_output, "r_zdelta", tol=self._r_zdelta_tol
-        )
+        """Verify that longitudinal transfer matrix is correct."""
+        assert wrap_approx("r_zdelta", simulation_output, abs=5e-3)

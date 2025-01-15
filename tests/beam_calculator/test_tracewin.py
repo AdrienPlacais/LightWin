@@ -12,7 +12,7 @@
 from typing import Any
 
 import pytest
-from tests.reference import compare_with_reference
+from tests.pytest_helpers.simulation_output import wrap_approx
 
 import lightwin.config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
@@ -100,27 +100,21 @@ class TestSolver3D:
     _r_zdelta_tol = 5e-3
 
     def test_w_kin(self, simulation_output: SimulationOutput) -> None:
-        """Verify that final energy is correct."""
-        return compare_with_reference(
-            simulation_output, "w_kin", tol=self._w_kin_tol
-        )
+        """Check the beam energy at the exit of the linac."""
+        assert wrap_approx("w_kin", simulation_output, abs=5e-3)
 
     def test_phi_abs(self, simulation_output: SimulationOutput) -> None:
-        """Verify that final absolute phase is correct."""
-        return compare_with_reference(
-            simulation_output, "phi_abs", tol=self._phi_abs_tol
-        )
+        """Check the beam phase at the exit of the linac."""
+        assert wrap_approx("phi_abs", simulation_output, abs=5e0)
 
     def test_phi_s(self, simulation_output: SimulationOutput) -> None:
-        """Verify that synchronous phase in last cavity is correct."""
-        return compare_with_reference(
-            simulation_output, "phi_s", elt="FM142", tol=self._phi_s_tol
-        )
+        """Check the synchronous phase of the cavity 142."""
+        assert wrap_approx("phi_s", simulation_output, abs=1e-6, elt="FM142")
 
     def test_v_cav(self, simulation_output: SimulationOutput) -> None:
-        """Verify that accelerating voltage in last cavity is correct."""
-        return compare_with_reference(
-            simulation_output, "v_cav_mv", elt="FM142", tol=self._v_cav_tol
+        """Check the accelerating voltage of the cavity 142."""
+        assert wrap_approx(
+            "v_cav_mv", simulation_output, abs=1e-7, elt="FM142"
         )
 
     @pytest.mark.xfail(
@@ -130,9 +124,7 @@ class TestSolver3D:
     )
     def test_r_xx(self, simulation_output: SimulationOutput) -> None:
         """Verify that final xx transfer matrix is correct."""
-        return compare_with_reference(
-            simulation_output, "r_xx", tol=self._r_xx_tol
-        )
+        assert wrap_approx("r_xx", simulation_output, abs=5e-1)
 
     @pytest.mark.xfail(
         condition=True,
@@ -141,9 +133,7 @@ class TestSolver3D:
     )
     def test_r_yy(self, simulation_output: SimulationOutput) -> None:
         """Verify that final yy transfer matrix is correct."""
-        return compare_with_reference(
-            simulation_output, "r_yy", tol=self._r_yy_tol
-        )
+        assert wrap_approx("r_yy", simulation_output, abs=5e-1)
 
     @pytest.mark.xfail(
         condition=True,
@@ -152,6 +142,4 @@ class TestSolver3D:
     )
     def test_r_zdelta(self, simulation_output: SimulationOutput) -> None:
         """Verify that final longitudinal transfer matrix is correct."""
-        return compare_with_reference(
-            simulation_output, "r_zdelta", tol=self._r_zdelta_tol
-        )
+        assert wrap_approx("r_zdelta", simulation_output, abs=5e-3)
