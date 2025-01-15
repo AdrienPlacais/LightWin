@@ -5,7 +5,6 @@ to work.
 
 """
 
-import logging
 from typing import Any
 
 import pytest
@@ -17,7 +16,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.config.config_manager import process_config
-from lightwin.constants import test_config
+from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import WithFaults
 from lightwin.failures.fault_scenario import (
@@ -28,7 +27,7 @@ from lightwin.failures.fault_scenario import (
 params = [
     pytest.param(
         ("generic_envelope1d", True, False),
-        marks=(pytest.mark.smoke, pytest.mark.envelope1d, pytest.mark.tmp),
+        marks=(pytest.mark.smoke, pytest.mark.envelope1d),
         id="Compensation with Envelope1D",
     ),
     pytest.param(
@@ -55,10 +54,6 @@ def config(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration."""
-    logging.critical(f"{test_config.exists() = }")
-    logging.critical(f"{test_config.parent.exists() = }")
-    logging.critical(f"{test_config.parents[2].exists() = }")
-    logging.critical(f"{test_config.parents[3].exists() = }")
     out_folder = tmp_path_factory.mktemp("tmp")
     (solver_key, flag_phi_abs, flag_cython) = request.param
 
@@ -84,7 +79,7 @@ def config(
         },
     }
     my_config = process_config(
-        test_config,
+        example_config,
         config_keys,
         warn_mismatch=True,
         override=override,
