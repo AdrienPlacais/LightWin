@@ -77,9 +77,6 @@ package-dir = { "" = "src" }
 [tool.setuptools.packages]
 find = { where = ["src"] }
 
-[tool.cibuildwheel]
-build = "cp3?-*"
-
 [build-system]
 build-backend = "setuptools.build_meta"
 requires = ["setuptools>=61", "cython>=3.0.10", "numpy>=2.0.1"]
