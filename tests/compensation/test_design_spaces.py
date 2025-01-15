@@ -147,13 +147,13 @@ class TestDesignSpaceImplementation:
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
     ) -> None:
         """Check the beam energy at the exit of the linac."""
-        assert wrap_approx("w_kin", *simulation_outputs, abs=1e-3)
+        assert wrap_approx("w_kin", *simulation_outputs)
 
     def test_phi_abs(
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
     ) -> None:
         """Check the beam phase at the exit of the linac."""
-        assert wrap_approx("phi_abs", *simulation_outputs, abs=1e-2)
+        assert wrap_approx("phi_abs", *simulation_outputs)
 
     def test_phi_s(
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
@@ -165,6 +165,4 @@ class TestDesignSpaceImplementation:
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
     ) -> None:
         """Check the accelerating voltage of the cavity 142."""
-        assert wrap_approx(
-            "v_cav_mv", *simulation_outputs, abs=1e-3, elt="FM142"
-        )
+        assert wrap_approx("v_cav_mv", *simulation_outputs, elt="FM142")

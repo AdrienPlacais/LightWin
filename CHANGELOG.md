@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FIELD_MAP 70` does not raise error (warning issued with `Envelope3D`: no transverse tracking).
 - `SUPERPOSE_MAP` will be implemented for 1D maps (warning issued with `Envelope3D`: no transverse tracking).
 
+## [0.8.4] 2025-01-15
+
+### Changed
+
+- Tests now rely on the `pytest.approx` functions, much cleaner than previous approach.
+
 ## [0.8.3] 2025-01-13
 
 ### Added

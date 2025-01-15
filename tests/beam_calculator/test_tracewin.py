@@ -91,14 +91,6 @@ def simulation_output(
 class TestSolver3D:
     """Gater all the tests in a single class."""
 
-    _w_kin_tol = 5e-3
-    _phi_abs_tol = 5e0
-    _phi_s_tol = 1e-6
-    _v_cav_tol = 1e-7
-    _r_xx_tol = 5e-1
-    _r_yy_tol = 5e-1
-    _r_zdelta_tol = 5e-3
-
     def test_w_kin(self, simulation_output: SimulationOutput) -> None:
         """Check the beam energy at the exit of the linac."""
         assert wrap_approx("w_kin", simulation_output, abs=5e-3)
@@ -109,13 +101,11 @@ class TestSolver3D:
 
     def test_phi_s(self, simulation_output: SimulationOutput) -> None:
         """Check the synchronous phase of the cavity 142."""
-        assert wrap_approx("phi_s", simulation_output, abs=1e-6, elt="FM142")
+        assert wrap_approx("phi_s", simulation_output, elt="FM142")
 
     def test_v_cav(self, simulation_output: SimulationOutput) -> None:
         """Check the accelerating voltage of the cavity 142."""
-        assert wrap_approx(
-            "v_cav_mv", simulation_output, abs=1e-7, elt="FM142"
-        )
+        assert wrap_approx("v_cav_mv", simulation_output, elt="FM142")
 
     @pytest.mark.xfail(
         condition=True,
@@ -124,7 +114,7 @@ class TestSolver3D:
     )
     def test_r_xx(self, simulation_output: SimulationOutput) -> None:
         """Verify that final xx transfer matrix is correct."""
-        assert wrap_approx("r_xx", simulation_output, abs=5e-1)
+        assert wrap_approx("r_xx", simulation_output)
 
     @pytest.mark.xfail(
         condition=True,
@@ -133,7 +123,7 @@ class TestSolver3D:
     )
     def test_r_yy(self, simulation_output: SimulationOutput) -> None:
         """Verify that final yy transfer matrix is correct."""
-        assert wrap_approx("r_yy", simulation_output, abs=5e-1)
+        assert wrap_approx("r_yy", simulation_output)
 
     @pytest.mark.xfail(
         condition=True,
@@ -142,4 +132,4 @@ class TestSolver3D:
     )
     def test_r_zdelta(self, simulation_output: SimulationOutput) -> None:
         """Verify that final longitudinal transfer matrix is correct."""
-        assert wrap_approx("r_zdelta", simulation_output, abs=5e-3)
+        assert wrap_approx("r_zdelta", simulation_output)

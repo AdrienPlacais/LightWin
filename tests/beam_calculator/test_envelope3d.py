@@ -95,11 +95,11 @@ class TestSolver3D:
 
     def test_w_kin(self, simulation_output: SimulationOutput) -> None:
         """Check the beam energy at the exit of the linac."""
-        assert wrap_approx("w_kin", simulation_output, abs=1e-3)
+        assert wrap_approx("w_kin", simulation_output)
 
     def test_phi_abs(self, simulation_output: SimulationOutput) -> None:
         """Check the beam phase at the exit of the linac."""
-        assert wrap_approx("phi_abs", simulation_output, abs=1e-2)
+        assert wrap_approx("phi_abs", simulation_output)
 
     def test_phi_s(self, simulation_output: SimulationOutput) -> None:
         """Check the synchronous phase of the cavity 142."""
