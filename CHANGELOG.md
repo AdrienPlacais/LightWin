@@ -13,12 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `evaluator` objects are more robust and can be configured from the `.toml`.
 - Plotting is now performed thanks to the `plotter` library.
 
-## [0.9.0] -- unreleased
+## [0.10.x] -- unreleased
 
 ### Added
 
 - `FIELD_MAP 70` does not raise error (warning issued with `Envelope3D`: no transverse tracking).
 - `SUPERPOSE_MAP` will be implemented for 1D maps (warning issued with `Envelope3D`: no transverse tracking).
+
+## [0.9.x] -- unreleased
+
+### Changed
+
+- Package on `pip` (simpler installation with `pip install lightwin`).
+- CI/CD tasks (automatic testing, formatting, code coverage).
 
 ## [0.8.4] 2025-01-15
 
