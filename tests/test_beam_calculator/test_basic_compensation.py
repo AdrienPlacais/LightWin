@@ -17,7 +17,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.config.config_manager import process_config
-from lightwin.constants import example_config, example_folder
+from lightwin.constants import test_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import WithFaults
 from lightwin.failures.fault_scenario import (
@@ -55,7 +55,6 @@ def config(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration."""
-    logging.critical(f"{example_folder.exists() = }")
     out_folder = tmp_path_factory.mktemp("tmp")
     (solver_key, flag_phi_abs, flag_cython) = request.param
 
@@ -81,7 +80,7 @@ def config(
         },
     }
     my_config = process_config(
-        example_config,
+        test_config,
         config_keys,
         warn_mismatch=True,
         override=override,
