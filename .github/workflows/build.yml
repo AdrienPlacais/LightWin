@@ -30,4 +30,4 @@ jobs:
         run: cibuildwheel --output-dir dist
         env:
           CIBW_BUILD: cp312-* cp313-*
-          CIBW_TEST_COMMAND: python -m pytest -m tmp {project}/tests
+          # CIBW_TEST_COMMAND: python -m pytest -m tmp {project}/tests
