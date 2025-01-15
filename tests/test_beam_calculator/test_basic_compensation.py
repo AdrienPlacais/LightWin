@@ -6,8 +6,6 @@ to work.
 """
 
 import logging
-import os
-from pathlib import Path
 from typing import Any
 
 import pytest
@@ -19,7 +17,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.config.config_manager import process_config
-from lightwin.constants import example_config
+from lightwin.constants import example_config, example_folder
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import WithFaults
 from lightwin.failures.fault_scenario import (
@@ -57,6 +55,7 @@ def config(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration."""
+    logging.critical(f"{example_folder.exists() = }")
     out_folder = tmp_path_factory.mktemp("tmp")
     (solver_key, flag_phi_abs, flag_cython) = request.param
 
@@ -81,16 +80,8 @@ def config(
             if v is not None
         },
     }
-    proper_example_config = example_config
-    logging.critical(f"We are at {os.getcwd()}")
-    logging.critical(f"{example_config = }. {example_config.exists() = }")
-    if not example_config.exists():
-        proper_example_config = Path("data/example/lightwin.toml")
-        logging.critical(
-            f"{proper_example_config = }. {proper_example_config.exists() = }"
-        )
     my_config = process_config(
-        proper_example_config,
+        example_config,
         config_keys,
         warn_mismatch=True,
         override=override,
