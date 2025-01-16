@@ -33,7 +33,7 @@ version = "0.9.1b2"
 
 [project.optional-dependencies]
 cython = ["Cython>=3.0.10, <4.0.0"]
-doc = [
+docs = [
    "sphinx-rtd-theme>=3.0.0, <4.0.0",
    "sphinx-multiversion>=0.2.4, <1.0.0",
    "sphinxcontrib-bibtex>=2.6.0,<3.0.0",
