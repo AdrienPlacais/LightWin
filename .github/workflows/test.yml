@@ -34,5 +34,4 @@ jobs:
           python -m pip install -e .[test]
 
       - name: Run tests
-        run: python -m pytest -m "tmp"
-        # run: python -m pytest -m "not implementation and not tracewin and not slow and not cython"
+        run: python -m pytest -m "not implementation and not tracewin and not slow and not cython"
