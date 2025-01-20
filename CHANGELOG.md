@@ -25,7 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Package on `pip` (simpler installation with `pip install lightwin`).
-- CI/CD tasks (automatic testing, formatting, code coverage).
+
+### Added
+
+- CI/CD tasks:
+    - Automatic checking of common mistakes with `pre-commmit`.
 
 ## [0.8.4] 2025-01-15
 
