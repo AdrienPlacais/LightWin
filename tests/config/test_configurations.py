@@ -24,7 +24,9 @@ CONFIG_KEYS = (
     pytest.param(({"beam": "beam"},), id="Beam configuration"),
     pytest.param(({"files": "files"},), id="Files configuration"),
     pytest.param(
-        ({"beam_calculator": "generic_tracewin"},), id="TraceWin configuration"
+        ({"beam_calculator": "generic_tracewin"},),
+        id="TraceWin configuration",
+        marks=pytest.mark.tracewin,
     ),
     pytest.param(
         ({"beam_calculator": "generic_envelope1d"},),
