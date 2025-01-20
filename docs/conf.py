@@ -17,6 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+from __future__ import annotations
 
 import os
 import sys
@@ -66,12 +67,6 @@ autodoc_default_options = {
     "undoc-members": True,  # Document members without doc
 }
 autodoc_mock_imports = ["pso", "lightwin.optimisation.algorithms.pso"]
-autodoc_type_aliases = {
-    "np": "numpy",
-    "pd": "pandas",
-    "Path": "pathlib.Path",
-    "plt": "matplotlib.pyplot",
-}
 
 add_module_names = False
 default_role = "literal"
@@ -127,9 +122,10 @@ intersphinx_mapping = {
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 
+
 # Parameters for sphinx-autodoc-typehints
-# always_document_param_types = True
-# always_use_bar_union = True
+always_document_param_types = True
+always_use_bar_union = True
 # typehints_defaults = "braces-after"
 
 # -- Options for HTML output -------------------------------------------------

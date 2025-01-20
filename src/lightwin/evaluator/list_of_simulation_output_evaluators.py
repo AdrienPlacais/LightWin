@@ -51,12 +51,12 @@ class ListOfSimulationOutputEvaluators(list):
             Dictionary with over evaluations to put in the output file. Keys
             are the column headers, values are corresponding values stored as
             lists. The default is None, in which case nothing is added.
-        project_folder : Path | None
+        project_folder : pathlib.Path | None
             Where to save the output file.
 
         Returns
         -------
-        pd.DataFrame
+        pandas.DataFrame
             A dataframe holding the evaluations.
 
         """

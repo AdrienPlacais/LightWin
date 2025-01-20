@@ -115,8 +115,6 @@ class BeamParametersFactory(ABC):
             Lorentz gamma factor.
         beta_kin : numpy.ndarray
             Lorentz beta factor.
-        beam_kwargs : dict[str, Any]
-            Configuration dictionary holding initial beam parameters.
 
         """
         implemented_in = ("zdelta",)
