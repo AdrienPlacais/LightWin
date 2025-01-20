@@ -138,4 +138,4 @@ def _element_to_index(
         return beam_calc_param.s_out - _shift
 
     logging.error(f"{pos = }, while it must be 'in', 'out' or None")
-    raise IOError(f"{pos = }, while it must be 'in', 'out' or None")
+    raise OSError(f"{pos = }, while it must be 'in', 'out' or None")

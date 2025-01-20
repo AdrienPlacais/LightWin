@@ -52,7 +52,7 @@ class TransferMatrixFactoryEnvelope3D(TransferMatrixFactory):
                 "now."
             )
             first_cumulated_transfer_matrix = None
-        individual = self._preprocess((single_elts_results))
+        individual = self._preprocess(single_elts_results)
         transfer_matrix = TransferMatrix(
             individual=individual,
             first_cumulated_transfer_matrix=first_cumulated_transfer_matrix,

@@ -232,7 +232,7 @@ class BeamParameters(InitialBeamParameters):
             return self.sigma_in[2:4, 2:4]
         if phase_space_name == "zdelta":
             return self.sigma_in[4:, 4:]
-        raise IOError(f"{phase_space_name = } is not allowed.")
+        raise OSError(f"{phase_space_name = } is not allowed.")
 
     @property
     def tracewin_command(self) -> list[str]:
@@ -312,7 +312,7 @@ class BeamParameters(InitialBeamParameters):
         """Get the two phase spaces between which mismatch will be computed."""
         if not hasattr(self, phase_space_name):
             if raise_missing_phase_space_error:
-                raise IOError(
+                raise OSError(
                     f"Phase space {phase_space_name} not "
                     "defined in fixed linac. Cannot compute "
                     "mismatch."
@@ -321,7 +321,7 @@ class BeamParameters(InitialBeamParameters):
 
         if not hasattr(reference_beam_parameters, phase_space_name):
             if raise_missing_phase_space_error:
-                raise IOError(
+                raise OSError(
                     f"Phase space {phase_space_name} not "
                     "defined in reference linac. Cannot compute "
                     "mismatch."
@@ -343,7 +343,7 @@ class BeamParameters(InitialBeamParameters):
         """Set ``t`` mismatch as average of ``x`` and ``y``."""
         if not hasattr(self, "x"):
             if raise_missing_phase_space_error:
-                raise IOError(
+                raise OSError(
                     "Phase space x not defined in fixed linac. "
                     "Cannot compute transverse mismatch."
                 )
@@ -351,7 +351,7 @@ class BeamParameters(InitialBeamParameters):
 
         if not hasattr(self, "y"):
             if raise_missing_phase_space_error:
-                raise IOError(
+                raise OSError(
                     "Phase space y not defined in fixed linac. "
                     "Cannot compute transverse mismatch."
                 )
@@ -359,7 +359,7 @@ class BeamParameters(InitialBeamParameters):
 
         if not hasattr(self.x, "mismatch_factor"):
             if raise_missing_mismatch_error:
-                raise IOError(
+                raise OSError(
                     "Phase space x has no calculated mismatch. "
                     "Cannot compute transverse mismatch."
                 )
@@ -367,7 +367,7 @@ class BeamParameters(InitialBeamParameters):
 
         if not hasattr(self.y, "mismatch_factor"):
             if raise_missing_mismatch_error:
-                raise IOError(
+                raise OSError(
                     "Phase space y has no calculated mismatch. "
                     "Cannot compute transverse mismatch."
                 )

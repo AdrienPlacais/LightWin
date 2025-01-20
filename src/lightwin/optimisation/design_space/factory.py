@@ -48,7 +48,7 @@ class DesignSpaceFactory(ABC):
         self.variables_names: Sequence[str]
         self.variables_filepath: Path
         if not hasattr(self, "variables_names"):
-            raise IOError("You must define at least one variable name.")
+            raise OSError("You must define at least one variable name.")
 
         self.constraints_names: Sequence[str]
         self.constraints_filepath: Path

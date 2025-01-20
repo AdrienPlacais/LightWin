@@ -168,7 +168,7 @@ def equivalent_elt_idx(
 
     logging.error(f"Element {elt} not found in this list of elements.")
     logging.debug(f"List of elements is:\n{elts}")
-    raise IOError(f"Element {elt} not found in this list of elements.")
+    raise OSError(f"Element {elt} not found in this list of elements.")
 
 
 def equivalent_elt(

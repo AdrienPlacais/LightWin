@@ -91,7 +91,7 @@ class ParticleFullTrajectory:
     @property
     def tracewin_command(self) -> list[str]:
         """Raise an error, this method should be called from InitialPart."""
-        raise IOError("This method should not be used from here.")
+        raise OSError("This method should not be used from here.")
 
     def compute_complementary_data(self):
         """Compute some data necessary to do the post-treatment."""

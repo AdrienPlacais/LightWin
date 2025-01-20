@@ -65,7 +65,7 @@ def _distance_to_ref[
         return lowest_distance, index
     if tie_politics == "downstream first":
         return lowest_distance, -index
-    raise IOError(f"{tie_politics = } not understood.")
+    raise OSError(f"{tie_politics = } not understood.")
 
 
 def _penalty(index: int, failure_index: int, shift: int) -> int:

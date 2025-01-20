@@ -213,7 +213,7 @@ class TransferMatrix:
                 "arrays: individual transfer matrices or "
                 "cumulated transfer matrices."
             )
-            raise IOError("Wrong input")
+            raise OSError("Wrong input")
         n_points = cumulated.shape[0]
 
         if (

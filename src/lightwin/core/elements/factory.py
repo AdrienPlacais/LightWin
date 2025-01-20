@@ -134,6 +134,6 @@ def _get_constructor(instruction: str, dat_idx: int) -> type:
     """Get the proper constructor."""
     if instruction in implemented_elements:
         return implemented_elements[instruction]
-    raise IOError(
+    raise OSError(
         f"No Element matching {instruction} at line {dat_idx + 1} was found."
     )

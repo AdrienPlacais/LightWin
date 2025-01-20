@@ -26,6 +26,10 @@ repos:
         exclude: ^tests/pytest_helpers/.*\.py$
       - id: trailing-whitespace
         types_or: [python, toml]
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.1
+    hooks:
+    -   id: pyupgrade
   - repo: https://github.com/psf/black
     rev: 24.4.2
     hooks:

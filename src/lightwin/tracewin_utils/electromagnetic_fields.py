@@ -217,7 +217,7 @@ def _get_field_nature(second_word_field_type: str) -> Literal["e", "b"]:
         return "e"
     if second_word_field_type == "magnetic":
         return "b"
-    raise IOError(
+    raise OSError(
         f"{second_word_field_type = } while it must be in "
         "('electric', 'magnetic')"
     )
@@ -241,7 +241,7 @@ def _get_type(first_word_field_type: str) -> Literal["s", "d"]:
         return "s"
     if first_word_field_type == "RF":
         return "d"
-    raise IOError(
+    raise OSError(
         f"{first_word_field_type = } while it must be in ('static', 'RF')"
     )
 
@@ -269,7 +269,7 @@ def _get_field_components(first_words_field_geometry: str) -> list[str]:
         "3D cylindrical": ["r", "q", "z"],
     }
     if first_words_field_geometry not in selectioner:
-        raise IOError(
+        raise OSError(
             f"{first_words_field_geometry = } while it should be in "
             f"{tuple(selectioner.keys())}."
         )

@@ -176,7 +176,7 @@ class TableConfSpec:
             f"{spec_name}"
         )
         logging.error(msg)
-        raise IOError(msg)
+        raise OSError(msg)
 
     def to_toml_strings(
         self,

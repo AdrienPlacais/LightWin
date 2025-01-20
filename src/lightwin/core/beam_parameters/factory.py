@@ -90,7 +90,7 @@ class BeamParametersFactory(ABC):
         if sigma_in.shape == (6, 6):
             return sigma_in
 
-        raise IOError(f"{sigma_in.shape = } not recognized.")
+        raise OSError(f"{sigma_in.shape = } not recognized.")
 
     def _set_from_other_phase_space(
         self,

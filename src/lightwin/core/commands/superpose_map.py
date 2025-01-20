@@ -194,7 +194,7 @@ class SuperposeMap(Command):
 
             if elt.idx["idx_in_lattice"] < 0:
                 if i == 0:
-                    raise IOError(
+                    raise OSError(
                         "Detected a SUPERPOSE_MAP at the end of a lattice. Not"
                         "supported for now."
                     )

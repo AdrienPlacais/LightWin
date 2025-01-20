@@ -386,7 +386,7 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
         reference_cavity = equivalent_elt(self.reference_elts, cavity)
 
         if self.design_space_kw["from_file"]:
-            raise IOError(
+            raise OSError(
                 "For now, synchronous phase cannot be taken from "
                 "the variables or constraints.csv files when used as"
                 " objectives."

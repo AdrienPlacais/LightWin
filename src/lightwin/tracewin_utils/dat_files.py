@@ -45,7 +45,7 @@ def dat_filecontent_from_file(
         List containing all the lines of dat_path.
 
     """
-    with open(dat_path, "r", encoding="utf-8") as file:
+    with open(dat_path, encoding="utf-8") as file:
         dat_filecontent = [DatLine(line, idx) for idx, line in enumerate(file)]
 
     dat_filecontent = _filter_lines(dat_filecontent, keep, filter_func)

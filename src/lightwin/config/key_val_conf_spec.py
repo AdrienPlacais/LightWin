@@ -82,7 +82,7 @@ class KeyValConfSpec:
             logging.warning(self.warning_message)
         if self.error_message:
             logging.critical(self.error_message)
-            raise IOError(self.error_message)
+            raise OSError(self.error_message)
         if self.action is not None:
             return True
 

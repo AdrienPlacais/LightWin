@@ -257,7 +257,7 @@ def _load_results_generic(
     n_lines_header = 9
     results = {}
 
-    with open(f_p, "r", encoding="utf-8") as file:
+    with open(f_p, encoding="utf-8") as file:
         for i, line in enumerate(file):
             if i == 1:
                 __mc2, freq, __z, __i, __npart = line.strip().split()
@@ -367,7 +367,7 @@ def _remove_incomplete_line(filepath: Path) -> None:
     """
     n_lines_header = 9
     i_last_valid = -1
-    with open(filepath, "r", encoding="utf-8") as file:
+    with open(filepath, encoding="utf-8") as file:
         lines = file.readlines()
     for i, line in enumerate(lines):
         if i < n_lines_header:
@@ -451,7 +451,7 @@ def _load_cavity_parameters(
     f_p = Path(path_cal, filename)
     n_lines_header = 1
 
-    with open(f_p, "r", encoding="utf-8") as file:
+    with open(f_p, encoding="utf-8") as file:
         for i, line in enumerate(file):
             if i == n_lines_header - 1:
                 headers = line.strip().split()
