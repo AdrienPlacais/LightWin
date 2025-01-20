@@ -16,7 +16,10 @@ from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import WithFaults
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.fault import Fault
-from lightwin.failures.fault_scenario import FaultScenario, fault_scenario_factory
+from lightwin.failures.fault_scenario import (
+    FaultScenario,
+    fault_scenario_factory,
+)
 from lightwin.util.pickling import MyCloudPickler, MyPickler
 
 params = [pytest.param((MyCloudPickler,), id="cloudpickle")]
