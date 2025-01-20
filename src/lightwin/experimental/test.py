@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Define simple tests for functionality under implementation."""
+
 from dataclasses import dataclass
 from typing import Self, Sequence
 

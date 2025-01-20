@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Define function to build the Cython module(s).
 
 Should be automatically handled at the package installation. If not, simply
@@ -9,6 +8,7 @@ run:
     make compile
 
 """
+
 import importlib
 from pathlib import Path
 from typing import Literal
