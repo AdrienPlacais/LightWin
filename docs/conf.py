@@ -54,7 +54,6 @@ extensions = [
     "sphinx.ext.intersphinx",  # interlink with other docs, such as numpy
     "sphinx.ext.todo",  # allow use of TODO
     "nbsphinx",
-    "sphinx_multiversion",
     "lightwin_sphinx_extensions",
     "sphinx_autodoc_typehints",  # Printing types in docstrings not necessary anymore
 ]
@@ -146,16 +145,6 @@ html_sidebars = {
 # -- Options for LaTeX output ------------------------------------------------
 # https://stackoverflow.com/questions/28454217/how-to-avoid-the-too-deeply-nested-error-when-creating-pdfs-with-sphinx
 latex_elements = {"preamble": r"\usepackage{enumitem}\setlistdepth{99}"}
-
-# -- Options for multiversion in doc -----------------------------------------
-smv_tag_whitelist = (
-    # r"^v\d+\.\d+.*$|latest"  # would keep all the versions (unnecessary)
-    r"^(v0\.7\.0|v0\.8\.3)$"  # keep only major tags
-)
-smv_branch_whitelist = "main"
-smv_remote_whitelist = None
-smv_released_pattern = r"v.*"
-smv_latest_version = version
 
 
 # -- Constants display fix ---------------------------------------------------
