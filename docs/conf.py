@@ -53,10 +53,10 @@ extensions = [
     "myst_parser",
     "sphinx.ext.intersphinx",  # interlink with other docs, such as numpy
     "sphinx.ext.todo",  # allow use of TODO
-    # "sphinx.ext.viewcode",
     "nbsphinx",
     "sphinx_multiversion",
     "lightwin_sphinx_extensions",
+    "sphinx_autodoc_typehints",  # Printing types in docstrings not necessary anymore
 ]
 
 autodoc_default_options = {
@@ -120,6 +120,11 @@ intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
+
+# Parameters for sphinx-autodoc-typehints
+always_document_param_types = True
+always_use_bar_union = True
+typehints_defaults = "braces-after"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

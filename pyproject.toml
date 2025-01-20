@@ -41,6 +41,7 @@ docs = [
    "sphinxcontrib-bibtex>=2.6.0,<3.0.0",
    "myst-parser>=3.0.1, <4.0.0",
    "nbsphinx>=0.9.4, <1.0.0",
+   "sphinx-autodoc-typehints>=3.0.1, <4.0.0",
 ]
 test = ["pytest>=8.3.2, <9.0.0"]
 
