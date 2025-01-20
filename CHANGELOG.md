@@ -5,31 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.9.x]
 
-## [0.?.??] 2024-??-?? -- branch under development
+Adhere to development best practices.
+In particular, follow advices listed in the great [Scientific Python library development guide](https://learn.scientific-python.org/development/).
 
-### Changed
-
-- `evaluator` objects are more robust and can be configured from the `.toml`.
-- Plotting is now performed thanks to the `plotter` library.
-
-## [0.10.x] -- unreleased
+## [0.9.1] -- unreleased
 
 ### Added
 
-- `FIELD_MAP 70` does not raise error (warning issued with `Envelope3D`: no transverse tracking).
-- `SUPERPOSE_MAP` will be implemented for 1D maps (warning issued with `Envelope3D`: no transverse tracking).
-
-## [0.9.x] -- unreleased
-
-### Changed
-
 - Package on `pip` (simpler installation with `pip install lightwin`).
+
+## [0.9.0] -- unreleased
 
 ### Added
 
 - CI/CD tasks:
-    - Automatic formatting, checking of common mistakes with `pre-commmit`.
+    - Automatic linting with `pre-commit.ci`.
+    - Automatic checking of common mistakes with `pre-commit.cli`.
+    - Run automatic tests using `pytest` and Github workflows.
+
+# [0.8.x]
 
 ## [0.8.4] 2025-01-15
 
@@ -130,6 +126,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - `Accelerator` will also use data from `beam`. Instantiate `AcceleratorFactory` with `**config`.
  - `SimulationOutputFactory` instantiated with `_beam_kwargs`.
 
+# [0.7.x]
+
 ## [0.7.0] 2024-10-22
 
 ### Added
@@ -186,6 +184,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - It is not necessary to add LightWin to your `PATH`.
  - Imports of LightWin modules and functions must be imported from `lightwin`: `from lightwin.<foo> import <fee>`.
  - Cython compilation is automatic.
+
+# [0.6.x]
 
 ## [0.6.21] 2024-06-07
 
@@ -293,6 +293,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Lattices and their indexes correctly set.
 - Synchronous phases correctly calculated and updated; can be used as a variable again.
+
+# Future updates
+
+## [0.?.??] 2024-??-?? -- branch under development
+
+### Changed
+
+- `evaluator` objects are more robust and can be configured from the `.toml`.
+- Plotting is now performed thanks to the `plotter` library.
+
+## [0.10.x] -- unreleased
+
+### Added
+
+- `FIELD_MAP 70` does not raise error (warning issued with `Envelope3D`: no transverse tracking).
+- `SUPERPOSE_MAP` will be implemented for 1D maps (warning issued with `Envelope3D`: no transverse tracking).
+
 
 <!-- ## [0.0.0] 1312-01-01 -->
 <!---->
