@@ -122,9 +122,9 @@ intersphinx_mapping = {
 }
 
 # Parameters for sphinx-autodoc-typehints
-always_document_param_types = True
-always_use_bar_union = True
-typehints_defaults = "braces-after"
+# always_document_param_types = True
+# always_use_bar_union = True
+# typehints_defaults = "braces-after"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
