@@ -57,6 +57,7 @@ line-length = 79
 target-version = ["py312"]
 
 [tool.isort]
+line_length = 79
 profile = "black"
 src_paths = ["./src"]
 

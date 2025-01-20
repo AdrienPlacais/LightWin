@@ -22,8 +22,8 @@ from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import 
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 
 try:
-    from lightwin.beam_calculation.cy_envelope_1d import (
-        transfer_matrices,  # type: ignore
+    from lightwin.beam_calculation.cy_envelope_1d import (  # type: ignore
+        transfer_matrices,
     )
 except ModuleNotFoundError as e:
     logging.error("Is CyEnvelope1D compiled? Check setup.py.")

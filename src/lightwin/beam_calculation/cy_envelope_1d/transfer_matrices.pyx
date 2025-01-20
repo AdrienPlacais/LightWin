@@ -16,12 +16,15 @@ Cython needs to be compiled to work. Check the instructions in
 
 """
 import cython
-from libc.math cimport sin, cos, sqrt, tan, floor
+
+from libc.math cimport cos, floor, sin, sqrt, tan
+
 import numpy as np
+
 cimport numpy as np
+
 np.import_array()
 from lightwin.constants import c
-
 
 # Must be changed to double if C float is replaced by double
 DTYPE = np.float64
