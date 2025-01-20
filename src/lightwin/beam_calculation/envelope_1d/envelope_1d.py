@@ -81,6 +81,34 @@ class Envelope1D(BeamCalculator):
             beam_kwargs=self._beam_kwargs,
         )
 
+    def alternative_run(
+        self,
+        elts: ListOfElements,
+        update_reference_phase: bool = False,
+        **kwargs,
+    ) -> SimulationOutput:
+        """Compute beam propagation in 1D, envelope calculation.
+
+        This is the same as run, but without type hints in the docstring. Also
+        without printing the default value in the docstring.
+        Should have the same appearance as the classic :meth:`run`.
+
+        Parameters
+        ----------
+        elts : List of elements in which the beam must be propagated.
+        update_reference_phase : To change the reference phase of cavities when
+            it is different from the one asked in the ``.toml``. To use after
+            the first calculation, if ``BeamCalculator.flag_phi_abs`` does not
+            correspond to ``CavitySettings.reference``.
+
+        Returns
+        -------
+        simulation_output : Holds energy, phase, transfer matrices (among
+            others) packed into a single object.
+
+        """
+        return super().run(elts, update_reference_phase, **kwargs)
+
     def run(
         self,
         elts: ListOfElements,
