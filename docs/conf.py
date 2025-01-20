@@ -66,6 +66,7 @@ autodoc_default_options = {
     "special-members": "__init__, __post_init__, __str__",  # Document those special members
     "undoc-members": True,  # Document members without doc
 }
+autodoc_mock_imports = ["pso", "lightwin.optimisation.algorithms.pso"]
 
 add_module_names = False
 default_role = "literal"
