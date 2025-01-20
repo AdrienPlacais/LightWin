@@ -109,6 +109,7 @@ def generated_toml_dict(
 
 
 @pytest.mark.smoke
+@pytest.mark.implementation
 class TestConfigManager:
     """Test that configuration file ``.toml`` correctly handled."""
 

@@ -21,8 +21,9 @@ repos:
       #   args: ["--remove"]
       - id: mixed-line-ending
         types_or: [python, toml]
-      # - id: name-tests-test
-      #   args: ["--pytest-test-first"]
+      - id: name-tests-test
+        args: ["--pytest-test-first"]
+        exclude: ^tests/pytest_helpers/.*\.py$
       - id: trailing-whitespace
         types_or: [python, toml]
   - repo: https://github.com/psf/black
