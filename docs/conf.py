@@ -67,6 +67,12 @@ autodoc_default_options = {
     "undoc-members": True,  # Document members without doc
 }
 autodoc_mock_imports = ["pso", "lightwin.optimisation.algorithms.pso"]
+autodoc_type_aliases = {
+    "np": "numpy",
+    "pd": "pandas",
+    "Path": "pathlib.Path",
+    "plt": "matplotlib.pyplot",
+}
 
 add_module_names = False
 default_role = "literal"
