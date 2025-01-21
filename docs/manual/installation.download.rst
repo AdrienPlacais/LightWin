@@ -12,7 +12,7 @@ You can switch between versions with:
 
 .. code-block:: bash
 
-   git checkout v0.8.3
+   git checkout v0.9.0
 
 Alternatively, you download the code as a `.zip` file from the repository's page.
 However, please note that using this method requires manually downloading updates whenever changes are made to the repository.

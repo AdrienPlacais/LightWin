@@ -13,7 +13,7 @@ Installation with pip (recommended)
 
   .. code-block:: bash
 
-     pip install -e .[tests]
+     pip install -e .[test]
 
 The mandatory packages with their dependencies should be automatically downloaded.
 On some systems, you may have to escape the brackets, *i.e.* to add a backslash before them.
@@ -51,14 +51,15 @@ Following packages are optional
 To install optional dependencies, run `pip install -e .[name-of-dependencies]`.
 It is recommended to install the `[test]` environment.
 
-* `[cython]` - Used to speed up calculations. Check `cython integration documentation`_.
+* `[test]` - To run tests and ensure everything is working as expected.
+
+* `[docs]` - To build the documentation locally.
+
+* (currently listed in mandatory packages) `[cython]` - Used to speed up calculations. Check `cython integration documentation`_.
   As for now, automatically installed.
 
    * Note: Installing `cython` prior to `pymoo` enable compilation of some `pymoo` functions for improved performance.
 
-* `[tests]` - To run tests and ensure everything is working as expected.
-
-* `[docs]` - To build the documentation locally.
 
 .. _cython integration documentation: https://lightwin.readthedocs.io/en/latest/manual/installation.cython.html
 
