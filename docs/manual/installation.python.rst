@@ -13,9 +13,10 @@ Installation with pip (recommended)
 
   .. code-block:: bash
 
-     pip install -e .
+     pip install -e .[tests]
 
 The mandatory packages with their dependencies should be automatically downloaded.
+On some systems, you may have to escape the brackets, *i.e.* to add a backslash before them.
 
 .. hint::
    The `-e` flag means that the installation is editable.
@@ -47,19 +48,24 @@ So the installation will require more work from your side.
 Following packages are optional
 """""""""""""""""""""""""""""""
 
-* `cython` - Used to speed up calculations. Check `cython integration documentation`_.
+To install optional dependencies, run `pip install -e .[name-of-dependencies]`.
+It is recommended to install the `[test]` environment.
+
+* `[cython]` - Used to speed up calculations. Check `cython integration documentation`_.
+  As for now, automatically installed.
 
    * Note: Installing `cython` prior to `pymoo` enable compilation of some `pymoo` functions for improved performance.
 
-* `pytest` - To run tests and ensure everything is working as expected.
-* `cloudpickle` - To pickle/unpickle some objects (see the `util.pickling` documentation).
+* `[tests]` - To run tests and ensure everything is working as expected.
+
+* `[docs]` - To build the documentation locally.
 
 .. _cython integration documentation: https://lightwin.readthedocs.io/en/latest/manual/installation.cython.html
 
 For developers
 """"""""""""""
 
-The files are formatted with `black` (text width: 79 characters) and `isort`.
+The files are formatted with `black` (text width: 79 characters) and `isort` - the `pre-commit-ci` bot will take care of that automatically on `push`.
 The docstrings must adhere to the `numpy` style.
 
 Reminders
