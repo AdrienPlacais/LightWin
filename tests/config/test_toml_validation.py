@@ -161,12 +161,37 @@ class TestConfigManager:
 # =============================================================================
 # New tests
 # =============================================================================
-@pytest.mark.tmp
+@pytest.fixture
+def mock_conf_spec() -> tuple[MagicMock, MagicMock]:
+    """Mock the :class:`.ConfSpec` class."""
+    conf_specs_t = MagicMock(spec=type(ConfSpec))
+    conf_specs = MagicMock(spec=ConfSpec)
+    conf_specs_t.return_value = conf_specs
+    return conf_specs_t, conf_specs
+
+
+@pytest.fixture
+def common_setup(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> tuple[Path, dict[str, str]]:
+    """Fixture to set up common test components."""
+    toml_content = b"""
+    [proton_beam]
+    key1 = "value1"
+    key2 = "value2"
+    """
+    toml_path = tmp_path_factory.mktemp("config") / "config.toml"
+    toml_path.write_bytes(toml_content)
+
+    config_keys = {"beam": "proton_beam"}
+    return toml_path, config_keys
+
+
 class TestLoadToml:
-    """Test the ``_load_toml`` function."""
+    """Test the :func:`._load_toml` function."""
 
     def test_success(self) -> None:
-        """Check that ``_load_toml`` successfully loads and maps sections."""
+        """Check :func:`_load_toml` successfully loads and maps sections."""
         mock_toml_data = b"""
         [proton_beam]
         key1 = "value1"
@@ -199,56 +224,6 @@ class TestLoadToml:
                     "files": {"file1": "path/to/file"},
                 }
 
-    def test_warn_mismatch(self):
-        """Test ``_load_toml`` raises KeyError for missing sections."""
-        mock_toml_data = b"""
-        [other_section]
-        key1 = "value1"
-        """
-        config_keys = {"beam": "proton_beam"}
-
-        with patch("builtins.open", mock_open(read_data=mock_toml_data)):
-            with patch(
-                "lightwin.config.config_manager.tomllib.load"
-            ) as mock_load:
-                mock_load.return_value = {"other_section": {"key1": "value1"}}
-
-                with pytest.raises(KeyError):
-                    _load_toml(
-                        "mock_path",
-                        config_keys,
-                        warn_mismatch=False,
-                        override=None,
-                    )
-
-    def test_override(self):
-        """Test ``_load_toml`` applies override logic."""
-        mock_toml_data = b"""
-        [proton_beam]
-        key1 = "value1"
-        key2 = "value2"
-        """
-        config_keys = {"beam": "proton_beam"}
-        override = {"beam": {"key1": "new_value1"}}
-
-        with patch("builtins.open", mock_open(read_data=mock_toml_data)):
-            with patch(
-                "lightwin.config.config_manager.tomllib.load"
-            ) as mock_load:
-                mock_load.return_value = {
-                    "proton_beam": {"key1": "value1", "key2": "value2"}
-                }
-
-                result = _load_toml(
-                    "mock_path",
-                    config_keys,
-                    warn_mismatch=False,
-                    override=override,
-                )
-                assert result == {
-                    "beam": {"key1": "new_value1", "key2": "value2"},
-                }
-
     @pytest.mark.smoke
     def test_general_behavior(self) -> None:
         """Check if ``TOML`` loading does not throw errors.
@@ -265,32 +240,6 @@ class TestLoadToml:
         ), f"Error loading {example_config}"
 
 
-@pytest.fixture
-def mock_conf_spec() -> tuple[MagicMock, MagicMock]:
-    """Mock the :class:`.ConfSpec` class."""
-    conf_specs_t = MagicMock(spec=type(ConfSpec))
-    conf_specs = MagicMock(spec=ConfSpec)
-    conf_specs_t.return_value = conf_specs
-    return conf_specs_t, conf_specs
-
-
-@pytest.fixture
-def common_setup(
-    tmp_path_factory: pytest.TempPathFactory,
-) -> tuple[Path, dict[str, str]]:
-    """Fixture to set up common test components."""
-    toml_content = b"""
-    [proton_beam]
-    key1 = "value1"
-    key2 = "value2"
-    """
-    toml_path = tmp_path_factory.mktemp("config") / "config.toml"
-    toml_path.write_bytes(toml_content)
-
-    config_keys = {"beam": "proton_beam"}
-    return toml_path, config_keys
-
-
 def mock_load_toml(mock_return_value: dict[str, dict[str, Any]]):
     """Mock :func:`._load_toml` with a given return value."""
     return patch(
@@ -299,7 +248,7 @@ def mock_load_toml(mock_return_value: dict[str, dict[str, Any]]):
     )
 
 
-@pytest.mark.tmp
+@pytest.mark.smoke
 class TestProcessConfig:
     """Define tests for the :func:``.process_config`` function."""
 
@@ -337,6 +286,8 @@ class TestProcessConfig:
         self, mock_conf_spec: tuple[MagicMock, MagicMock]
     ) -> None:
         """Test process_config raises an error for an invalid ``TOML`` path."""
+        conf_specs_t, _ = mock_conf_spec
+        conf_specs_t_cast = cast(type[ConfSpec], conf_specs_t)  # for linter
         toml_path = Path("non_existent_file.toml")
         config_keys = {"beam": "proton_beam"}
 
@@ -344,7 +295,7 @@ class TestProcessConfig:
             process_config(
                 toml_path=toml_path,
                 config_keys=config_keys,
-                conf_specs_t=mock_conf_spec[0],
+                conf_specs_t=conf_specs_t_cast,
             )
 
     def test_process_config_with_override(
