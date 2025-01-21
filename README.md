@@ -1,8 +1,8 @@
 [![Py versions](https://img.shields.io/badge/python-3.12-blue)](https://img.shields.io/badge/python-3.12-blue)
 [![build status](https://github.com/AdrienPlacais/LightWin/actions/workflows/main.yml/badge.svg)](https://github.com/AdrienPlacais/LightWin/actions/workflows/main.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Documentation Status](https://readthedocs.org/projects/lightwin/badge/?version=latest)](https://lightwin.readthedocs.io/en/latest/?badge=latest)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/AdrienPlacais/LightWin/main.svg)](https://results.pre-commit.ci/latest/github/AdrienPlacais/LightWin/main)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
 
