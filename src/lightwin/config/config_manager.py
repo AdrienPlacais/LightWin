@@ -49,7 +49,9 @@ def process_config(
 
     """
     assert toml_path.is_file(), f"{toml_path = } does not exist."
-    toml_fulldict = _load_toml(toml_path, config_keys, warn_mismatch, override)
+    toml_fulldict = _load_toml(
+        toml_path, config_keys, warn_mismatch=warn_mismatch, override=override
+    )
 
     conf_specs = conf_specs_t(**config_keys)
     conf_specs.prepare(toml_fulldict, toml_folder=toml_path.parent)

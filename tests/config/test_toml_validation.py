@@ -1,7 +1,8 @@
 """Ensure that loading and validating ``TOML`` works as expected."""
 
-from typing import Any
-from unittest.mock import mock_open, patch
+from pathlib import Path
+from typing import Any, cast
+from unittest.mock import MagicMock, mock_open, patch
 
 import pytest
 
@@ -10,7 +11,7 @@ from lightwin.config.config_manager import (
     dict_to_toml,
     process_config,
 )
-from lightwin.config.full_specs import SimplestConfSpec
+from lightwin.config.full_specs import ConfSpec, SimplestConfSpec
 from lightwin.constants import (
     example_config,
     example_dat,
@@ -109,6 +110,57 @@ def generated_toml_dict(
     return conf_specs.generate_dummy_dict()
 
 
+@pytest.mark.smoke
+@pytest.mark.implementation
+class TestConfigManager:
+    """Test that configuration file ``TOML`` correctly handled."""
+
+    def test_validate(
+        self,
+        conf_specs: SimplestConfSpec,
+        dummy_toml_dict: dict[str, dict[str, Any]],
+    ) -> None:
+        """Check if loaded toml is valid."""
+        assert conf_specs.prepare(
+            dummy_toml_dict,
+            id_type="configured_object",
+            toml_folder=example_folder,
+        ), f"Error validating {example_config}"
+
+    def test_generate_works(
+        self, generated_toml_dict: dict[str, dict[str, Any]]
+    ) -> None:
+        """Check that generating a default toml leads to a valid dict."""
+        assert isinstance(
+            generated_toml_dict, dict
+        ), "Error generating default configuration dict."
+
+    def test_generate_is_valid(
+        self,
+        conf_specs: SimplestConfSpec,
+        generated_toml_dict: dict[str, dict[str, Any]],
+    ) -> None:
+        """Check that generating a default toml leads to a valid dict."""
+        assert conf_specs.prepare(
+            generated_toml_dict, id_type="table_entry"
+        ), "Error validating default configuration dict."
+
+    def test_config_can_be_saved_to_file(
+        self,
+        conf_specs: SimplestConfSpec,
+        dummy_toml_dict: dict[str, dict[str, Any]],
+        tmp_path_factory: pytest.TempPathFactory,
+    ):
+        """Check if saving the given conf dict as toml works."""
+        toml_path = tmp_path_factory.mktemp("test_toml") / "test.toml"
+        dict_to_toml(dummy_toml_dict, toml_path, conf_specs)
+        process_config(toml_path, CONFIG_KEYS, conf_specs_t=SimplestConfSpec)
+        assert True
+
+
+# =============================================================================
+# New tests
+# =============================================================================
 class TestLoadToml:
     """Test the ``_load_toml`` function."""
 
@@ -212,49 +264,115 @@ class TestLoadToml:
         ), f"Error loading {example_config}"
 
 
-@pytest.mark.smoke
-@pytest.mark.implementation
-class TestConfigManager:
-    """Test that configuration file ``TOML`` correctly handled."""
+@pytest.fixture
+def mock_conf_spec() -> tuple[MagicMock, MagicMock]:
+    """Mock the :class:`.ConfSpec` class."""
+    conf_specs_t = MagicMock(spec=type(ConfSpec))
+    conf_specs = MagicMock(spec=ConfSpec)
+    conf_specs_t.return_value = conf_specs
+    return conf_specs_t, conf_specs
 
-    def test_validate(
+
+@pytest.mark.tmp
+class TestProcessConfig:
+    """Define tests for the :func:``.process_config`` function."""
+
+    def test_process_config_valid(
         self,
-        conf_specs: SimplestConfSpec,
-        dummy_toml_dict: dict[str, dict[str, Any]],
-    ) -> None:
-        """Check if loaded toml is valid."""
-        assert conf_specs.prepare(
-            dummy_toml_dict,
-            id_type="configured_object",
-            toml_folder=example_folder,
-        ), f"Error validating {example_config}"
-
-    def test_generate_works(
-        self, generated_toml_dict: dict[str, dict[str, Any]]
-    ) -> None:
-        """Check that generating a default toml leads to a valid dict."""
-        assert isinstance(
-            generated_toml_dict, dict
-        ), "Error generating default configuration dict."
-
-    def test_generate_is_valid(
-        self,
-        conf_specs: SimplestConfSpec,
-        generated_toml_dict: dict[str, dict[str, Any]],
-    ) -> None:
-        """Check that generating a default toml leads to a valid dict."""
-        assert conf_specs.prepare(
-            generated_toml_dict, id_type="table_entry"
-        ), "Error validating default configuration dict."
-
-    def test_config_can_be_saved_to_file(
-        self,
-        conf_specs: SimplestConfSpec,
-        dummy_toml_dict: dict[str, dict[str, Any]],
+        mock_conf_spec: tuple[MagicMock, MagicMock],
         tmp_path_factory: pytest.TempPathFactory,
-    ):
-        """Check if saving the given conf dict as toml works."""
-        toml_path = tmp_path_factory.mktemp("test_toml") / "test.toml"
-        dict_to_toml(dummy_toml_dict, toml_path, conf_specs)
-        process_config(toml_path, CONFIG_KEYS, conf_specs_t=SimplestConfSpec)
-        assert True
+    ) -> None:
+        """Test process_config with valid inputs."""
+        conf_specs_t, conf_specs = mock_conf_spec
+        conf_specs_t_cast = cast(type[ConfSpec], conf_specs_t)  # for linter
+
+        toml_content = b"""
+        [proton_beam]
+        key1 = "value1"
+        key2 = "value2"
+        """
+        toml_path = tmp_path_factory.mktemp("config") / "config.toml"
+        toml_path.write_bytes(toml_content)
+
+        config_keys = {"beam": "proton_beam"}
+
+        with patch(
+            "lightwin.config.config_manager._load_toml"
+        ) as mock_load_toml:
+            mock_load_toml.return_value = {
+                "beam": {"key1": "value1", "key2": "value2"}
+            }
+
+            result = process_config(
+                toml_path=toml_path,
+                config_keys=config_keys,
+                conf_specs_t=conf_specs_t_cast,
+            )
+
+            assert result == {"beam": {"key1": "value1", "key2": "value2"}}
+            mock_load_toml.assert_called_once_with(
+                toml_path, config_keys, warn_mismatch=False, override=None
+            )
+            conf_specs_t.assert_called_once_with(**config_keys)
+            conf_specs.prepare.assert_called_once_with(
+                result, toml_folder=toml_path.parent
+            )
+
+    def test_process_config_invalid_toml_path(
+        self, mock_conf_spec: tuple[MagicMock, MagicMock]
+    ) -> None:
+        """Test process_config raises an error for an invalid ``TOML`` path."""
+        toml_path = Path("non_existent_file.toml")
+        config_keys = {"beam": "proton_beam"}
+
+        with pytest.raises(AssertionError, match="does not exist"):
+            process_config(
+                toml_path=toml_path,
+                config_keys=config_keys,
+                conf_specs_t=mock_conf_spec[0],
+            )
+
+    def test_process_config_with_override(
+        self,
+        mock_conf_spec: tuple[MagicMock, MagicMock],
+        tmp_path_factory: pytest.TempPathFactory,
+    ) -> None:
+        """Test process_config applies overrides correctly."""
+        conf_specs_t, conf_specs = mock_conf_spec
+        conf_specs_t_cast = cast(type[ConfSpec], conf_specs_t)  # for linter
+
+        toml_content = b"""
+        [proton_beam]
+        key1 = "value1"
+        key2 = "value2"
+        """
+        toml_path = tmp_path_factory.mktemp("config") / "config.toml"
+        toml_path.write_bytes(toml_content)
+
+        config_keys = {"beam": "proton_beam"}
+        override = {"beam": {"key1": "new_value"}}
+
+        with patch(
+            "lightwin.config.config_manager._load_toml"
+        ) as mock_load_toml:
+            mock_load_toml.return_value = {
+                "beam": {"key1": "value1", "key2": "value2"}
+            }
+
+            result = process_config(
+                toml_path=toml_path,
+                config_keys=config_keys,
+                override=override,
+                conf_specs_t=conf_specs_t_cast,
+            )
+
+            mock_load_toml.assert_called_once_with(
+                toml_path, config_keys, warn_mismatch=False, override=override
+            )
+            # Note the key1: value1; not key1: new_value! This is because we
+            # mocked _load_toml and the override logic happens in this function
+            assert result == {"beam": {"key1": "value1", "key2": "value2"}}
+            conf_specs_t.assert_called_once_with(**config_keys)
+            conf_specs.prepare.assert_called_once_with(
+                result, toml_folder=toml_path.parent
+            )
