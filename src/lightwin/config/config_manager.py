@@ -15,6 +15,18 @@ from typing import Any
 from lightwin.config.full_specs import ConfSpec
 
 
+class ConfigFileNotFoundError(FileNotFoundError):
+    """Custom exception raised when the configuration file is not found."""
+
+    pass
+
+
+class InvalidTomlSyntaxError(ValueError):
+    """Custom exception raised for invalid TOML syntax."""
+
+    pass
+
+
 def process_config(
     toml_path: Path,
     config_keys: dict[str, str],
@@ -48,7 +60,8 @@ def process_config(
         :class:`.BeamCalculator`.
 
     """
-    assert toml_path.is_file(), f"{toml_path = } does not exist."
+    if not toml_path.is_file():
+        raise ConfigFileNotFoundError(f"The file {toml_path} does not exist.")
     toml_fulldict = _load_toml(
         toml_path, config_keys, warn_mismatch=warn_mismatch, override=override
     )
@@ -93,9 +106,13 @@ def _load_toml(
         with open(config_path, "rb") as f:
             all_toml = tomllib.load(f)
     except FileNotFoundError:
-        raise FileNotFoundError(f"The file {config_path} does not exist.")
+        raise ConfigFileNotFoundError(
+            f"The file {config_path} does not exist."
+        )
     except tomllib.TOMLDecodeError as e:
-        raise ValueError(f"Error decoding TOML file {config_path}: {e}")
+        raise InvalidTomlSyntaxError(
+            f"Invalid TOML syntax in file {config_path}: {e}"
+        )
 
     toml_fulldict = {}
     for key, value in config_keys.items():

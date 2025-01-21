@@ -7,13 +7,14 @@ from unittest.mock import MagicMock, call, mock_open, patch
 import pytest
 
 from lightwin.config.config_manager import (
+    ConfigFileNotFoundError,
+    InvalidTomlSyntaxError,
     _load_toml,
     _override_some_toml_entries,
     dict_to_toml,
     process_config,
 )
 from lightwin.config.full_specs import ConfSpec
-from lightwin.constants import example_config
 
 CONFIG_KEYS = {
     "beam": "beam",
@@ -89,9 +90,12 @@ class TestLoadToml:
 
         Ensures
         -------
-        Raises FileNotFoundError when the specified file does not exist.
+        Raises ConfigFileNotFoundError when the specified file does not exist.
         """
-        with pytest.raises(FileNotFoundError, match="does not exist"):
+        with pytest.raises(
+            ConfigFileNotFoundError,
+            match="The file non_existent_file.toml does not exist.",
+        ):
             _load_toml(
                 "non_existent_file.toml", {"beam": "proton_beam"}, False, None
             )
@@ -101,7 +105,7 @@ class TestLoadToml:
 
         Ensures
         -------
-        Raises ValueError for invalid TOML syntax.
+        Raises InvalidTomlSyntaxError for invalid TOML syntax.
         """
         invalid_toml = b"invalid_toml_content"
 
@@ -109,7 +113,9 @@ class TestLoadToml:
             "builtins.open", mock_open(read_data=invalid_toml)
         ) as mocked_file:
             mocked_file.return_value.read.return_value = invalid_toml
-            with pytest.raises(ValueError, match="Error decoding TOML"):
+            with pytest.raises(
+                InvalidTomlSyntaxError, match="Invalid TOML syntax"
+            ):
                 _load_toml("mock_path", {"beam": "proton_beam"}, False, None)
 
     def test_missing_key(self) -> None:
@@ -268,7 +274,10 @@ class TestProcessConfig:
         toml_path = Path("non_existent_file.toml")
         config_keys = {"beam": "proton_beam"}
 
-        with pytest.raises(AssertionError, match="does not exist"):
+        with pytest.raises(
+            ConfigFileNotFoundError,
+            match="The file non_existent_file.toml does not exist.",
+        ):
             process_config(
                 toml_path=toml_path,
                 config_keys=config_keys,
