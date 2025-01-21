@@ -1,4 +1,4 @@
-"""Ensure that loading and validating ``.toml`` works as expected."""
+"""Ensure that loading and validating ``TOML`` works as expected."""
 
 from typing import Any
 
@@ -111,10 +111,11 @@ def generated_toml_dict(
 @pytest.mark.smoke
 @pytest.mark.implementation
 class TestConfigManager:
-    """Test that configuration file ``.toml`` correctly handled."""
+    """Test that configuration file ``TOML`` correctly handled."""
 
-    def test_load(self) -> None:
-        """Check if toml loading does not throw errors."""
+    @pytest.mark.tmp
+    def test_load_toml(self) -> None:
+        """Check if ``TOML`` loading does not throw errors."""
         toml_fulldict = _load_toml(
             example_config, CONFIG_KEYS, warn_mismatch=True, override=None
         )
