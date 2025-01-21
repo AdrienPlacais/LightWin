@@ -27,7 +27,7 @@ from lightwin.failures.fault_scenario import (
 params = [
     pytest.param(
         ("generic_envelope1d", True, False),
-        marks=(pytest.mark.smoke, pytest.mark.envelope1d, pytest.mark.tmp),
+        marks=(pytest.mark.smoke, pytest.mark.envelope1d),
         id="Compensation with Envelope1D",
     ),
     pytest.param(
