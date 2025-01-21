@@ -89,18 +89,26 @@ def _load_toml(
         configuration file.
 
     """
-    all_toml: dict[str, dict[str, Any]]
-    with open(config_path, "rb") as f:
-        all_toml = tomllib.load(f)
+    try:
+        with open(config_path, "rb") as f:
+            all_toml = tomllib.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"The file {config_path} does not exist.")
+    except tomllib.TOMLDecodeError as e:
+        raise ValueError(f"Error decoding TOML file {config_path}: {e}")
 
-    toml_fulldict = {
-        key: all_toml[value] for key, value in config_keys.items()
-    }
+    toml_fulldict = {}
+    for key, value in config_keys.items():
+        if value not in all_toml:
+            raise KeyError(
+                f"Expected table '{value}' for key '{key}' not found in the "
+                "TOML file."
+            )
+        toml_fulldict[key] = all_toml[value]
 
-    if override is None:
-        return toml_fulldict
+    if override:
+        _override_some_toml_entries(toml_fulldict, warn_mismatch, **override)
 
-    _override_some_toml_entries(toml_fulldict, warn_mismatch, **override)
     return toml_fulldict
 
 

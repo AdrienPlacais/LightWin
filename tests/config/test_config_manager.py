@@ -26,29 +26,35 @@ CONFIG_KEYS = {
 # Mocks and fixtures
 # =============================================================================
 @pytest.fixture
+def mock_toml_content() -> bytes:
+    """Fixture to mock a valid TOML file and its data."""
+    return b"""
+    [proton_beam]
+    key1 = "value1"
+    key2 = "value2"
+    """
+
+
+@pytest.fixture
+def common_setup(
+    mock_toml_content: bytes,
+    tmp_path_factory: pytest.TempPathFactory,
+) -> tuple[Path, dict[str, str]]:
+    """Fixture to set up common test components."""
+    toml_path = tmp_path_factory.mktemp("config") / "config.toml"
+    toml_path.write_bytes(mock_toml_content)
+
+    config_keys = {"beam": "proton_beam"}
+    return toml_path, config_keys
+
+
+@pytest.fixture
 def mock_conf_spec() -> tuple[MagicMock, MagicMock]:
     """Mock the :class:`.ConfSpec` class."""
     conf_specs_t = MagicMock(spec=type(ConfSpec))
     conf_specs = MagicMock(spec=ConfSpec)
     conf_specs_t.return_value = conf_specs
     return conf_specs_t, conf_specs
-
-
-@pytest.fixture
-def common_setup(
-    tmp_path_factory: pytest.TempPathFactory,
-) -> tuple[Path, dict[str, str]]:
-    """Fixture to set up common test components."""
-    toml_content = b"""
-    [proton_beam]
-    key1 = "value1"
-    key2 = "value2"
-    """
-    toml_path = tmp_path_factory.mktemp("config") / "config.toml"
-    toml_path.write_bytes(toml_content)
-
-    config_keys = {"beam": "proton_beam"}
-    return toml_path, config_keys
 
 
 def mock_load_toml(mock_return_value: dict[str, dict[str, Any]]):
@@ -78,54 +84,144 @@ def mock_conf_spec_for_dict_to_toml() -> MagicMock:
 class TestLoadToml:
     """Test the :func:`._load_toml` function."""
 
-    def test_success(self) -> None:
-        """Check :func:`_load_toml` successfully loads and maps sections."""
-        mock_toml_data = b"""
-        [proton_beam]
-        key1 = "value1"
-        key2 = "value2"
+    def test_file_not_found(self) -> None:
+        """Test for non-existent file.
 
+        Ensures
+        -------
+        Raises FileNotFoundError when the specified file does not exist.
+        """
+        with pytest.raises(FileNotFoundError, match="does not exist"):
+            _load_toml(
+                "non_existent_file.toml", {"beam": "proton_beam"}, False, None
+            )
+
+    def test_invalid_syntax(self) -> None:
+        """Test for invalid TOML syntax.
+
+        Ensures
+        -------
+        Raises ValueError for invalid TOML syntax.
+        """
+        invalid_toml = b"invalid_toml_content"
+
+        with patch(
+            "builtins.open", mock_open(read_data=invalid_toml)
+        ) as mocked_file:
+            mocked_file.return_value.read.return_value = invalid_toml
+            with pytest.raises(ValueError, match="Error decoding TOML"):
+                _load_toml("mock_path", {"beam": "proton_beam"}, False, None)
+
+    def test_missing_key(self) -> None:
+        """Test for missing table key.
+
+        Ensures
+        -------
+        Raises KeyError if a required table is missing in the TOML file.
+        """
+        mock_toml_data = b"""
         [files]
         file1 = "path/to/file"
         """
-        config_keys = {"beam": "proton_beam", "files": "files"}
 
-        # Mock the `open` function used to open `config_path`
         with patch("builtins.open", mock_open(read_data=mock_toml_data)):
-            # Mock the `tomllib.load` function imported in the config_manager
             with patch(
-                "lightwin.config.config_manager.tomllib.load"
-            ) as mock_load:
-                mock_load.return_value = {
-                    "proton_beam": {"key1": "value1", "key2": "value2"},
-                    "files": {"file1": "path/to/file"},
-                }
+                "tomllib.load",
+                return_value={"files": {"file1": "path/to/file"}},
+            ):
+                with pytest.raises(
+                    KeyError, match="Expected table 'proton_beam'"
+                ):
+                    _load_toml(
+                        "mock_path", {"beam": "proton_beam"}, False, None
+                    )
 
+    def test_success(self, mock_toml_content: bytes) -> None:
+        """Test for successful TOML loading.
+
+        Parameters
+        ----------
+        mock_toml_content : bytes
+            Mocked TOML content fixture.
+
+        Ensures
+        -------
+        Correctly loads TOML with valid keys.
+        """
+        with patch("builtins.open", mock_open(read_data=mock_toml_content)):
+            with patch(
+                "tomllib.load",
+                return_value={
+                    "proton_beam": {"key1": "value1", "key2": "value2"}
+                },
+            ):
                 result = _load_toml(
-                    "mock_path",
-                    config_keys,
-                    warn_mismatch=False,
-                    override=None,
+                    "mock_path", {"beam": "proton_beam"}, False, None
+                )
+                assert result == {"beam": {"key1": "value1", "key2": "value2"}}
+
+    def test_with_override(self, mock_toml_content: bytes) -> None:
+        """Test for applying overrides.
+
+        Parameters
+        ----------
+        mock_toml_content : bytes
+            Mocked TOML content fixture.
+
+        Ensures
+        -------
+        Overrides are correctly applied to the loaded TOML.
+        """
+        override = {"beam": {"key1": "new_value"}}
+
+        with patch("builtins.open", mock_open(read_data=mock_toml_content)):
+            with patch(
+                "tomllib.load",
+                return_value={
+                    "proton_beam": {"key1": "value1", "key2": "value2"}
+                },
+            ):
+                result = _load_toml(
+                    "mock_path", {"beam": "proton_beam"}, False, override
                 )
                 assert result == {
-                    "beam": {"key1": "value1", "key2": "value2"},
-                    "files": {"file1": "path/to/file"},
+                    "beam": {"key1": "new_value", "key2": "value2"}
                 }
 
-    @pytest.mark.smoke
-    def test_general_behavior(self) -> None:
-        """Check if ``TOML`` loading does not throw errors.
+    def test_warn_mismatch(self, mock_toml_content: bytes) -> None:
+        """Test for warnings on mismatched overrides.
 
-        This is not a "deep" test, but a high-level test ensuring that the
-        function will work for the user.
+        Parameters
+        ----------
+        mock_toml_content : bytes
+            Mocked TOML content fixture.
 
+        Ensures
+        -------
+        Logs warnings for overrides that mismatch existing keys.
         """
-        toml_fulldict = _load_toml(
-            example_config, CONFIG_KEYS, warn_mismatch=True, override=None
-        )
-        assert isinstance(
-            toml_fulldict, dict
-        ), f"Error loading {example_config}"
+        override = {"beam": {"nonexistent_key": "new_value"}}
+
+        with patch("builtins.open", mock_open(read_data=mock_toml_content)):
+            with patch(
+                "tomllib.load",
+                return_value={"proton_beam": {"key1": "value1"}},
+            ):
+                with patch("logging.warning") as mock_warning:
+                    result = _load_toml(
+                        "mock_path", {"beam": "proton_beam"}, True, override
+                    )
+                    assert result == {
+                        "beam": {
+                            "key1": "value1",
+                            "nonexistent_key": "new_value",
+                        }
+                    }
+                    mock_warning.assert_called_once_with(
+                        "You want to override key = 'nonexistent_key', which "
+                        "was not found in conf_subdict.keys() = "
+                        "dict_keys(['key1']). Setting it anyway..."
+                    )
 
 
 @pytest.mark.smoke
