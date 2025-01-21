@@ -112,7 +112,7 @@ def generated_toml_dict(
 class TestLoadToml:
     """Test the ``_load_toml`` function."""
 
-    def test_load_toml_success(self) -> None:
+    def test_success(self) -> None:
         """Check that ``_load_toml`` successfully loads and maps sections."""
         mock_toml_data = b"""
         [proton_beam]
@@ -146,7 +146,7 @@ class TestLoadToml:
                     "files": {"file1": "path/to/file"},
                 }
 
-    def test_load_toml_missing_section(self):
+    def test_warn_mismatch(self):
         """Test ``_load_toml`` raises KeyError for missing sections."""
         mock_toml_data = b"""
         [other_section]
@@ -168,7 +168,7 @@ class TestLoadToml:
                         override=None,
                     )
 
-    def test_load_toml_with_override(self):
+    def test_override(self):
         """Test ``_load_toml`` applies override logic."""
         mock_toml_data = b"""
         [proton_beam]
@@ -197,7 +197,7 @@ class TestLoadToml:
                 }
 
     @pytest.mark.smoke
-    def test_load_toml(self) -> None:
+    def test_general_behavior(self) -> None:
         """Check if ``TOML`` loading does not throw errors.
 
         This is not a "deep" test, but a high-level test ensuring that the
