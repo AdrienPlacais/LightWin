@@ -1,10 +1,10 @@
 Python (mandatory)
 ------------------
-LightWin requires Python 3.12 or higher.
-Ensure that you have an appropriate version of Python installed on your system.
-If not, you can download the latest version from the `official Python website`_.
 
-.. _official Python website: https://www.python.org/downloads/
+Pre-requisites:
+
+* Python 3.12 or higher.
+* A C++ compiler. On Unix systems, install `gcc`. On Windows, check :ref:`here<windows_c_compiler>`.
 
 Installation with pip (recommended)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

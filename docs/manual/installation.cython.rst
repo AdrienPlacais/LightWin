@@ -57,7 +57,7 @@ To:
 
    * `/path/to/LightWin/src/lightwin/beam_calculation/cy_envelope_1d/`.
 
-`Microsoft Visual C++ 14.0 or greater is required` error is covered in the :ref:`troubleshooting section<troubleshooting>`.
+`Microsoft Visual C++ 14.0 or greater is required` error is covered :ref:`here<windows_c_compiler>`.
 
 
 4. Restarting Your Interpreter
