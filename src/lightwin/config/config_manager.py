@@ -81,7 +81,7 @@ def _load_toml(
 
     Returns
     -------
-    dict[str, dict[str, Any]]
+    toml_fulldict : dict[str, dict[str, Any]]
         A dictionary which keys are the keys of ``config_keys``, and the values
         are dictionaries holding corresponding table entries from the
         configuration file.
