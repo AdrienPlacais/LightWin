@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from typing import Any, cast
-from unittest.mock import MagicMock, mock_open, patch
+from unittest.mock import MagicMock, call, mock_open, patch
 
 import pytest
 
@@ -196,6 +196,18 @@ def mock_load_toml(mock_return_value: dict[str, dict[str, Any]]):
     )
 
 
+@pytest.fixture
+def mock_conf_spec_for_dict_to_toml() -> MagicMock:
+    """Mock the ConfSpec class for dict_to_toml tests."""
+    mock = MagicMock()
+    mock.to_toml_strings.return_value = [
+        "[beam]",
+        "key1 = 'value1'",
+        "key2 = 'value2'",
+    ]
+    return mock
+
+
 # =============================================================================
 # Tests for every function of the config_manager_module
 # =============================================================================
@@ -336,7 +348,6 @@ class TestProcessConfig:
             )
 
 
-@pytest.mark.tmp
 class TestOverrideSomeTomlEntries:
     """Provide methods to validate :func:`._override_some_toml_entries.`"""
 
@@ -387,3 +398,94 @@ class TestOverrideSomeTomlEntries:
             assert toml_fulldict == {
                 "beam": {"key1": "value1", "nonexistent_key": "new_value"}
             }
+
+
+@pytest.mark.tmp
+class TestDictToToml:
+    """Test suite for the dict_to_toml function."""
+
+    def test_success(
+        self, mock_conf_spec_for_dict_to_toml: MagicMock, tmp_path: Path
+    ) -> None:
+        """Test that dict_to_toml writes the correct TOML content to a file."""
+        toml_path = tmp_path / "test.toml"
+        toml_fulldict = {"beam": {"key1": "value1", "key2": "value2"}}
+
+        with patch("builtins.open", mock_open()) as mocked_file:
+            dict_to_toml(
+                toml_fulldict, toml_path, mock_conf_spec_for_dict_to_toml
+            )
+            mocked_file().write.assert_has_calls(
+                [
+                    call("[beam]"),
+                    call("\n"),
+                    call("key1 = 'value1'"),
+                    call("\n"),
+                    call("key2 = 'value2'"),
+                    call("\n"),
+                ]
+            )
+
+    def test_no_overwrite(
+        self, mock_conf_spec_for_dict_to_toml: MagicMock, tmp_path: Path
+    ) -> None:
+        """Test that dict_to_toml does not overwrite an existing file by default."""
+        toml_path = tmp_path / "test.toml"
+        toml_path.touch()  # Create the file to simulate pre-existence
+        toml_fulldict = {"beam": {"key1": "value1"}}
+
+        with patch("logging.error") as mock_error:
+            dict_to_toml(
+                toml_fulldict, toml_path, mock_conf_spec_for_dict_to_toml
+            )
+
+            # Ensure an error is logged
+            mock_error.assert_called_once_with(
+                "Overwritting not permitted. Skipping action..."
+            )
+
+    def test_allow_overwrite(
+        self, mock_conf_spec_for_dict_to_toml: MagicMock, tmp_path: Path
+    ) -> None:
+        """Test that file is overwritten when allow_overwrite is True."""
+        toml_path = tmp_path / "test.toml"
+        toml_path.write_text("[old_content]\nkey = 'old_value'")
+        toml_fulldict = {"beam": {"key1": "value1"}}
+
+        with (
+            patch("builtins.open", mock_open()) as mocked_file,
+            patch("shutil.copy") as mock_copy,
+        ):
+            dict_to_toml(
+                toml_fulldict,
+                toml_path,
+                mock_conf_spec_for_dict_to_toml,
+                allow_overwrite=True,
+            )
+
+            mock_copy.assert_called_once_with(
+                toml_path, toml_path.with_suffix(".toml.old")
+            )
+
+            mocked_file.assert_called_once_with(toml_path, "w")
+            mocked_file().write.assert_has_calls(
+                [
+                    call("[beam]"),
+                    call("\n"),
+                    call("key1 = 'value1'"),
+                    call("\n"),
+                ]
+            )
+
+    def test_calls_to_toml_strings(
+        self, mock_conf_spec_for_dict_to_toml: MagicMock, tmp_path: Path
+    ) -> None:
+        """Test that dict_to_toml calls ConfSpec.to_toml_strings with the correct arguments."""
+        toml_path = tmp_path / "test.toml"
+        toml_fulldict = {"beam": {"key1": "value1"}}
+
+        dict_to_toml(toml_fulldict, toml_path, mock_conf_spec_for_dict_to_toml)
+
+        mock_conf_spec_for_dict_to_toml.to_toml_strings.assert_called_once_with(
+            toml_fulldict, original_toml_folder=None
+        )
