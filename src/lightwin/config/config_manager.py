@@ -120,8 +120,8 @@ def _override_some_toml_entries(
         for key, val in over_subdict.items():
             if warn_mismatch and key not in conf_subdict:
                 logging.warning(
-                    f"You want to override {key = }, which was "
-                    f"not found in {conf_subdict.keys() = }"
+                    f"You want to override {key = }, which was not found in "
+                    f"{conf_subdict.keys() = }. Setting it anyway..."
                 )
             conf_subdict[key] = val
 

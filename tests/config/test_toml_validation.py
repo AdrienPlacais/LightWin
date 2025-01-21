@@ -8,6 +8,7 @@ import pytest
 
 from lightwin.config.config_manager import (
     _load_toml,
+    _override_some_toml_entries,
     dict_to_toml,
     process_config,
 )
@@ -159,7 +160,7 @@ class TestConfigManager:
 
 
 # =============================================================================
-# New tests
+# Mocks and fixtures
 # =============================================================================
 @pytest.fixture
 def mock_conf_spec() -> tuple[MagicMock, MagicMock]:
@@ -187,6 +188,17 @@ def common_setup(
     return toml_path, config_keys
 
 
+def mock_load_toml(mock_return_value: dict[str, dict[str, Any]]):
+    """Mock :func:`._load_toml` with a given return value."""
+    return patch(
+        "lightwin.config.config_manager._load_toml",
+        return_value=mock_return_value,
+    )
+
+
+# =============================================================================
+# Tests for every function of the config_manager_module
+# =============================================================================
 class TestLoadToml:
     """Test the :func:`._load_toml` function."""
 
@@ -238,14 +250,6 @@ class TestLoadToml:
         assert isinstance(
             toml_fulldict, dict
         ), f"Error loading {example_config}"
-
-
-def mock_load_toml(mock_return_value: dict[str, dict[str, Any]]):
-    """Mock :func:`._load_toml` with a given return value."""
-    return patch(
-        "lightwin.config.config_manager._load_toml",
-        return_value=mock_return_value,
-    )
 
 
 @pytest.mark.smoke
@@ -330,3 +334,56 @@ class TestProcessConfig:
             conf_specs.prepare.assert_called_once_with(
                 result, toml_folder=toml_path.parent
             )
+
+
+@pytest.mark.tmp
+class TestOverrideSomeTomlEntries:
+    """Provide methods to validate :func:`._override_some_toml_entries.`"""
+
+    def test_success(self) -> None:
+        """Test that overrides are correctly applied."""
+        toml_fulldict = {
+            "beam": {"key1": "value1", "key2": "value2"},
+            "files": {"file1": "path/to/file"},
+        }
+        override = {"beam": {"key1": "new_value1", "key2": "new_value2"}}
+
+        _override_some_toml_entries(
+            toml_fulldict, warn_mismatch=False, **override
+        )
+
+        assert toml_fulldict == {
+            "beam": {"key1": "new_value1", "key2": "new_value2"},
+            "files": {"file1": "path/to/file"},
+        }
+
+    def test_missing_key(self) -> None:
+        """Test that an AssertionError is raised when keys miss."""
+        toml_fulldict = {"beam": {"key1": "value1", "key2": "value2"}}
+        override = {"nonexistent_key": {"key1": "new_value"}}
+
+        with pytest.raises(
+            AssertionError, match="You want to override entries in .*"
+        ):
+            _override_some_toml_entries(
+                toml_fulldict, warn_mismatch=False, **override
+            )
+
+    def test_warn_mismatch(self) -> None:
+        """Test that warnings are logged for missing keys."""
+        toml_fulldict = {"beam": {"key1": "value1"}}
+        override = {"beam": {"nonexistent_key": "new_value"}}
+
+        with patch("logging.warning") as mock_warning:
+            _override_some_toml_entries(
+                toml_fulldict, warn_mismatch=True, **override
+            )
+
+            mock_warning.assert_called_once_with(
+                "You want to override key = 'nonexistent_key', which was not "
+                "found in conf_subdict.keys() = dict_keys(['key1']). Setting "
+                "it anyway..."
+            )
+            assert toml_fulldict == {
+                "beam": {"key1": "value1", "nonexistent_key": "new_value"}
+            }
