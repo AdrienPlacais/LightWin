@@ -57,7 +57,7 @@ def process_config(
 
 
 def _load_toml(
-    config_path: Path,
+    config_path: Path | str,
     config_keys: dict[str, str],
     warn_mismatch: bool,
     override: dict[str, dict[str, Any]] | None,
@@ -66,7 +66,7 @@ def _load_toml(
 
     Parameters
     ----------
-    config_path : pathlib.Path
+    config_path : pathlib.Path | str
         Path to the configuration file.
     config_keys : dict[str, str]
         Keys will be the keys of the output. Values are the name of the tables
