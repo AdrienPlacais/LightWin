@@ -50,6 +50,8 @@ lw-compute-lost-power-per-meter = "lightwin.scripts.compute_lost_power_per_meter
 lw-reorder-output-figures = "lightwin.scripts.reorder_output_figures:main"
 
 [project.urls]
+changelog = "https://github.com/AdrienPlacais/LightWin/blob/main/CHANGELOG.md"
+discussions = "https://github.com/AdrienPlacais/LightWin/discussions"
 documentation = "https://lightwin.readthedocs.io/en/latest/"
 homepage = "https://github.com/AdrienPlacais/LightWin"
 tracker = "https://github.com/AdrienPlacais/LightWin/issues"
