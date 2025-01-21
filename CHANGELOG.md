@@ -16,14 +16,21 @@ In particular, follow advices listed in the great [Scientific Python library dev
 
 - Package on `pip` (simpler installation with `pip install lightwin`).
 
-## [0.9.0] -- unreleased
+## [0.9.0] -- 2025-01-21
 
 ### Added
 
 - CI/CD tasks:
     - Automatic linting with `pre-commit.ci`.
     - Automatic checking of common mistakes with `pre-commit.cli`.
-    - Run automatic tests using `pytest` and Github workflows.
+    - Run automatic tests using `pytest` and GitHub workflows.
+- Badges to quickly see if something went wrong.
+
+### Changed
+
+- Introduced optional dependencies.
+    - Install them with `pip install -e .[docs]` or `pip install -e .[test]`.
+    - It is recommended to install LightWin with the test optional dependencies.
 
 # [0.8.x]
 
