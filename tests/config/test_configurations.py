@@ -13,8 +13,8 @@ from typing import Any
 import pytest
 
 from lightwin.config.config_manager import (
+    _load_toml,
     dict_to_toml,
-    load_toml,
     process_config,
 )
 from lightwin.config.full_specs import ConfSpec
@@ -82,7 +82,7 @@ def config_key(request: pytest.FixtureRequest) -> dict[str, str]:
 @pytest.fixture(scope="function")
 def toml_dict(config_key: dict[str, str]) -> dict[str, dict[str, Any]]:
     """Check that loading the table does not raise any error."""
-    toml_dict = load_toml(
+    toml_dict = _load_toml(
         example_config, config_key, warn_mismatch=True, override=None
     )
     return toml_dict

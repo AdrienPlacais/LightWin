@@ -5,8 +5,8 @@ from typing import Any
 import pytest
 
 from lightwin.config.config_manager import (
+    _load_toml,
     dict_to_toml,
-    load_toml,
     process_config,
 )
 from lightwin.config.full_specs import SimplestConfSpec
@@ -44,7 +44,7 @@ def conf_specs() -> SimplestConfSpec:
 @pytest.fixture(scope="class")
 def toml_fulldict_unaltered() -> dict[str, dict[str, Any]]:
     """Load the configuration file without editing or testing it."""
-    toml_fulldict = load_toml(
+    toml_fulldict = _load_toml(
         example_config, CONFIG_KEYS, warn_mismatch=True, override=None
     )
     return toml_fulldict
@@ -115,7 +115,7 @@ class TestConfigManager:
 
     def test_load(self) -> None:
         """Check if toml loading does not throw errors."""
-        toml_fulldict = load_toml(
+        toml_fulldict = _load_toml(
             example_config, CONFIG_KEYS, warn_mismatch=True, override=None
         )
         assert isinstance(
