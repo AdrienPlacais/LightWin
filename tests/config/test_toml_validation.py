@@ -1,6 +1,7 @@
 """Ensure that loading and validating ``TOML`` works as expected."""
 
 from typing import Any
+from unittest.mock import mock_open, patch
 
 import pytest
 
@@ -108,20 +109,113 @@ def generated_toml_dict(
     return conf_specs.generate_dummy_dict()
 
 
-@pytest.mark.smoke
-@pytest.mark.implementation
-class TestConfigManager:
-    """Test that configuration file ``TOML`` correctly handled."""
+class TestLoadToml:
+    """Test the ``_load_toml`` function."""
 
-    @pytest.mark.tmp
+    def test_load_toml_success(self) -> None:
+        """Check that ``_load_toml`` successfully loads and maps sections."""
+        mock_toml_data = b"""
+        [proton_beam]
+        key1 = "value1"
+        key2 = "value2"
+
+        [files]
+        file1 = "path/to/file"
+        """
+        config_keys = {"beam": "proton_beam", "files": "files"}
+
+        # Mock the `open` function used to open `config_path`
+        with patch("builtins.open", mock_open(read_data=mock_toml_data)):
+            # Mock the `tomllib.load` function imported in the config_manager
+            with patch(
+                "lightwin.config.config_manager.tomllib.load"
+            ) as mock_load:
+                mock_load.return_value = {
+                    "proton_beam": {"key1": "value1", "key2": "value2"},
+                    "files": {"file1": "path/to/file"},
+                }
+
+                result = _load_toml(
+                    "mock_path",
+                    config_keys,
+                    warn_mismatch=False,
+                    override=None,
+                )
+                assert result == {
+                    "beam": {"key1": "value1", "key2": "value2"},
+                    "files": {"file1": "path/to/file"},
+                }
+
+    def test_load_toml_missing_section(self):
+        """Test ``_load_toml`` raises KeyError for missing sections."""
+        mock_toml_data = b"""
+        [other_section]
+        key1 = "value1"
+        """
+        config_keys = {"beam": "proton_beam"}
+
+        with patch("builtins.open", mock_open(read_data=mock_toml_data)):
+            with patch(
+                "lightwin.config.config_manager.tomllib.load"
+            ) as mock_load:
+                mock_load.return_value = {"other_section": {"key1": "value1"}}
+
+                with pytest.raises(KeyError):
+                    _load_toml(
+                        "mock_path",
+                        config_keys,
+                        warn_mismatch=False,
+                        override=None,
+                    )
+
+    def test_load_toml_with_override(self):
+        """Test ``_load_toml`` applies override logic."""
+        mock_toml_data = b"""
+        [proton_beam]
+        key1 = "value1"
+        key2 = "value2"
+        """
+        config_keys = {"beam": "proton_beam"}
+        override = {"beam": {"key1": "new_value1"}}
+
+        with patch("builtins.open", mock_open(read_data=mock_toml_data)):
+            with patch(
+                "lightwin.config.config_manager.tomllib.load"
+            ) as mock_load:
+                mock_load.return_value = {
+                    "proton_beam": {"key1": "value1", "key2": "value2"}
+                }
+
+                result = _load_toml(
+                    "mock_path",
+                    config_keys,
+                    warn_mismatch=False,
+                    override=override,
+                )
+                assert result == {
+                    "beam": {"key1": "new_value1", "key2": "value2"},
+                }
+
+    @pytest.mark.smoke
     def test_load_toml(self) -> None:
-        """Check if ``TOML`` loading does not throw errors."""
+        """Check if ``TOML`` loading does not throw errors.
+
+        This is not a "deep" test, but a high-level test ensuring that the
+        function will work for the user.
+
+        """
         toml_fulldict = _load_toml(
             example_config, CONFIG_KEYS, warn_mismatch=True, override=None
         )
         assert isinstance(
             toml_fulldict, dict
         ), f"Error loading {example_config}"
+
+
+@pytest.mark.smoke
+@pytest.mark.implementation
+class TestConfigManager:
+    """Test that configuration file ``TOML`` correctly handled."""
 
     def test_validate(
         self,
