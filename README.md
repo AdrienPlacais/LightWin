@@ -1,3 +1,4 @@
+[![Py versions](https://img.shields.io/badge/python-3.12-blue)](https://img.shields.io/badge/python-3.12-blue)
 [![build status](https://github.com/AdrienPlacais/LightWin/actions/workflows/main.yml/badge.svg)](https://github.com/AdrienPlacais/LightWin/actions/workflows/main.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Documentation Status](https://readthedocs.org/projects/lightwin/badge/?version=latest)](https://lightwin.readthedocs.io/en/latest/?badge=latest)
