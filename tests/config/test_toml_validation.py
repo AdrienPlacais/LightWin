@@ -161,6 +161,7 @@ class TestConfigManager:
 # =============================================================================
 # New tests
 # =============================================================================
+@pytest.mark.tmp
 class TestLoadToml:
     """Test the ``_load_toml`` function."""
 
@@ -273,6 +274,31 @@ def mock_conf_spec() -> tuple[MagicMock, MagicMock]:
     return conf_specs_t, conf_specs
 
 
+@pytest.fixture
+def common_setup(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> tuple[Path, dict[str, str]]:
+    """Fixture to set up common test components."""
+    toml_content = b"""
+    [proton_beam]
+    key1 = "value1"
+    key2 = "value2"
+    """
+    toml_path = tmp_path_factory.mktemp("config") / "config.toml"
+    toml_path.write_bytes(toml_content)
+
+    config_keys = {"beam": "proton_beam"}
+    return toml_path, config_keys
+
+
+def mock_load_toml(mock_return_value: dict[str, dict[str, Any]]):
+    """Mock :func:`._load_toml` with a given return value."""
+    return patch(
+        "lightwin.config.config_manager._load_toml",
+        return_value=mock_return_value,
+    )
+
+
 @pytest.mark.tmp
 class TestProcessConfig:
     """Define tests for the :func:``.process_config`` function."""
@@ -280,29 +306,18 @@ class TestProcessConfig:
     def test_process_config_valid(
         self,
         mock_conf_spec: tuple[MagicMock, MagicMock],
-        tmp_path_factory: pytest.TempPathFactory,
+        common_setup: tuple[Path, dict[str, str]],
     ) -> None:
         """Test process_config with valid inputs."""
         conf_specs_t, conf_specs = mock_conf_spec
         conf_specs_t_cast = cast(type[ConfSpec], conf_specs_t)  # for linter
-
-        toml_content = b"""
-        [proton_beam]
-        key1 = "value1"
-        key2 = "value2"
-        """
-        toml_path = tmp_path_factory.mktemp("config") / "config.toml"
-        toml_path.write_bytes(toml_content)
+        toml_path, config_keys = common_setup
 
         config_keys = {"beam": "proton_beam"}
 
-        with patch(
-            "lightwin.config.config_manager._load_toml"
-        ) as mock_load_toml:
-            mock_load_toml.return_value = {
-                "beam": {"key1": "value1", "key2": "value2"}
-            }
-
+        with mock_load_toml(
+            {"beam": {"key1": "value1", "key2": "value2"}}
+        ) as mock_load:
             result = process_config(
                 toml_path=toml_path,
                 config_keys=config_keys,
@@ -310,7 +325,7 @@ class TestProcessConfig:
             )
 
             assert result == {"beam": {"key1": "value1", "key2": "value2"}}
-            mock_load_toml.assert_called_once_with(
+            mock_load.assert_called_once_with(
                 toml_path, config_keys, warn_mismatch=False, override=None
             )
             conf_specs_t.assert_called_once_with(**config_keys)
@@ -335,30 +350,18 @@ class TestProcessConfig:
     def test_process_config_with_override(
         self,
         mock_conf_spec: tuple[MagicMock, MagicMock],
-        tmp_path_factory: pytest.TempPathFactory,
+        common_setup: tuple[Path, dict[str, str]],
     ) -> None:
         """Test process_config applies overrides correctly."""
         conf_specs_t, conf_specs = mock_conf_spec
         conf_specs_t_cast = cast(type[ConfSpec], conf_specs_t)  # for linter
 
-        toml_content = b"""
-        [proton_beam]
-        key1 = "value1"
-        key2 = "value2"
-        """
-        toml_path = tmp_path_factory.mktemp("config") / "config.toml"
-        toml_path.write_bytes(toml_content)
-
-        config_keys = {"beam": "proton_beam"}
+        toml_path, config_keys = common_setup
         override = {"beam": {"key1": "new_value"}}
 
-        with patch(
-            "lightwin.config.config_manager._load_toml"
-        ) as mock_load_toml:
-            mock_load_toml.return_value = {
-                "beam": {"key1": "value1", "key2": "value2"}
-            }
-
+        with mock_load_toml(
+            {"beam": {"key1": "value1", "key2": "value2"}}
+        ) as mock_load:
             result = process_config(
                 toml_path=toml_path,
                 config_keys=config_keys,
@@ -366,7 +369,7 @@ class TestProcessConfig:
                 conf_specs_t=conf_specs_t_cast,
             )
 
-            mock_load_toml.assert_called_once_with(
+            mock_load.assert_called_once_with(
                 toml_path, config_keys, warn_mismatch=False, override=override
             )
             # Note the key1: value1; not key1: new_value! This is because we
