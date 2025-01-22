@@ -9,6 +9,7 @@
 import logging
 import shutil
 import tomllib
+from importlib import resources
 from importlib.resources.abc import Traversable
 from pathlib import Path
 from typing import Any
@@ -68,12 +69,15 @@ def process_config(
     )
 
     conf_specs = conf_specs_t(**config_keys)
-    if not hasattr(toml_path, "parent"):
-        raise NotImplementedError("packaged data not fully supported yet.")
     if isinstance(toml_path, str):
         toml_path = Path(toml_path)
-    conf_specs.prepare(toml_fulldict, toml_folder=toml_path.parent)
-    return toml_fulldict
+    if isinstance(toml_path, Path):
+        conf_specs.prepare(toml_fulldict, toml_folder=toml_path.parent)
+        return toml_fulldict
+
+    with resources.as_file(toml_path) as extracted_path:
+        conf_specs.prepare(toml_fulldict, toml_folder=extracted_path.parent)
+        return toml_fulldict
 
 
 def _load_toml(

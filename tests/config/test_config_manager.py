@@ -44,7 +44,6 @@ def mock_conf_spec() -> MagicMock:
 # =============================================================================
 # Tests for every function of the config_manager_module
 # =============================================================================
-@pytest.mark.tmp
 class TestLoadToml:
     """Test the :func:`._load_toml` function."""
 
@@ -129,7 +128,6 @@ class TestLoadToml:
             assert result == {}
 
 
-@pytest.mark.tmp
 class TestProcessToml:
     """Test the :func:`._process_toml` function."""
 
@@ -214,7 +212,6 @@ class TestProcessToml:
 
 
 @pytest.mark.smoke
-@pytest.mark.tmp
 class TestProcessConfig:
     """Define tests for the :func:``.process_config`` function.
 
@@ -224,7 +221,6 @@ class TestProcessConfig:
     """
 
 
-@pytest.mark.tmp
 class TestOverrideSomeTomlEntries:
     """Provide methods to validate :func:`._override_some_toml_entries.`"""
 
@@ -277,7 +273,6 @@ class TestOverrideSomeTomlEntries:
             }
 
 
-@pytest.mark.tmp
 class TestDictToToml:
     """Test suite for the dict_to_toml function."""
 

@@ -96,6 +96,7 @@ def conf_spec(config_key: dict[str, str]) -> ConfSpec:
 
 
 @pytest.mark.smoke
+@pytest.mark.implementation
 class TestSingleTable:
     """Test a single [table] from the ``.toml``.
 

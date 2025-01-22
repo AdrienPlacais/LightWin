@@ -4,11 +4,7 @@ from typing import Any
 
 import pytest
 
-from lightwin.config.config_manager import (
-    _load_toml,
-    dict_to_toml,
-    process_config,
-)
+from lightwin.config.config_manager import dict_to_toml, process_config
 from lightwin.config.full_specs import SimplestConfSpec
 from lightwin.constants import (
     example_config,
@@ -39,15 +35,6 @@ def conf_specs() -> SimplestConfSpec:
         files="files",
         beam_calculator="generic_tracewin",
     )
-
-
-@pytest.fixture(scope="class")
-def toml_fulldict_unaltered() -> dict[str, dict[str, Any]]:
-    """Load the configuration file without editing or testing it."""
-    toml_fulldict = _load_toml(
-        example_config, CONFIG_KEYS, warn_mismatch=True, override=None
-    )
-    return toml_fulldict
 
 
 @pytest.fixture(scope="class")
