@@ -9,6 +9,7 @@
 import logging
 import shutil
 import tomllib
+from importlib.resources.abc import Traversable
 from pathlib import Path
 from typing import Any
 
@@ -28,7 +29,7 @@ class InvalidTomlSyntaxError(ValueError):
 
 
 def process_config(
-    toml_path: Path,
+    toml_path: Path | str | Traversable,
     config_keys: dict[str, str],
     warn_mismatch: bool = False,
     override: dict[str, dict[str, Any]] | None = None,
@@ -38,8 +39,9 @@ def process_config(
 
     Parameters
     ----------
-    toml_path : pathlib.Path
-        Path to the configuration file. It must be a ``TOML`` file.
+    toml_path : pathlib.Path | str | importlib.resources.abc.Traversable
+        Path to the configuration file. It can be path to a real file or a
+        resource reference.
     config_keys : dict[str, str]
         Associate the name of LightWin's group of parameters to the entry in
         the configuration file.
@@ -60,29 +62,82 @@ def process_config(
         :class:`.BeamCalculator`.
 
     """
-    if not toml_path.is_file():
-        raise ConfigFileNotFoundError(f"The file {toml_path} does not exist.")
-    toml_fulldict = _load_toml(
-        toml_path, config_keys, warn_mismatch=warn_mismatch, override=override
+    raw_toml = _load_toml(toml_path)
+    toml_fulldict = _process_toml(
+        raw_toml, config_keys, warn_mismatch=warn_mismatch, override=override
     )
 
     conf_specs = conf_specs_t(**config_keys)
+    if not hasattr(toml_path, "parent"):
+        raise NotImplementedError("packaged data not fully supported yet.")
+    if isinstance(toml_path, str):
+        toml_path = Path(toml_path)
     conf_specs.prepare(toml_fulldict, toml_folder=toml_path.parent)
     return toml_fulldict
 
 
 def _load_toml(
-    config_path: Path | str,
-    config_keys: dict[str, str],
-    warn_mismatch: bool,
-    override: dict[str, dict[str, Any]] | None,
+    toml_path: Path | str | Traversable,
 ) -> dict[str, dict[str, Any]]:
     """Load the ``TOML`` and extract the dicts asked by user.
 
     Parameters
     ----------
-    config_path : pathlib.Path | str
-        Path to the configuration file.
+    toml_path : pathlib.Path | str | importlib.resources.abc.Traversable
+        Path to the configuration file. It can be path to a real file or a
+        resource reference.
+
+    Returns
+    -------
+    raw_toml : dict[str, dict[str, Any]]
+        Dictionary holding the whole ``TOML`` file.
+
+    """
+    if isinstance(toml_path, (str, Path)):
+        toml_path = Path(toml_path)
+        if not toml_path.is_file():
+            raise ConfigFileNotFoundError(
+                f"The file {toml_path} does not exist."
+            )
+        try:
+            with open(toml_path, "rb") as f:
+                raw_toml = tomllib.load(f)
+        except tomllib.TOMLDecodeError as e:
+            raise InvalidTomlSyntaxError(
+                f"Invalid TOML syntax in file {toml_path}: {e}"
+            )
+
+        return raw_toml
+
+    if isinstance(toml_path, Traversable):
+        try:
+            with toml_path.open("rb") as f:
+                raw_toml = tomllib.load(f)
+        except tomllib.TOMLDecodeError as e:
+            raise InvalidTomlSyntaxError(
+                f"Invalid TOML syntax in resource {toml_path}: {e}"
+            )
+        return raw_toml
+
+    raise TypeError(
+        f"Unsupported type for `config_path`: {type(toml_path)}. Expected "
+        "str, Path, or Traversable."
+    )
+
+
+def _process_toml(
+    raw_toml: dict[str, dict[str, Any]],
+    config_keys: dict[str, str],
+    *,
+    warn_mismatch: bool,
+    override: dict[str, dict[str, Any]] | None,
+) -> dict[str, dict[str, Any]]:
+    """Extract the dicts asked by user. Override some keys if requested.
+
+    Parameters
+    ----------
+    raw_toml : dict[str, dict[str, Any]]
+        Dictionary holding the whole ``TOML`` file.
     config_keys : dict[str, str]
         Keys will be the keys of the output. Values are the name of the tables
         in the configuration file. If ``config_keys = {"beam": "proton_beam"}``
@@ -102,26 +157,14 @@ def _load_toml(
         configuration file.
 
     """
-    try:
-        with open(config_path, "rb") as f:
-            all_toml = tomllib.load(f)
-    except FileNotFoundError:
-        raise ConfigFileNotFoundError(
-            f"The file {config_path} does not exist."
-        )
-    except tomllib.TOMLDecodeError as e:
-        raise InvalidTomlSyntaxError(
-            f"Invalid TOML syntax in file {config_path}: {e}"
-        )
-
     toml_fulldict = {}
     for key, value in config_keys.items():
-        if value not in all_toml:
+        if value not in raw_toml:
             raise KeyError(
                 f"Expected table '{value}' for key '{key}' not found in the "
                 "TOML file."
             )
-        toml_fulldict[key] = all_toml[value]
+        toml_fulldict[key] = raw_toml[value]
 
     if override:
         _override_some_toml_entries(toml_fulldict, warn_mismatch, **override)

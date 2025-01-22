@@ -197,13 +197,14 @@ class ConfSpec:
             Holds the full configuration.
         id_type : Literal["configured_object", "table_entry"], optional
             If ``toml_fulldict`` keys are name of the object (eg ``'beam'``) or
-            of the table entry in the ``.toml`` (eg ``'my_proton_beam'``,
-            without brackets).
+            of the table entry in the ``.toml`` (eg ``'my_proton_beam'``). Do
+            not put the brackets present in the ``TOML`` file.
 
         Returns
         -------
-        bool
+        all_is_validated : bool
             If the dict is valid or not.
+
         """
         validations = [self._mandatory_keys_are_present]
         for table_name, toml_subdict in toml_fulldict.items():

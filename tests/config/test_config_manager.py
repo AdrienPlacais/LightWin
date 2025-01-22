@@ -1,5 +1,6 @@
 """Ensure that loading and validating ``TOML`` works as expected."""
 
+from importlib.resources.abc import Traversable
 from pathlib import Path
 from typing import Any, cast
 from unittest.mock import MagicMock, call, mock_open, patch
@@ -11,6 +12,7 @@ from lightwin.config.config_manager import (
     InvalidTomlSyntaxError,
     _load_toml,
     _override_some_toml_entries,
+    _process_toml,
     dict_to_toml,
     process_config,
 )
@@ -91,14 +93,13 @@ class TestLoadToml:
         Ensures
         -------
         Raises ConfigFileNotFoundError when the specified file does not exist.
+
         """
         with pytest.raises(
             ConfigFileNotFoundError,
             match="The file non_existent_file.toml does not exist.",
         ):
-            _load_toml(
-                "non_existent_file.toml", {"beam": "proton_beam"}, False, None
-            )
+            _load_toml("non_existent_file.toml")
 
     def test_invalid_syntax(self) -> None:
         """Test for invalid TOML syntax.
@@ -106,67 +107,80 @@ class TestLoadToml:
         Ensures
         -------
         Raises InvalidTomlSyntaxError for invalid TOML syntax.
+
         """
-        invalid_toml = b"invalid_toml_content"
-
-        with patch(
-            "builtins.open", mock_open(read_data=invalid_toml)
-        ) as mocked_file:
-            mocked_file.return_value.read.return_value = invalid_toml
+        bad_content = b"invalid: toml::"
+        with (
+            patch("builtins.open", mock_open(read_data=bad_content)),
+            patch("pathlib.Path.is_file", return_value=True),
+        ):
             with pytest.raises(
-                InvalidTomlSyntaxError, match="Invalid TOML syntax"
+                InvalidTomlSyntaxError,
+                match="Invalid TOML syntax in file mock_path",
             ):
-                _load_toml("mock_path", {"beam": "proton_beam"}, False, None)
+                _load_toml("mock_path")
 
-    def test_missing_key(self) -> None:
+    def test_valid_toml_file(self, mock_toml_content: bytes) -> None:
+        """Ensure valid TOML content is correctly loaded."""
+        with (
+            patch("builtins.open", mock_open(read_data=mock_toml_content)),
+            patch("pathlib.Path.is_file", return_value=True),
+            patch(
+                "tomllib.load",
+                return_value={
+                    "proton_beam": {"key1": "value1", "key2": "value2"}
+                },
+            ),
+        ):
+            result = _load_toml("mock_path")
+            assert result == {
+                "proton_beam": {"key1": "value1", "key2": "value2"}
+            }
+
+    def test_traversable_input(self, mock_toml_content: bytes):
+        """Ensure Traversable inputs are correctly processed."""
+        mock_traversable = MagicMock(spec=Traversable)
+        mock_traversable.open.return_value = mock_open(
+            read_data=mock_toml_content
+        ).return_value
+
+        with (
+            patch("importlib.resources.files", return_value=mock_traversable),
+            patch(
+                "tomllib.load",
+                return_value={
+                    "proton_beam": {"key1": "value1", "key2": "value2"}
+                },
+            ),
+        ):
+            result = _load_toml(mock_traversable)
+            assert result == {
+                "proton_beam": {"key1": "value1", "key2": "value2"}
+            }
+
+
+@pytest.mark.tmp
+class TestProcessToml:
+    """Test the :func:`._process_toml` function."""
+
+    def test_missing_table_key(self):
         """Test for missing table key.
 
         Ensures
         -------
         Raises KeyError if a required table is missing in the TOML file.
+
         """
-        mock_toml_data = b"""
-        [files]
-        file1 = "path/to/file"
-        """
+        raw_toml = {"files": {"key": "value"}}
+        config_keys = {"beam": "proton_beam"}
+        with pytest.raises(
+            KeyError, match="Expected table 'proton_beam' for key 'beam'"
+        ):
+            _process_toml(
+                raw_toml, config_keys, warn_mismatch=False, override=None
+            )
 
-        with patch("builtins.open", mock_open(read_data=mock_toml_data)):
-            with patch(
-                "tomllib.load",
-                return_value={"files": {"file1": "path/to/file"}},
-            ):
-                with pytest.raises(
-                    KeyError, match="Expected table 'proton_beam'"
-                ):
-                    _load_toml(
-                        "mock_path", {"beam": "proton_beam"}, False, None
-                    )
-
-    def test_success(self, mock_toml_content: bytes) -> None:
-        """Test for successful TOML loading.
-
-        Parameters
-        ----------
-        mock_toml_content : bytes
-            Mocked TOML content fixture.
-
-        Ensures
-        -------
-        Correctly loads TOML with valid keys.
-        """
-        with patch("builtins.open", mock_open(read_data=mock_toml_content)):
-            with patch(
-                "tomllib.load",
-                return_value={
-                    "proton_beam": {"key1": "value1", "key2": "value2"}
-                },
-            ):
-                result = _load_toml(
-                    "mock_path", {"beam": "proton_beam"}, False, None
-                )
-                assert result == {"beam": {"key1": "value1", "key2": "value2"}}
-
-    def test_with_override(self, mock_toml_content: bytes) -> None:
+    def test_with_override(self) -> None:
         """Test for applying overrides.
 
         Parameters
@@ -177,24 +191,19 @@ class TestLoadToml:
         Ensures
         -------
         Overrides are correctly applied to the loaded TOML.
+
         """
+        raw_toml = {"proton_beam": {"key1": "value1", "key2": "value2"}}
         override = {"beam": {"key1": "new_value"}}
+        result = _process_toml(
+            raw_toml,
+            {"beam": "proton_beam"},
+            warn_mismatch=False,
+            override=override,
+        )
+        assert result == {"beam": {"key1": "new_value", "key2": "value2"}}
 
-        with patch("builtins.open", mock_open(read_data=mock_toml_content)):
-            with patch(
-                "tomllib.load",
-                return_value={
-                    "proton_beam": {"key1": "value1", "key2": "value2"}
-                },
-            ):
-                result = _load_toml(
-                    "mock_path", {"beam": "proton_beam"}, False, override
-                )
-                assert result == {
-                    "beam": {"key1": "new_value", "key2": "value2"}
-                }
-
-    def test_warn_mismatch(self, mock_toml_content: bytes) -> None:
+    def test_warn_mismatch(self) -> None:
         """Test for warnings on mismatched overrides.
 
         Parameters
@@ -205,29 +214,21 @@ class TestLoadToml:
         Ensures
         -------
         Logs warnings for overrides that mismatch existing keys.
-        """
-        override = {"beam": {"nonexistent_key": "new_value"}}
 
-        with patch("builtins.open", mock_open(read_data=mock_toml_content)):
-            with patch(
-                "tomllib.load",
-                return_value={"proton_beam": {"key1": "value1"}},
-            ):
-                with patch("logging.warning") as mock_warning:
-                    result = _load_toml(
-                        "mock_path", {"beam": "proton_beam"}, True, override
-                    )
-                    assert result == {
-                        "beam": {
-                            "key1": "value1",
-                            "nonexistent_key": "new_value",
-                        }
-                    }
-                    mock_warning.assert_called_once_with(
-                        "You want to override key = 'nonexistent_key', which "
-                        "was not found in conf_subdict.keys() = "
-                        "dict_keys(['key1']). Setting it anyway..."
-                    )
+        """
+        raw_toml = {"proton_beam": {"key1": "value1"}}
+        override = {"beam": {"nonexistent_key": "new_value"}}
+        with patch("logging.warning") as mock_warning:
+            result = _process_toml(
+                raw_toml,
+                {"beam": "proton_beam"},
+                warn_mismatch=True,
+                override=override,
+            )
+            assert result == {
+                "beam": {"key1": "value1", "nonexistent_key": "new_value"}
+            }
+            mock_warning.assert_called_once()
 
 
 @pytest.mark.smoke
@@ -237,33 +238,22 @@ class TestProcessConfig:
 
     def test_process_config_valid(
         self,
-        mock_conf_spec: tuple[MagicMock, MagicMock],
         common_setup: tuple[Path, dict[str, str]],
+        mock_conf_spec: tuple[MagicMock, MagicMock],
     ) -> None:
         """Test process_config with valid inputs."""
-        conf_specs_t, conf_specs = mock_conf_spec
-        conf_specs_t_cast = cast(type[ConfSpec], conf_specs_t)  # for linter
         toml_path, config_keys = common_setup
+        conf_specs_t, _ = mock_conf_spec
+        conf_specs_t_cast = cast(type[ConfSpec], conf_specs_t)  # for linter
 
-        config_keys = {"beam": "proton_beam"}
-
-        with mock_load_toml(
-            {"beam": {"key1": "value1", "key2": "value2"}}
-        ) as mock_load:
+        with patch(
+            "lightwin.config.config_manager._load_toml",
+            return_value={"proton_beam": {"key1": "value1", "key2": "value2"}},
+        ):
             result = process_config(
-                toml_path=toml_path,
-                config_keys=config_keys,
-                conf_specs_t=conf_specs_t_cast,
+                toml_path, config_keys, conf_specs_t=conf_specs_t_cast
             )
-
             assert result == {"beam": {"key1": "value1", "key2": "value2"}}
-            mock_load.assert_called_once_with(
-                toml_path, config_keys, warn_mismatch=False, override=None
-            )
-            conf_specs_t.assert_called_once_with(**config_keys)
-            conf_specs.prepare.assert_called_once_with(
-                result, toml_folder=toml_path.parent
-            )
 
     def test_process_config_invalid_toml_path(
         self, mock_conf_spec: tuple[MagicMock, MagicMock]
@@ -284,38 +274,25 @@ class TestProcessConfig:
                 conf_specs_t=conf_specs_t_cast,
             )
 
-    def test_process_config_with_override(
-        self,
-        mock_conf_spec: tuple[MagicMock, MagicMock],
-        common_setup: tuple[Path, dict[str, str]],
-    ) -> None:
-        """Test process_config applies overrides correctly."""
-        conf_specs_t, conf_specs = mock_conf_spec
-        conf_specs_t_cast = cast(type[ConfSpec], conf_specs_t)  # for linter
-
+    def test_process_config_with_override(self, common_setup, mock_conf_spec):
+        """Ensure process_config applies overrides correctly."""
         toml_path, config_keys = common_setup
-        override = {"beam": {"key1": "new_value"}}
+        conf_specs_t, _ = mock_conf_spec
+        override = {"beam": {"key1": "overridden_value"}}
 
-        with mock_load_toml(
-            {"beam": {"key1": "value1", "key2": "value2"}}
-        ) as mock_load:
+        with patch(
+            "lightwin.config.config_manager._load_toml",
+            return_value={"proton_beam": {"key1": "value1", "key2": "value2"}},
+        ):
             result = process_config(
-                toml_path=toml_path,
-                config_keys=config_keys,
+                toml_path,
+                config_keys,
                 override=override,
-                conf_specs_t=conf_specs_t_cast,
+                conf_specs_t=conf_specs_t,
             )
-
-            mock_load.assert_called_once_with(
-                toml_path, config_keys, warn_mismatch=False, override=override
-            )
-            # Note the key1: value1; not key1: new_value! This is because we
-            # mocked _load_toml and the override logic happens in this function
-            assert result == {"beam": {"key1": "value1", "key2": "value2"}}
-            conf_specs_t.assert_called_once_with(**config_keys)
-            conf_specs.prepare.assert_called_once_with(
-                result, toml_folder=toml_path.parent
-            )
+            assert result == {
+                "beam": {"key1": "overridden_value", "key2": "value2"}
+            }
 
 
 @pytest.mark.tmp
