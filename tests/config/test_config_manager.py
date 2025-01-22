@@ -119,6 +119,15 @@ class TestLoadToml:
                 "proton_beam": {"key1": "value1", "key2": "value2"}
             }
 
+    def test_empty_toml(self):
+        """Validate handling of empty TOML files."""
+        with (
+            patch("builtins.open", mock_open(read_data=b"")),
+            patch("pathlib.Path.is_file", return_value=True),
+        ):
+            result = _load_toml("mock_path")
+            assert result == {}
+
 
 @pytest.mark.tmp
 class TestProcessToml:
@@ -190,6 +199,18 @@ class TestProcessToml:
                 "beam": {"key1": "value1", "nonexistent_key": "new_value"}
             }
             mock_warning.assert_called_once()
+
+    def test_nested_overrides(self):
+        """Ensure `_process_toml` applies nested overrides correctly."""
+        raw_toml = {"proton_beam": {"key1": {"subkey1": "value1"}}}
+        override = {"beam": {"key1": {"subkey1": "new_value"}}}
+        result = _process_toml(
+            raw_toml,
+            {"beam": "proton_beam"},
+            warn_mismatch=False,
+            override=override,
+        )
+        assert result == {"beam": {"key1": {"subkey1": "new_value"}}}
 
 
 @pytest.mark.smoke
@@ -279,7 +300,7 @@ class TestDictToToml:
             )
 
     def test_no_overwrite(
-        self, mock_conf_spec_for_dict_to_toml: MagicMock, tmp_path: Path
+        self, mock_conf_spec: MagicMock, tmp_path: Path
     ) -> None:
         """Test that dict_to_toml does not overwrite an existing file by default."""
         toml_path = tmp_path / "test.toml"
@@ -287,9 +308,7 @@ class TestDictToToml:
         toml_fulldict = {"beam": {"key1": "value1"}}
 
         with patch("logging.error") as mock_error:
-            dict_to_toml(
-                toml_fulldict, toml_path, mock_conf_spec_for_dict_to_toml
-            )
+            dict_to_toml(toml_fulldict, toml_path, mock_conf_spec)
 
             # Ensure an error is logged
             mock_error.assert_called_once_with(
@@ -297,7 +316,7 @@ class TestDictToToml:
             )
 
     def test_allow_overwrite(
-        self, mock_conf_spec_for_dict_to_toml: MagicMock, tmp_path: Path
+        self, mock_conf_spec: MagicMock, tmp_path: Path
     ) -> None:
         """Test that file is overwritten when allow_overwrite is True."""
         toml_path = tmp_path / "test.toml"
@@ -311,7 +330,7 @@ class TestDictToToml:
             dict_to_toml(
                 toml_fulldict,
                 toml_path,
-                mock_conf_spec_for_dict_to_toml,
+                mock_conf_spec,
                 allow_overwrite=True,
             )
 
@@ -330,14 +349,30 @@ class TestDictToToml:
             )
 
     def test_calls_to_toml_strings(
-        self, mock_conf_spec_for_dict_to_toml: MagicMock, tmp_path: Path
+        self, mock_conf_spec: MagicMock, tmp_path: Path
     ) -> None:
         """Test that dict_to_toml calls ConfSpec.to_toml_strings with the correct arguments."""
         toml_path = tmp_path / "test.toml"
         toml_fulldict = {"beam": {"key1": "value1"}}
 
-        dict_to_toml(toml_fulldict, toml_path, mock_conf_spec_for_dict_to_toml)
+        dict_to_toml(toml_fulldict, toml_path, mock_conf_spec)
 
-        mock_conf_spec_for_dict_to_toml.to_toml_strings.assert_called_once_with(
+        mock_conf_spec.to_toml_strings.assert_called_once_with(
             toml_fulldict, original_toml_folder=None
         )
+
+    def test_round_trip(
+        self,
+        mock_conf_spec: MagicMock,
+        tmp_path: Path,
+    ) -> None:
+        """Ensure configuration saved with `dict_to_toml` can be reloaded."""
+        toml_path = tmp_path / "config.toml"
+        toml_fulldict = {"beam": {"key1": "value1", "key2": "value2"}}
+
+        dict_to_toml(toml_fulldict, toml_path, mock_conf_spec)
+
+        with patch("pathlib.Path.is_file", return_value=True):
+            result = _load_toml(toml_path)
+
+        assert result == toml_fulldict
