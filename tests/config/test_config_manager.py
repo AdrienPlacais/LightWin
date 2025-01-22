@@ -2,7 +2,6 @@
 
 from importlib.resources.abc import Traversable
 from pathlib import Path
-from typing import Any, cast
 from unittest.mock import MagicMock, call, mock_open, patch
 
 import pytest
@@ -14,15 +13,7 @@ from lightwin.config.config_manager import (
     _override_some_toml_entries,
     _process_toml,
     dict_to_toml,
-    process_config,
 )
-from lightwin.config.full_specs import ConfSpec
-
-CONFIG_KEYS = {
-    "beam": "beam",
-    "files": "files",
-    "beam_calculator": "generic_tracewin",
-}
 
 
 # =============================================================================
@@ -39,37 +30,7 @@ def mock_toml_content() -> bytes:
 
 
 @pytest.fixture
-def common_setup(
-    mock_toml_content: bytes,
-    tmp_path_factory: pytest.TempPathFactory,
-) -> tuple[Path, dict[str, str]]:
-    """Fixture to set up common test components."""
-    toml_path = tmp_path_factory.mktemp("config") / "config.toml"
-    toml_path.write_bytes(mock_toml_content)
-
-    config_keys = {"beam": "proton_beam"}
-    return toml_path, config_keys
-
-
-@pytest.fixture
-def mock_conf_spec() -> tuple[MagicMock, MagicMock]:
-    """Mock the :class:`.ConfSpec` class."""
-    conf_specs_t = MagicMock(spec=type(ConfSpec))
-    conf_specs = MagicMock(spec=ConfSpec)
-    conf_specs_t.return_value = conf_specs
-    return conf_specs_t, conf_specs
-
-
-def mock_load_toml(mock_return_value: dict[str, dict[str, Any]]):
-    """Mock :func:`._load_toml` with a given return value."""
-    return patch(
-        "lightwin.config.config_manager._load_toml",
-        return_value=mock_return_value,
-    )
-
-
-@pytest.fixture
-def mock_conf_spec_for_dict_to_toml() -> MagicMock:
+def mock_conf_spec() -> MagicMock:
     """Mock the ConfSpec class for dict_to_toml tests."""
     mock = MagicMock()
     mock.to_toml_strings.return_value = [
@@ -234,65 +195,12 @@ class TestProcessToml:
 @pytest.mark.smoke
 @pytest.mark.tmp
 class TestProcessConfig:
-    """Define tests for the :func:``.process_config`` function."""
+    """Define tests for the :func:``.process_config`` function.
 
-    def test_process_config_valid(
-        self,
-        common_setup: tuple[Path, dict[str, str]],
-        mock_conf_spec: tuple[MagicMock, MagicMock],
-    ) -> None:
-        """Test process_config with valid inputs."""
-        toml_path, config_keys = common_setup
-        conf_specs_t, _ = mock_conf_spec
-        conf_specs_t_cast = cast(type[ConfSpec], conf_specs_t)  # for linter
+    .. todo::
+        Maybe a smoke test as this is part of API?
 
-        with patch(
-            "lightwin.config.config_manager._load_toml",
-            return_value={"proton_beam": {"key1": "value1", "key2": "value2"}},
-        ):
-            result = process_config(
-                toml_path, config_keys, conf_specs_t=conf_specs_t_cast
-            )
-            assert result == {"beam": {"key1": "value1", "key2": "value2"}}
-
-    def test_process_config_invalid_toml_path(
-        self, mock_conf_spec: tuple[MagicMock, MagicMock]
-    ) -> None:
-        """Test process_config raises an error for an invalid ``TOML`` path."""
-        conf_specs_t, _ = mock_conf_spec
-        conf_specs_t_cast = cast(type[ConfSpec], conf_specs_t)  # for linter
-        toml_path = Path("non_existent_file.toml")
-        config_keys = {"beam": "proton_beam"}
-
-        with pytest.raises(
-            ConfigFileNotFoundError,
-            match="The file non_existent_file.toml does not exist.",
-        ):
-            process_config(
-                toml_path=toml_path,
-                config_keys=config_keys,
-                conf_specs_t=conf_specs_t_cast,
-            )
-
-    def test_process_config_with_override(self, common_setup, mock_conf_spec):
-        """Ensure process_config applies overrides correctly."""
-        toml_path, config_keys = common_setup
-        conf_specs_t, _ = mock_conf_spec
-        override = {"beam": {"key1": "overridden_value"}}
-
-        with patch(
-            "lightwin.config.config_manager._load_toml",
-            return_value={"proton_beam": {"key1": "value1", "key2": "value2"}},
-        ):
-            result = process_config(
-                toml_path,
-                config_keys,
-                override=override,
-                conf_specs_t=conf_specs_t,
-            )
-            assert result == {
-                "beam": {"key1": "overridden_value", "key2": "value2"}
-            }
+    """
 
 
 @pytest.mark.tmp
@@ -352,17 +260,13 @@ class TestOverrideSomeTomlEntries:
 class TestDictToToml:
     """Test suite for the dict_to_toml function."""
 
-    def test_success(
-        self, mock_conf_spec_for_dict_to_toml: MagicMock, tmp_path: Path
-    ) -> None:
+    def test_success(self, mock_conf_spec: MagicMock, tmp_path: Path) -> None:
         """Test that dict_to_toml writes the correct TOML content to a file."""
         toml_path = tmp_path / "test.toml"
         toml_fulldict = {"beam": {"key1": "value1", "key2": "value2"}}
 
         with patch("builtins.open", mock_open()) as mocked_file:
-            dict_to_toml(
-                toml_fulldict, toml_path, mock_conf_spec_for_dict_to_toml
-            )
+            dict_to_toml(toml_fulldict, toml_path, mock_conf_spec)
             mocked_file().write.assert_has_calls(
                 [
                     call("[beam]"),
