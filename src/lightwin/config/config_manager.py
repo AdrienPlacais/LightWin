@@ -71,6 +71,7 @@ def process_config(
     conf_specs = conf_specs_t(**config_keys)
     if isinstance(toml_path, str):
         toml_path = Path(toml_path)
+
     if isinstance(toml_path, Path):
         conf_specs.prepare(toml_fulldict, toml_folder=toml_path.parent)
         return toml_fulldict
