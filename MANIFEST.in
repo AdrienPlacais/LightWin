@@ -1,9 +1,0 @@
-include src/lightwin/data/ads/ads.dat
-include src/lightwin/data/ads/ads.ini
-include src/lightwin/data/ads/constraints.csv
-include src/lightwin/data/ads/field_maps_1D/beta065_1D.edz
-include src/lightwin/data/ads/field_maps_1D/Double_spoke.edz
-include src/lightwin/data/ads/field_maps_1D/Simple_Spoke_1D.edz
-include src/lightwin/data/ads/lightwin.toml
-include src/lightwin/data/ads/variables_centered_around_solution.csv
-include src/lightwin/data/ads/variables.csv
