@@ -16,6 +16,12 @@ In particular, follow advices listed in the great [Scientific Python library dev
 
 - Package on `pip` (simpler installation with `pip install lightwin`).
 
+### Changed
+
+- Data used for examples was moved from `data/example/` to `src/lightwin/data/ads/`.
+    - It can now be imported for testing purposes.
+    - See also: [Including data files](https://learn.scientific-python.org/development/patterns/data-files/)
+
 ## [0.9.0] -- 2025-01-21
 
 ### Added
