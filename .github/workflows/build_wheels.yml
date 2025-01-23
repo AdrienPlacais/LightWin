@@ -2,9 +2,13 @@ name: Build
 
 on:
   workflow_dispatch:
-  release:
-    types:
-      - published
+  push:
+    branches:
+      - experiment/auto-release
+  # release:
+  #   types:
+  #     - published
+
 
 # ============
 # Build wheels
