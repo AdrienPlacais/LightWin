@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - experiment/auto-release
-  pull-request:
   # release:
   #   types:
   #     - published
