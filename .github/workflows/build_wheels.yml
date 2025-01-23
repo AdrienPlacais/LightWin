@@ -1,65 +1,13 @@
 name: Build
 
+# TODO: review when these actions are run
 on:
   workflow_dispatch:
-  # This process is very time-consuming, will have to reduce frequency
   push:
     branches:
       - experiment/auto-release
-  # release:
-  #   types:
-  #     - published
 
 jobs:
-  # ==========
-  # Unit tests
-  # ==========
-  tests:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version:
-          - "3.12"
-        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
-
-    name: Check Python ${{ matrix.python-version }} on ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-          allow-prereleases: true
-
-      - name: Install package
-        run: python -m pip install -e .[test]
-
-      - name: Test package
-        run: python -m pytest -m "tmp"
-
-  # ===============
-  # Making an SDist
-  # ===============
-  make_sdist:
-    name: Make SDist
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Optional, use if you use setuptools_scm
-
-      - name: Build SDist
-        run: pipx run build --sdist
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cibw-sdist
-          path: dist/*.tar.gz
-
   # ============
   # Build wheels
   # # ============
