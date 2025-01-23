@@ -114,7 +114,8 @@ jobs:
 
     # ============================================
     # Separate workflow for publishing to TestPyPI
-    # ============================================  publish-to-testpypi:
+    # ============================================
+  publish-to-testpypi:
     name: Publish LightWin distribution 📦 to TestPyPI
     needs:
     - build
