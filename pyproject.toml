@@ -92,7 +92,8 @@ where = ["src"]
 [tool.cibuildwheel]
 build-verbosity = 1
 test-command = "pytest {project}/tests -m 'not implementation and not tracewin and not slow and not cython'"
-test-requires = "pytest"
+# Install [test] dependencies:
+test-extras = "test"
 
 [build-system]
 build-backend = "setuptools.build_meta"
