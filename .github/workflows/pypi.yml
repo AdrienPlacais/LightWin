@@ -112,9 +112,9 @@ jobs:
         "$GITHUB_REF_NAME" dist/**
         --repo "$GITHUB_REPOSITORY"
 
-    # ============================================
-    # Separate workflow for publishing to TestPyPI
-    # ============================================
+  # ============================================
+  # Separate workflow for publishing to TestPyPI
+  # ============================================
   publish-to-testpypi:
     name: Publish LightWin distribution 📦 to TestPyPI
     needs:
@@ -138,3 +138,4 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
+        args: --verbose
