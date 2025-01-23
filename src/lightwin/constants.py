@@ -22,4 +22,7 @@ example_ini = example_folder / "ads.ini"
 example_machine_config = example_folder / "machine_config.toml"
 example_variables = example_folder / "variables.csv"
 
+# Instructions tests
+instructions_tests_folder = resources.files("lightwin.data.instructions_test")
+
 NEW = False

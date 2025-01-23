@@ -12,6 +12,7 @@ from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.constants import instructions_tests_folder
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import NoFault
 
@@ -63,7 +64,7 @@ all_expected = {
     ),
 }
 
-DATA_DIR = Path("data", "test_instructions")
+DATA_DIR = instructions_tests_folder
 
 
 @pytest.fixture

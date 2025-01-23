@@ -1,6 +1,6 @@
 [files]
 dat_file = "placeholder.dat"
-project_folder = "results_tests/"
+project_folder = "lw_results/"
 
 [generic_envelope1d]
 flag_cython = false
