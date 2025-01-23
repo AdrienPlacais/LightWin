@@ -1,5 +1,5 @@
-# Adapted from https://github.com/ArjanCodes/examples/blob/main/2024/publish_pypi/release.yaml
 name: release
+# Adapted from https://github.com/ArjanCodes/examples/blob/main/2024/publish_pypi/release.yaml
 
 on:
   push:
@@ -12,7 +12,6 @@ on:
 env:
   PACKAGE_NAME: "LightWin"
   OWNER: "AdrienPlacais"
-  TAP_NAME: "<TAP_NAME>"
 
 jobs:
   details:
@@ -100,7 +99,7 @@ jobs:
       #   run: poetry install --sync --no-interaction
 
       - name: Install build and twine packages
-        run: python -m pi install --upgrade build twine
+        run: python -m pip install --upgrade build twine
 
       - name: Build source and wheel distribution
         run: python -m build
