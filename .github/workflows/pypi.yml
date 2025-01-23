@@ -115,7 +115,7 @@ jobs:
     needs: [setup_and_build, details]
     runs-on: ubuntu-latest
     environment:
-      name: experiment/auto-release
+      name: release
     permissions:
       id-token: write
     steps:
