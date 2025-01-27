@@ -90,7 +90,7 @@ where = ["src"]
 [tool.setuptools_scm]
 
 [tool.cibuildwheel]
-build = "cp3?-*"
+build = "cp312-*"
 build-verbosity = 1
 # test-command = 'pytest {project}/tests -m "not implementation and not tracewin and not slow and not cython"'
 test-command = 'pytest {project}/tests -m "tmp"'
