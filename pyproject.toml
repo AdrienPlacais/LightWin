@@ -90,8 +90,8 @@ where = ["src"]
 [tool.cibuildwheel]
 build = "cp312-*"
 build-verbosity = 1
-test-command = 'pytest {project}/tests -m "not implementation and not tracewin and not slow"'
-# test-command = 'pytest {project}/tests -m "tmp"'
+# test-command = 'pytest {project}/tests -m "not implementation and not tracewin and not slow"'
+test-command = 'pytest {project}/tests -m "tmp"'
 # Install [test] dependencies:
 test-extras = "test"
 

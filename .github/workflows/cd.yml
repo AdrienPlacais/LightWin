@@ -3,8 +3,10 @@ name: CD
 on:
   workflow_dispatch:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - experiment/release
+    # tags:
+    #   - 'v*'
 
 jobs:
   build_wheels:
@@ -12,7 +14,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-13, macos-latest]
+        # os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-13, macos-latest]
+        os: [windows-latest, macos-latest]
 
     steps:
       - uses: actions/checkout@v4
