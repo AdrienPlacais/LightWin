@@ -15,8 +15,8 @@ classifiers = [
    "Topic :: Scientific/Engineering :: Physics",
 ]
 dependencies = [
-   "cloudpickle>=3, <4",
-   # "matplotlib>=3.9.1, <4",
+   # "cloudpickle>=3, <4",
+   "matplotlib>=3.9.1, <4",
    # "numpy>=2, <3",
    # "pandas>=2.2, <3",
    # "palettable>=3.3.3, <4",
