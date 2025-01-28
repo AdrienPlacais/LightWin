@@ -15,13 +15,13 @@ classifiers = [
    "Topic :: Scientific/Engineering :: Physics",
 ]
 dependencies = [
-   # "cloudpickle>=3, <4",
-   # "matplotlib>=3.9.1, <4",
-   # "numpy>=2, <3",
-   # "pandas>=2.2, <3",
-   # "palettable>=3.3.3, <4",
-   # "pre-commit>=4, <5",
-   # "pymoo>=0.6.1.3, <1",
+   "cloudpickle>=3, <4",
+   "matplotlib>=3.9.1, <4",
+   "numpy>=2, <3",
+   "pandas>=2.2, <3",
+   "palettable>=3.3.3, <4",
+   "pre-commit>=4, <5",
+   "pymoo>=0.6.1.3, <1",
    "scipy>=1.14, <2",
 ]
 description = "Automatically compensate cavity failures in linacs"
@@ -32,7 +32,6 @@ readme = "README.md"
 requires-python = ">=3.12"
 
 [project.optional-dependencies]
-# cython = ["Cython>=3.0.10, <4.0.0"]
 docs = [
    "sphinx-rtd-theme>=3, <4",
    "sphinxcontrib-bibtex>=2.6,<3",
@@ -88,11 +87,12 @@ where = ["src"]
 [tool.setuptools_scm]
 
 [tool.cibuildwheel]
-build = "cp312-*"
+# Mandatory!! If not provided, github actions will try to build some dependencies missing wheels,
+# such as Windows 32 bits, which will fail.
+archs = "auto64"
 build-verbosity = 1
 # test-command = 'pytest {project}/tests -m "not implementation and not tracewin and not slow"'
 test-command = 'pytest {project}/tests -m "tmp"'
-# Install [test] dependencies:
 test-extras = "test"
 
 [build-system]
