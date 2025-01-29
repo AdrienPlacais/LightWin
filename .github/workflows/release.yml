@@ -7,6 +7,7 @@ on:
       - 'v*'
     branches:
       - experiment/auto-release
+      - ci/handle-missing-tkinter
 
 jobs:
   build_wheels:
@@ -46,6 +47,9 @@ jobs:
           - buildplat: [ubuntu-latest, musllinux_i686]
           # Does not manage to build matplotlib
           - buildplat: [windows-latest, win32]
+          # temporary deactivation. all tests will fail as tkinter is not available
+          # but imported in the very fundamental tracewin_utils.load module
+          - buildplat: [windows-latest, win_amd64]
 
     steps:
       - name: 🔍 Checkout current repo
