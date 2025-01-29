@@ -1,4 +1,4 @@
-name: CI
+name: 🚦 Test last push
 
 on:
   pull_request:
@@ -9,28 +9,27 @@ on:
 
 jobs:
   tests:
+    name: Test for ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version:
-          - "3.12"
-    name: Check Python ${{ matrix.python-version }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        python-version: ["3.12"]
 
-      - name: Setup Python ${{ matrix.python-version }}
+    steps:
+      - name: 🔍 Checkout current repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
 
-      - name: Install package
+      - name: 📦 Install package
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e .[test]
 
-      - name: Run tests
+      - name: 🚦 Run tests
         run: python -m pytest -m "not implementation and not tracewin and not slow and not cython"

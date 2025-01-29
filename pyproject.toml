@@ -87,9 +87,6 @@ where = ["src"]
 [tool.setuptools_scm]
 
 [tool.cibuildwheel]
-# Mandatory!! If not provided, github actions will try to build some dependencies missing wheels,
-# such as Windows 32 bits, which will fail.
-archs = "auto64"
 build-verbosity = 1
 test-command = 'pytest {project}/tests -m "not implementation and not tracewin and not slow"'
 test-extras = "test"
