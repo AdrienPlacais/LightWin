@@ -44,7 +44,6 @@ def mock_conf_spec() -> MagicMock:
 # =============================================================================
 # Tests for every function of the config_manager_module
 # =============================================================================
-@pytest.mark.tmp
 class TestLoadToml:
     """Test the :func:`._load_toml` function."""
 
