@@ -1,34 +1,24 @@
-"""Test that complete ``DAT`` files are properly understood."""
+"""Test that complete ``DAT`` files are properly understood.
 
-import hashlib
-from importlib import resources
+We use ``ads_dat_path``, defined in :file:`conftest.py`.
+
+"""
+
 from pathlib import Path
 from pprint import pformat
 
 import pytest
 
-from lightwin.constants import example_dat
 from lightwin.core.commands.adjust import Adjust
 from lightwin.tracewin_utils.dat_files import dat_filecontent_from_file
 from lightwin.tracewin_utils.line import DatLine
 
 
-def sha256(fname: Path) -> str:
-    """Give SHA-256 checksum of a file."""
-    hash_sha256 = hashlib.sha256()
-    with open(fname, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            hash_sha256.update(chunk)
-    return hash_sha256.hexdigest()
-
-
 @pytest.mark.smoke
+@pytest.mark.tmp
 class TestLoadDatFile:
     """Ensure that the ``.dat`` file will be correctly loaded."""
 
-    expected_checksum = (
-        "e6053120d80b36a9f1d2c1f5f238bf313deefb87e5815516c2563f83a80ccbfa"
-    )
     lines = [
         "FIELD_MAP_PATH field_maps_1D",
         "LATTICE 10 0",
@@ -58,25 +48,11 @@ class TestLoadDatFile:
         ]
         return expected_dat_filecontent
 
-    @pytest.mark.tmp
-    def test_file_was_not_changed(self) -> None:
-        """Compare checksums to verify file is still the same.
-
-        Otherwise, I may mess up with those tests.
-
-        """
-        with resources.as_file(example_dat) as path:
-            actual_checksum = sha256(path)
-        assert actual_checksum == self.expected_checksum, (
-            f"The checksum of {example_dat} does not match the expected one."
-            " Maybe the file was edited?"
-        )
-
-    def test_some_lines_of_the_dat(self) -> None:
+    def test_some_lines_of_the_dat(self, ads_dat_path: Path) -> None:
         """Check one some lines that the loading is correct."""
         actual_dat_filecontent = dat_filecontent_from_file(
             # "splitted": ["DRIFT", "76"]}
-            example_dat,
+            ads_dat_path,
             keep="none",
         )
         expected_dat_filecontent = self.expected_dat_filecontent
@@ -85,7 +61,7 @@ class TestLoadDatFile:
             f"returned:\n{pformat(actual_dat_filecontent[:15], width=120)}"
         )
 
-    def test_insert_instruction(self) -> None:
+    def test_insert_instruction(self, ads_dat_path: Path) -> None:
         """Check that an instruction will be inserted at the proper place."""
         line_1 = DatLine(self.line_adj_phase, self.idx_fm1)
         instruction_1 = Adjust(line_1)
@@ -94,14 +70,14 @@ class TestLoadDatFile:
         expected_dat_filecontent.insert(self.idx_fm1, line_1)
 
         actual_dat_filecontent = dat_filecontent_from_file(
-            example_dat, instructions_to_insert=(instruction_1,), keep="none"
+            ads_dat_path, instructions_to_insert=(instruction_1,), keep="none"
         )
         assert expected_dat_filecontent == actual_dat_filecontent[:15], (
             f"Expected:\n{pformat(expected_dat_filecontent, width=120)}\nbut "
             f"returned:\n{pformat(actual_dat_filecontent[:15], width=120)}"
         )
 
-    def test_insert_instructions(self) -> None:
+    def test_insert_instructions(self, ads_dat_path: Path) -> None:
         """Check that several instructions will work together."""
         line_1 = DatLine(self.line_adj_phase, self.idx_fm1)
         line_2 = DatLine(self.line_adj_ampl, self.idx_fm1)
@@ -116,7 +92,7 @@ class TestLoadDatFile:
         expected_dat_filecontent.insert(self.idx_fm2 + 3, line_4)
 
         actual_dat_filecontent = dat_filecontent_from_file(
-            example_dat, instructions_to_insert=instructions, keep="none"
+            ads_dat_path, instructions_to_insert=instructions, keep="none"
         )
         assert expected_dat_filecontent == actual_dat_filecontent[:15], (
             f"Expected:\n{pformat(expected_dat_filecontent, width=120)}\nbut "
