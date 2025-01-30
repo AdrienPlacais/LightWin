@@ -7,7 +7,6 @@ on:
       - 'v*'
     branches:
       - experiment/auto-release
-      - test/handle-checksum
 
 jobs:
   build_wheels:
