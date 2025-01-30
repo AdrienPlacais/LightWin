@@ -14,6 +14,9 @@ In particular, follow advices listed in the great [Scientific Python library dev
 
 ### Added
 
+- When tagging a version:
+    - The package is built and tested on several platforms, before being released to PyPI.
+    - `CITATION.cff` is automatically updated accordingly.
 - Package on `pip` (simpler installation with `pip install lightwin`).
 
 ### Changed
@@ -28,7 +31,7 @@ In particular, follow advices listed in the great [Scientific Python library dev
 
 - CI/CD tasks:
     - Automatic linting with `pre-commit.ci`.
-    - Automatic checking of common mistakes with `pre-commit.cli`.
+    - Automatic checking of common mistakes with `pre-commit.ci`.
     - Run automatic tests using `pytest` and GitHub workflows.
 - Badges to quickly see if something went wrong.
 
