@@ -6,7 +6,7 @@ on:
     branches:
       - main
       - 0.9.x
-      - ci/handle-missing-tkinter
+      - test/handle-checksum
 
 jobs:
   tests:

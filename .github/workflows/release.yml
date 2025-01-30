@@ -7,7 +7,7 @@ on:
       - 'v*'
     branches:
       - experiment/auto-release
-      - ci/handle-missing-tkinter
+      - test/handle-checksum
 
 jobs:
   build_wheels:
