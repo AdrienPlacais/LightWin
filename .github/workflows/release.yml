@@ -103,8 +103,7 @@ jobs:
         path: dist
         merge-multiple: true
 
-    - name: 🚀 Release on TestPyPi
+    - name: 🚀 Release on PyPi
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        repository-url: https://test.pypi.org/legacy/
         verbose: true
