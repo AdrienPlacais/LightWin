@@ -1,5 +1,7 @@
-Testing
--------
+Testing (for developers)
+------------------------
+
+Read this section if you built LightWin from source and expect to modify the code.
 
 Pytest
 ^^^^^^
