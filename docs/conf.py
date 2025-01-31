@@ -57,6 +57,7 @@ extensions = [
     "nbsphinx",
     "lightwin_sphinx_extensions",
     "sphinx_autodoc_typehints",  # Printing types in docstrings not necessary anymore
+    "sphinx_tabs.tabs",
 ]
 
 autodoc_default_options = {
