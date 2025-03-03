@@ -356,9 +356,7 @@ def _get_first_key_of_idx_dict_higher_than(
     return -1
 
 
-def first[
-    T
-](
+def first[T](
     iterable: Iterable[T],
     default: T | None = None,
     condition: Callable[[T], bool] = lambda _: True,

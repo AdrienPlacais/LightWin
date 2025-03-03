@@ -219,7 +219,7 @@ def _0_to_NaN(data: np.ndarray) -> np.ndarray:
 
 
 def _remove_invalid_values(
-    results: dict[str, np.ndarray]
+    results: dict[str, np.ndarray],
 ) -> dict[str, np.ndarray]:
     """Remove invalid values that appear when ``exception`` is True."""
     results["SizeX"] = _0_to_NaN(results["SizeX"])

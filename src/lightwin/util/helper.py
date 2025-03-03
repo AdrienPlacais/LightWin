@@ -96,7 +96,7 @@ def remove_duplicates[T](iterable: Iterable[T]) -> Iterator[T]:
 def printc(*args: str, color: str = "cyan") -> None:
     """Print colored messages."""
     dict_c = {
-        "red": "\x1B[31m",
+        "red": "\x1b[31m",
         "blue": "\x1b[34m",
         "green": "\x1b[32m",
         "magenta": "\x1b[35m",

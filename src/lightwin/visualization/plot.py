@@ -181,7 +181,7 @@ def factory(
 
 
 def _separate_plot_presets_from_plot_modificators(
-    plots: dict[str, Any]
+    plots: dict[str, Any],
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Separate the config entries corresponding to the name of a plot."""
     plot_presets: dict[str, bool] = {}

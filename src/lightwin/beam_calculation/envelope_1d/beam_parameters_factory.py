@@ -1,6 +1,4 @@
-"""Define class generating :class:`.BeamParameters` for :class:`.Envelope1D`.
-
-"""
+"""Define class generating :class:`.BeamParameters` for :class:`.Envelope1D`."""
 
 from typing import Callable
 

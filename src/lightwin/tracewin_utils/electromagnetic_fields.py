@@ -136,7 +136,7 @@ field', 'static electric field': 'no field'}``
 
 
 def _get_filemaps_extensions(
-    field_map_type: dict[str, str]
+    field_map_type: dict[str, str],
 ) -> dict[str, list[str]]:
     """
     Get the proper file extensions for every field map.
