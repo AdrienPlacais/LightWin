@@ -13,9 +13,7 @@ from functools import partial
 from typing import Literal
 
 
-def _distance_to_ref[
-    T
-](
+def _distance_to_ref[T](
     element: T,
     failed: Sequence[T],
     all_elements: Sequence[T],
@@ -83,9 +81,7 @@ def _penalty(index: int, failure_index: int, shift: int) -> int:
     return abs(shift)
 
 
-def sort_by_position[
-    T
-](
+def sort_by_position[T](
     all_elements: Sequence[T],
     failed: Sequence[T],
     tie_politics: Literal[
@@ -129,17 +125,15 @@ def sort_by_position[
     return sorted(all_elements, key=lambda element: sorter(element))
 
 
-def remove_lists_with_less_than_n_elements[
-    T
-](elements: list[Sequence[T]], minimum_size: int = 1) -> list[Sequence[T]]:
+def remove_lists_with_less_than_n_elements[T](
+    elements: list[Sequence[T]], minimum_size: int = 1
+) -> list[Sequence[T]]:
     """Return a list where objects have a minimum length of ``minimum_size``."""
     out = [x for x in elements if len(x) >= minimum_size]
     return out
 
 
-def gather[
-    T
-](
+def gather[T](
     failed_elements: list[T],
     fun_sort: Callable[[Sequence[T] | Sequence[Sequence[T]]], list[T]],
 ) -> tuple[list[list[T]], list[list[T]]]:
@@ -213,14 +207,10 @@ def gather[
     return failed_gathered, compensating_gathered
 
 
-def nested_containing_desired[
-    T
-](
+def nested_containing_desired[T](
     nested: Collection[Sequence[T]],
     desired_elements: Collection[T],
-) -> list[
-    Sequence[T]
-]:
+) -> list[Sequence[T]]:
     """Return collections of ``nested`` containing some ``desired_elements``.
 
     Example

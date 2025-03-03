@@ -66,9 +66,7 @@ def failed_and_compensating(
     return failed_gathered, compensating_gathered
 
 
-def k_out_of_n[
-    T
-](
+def k_out_of_n[T](
     elements: Sequence[T],
     failed_elements: Sequence[T],
     *,
@@ -123,9 +121,7 @@ def k_out_of_n[
     return altered
 
 
-def l_neighboring_lattices[
-    T
-](
+def l_neighboring_lattices[T](
     elements_gathered_by_lattice: Sequence[Sequence[T]],
     failed_elements: Sequence[T],
     *,
@@ -233,9 +229,7 @@ def manual(
     return failed_cavities, compensating_cavities
 
 
-def global_compensation[
-    T
-](
+def global_compensation[T](
     elements: Sequence[T],
     failed_elements: Sequence[T],
     *,
@@ -263,9 +257,7 @@ def global_compensation[
     return altered
 
 
-def global_downstream[
-    T
-](
+def global_downstream[T](
     elements: Sequence[T],
     failed_elements: Sequence[T],
     *,

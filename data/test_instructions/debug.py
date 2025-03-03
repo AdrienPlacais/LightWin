@@ -14,7 +14,7 @@ from lightwin.core.accelerator.factory import NoFault
 
 
 def _set_up_solvers(
-    config: dict[str, Any]
+    config: dict[str, Any],
 ) -> tuple[BeamCalculator, list[str]]:
     """Create the beam calculators."""
     factory = BeamCalculatorsFactory(**config)
