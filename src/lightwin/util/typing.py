@@ -47,3 +47,26 @@ GETTABLE_BEAM_PARAMETERS_T = (
     ] | GETTABLE_BEAM_PARAMETERS_PHASE_SPACE_T
     # fmt: on
 )
+
+#: Attributes stored in the :attr:`.ParticleFullTrajectory.beam` dictionary
+BEAM_KEYS_T = Literal[
+    "e_mev",
+    "e_rest_mev",
+    "f_bunch_mhz",
+    "i_milli_a",
+    "q_adim",
+    "sigma",
+    "inv_e_rest_mev",
+    "gamma_init",
+    "omega_0_bunch",
+    "lambda_bunch",
+    "q_over_m",
+    "m_over_q",
+]
+
+#: Attributes that can be extracted with :meth:`.ParticleFullTrajectory.get`
+#: method
+GETTABLE_PARTICLE_T = (
+    Literal["beta", "gamma", "phi_abs", "synchronous", "w_kin", "z_in"]
+    | BEAM_KEYS_T
+)
