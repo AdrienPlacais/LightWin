@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Adhere to development best practices.
 In particular, follow advices listed in the great [Scientific Python library development guide](https://learn.scientific-python.org/development/).
 
+
+## [0.9.2] -- unreleased
+
+### Added
+
+- Type hints for the `.get` methods.
+
 ## [0.9.1] -- 2025-01-30
 
 ### Added
