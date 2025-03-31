@@ -32,7 +32,7 @@ from lightwin.util.typing import GETTABLE_PARTICLE_T
 class ParticleInitialState:
     """Hold the initial energy/phase of a particle, and if it is synchronous.
 
-    It is stored in Accelerator, and is parent of ParticleFullTrajectory.
+    It is used for :class:`.ListOfElements` attribute.
 
     """
 
@@ -51,17 +51,19 @@ class ParticleInitialState:
 
 @dataclass
 class ParticleFullTrajectory:
-    """
-    Hold the full energy, phase, etc of a particle.
+    r"""Hold the full energy, phase, etc of a particle.
 
-    It is stored in a SimulationOutput. A single Accelerator can have several
-    SimulationOutput, hence an Accelerator.ParticleInitialState can have
-    several SimulationOutput.ParticleFullTrajectory.
+    It is stored in a :class:`.SimulationOutput`.
 
     Phase is defined as:
-        phi = omega_0_bunch * t
-    while in electric_field it is:
-        phi = omega_0_rf * t
+
+    .. math::
+        \phi = \omega_{0,\,\mathrm{bunch}} t
+
+    while in :class:`.Field` it is:
+
+    .. math::
+        \phi = \omega_{0,\,\mathrm{rf}} t
 
     """
 
