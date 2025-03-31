@@ -19,7 +19,7 @@ import logging
 import math
 from collections.abc import Callable
 from functools import partial
-from typing import Any, Literal, Self
+from typing import Any, Self
 
 import numpy as np
 from scipy.optimize import minimize_scalar
@@ -33,45 +33,12 @@ from lightwin.util.phases import (
     phi_bunch_to_phi_rf,
     phi_rf_to_phi_bunch,
 )
-
-#: The three types of reference phase
-REFERENCE_PHASES_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
-#: The three types of reference phase
-REFERENCE_PHASES = ("phi_0_abs", "phi_0_rel", "phi_s")
-
-#: How phases can be saved in the output ``DAT`` file.
-EXPORT_PHASES_T = (
-    REFERENCE_PHASES_T | Literal["as_in_settings", "as_in_original_dat"]
-)
-#: How phases can be saved in the output ``DAT`` file.
-EXPORT_PHASES = (
-    "phi_0_abs",
-    "phi_0_rel",
-    "phi_s",
-    "as_in_settings",
-    "as_in_original_dat",
-)
-
-# warning: doublon with field_map.IMPLEMENTED_STATUS
-#: Different status for cavities
-STATUS_T = Literal[
-    "nominal",
-    "rephased (in progress)",
-    "rephased (ok)",
-    "failed",
-    "compensate (in progress)",
-    "compensate (ok)",
-    "compensate (not ok)",
-]
-#: Different status for cavities
-ALLOWED_STATUS = (
-    "nominal",
-    "rephased (in progress)",
-    "rephased (ok)",
-    "failed",
-    "compensate (in progress)",
-    "compensate (ok)",
-    "compensate (not ok)",
+from lightwin.util.typing import (
+    ALLOWED_STATUS,
+    GETTABLE_CAVITY_SETTINGS_T,
+    REFERENCE_PHASES,
+    REFERENCE_PHASES_T,
+    STATUS_T,
 )
 
 
@@ -120,7 +87,7 @@ class CavitySettings:
             Name of the phase used for reference. When a particle enters the
             cavity, this is the phase that is not recomputed.
         status :
-            A value in :data:`ALLOWED_STATUS`.
+            A value in :data:`.ALLOWED_STATUS`.
         freq_bunch_mhz :
             Bunch frequency in MHz.
         freq_cavity_mhz :
@@ -301,7 +268,10 @@ class CavitySettings:
         return hasattr(self, key)
 
     def get(
-        self, *keys: str, to_deg: bool = False, **kwargs: bool | str | None
+        self,
+        *keys: GETTABLE_CAVITY_SETTINGS_T,
+        to_deg: bool = False,
+        **kwargs: bool | str | None,
     ) -> Any:
         """Shorthand to get attributes from this class or its attributes.
 

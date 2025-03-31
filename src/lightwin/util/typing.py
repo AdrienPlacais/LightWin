@@ -118,6 +118,73 @@ GETTABLE_ELTS_T = (
 #: Attributes that can be extracted with :meth:`.TransferMatrix.get` method.
 GETTABLE_TRANSFER_MATRIX_T = Literal["a"]
 
+#: The three types of reference phase
+REFERENCE_PHASES_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
+#: The three types of reference phase
+REFERENCE_PHASES = ("phi_0_abs", "phi_0_rel", "phi_s")
+
+#: How phases can be saved in the output ``DAT`` file.
+EXPORT_PHASES_T = (
+    REFERENCE_PHASES_T | Literal["as_in_settings", "as_in_original_dat"]
+)
+#: How phases can be saved in the output ``DAT`` file.
+EXPORT_PHASES = (
+    "phi_0_abs",
+    "phi_0_rel",
+    "phi_s",
+    "as_in_settings",
+    "as_in_original_dat",
+)
+
+# warning: doublon with field_map.IMPLEMENTED_STATUS
+#: Different status for cavities
+STATUS_T = Literal[
+    "nominal",
+    "rephased (in progress)",
+    "rephased (ok)",
+    "failed",
+    "compensate (in progress)",
+    "compensate (ok)",
+    "compensate (not ok)",
+]
+#: Different status for cavities
+ALLOWED_STATUS = (
+    "nominal",
+    "rephased (in progress)",
+    "rephased (ok)",
+    "failed",
+    "compensate (in progress)",
+    "compensate (ok)",
+    "compensate (not ok)",
+)
+#: Attributes that can be extracted with :meth:`.RfField.get` method.
+GETTABLE_RF_FIELD_T = Literal[
+    "e_spat",
+    "n_cell",
+    "n_z",
+    "starting_position",
+    "section_idx",
+]
+#: Attributes that can be extracted with :meth:`.CavitySettings.get` method.
+GETTABLE_CAVITY_SETTINGS_T = (
+    Literal[
+        "field",
+        "freq_cavity_mhz",
+        "k_e",
+        "omega_0_rf",
+        "phi_ref",
+        "phi_rf",
+        "phi_s_func",
+        "reference",
+        "rf_field",
+        "status",
+        "v_cav_mv",
+        "w_kin",
+    ]
+    | REFERENCE_PHASES_T
+    | GETTABLE_RF_FIELD_T
+)
+
 
 #: Attributes that can be extracted with :meth:`.SimulationOutput.get` method.
 GETTABLE_SIMULATION_OUTPUT_T = (

@@ -24,7 +24,6 @@ from lightwin.core.beam_parameters.initial_beam_parameters import (
     InitialBeamParameters,
 )
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.cavity_settings import EXPORT_PHASES_T
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.instruction import Instruction
 from lightwin.core.list_of_elements.helper import (
@@ -39,7 +38,7 @@ from lightwin.tracewin_utils.interface import list_of_elements_to_command
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter, recursive_items
 from lightwin.util.pickling import MyPickler
-from lightwin.util.typing import GETTABLE_ELTS_T
+from lightwin.util.typing import EXPORT_PHASES_T, GETTABLE_ELTS_T
 
 element_id = int | str
 elements_id = Sequence[int] | Sequence[str]

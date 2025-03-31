@@ -2,7 +2,7 @@
 
 from lightwin.beam_calculation.envelope_1d.util import ENVELOPE1D_METHODS
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
-from lightwin.core.elements.field_maps.cavity_settings import EXPORT_PHASES
+from lightwin.util.typing import EXPORT_PHASES
 
 ENVELOPE1D_CONFIG = (
     KeyValConfSpec(

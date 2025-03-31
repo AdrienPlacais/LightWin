@@ -23,7 +23,6 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.cavity_settings import EXPORT_PHASES_T
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.helper import (
     elt_at_this_s_idx,
@@ -32,7 +31,7 @@ from lightwin.core.list_of_elements.helper import (
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.util.helper import recursive_getter, recursive_items
 from lightwin.util.pickling import MyPickler
-from lightwin.util.typing import GETTABLE_ACCELERATOR_T
+from lightwin.util.typing import EXPORT_PHASES_T, GETTABLE_ACCELERATOR_T
 
 
 class Accelerator:
