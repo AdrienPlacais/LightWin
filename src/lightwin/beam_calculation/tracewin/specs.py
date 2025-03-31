@@ -19,7 +19,7 @@ from lightwin.config.helper import find_file
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
 from lightwin.config.table_spec import TableConfSpec
 from lightwin.constants import example_ini, example_machine_config
-from lightwin.core.elements.field_maps.cavity_settings import EXPORT_PHASES
+from lightwin.util.typing import EXPORT_PHASES
 
 _PURE_TRACEWIN_CONFIG = (
     KeyValConfSpec(

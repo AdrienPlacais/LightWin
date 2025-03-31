@@ -83,41 +83,6 @@ GETTABLE_BEAM_CALC_PARAMETERS_T = Literal[
     "transf_mat_function",
 ]
 
-#: Attributes that can be extracted with :meth:`.Element.get` method.
-GETTABLE_ELT_T = (
-    Literal[
-        "dat_idx",
-        "elt_idx",
-        "idx",
-        "idx_in_lattice",
-        "lattice",
-        "length_m",
-        "nature",
-        "section",
-    ]
-    | GETTABLE_BEAM_CALC_PARAMETERS_T
-)
-
-#: Attributes that can be extracted with :meth:`.ListOfElements.get` method.
-GETTABLE_ELTS_T = (
-    Literal[
-        "accelerator_path",
-        "dat_file",
-        "dat_filecontent",
-        "elts_n_cmds",
-        "files",
-        "input_beam",
-        "input_particle",
-        "tm_cumul_in",
-    ]
-    | GETTABLE_ELT_T
-    | GETTABLE_PARTICLE_T
-    | GETTABLE_BEAM_PARAMETERS_T
-)
-
-#: Attributes that can be extracted with :meth:`.TransferMatrix.get` method.
-GETTABLE_TRANSFER_MATRIX_T = Literal["a"]
-
 #: The three types of reference phase
 REFERENCE_PHASES_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
 #: The three types of reference phase
@@ -136,16 +101,15 @@ EXPORT_PHASES = (
     "as_in_original_dat",
 )
 
-# warning: doublon with field_map.IMPLEMENTED_STATUS
 #: Different status for cavities
 STATUS_T = Literal[
-    "nominal",
-    "rephased (in progress)",
+    "compensate (in progress)",  # Trying to fit
+    "compensate (not ok)",  # Compensating, proper setting found
+    "compensate (ok)",  # Compensating, proper setting not found
+    "failed",  # Cavity norm is 0
+    "nominal",  # Cavity settings not changed from .dat
+    "rephased (in progress)",  # Cavity ABSOLUTE phase changed; relative phase unchanged
     "rephased (ok)",
-    "failed",
-    "compensate (in progress)",
-    "compensate (ok)",
-    "compensate (not ok)",
 ]
 #: Different status for cavities
 ALLOWED_STATUS = (
@@ -184,6 +148,48 @@ GETTABLE_CAVITY_SETTINGS_T = (
     | REFERENCE_PHASES_T
     | GETTABLE_RF_FIELD_T
 )
+
+#: Attributes that can be extracted with :meth:`.Element.get` method.
+GETTABLE_ELT_T = (
+    Literal[
+        "dat_idx",
+        "elt_idx",
+        "idx",
+        "idx_in_lattice",
+        "lattice",
+        "length_m",
+        "nature",
+        "section",
+    ]
+    | GETTABLE_BEAM_CALC_PARAMETERS_T
+)
+
+#: Attributes that can be extracted with :meth:`.FieldMap.get` method.
+GETTABLE_FIELD_MAPS_T = (
+    Literal["a"] | GETTABLE_ELT_T | GETTABLE_CAVITY_SETTINGS_T
+)
+
+#: Attributes that can be extracted with :meth:`.ListOfElements.get` method.
+GETTABLE_ELTS_T = (
+    Literal[
+        "accelerator_path",
+        "dat_file",
+        "dat_filecontent",
+        "elts_n_cmds",
+        "files",
+        "input_beam",
+        "input_particle",
+        "tm_cumul_in",
+    ]
+    | GETTABLE_ELT_T
+    | GETTABLE_PARTICLE_T
+    | GETTABLE_BEAM_PARAMETERS_T
+)
+
+#: Attributes that can be extracted with :meth:`.TransferMatrix.get` method.
+GETTABLE_TRANSFER_MATRIX_T = Literal[
+    "cumulated", "individual", "n_points", "r_xx", "r_yy", "r_zdelta", "r_zz"
+]
 
 
 #: Attributes that can be extracted with :meth:`.SimulationOutput.get` method.

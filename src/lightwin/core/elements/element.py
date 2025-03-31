@@ -18,7 +18,7 @@ from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter, recursive_items
-from lightwin.util.typing import GETTABLE_ELT_T
+from lightwin.util.typing import GETTABLE_ELT_T, STATUS_T
 
 
 class Element(Instruction):
@@ -178,7 +178,7 @@ class Element(Instruction):
         """
         return False
 
-    def update_status(self, new_status: str) -> None:
+    def update_status(self, new_status: STATUS_T) -> None:
         """Change the status of the element. To override."""
         if not self.can_be_retuned:
             logging.error(

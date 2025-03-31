@@ -21,7 +21,7 @@
 
 import math
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 
 import numpy as np
 
@@ -32,23 +32,12 @@ from lightwin.core.em_fields.field import Field
 from lightwin.core.em_fields.rf_field import RfField
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter
-
-# warning: doublon with cavity_settings.ALLOWED_STATUS
-IMPLEMENTED_STATUS = (
-    # Cavity settings not changed from .dat
-    "nominal",
-    # Cavity ABSOLUTE phase changed; relative phase unchanged
-    "rephased (in progress)",
-    "rephased (ok)",
-    # Cavity norm is 0
-    "failed",
-    # Trying to fit
-    "compensate (in progress)",
-    # Compensating, proper setting found
-    "compensate (ok)",
-    # Compensating, proper setting not found
-    "compensate (not ok)",
-)  #:
+from lightwin.util.typing import (
+    ALLOWED_STATUS,
+    EXPORT_PHASES_T,
+    GETTABLE_FIELD_MAPS_T,
+    STATUS_T,
+)
 
 
 class FieldMap(Element):
@@ -103,7 +92,7 @@ class FieldMap(Element):
         """Forbid this cavity from being retuned (or re-allow it)."""
         self._can_be_retuned = value
 
-    def update_status(self, new_status: str) -> None:
+    def update_status(self, new_status: STATUS_T) -> None:
         """Change the status of the cavity.
 
         We use
@@ -113,7 +102,7 @@ class FieldMap(Element):
         :meth:`.CavitySettings.status` ``setter``.
 
         """
-        assert new_status in IMPLEMENTED_STATUS
+        assert new_status in ALLOWED_STATUS
 
         self.cavity_settings.status = new_status
         if new_status != "failed":
@@ -132,7 +121,7 @@ class FieldMap(Element):
 
         Parameters
         ----------
-        extensions : dict[str, list[str]]
+        extensions :
             Keys are nature of the field, values are a list of extensions
             corresponding to it without a period.
 
@@ -152,22 +141,21 @@ class FieldMap(Element):
 
     def get(
         self,
-        *keys: str,
+        *keys: GETTABLE_FIELD_MAPS_T,
         to_numpy: bool = True,
         none_to_nan: bool = False,
         **kwargs: bool | str | None,
     ) -> Any:
-        """
-        Shorthand to get attributes from this class or its attributes.
+        """Get attributes from this class or its attributes.
 
         Parameters
         ----------
-        *keys: str
+        *keys :
             Name of the desired attributes.
-        to_numpy : bool, optional
+        to_numpy :
             If you want the list output to be converted to a np.ndarray. The
             default is True.
-        **kwargs : bool | str | None
+        **kwargs :
             Other arguments passed to recursive getter.
 
         Returns
@@ -212,31 +200,24 @@ class FieldMap(Element):
 
     def to_line(
         self,
-        which_phase: Literal[
-            "phi_0_abs",
-            "phi_0_rel",
-            "phi_s",
-            "as_in_settings",
-            "as_in_original_dat",
-        ] = "phi_0_rel",
+        which_phase: EXPORT_PHASES_T,
         *args,
         **kwargs,
     ) -> list[str]:
-        r"""Convert the object back into a line in the ``.dat`` file.
+        r"""Convert the object back into a line in the ``DAT`` file.
 
         Parameters
         ----------
-        which_phase : Literal["phi_0_abs", "phi_0_rel", "phi_s", \
-                "as_in_settings", "as_in_original_dat"]
-            Which phase should be put in the output ``.dat``.
-        inplace : bool, optional
+        which_phase :
+            Which phase should be put in the output ``DAT``.
+        inplace :
             To modify the :class:`.Element` inplace. The default is False, in
             which case, we return a modified copy.
 
         Returns
         -------
         list[str]
-            The line in the ``.dat``, with updated amplitude and phase from
+            The line in the ``DAT``, with updated amplitude and phase from
             current object.
 
         """
@@ -267,16 +248,9 @@ class FieldMap(Element):
         return indexes
 
     def _phase_for_line(
-        self,
-        which_phase: Literal[
-            "phi_0_abs",
-            "phi_0_rel",
-            "phi_s",
-            "as_in_settings",
-            "as_in_original_dat",
-        ],
+        self, which_phase: EXPORT_PHASES_T
     ) -> tuple[float, int, str]:
-        """Give the phase to put in ``.dat`` line, with abs phase flag."""
+        """Give the phase to put in ``DAT`` line, with abs phase flag."""
         settings = self.cavity_settings
         match which_phase:
             case "phi_0_abs" | "phi_0_rel" | "phi_s":
