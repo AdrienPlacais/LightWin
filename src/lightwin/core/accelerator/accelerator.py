@@ -32,6 +32,7 @@ from lightwin.core.list_of_elements.helper import (
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.util.helper import recursive_getter, recursive_items
 from lightwin.util.pickling import MyPickler
+from lightwin.util.typing import GETTABLE_ACCELERATOR_T
 
 
 class Accelerator:
@@ -51,18 +52,18 @@ class Accelerator:
 
         Parameters
         ----------
-        name : str
+        name :
             Name of the accelerator, used in plots.
-        dat_file : pathlib.Path
-            Absolute path to the linac ``.dat`` file.
-        accelerator_path : pathlib.Path
+        dat_file :
+            Absolute path to the linac ``DAT`` file.
+        accelerator_path :
             Absolute path where results for each :class:`.BeamCalculator` will
             be stored.
-        list_of_elements_factory : ListOfElementsFactory
+        list_of_elements_factory :
             A factory to create the list of elements.
-        e_mev : float
+        e_mev :
             Initial beam energy in :unit:`MeV`.
-        sigma : numpy.ndarray
+        sigma :
             Initial beam :math:`\sigma` matrix in :unit:`m` and :unit:`rad`.
 
         """
@@ -98,7 +99,7 @@ class Accelerator:
 
     def get(
         self,
-        *keys: str,
+        *keys: GETTABLE_ACCELERATOR_T,
         to_numpy: bool = True,
         none_to_nan: bool = False,
         elt: str | Element | None = None,
@@ -109,20 +110,19 @@ class Accelerator:
 
         Parameters
         ----------
-        *keys : str
+        *keys :
             Name of the desired attributes.
-        to_numpy : bool, optional
-            If you want the list output to be converted to a np.ndarray. The
-            default is True.
-        none_to_nan : bool, optional
-            To convert None to np.nan. The default is False.
-        elt : str | Element | None, optional
+        to_numpy :
+            If you want the list output to be converted to a np.ndarray.
+        none_to_nan :
+            To convert None to np.nan.
+        elt :
             If provided, and if the desired keys are in SimulationOutput, the
             attributes will be given over the Element only. You can provide an
-            Element name, such as `QP1`. If the given Element is not in the
+            Element name, such as ``QP1``. If the given Element is not in the
             Accelerator.ListOfElements, the Element with the same name that is
             present in this list will be used.
-        **kwargs : bool | str
+        **kwargs :
             Other arguments passed to recursive getter.
 
         Returns
@@ -139,8 +139,8 @@ class Accelerator:
                 if elt is not None:
                     # TODO
                     logging.error(
-                        "Get attribute by elt not implemented with "
-                        "special getters."
+                        "Get attribute by elt not implemented with special "
+                        "getters."
                     )
                 continue
 

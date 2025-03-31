@@ -114,3 +114,29 @@ GETTABLE_ELTS_T = (
     | GETTABLE_PARTICLE_T
     | GETTABLE_BEAM_PARAMETERS_T
 )
+
+#: Attributes that can be extracted with :meth:`.TransferMatrix.get` method.
+GETTABLE_TRANSFER_MATRIX_T = Literal["a"]
+
+
+#: Attributes that can be extracted with :meth:`.SimulationOutput.get` method.
+GETTABLE_SIMULATION_OUTPUT_T = (
+    Literal[
+        "beam_parameters",
+        "element_to_index",
+        "phi_s",
+        "set_of_cavity_settings",
+        "synch_trajectory",
+        "v_cav_mv",
+        "z_abs",
+    ]
+    | GETTABLE_BEAM_PARAMETERS_T
+    | GETTABLE_PARTICLE_T
+    | GETTABLE_TRANSFER_MATRIX_T
+)
+
+#: Attributes that can be extracted with :meth:`.Accelerator.get` method.
+GETTABLE_ACCELERATOR_T = (
+    Literal["accelerator_path", "elts", "name", "simulation_outputs"]
+    | GETTABLE_ELTS_T
+)
