@@ -2,7 +2,7 @@
 
 - :class:`ParticleInitialState` is just here to save the position and
   energy of a particle at the entrance of the linac. Saved as an
-  :class:`.Accelerator` attribute.
+  :class:`.ListOfElements` attribute.
 
 - :class:`ParticleFullTrajectory` saves the energy, phase, position of a
   particle along the linac. As a single :class:`ParticleInitialState` can
