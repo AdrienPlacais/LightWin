@@ -48,7 +48,7 @@ GETTABLE_BEAM_PARAMETERS_T = (
     # fmt: on
 )
 
-#: Attributes stored in the :attr:`.ParticleFullTrajectory.beam` dictionary
+#: Attributes stored in the :attr:`.ParticleFullTrajectory.beam` dictionary.
 BEAM_KEYS_T = Literal[
     "e_mev",
     "e_rest_mev",
@@ -65,8 +65,24 @@ BEAM_KEYS_T = Literal[
 ]
 
 #: Attributes that can be extracted with :meth:`.ParticleFullTrajectory.get`
-#: method
+#: method.
 GETTABLE_PARTICLE_T = (
     Literal["beta", "gamma", "phi_abs", "synchronous", "w_kin", "z_in"]
     | BEAM_KEYS_T
+)
+
+#: Attributes that can be extracted with :meth:`.ListOfElements.get` method.
+GETTABLE_ELTS_T = (
+    Literal[
+        "accelerator_path",
+        "dat_file",
+        "dat_filecontent",
+        "elts_n_cmds",
+        "files",
+        "input_beam",
+        "input_particle",
+        "tm_cumul_in",
+    ]
+    | GETTABLE_PARTICLE_T
+    | GETTABLE_BEAM_PARAMETERS_T
 )
