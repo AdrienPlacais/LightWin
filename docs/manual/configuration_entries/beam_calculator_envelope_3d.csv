@@ -1,5 +1,5 @@
 Entry,Type,Description,Allowed values,Mandatory?
-export_phase,``str``,"The type of phases that should be exported in the final DAT file. Note that ``'as_in_original_dat'`` is not implemented yet, but ``'as_in_settings'`` should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.","('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_settings', 'as_in_original_dat')",❌
+export_phase,``str``,"The type of phases that should be exported in the final DAT file. Note that ``'as_in_original_dat'`` is not implemented yet, but ``'as_in_settings'`` should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.","('as_in_original_dat', 'as_in_settings', 'phi_0_abs', 'phi_0_rel', 'phi_s')",❌
 flag_cython,``bool``,Not implemented yet. If we should use the Cython implementation (faster).,"(False,)",❌
 flag_phi_abs,``bool``,If the field maps phases should be absolute (no implicit rephasing after a failure).,,❌
 method,``str``,Integration method.,"('RK4',)",❌
