@@ -34,10 +34,10 @@ from lightwin.util.phases import (
     phi_rf_to_phi_bunch,
 )
 
-REFERENCE_PHASES_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
+type REFERENCE_PHASES_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
 REFERENCE_PHASES = ("phi_0_abs", "phi_0_rel", "phi_s")  #:
 
-EXPORT_PHASES_T = (
+type EXPORT_PHASES_T = (
     REFERENCE_PHASES_T | Literal["as_in_settings", "as_in_original_dat"]
 )
 EXPORT_PHASES = (
@@ -49,7 +49,7 @@ EXPORT_PHASES = (
 )  #:
 
 # warning: doublon with field_map.IMPLEMENTED_STATUS
-STATUS_T = Literal[
+type STATUS_T = Literal[
     "nominal",
     "rephased (in progress)",
     "rephased (ok)",
@@ -388,7 +388,7 @@ class CavitySettings:
         return self._reference
 
     @reference.setter
-    def reference(self, value: REFERENCE_PHASES) -> None:
+    def reference(self, value: REFERENCE_PHASES_T) -> None:
         """Set the value of reference, check that it is valid."""
         assert value in REFERENCE_PHASES
         self._reference = value
@@ -798,17 +798,16 @@ class CavitySettings:
         # We omit the _ in front of phi_0_rel to compute it if necessary
         if self.phi_0_rel is None:
             logging.error(
-                "You must declare the particle entry phase in the "
-                "cavity to compute phi_0_rel and then v_cav_mv."
+                "You must declare the particle entry phase in the cavity to "
+                "compute phi_0_rel and then v_cav_mv."
             )
             return None
 
         v_cav_mv_calc = getattr(self, "_phi_0_rel_to_v_cav_mv", None)
         if v_cav_mv_calc is None:
             logging.debug(
-                "You must set a function to compute v_cav_mv from "
-                "phi_0_rel with CavitySettings.set_cavity_parameters_arguments"
-                " method."
+                "You must set a function to compute v_cav_mv from phi_0_rel "
+                "with CavitySettings.set_cavity_parameters_arguments method."
             )
             return None
 
