@@ -94,11 +94,11 @@ EXPORT_PHASES_T = (
 )
 #: How phases can be saved in the output ``DAT`` file.
 EXPORT_PHASES = (
+    "as_in_original_dat",
+    "as_in_settings",
     "phi_0_abs",
     "phi_0_rel",
     "phi_s",
-    "as_in_settings",
-    "as_in_original_dat",
 )
 
 #: Different status for cavities
@@ -121,6 +121,7 @@ ALLOWED_STATUS = (
     "compensate (ok)",
     "compensate (not ok)",
 )
+
 #: Attributes that can be extracted with :meth:`.RfField.get` method.
 GETTABLE_RF_FIELD_T = Literal[
     "e_spat",
@@ -166,7 +167,12 @@ GETTABLE_ELT_T = (
 
 #: Attributes that can be extracted with :meth:`.FieldMap.get` method.
 GETTABLE_FIELD_MAPS_T = (
-    Literal["a"] | GETTABLE_ELT_T | GETTABLE_CAVITY_SETTINGS_T
+    Literal[
+        "aperture_flag", "field_map_filename", "field_map_folder", "geometry"
+    ]
+    | GETTABLE_RF_FIELD_T
+    | GETTABLE_ELT_T
+    | GETTABLE_CAVITY_SETTINGS_T
 )
 
 #: Attributes that can be extracted with :meth:`.ListOfElements.get` method.
