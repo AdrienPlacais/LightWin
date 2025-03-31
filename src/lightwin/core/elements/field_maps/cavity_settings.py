@@ -34,22 +34,27 @@ from lightwin.util.phases import (
     phi_rf_to_phi_bunch,
 )
 
-type REFERENCE_PHASES_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
-REFERENCE_PHASES = ("phi_0_abs", "phi_0_rel", "phi_s")  #:
+#: The three types of reference phase
+REFERENCE_PHASES_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
+#: The three types of reference phase
+REFERENCE_PHASES = ("phi_0_abs", "phi_0_rel", "phi_s")
 
-type EXPORT_PHASES_T = (
+#: How phases can be saved in the output ``DAT`` file.
+EXPORT_PHASES_T = (
     REFERENCE_PHASES_T | Literal["as_in_settings", "as_in_original_dat"]
 )
+#: How phases can be saved in the output ``DAT`` file.
 EXPORT_PHASES = (
     "phi_0_abs",
     "phi_0_rel",
     "phi_s",
     "as_in_settings",
     "as_in_original_dat",
-)  #:
+)
 
 # warning: doublon with field_map.IMPLEMENTED_STATUS
-type STATUS_T = Literal[
+#: Different status for cavities
+STATUS_T = Literal[
     "nominal",
     "rephased (in progress)",
     "rephased (ok)",
@@ -58,6 +63,7 @@ type STATUS_T = Literal[
     "compensate (ok)",
     "compensate (not ok)",
 ]
+#: Different status for cavities
 ALLOWED_STATUS = (
     "nominal",
     "rephased (in progress)",
@@ -66,7 +72,7 @@ ALLOWED_STATUS = (
     "compensate (in progress)",
     "compensate (ok)",
     "compensate (not ok)",
-)  #:
+)
 
 
 class CavitySettings:
@@ -105,34 +111,34 @@ class CavitySettings:
 
         Parameters
         ----------
-        k_e : float
+        k_e :
             Amplitude of the electric field.
-        phi : float
+        phi :
             Input phase. Must be absolute or relative entry phase, or
             synchronous phase.
-        reference : REFERENCE_T
+        reference :
             Name of the phase used for reference. When a particle enters the
             cavity, this is the phase that is not recomputed.
-        status : STATUS_T
+        status :
             A value in :data:`ALLOWED_STATUS`.
-        freq_bunch_mhz : float
+        freq_bunch_mhz :
             Bunch frequency in MHz.
-        freq_cavity_mhz : float | None, optional
+        freq_cavity_mhz :
             Frequency of the cavity in MHz. The default is None, which happens
             when the :class:`.ListOfElements` is under creation and we did not
             process the ``FREQ`` commands yet.
-        transf_mat_func_wrappers : dict[str, Callable] | None, optional
+        transf_mat_func_wrappers :
             A dictionary which keys are the different :class:`.BeamCalculator`
             ids, and values are corresponding functions to compute propagation
             of the beam. The default is None, in which case attribute is not
             set.
-        phi_s_funcs : dict[str, Callable] | None, optional
+        phi_s_funcs :
             A dictionary which keys are the different :class:`.BeamCalculator`
             ids, and values are corresponding functions to compute synchronous
             phase and accelerating voltage from the ouput of corresponding
             ``transf_mat_func_wrapper``. The default is None, in which case
             attribute is not set.
-        field : Field | None, optional
+        field :
             Holds the constant parameters, such as interpolated field maps.
 
         """
@@ -244,17 +250,16 @@ class CavitySettings:
 
         Parameters
         ----------
-        base : Self
+        base :
             The reference :class:`CavitySettings`. A priori, this is the
             nominal settings.
-        k_e : float
+        k_e :
             New field amplitude.
-        phi : float
+        phi :
             New reference phase. Its nature is defined by ``reference``.
-        status : Literal["compensate (in progress)", "compensate (ok)", \
-                "compensate (not ok)"]
+        status :
             Status of the created settings.
-        reference : Literal["phi_0_rel", "phi_0_abs", "phi_s"]
+        reference :
             The phase used as a reference.
 
         Returns
@@ -302,9 +307,9 @@ class CavitySettings:
 
         Parameters
         ----------
-        *keys : str
+        *keys :
             Name of the desired attributes.
-        **kwargs : bool | str | None
+        **kwargs :
             Other arguments passed to recursive getter.
 
         Returns
@@ -346,7 +351,7 @@ class CavitySettings:
 
         Parameters
         ----------
-        freq_cavity_mhz : float
+        freq_cavity_mhz :
             Frequency in the cavity in MHz.
 
         """
@@ -628,11 +633,11 @@ class CavitySettings:
 
         Parameters
         ----------
-        solver_id : str
+        solver_id :
             The name of the solver for which functions must be changed.
-        transf_mat_function_wrapper : Callable
+        transf_mat_function_wrapper :
             A function that compute the propagation of the beam.
-        phi_s_func : Callable | None, optional
+        phi_s_func :
             A function that takes in the ouptut of
             ``transf_mat_function_wrapper`` and return the accelerating voltage
             in MV and the synchronous phase in rad. The default is None, which
@@ -663,10 +668,10 @@ class CavitySettings:
 
         Parameters
         ----------
-        solver_id : str
+        solver_id :
             Name of the solver that will compute :math:`V_\mathrm{cav}` and
             :math:`\phi_s`.
-        w_kin : float
+        w_kin :
             Kinetic energy of the synchronous particle at the entry of the
             cavity.
         kwargs :
@@ -695,7 +700,7 @@ class CavitySettings:
 
         Parameters
         ----------
-        phi_0_rel : float
+        phi_0_rel :
             Relative entry phase in radians.
 
         Returns
@@ -729,9 +734,9 @@ class CavitySettings:
 
         Parameters
         ----------
-        phi_0_rel : float
+        phi_0_rel :
             Relative entry phase in radians.
-        phi_s_target : float
+        phi_s_target :
             Target synchronous phase in radians.
 
         Returns
@@ -749,7 +754,7 @@ class CavitySettings:
 
         Parameters
         ----------
-        phi_s : float
+        phi_s :
             Target synchronous phase in radians.
 
         Returns
@@ -833,7 +838,7 @@ class CavitySettings:
 
         Parameters
         ----------
-        value : float
+        value :
             New rf phase of the synchronous particle at the entrance of the
             cavity.
 
@@ -883,7 +888,7 @@ class CavitySettings:
 
         Parameters
         ----------
-        delta_phi_bunch : float
+        delta_phi_bunch :
             Phase difference between the new first element of the linac and the
             previous first element of the linac.
 
