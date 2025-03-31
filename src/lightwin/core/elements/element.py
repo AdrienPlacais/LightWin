@@ -18,6 +18,7 @@ from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter, recursive_items
+from lightwin.util.typing import GETTABLE_ELT_T
 
 
 class Element(Instruction):
@@ -25,18 +26,16 @@ class Element(Instruction):
 
     Parameters
     ----------
-    base_name : str, optional
+    base_name :
         Short name for the element according to TraceWin. Should be overriden.
-        The default is ``"ELT"``.
-    increment_elt_idx : bool, optional
+    increment_elt_idx :
         If the element should be considered when counting the elements. If
-        False, ``elt_idx`` will keep  its default value of ``-1``. The default
-        is True. As for now, there is no element with this attribute set to
-        False.
-    increment_lattice_idx : bool, optional
+        False, ``elt_idx`` will keep  its default value of ``-1``. As for now,
+        there is no element with this attribute set to False.
+    increment_lattice_idx :
         If the element should be considered when determining the lattice.
         Should be True for physical elements, such as ``DRIFT``, and False for
-        other elements such as ``DIAGNOSTIC``. The default is True.
+        other elements such as ``DIAGNOSTIC``.
 
     """
 
@@ -58,14 +57,14 @@ class Element(Instruction):
 
         Parameters
         ----------
-        line : list[str]
-            A line of the ``.dat`` file. If the element was given a name, it
+        line :
+            A line of the ``DAT`` file. If the element was given a name, it
             must not appear in ``line`` but rather in ``name``. First
             element of the list must be in :data:`.implemented_elements`.
-        dat_idx : int
-            Position in the ``.dat`` file.
-        name : str | None, optional
-            Non-default name of the element, as given in the ``.dat`` file. The
+        dat_idx :
+            Position in the ``DAT`` file.
+        name :
+            Non-default name of the element, as given in the ``DAT`` file. The
             default is None, in which case an automatic name will be given
             later.
 
@@ -93,19 +92,21 @@ class Element(Instruction):
         return key in recursive_items(vars(self))
 
     def get(
-        self, *keys: str, to_numpy: bool = True, **kwargs: bool | str | None
+        self,
+        *keys: GETTABLE_ELT_T,
+        to_numpy: bool = True,
+        **kwargs: bool | str | None,
     ) -> Any:
         """
         Shorthand to get attributes from this class or its attributes.
 
         Parameters
         ----------
-        *keys: str
+        *keys :
             Name of the desired attributes.
-        to_numpy : bool, optional
-            If you want the list output to be converted to a np.ndarray. The
-            default is True.
-        **kwargs : bool | str | None
+        to_numpy :
+            If you want the list output to be converted to a np.ndarray.
+        **kwargs :
             Other arguments passed to recursive getter.
 
         Returns

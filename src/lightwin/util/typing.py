@@ -71,6 +71,33 @@ GETTABLE_PARTICLE_T = (
     | BEAM_KEYS_T
 )
 
+#: Attributes that can be extracted with
+#: :meth:`.ElementBeamCalculatorParameters.get` method.
+GETTABLE_BEAM_CALC_PARAMETERS_T = Literal[
+    "abs_mesh",
+    "d_z",
+    "n_steps",
+    "rel_mesh",
+    "s_in",
+    "s_out",
+    "transf_mat_function",
+]
+
+#: Attributes that can be extracted with :meth:`.Element.get` method.
+GETTABLE_ELT_T = (
+    Literal[
+        "dat_idx",
+        "elt_idx",
+        "idx",
+        "idx_in_lattice",
+        "lattice",
+        "length_m",
+        "nature",
+        "section",
+    ]
+    | GETTABLE_BEAM_CALC_PARAMETERS_T
+)
+
 #: Attributes that can be extracted with :meth:`.ListOfElements.get` method.
 GETTABLE_ELTS_T = (
     Literal[
@@ -83,6 +110,7 @@ GETTABLE_ELTS_T = (
         "input_particle",
         "tm_cumul_in",
     ]
+    | GETTABLE_ELT_T
     | GETTABLE_PARTICLE_T
     | GETTABLE_BEAM_PARAMETERS_T
 )

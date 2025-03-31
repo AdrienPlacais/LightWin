@@ -243,14 +243,14 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
         Parameters
         ----------
-        w_kin : float
+        w_kin :
             Kinetic energy at the entrance of cavity in :unit:`MeV`.
-        cavity_settings : CavitySettings
+        cavity_settings :
             Object holding the cavity parameters that can be changed.
-        phi_0_rel : float | None
+        phi_0_rel :
             Relative entry phase of the cavity. When provided, it means that we
             are trying to find the :math:`\phi_{0,\,\mathrm{rel}}` matching a
-            given :math:`\phi_s`. The default is None.
+            given :math:`\phi_s`.
 
         Returns
         -------
@@ -494,14 +494,12 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
 
         Parameters
         ----------
-        transf_mat_module : types.ModuleType
-            Module where the transfer matrix function is defined.
-        elt : Bend
+        elt :
             ``BEND`` element.
-        beam_kwargs : dict[str, Any]
+        beam_kwargs :
             Configuration dict holding all initial beam properties.
-        n_steps : int, optional
-            Number of integration steps. The default is 1.
+        n_steps :
+            Number of integration steps.
 
         """
         transf_mat_function = self._proper_transfer_matrix_func("Bend")
