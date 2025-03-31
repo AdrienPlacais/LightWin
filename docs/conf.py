@@ -50,6 +50,7 @@ extensions = [
     "sphinxcontrib.bibtex",  # Integrate citations
     "sphinx.ext.napoleon",  # handle numpy style
     "sphinx.ext.autodoc",
+    # "sphinx.ext.autodoc.typehints",
     "sphinx_rtd_theme",  # ReadTheDocs theme
     "myst_parser",
     "sphinx.ext.intersphinx",  # interlink with other docs, such as numpy
@@ -126,8 +127,8 @@ intersphinx_mapping = {
 
 # Parameters for sphinx-autodoc-typehints
 always_document_param_types = True
-always_use_bar_union = True
-# typehints_defaults = "braces-after"
+always_use_bars_union = True
+typehints_defaults = "comma"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
