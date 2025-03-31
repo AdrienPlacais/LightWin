@@ -50,7 +50,6 @@ extensions = [
     "sphinxcontrib.bibtex",  # Integrate citations
     "sphinx.ext.napoleon",  # handle numpy style
     "sphinx.ext.autodoc",
-    # "sphinx.ext.autodoc.typehints",
     "sphinx_rtd_theme",  # ReadTheDocs theme
     "myst_parser",
     "sphinx.ext.intersphinx",  # interlink with other docs, such as numpy
@@ -111,8 +110,6 @@ nitpick_ignore = [
     ("py:class", "ref_value_t"),
     ("py:class", "tester_t"),
     ("py:class", "value_t"),
-    ("py:class", "REFERENCE_T"),
-    ("py:class", "STATUS_T"),
 ]
 
 # Link to other libraries
