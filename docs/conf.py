@@ -89,6 +89,7 @@ nitpick_ignore = [
     # Not recognized by Sphinx, don't know if this is normal
     ("py:class", "optional"),
     ("py:class", "T"),
+    ("py:class", "numpy.float64"),
     # pymoo fixes should be temporary
     ("py:class", "ElementwiseProblem"),
     ("py:class", "pymoo.core.algorithm.Algorithm"),
@@ -121,7 +122,9 @@ intersphinx_mapping = {
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 
-
+# autodoc_type_aliases = {
+#     "np.float64": "numpy.float64",
+# }
 # Parameters for sphinx-autodoc-typehints
 always_document_param_types = True
 always_use_bars_union = True
