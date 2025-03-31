@@ -66,11 +66,11 @@ if __name__ == "__main__":
         "files": "files",
         "plots": "plots_minimal",
         "beam_calculator": "generic_envelope1d",
-        "beam_calculator_post": "generic_tracewin",
+        # "beam_calculator_post": "generic_tracewin",
         "beam": "beam",
-        "wtf": "save_wtf",
-        "design_space": "fit_phi_s_design_space",
-        # "design_space": "tiny_design_space",
+        "wtf": "generic_wtf",
+        # "design_space": "fit_phi_s_design_space",
+        "design_space": "tiny_design_space",
     }
     NEW_EVALUATIONS = True
     BEAUTY_PASS = False
