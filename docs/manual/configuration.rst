@@ -9,10 +9,10 @@ Configuration
    configuration.beam_calculator
    configuration.plots
    configuration.wtf
-   configuration.optimisation.design_space
+   configuration.design_space
    configuration.evaluators
 
-Most of the configuration of LightWin is performed through a ``.toml`` configuration file, which should be given as argument to several objects initialisation.
+Most of the configuration of LightWin is performed through a `TOML` configuration file, which should be given as argument to several objects initialisation.
 The configuration file is treated with the help of the `tomllib <https://docs.python.org/3/library/tomllib.html>`_ module.
 It is processed by the :func:`.config.config_manager.process_config` function, which checks its validity and converts it to a dictionary.
 

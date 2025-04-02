@@ -1,3 +1,6 @@
+.. _Cython-setup:
+
+
 Cython setup (should be automatic)
 ----------------------------------
 
