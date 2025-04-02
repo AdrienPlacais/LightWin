@@ -34,10 +34,7 @@ from lightwin.core.elements.field_maps.cavity_settings_factory import (
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.util.typing import (
-    EXPORT_PHASES_T,
-    REFERENCE_PHASES_T,
-)
+from lightwin.util.typing import EXPORT_PHASES_T, REFERENCE_PHASES_T
 
 
 class BeamCalculator(ABC):
