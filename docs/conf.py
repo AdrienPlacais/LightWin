@@ -31,10 +31,9 @@ import lightwin
 sys.path.append(os.path.abspath("./_ext"))
 
 project = "LightWin"
-copyright = (
-    "2025, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
-)
 author = "A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
+copyright = "2025, " + author
+
 
 # See https://protips.readthedocs.io/git-tag-version.html
 # The full version, including alpha/beta/rc tags.
@@ -47,17 +46,17 @@ version = lightwin.__version__
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "sphinxcontrib.bibtex",  # Integrate citations
-    "sphinx.ext.napoleon",  # handle numpy style
-    "sphinx.ext.autodoc",
-    "sphinx_rtd_theme",  # ReadTheDocs theme
-    "myst_parser",
-    "sphinx.ext.intersphinx",  # interlink with other docs, such as numpy
-    "sphinx.ext.todo",  # allow use of TODO
-    "nbsphinx",
     "lightwin_sphinx_extensions",
-    "sphinx_autodoc_typehints",  # Printing types in docstrings not necessary anymore
+    "myst_parser",
+    "nbsphinx",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.todo",
+    "sphinx_autodoc_typehints",
+    "sphinx_rtd_theme",
     "sphinx_tabs.tabs",
+    "sphinxcontrib.bibtex",
 ]
 
 autodoc_default_options = {
