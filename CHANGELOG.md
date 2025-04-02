@@ -16,6 +16,7 @@ In particular, follow advices listed in the great [Scientific Python library dev
 ### Added
 
 - Type hints for the `.get` methods.
+- Notebook example to showcase how LightWin can be used.
 
 ## [0.9.1] -- 2025-01-30
 
