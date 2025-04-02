@@ -42,7 +42,7 @@ sigma = [
 failed = [["FM11"]]
 id_nature = "name"
 k = 3
-objective_preset = "simple_ADS"
+objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
