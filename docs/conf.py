@@ -34,7 +34,6 @@ project = "LightWin"
 author = "A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
 copyright = "2025, " + author
 
-
 # See https://protips.readthedocs.io/git-tag-version.html
 # The full version, including alpha/beta/rc tags.
 # release = re.sub("^v", "", os.popen("git describe").read().strip())
@@ -53,6 +52,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "sphinx.ext.todo",
+    "sphinx.ext.viewcode",
     "sphinx_autodoc_typehints",
     "sphinx_rtd_theme",
     "sphinx_tabs.tabs",
