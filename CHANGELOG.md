@@ -17,6 +17,7 @@ In particular, follow advices listed in the great [Scientific Python library dev
 
 - Type hints for the `.get` methods.
 - Notebook example to showcase how LightWin can be used.
+- You can give `plt.plot` kwargs in the `plots` TOML section.
 
 ## [0.9.1] -- 2025-01-30
 
