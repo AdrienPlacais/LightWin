@@ -204,7 +204,6 @@ def _separate_plot_presets_from_plot_modificators(
 
     """
 
-    
     plot_presets: dict[str, bool] = {}
     plot_kwargs: dict[str, Any] = {}
     for key, value in plots.items():
