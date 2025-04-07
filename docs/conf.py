@@ -157,3 +157,8 @@ def object_description(obj: object) -> str:
 
 
 inspect.object_description = object_description
+
+# -- Shortcuts ---------------------------------------------------
+rst_prolog = """
+.. |axplot| replace:: :meth:`matplotlib.axes.Axes.plot`
+"""

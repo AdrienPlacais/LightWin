@@ -96,6 +96,8 @@ ERROR_PRESETS = {
     "w_kin_err": {"scale": 1.0, "diff": "simple"},
     "phi_abs_err": {"scale": 1.0, "diff": "simple"},
 }
+#: List of implemented presets for the plots
+ALLOWED_PLOT_PRESETS = list(PLOT_PRESETS.keys())
 
 # The one you generally want
 ERROR_REFERENCE = "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)"
@@ -194,7 +196,7 @@ def _separate_plot_presets_from_plot_modificators(
     -------
     plot_presets : dict[str, bool]
         Subset of ``plots``, with only the keys that can be found in
-        :data:`PLOT_PRESETS`. Indicates which plots presets will be plotted:
+        :data:`ALLOWED_PLOT_PRESETS`. Indicates which plots presets will be plotted:
         ``"cav"``, ``"emittance"``...
     plot_kwargs : dict[str, Any]
         Subset of ``plots``, with only the keys corresponding to a plot
@@ -228,7 +230,7 @@ def _plot_preset(
     Parameters
     ----------
     str_preset :
-        Key of :data:`PLOT_PRESETS`.
+        Key of :data:`ALLOWED_PLOT_PRESETS`.
     *args :
         Accelerators to plot. In typical usage, ``args = (Working, Fixed)``
     x_axis :
@@ -243,7 +245,7 @@ def _plot_preset(
     fault_scenarios :
         To plot the objectives, if ``add_objectives == True``.
     usr_kwargs :
-        User-defined ``kwargs``, passed to the :meth:`plt.plot` method.
+        User-defined ``kwargs``, passed to the |axplot| method.
     **kwargs :
         Holds all complementary data on the plots.
 
@@ -277,7 +279,7 @@ def _proper_kwargs(preset: str, kwargs: dict[str, Any]) -> dict[str, Any]:
     """Merge dicts, priority kwargs > PLOT_PRESETS > FALLBACK_PRESETS.
 
     We also add a ``"usr_kwargs"`` key holding additional keywords, that will
-    be passed to :meth:`plt.plot`.
+    be passed to |axplot|.
 
     """
     merged = FALLBACK_PRESETS | PLOT_PRESETS[preset] | kwargs
@@ -510,7 +512,7 @@ def _make_a_subplot(
     symetric_plot :
         If a symetric plot (wrt x axis) should be added.
     usr_kwargs :
-        User-defined ``kwargs``, passed to the :meth:`plt.plot` method.
+        User-defined ``kwargs``, passed to the |axplot| method.
 
     """
     if plot_section:
