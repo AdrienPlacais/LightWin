@@ -230,17 +230,17 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
 
         Parameters
         ----------
-        reference_phase_space : PhaseSpaceBeamParameters
+        reference_phase_space :
             Beam parameters in the same phase space, corresponding to the
             reference linac.
-        reference_z_abs : numpy.ndarray
+        reference_z_abs :
             Positions corresponding to ``reference_phase_space``.
-        z_abs : numpy.ndarray
+        z_abs :
             Positions in the linac under study.
-        raise_missing_twiss_error : bool
+        raise_missing_twiss_error :
             If set to True and the Twiss parameters were not calculated in
             current phase space, raise an error.
-        mismatch_kw : bool
+        mismatch_kw :
             Keyword arguments passed to the function computing mismatch factor.
 
         """

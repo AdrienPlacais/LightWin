@@ -16,6 +16,7 @@ from typing import Any
 import numpy as np
 
 from lightwin.util.helper import recursive_getter, recursive_items
+from lightwin.util.typing import GETTABLE_BEAM_CALC_PARAMETERS_T
 
 
 class ElementBeamCalculatorParameters(ABC):
@@ -29,7 +30,12 @@ class ElementBeamCalculatorParameters(ABC):
         """Tell if the required attribute is in this class."""
         return key in recursive_items(vars(self))
 
-    def get(self, *keys: str, to_numpy: bool = True, **kwargs: dict) -> Any:
+    def get(
+        self,
+        *keys: GETTABLE_BEAM_CALC_PARAMETERS_T,
+        to_numpy: bool = True,
+        **kwargs: Any,
+    ) -> Any:
         """Shorthand to get attributes."""
         val = {key: [] for key in keys}
 

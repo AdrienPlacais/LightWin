@@ -17,14 +17,12 @@ from lightwin.core.beam_parameters.initial_beam_parameters import (
     phase_space_name_hidden_in_key,
     separate_var_from_phase_space,
 )
-from lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters import (
-    PHASE_SPACE_T,
-)
 from lightwin.core.beam_parameters.phase_space.phase_space_beam_parameters import (
     PhaseSpaceBeamParameters,
 )
 from lightwin.core.elements.element import Element
 from lightwin.tracewin_utils.interface import beam_parameters_to_command
+from lightwin.util.typing import GETTABLE_BEAM_PARAMETERS_T, PHASE_SPACE_T
 
 
 @dataclass
@@ -34,24 +32,24 @@ class BeamParameters(InitialBeamParameters):
 
     Parameters
     ----------
-    z_abs : numpy.ndarray
+    z_abs :
         Absolute position in the linac in m.
-    gamma_kin : numpy.ndarray
+    gamma_kin :
         Lorentz gamma factor.
-    beta_kin : numpy.ndarray
+    beta_kin :
         Lorentz gamma factor.
-    sigma_in : numpy.ndarray | None, optional
+    sigma_in :
         Holds the (6, 6) :math:`\sigma` beam matrix at the entrance of the
-        linac/portion of linac. The default is None.
-    zdelta, z, phiw, x, y, t : PhaseSpaceBeamParameters
+        linac/portion of linac.
+    zdelta, z, phiw, x, y, t :
         Holds beam parameters respectively in the :math:`[z-z\delta]`,
         :math:`[z-z']`, :math:`[\phi-W]`, :math:`[x-x']`, :math:`[y-y']` and
         :math:`[t-t']` planes.
-    phiw99, x99, y99 : PhaseSpaceBeamParameters
+    phiw99, x99, y99 :
         Holds 99% beam parameters respectively in the :math:`[\phi-W]`,
         :math:`[x-x']` and :math:`[y-y']` planes. Only used with multiparticle
         simulations.
-    element_to_index : Callable[[str | Element, str | None], int | slice]
+    element_to_index :
         Takes an :class:`.Element`, its name, ``'first'`` or ``'last'`` as
         argument, and returns corresponding index. Index should be the same in
         all the arrays attributes of this class: ``z_abs``, ``beam_parameters``
@@ -85,7 +83,7 @@ class BeamParameters(InitialBeamParameters):
 
     def get(
         self,
-        *keys: str,
+        *keys: GETTABLE_BEAM_PARAMETERS_T,
         to_numpy: bool = True,
         none_to_nan: bool = False,
         elt: Element | None = None,
@@ -98,30 +96,36 @@ class BeamParameters(InitialBeamParameters):
         Notes
         -----
         What is particular in this getter is that all
-        :class:`.PhaseSpaceBeamParameters` attributes have attributes with
-        the same name: ``twiss``, ``alpha``, ``beta``, ``gamma``, ``eps``,
-        ``envelope_pos`` and ``envelope_energy``.
+        :class:`.PhaseSpaceBeamParameters` objects have attributes with the
+        same name: ``twiss``, ``alpha``, ``beta``, ``gamma``, ``eps``, etc.
 
-        Hence, you must provide either a ``phase_space`` argument which shall
-        be in :data:`.PHASE_SPACES`, either or ypu must append the name of the
-        phase space to the name of the desired variable with an underscore.
+        Hence, you must provide either a ``phase_space_name`` argument which
+        shall be in :data:`.PHASE_SPACES`, either or you must append the name
+        of the phase space to the name of the desired variable with an
+        underscore.
+
+        Examples
+        --------
+        >>> beam_parameters: BeamParameters
+        >>> beam_parameters.get("beta", phase_space_name="zdelta")
+        >>> beam_parameters.get("beta_zdelta")  # Alternative
+        >>> beam_parameters.get("beta")  # Incorrect
 
         Parameters
         ----------
-        *keys: str
+        *keys :
             Name of the desired attributes.
-        to_numpy : bool, optional
-            If you want the list output to be converted to a np.ndarray. The
-            default is True.
-        none_to_nan : bool, optional
-            To convert None to np.nan. The default is True.
-        elt : Element | None, optional
+        to_numpy :
+            If you want the list output to be converted to a np.ndarray.
+        none_to_nan :
+            To convert None to np.nan.
+        elt :
             If provided, return the attributes only at the considered Element.
-        pos : Literal["in", "out"] | None, optional
+        pos :
             If you want the attribute at the entry, exit, or in the whole
             :class:`.Element`. The default is None, in which case you get an
             array with ``keys`` from the start to the end of the element.
-        phase_space_name : str | None, optional
+        phase_space_name :
             Phase space in which you want the key. The default is None. In this
             case, the quantities from the ``zdelta`` phase space are taken.
             Otherwise, it must be in :data:`.PHASE_SPACES`.
@@ -150,7 +154,7 @@ class BeamParameters(InitialBeamParameters):
                     )
                     assert hasattr(self, phase_space_name), (
                         f"{phase_space_name = } not set for current "
-                        + "BeamParameters object."
+                        "BeamParameters object."
                     )
                     phase_space = getattr(self, phase_space_name)
                     val[key] = getattr(phase_space, short_key)
@@ -214,15 +218,14 @@ class BeamParameters(InitialBeamParameters):
 
         Parameters
         ----------
-        phase_space_name : Literal["x", "y", "zdelta"]
+        phase_space_name :
             Name of the phase space from which you want the :math:`\sigma` beam
             matrix.
 
         Returns
         -------
-        sigma : numpy.ndarray
-            ``(2, 2)`` :math:`\sigma` beam matrix at the linac entrance, in a
-            single phase space.
+        ``(2, 2)`` :math:`\sigma` beam matrix at the linac entrance, in a
+        single phase space.
 
         """
         assert self.sigma_in is not None
@@ -378,9 +381,6 @@ class BeamParameters(InitialBeamParameters):
         )
 
 
-# =============================================================================
-# Private
-# =============================================================================
 def _to_float_if_necessary(
     eps: float | np.ndarray,
     alpha: float | np.ndarray,

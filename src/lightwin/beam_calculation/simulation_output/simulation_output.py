@@ -40,6 +40,7 @@ from lightwin.util.helper import (
     recursive_items,
 )
 from lightwin.util.pickling import MyPickler
+from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
 
 
 @dataclass
@@ -50,37 +51,36 @@ class SimulationOutput:
 
     Parameters
     ----------
-    out_folder : pathlib.Path
+    out_folder :
         Results folder used by the :class:`.BeamCalculator` that created this.
-    is_multiparticle : bool
+    is_multiparticle :
         Tells if the simulation is a multiparticle simulation.
-    is_3d : bool
+    is_3d :
         Tells if the simulation is in 3D.
-    synch_trajectory : ParticleFullTrajectory | None
+    synch_trajectory :
         Holds energy, phase of the synchronous particle.
-    cav_params : dict[str, float | None] | None
+    cav_params :
         Holds amplitude, synchronous phase, absolute phase, relative phase of
         cavities.
-    beam_parameters : BeamParameters | None
+    beam_parameters :
         Holds emittance, Twiss parameters, envelopes in the various phase
         spaces.
-    element_to_index : Callable[[str | Element, str | None], int | slice] |\
-    None
+    element_to_index :
         Takes an :class:`.Element`, its name, 'first' or 'last' as argument,
         and returns corresponding index. Index should be the same in all the
         arrays attributes of this class: ``z_abs``, ``beam_parameters``
         attributes, etc.  Used to easily `get` the desired properties at the
         proper position.
-    set_of_cavity_settings : SetOfCavitySettings
+    set_of_cavity_settings :
         The cavity parameters used for the simulation.
-    transfer_matrix : TransferMatrix
+    transfer_matrix :
          Holds absolute and relative transfer matrices in all planes.
-    z_abs : numpy.ndarray | None, optional
+    z_abs :
         Absolute position in the linac in m. The default is None.
-    in_tw_fashion : pandas.DataFrame | None, optional
+    in_tw_fashion :
         A way to output the :class:`.SimulationOutput` in the same way as the
         ``Data`` tab of TraceWin. The default is None.
-    r_zz_elt : list[numpy.ndarray] | None, optional
+    r_zz_elt :
         Cumulated transfer matrices in the [z-delta] plane. The default is
         None.
 
@@ -105,12 +105,12 @@ class SimulationOutput:
     r_zz_elt: list[np.ndarray] | None = None
 
     def __post_init__(self) -> None:
-        """Save complementary data, such as `Element` indexes."""
+        """Save complementary data, such as :class:`.Element` indexes."""
         self.elt_idx: list[int]
         if self.cav_params is None:
             logging.error(
-                "Failed to init SimulationOutput.elt_idx as "
-                ".cav_params was not provided."
+                "Failed to init SimulationOutput.elt_idx as .cav_params was "
+                "not provided."
             )
         else:
             self.elt_idx = [
@@ -152,7 +152,7 @@ class SimulationOutput:
 
     def get(
         self,
-        *keys: str,
+        *keys: GETTABLE_SIMULATION_OUTPUT_T,
         to_numpy: bool = True,
         to_deg: bool = False,
         elt: (
@@ -162,28 +162,26 @@ class SimulationOutput:
         none_to_nan: bool = False,
         **kwargs: str | bool | None,
     ) -> Any:
-        """
-        Shorthand to get attributes from this class or its attributes.
+        """Get attributes from this class or its attributes.
 
         Parameters
         ----------
-        *keys : str
+        *keys :
             Name of the desired attributes.
-        to_numpy : bool, optional
-            If you want the list output to be converted to a np.ndarray. The
-            default is True.
-        to_deg : bool, optional
+        to_numpy :
+            If you want the list output to be converted to a np.ndarray.
+        to_deg :
             To apply np.rad2deg function over every ``key`` containing the
             string.
-        elt : Element | str | Collection[Element] | Collection[str] | None, optional
+        elt :
             If provided, return the attributes only at the considered
             element(s).
-        pos : Literal["in", "out"] | None, optional
+        pos :
             If you want the attribute at the entry, exit, or in the whole
             element.
-        none_to_nan : bool, optional
-            To convert None to np.nan. The default is False.
-        **kwargs : str | bool | None
+        none_to_nan :
+            To convert None to np.nan.
+        **kwargs :
             Other arguments passed to recursive getter.
 
         Returns
@@ -253,8 +251,8 @@ class SimulationOutput:
         if none_to_nan:
             if not to_numpy:
                 logging.error(
-                    f"{none_to_nan = } while {to_numpy = }, which "
-                    "is not supported."
+                    f"{none_to_nan = } while {to_numpy = }, which is not "
+                    "supported."
                 )
             out = [val.astype(float) for val in out]
 
@@ -274,10 +272,10 @@ class SimulationOutput:
 
         Parameters
         ----------
-        elts : ListOfElements
+        elts :
             Must be a full :class:`.ListOfElements`, containing all the
             elements of the linac.
-        ref_simulation_output : SimulationOutput | None, optional
+        ref_simulation_output :
             For calculation of mismatch factors. The default is None, in which
             case the calculation is simply skipped.
 

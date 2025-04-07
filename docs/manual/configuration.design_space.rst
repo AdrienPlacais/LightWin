@@ -1,4 +1,4 @@
-``optimisation.design_space`` section
+``design_space`` section
 *************************************
 .. toctree::
    :maxdepth: 5
@@ -14,10 +14,10 @@ This approach is easier to use for the first runs.
    :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
-When ``from_file`` is ``True``, you must provide a path to a ``.csv`` file containing, for every element, every variable, its initial value and limits.
-If the problem is constrained, you must also provide a ``.csv`` with, for every element, the limits of every constraint.
-This approach is more useful when you want to fine-tune the optimisation, as you can manually edit the ``.csv``, for example to take into account the specific multipacting barriers of a rogue cavity. 
-To generate the ``.csv`` files with the proper format, look at ``examples/generate_design_space_files.py``.
+When ``from_file`` is ``True``, you must provide a path to a `CSV` file containing, for every element, every variable, its initial value and limits.
+If the problem is constrained, you must also provide a `CSV` with, for every element, the limits of every constraint.
+This approach is more useful when you want to fine-tune the optimisation, as you can manually edit the `CSV`, for example to take into account the specific multipacting barriers of a rogue cavity. 
+To generate the `CSV` files with the proper format, look at ``examples/generate_design_space_files.py``.
 
 .. csv-table::
    :file: configuration_entries/design_space_from_file.csv

@@ -24,7 +24,6 @@ from lightwin.core.beam_parameters.initial_beam_parameters import (
     InitialBeamParameters,
 )
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.cavity_settings import EXPORT_PHASES_T
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.instruction import Instruction
 from lightwin.core.list_of_elements.helper import (
@@ -39,6 +38,7 @@ from lightwin.tracewin_utils.interface import list_of_elements_to_command
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter, recursive_items
 from lightwin.util.pickling import MyPickler
+from lightwin.util.typing import EXPORT_PHASES_T, GETTABLE_ELTS_T
 
 element_id = int | str
 elements_id = Sequence[int] | Sequence[str]
@@ -75,18 +75,17 @@ class ListOfElements(list):
 
         Parameters
         ----------
-        elts : list[Element]
+        elts :
             List containing the element objects.
-        input_particle : ParticleInitialState
+        input_particle :
             An object to hold initial energy and phase of the particle at the
-            entry of the first element/
-        input_beam : InitialBeamParameters
+            entry of the first element.
+        input_beam :
             An object to hold emittances, Twiss, sigma beam matrix, etc at the
             entry of the first element.
-        first_init : bool, optional
+        first_init :
             To indicate if this a full linac or only a portion (fit process).
-            The default is True.
-        files : FilesInfo
+        files :
             A dictionary to hold information on the source and output
             files/folders of the object.
 
@@ -95,7 +94,7 @@ class ListOfElements(list):
             * ``accelerator_path``: where calculation results for each
               :class:`.BeamCalculator` will be stored.
             * ``dat_filecontent``: list of list of str, holding content of the
-              ``.dat``.
+              ``DAT``.
 
         """
         self.input_particle = input_particle
@@ -168,7 +167,7 @@ class ListOfElements(list):
 
     def get(
         self,
-        *keys: str,
+        *keys: GETTABLE_ELTS_T,
         to_numpy: bool = True,
         remove_first: bool = False,
         **kwargs: bool | str | Element | None,
@@ -181,19 +180,17 @@ class ListOfElements(list):
 
         Parameters
         ----------
-        *keys : str
+        *keys :
             Name of the desired attributes.
-        to_numpy : bool, optional
-            If you want the list output to be converted to a np.ndarray. The
-            default is True.
-        remove_first : bool, optional
+        to_numpy :
+            If you want the list output to be converted to a np.ndarray.
+        remove_first :
             If you want to remove the first item of every :class:`.Element`
             ``key``.
             It the element is the first of the list, we do not remove its first
             item.  It is useful when the last item of an element is the same as
-            the first item of the next element. For example, ``z_abs``. The
-            default is False.
-        **kwargs : bool | str | Element | None
+            the first item of the next element. For example, ``z_abs``.
+        **kwargs :
             Other arguments passed to recursive getter.
 
         Returns
@@ -272,23 +269,22 @@ class ListOfElements(list):
     ) -> None:
         r"""Update the DAT file, save it if asked.
 
-        This method is called by the :class:`.FaultScenario` ``fix_all``
-        method several times:
+        This method is called by the :meth:`.FaultScenario.fix_all` method
+        several times:
 
         * Once per :class:`.Fault` (only the compensation zone is saved).
         * When all the :class:`.Fault` were dealt with.
 
-        It is also called by :class:`.Accelerator` ``keep_settings`` method.
+        It is also called by :meth:`.Accelerator.keep_settings` method.
 
         Parameters
         ----------
-        dat_file : pathlib.Path
-            Where the output ``.dat`` should be saved.
-        export_phase : Literal["phi_0_abs", "phi_0_rel", "phi_s",
-                "as_in_settings", "as_in_original_dat"], optional
+        dat_file :
+            Where the output ``DAT`` should be saved.
+        export_phase :
             Which phase should be put in the output DAT file.
-        save : bool, optional
-            If the output file should be created. The default is True.
+        save :
+            If the output file should be created.
 
         Note
         ----

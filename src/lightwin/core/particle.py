@@ -2,7 +2,7 @@
 
 - :class:`ParticleInitialState` is just here to save the position and
   energy of a particle at the entrance of the linac. Saved as an
-  :class:`.Accelerator` attribute.
+  :class:`.ListOfElements` attribute.
 
 - :class:`ParticleFullTrajectory` saves the energy, phase, position of a
   particle along the linac. As a single :class:`ParticleInitialState` can
@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 
 import lightwin.util.converters as convert
 from lightwin.tracewin_utils.interface import particle_initial_state_to_command
@@ -24,13 +25,14 @@ from lightwin.util.helper import (
     recursive_getter,
     recursive_items,
 )
+from lightwin.util.typing import GETTABLE_PARTICLE_T
 
 
 @dataclass
 class ParticleInitialState:
     """Hold the initial energy/phase of a particle, and if it is synchronous.
 
-    It is stored in Accelerator, and is parent of ParticleFullTrajectory.
+    It is used for :class:`.ListOfElements` attribute.
 
     """
 
@@ -49,24 +51,26 @@ class ParticleInitialState:
 
 @dataclass
 class ParticleFullTrajectory:
-    """
-    Hold the full energy, phase, etc of a particle.
+    r"""Hold the full energy, phase, etc of a particle.
 
-    It is stored in a SimulationOutput. A single Accelerator can have several
-    SimulationOutput, hence an Accelerator.ParticleInitialState can have
-    several SimulationOutput.ParticleFullTrajectory.
+    It is stored in a :class:`.SimulationOutput`.
 
     Phase is defined as:
-        phi = omega_0_bunch * t
-    while in electric_field it is:
-        phi = omega_0_rf * t
+
+    .. math::
+        \phi = \omega_{0,\,\mathrm{bunch}} t
+
+    while in :class:`.Field` it is:
+
+    .. math::
+        \phi = \omega_{0,\,\mathrm{rf}} t
 
     """
 
     w_kin: np.ndarray | list
     phi_abs: np.ndarray | list
     synchronous: bool
-    beam: dict[str, Any]
+    beam: dict[str, NDArray[np.float64] | float]
 
     def __post_init__(self):
         """Ensure that LightWin has everything it needs, with proper format."""
@@ -76,9 +80,7 @@ class ParticleFullTrajectory:
         if isinstance(self.w_kin, list):
             self.w_kin = np.array(self.w_kin)
 
-        self.gamma = convert.energy(
-            self.get("w_kin"), "kin to gamma", **self.beam
-        )
+        self.gamma = convert.energy(self.w_kin, "kin to gamma", **self.beam)
         self.beta: np.ndarray
 
     def __str__(self) -> str:
@@ -95,16 +97,14 @@ class ParticleFullTrajectory:
 
     def compute_complementary_data(self):
         """Compute some data necessary to do the post-treatment."""
-        self.beta = convert.energy(
-            self.get("gamma"), "gamma to beta", **self.beam
-        )
+        self.beta = convert.energy(self.gamma, "gamma to beta", **self.beam)
 
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class."""
         return key in recursive_items(vars(self))
 
     def get(
-        self, *keys: tuple[str], to_deg: bool = False, **kwargs: dict
+        self, *keys: GETTABLE_PARTICLE_T, to_deg: bool = False, **kwargs: dict
     ) -> tuple[Any]:
         """Shorthand to get attributes."""
         val = {}

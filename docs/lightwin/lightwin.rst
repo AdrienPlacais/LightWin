@@ -15,6 +15,7 @@ Subpackages
    lightwin.beam_calculation
    lightwin.config
    lightwin.core
+   lightwin.data
    lightwin.evaluator
    lightwin.failures
    lightwin.optimisation

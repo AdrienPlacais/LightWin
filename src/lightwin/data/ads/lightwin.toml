@@ -42,7 +42,7 @@ sigma = [
 failed = [["FM11"]]
 id_nature = "name"
 k = 3
-objective_preset = "simple_ADS"
+objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
@@ -51,7 +51,7 @@ strategy = "k out of n"
 failed = [["FM11"]]
 id_nature = "name"
 k = 3
-objective_preset = "simple_ADS"
+objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
@@ -66,7 +66,7 @@ save_interval = 512
 failed = [["FM11"]]
 id_nature = "name"
 l = 3
-objective_preset = "simple_ADS"
+objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "l neighboring lattices"
@@ -75,7 +75,7 @@ strategy = "l neighboring lattices"
 compensating_manual = [[["FM9", "FM10", "FM12"]]]
 failed = [[["FM11"]]]
 id_nature = "name"
-objective_preset = "simple_ADS"
+objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "manual"
@@ -120,7 +120,6 @@ max_increase_k_e_in_percent = 180.0
 max_increase_sync_phase_in_percent = 40.0
 maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = true
 min_absolute_sync_phase_in_deg = -90.0
-
 
 [plots_minimal]
 add_objectives = true

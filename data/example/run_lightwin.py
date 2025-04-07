@@ -66,9 +66,9 @@ if __name__ == "__main__":
         "files": "files",
         "plots": "plots_minimal",
         "beam_calculator": "generic_envelope1d",
-        "beam_calculator_post": "generic_tracewin",
+        # "beam_calculator_post": "generic_tracewin",
         "beam": "beam",
-        "wtf": "save_wtf",
+        "wtf": "generic_wtf",
         "design_space": "fit_phi_s_design_space",
         # "design_space": "tiny_design_space",
     }
@@ -76,8 +76,8 @@ if __name__ == "__main__":
     BEAUTY_PASS = False
     config = process_config(toml_filepath, toml_keys)
     # my_objective_factory = MyObjectiveFactory
-    my_objective_factory = EnergyPhaseMismatchMoreElements
+    # my_objective_factory = EnergyPhaseMismatchMoreElements
     fault_scenarios = run_simulation(
         config,
-        objective_factory_class=my_objective_factory,
+        # objective_factory_class=my_objective_factory,
     )

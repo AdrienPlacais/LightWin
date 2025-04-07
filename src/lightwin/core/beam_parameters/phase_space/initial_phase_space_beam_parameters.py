@@ -14,9 +14,9 @@ from typing import Any, Self
 import numpy as np
 
 from lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters import (
-    PHASE_SPACE_T,
     IPhaseSpaceBeamParameters,
 )
+from lightwin.util.typing import PHASE_SPACE_T
 
 
 @dataclass

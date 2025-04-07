@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Adhere to development best practices.
 In particular, follow advices listed in the great [Scientific Python library development guide](https://learn.scientific-python.org/development/).
 
+
+## [0.9.2] -- 2025-04-07
+
+### Added
+
+- Type hints for the `.get` methods.
+- Notebook example to showcase how LightWin can be used.
+- You can give `matplotlib.axes.Axes.plot` kwargs in the `plots` TOML section.
+
 ## [0.9.1] -- 2025-01-30
 
 ### Added

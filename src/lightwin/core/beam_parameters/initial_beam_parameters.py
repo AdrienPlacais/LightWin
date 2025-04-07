@@ -13,11 +13,12 @@ import numpy as np
 
 from lightwin.tracewin_utils.interface import beam_parameters_to_command
 from lightwin.util.helper import recursive_items
-
-from .phase_space.i_phase_space_beam_parameters import (
+from lightwin.util.typing import (
+    GETTABLE_BEAM_PARAMETERS_T,
     PHASE_SPACE_T,
     PHASE_SPACES,
 )
+
 from .phase_space.initial_phase_space_beam_parameters import (
     InitialPhaseSpaceBeamParameters,
 )
@@ -30,17 +31,17 @@ class InitialBeamParameters:
 
     Parameters
     ----------
-    z_abs : float
+    z_abs :
         Absolute position in the linac in :unit:`m`.
-    gamma_kin : float
+    gamma_kin :
         Lorentz gamma factor.
-    beta_kin : float
+    beta_kin :
         Lorentz beta factor.
-    zdelta, z, phiw, x, y, t : InitialPhaseSpaceBeamParameters
+    zdelta, z, phiw, x, y, t :
         Beam parameters respectively in the :math:`[z-z\delta]`,
         :math:`[z-z']`, :math:`[\phi-W]`, :math:`[x-x']`, :math:`[y-y']` and
         :math:`[t-t']` planes.
-    phiw99, x99, y99 : InitialPhaseSpaceBeamParameters
+    phiw99, x99, y99 :
         99% beam parameters respectively in the :math:`[\phi-W]`,
         :math:`[x-x']` and :math:`[y-y']` planes. Only used with multiparticle
         simulations.
@@ -101,7 +102,7 @@ class InitialBeamParameters:
 
     def get(
         self,
-        *keys: str,
+        *keys: GETTABLE_BEAM_PARAMETERS_T,
         to_numpy: bool = True,
         none_to_nan: bool = False,
         phase_space_name: PHASE_SPACE_T | None = None,
@@ -112,13 +113,20 @@ class InitialBeamParameters:
         Notes
         -----
         What is particular in this getter is that all
-        :class:`.InitialPhaseSpaceBeamParameters` attributes have attributes
-        with the same name: ``twiss``, ``alpha``, ``beta``, ``gamma``, ``eps``,
-        ``envelope_pos`` and ``envelope_energy``.
+        :class:`.InitialPhaseSpaceBeamParameters` objects have attributes with
+        the same name: ``twiss``, ``alpha``, ``beta``, ``gamma``, ``eps``, etc.
 
-        Hence, you must provide either a ``phase_space`` argument which shall
-        be in :data:`.PHASE_SPACES`, either you must append the name of the
-        phase space to the name of the desired variable with an underscore.
+        Hence, you must provide either a ``phase_space_name`` argument which
+        shall be in :data:`.PHASE_SPACES`, either or you must append the name
+        of the phase space to the name of the desired variable with an
+        underscore.
+
+        Examples
+        --------
+        >>> initial_beam_parameters: InitialBeamParameters
+        >>> initial_beam_parameters.get("beta", phase_space_name="zdelta")
+        >>> initial_beam_parameters.get("beta_zdelta")  # Alternative
+        >>> initial_beam_parameters.get("beta")  # Incorrect
 
         See Also
         --------
@@ -126,14 +134,14 @@ class InitialBeamParameters:
 
         Parameters
         ----------
-        *keys: str
+        *keys :
             Name of the desired attributes.
-        to_numpy : bool, optional
+        to_numpy :
             If you want the list output to be converted to a np.ndarray. The
             default is True.
-        none_to_nan : bool, optional
-            To convert None to np.nan. The default is True.
-        phase_space_name : str | None, optional
+        none_to_nan :
+            To convert ``None`` to ``np.nan``. The default is True.
+        phase_space_name :
             Phase space in which you want the key. The default is None. In this
             case, the quantities from the ``zdelta`` phase space are taken.
             Otherwise, it must be in :data:`.PHASE_SPACES`.
@@ -161,7 +169,7 @@ class InitialBeamParameters:
                     )
                     assert hasattr(self, phase_space_name), (
                         f"{phase_space_name = } not set for current "
-                        + "InitialBeamParameters object."
+                        "InitialBeamParameters object."
                     )
                     phase_space = getattr(self, phase_space_name)
                     val[key] = getattr(phase_space, short_key)

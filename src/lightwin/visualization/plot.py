@@ -18,7 +18,7 @@
 import itertools
 import logging
 from pathlib import Path
-from typing import Any, Callable, Sequence
+from typing import Any, Callable, Literal, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -35,6 +35,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.failures.fault import Fault
 from lightwin.util import helper
+from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
 from lightwin.visualization import structure
 from lightwin.visualization.helper import (
     X_AXIS_T,
@@ -95,6 +96,8 @@ ERROR_PRESETS = {
     "w_kin_err": {"scale": 1.0, "diff": "simple"},
     "phi_abs_err": {"scale": 1.0, "diff": "simple"},
 }
+#: List of implemented presets for the plots
+ALLOWED_PLOT_PRESETS = list(PLOT_PRESETS.keys())
 
 # The one you generally want
 ERROR_REFERENCE = "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)"
@@ -120,7 +123,7 @@ def factory(
 
     Parameters
     ----------
-    accelerators : Sequence[Accelerator]
+    accelerators :
         The accelerators holding relatable data. Due to bad implementation, the
         following accelerators are expected:
         - Reference linac, first solver
@@ -129,14 +132,13 @@ def factory(
         - Fixed linac, second solver
         If you provide only the two first linacs, the function will still work
         but they will be plotted twice.
-    plots : dict[str, Any]
+    plots :
         The plot TOML table.
-    save_fig : bool, optional
-        If Figures should be saved; the default is True.
-    clean_fig : bool
-        If Figures should be cleaned between two calls of this function; the
-        default is True.
-    fault_scenarios : Sequence[FaultScenario] | None, optional
+    save_fig :
+        If Figures should be saved.
+    clean_fig :
+        If Figures should be cleaned between two calls of this function.
+    fault_scenarios :
         If provided, the position of the :class:`.Objective` will also appear
         on plots.
     kwargs :
@@ -144,14 +146,14 @@ def factory(
 
     Returns
     -------
-    list[matplotlib.figure.Figure]
+    figs : list[matplotlib.figure.Figure]
         The created figures.
 
     """
     if clean_fig and not save_fig and len(accelerators) > 2:
         logging.warning(
-            "You will only see the plots of the last accelerators,"
-            " previous will be erased without saving."
+            "You will only see the plots of the last accelerators, previous "
+            "will be erased without saving."
         )
 
     ref_acc = accelerators[0]
@@ -182,48 +184,70 @@ def factory(
 
 def _separate_plot_presets_from_plot_modificators(
     plots: dict[str, Any],
-) -> tuple[dict[str, Any], dict[str, Any]]:
-    """Separate the config entries corresponding to the name of a plot."""
+) -> tuple[dict[str, bool], dict[str, Any]]:
+    """Separate the config entries corresponding to the name of a plot.
+
+    Parameters
+    ----------
+    plots :
+        Dictionary holding the plot configuration.
+
+    Returns
+    -------
+    plot_presets : dict[str, bool]
+        Subset of ``plots``, with only the keys that can be found in
+        :data:`ALLOWED_PLOT_PRESETS`. Indicates which plots presets will be plotted:
+        ``"cav"``, ``"emittance"``...
+    plot_kwargs : dict[str, Any]
+        Subset of ``plots``, with only the keys corresponding to a plot
+        modificator, eg ``"add_objectives"``.
+
+    """
+
+    
     plot_presets: dict[str, bool] = {}
-    plot_kwargs: dict[str, bool] = {}
-    for key, flag in plots.items():
+    plot_kwargs: dict[str, Any] = {}
+    for key, value in plots.items():
         if key in PLOT_PRESETS:
-            plot_presets[key] = flag
+            plot_presets[key] = value
             continue
-        plot_kwargs[key] = flag
+        plot_kwargs[key] = value
     return plot_presets, plot_kwargs
 
 
 def _plot_preset(
     preset: str,
     *args: Accelerator,
-    all_y_axis: list[str],
+    all_y_axis: list[GETTABLE_SIMULATION_OUTPUT_T | Literal["struct"]],
     x_axis: X_AXIS_T = "z_abs",
     save_fig: bool = True,
     clean_fig: bool = True,
     add_objectives: bool = False,
     fault_scenarios: Sequence[list[Fault]] | None = None,
+    usr_kwargs: dict[str, Any] | None = None,
     **kwargs,
 ) -> Figure:
     """Plot a preset.
 
     Parameters
     ----------
-    str_preset : str
-        Key of PLOT_PRESETS.
-    *args : Accelerator
-        Accelerators to plot. In typical usage, args = (Working, Fixed)
-    x_axis : str, optional
-        Name of the x axis. The default is 'z_abs'.
-    all_y_axis : list[str]
+    str_preset :
+        Key of :data:`ALLOWED_PLOT_PRESETS`.
+    *args :
+        Accelerators to plot. In typical usage, ``args = (Working, Fixed)``
+    x_axis :
+        Name of the x axis.
+    all_y_axis :
         Name of all the y axis.
-    save_fig : bool, optional
-        To save Figures or not. The default is True.
-    add_objectives : bool, optional
+    save_fig :
+        To save Figures or not.
+    add_objectives :
         To add the position of objectives to the plots; if True, the
         ``fault_scenarios`` must be provided.
-    fault_scenarios : Sequence[FaultScenario] | None, optional
+    fault_scenarios :
         To plot the objectives, if ``add_objectives == True``.
+    usr_kwargs :
+        User-defined ``kwargs``, passed to the |axplot| method.
     **kwargs :
         Holds all complementary data on the plots.
 
@@ -233,10 +257,12 @@ def _plot_preset(
     )
 
     colors = None
+    if usr_kwargs is None:
+        usr_kwargs = {}
     for i, (ax, y_axis) in enumerate(zip(axx, all_y_axis)):
-        _make_a_subplot(ax, x_axis, y_axis, colors, *args, **kwargs)
+        _make_a_subplot(ax, x_axis, y_axis, colors, *args, **usr_kwargs)
         if i == 0:
-            colors = _keep_colors(ax)
+            colors = _used_colors(ax)
 
         if add_objectives:
             mark_objectives_position(ax, fault_scenarios, y_axis, x_axis)
@@ -252,14 +278,23 @@ def _plot_preset(
 
 
 def _proper_kwargs(preset: str, kwargs: dict[str, Any]) -> dict[str, Any]:
-    """Merge dicts, priority kwargs > PLOT_PRESETS > FALLBACK_PRESETS."""
-    return FALLBACK_PRESETS | PLOT_PRESETS[preset] | kwargs
+    """Merge dicts, priority kwargs > PLOT_PRESETS > FALLBACK_PRESETS.
+
+    We also add a ``"usr_kwargs"`` key holding additional keywords, that will
+    be passed to |axplot|.
+
+    """
+    merged = FALLBACK_PRESETS | PLOT_PRESETS[preset] | kwargs
+    if "kwargs" in merged:
+        merged["usr_kwargs"] = merged.pop("kwargs")
+
+    return merged
 
 
-def _keep_colors(axe: Axes) -> dict[object, ColorType]:
-    """Keep track of the color associated with each SimulationOutput."""
+def _used_colors(axe: Axes) -> dict[str, ColorType]:
+    """Associate every line label to a color."""
     lines = axe.get_lines()
-    colors = {line.get_label(): line.get_color() for line in lines}
+    colors = {str(line.get_label()): line.get_color() for line in lines}
     return colors
 
 
@@ -275,7 +310,7 @@ def _y_label(y_axis: str) -> str:
 
 # Data getters
 def _single_simulation_data(
-    axis: str, simulation_output: SimulationOutput
+    axis: GETTABLE_SIMULATION_OUTPUT_T, simulation_output: SimulationOutput
 ) -> list[float] | None:
     """lightwin.Get single data array from single SimulationOutput."""
     kwargs: dict[str, Any]
@@ -452,14 +487,36 @@ def _compute_error(
 def _make_a_subplot(
     axe: Axes,
     x_axis: X_AXIS_T,
-    y_axis: str,
-    colors: dict[str, str] | None,
+    y_axis: GETTABLE_SIMULATION_OUTPUT_T | Literal["struct"],
+    colors: dict[str, ColorType] | None,
     *accelerators: Accelerator,
     plot_section: bool = True,
     symetric_plot: bool = False,
-    **kwargs,
+    **usr_kwargs,
 ) -> None:
-    """Get proper data and plot it on an Axe."""
+    """Get proper data and plot it on an Axe.
+
+    Parameters
+    ----------
+    axe :
+        Object on which to add plot data.
+    x_axis :
+        Nature of x axis.
+    y_axis :
+        What to plot.
+    colors :
+       Holds the line labels from previous plots and associate it to their
+       colors.
+    accelerators :
+        Objects from which we take ``y_axis``.
+    plot_section :
+        To outline the different sections in the background of the plots.
+    symetric_plot :
+        If a symetric plot (wrt x axis) should be added.
+    usr_kwargs :
+        User-defined ``kwargs``, passed to the |axplot| method.
+
+    """
     if plot_section:
         structure.outline_sections(accelerators[0].elts, axe, x_axis=x_axis)
 
@@ -468,31 +525,30 @@ def _make_a_subplot(
             accelerators[-1].elts, axe, x_axis=x_axis
         )
 
-    all_my_data = _all_accelerators_data(x_axis, y_axis, *accelerators)
+    x_data, y_data, plt_kwargs = _all_accelerators_data(
+        x_axis, y_axis, *accelerators
+    )
 
     # Alternate markers for the "cav" preset
     markers = ("o", "^")
     marker_index = 0
 
-    for x_data, y_data, plt_kwargs in zip(
-        all_my_data[0], all_my_data[1], all_my_data[2]
-    ):
-        # Check if we are in the "cav" preset and assign markers alternately
+    for x, y, _plt_kwargs in zip(x_data, y_data, plt_kwargs):
         if y_axis in ("v_cav_mv", "phi_s"):
-            plt_kwargs["marker"] = markers[marker_index]
+            _plt_kwargs["marker"] = markers[marker_index]
             marker_index = (marker_index + 1) % len(markers)
 
-        if colors is not None and plt_kwargs["label"] in colors:
-            plt_kwargs["color"] = colors[plt_kwargs["label"]]
+        if colors is not None and _plt_kwargs["label"] in colors:
+            _plt_kwargs["color"] = colors[_plt_kwargs["label"]]
 
-        (line,) = axe.plot(x_data, y_data, **plt_kwargs)
+        (line,) = axe.plot(x, y, **_plt_kwargs | usr_kwargs)
 
         if symetric_plot:
-            symetric_kwargs = plt_kwargs | {
+            symetric_kwargs = _plt_kwargs | {
                 "color": line.get_color(),
                 "label": None,
             }
-            axe.plot(x_data, -y_data, **symetric_kwargs)
+            axe.plot(x, -y, **symetric_kwargs)
 
     axe.grid(True)
     axe.set_ylabel(_y_label(y_axis))

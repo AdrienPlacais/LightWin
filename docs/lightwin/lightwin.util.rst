@@ -22,3 +22,4 @@ Submodules
    lightwin.util.phases
    lightwin.util.pickling
    lightwin.util.synchronous_phases
+   lightwin.util.typing

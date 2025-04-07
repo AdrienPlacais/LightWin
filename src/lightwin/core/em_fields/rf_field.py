@@ -15,6 +15,7 @@ from lightwin.core.em_fields.helper import (
     null_field_1d,
     shifted_e_spat,
 )
+from lightwin.util.typing import GETTABLE_RF_FIELD_T
 
 
 def compute_param_cav(integrated_field: complex) -> dict[str, float]:
@@ -67,14 +68,16 @@ class RfField:
         """Tell if the required attribute is in this class."""
         return hasattr(self, key)
 
-    def get(self, *keys: str, **kwargs: bool | str | None) -> Any:
+    def get(
+        self, *keys: GETTABLE_RF_FIELD_T, **kwargs: bool | str | None
+    ) -> Any:
         """Shorthand to get attributes from this class or its attributes.
 
         Parameters
         ----------
-        *keys : str
+        *keys :
             Name of the desired attributes.
-        **kwargs : bool | str | None
+        **kwargs :
             Other arguments passed to recursive getter.
 
         Returns

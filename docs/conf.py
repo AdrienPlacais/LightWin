@@ -31,10 +31,8 @@ import lightwin
 sys.path.append(os.path.abspath("./_ext"))
 
 project = "LightWin"
-copyright = (
-    "2025, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
-)
 author = "A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
+copyright = "2025, " + author
 
 # See https://protips.readthedocs.io/git-tag-version.html
 # The full version, including alpha/beta/rc tags.
@@ -47,17 +45,18 @@ version = lightwin.__version__
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "sphinxcontrib.bibtex",  # Integrate citations
-    "sphinx.ext.napoleon",  # handle numpy style
-    "sphinx.ext.autodoc",
-    "sphinx_rtd_theme",  # ReadTheDocs theme
-    "myst_parser",
-    "sphinx.ext.intersphinx",  # interlink with other docs, such as numpy
-    "sphinx.ext.todo",  # allow use of TODO
-    "nbsphinx",
     "lightwin_sphinx_extensions",
-    "sphinx_autodoc_typehints",  # Printing types in docstrings not necessary anymore
+    "myst_parser",
+    "nbsphinx",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.todo",
+    "sphinx.ext.viewcode",
+    "sphinx_autodoc_typehints",
+    "sphinx_rtd_theme",
     "sphinx_tabs.tabs",
+    "sphinxcontrib.bibtex",
 ]
 
 autodoc_default_options = {
@@ -89,6 +88,11 @@ nitpick_ignore = [
     # Not recognized by Sphinx, don't know if this is normal
     ("py:class", "optional"),
     ("py:class", "T"),
+    ("py:class", "numpy.float64"),
+    ("py:class", "numpy.typing.NDArray"),
+    ("py:class", "NDArray[np.float64]"),
+    ("py:class", "NDArray"),
+    ("py:class", "np.float64"),
     # pymoo fixes should be temporary
     ("py:class", "ElementwiseProblem"),
     ("py:class", "pymoo.core.algorithm.Algorithm"),
@@ -110,8 +114,6 @@ nitpick_ignore = [
     ("py:class", "ref_value_t"),
     ("py:class", "tester_t"),
     ("py:class", "value_t"),
-    ("py:class", "REFERENCE_T"),
-    ("py:class", "STATUS_T"),
 ]
 
 # Link to other libraries
@@ -123,11 +125,14 @@ intersphinx_mapping = {
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 
-
+autodoc_type_aliases = {
+    "np.float64": "numpy.float64",
+    "NDArray": "numpy.typing.NDArray",
+}
 # Parameters for sphinx-autodoc-typehints
 always_document_param_types = True
-always_use_bar_union = True
-# typehints_defaults = "braces-after"
+always_use_bars_union = True
+typehints_defaults = "comma"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -152,3 +157,8 @@ def object_description(obj: object) -> str:
 
 
 inspect.object_description = object_description
+
+# -- Shortcuts ---------------------------------------------------
+rst_prolog = """
+.. |axplot| replace:: :meth:`matplotlib.axes.Axes.plot`
+"""

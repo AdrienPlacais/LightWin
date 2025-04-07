@@ -10,7 +10,7 @@ For a list of the units associated with every parameter, see
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Literal, Self
+from typing import Any, Self
 
 import numpy as np
 
@@ -23,21 +23,7 @@ from lightwin.core.beam_parameters.helper import (
     twiss_from_sigma,
 )
 from lightwin.util.helper import range_vals_object
-
-PHASE_SPACES = (
-    "zdelta",
-    "z",
-    "phiw",
-    "x",
-    "y",
-    "t",
-    "phiw99",
-    "x99",
-    "y99",
-)  #:
-PHASE_SPACE_T = Literal[
-    "zdelta", "z", "phiw", "x", "y", "t", "phiw99", "x99", "y99"
-]
+from lightwin.util.typing import PHASE_SPACE_T, PHASE_SPACES
 
 
 @dataclass
