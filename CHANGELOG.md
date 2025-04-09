@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Adhere to development best practices.
 In particular, follow advices listed in the great [Scientific Python library development guide](https://learn.scientific-python.org/development/).
 
+## [0.9.3] -- 2025-04-09
+
+### Fixed
+
+- The `lightwin.config_manager` symlink pointing to `lightwin.config.config_manager` did not resolve on Windows.
+  It was deleted and all `import lightwin.config_manager` were replaced by `import lightwin.config.config_manager`.
 
 ## [0.9.2] -- 2025-04-07
 
