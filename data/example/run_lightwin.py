@@ -11,7 +11,7 @@ from my_own_objectives import (
 )
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
-from lightwin.config_manager import process_config
+from lightwin.config.config_manager import process_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.experimental.new_evaluator.simulation_output.factory import (
     SimulationOutputEvaluatorsFactory,

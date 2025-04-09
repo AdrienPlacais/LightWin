@@ -14,7 +14,7 @@ from typing import Any
 import pytest
 from tests.pytest_helpers.simulation_output import wrap_approx
 
-import lightwin.config_manager
+import lightwin.config.config_manager as config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
@@ -81,7 +81,7 @@ def config(
             "design_space_preset": design_space_preset,
         },
     }
-    my_config = lightwin.config_manager.process_config(
+    my_config = config_manager.process_config(
         example_config,
         config_keys,
         warn_mismatch=True,

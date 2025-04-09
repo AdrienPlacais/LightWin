@@ -9,7 +9,7 @@ import os.path
 from pathlib import Path
 
 from lightwin.beam_calculation.factory import BeamCalculatorsFactory
-from lightwin.config_manager import process_config
+from lightwin.config.config_manager import process_config
 from lightwin.core.accelerator.factory import (
     StudyWithoutFaultsAcceleratorFactory,
 )
