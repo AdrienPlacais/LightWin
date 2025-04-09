@@ -14,7 +14,7 @@ LightWin is a tool to automatically find compensation settings for cavity failur
 The full installation instructions are detailed [here](https://lightwin.readthedocs.io/en/latest/manual/installation.html).
 The steps are straightforward and can be summarized as follows:
 1. Clone the repository: `git clone git@github.com:AdrienPlacais/LightWin.git`
-2. Navigate to the `LightWin` directory, and switch to the last tagged version: `git checkout v0.9.0`
+2. Navigate to the `LightWin` directory, and switch to the last tagged version. For example: `git switch v0.9.3`
 3. Install LightWin with all its dependencies: `pip install -e .[test]`
 4. Test that everything is working with `pytest -m "not tracewin and not implementation"`.
 
