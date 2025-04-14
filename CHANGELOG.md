@@ -17,6 +17,10 @@ In particular, follow advices listed in the great [Scientific Python library dev
 - The `lightwin.config_manager` symlink pointing to `lightwin.config.config_manager` did not resolve on Windows.
   It was deleted and all `import lightwin.config_manager` were replaced by `import lightwin.config.config_manager`.
 
+### Changed
+
+- `import lightwin.config_manager` no longer works! Replace all occurrences by `import lightwin.config.config_manager`.
+
 ## [0.9.2] -- 2025-04-07
 
 ### Added
