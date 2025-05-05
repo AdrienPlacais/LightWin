@@ -31,5 +31,4 @@ Submodules
 .. toctree::
    :maxdepth: 5
 
-   lightwin.config_manager
    lightwin.constants

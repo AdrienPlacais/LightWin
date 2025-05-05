@@ -1,9 +1,0 @@
-Entry,Type,Description,Allowed values,Mandatory?
-add_objectives,``bool``,Add objectives position to plots?,,❌
-energy,``bool``,Plot evolution of kinetic energy?,,❌
-phase,``bool``,Plot evolution of absolute phase?,,❌
-cav,``bool``,Plot cavity parameters?,,❌
-emittance,``bool``,Plot evolution of emittance?,,❌
-twiss,``bool``,Plot Twiss parameters?,,❌
-envelopes,``bool``,Plot envelopes?,,❌
-transfer_matrices,``bool``,Plot transfer matrix components?,,❌
