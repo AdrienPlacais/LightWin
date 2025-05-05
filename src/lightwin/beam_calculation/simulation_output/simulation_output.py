@@ -169,10 +169,10 @@ class SimulationOutput:
         *keys :
             Name of the desired attributes.
         to_numpy :
-            If you want the list output to be converted to a np.ndarray.
+            If you want the list output to be converted to a
+            :class:`numpy.array`.
         to_deg :
-            To apply np.rad2deg function over every ``key`` containing the
-            string.
+            To convert entries with ``"phi"`` in their name to degrees.
         elt :
             If provided, return the attributes only at the considered
             element(s).
@@ -180,7 +180,7 @@ class SimulationOutput:
             If you want the attribute at the entry, exit, or in the whole
             element.
         none_to_nan :
-            To convert None to np.nan.
+            To convert ``None`` to ``numpy.nan``.
         **kwargs :
             Other arguments passed to recursive getter.
 
