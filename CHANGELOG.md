@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Adhere to development best practices.
 In particular, follow advices listed in the great [Scientific Python library development guide](https://learn.scientific-python.org/development/).
 
+## [0.9.4] -- unreleased
+
+### Added
+
+- Wrote the [documentation](https://lightwin.readthedocs.io/en/latest/manual/get_method.html) for the magic `get` methods.
+
 ## [0.9.3] -- 2025-04-09
 
 ### Fixed
