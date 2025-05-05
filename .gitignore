@@ -176,7 +176,6 @@ data/test_instructions/results_tests/*
 src/lightwin/data/ads/*
 
 docs/source/manual/notebooks/*.py
-images/
 source/build/
 source/untitled*.py
 *.c
