@@ -6,7 +6,7 @@ SPHINXBUILD   ?= sphinx-build
 SPHINXAPIDOC  ?= sphinx-apidoc
 # Dirs
 SOURCEDIR     = .
-BUILDDIR      = ../../_tmp_LightWin-docs
+BUILDDIR      = _build/
 SRC_DIR       = ../src
 EXCLUDE_DIR   = ../src/lightwin/experimental/*
 APIDOC_DIR    = lightwin
