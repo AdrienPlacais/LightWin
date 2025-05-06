@@ -10,7 +10,7 @@ If your development environment is properly configured for type completion, it s
    :width: 400
    :alt: Auto-completion example in an editor
 
-.. note::
+.. tip::
    The first argument of the `get` method uses the standard Python `*args` syntax.  
    This means you can request multiple keys at once:
    
@@ -69,3 +69,7 @@ Here are a few commonly used ones:
    To avoid this, use the `phase_space_name` keyword instead.
 
 If the requested key is not found, the method does **not** raise an error -- it simply returns an empty array.
+
+Some examples are provided at the end of the `example notebook`_.
+
+.. _example notebook: notebooks/example.ipynb
