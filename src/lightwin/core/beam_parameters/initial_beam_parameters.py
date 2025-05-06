@@ -189,12 +189,14 @@ class InitialBeamParameters:
                 val[key] = None
 
         out = [val[key] for key in keys]
+
+        if none_to_nan:
+            out = [np.nan if x is None else x for x in out]
+
         if to_numpy:
             out = [
                 np.array(val) if isinstance(val, list) else val for val in out
             ]
-            if none_to_nan:
-                out = [val.astype(float) for val in out]
 
         if len(out) == 1:
             return out[0]
