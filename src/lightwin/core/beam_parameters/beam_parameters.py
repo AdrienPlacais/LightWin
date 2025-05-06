@@ -12,10 +12,12 @@ from typing import Any, Callable, Literal, Self
 
 import numpy as np
 
-from lightwin.core.beam_parameters.initial_beam_parameters import (
-    InitialBeamParameters,
+from lightwin.core.beam_parameters.helper import (
     phase_space_name_hidden_in_key,
     separate_var_from_phase_space,
+)
+from lightwin.core.beam_parameters.initial_beam_parameters import (
+    InitialBeamParameters,
 )
 from lightwin.core.beam_parameters.phase_space.phase_space_beam_parameters import (
     PhaseSpaceBeamParameters,

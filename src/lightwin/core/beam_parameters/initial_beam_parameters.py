@@ -11,6 +11,10 @@ from typing import Any
 
 import numpy as np
 
+from lightwin.core.beam_parameters.helper import (
+    phase_space_name_hidden_in_key,
+    separate_var_from_phase_space,
+)
 from lightwin.tracewin_utils.interface import beam_parameters_to_command
 from lightwin.util.helper import recursive_items
 from lightwin.util.typing import (
@@ -254,26 +258,3 @@ class InitialBeamParameters:
 
             args.extend((eps, alpha, beta))
         return beam_parameters_to_command(*args)
-
-
-# =============================================================================
-# Private
-# =============================================================================
-def phase_space_name_hidden_in_key(key: str) -> bool:
-    """Look for the name of a phase-space in a key name."""
-    if "_" not in key:
-        return False
-
-    to_test = key.split("_")
-    if to_test[-1] in PHASE_SPACES:
-        return True
-    return False
-
-
-def separate_var_from_phase_space(key: str) -> tuple[str, PHASE_SPACE_T]:
-    """Separate variable name from phase space name."""
-    splitted = key.split("_")
-    key = "_".join(splitted[:-1])
-    phase_space = splitted[-1]
-    assert phase_space in PHASE_SPACES
-    return key, phase_space

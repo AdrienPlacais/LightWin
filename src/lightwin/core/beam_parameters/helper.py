@@ -11,6 +11,7 @@ from typing import Any, overload
 import numpy as np
 
 from lightwin.util import converters
+from lightwin.util.typing import PHASE_SPACE_T, PHASE_SPACES
 
 
 # =============================================================================
@@ -546,3 +547,23 @@ def resample_twiss_on_fix(
             z_abs, reference_z_abs, reference_twiss[:, axis]
         )
     return out
+
+
+def phase_space_name_hidden_in_key(key: str) -> bool:
+    """Tell if the name of a phase-space is present in ``key``."""
+    if "_" not in key:
+        return False
+
+    to_test = key.split("_")
+    if to_test[-1] in PHASE_SPACES:
+        return True
+    return False
+
+
+def separate_var_from_phase_space(key: str) -> tuple[str, PHASE_SPACE_T]:
+    """Separate variable name from phase space name."""
+    splitted = key.split("_")
+    key = "_".join(splitted[:-1])
+    phase_space = splitted[-1]
+    assert phase_space in PHASE_SPACES
+    return key, phase_space
