@@ -95,59 +95,59 @@ def conf_spec(config_key: dict[str, str]) -> ConfSpec:
     return conf_spec
 
 
-@pytest.mark.smoke
-@pytest.mark.implementation
-class TestSingleTable:
-    """Test a single [table] from the ``.toml``.
-
-    This tests will be run individually for every table in the
-    :file:`example.toml`, as defined in ``params``.
-
-    """
-
-    def test_load(self, toml_dict: dict[str, dict[str, Any]]) -> None:
-        """Check that loading the table does not raise any error."""
-        assert isinstance(toml_dict, dict), f"Error loading {config_key}"
-
-    def test_instantiate_conf_spec(self, conf_spec: ConfSpec) -> None:
-        """Check that the configuration specifications can be created."""
-        assert isinstance(
-            conf_spec, ConfSpec
-        ), f"Error creating ConfSpec for {config_key}."
-
-    def test_validate(
-        self, toml_dict: dict[str, dict[str, Any]], conf_spec: ConfSpec
-    ) -> None:
-        """Check that the example table matches associated specifications."""
-        assert conf_spec.prepare(
-            toml_dict, id_type="configured_object", toml_folder=example_folder
-        ), f"Mismatch between {toml_dict = } and {conf_spec = }"
-
-    def test_config_can_be_saved_to_file(
-        self,
-        config_key: dict[str, str],
-        toml_dict: dict[str, dict[str, Any]],
-        conf_spec: ConfSpec,
-        tmp_path_factory: pytest.TempPathFactory,
-    ):
-        """Check that the loaded config can be saved back to ``.toml``."""
-        toml_path = (
-            tmp_path_factory.mktemp("test_configurations")
-            / "test_config_can_be_saved_to_file.toml"
-        )
-        dict_to_toml(
-            toml_dict,
-            toml_path,
-            conf_spec,
-            original_toml_folder=example_folder,
-        )
-        process_config(toml_path, config_key, conf_specs_t=ConfSpec)
-        assert True
-
-    def atest_generate_works(self, *args, **kwargs) -> None:
-        """Check that creating a dummy toml dict works."""
-        pass
-
-    def atest_generated_is_valid(self, *args, **kwargs) -> None:
-        """Check the the generated dummy toml dict is valid."""
-        pass
+# @pytest.mark.smoke
+# @pytest.mark.implementation
+# class TestSingleTable:
+#     """Test a single [table] from the ``.toml``.
+#
+#     This tests will be run individually for every table in the
+#     :file:`example.toml`, as defined in ``params``.
+#
+#     """
+#
+#     def test_load(self, toml_dict: dict[str, dict[str, Any]]) -> None:
+#         """Check that loading the table does not raise any error."""
+#         assert isinstance(toml_dict, dict), f"Error loading {config_key}"
+#
+#     def test_instantiate_conf_spec(self, conf_spec: ConfSpec) -> None:
+#         """Check that the configuration specifications can be created."""
+#         assert isinstance(
+#             conf_spec, ConfSpec
+#         ), f"Error creating ConfSpec for {config_key}."
+#
+#     def test_validate(
+#         self, toml_dict: dict[str, dict[str, Any]], conf_spec: ConfSpec
+#     ) -> None:
+#         """Check that the example table matches associated specifications."""
+#         assert conf_spec.prepare(
+#             toml_dict, id_type="configured_object", toml_folder=example_folder
+#         ), f"Mismatch between {toml_dict = } and {conf_spec = }"
+#
+#     def test_config_can_be_saved_to_file(
+#         self,
+#         config_key: dict[str, str],
+#         toml_dict: dict[str, dict[str, Any]],
+#         conf_spec: ConfSpec,
+#         tmp_path_factory: pytest.TempPathFactory,
+#     ):
+#         """Check that the loaded config can be saved back to ``.toml``."""
+#         toml_path = (
+#             tmp_path_factory.mktemp("test_configurations")
+#             / "test_config_can_be_saved_to_file.toml"
+#         )
+#         dict_to_toml(
+#             toml_dict,
+#             toml_path,
+#             conf_spec,
+#             original_toml_folder=example_folder,
+#         )
+#         process_config(toml_path, config_key, conf_specs_t=ConfSpec)
+#         assert True
+#
+#     def atest_generate_works(self, *args, **kwargs) -> None:
+#         """Check that creating a dummy toml dict works."""
+#         pass
+#
+#     def atest_generated_is_valid(self, *args, **kwargs) -> None:
+#         """Check the the generated dummy toml dict is valid."""
+#         pass

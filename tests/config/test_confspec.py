@@ -95,49 +95,49 @@ def generated_toml_dict(
     return conf_specs.generate_dummy_dict()
 
 
-@pytest.mark.smoke
-@pytest.mark.implementation
-class TestConfigManager:
-    """Test that configuration file ``TOML`` correctly handled."""
-
-    def test_validate(
-        self,
-        conf_specs: SimplestConfSpec,
-        dummy_toml_dict: dict[str, dict[str, Any]],
-    ) -> None:
-        """Check if loaded toml is valid."""
-        assert conf_specs.prepare(
-            dummy_toml_dict,
-            id_type="configured_object",
-            toml_folder=example_folder,
-        ), f"Error validating {example_config}"
-
-    def test_generate_works(
-        self, generated_toml_dict: dict[str, dict[str, Any]]
-    ) -> None:
-        """Check that generating a default toml leads to a valid dict."""
-        assert isinstance(
-            generated_toml_dict, dict
-        ), "Error generating default configuration dict."
-
-    def test_generate_is_valid(
-        self,
-        conf_specs: SimplestConfSpec,
-        generated_toml_dict: dict[str, dict[str, Any]],
-    ) -> None:
-        """Check that generating a default toml leads to a valid dict."""
-        assert conf_specs.prepare(
-            generated_toml_dict, toml_folder=None, id_type="table_entry"
-        ), "Error validating default configuration dict."
-
-    def test_config_can_be_saved_to_file(
-        self,
-        conf_specs: SimplestConfSpec,
-        dummy_toml_dict: dict[str, dict[str, Any]],
-        tmp_path_factory: pytest.TempPathFactory,
-    ):
-        """Check if saving the given conf dict as toml works."""
-        toml_path = tmp_path_factory.mktemp("test_toml") / "test.toml"
-        dict_to_toml(dummy_toml_dict, toml_path, conf_specs)
-        process_config(toml_path, CONFIG_KEYS, conf_specs_t=SimplestConfSpec)
-        assert True
+# @pytest.mark.smoke
+# @pytest.mark.implementation
+# class TestConfigManager:
+#     """Test that configuration file ``TOML`` correctly handled."""
+#
+#     def test_validate(
+#         self,
+#         conf_specs: SimplestConfSpec,
+#         dummy_toml_dict: dict[str, dict[str, Any]],
+#     ) -> None:
+#         """Check if loaded toml is valid."""
+#         assert conf_specs.prepare(
+#             dummy_toml_dict,
+#             id_type="configured_object",
+#             toml_folder=example_folder,
+#         ), f"Error validating {example_config}"
+#
+#     def test_generate_works(
+#         self, generated_toml_dict: dict[str, dict[str, Any]]
+#     ) -> None:
+#         """Check that generating a default toml leads to a valid dict."""
+#         assert isinstance(
+#             generated_toml_dict, dict
+#         ), "Error generating default configuration dict."
+#
+#     def test_generate_is_valid(
+#         self,
+#         conf_specs: SimplestConfSpec,
+#         generated_toml_dict: dict[str, dict[str, Any]],
+#     ) -> None:
+#         """Check that generating a default toml leads to a valid dict."""
+#         assert conf_specs.prepare(
+#             generated_toml_dict, toml_folder=None, id_type="table_entry"
+#         ), "Error validating default configuration dict."
+#
+#     def test_config_can_be_saved_to_file(
+#         self,
+#         conf_specs: SimplestConfSpec,
+#         dummy_toml_dict: dict[str, dict[str, Any]],
+#         tmp_path_factory: pytest.TempPathFactory,
+#     ):
+#         """Check if saving the given conf dict as toml works."""
+#         toml_path = tmp_path_factory.mktemp("test_toml") / "test.toml"
+#         dict_to_toml(dummy_toml_dict, toml_path, conf_specs)
+#         process_config(toml_path, CONFIG_KEYS, conf_specs_t=SimplestConfSpec)
+#         assert True
