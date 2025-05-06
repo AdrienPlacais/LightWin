@@ -5,8 +5,8 @@ Utility scripts
    :maxdepth: 5
    :hidden:
 
-LightWin includes several utility scripts located in the `LightWin/scripts/` folder.
-They are scripts that I developed for my own usage, but did not directly belong to the LightWin library.
+LightWin includes several utility scripts located in the `src/lightwin/scripts/` folder.
+They are scripts that I developed for my own usage, but that may not be relatable for your usage.
 
 List of scripts
 ---------------
