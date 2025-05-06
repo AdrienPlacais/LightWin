@@ -79,8 +79,9 @@ class InitialBeamParameters:
             out += f"{phase_space}"
         return out
 
-    def has(self, key: str) -> bool:
-        """Tell if the required attribute is in this class.
+    def has(self, var: str) -> bool:
+        """
+        Tell if the attribute exists, either directly or withing a phase space.
 
         Notes
         -----
@@ -98,13 +99,11 @@ class InitialBeamParameters:
         get
 
         """
-        if phase_space_name_hidden_in_key(key):
-            key, phase_space_name = separate_var_from_phase_space(key)
+        if phase_space_name_hidden_in_key(var):
+            var, phase_space_name = separate_var_from_phase_space(var)
             phase_space = getattr(self, phase_space_name, None)
-            if phase_space is None:
-                return False
-            return hasattr(phase_space, key)
-        return key in recursive_items(vars(self))
+            return hasattr(phase_space, var) if phase_space else False
+        return var in recursive_items(vars(self))
 
     def get(
         self,
