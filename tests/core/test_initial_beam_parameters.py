@@ -35,55 +35,58 @@ def beam(
     return beam
 
 
-@pytest.mark.implementation
 def test_has_direct(beam: InitialBeamParameters) -> None:
     assert beam.has("z_abs")
     assert not beam.has("nonexistent")
 
 
-@pytest.mark.implementation
 def test_has_nested(beam: InitialBeamParameters) -> None:
     assert beam.has("twiss_zdelta")
     assert not beam.has("twiss_phiw")
     assert not beam.has("twiss_nonexistent")
 
 
-@pytest.mark.implementation
 def test_get_single_key(beam: InitialBeamParameters) -> None:
     assert beam.get("alpha", phase_space_name="zdelta") == 10.0
 
 
-@pytest.mark.implementation
 def test_get_inferred_key(beam: InitialBeamParameters) -> None:
     assert beam.get("alpha_zdelta") == 10.0
 
 
-@pytest.mark.implementation
 def test_get_missing_key(beam: InitialBeamParameters) -> None:
     assert beam.get("nonexistent") is None  # pyright: ignore
 
 
-@pytest.mark.implementation
 def test_get_none_to_nan(beam: InitialBeamParameters) -> None:
     assert np.isnan(
         beam.get("nonexistent", none_to_nan=True)  # pyright: ignore
     )
 
 
-@pytest.mark.implementation
 def test_get_multiple_keys(beam: InitialBeamParameters) -> None:
     alpha, beta = beam.get("alpha_zdelta", "beta_zdelta")
     assert alpha == 10.0
     assert beta == 20.0
 
 
-@pytest.mark.implementation
+def test_get_mixed(beam: InitialBeamParameters) -> None:
+    alpha, z_abs = beam.get("alpha_zdelta", "z_abs")
+    assert alpha == 10.0
+    assert z_abs == 0.5
+
+
+def test_get_mixed_phase_space_name(beam: InitialBeamParameters) -> None:
+    alpha, z_abs = beam.get("alpha", "z_abs", phase_space_name="zdelta")
+    assert alpha == 10.0
+    assert z_abs == 0.5
+
+
 def test_get_to_numpy(beam: InitialBeamParameters) -> None:
     val = beam.get("twiss_zdelta")
     assert isinstance(val, np.ndarray)
 
 
-@pytest.mark.implementation
 def test_sigma(beam: InitialBeamParameters) -> None:
     sigma = beam.sigma
     assert sigma.shape == (6, 6)
