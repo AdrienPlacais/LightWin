@@ -2,13 +2,9 @@
 
 It holds, well... an accelerator. This accelerator has a
 :class:`.ListOfElements`. For each :class:`.BeamCalculator` defined, it has a
-:class:`.SimulationOutput`. Additionally, it has a
-:class:`.ParticleInitialState`, which describes energy, phase, etc of the beam
-at the entry of its :class:`.ListOfElements`.
-
-.. todo::
-    Compute_transfer_matrices: simplify, add a calculation of missing phi_0
-    at the end
+:class:`.SimulationOutput` stored in :attr:`Accelerator.simulation_outputs`.
+Additionally, it has a :class:`.ParticleInitialState`, which describes energy,
+phase, etc of the beam at the entry of its :class:`.ListOfElements`.
 
 """
 
@@ -31,7 +27,11 @@ from lightwin.core.list_of_elements.helper import (
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.util.helper import recursive_getter, recursive_items
 from lightwin.util.pickling import MyPickler
-from lightwin.util.typing import EXPORT_PHASES_T, GETTABLE_ACCELERATOR_T
+from lightwin.util.typing import (
+    EXPORT_PHASES_T,
+    GETTABLE_ACCELERATOR_T,
+    GETTABLE_SIMULATION_OUTPUT,
+)
 
 
 class Accelerator:
@@ -67,6 +67,9 @@ class Accelerator:
 
         """
         self.name = name
+        #: Every :class:`.SimulationOutput` instance, associated with the name
+        #: of the :class:`.BeamCalculator` that created it. This dictionary is
+        #: filled by :meth:`keep_simulation_output`.
         self.simulation_outputs: dict[str, SimulationOutput] = {}
         self.data_in_tw_fashion: pd.DataFrame
         self.accelerator_path = accelerator_path
@@ -77,6 +80,7 @@ class Accelerator:
             "z_in": 0.0,
             "sigma_in": sigma,
         }
+        #: The list of elements contained in the accelerator.
         self.elts: ListOfElements
         self.elts = list_of_elements_factory.whole_list_run(
             dat_file, accelerator_path, **kwargs
@@ -104,22 +108,30 @@ class Accelerator:
         elt: str | Element | None = None,
         **kwargs: bool | str,
     ) -> Any:
-        """
-        Shorthand to get attributes from this class or its attributes.
+        """Get attributes from this instance or its attributes.
+
+        .. note::
+            It is recommended to use the :meth:`.SimulationOutput.get` method
+            to retrieve simulation-related data. While :meth:`Accelerator.get`
+            will generally return the same results when the
+            :attr:`simulation_outputs` attribute contains only one
+            :class:`.SimulationOutput` object, its behavior is undefined if
+            multiple outputs are present.
 
         Parameters
         ----------
         *keys :
             Name of the desired attributes.
         to_numpy :
-            If you want the list output to be converted to a np.ndarray.
+            If you want the list output to be converted to a numpy array.
         none_to_nan :
-            To convert None to np.nan.
+            To convert ``None`` to ``np.nan``.
         elt :
-            If provided, and if the desired keys are in SimulationOutput, the
-            attributes will be given over the Element only. You can provide an
-            Element name, such as ``QP1``. If the given Element is not in the
-            Accelerator.ListOfElements, the Element with the same name that is
+            If provided, and if the desired keys are in
+            :class:`.SimulationOutput`, the attributes will be given over the
+            :class:`.Element` only. You can provide an :class:`.Element` name,
+            such as ``"QP1"``. If the given :class:`.Element` is not in the
+            :attr:`elts`, the :class:`.Element` with the same name that is
             present in this list will be used.
         **kwargs :
             Other arguments passed to recursive getter.
@@ -133,6 +145,21 @@ class Accelerator:
         val = {key: [] for key in keys}
 
         for key in keys:
+            if key in GETTABLE_SIMULATION_OUTPUT:
+                msg = (
+                    f"{key = }: it is recommended to use the "
+                    "`SimulationOutput.get()` method to retrieve simulation-"
+                    "related data. While `Accelerator.get()` will generally "
+                    " return the same results when the "
+                    "`Accelerator.simulation_outputs` attribute contains only "
+                    "one `SimulationOutput` object, its behavior is undefined "
+                    "if multiple outputs are present."
+                )
+                fun = logging.warning
+                if len(self.simulation_outputs) > 1:
+                    fun = logging.error
+                fun(msg)
+
             if key in self._special_getters:
                 val[key] = self._special_getters[key](self)
                 if elt is not None:
@@ -210,11 +237,12 @@ class Accelerator:
     def keep_simulation_output(
         self, simulation_output: SimulationOutput, beam_calculator_id: str
     ) -> None:
-        """
-        Save `SimulationOutput`. Store info on current `Accelerator` in it.
+        """Save :class:`.SimulationOutput` in :attr:`simulation_outputs`.
 
-        In particular, we want to save a results path in the `SimulationOutput`
-        so we can study it and save Figures/study results in the proper folder.
+        Also store info on current :class:`.Accelerator` in this object. In
+        particular, we want to save a results path in the
+        :class:`.SimulationOutput` so we can study it and save Figures/study
+        results in the proper folder.
 
         """
         simulation_output.out_path = (
