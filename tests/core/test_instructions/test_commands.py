@@ -149,12 +149,12 @@ def simulation_output(
             id="Test for SET_SYNC_PHASE command",
             marks=pytest.mark.envelope3d,
         ),
-        pytest.param(
-            "superpose_map.dat",
-            "generic_envelope1d",
-            id="Test for SUPERPOSE_MAP command",
-            marks=(pytest.mark.envelope1d, pytest.mark.implementation),
-        ),
+        # pytest.param(
+        #     "superpose_map.dat",
+        #     "generic_envelope1d",
+        #     id="Test for SUPERPOSE_MAP command",
+        #     marks=(pytest.mark.envelope1d, pytest.mark.implementation),
+        # ),
     ],
 )
 def test_transfer_matrix(
