@@ -72,4 +72,4 @@ If the requested key is not found, the method does **not** raise an error -- it 
 
 Some examples are provided at the end of the `example notebook`_.
 
-.. _example notebook: notebooks/example.ipynb
+.. _example notebook: notebooks/example.ipynb#Accessing-data
