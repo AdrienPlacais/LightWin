@@ -100,7 +100,9 @@ class InitialBeamParameters:
         """
         if phase_space_name_hidden_in_key(key):
             key, phase_space_name = separate_var_from_phase_space(key)
-            phase_space = getattr(self, phase_space_name)
+            phase_space = getattr(self, phase_space_name, None)
+            if phase_space is None:
+                return False
             return hasattr(phase_space, key)
         return key in recursive_items(vars(self))
 
