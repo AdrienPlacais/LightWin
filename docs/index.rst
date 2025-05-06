@@ -18,13 +18,13 @@ Welcome to LightWin's documentation!
 
    manual/installation
    manual/usage
+   manual/examples
    manual/get_method
    manual/configuration
    manual/units
    Utility scripts <manual/scripts>
    manual/bibliography
    API Reference <lightwin/lightwin>
-   manual/examples
 
 .. todolist::
 
