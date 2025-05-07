@@ -15,7 +15,7 @@ from typing import Any
 
 import numpy as np
 
-from lightwin.util.helper import recursive_getter, recursive_items
+from lightwin.util.helper import recursive_items
 from lightwin.util.typing import GETTABLE_BEAM_CALC_PARAMETERS_T
 
 
@@ -36,30 +36,37 @@ class ElementBeamCalculatorParameters(ABC):
         to_numpy: bool = True,
         **kwargs: Any,
     ) -> Any:
-        """Shorthand to get attributes."""
-        val = {key: [] for key in keys}
+        """
+        Shorthand to get attributes.
 
-        for key in keys:
-            if not self.has(key):
-                val[key] = None
-                continue
+        Parameters
+        ----------
+        *keys :
+            One or more attribute names to retrieve.
+        to_numpy :
+            If True, convert lists to NumPy arrays. If False, convert NumPy
+            arrays to lists.
+        **kwargs :
+            Reserved for future extensions.
 
-            val[key] = recursive_getter(key, vars(self), **kwargs)
-            if not to_numpy and isinstance(val[key], np.ndarray):
-                val[key] = val[key].tolist()
+        Returns
+        -------
+        Any
+            A single value if one key is given, or a tuple of values.
 
-        out = [
-            (
-                np.array(val[key])
-                if to_numpy and not isinstance(val[key], str)
-                else val[key]
-            )
-            for key in keys
-        ]
-        if len(out) == 1:
-            return out[0]
+        """
+        values = [getattr(self, key, None) for key in keys]
 
-        return tuple(out)
+        if to_numpy:
+            values = [
+                np.array(v) if isinstance(v, list) else v for v in values
+            ]
+        else:
+            values = [
+                v.tolist() if isinstance(v, np.ndarray) else v for v in values
+            ]
+
+        return values[0] if len(values) == 1 else tuple(values)
 
     @abstractmethod
     def re_set_for_broken_cavity(self) -> None | Callable:
