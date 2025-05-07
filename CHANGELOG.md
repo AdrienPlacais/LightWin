@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Adhere to development best practices.
 In particular, follow advices listed in the great [Scientific Python library development guide](https://learn.scientific-python.org/development/).
 
+## [0.9.5rc0] -- unreleased
+
+### Fixed
+
+- Some `get` methods such as `SimulationOutput.get` did not consider the `phase_space_name` keyword argument.
+    - Refactored most `get` methods to fix this bug.
+    - Their behavior are more consistent, even if it may break some of your scripts.
+
 ## [0.9.4] -- 2025-05-06
 
 ### Added
