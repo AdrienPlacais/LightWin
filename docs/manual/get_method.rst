@@ -29,6 +29,7 @@ You can also refer to the documentation of each specific `get` method:
 
 * :meth:`.Accelerator.get`
 * :meth:`.BeamParameters.get`
+* :meth:`.CavitySettings.get`
 * :meth:`.Element.get`
 * :meth:`.FieldMap.get`
 * :meth:`.InitialBeamParameters.get`
