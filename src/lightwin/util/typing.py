@@ -1,6 +1,5 @@
 """Define types for better code-completion and linting."""
 
-from collections.abc import Callable
 from typing import Literal
 
 #: Type for the different phase spaces.
@@ -246,6 +245,7 @@ GETTABLE_ELT_T = (
         "idx_in_lattice",
         "lattice",
         "length_m",
+        "name",
         "nature",
         "section",
     ]
@@ -258,6 +258,7 @@ GETTABLE_ELT = (
     "idx_in_lattice",
     "lattice",
     "length_m",
+    "name",
     "nature",
     "section",
 ) + GETTABLE_BEAM_CALC_PARAMETERS
