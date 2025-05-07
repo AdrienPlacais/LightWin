@@ -31,6 +31,7 @@ You can also refer to the documentation of each specific `get` method:
 * :meth:`.BeamParameters.get`
 * :meth:`.Element.get`
 * :meth:`.FieldMap.get`
+* :meth:`.InitialBeamParameters.get`
 * :meth:`.ListOfElements.get`
 * :meth:`.ParticleFullTrajectory.get`
 * :meth:`.RfField.get`
