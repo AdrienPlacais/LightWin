@@ -163,7 +163,7 @@ class InitialBeamParameters:
 
         Returns
         -------
-        out
+        Any
             A single value if one key is provided, or a tuple of values if
             multiple keys are given.
 

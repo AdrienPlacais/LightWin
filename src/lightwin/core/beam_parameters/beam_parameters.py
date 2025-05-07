@@ -121,10 +121,6 @@ class BeamParameters(InitialBeamParameters):
         >>> beam_parameters.get("beta_zdelta")  # Alternative
         >>> beam_parameters.get("beta")  # May fail or be ambiguous
 
-        See Also
-        --------
-        :meth:`has`
-
         Parameters
         ----------
         *keys :
