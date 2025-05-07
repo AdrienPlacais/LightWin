@@ -7,7 +7,8 @@
 """
 
 import logging
-from typing import Any
+from collections.abc import Callable
+from typing import Any, Literal, Protocol
 
 import numpy as np
 
@@ -192,3 +193,49 @@ class Element(Instruction):
             f"You want to give {new_status = } to the element f{self.name}, "
             "which update_status method is not defined."
         )
+
+
+#: Allowed values for the ``pos`` keyword argument in ``get`` methods.
+POS_T = Literal["in", "out"]
+
+
+class ELEMENT_TO_INDEX_T(Protocol):
+    """Type for function linking an :class:`Element` or its name to its index.
+
+    In particular, it is used for the ``get`` methods.
+
+    """
+
+    def __call__(
+        self, *, elt: str | Element, pos: POS_T | None = None
+    ) -> int | slice: ...
+
+
+def default_element_to_index(
+    *, elt: str | Element, pos: POS_T | None = None
+) -> int | slice:
+    """Return all indexes whatever the inputs are.
+
+    Parameters
+    ----------
+    elt :
+        :class:`Element` for which you want position. Can be the
+        :attr:`Element.name` attribute or the :class:`Element` instance itself.
+        Actually unused in this default function.
+    pos :
+        Position within the :class:`Element`. If not provided, all indexes of
+        :class:`Element` will be returned. Actually unused in this default
+        function.
+
+    Returns
+    -------
+    indexes : int | slice
+        Index(es) of given ``elt``, at given ``pos``. Returns all indexes in
+        this default function.
+
+    """
+    logging.warning(
+        "Actual ``element_to_index`` was not set, you are calling a default. "
+        f"{elt = }; {pos = }."
+    )
+    return slice(0, -1)

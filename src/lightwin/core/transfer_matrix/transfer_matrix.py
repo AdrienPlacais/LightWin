@@ -16,21 +16,21 @@
 """
 
 import logging
-from typing import Any, Callable, Literal
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
 
-from lightwin.core.elements.element import Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, POS_T, Element
 from lightwin.util.typing import GETTABLE_TRANSFER_MATRIX_T
 
 
 class TransferMatrix:
-    """Hold the (n, 6, 6) transfer matrix along the linac.
+    """Hold the ``(n, 6, 6)`` transfer matrix along the linac.
 
     .. note::
-        When the simulation is in 1D only, the values corresponding to the
-        transverse planes are filled with np.nan.
+        When the simulation is 1D only, the values corresponding to the
+        transverse planes are filled with ``np.nan``.
 
     Parameters
     ----------
@@ -46,7 +46,7 @@ class TransferMatrix:
         self,
         is_3d: bool,
         first_cumulated_transfer_matrix: NDArray[np.float64],
-        element_to_index: Callable[[str | Element, str | None], int | slice],
+        element_to_index: ELEMENT_TO_INDEX_T,
         individual: NDArray[np.float64] | None = None,
         cumulated: NDArray[np.float64] | None = None,
     ) -> None:
@@ -65,7 +65,11 @@ class TransferMatrix:
             Cumulated transfer matrices. The default is None, in which case the
             ``individual`` transfer matrices must be given.
         element_to_index :
-            to doc
+            Takes an :class:`.Element`, its name, ``'first'`` or ``'last'`` as
+            argument, and returns corresponding index. Index should be the same
+            in all the arrays attributes of this class: ``z_abs``,
+            ``beam_parameters`` attributes, etc. Used to easily ``get`` the
+            desired properties at the proper position.
 
         """
         self.is_3d = is_3d
@@ -91,11 +95,65 @@ class TransferMatrix:
         """Check if object has attribute named ``key``."""
         return hasattr(self, key)
 
+    def get_new(
+        self,
+        *keys: GETTABLE_TRANSFER_MATRIX_T,
+        elt: Element | str | None = None,
+        pos: POS_T | None = None,
+        **kwargs: Any,
+    ) -> Any:
+        """Get attributes from this class or its attributes.
+
+        Note
+        ----
+        We do not define the ``to_numpy`` and ``none_to_nan`` keyword arguments
+        here. As transfer matrices are 2D, we expect the user to want a numpy
+        array with ``np.nan`` values where invalid.
+
+        .. todo::
+            I think could be more compact.
+
+        Parameters
+        ----------
+        *keys :
+            Name of the desired attributes.
+        elt :
+            If provided, return the attributes only at the considered
+            :class:`.Element`.
+        pos :
+            If you want the attribute at the entry, exit, or in the whole
+            :class:`.Element`.
+        **kwargs :
+            Other arguments passed to recursive getter.
+
+        Returns
+        -------
+        out :
+            Attribute(s) value(s).
+
+        """
+        out = [getattr(self, key, None) for key in keys]
+
+        if elt is not None:
+            idx = self._element_to_index(elt=elt, pos=pos)
+            out = [val[idx] if val is not None else None for val in out]
+
+        out = [
+            (
+                np.array(np.nan)
+                if val is None
+                else np.array(val) if isinstance(val, list) else val
+            )
+            for val in out
+        ]
+
+        return out[0] if len(out) == 1 else tuple(out)
+
     def get(
         self,
         *keys: GETTABLE_TRANSFER_MATRIX_T,
-        elt: Element | None = None,
-        pos: Literal["in", "out"] | None = None,
+        elt: Element | str | None = None,
+        pos: POS_T | None = None,
         **kwargs: Any,
     ) -> tuple[NDArray[np.float64] | float, ...]:
         """Get attributes from this class or its attributes.
@@ -119,7 +177,7 @@ class TransferMatrix:
 
         Returns
         -------
-        out : tuple[NDArray[np.float64] | float, ...]
+        out :
             Attribute(s) value(s). Will be floats if only one value is returned
             (``elt`` is given, ``pos`` is in ``('in', 'out')``).
 
@@ -210,9 +268,8 @@ class TransferMatrix:
         """
         if cumulated is None:
             logging.error(
-                "You must provide at least one of the two "
-                "arrays: individual transfer matrices or "
-                "cumulated transfer matrices."
+                "You must provide at least one of the two arrays: individual "
+                "transfer matrices or cumulated transfer matrices."
             )
             raise OSError("Wrong input")
         n_points = cumulated.shape[0]

@@ -133,6 +133,11 @@ class Accelerator:
             such as ``"QP1"``. If the given :class:`.Element` is not in the
             :attr:`elts`, the :class:`.Element` with the same name that is
             present in this list will be used.
+        phase_space_name :
+            Used for :class:`.BeamParameters` quantities. Phase space in which
+            you want the key. The default is None. In this case, the
+            quantities from the ``zdelta`` phase space are taken. Otherwise, it
+            must be in :data:`.PHASE_SPACES`.
         **kwargs :
             Other arguments passed to recursive getter.
 

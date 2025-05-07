@@ -1,10 +1,11 @@
 """Provide an easy way to generate :class:`.TransferMatrix`."""
 
 import logging
-from typing import Any, Callable
+from typing import Any
 
 import numpy as np
 
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T
 from lightwin.core.transfer_matrix.factory import TransferMatrixFactory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
 
@@ -13,12 +14,12 @@ class TransferMatrixFactoryEnvelope3D(TransferMatrixFactory):
     """Provide a method for easy creation of :class:`.TransferMatrix`."""
 
     def _preprocess(
-        self, single_elts_results: list[dict[str, Any]]
+        self, single_elt_results: list[dict[str, Any]]
     ) -> np.ndarray:
         """Preprocess the data given by the :class:`.BeamCalculator`."""
         individual = [
             results["transfer_matrix"][i]
-            for results in single_elts_results
+            for results in single_elt_results
             for i in range(results["transfer_matrix"].shape[0])
         ]
         return np.array(individual)
@@ -27,21 +28,21 @@ class TransferMatrixFactoryEnvelope3D(TransferMatrixFactory):
         self,
         first_cumulated_transfer_matrix: np.ndarray,
         single_elts_results: list[dict[str, Any]],
-        element_to_index: Callable,
+        element_to_index: ELEMENT_TO_INDEX_T,
     ) -> TransferMatrix:
         """Create the transfer matrix from a simulation.
 
         Parameters
         ----------
-        first_cumulated_transfer_matrix : numpy.ndarray
+        first_cumulated_transfer_matrix :
             Cumulated transfer matrix at beginning of :class:`.ListOfElements`
             under study.
-        single_elts_results : list[dict[str, Any]]
+        single_elts_results :
             Results of the solver.
 
         Returns
         -------
-        TransferMatrix
+        transfer_matrix
             Holds all cumulated transfer matrices in all the planes.
 
         """

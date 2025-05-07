@@ -27,7 +27,7 @@ import pandas as pd
 from matplotlib.axes import Axes
 
 from lightwin.core.beam_parameters.beam_parameters import BeamParameters
-from lightwin.core.elements.element import Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, Element
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.core.particle import ParticleFullTrajectory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
@@ -96,7 +96,7 @@ class SimulationOutput:
 
     beam_parameters: BeamParameters
 
-    element_to_index: Callable[[str | Element, str | None], int | slice] | None
+    element_to_index: ELEMENT_TO_INDEX_T | None
     set_of_cavity_settings: SetOfCavitySettings
 
     transfer_matrix: TransferMatrix | None = None

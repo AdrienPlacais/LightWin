@@ -1,13 +1,13 @@
 """Define a function to generate a :class:`.BeamParameters` for TraceWin."""
 
-from typing import Callable, Literal
+from typing import Literal
 
 import numpy as np
 
 from lightwin.core.beam_parameters.beam_parameters import BeamParameters
 from lightwin.core.beam_parameters.factory import BeamParametersFactory
 from lightwin.core.beam_parameters.helper import reconstruct_sigma
-from lightwin.core.elements.element import Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T
 
 
 class BeamParametersFactoryTraceWin(BeamParametersFactory):
@@ -18,7 +18,7 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
         z_abs: np.ndarray,
         gamma_kin: np.ndarray,
         results: dict[str, np.ndarray],
-        element_to_index: Callable[[str | Element, str | None], int | slice],
+        element_to_index: ELEMENT_TO_INDEX_T,
     ) -> BeamParameters:
         """Create the :class:`.BeamParameters` object."""
         z_abs, gamma_kin, beta_kin = self._check_and_set_arrays(

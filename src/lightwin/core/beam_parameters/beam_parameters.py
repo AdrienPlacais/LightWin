@@ -8,7 +8,7 @@ For a list of the units associated with every parameter, see
 import logging
 import warnings
 from dataclasses import dataclass
-from typing import Any, Callable, Literal, Self
+from typing import Any, Literal, Self
 
 import numpy as np
 
@@ -22,7 +22,12 @@ from lightwin.core.beam_parameters.initial_beam_parameters import (
 from lightwin.core.beam_parameters.phase_space.phase_space_beam_parameters import (
     PhaseSpaceBeamParameters,
 )
-from lightwin.core.elements.element import Element
+from lightwin.core.elements.element import (
+    ELEMENT_TO_INDEX_T,
+    POS_T,
+    Element,
+    default_element_to_index,
+)
 from lightwin.tracewin_utils.interface import beam_parameters_to_command
 from lightwin.util.helper import recursive_getter
 from lightwin.util.typing import GETTABLE_BEAM_PARAMETERS_T, PHASE_SPACE_T
@@ -66,9 +71,7 @@ class BeamParameters(InitialBeamParameters):
     beta_kin: np.ndarray
     sigma_in: np.ndarray | None = None
 
-    element_to_index: Callable[[str | Element, str | None], int | slice] = (
-        lambda elt, pos: slice(0, -1)
-    )
+    element_to_index: ELEMENT_TO_INDEX_T = default_element_to_index
 
     def __post_init__(self) -> None:
         """Declare the phase spaces."""
@@ -90,7 +93,7 @@ class BeamParameters(InitialBeamParameters):
         none_to_nan: bool = False,
         phase_space_name: PHASE_SPACE_T | None = None,
         elt: str | Element | None = None,
-        pos: str | None = None,
+        pos: POS_T | None = None,
         **kwargs: Any,
     ) -> Any:
         """Retrieve attribute values from the beam or its nested phase spaces.
@@ -167,7 +170,7 @@ class BeamParameters(InitialBeamParameters):
         val = {key: resolve_key(key) for key in keys}
 
         if elt is not None:
-            idx = self.element_to_index(elt, pos)
+            idx = self.element_to_index(elt=elt, pos=pos)
             val = {
                 _key: (_value[idx] if _value is not None else None)
                 for _key, _value in val.items()

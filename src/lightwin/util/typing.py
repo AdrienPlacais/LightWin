@@ -1,5 +1,6 @@
 """Define types for better code-completion and linting."""
 
+from collections.abc import Callable
 from typing import Literal
 
 #: Type for the different phase spaces.
@@ -323,7 +324,6 @@ GETTABLE_TRANSFER_MATRIX = (
     "r_zz",
 )
 
-
 #: Attributes that can be extracted with :meth:`.SimulationOutput.get` method.
 GETTABLE_SIMULATION_OUTPUT_T = (
     Literal[
@@ -353,7 +353,6 @@ GETTABLE_SIMULATION_OUTPUT = (
     + GETTABLE_PARTICLE
     + GETTABLE_TRANSFER_MATRIX
 )
-
 
 #: Attributes that can be extracted with :meth:`.Accelerator.get` method.
 GETTABLE_ACCELERATOR_T = (
