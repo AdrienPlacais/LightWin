@@ -20,7 +20,7 @@ import math
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Literal, Self
+from typing import Any, Literal, Self
 
 import numpy as np
 import pandas as pd
