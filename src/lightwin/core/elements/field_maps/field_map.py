@@ -139,12 +139,29 @@ class FieldMap(Element):
         assert cavity_settings is not None
         self.cavity_settings = cavity_settings
 
+    def has(self, key: str) -> bool:
+        """
+        Tell if required attribute is in this object or its cavity settings.
+
+        Parameters
+        ----------
+        key :
+            Name of the attribute to check.
+
+        Returns
+        -------
+        bool
+            True if the key is found in ``self`` or ``self.cavity_settings``.
+
+        """
+        return super().has(key) or self.cavity_settings.has(key)
+
     def get(
         self,
         *keys: GETTABLE_FIELD_MAPS_T,
         to_numpy: bool = True,
         none_to_nan: bool = False,
-        **kwargs: bool | str | None,
+        **kwargs: Any,
     ) -> Any:
         """Get attributes from this class or its attributes.
 
@@ -153,8 +170,7 @@ class FieldMap(Element):
         *keys :
             Name of the desired attributes.
         to_numpy :
-            If you want the list output to be converted to a np.ndarray. The
-            default is True.
+            If you want the list output to be converted to a np.ndarray.
         **kwargs :
             Other arguments passed to recursive getter.
 
@@ -164,6 +180,46 @@ class FieldMap(Element):
             Attribute(s) value(s).
 
         """
+
+        def resolve_key(key: str) -> Any:
+            if key == "name":
+                return self.name
+
+            if self.cavity_settings.has(key):
+                return self.cavity_settings.get(
+                    key, to_numpy=to_numpy, none_to_nan=none_to_nan, **kwargs
+                )
+
+            if not self.has(key):
+                return None
+            return recursive_getter(key, vars(self), **kwargs)
+
+        values = [resolve_key(key) for key in keys]
+
+        if to_numpy:
+            values = [
+                (
+                    np.array(np.nan)
+                    if v is None and none_to_nan
+                    else np.array(v) if isinstance(v, list) else v
+                )
+                for v in values
+            ]
+        else:
+            values = [
+                (
+                    [np.nan]
+                    if v is None and none_to_nan
+                    else v.tolist() if isinstance(v, np.ndarray) else v
+                )
+                for v in values
+            ]
+
+        return values[0] if len(values) == 1 else tuple(values)
+
+        # return super().get(
+        #     *keys, to_numpy=to_numpy, none_to_nan=none_to_nan, **kwargs
+        # )
         val = {key: [] for key in keys}
 
         for key in keys:
@@ -193,6 +249,57 @@ class FieldMap(Element):
         ]
         if none_to_nan:
             out = [x if x is not None else np.nan for x in out]
+
+        if len(out) == 1:
+            return out[0]
+        return tuple(out)
+
+    def get_of_element_for_comparison(
+        self,
+        *keys: GETTABLE_FIELD_MAPS_T,
+        to_numpy: bool = True,
+        **kwargs: bool | str | None,
+    ) -> Any:
+        """Get attributes from this class or its attributes.
+
+        Parameters
+        ----------
+        *keys :
+            Name of the desired attributes.
+        to_numpy :
+            If you want the list output to be converted to a np.ndarray.
+        **kwargs :
+            Other arguments passed to recursive getter.
+
+        Returns
+        -------
+        out : Any
+            Attribute(s) value(s).
+
+        """
+        val = {key: [] for key in keys}
+
+        for key in keys:
+            if key == "name":
+                val[key] = self.name
+                continue
+
+            if not self.has(key):
+                val[key] = None
+                continue
+
+            val[key] = recursive_getter(key, vars(self), **kwargs)
+            if not to_numpy and isinstance(val[key], np.ndarray):
+                val[key] = val[key].tolist()
+
+        out = [
+            (
+                np.array(val[key])
+                if to_numpy and not isinstance(val[key], str)
+                else val[key]
+            )
+            for key in keys
+        ]
 
         if len(out) == 1:
             return out[0]

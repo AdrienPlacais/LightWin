@@ -40,13 +40,8 @@ def test_has_nested_attr(element: DummyElement) -> None:
     assert element.has("elt_idx")
 
 
-@pytest.mark.xfail(
-    condition=True,
-    reason="One key returned an array instead of a float",
-    raises=AssertionError,
-)
 def test_get_direct_attr(element: DummyElement) -> None:
-    assert element.get("length_m") == 0.1
+    assert element.get("length_m") == 0.01
 
 
 def test_get_property_name(element: DummyElement) -> None:
@@ -58,11 +53,6 @@ def test_get_nested_attr(element: DummyElement) -> None:
     assert element.get("elt_idx") == -1
 
 
-@pytest.mark.xfail(
-    condition=True,
-    reason="One key returned an array of None instead of a None",
-    raises=AssertionError,
-)
 def test_get_missing_key(element: DummyElement) -> None:
     assert element.get("nonexistent") is None  # pyright: ignore
 

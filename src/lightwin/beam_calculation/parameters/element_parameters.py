@@ -36,8 +36,7 @@ class ElementBeamCalculatorParameters(ABC):
         to_numpy: bool = True,
         **kwargs: Any,
     ) -> Any:
-        """
-        Shorthand to get attributes.
+        """Get attributes from this class.
 
         Parameters
         ----------
