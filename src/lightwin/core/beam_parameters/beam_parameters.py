@@ -29,26 +29,25 @@ from lightwin.util.typing import GETTABLE_BEAM_PARAMETERS_T, PHASE_SPACE_T
 
 @dataclass
 class BeamParameters(InitialBeamParameters):
-    r"""
-    Hold all emittances, envelopes, etc in various planes.
+    r"""Hold all emittances, envelopes, etc in various planes.
 
     Parameters
     ----------
     z_abs :
-        Absolute position in the linac in m.
+        Absolute position in the linac in :unit:`m`.
     gamma_kin :
         Lorentz gamma factor.
     beta_kin :
         Lorentz gamma factor.
     sigma_in :
-        Holds the (6, 6) :math:`\sigma` beam matrix at the entrance of the
-        linac/portion of linac.
+        The (6, 6) :math:`\sigma` beam matrix at the entrance of the linac/
+        portion of linac.
     zdelta, z, phiw, x, y, t :
-        Holds beam parameters respectively in the :math:`[z-z\delta]`,
+        Beam parameters respectively in the :math:`[z-z\delta]`,
         :math:`[z-z']`, :math:`[\phi-W]`, :math:`[x-x']`, :math:`[y-y']` and
         :math:`[t-t']` planes.
     phiw99, x99, y99 :
-        Holds 99% beam parameters respectively in the :math:`[\phi-W]`,
+        99% beam parameters respectively in the :math:`[\phi-W]`,
         :math:`[x-x']` and :math:`[y-y']` planes. Only used with multiparticle
         simulations.
     element_to_index :
@@ -318,18 +317,16 @@ class BeamParameters(InitialBeamParameters):
         if not hasattr(self, phase_space_name):
             if raise_missing_phase_space_error:
                 raise OSError(
-                    f"Phase space {phase_space_name} not "
-                    "defined in fixed linac. Cannot compute "
-                    "mismatch."
+                    f"Phase space {phase_space_name} not defined in fixed "
+                    "linac. Cannot compute mismatch."
                 )
             return None, None
 
         if not hasattr(reference_beam_parameters, phase_space_name):
             if raise_missing_phase_space_error:
                 raise OSError(
-                    f"Phase space {phase_space_name} not "
-                    "defined in reference linac. Cannot compute "
-                    "mismatch."
+                    f"Phase space {phase_space_name} not defined in reference "
+                    "linac. Cannot compute mismatch."
                 )
             return None, None
 
@@ -349,32 +346,32 @@ class BeamParameters(InitialBeamParameters):
         if not hasattr(self, "x"):
             if raise_missing_phase_space_error:
                 raise OSError(
-                    "Phase space x not defined in fixed linac. "
-                    "Cannot compute transverse mismatch."
+                    "Phase space x not defined in fixed linac. Cannot compute "
+                    "transverse mismatch."
                 )
             return None
 
         if not hasattr(self, "y"):
             if raise_missing_phase_space_error:
                 raise OSError(
-                    "Phase space y not defined in fixed linac. "
-                    "Cannot compute transverse mismatch."
+                    "Phase space y not defined in fixed linac. Cannot compute "
+                    "transverse mismatch."
                 )
             return None
 
         if not hasattr(self.x, "mismatch_factor"):
             if raise_missing_mismatch_error:
                 raise OSError(
-                    "Phase space x has no calculated mismatch. "
-                    "Cannot compute transverse mismatch."
+                    "Phase space x has no calculated mismatch. Cannot compute "
+                    "transverse mismatch."
                 )
             return None
 
         if not hasattr(self.y, "mismatch_factor"):
             if raise_missing_mismatch_error:
                 raise OSError(
-                    "Phase space y has no calculated mismatch. "
-                    "Cannot compute transverse mismatch."
+                    "Phase space y has no calculated mismatch. Cannot compute "
+                    "transverse mismatch."
                 )
             return None
 
@@ -388,11 +385,10 @@ def _to_float_if_necessary(
     alpha: float | np.ndarray,
     beta: float | np.ndarray,
 ) -> tuple[float, float, float]:
-    """
-    Ensure that the data given to TraceWin will be float.
+    """Ensure that the data given to TraceWin will be float.
 
-        .. deprecated:: v3.2.2.3
-            eps, alpha, beta will always be arrays of size 1.
+    .. deprecated:: v3.2.2.3
+        eps, alpha, beta will always be arrays of size 1.
 
     """
     as_arrays = (np.atleast_1d(eps), np.atleast_1d(alpha), np.atleast_1d(beta))
