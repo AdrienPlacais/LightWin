@@ -7,7 +7,6 @@
 """
 
 import logging
-from collections.abc import Callable
 from typing import Any, Literal, Protocol
 
 import numpy as np
@@ -89,60 +88,65 @@ class Element(Instruction):
         self.beam_calc_param: dict[str, ElementBeamCalculatorParameters] = {}
 
     def has(self, key: str) -> bool:
-        """Tell if the required attribute is in this class."""
+        """Check if the given key exists in this element or its nested members.
+
+        Parameters
+        ----------
+        key :
+            Name of the attribute to check.
+
+        Returns
+        -------
+        bool
+            True if the key exists, False otherwise.
+
+        """
+        if key == "name":  # @property are not caught by vars(self)
+            return True
         return key in recursive_items(vars(self))
 
     def get(
-        self,
-        *keys: GETTABLE_ELT_T,
-        to_numpy: bool = True,
-        **kwargs: bool | str | None,
+        self, *keys: GETTABLE_ELT_T, to_numpy: bool = True, **kwargs: Any
     ) -> Any:
-        """
-        Shorthand to get attributes from this class or its attributes.
+        """Get attributes from this class or its nested members.
 
         Parameters
         ----------
         *keys :
-            Name of the desired attributes.
+            Names of the desired attributes.
         to_numpy :
-            If you want the list output to be converted to a np.ndarray.
+            If True, convert lists to NumPy arrays. If False, convert NumPy
+            arrays to lists.
         **kwargs :
-            Other arguments passed to recursive getter.
+            Other arguments passed to the recursive getter.
 
         Returns
         -------
-        out : Any
-            Attribute(s) value(s).
+        out :
+            A single attribute value if one key is provided, otherwise a tuple
+            of values.
 
         """
-        val = {key: [] for key in keys}
 
-        for key in keys:
+        def resolve_key(key: str) -> Any:
             if key == "name":
-                val[key] = self.name
-                continue
-
+                return self.name
             if not self.has(key):
-                val[key] = None
-                continue
+                return None
+            return recursive_getter(key, vars(self), **kwargs)
 
-            val[key] = recursive_getter(key, vars(self), **kwargs)
-            if not to_numpy and isinstance(val[key], np.ndarray):
-                val[key] = val[key].tolist()
+        values = [resolve_key(key) for key in keys]
 
-        out = [
-            (
-                np.array(val[key])
-                if to_numpy and not isinstance(val[key], str)
-                else val[key]
-            )
-            for key in keys
-        ]
+        if to_numpy:
+            values = [
+                np.array(v) if isinstance(v, list) else v for v in values
+            ]
+        else:
+            values = [
+                v.tolist() if isinstance(v, np.ndarray) else v for v in values
+            ]
 
-        if len(out) == 1:
-            return out[0]
-        return tuple(out)
+        return values[0] if len(values) == 1 else tuple(values)
 
     def keep_rf_field(self, *args, **kwargs) -> None:
         """Save data calculated by :meth:`.BeamCalculator.run_with_this`.
