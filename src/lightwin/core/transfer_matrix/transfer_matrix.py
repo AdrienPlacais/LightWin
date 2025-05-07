@@ -95,7 +95,7 @@ class TransferMatrix:
         """Check if object has attribute named ``key``."""
         return hasattr(self, key)
 
-    def get_new(
+    def get(
         self,
         *keys: GETTABLE_TRANSFER_MATRIX_T,
         elt: Element | str | None = None,
@@ -148,58 +148,6 @@ class TransferMatrix:
         ]
 
         return out[0] if len(out) == 1 else tuple(out)
-
-    def get(
-        self,
-        *keys: GETTABLE_TRANSFER_MATRIX_T,
-        elt: Element | str | None = None,
-        pos: POS_T | None = None,
-        **kwargs: Any,
-    ) -> tuple[NDArray[np.float64] | float, ...]:
-        """Get attributes from this class or its attributes.
-
-        Parameters
-        ----------
-        *keys :
-            Name of the desired attributes.
-        to_numpy :
-            If you want the list output to be converted to a
-            :class:`NDArray[np.float64]`.
-        none_to_nan :
-            To convert None to np.nan.
-        elt :
-            If provided, return the attributes only at the considered Element.
-        pos :
-            If you want the attribute at the entry, exit, or in the whole
-            Element.
-        **kwargs :
-            Other arguments passed to recursive getter.
-
-        Returns
-        -------
-        out :
-            Attribute(s) value(s). Will be floats if only one value is returned
-            (``elt`` is given, ``pos`` is in ``('in', 'out')``).
-
-        """
-        val = {key: [] for key in keys}
-
-        for key in keys:
-            if not self.has(key):
-                val[key] = None
-                continue
-            val[key] = getattr(self, key)
-
-        if elt is not None:
-            assert self._element_to_index is not None
-            idx = self._element_to_index(elt=elt, pos=pos)
-            val = {_key: _value[idx] for _key, _value in val.items()}
-
-        if len(keys) == 1:
-            return val[keys[0]]
-
-        out = [val[key] for key in keys]
-        return tuple(out)
 
     def _init_from_individual(
         self,
