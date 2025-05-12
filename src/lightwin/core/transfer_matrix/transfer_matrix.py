@@ -104,8 +104,9 @@ class TransferMatrix:
         none_to_nan: bool = False,
         **kwargs: Any,
     ) -> Any:
-        """
-        Get attributes from this class, optionally at a specific element/position.
+        """Get attributes from this class.
+
+        Optionally, at a specific element/position.
 
         Parameters
         ----------
