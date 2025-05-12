@@ -330,6 +330,7 @@ GETTABLE_SIMULATION_OUTPUT_T = (
     Literal[
         "beam_parameters",
         "element_to_index",
+        "elt_idx",
         "phi_s",
         "set_of_cavity_settings",
         "synch_trajectory",
@@ -344,6 +345,7 @@ GETTABLE_SIMULATION_OUTPUT = (
     (
         "beam_parameters",
         "element_to_index",
+        "elt_idx",
         "phi_s",
         "set_of_cavity_settings",
         "synch_trajectory",
