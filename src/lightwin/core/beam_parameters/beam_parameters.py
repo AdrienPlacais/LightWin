@@ -140,7 +140,7 @@ class BeamParameters(InitialBeamParameters):
         elt :
             Element name for slicing data arrays.
         pos :
-            Position index for slicing data arrays.
+            Position key for slicing data arrays.
         **kwargs :
             Additional keyword arguments passed to the internal recursive
             getter.
