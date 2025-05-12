@@ -169,14 +169,77 @@ class ListOfElements(list):
         self,
         *keys: GETTABLE_ELTS_T,
         to_numpy: bool = True,
+        none_to_nan: bool = False,
+        remove_first: bool = False,
+        **kwargs: Any,
+    ) -> Any:
+        """Get attributes from this class or its contained elements.
+
+        Parameters
+        ----------
+        *keys :
+            Names of the desired attributes.
+        to_numpy :
+            Convert list outputs to NumPy arrays.
+        none_to_nan :
+            Replace ``None`` values with ``np.nan``.
+        remove_first :
+            Remove the first item of each element's attribute except for the
+            first element itself.
+        **kwargs :
+            Passed to recursive getter or :meth:`.Element.get`.
+
+        Returns
+        -------
+        Any
+            A single value or tuple of values.
+
+        """
+        results = []
+
+        for key in keys:
+            if not self.has(key):
+                val = np.nan if none_to_nan else None
+
+            elif self[0].has(key):  # gather per element
+                values = []
+                for i, elt in enumerate(self):
+                    data = elt.get(key, to_numpy=False, **kwargs)
+                    if remove_first and i > 0:
+                        data = data[1:]
+                    if isinstance(data, list):
+                        values.extend(data)
+                    else:
+                        values.append(data)
+                val = values
+
+            else:  # get from self
+                val = recursive_getter(key, vars(self), **kwargs)
+
+            if val is None and none_to_nan:
+                val = np.nan
+            if to_numpy and isinstance(val, list):
+                val = np.array(val)
+            elif not to_numpy and isinstance(val, np.ndarray):
+                val = val.tolist()
+
+            results.append(val)
+
+        return results[0] if len(results) == 1 else tuple(results)
+
+    def get_old(
+        self,
+        *keys: GETTABLE_ELTS_T,
+        to_numpy: bool = True,
         remove_first: bool = False,
         **kwargs: bool | str | Element | None,
     ) -> Any:
         """Shorthand to get attributes from this class or its attributes.
 
-        This method also looks into the first :class:`.Element` of self. If the
-        desired ``key`` is in this :class:`.Element`, we recursively get ``key``
-        from every :class:`.Element` and concatenate the output.
+        This method also looks into the first :class:`.Element` instance of
+        ``self``. If the desired ``key`` is in this :class:`.Element`, we
+        recursively get ``key`` from every :class:`.Element` and concatenate
+        the output.
 
         Parameters
         ----------
