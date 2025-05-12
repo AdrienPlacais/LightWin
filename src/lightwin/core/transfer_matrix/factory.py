@@ -41,8 +41,7 @@ class TransferMatrixFactory(ABC):
 
         Returns
         -------
-        TransferMatrix
-            Holds all cumulated transfer matrices in all the planes.
+            All cumulated transfer matrices in all the planes.
 
         """
         self._preprocess(*args, **kwargs)

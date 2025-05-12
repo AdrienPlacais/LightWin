@@ -72,13 +72,12 @@ class TransferMatrixFactoryTraceWin(TransferMatrixFactory):
         path_cal :
             Full path to transfer matrix file.
         element_to_index :
-         to doc
+            to doc
 
         Returns
         -------
-        transfer_matrix :
-            Object holding the various transfer matrices in the :math:`[x-x']`,
-            :math:`[y-y']` and :math:`[z-\delta]` planes.
+            The various transfer matrices in the :math:`[x-x']`, :math:`[y-y']`
+            and :math:`[z-\delta]` planes.
 
         """
         _, _, cumulated = self._load_transfer_matrices(path_cal)

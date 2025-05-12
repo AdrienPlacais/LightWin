@@ -42,8 +42,7 @@ class TransferMatrixFactoryEnvelope3D(TransferMatrixFactory):
 
         Returns
         -------
-        transfer_matrix
-            Holds all cumulated transfer matrices in all the planes.
+            All cumulated transfer matrices in all the planes.
 
         """
         if first_cumulated_transfer_matrix.shape != (6, 6):

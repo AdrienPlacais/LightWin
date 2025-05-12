@@ -41,8 +41,7 @@ class TransferMatrixFactoryEnvelope1D(TransferMatrixFactory):
 
         Returns
         -------
-        transfer_matrix
-            Holds all cumulated transfer matrices in all the planes.
+            All cumulated transfer matrices in all the planes.
 
         """
         first_cumulated_transfer_matrix = first_cumulated_transfer_matrix[

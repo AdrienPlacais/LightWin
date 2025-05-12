@@ -87,6 +87,11 @@ class Element(Instruction):
         self.idx = self.idx | new_idx
         self.beam_calc_param: dict[str, ElementBeamCalculatorParameters] = {}
 
+    @property
+    def name(self) -> str:
+        """Give personalized name of element if exists, default otherwise."""
+        return super().name
+
     def has(self, key: str) -> bool:
         """Check if the given key exists in this element or its nested members.
 
@@ -122,7 +127,6 @@ class Element(Instruction):
 
         Returns
         -------
-        out :
             A single attribute value if one key is provided, otherwise a tuple
             of values.
 
@@ -223,11 +227,12 @@ class ELEMENT_TO_INDEX_T(Protocol):
     Parameters
     ----------
     elt :
-        :class:`Element` for which you want position. Can be the
-        :attr:`Element.name` attribute or the :class:`Element` instance itself.
+        :class:`.Element` for which you want position. Can be the
+        :attr:`.Element.name` attribute or the :class:`.Element` instance
+        itself.
     pos :
-        Position within the :class:`Element`. If not provided, all indexes of
-        :class:`Element` will be returned.
+        Position within the :class:`.Element`. If not provided, all indexes of
+        :class:`.Element` will be returned.
     return_elt_idx :
         Return a position in a :class:`.ListOfElements` instance. Used for
         arguments such as `phi_s`, which holds one value per :class:`.Element`.
@@ -252,12 +257,12 @@ def default_element_to_index(
     Parameters
     ----------
     elt :
-        :class:`Element` for which you want position. Can be the
-        :attr:`Element.name` attribute or the :class:`Element` instance itself.
-        Actually unused in this default function.
+        :class:`.Element` for which you want position. Can be the
+        :attr:`.Element.name` attribute or the :class:`.Element` instance
+        itself. Actually unused in this default function.
     pos :
-        Position within the :class:`Element`. If not provided, all indexes of
-        :class:`Element` will be returned. Actually unused in this default
+        Position within the :class:`.Element`. If not provided, all indexes of
+        :class:`.Element` will be returned. Actually unused in this default
         function.
     return_elt_idx :
         Return a position in a :class:`.ListOfElements` instance. Used for
