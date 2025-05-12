@@ -1,0 +1,11 @@
+Entry,Type,Description,Allowed values,Mandatory?
+failed,``list``,Index/name of failed cavities. Must be a list[list[int]] or list[list[str]].,,✅
+history_kwargs,``dict``,kwargs for the :class:`.OptimizationHistory`.,,❌
+id_nature,``str``,"Indicates if failed is element index/cavity index/name, ``element`` or ``cavity`` or ``name``.","('element', 'cavity', 'name')",✅
+objective_preset,``str``,Objectives for the optimisation algorithm.,"('EnergyPhaseMismatch', 'simple_ADS', 'EnergyMismatch', 'rephased_ADS', 'EnergySyncPhaseMismatch', 'sync_phase_as_objective_ADS', 'experimental')",✅
+optimisation_algorithm,``str``,Name of optimisation algorithm.,"('least_squares', 'least_squares_penalty', 'nsga', 'downhill_simplex', 'downhill_simplex_penalty', 'nelder_mead', 'nelder_mead_penalty', 'differential_evolution', 'explorator', 'experimental')",✅
+optimisation_algorithm_kwargs,``dict``,Keyword arguments passed to the optimisation algorithm.,,❌
+strategy,``str``,How compensating cavities are selected.,"('k out of n', 'l neighboring lattices', 'global', 'global_downstream', 'manual')",✅
+tie_politics,``str``,How to select the compensating elements when several are equidistant to the failure.,"('upstream first', 'downstream first')",❌
+shift,``int``,Distance increase for downstream elements (``shift < 0``) or upstream elements (``shift > 0``). Used to have a window of compensating cavities which is not centered around the failed elements.,,❌
+k,``int``,Number of compensating cavities per failed cavity.,,✅
