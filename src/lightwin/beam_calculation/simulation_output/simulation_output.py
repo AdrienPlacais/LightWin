@@ -20,14 +20,14 @@ import math
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal, Self
+from typing import Any, Self
 
 import numpy as np
 import pandas as pd
 from matplotlib.axes import Axes
 
 from lightwin.core.beam_parameters.beam_parameters import BeamParameters
-from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, POS_T, Element
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.core.particle import ParticleFullTrajectory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
@@ -147,7 +147,10 @@ class SimulationOutput:
         return (
             key in recursive_items(vars(self))
             or self.beam_parameters.has(key)
-            or self.transfer_matrix.has(key)
+            or (
+                self.transfer_matrix is not None
+                and self.transfer_matrix.has(key)
+            )
         )
 
     def get(
@@ -155,10 +158,101 @@ class SimulationOutput:
         *keys: GETTABLE_SIMULATION_OUTPUT_T,
         to_numpy: bool = True,
         to_deg: bool = False,
+        elt: str | Element | Collection[str | Element] | None = None,
+        pos: POS_T | None = None,
+        none_to_nan: bool = False,
+        **kwargs: str | bool | None,
+    ) -> Any:
+        """Get attributes from this class or its subcomponents.
+
+        See class docstring for parameter descriptions.
+        """
+        if not isinstance(elt, str) and isinstance(elt, Collection):
+            return list(
+                flatten(
+                    [
+                        self.get(
+                            *keys,
+                            to_numpy=to_numpy,
+                            to_deg=to_deg,
+                            elt=e,
+                            pos=pos,
+                            none_to_nan=none_to_nan,
+                            **kwargs,
+                        )
+                        for e in elt
+                    ]
+                )
+            )
+
+        out: list[Any] = []
+
+        for key in keys:
+            # Special case: transfer matrix
+            if (
+                "r_" in key
+                and "mismatch_factor_" not in key
+                and self.transfer_matrix
+            ):
+                # GETTABLE_TRANSFER_MATRIX_T is in GETTABLE_SIMULATION_OUTPUT_T
+                val = self.transfer_matrix.get(
+                    key, to_numpy=False  # type: ignore[arg-type]
+                )
+            else:
+                val = recursive_getter(
+                    key, vars(self), to_numpy=False, **kwargs
+                )
+
+            # Post-process
+            if val is not None:
+                if to_deg and "phi" in key:
+                    val = _to_deg(val)
+                if elt is not None and self.element_to_index:
+                    return_elt_idx = False
+                    if key in ("v_cav_mv", "phi_s"):
+                        # With these keys, `val` holds one value per
+                        # :class:`.Element`, not one per mesh point.
+                        return_elt_idx = True
+                    idx = self.element_to_index(
+                        elt=elt, pos=pos, return_elt_idx=return_elt_idx
+                    )
+                    val = val[idx]
+                if not to_numpy and isinstance(val, np.ndarray):
+                    val = val.tolist()
+
+            out.append(val)
+
+        if none_to_nan:
+            if not to_numpy:
+                logging.error(
+                    f"{none_to_nan = } while {to_numpy = }, which is not "
+                    "supported."
+                )
+            out = [
+                (
+                    np.array(np.nan)
+                    if val is None
+                    else np.asarray(val, dtype=float)
+                )
+                for val in out
+            ]
+        elif to_numpy:
+            out = [
+                np.array(val) if not isinstance(val, str) else val
+                for val in out
+            ]
+
+        return out[0] if len(out) == 1 else tuple(out)
+
+    def get_old(
+        self,
+        *keys: GETTABLE_SIMULATION_OUTPUT_T,
+        to_numpy: bool = True,
+        to_deg: bool = False,
         elt: (
             Element | str | Collection[Element] | Collection[str] | None
         ) = None,
-        pos: Literal["in", "out"] | None = None,
+        pos: POS_T | None = None,
         none_to_nan: bool = False,
         **kwargs: str | bool | None,
     ) -> Any:
@@ -211,6 +305,8 @@ class SimulationOutput:
                 val[key] = None
                 continue
 
+            # Handle TransferMatrix arguments directly: `r_xx`, `r_yy`, `r_zz`,
+            # `r_zdelta`, but do not catch `mismatch_factor_phasespacename`
             if "r_" in key and "mismatch_factor_" not in key:
                 val[key] = self.transfer_matrix.get(
                     key, elt=elt, pos=pos, to_numpy=False, **kwargs
