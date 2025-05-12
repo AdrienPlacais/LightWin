@@ -100,11 +100,64 @@ class ParticleFullTrajectory:
         self.beta = convert.energy(self.gamma, "gamma to beta", **self.beam)
 
     def has(self, key: str) -> bool:
-        """Tell if the required attribute is in this class."""
+        """Tell if the required attribute is in this class or its subfields."""
         return key in recursive_items(vars(self))
 
     def get(
-        self, *keys: GETTABLE_PARTICLE_T, to_deg: bool = False, **kwargs: dict
+        self,
+        *keys: GETTABLE_PARTICLE_T,
+        to_numpy: bool = True,
+        none_to_nan: bool = False,
+        to_deg: bool = False,
+        **kwargs: Any,
+    ) -> Any:
+        """Get attributes from this class or its nested attributes.
+
+        Parameters
+        ----------
+        *keys :
+            Names of the desired attributes.
+        to_numpy :
+            Convert list outputs to NumPy arrays.
+        none_to_nan :
+            Convert ``None`` values to ``np.nan``.
+        to_deg :
+            Convert phase attributes (containing "phi") to degrees.
+        **kwargs :
+            Passed to recursive_getter.
+
+        Returns
+        -------
+        Any
+            A single value if one key is given, or a tuple of values.
+
+        """
+        results = []
+
+        for key in keys:
+            value = (
+                recursive_getter(key, vars(self), **kwargs)
+                if self.has(key)
+                else None
+            )
+
+            if value is None and none_to_nan:
+                value = np.nan
+
+            if to_deg and value is not None and "phi" in key:
+                value = np.rad2deg(value)
+
+            if to_numpy and isinstance(value, list):
+                value = np.array(value)
+            elif not to_numpy and isinstance(value, np.ndarray):
+                value = value.tolist()
+
+            results.append(value)
+
+        return results[0] if len(results) == 1 else tuple(results)
+
+    def get_old(
+        self, *keys: GETTABLE_PARTICLE_T, to_deg: bool = False, **kwargs: Any
     ) -> tuple[Any]:
         """Shorthand to get attributes."""
         val = {}
