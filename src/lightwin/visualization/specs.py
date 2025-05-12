@@ -62,7 +62,7 @@ PLOTS_CONFIG = (
     KeyValConfSpec(
         key="kwargs",
         types=(dict,),
-        description="kwargs passed to :func:`matplotlib.pyplot.plot`.",
+        description="kwargs passed to |axplot|.",
         default_value={},
         is_mandatory=False,
     ),
