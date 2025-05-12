@@ -100,6 +100,59 @@ class TransferMatrix:
         *keys: GETTABLE_TRANSFER_MATRIX_T,
         elt: Element | str | None = None,
         pos: POS_T | None = None,
+        to_numpy: bool = True,
+        none_to_nan: bool = False,
+        **kwargs: Any,
+    ) -> Any:
+        """
+        Get attributes from this class, optionally at a specific element/position.
+
+        Parameters
+        ----------
+        *keys :
+            Names of the desired attributes.
+        elt :
+            Element or its name where the value should be extracted.
+        pos :
+            Position in the element.
+        to_numpy :
+            Convert lists to NumPy arrays.
+        none_to_nan :
+            Replace ``None`` values with ``np.nan``.
+        **kwargs :
+            Ignored here, but accepted for compatibility.
+
+        Returns
+        -------
+        Any
+            Attribute(s) at the requested location.
+        """
+        out = []
+
+        for key in keys:
+            val = getattr(self, key, None)
+
+            if elt is not None:
+                idx = self._element_to_index(elt=elt, pos=pos)
+                val = val[idx] if val is not None else None
+
+            if none_to_nan and val is None:
+                val = np.nan
+
+            if to_numpy and isinstance(val, list):
+                val = np.array(val)
+            elif not to_numpy and isinstance(val, np.ndarray):
+                val = val.tolist()
+
+            out.append(val)
+
+        return out[0] if len(out) == 1 else tuple(out)
+
+    def get_old(
+        self,
+        *keys: GETTABLE_TRANSFER_MATRIX_T,
+        elt: Element | str | None = None,
+        pos: POS_T | None = None,
         **kwargs: Any,
     ) -> Any:
         """Get attributes from this class or its attributes.
