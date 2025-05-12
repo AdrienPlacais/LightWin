@@ -149,60 +149,6 @@ class TransferMatrix:
 
         return out[0] if len(out) == 1 else tuple(out)
 
-    def get_old(
-        self,
-        *keys: GETTABLE_TRANSFER_MATRIX_T,
-        elt: Element | str | None = None,
-        pos: POS_T | None = None,
-        **kwargs: Any,
-    ) -> Any:
-        """Get attributes from this class or its attributes.
-
-        Note
-        ----
-        We do not define the ``to_numpy`` and ``none_to_nan`` keyword arguments
-        here. As transfer matrices are 2D, we expect the user to want a numpy
-        array with ``np.nan`` values where invalid.
-
-        .. todo::
-            I think could be more compact.
-
-        Parameters
-        ----------
-        *keys :
-            Name of the desired attributes.
-        elt :
-            If provided, return the attributes only at the considered
-            :class:`.Element`.
-        pos :
-            If you want the attribute at the entry, exit, or in the whole
-            :class:`.Element`.
-        **kwargs :
-            Other arguments passed to recursive getter.
-
-        Returns
-        -------
-        out :
-            Attribute(s) value(s).
-
-        """
-        out = [getattr(self, key, None) for key in keys]
-
-        if elt is not None:
-            idx = self._element_to_index(elt=elt, pos=pos)
-            out = [val[idx] if val is not None else None for val in out]
-
-        out = [
-            (
-                np.array(np.nan)
-                if val is None
-                else np.array(val) if isinstance(val, list) else val
-            )
-            for val in out
-        ]
-
-        return out[0] if len(out) == 1 else tuple(out)
-
     def _init_from_individual(
         self,
         individual: NDArray[np.float64],

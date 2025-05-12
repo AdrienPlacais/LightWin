@@ -156,30 +156,6 @@ class ParticleFullTrajectory:
 
         return results[0] if len(results) == 1 else tuple(results)
 
-    def get_old(
-        self, *keys: GETTABLE_PARTICLE_T, to_deg: bool = False, **kwargs: Any
-    ) -> tuple[Any]:
-        """Shorthand to get attributes."""
-        val = {}
-        for key in keys:
-            val[key] = []
-
-        for key in keys:
-            if not self.has(key):
-                val[key] = None
-                continue
-
-            val[key] = recursive_getter(key, vars(self), **kwargs)
-
-            if val[key] is not None and to_deg and "phi" in key:
-                val[key] = np.rad2deg(val[key])
-
-        out = [val[key] for key in keys]
-
-        if len(out) == 1:
-            return out[0]
-        return tuple(out)
-
 
 # def create_rand_particles(e_0_mev):
 #     """Create two random particles."""
