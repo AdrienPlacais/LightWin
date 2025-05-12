@@ -18,7 +18,7 @@ import pandas as pd
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from lightwin.core.elements.element import Element
+from lightwin.core.elements.element import POS_T, Element
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.helper import (
     elt_at_this_s_idx,
@@ -101,6 +101,103 @@ class Accelerator:
         return key in recursive_items(vars(self))
 
     def get(
+        self,
+        *keys: GETTABLE_ACCELERATOR_T,
+        to_numpy: bool = True,
+        none_to_nan: bool = False,
+        elt: str | Element | None = None,
+        pos: POS_T | None = None,
+        **kwargs: Any,
+    ) -> Any:
+        """
+        Get attributes from this instance or its attributes.
+
+        .. note::
+            Simulation-related quantities (e.g., beam parameters, transfer
+            matrices) are stored in the :attr:`simulation_outputs` dictionary,
+            where each key is the name of a :class:`.BeamCalculator` solver
+            (e.g., ``"CyEnvelope1D_0"``, ``"TraceWin_1"``), and each value is a
+            corresponding :class:`.SimulationOutput` object.
+
+            If simulations have been performed using multiple solvers,
+            :meth:`Accelerator.get` becomes ambiguous and should be avoided
+            for solver-dependent data. In that case, prefer calling
+            ``accelerator.simulation_outputs[solver_name].get(...)`` directly.
+
+        Parameters
+        ----------
+        *keys :
+            Names of the desired attributes.
+        to_numpy :
+            Convert list outputs to NumPy arrays.
+        none_to_nan :
+            Replace ``None`` values with ``np.nan``.
+        elt :
+            Target element name or instance, passed to recursive_getter.
+        pos :
+            Position key for slicing data arrays.
+        **kwargs :
+            Additional arguments for recursive_getter.
+
+        Returns
+        -------
+        Any
+            A single value or tuple of values.
+        """
+        results = []
+
+        for key in keys:
+            if key in GETTABLE_SIMULATION_OUTPUT:
+                msg = (
+                    f"{key = }: use `SimulationOutput.get()` for "
+                    "simulation-related attributes. `Accelerator.get()` may be"
+                    " ambiguous when multiple outputs exist."
+                )
+                log = (
+                    logging.error
+                    if len(self.simulation_outputs) > 1
+                    else logging.warning
+                )
+                log(msg)
+
+            if key in self._special_getters:
+                if elt is not None:
+                    logging.error(
+                        f"Cannot resolve special getter with {elt = }."
+                    )
+                value = self._special_getters[key](self)
+
+            elif not self.has(key):
+                value = None
+
+            else:
+                if elt is not None and (
+                    isinstance(elt, str) or elt not in self.elts
+                ):
+                    elt = self.equivalent_elt(elt)
+                value = recursive_getter(
+                    key,
+                    vars(self),
+                    to_numpy=False,
+                    none_to_nan=False,
+                    elt=elt,
+                    pos=pos,
+                    **kwargs,
+                )
+
+            if value is None and none_to_nan:
+                value = np.nan
+
+            if to_numpy and isinstance(value, list):
+                value = np.array(value)
+            elif not to_numpy and isinstance(value, np.ndarray):
+                value = value.tolist()
+
+            results.append(value)
+
+        return results[0] if len(results) == 1 else tuple(results)
+
+    def get_old(
         self,
         *keys: GETTABLE_ACCELERATOR_T,
         to_numpy: bool = True,
