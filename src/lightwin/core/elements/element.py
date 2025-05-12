@@ -102,7 +102,6 @@ class Element(Instruction):
 
         Returns
         -------
-        bool
             True if the key exists, False otherwise.
 
         """
@@ -239,7 +238,6 @@ class ELEMENT_TO_INDEX_T(Protocol):
 
     Returns
     -------
-    indexes : int | slice
         Index(es) of given ``elt``, at given ``pos``. Returns all indexes in
         this default function.
 
@@ -271,7 +269,6 @@ def default_element_to_index(
 
     Returns
     -------
-    indexes : int | slice
         Index(es) of given ``elt``, at given ``pos``. Returns all indexes in
         this default function.
 
