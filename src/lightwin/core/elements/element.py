@@ -211,12 +211,41 @@ class ELEMENT_TO_INDEX_T(Protocol):
     """
 
     def __call__(
-        self, *, elt: str | Element, pos: POS_T | None = None
+        self,
+        *,
+        elt: str | Element,
+        pos: POS_T | None = None,
+        return_elt_idx: bool = False,
     ) -> int | slice: ...
+
+    """Return indexes of element ``elt``.
+
+    Parameters
+    ----------
+    elt :
+        :class:`Element` for which you want position. Can be the
+        :attr:`Element.name` attribute or the :class:`Element` instance itself.
+    pos :
+        Position within the :class:`Element`. If not provided, all indexes of
+        :class:`Element` will be returned.
+    return_elt_idx :
+        Return a position in a :class:`.ListOfElements` instance. Used for
+        arguments such as `phi_s`, which holds one value per :class:`.Element`.
+
+    Returns
+    -------
+    indexes : int | slice
+        Index(es) of given ``elt``, at given ``pos``. Returns all indexes in
+        this default function.
+
+    """
 
 
 def default_element_to_index(
-    *, elt: str | Element, pos: POS_T | None = None
+    *,
+    elt: str | Element,
+    pos: POS_T | None = None,
+    return_elt_idx: bool = False,
 ) -> int | slice:
     """Return all indexes whatever the inputs are.
 
@@ -230,6 +259,10 @@ def default_element_to_index(
         Position within the :class:`Element`. If not provided, all indexes of
         :class:`Element` will be returned. Actually unused in this default
         function.
+    return_elt_idx :
+        Return a position in a :class:`.ListOfElements` instance. Used for
+        arguments such as `phi_s`, which holds one value per :class:`.Element`.
+        Actually unused in this default function.
 
     Returns
     -------
@@ -240,6 +273,6 @@ def default_element_to_index(
     """
     logging.warning(
         "Actual ``element_to_index`` was not set, you are calling a default. "
-        f"{elt = }; {pos = }."
+        f"{elt = }; {pos = }, {return_elt_idx = }."
     )
     return slice(0, -1)
