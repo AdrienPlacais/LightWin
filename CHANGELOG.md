@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [0.10.x]
 
-## [0.10.0] - 2025-06-06
+## [0.10.1]
+
+### Fixed
+
+- Update of `CITATION.cff`, `CHANGELOG.md`
+
+## [0.10.0] -- 2025-06-06
 
 ### Added
 
