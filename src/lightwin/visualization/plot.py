@@ -133,7 +133,7 @@ def factory(
         If you provide only the two first linacs, the function will still work
         but they will be plotted twice.
     plots :
-        The plot TOML table.
+        The plot ``TOML`` table.
     save_fig :
         If Figures should be saved.
     clean_fig :
@@ -142,7 +142,7 @@ def factory(
         If provided, the position of the :class:`.Objective` will also appear
         on plots.
     kwargs :
-        Other tables from the TOML configuration file.
+        Other tables from the ``TOML`` configuration file.
 
     Returns
     -------

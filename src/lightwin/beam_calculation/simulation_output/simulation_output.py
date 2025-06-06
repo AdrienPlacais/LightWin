@@ -20,14 +20,14 @@ import math
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Literal, Self
+from typing import Any, Self
 
 import numpy as np
 import pandas as pd
 from matplotlib.axes import Axes
 
 from lightwin.core.beam_parameters.beam_parameters import BeamParameters
-from lightwin.core.elements.element import Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, POS_T, Element
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.core.particle import ParticleFullTrajectory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
@@ -40,7 +40,10 @@ from lightwin.util.helper import (
     recursive_items,
 )
 from lightwin.util.pickling import MyPickler
-from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
+from lightwin.util.typing import (
+    CONCATENABLE_ELTS,
+    GETTABLE_SIMULATION_OUTPUT_T,
+)
 
 
 @dataclass
@@ -96,7 +99,7 @@ class SimulationOutput:
 
     beam_parameters: BeamParameters
 
-    element_to_index: Callable[[str | Element, str | None], int | slice] | None
+    element_to_index: ELEMENT_TO_INDEX_T | None
     set_of_cavity_settings: SetOfCavitySettings
 
     transfer_matrix: TransferMatrix | None = None
@@ -147,7 +150,10 @@ class SimulationOutput:
         return (
             key in recursive_items(vars(self))
             or self.beam_parameters.has(key)
-            or self.transfer_matrix.has(key)
+            or (
+                self.transfer_matrix is not None
+                and self.transfer_matrix.has(key)
+            )
         )
 
     def get(
@@ -155,98 +161,96 @@ class SimulationOutput:
         *keys: GETTABLE_SIMULATION_OUTPUT_T,
         to_numpy: bool = True,
         to_deg: bool = False,
-        elt: (
-            Element | str | Collection[Element] | Collection[str] | None
-        ) = None,
-        pos: Literal["in", "out"] | None = None,
+        elt: str | Element | Collection[str | Element] | None = None,
+        pos: POS_T | None = None,
         none_to_nan: bool = False,
         **kwargs: str | bool | None,
     ) -> Any:
-        """Get attributes from this class or its attributes.
+        """Get attributes from this class or its subcomponents.
+
+        See class docstring for parameter descriptions.
 
         Parameters
         ----------
         *keys :
-            Name of the desired attributes.
+            Names of the desired attributes.
         to_numpy :
-            If you want the list output to be converted to a
-            :class:`numpy.array`.
+            Convert list outputs to NumPy arrays.
         to_deg :
-            To convert entries with ``"phi"`` in their name to degrees.
+            Multiply keys with ``"phi"`` by ``180 / pi``.
         elt :
-            If provided, return the attributes only at the considered
-            element(s).
+            Target element name or instance, passed to recursive_getter.
         pos :
-            If you want the attribute at the entry, exit, or in the whole
-            element.
+            Position key for slicing data arrays.
         none_to_nan :
-            To convert ``None`` to ``numpy.nan``.
+            Replace ``None`` values with ``np.nan``.
         **kwargs :
-            Other arguments passed to recursive getter.
+            Additional arguments for recursive_getter.
 
         Returns
         -------
-        out : Any
-            Attribute(s) value(s).
+        Any
+            A single value or tuple of values.
 
         """
         if not isinstance(elt, str) and isinstance(elt, Collection):
-            out = [
-                self.get(
-                    *keys,
-                    to_numpy=to_numpy,
-                    to_deg=to_deg,
-                    elt=x,
-                    pos=pos,
-                    none_to_nan=none_to_nan,
-                    **kwargs,
+            return list(
+                flatten(
+                    [
+                        self.get(
+                            *keys,
+                            to_numpy=to_numpy,
+                            to_deg=to_deg,
+                            elt=e,
+                            pos=pos,
+                            none_to_nan=none_to_nan,
+                            **kwargs,
+                        )
+                        for e in elt
+                    ]
                 )
-                for x in elt
-            ]
-            return list(flatten(out))
-        val = {key: [] for key in keys}
+            )
 
+        out: list[Any] = []
         for key in keys:
-            if not self.has(key):
-                val[key] = None
-                continue
-
-            if "r_" in key and "mismatch_factor_" not in key:
-                val[key] = self.transfer_matrix.get(
-                    key, elt=elt, pos=pos, to_numpy=False, **kwargs
+            if key in CONCATENABLE_ELTS:
+                logging.warning(
+                    f"{key = } is structure-dependent and does not vary from "
+                    "simulation to simulation. You may be better of calling "
+                    "`Accelerator.get` or `ListOfElements.get`."
                 )
-                continue
 
-            val[key] = recursive_getter(
-                key, vars(self), to_numpy=False, **kwargs
-            )
-
-            if val[key] is None:
-                continue
-
-            if to_deg and "phi" in key:
-                val[key] = _to_deg(val[key])
-
-            if not to_numpy and isinstance(val[key], np.ndarray):
-                val[key] = val[key].tolist()
-
-            if None not in (self.element_to_index, elt):
-                return_elt_idx = False
-                if key in ("v_cav_mv", "phi_s"):
-                    return_elt_idx = True
-                idx = self.element_to_index(
-                    elt=elt, pos=pos, return_elt_idx=return_elt_idx
+            # Special case: transfer matrix
+            if (
+                "r_" in key
+                and "mismatch_factor_" not in key
+                and self.transfer_matrix
+            ):
+                val = self.transfer_matrix.get(
+                    key, to_numpy=False  # type: ignore[arg-type]
                 )
-                val[key] = val[key][idx]
+            else:
+                val = recursive_getter(
+                    key, vars(self), to_numpy=False, **kwargs
+                )
 
-        out = [
-            (
-                np.array(val[key])
-                if to_numpy and not isinstance(val[key], str)
-                else val[key]
-            )
-            for key in keys
-        ]
+            if val is not None:
+                if to_deg and "phi" in key:
+                    val = _to_deg(val)
+                if elt is not None and self.element_to_index:
+                    return_elt_idx = False
+                    if key in CONCATENABLE_ELTS:
+                        # With these keys, `val` holds one value per
+                        # :class:`.Element`, not one per mesh point.
+                        return_elt_idx = True
+                    idx = self.element_to_index(
+                        elt=elt, pos=pos, return_elt_idx=return_elt_idx
+                    )
+                    val = val[idx]
+                if not to_numpy and isinstance(val, np.ndarray):
+                    val = val.tolist()
+
+            out.append(val)
 
         if none_to_nan:
             if not to_numpy:
@@ -254,11 +258,21 @@ class SimulationOutput:
                     f"{none_to_nan = } while {to_numpy = }, which is not "
                     "supported."
                 )
-            out = [val.astype(float) for val in out]
+            out = [
+                (
+                    np.array(np.nan)
+                    if val is None
+                    else np.asarray(val, dtype=float)
+                )
+                for val in out
+            ]
+        elif to_numpy:
+            out = [
+                np.array(val) if not isinstance(val, str) else val
+                for val in out
+            ]
 
-        if len(out) == 1:
-            return out[0]
-        return tuple(out)
+        return out[0] if len(out) == 1 else tuple(out)
 
     def compute_complementary_data(
         self,

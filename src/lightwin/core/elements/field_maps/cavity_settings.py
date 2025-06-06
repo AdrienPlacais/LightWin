@@ -81,8 +81,8 @@ class CavitySettings:
         k_e :
             Amplitude of the electric field.
         phi :
-            Input phase. Must be absolute or relative entry phase, or
-            synchronous phase.
+            Input phase in radians. Must be absolute or relative entry phase,
+            or synchronous phase.
         reference :
             Name of the phase used for reference. When a particle enters the
             cavity, this is the phase that is not recomputed.
@@ -271,14 +271,17 @@ class CavitySettings:
         self,
         *keys: GETTABLE_CAVITY_SETTINGS_T,
         to_deg: bool = False,
-        **kwargs: bool | str | None,
+        **kwargs: Any,
     ) -> Any:
-        """Shorthand to get attributes from this class or its attributes.
+        r"""Get attributes from this class or its nested members.
 
         Parameters
         ----------
         *keys :
             Name of the desired attributes.
+        to_deg :
+            Wether keys with ``"phi"`` in their name should be multiplied by
+            :math:`360 / 2\pi`.
         **kwargs :
             Other arguments passed to recursive getter.
 
@@ -288,6 +291,15 @@ class CavitySettings:
             Attribute(s) value(s).
 
         """
+        values = [getattr(self, key, None) for key in keys]
+
+        if to_deg:
+            values = [
+                math.degrees(v) if "phi" in key and v is not None else v
+                for v, key in zip(values, keys)
+            ]
+
+        return values[0] if len(values) == 1 else tuple(values)
         val: dict[str, Any] = {key: [] for key in keys}
 
         for key in keys:

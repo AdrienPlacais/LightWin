@@ -1,27 +1,27 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
-title: "LightWin"
+message: If you use this software, please cite it as below.
+title: LightWin
 abstract: A tool dedicated to finding cavity failure compensation settings in linacs.
-version: 0.9.4
-date-released: '2025-05-06'
+version: 0.10.0
+date-released: '2025-06-06'
 authors:
-  - family-names: Plaçais
-    given-names: Adrien
-    orcid: "https://orcid.org/0000-0001-6840-1685"
-  - family-names: Bouly
-    given-names: Frédéric
-    orcid: "https://orcid.org/0000-0002-4030-7694"
-  - family-names: Lagniel
-    given-names: Jean-Michel
-  - family-names: Uriot
-    given-names: Didier
-    orcid: "https://orcid.org/0000-0003-1568-8488"
-  - family-names: Yee-Rendon
-    given-names: Bruce
-    orcid: "https://orcid.org/0000-0002-4589-818X"
+- family-names: Plaçais
+  given-names: Adrien
+  orcid: https://orcid.org/0000-0001-6840-1685
+- family-names: Bouly
+  given-names: Frédéric
+  orcid: https://orcid.org/0000-0002-4030-7694
+- family-names: Lagniel
+  given-names: Jean-Michel
+- family-names: Uriot
+  given-names: Didier
+  orcid: https://orcid.org/0000-0003-1568-8488
+- family-names: Yee-Rendon
+  given-names: Bruce
+  orcid: https://orcid.org/0000-0002-4589-818X
 identifiers:
-  - description: This is the article that presented the code.
-    type: doi
-    value: "10.0000/nan.00000000"
+- description: This is the article that presented the code.
+  type: doi
+  value: 10.0000/nan.00000000
 license: MIT
-repository-code: "https://github.com/AdrienPlacais/LightWin"
+repository-code: https://github.com/AdrienPlacais/LightWin

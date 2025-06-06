@@ -1,12 +1,10 @@
 """Define a function to generate a :class:`.BeamParameters` for Envelope3D."""
 
-from typing import Callable
-
 import numpy as np
 
 from lightwin.core.beam_parameters.beam_parameters import BeamParameters
 from lightwin.core.beam_parameters.factory import BeamParametersFactory
-from lightwin.core.elements.element import Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
 
 
@@ -19,7 +17,7 @@ class BeamParametersFactoryEnvelope3D(BeamParametersFactory):
         z_abs: np.ndarray,
         gamma_kin: np.ndarray,
         transfer_matrix: TransferMatrix,
-        element_to_index: Callable[[str | Element, str | None], int | slice],
+        element_to_index: ELEMENT_TO_INDEX_T,
     ) -> BeamParameters:
         """Create the :class:`.BeamParameters` object."""
         z_abs, gamma_kin, beta_kin = self._check_and_set_arrays(

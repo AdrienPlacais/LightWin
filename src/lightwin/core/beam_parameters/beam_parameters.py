@@ -8,45 +8,52 @@ For a list of the units associated with every parameter, see
 import logging
 import warnings
 from dataclasses import dataclass
-from typing import Any, Callable, Literal, Self
+from typing import Any, Literal, Self
 
 import numpy as np
 
-from lightwin.core.beam_parameters.initial_beam_parameters import (
-    InitialBeamParameters,
+from lightwin.core.beam_parameters.helper import (
     phase_space_name_hidden_in_key,
     separate_var_from_phase_space,
+)
+from lightwin.core.beam_parameters.initial_beam_parameters import (
+    InitialBeamParameters,
 )
 from lightwin.core.beam_parameters.phase_space.phase_space_beam_parameters import (
     PhaseSpaceBeamParameters,
 )
-from lightwin.core.elements.element import Element
+from lightwin.core.elements.element import (
+    ELEMENT_TO_INDEX_T,
+    POS_T,
+    Element,
+    default_element_to_index,
+)
 from lightwin.tracewin_utils.interface import beam_parameters_to_command
+from lightwin.util.helper import recursive_getter
 from lightwin.util.typing import GETTABLE_BEAM_PARAMETERS_T, PHASE_SPACE_T
 
 
 @dataclass
 class BeamParameters(InitialBeamParameters):
-    r"""
-    Hold all emittances, envelopes, etc in various planes.
+    r"""Hold all emittances, envelopes, etc in various planes.
 
     Parameters
     ----------
     z_abs :
-        Absolute position in the linac in m.
+        Absolute position in the linac in :unit:`m`.
     gamma_kin :
         Lorentz gamma factor.
     beta_kin :
         Lorentz gamma factor.
     sigma_in :
-        Holds the (6, 6) :math:`\sigma` beam matrix at the entrance of the
-        linac/portion of linac.
+        The (6, 6) :math:`\sigma` beam matrix at the entrance of the linac/
+        portion of linac.
     zdelta, z, phiw, x, y, t :
-        Holds beam parameters respectively in the :math:`[z-z\delta]`,
+        Beam parameters respectively in the :math:`[z-z\delta]`,
         :math:`[z-z']`, :math:`[\phi-W]`, :math:`[x-x']`, :math:`[y-y']` and
         :math:`[t-t']` planes.
     phiw99, x99, y99 :
-        Holds 99% beam parameters respectively in the :math:`[\phi-W]`,
+        99% beam parameters respectively in the :math:`[\phi-W]`,
         :math:`[x-x']` and :math:`[y-y']` planes. Only used with multiparticle
         simulations.
     element_to_index :
@@ -64,9 +71,7 @@ class BeamParameters(InitialBeamParameters):
     beta_kin: np.ndarray
     sigma_in: np.ndarray | None = None
 
-    element_to_index: Callable[[str | Element, str | None], int | slice] = (
-        lambda _elt, _pos: slice(0, -1)
-    )
+    element_to_index: ELEMENT_TO_INDEX_T = default_element_to_index
 
     def __post_init__(self) -> None:
         """Declare the phase spaces."""
@@ -86,105 +91,104 @@ class BeamParameters(InitialBeamParameters):
         *keys: GETTABLE_BEAM_PARAMETERS_T,
         to_numpy: bool = True,
         none_to_nan: bool = False,
-        elt: Element | None = None,
-        pos: Literal["in", "out"] | None = None,
         phase_space_name: PHASE_SPACE_T | None = None,
+        elt: str | Element | None = None,
+        pos: POS_T | None = None,
         **kwargs: Any,
     ) -> Any:
-        """Get attributes from this class or its attributes.
+        """Retrieve attribute values from the beam or its nested phase spaces.
+
+        This method supports flexible ways of accessing attributes such as
+        ``alpha``, ``beta``, etc., which are common to all
+        :class:`.PhaseSpaceBeamParameters`. Attributes can be retrieved
+        directly, from a specific phase space, or using a compound key like
+        ``"alpha_zdelta"``.
+
+        If a ``phase_space_name`` is provided, the method will first attempt to
+        resolve all keys through that phase space. If a key is not found there,
+        it will fall back to a recursive global search.
 
         Notes
         -----
-        What is particular in this getter is that all
-        :class:`.PhaseSpaceBeamParameters` objects have attributes with the
-        same name: ``twiss``, ``alpha``, ``beta``, ``gamma``, ``eps``, etc.
+        All phase space components (e.g., ``x``, ``y``, ``z``, ``zdelta``)
+        share the same attribute names. To disambiguate, you can either:
+        - Provide a ``phase_space_name`` argument, or
+        - Use compound keys such as ``"alpha_zdelta"``.
 
-        Hence, you must provide either a ``phase_space_name`` argument which
-        shall be in :data:`.PHASE_SPACES`, either or you must append the name
-        of the phase space to the name of the desired variable with an
-        underscore.
+        If neither method is used and ambiguity arises, a recursive search is
+        performed.
 
         Examples
         --------
-        >>> beam_parameters: BeamParameters
         >>> beam_parameters.get("beta", phase_space_name="zdelta")
         >>> beam_parameters.get("beta_zdelta")  # Alternative
-        >>> beam_parameters.get("beta")  # Incorrect
+        >>> beam_parameters.get("beta")  # May fail or be ambiguous
 
         Parameters
         ----------
         *keys :
-            Name of the desired attributes.
+            One or more names of attributes to retrieve.
         to_numpy :
-            If you want the list output to be converted to a np.ndarray.
+            Whether to convert list-like outputs to NumPy arrays. The default
+            is True.
         none_to_nan :
-            To convert None to np.nan.
-        elt :
-            If provided, return the attributes only at the considered Element.
-        pos :
-            If you want the attribute at the entry, exit, or in the whole
-            :class:`.Element`. The default is None, in which case you get an
-            array with ``keys`` from the start to the end of the element.
+            Whether to convert ``None`` values to ``np.nan``. The default is
+            False.
         phase_space_name :
-            Phase space in which you want the key. The default is None. In this
-            case, the quantities from the ``zdelta`` phase space are taken.
-            Otherwise, it must be in :data:`.PHASE_SPACES`.
-        **kwargs: Any
-            Other arguments passed to recursive getter.
+            If specified, restricts the search to the given phase space
+            component before falling back.
+        elt :
+            Element name for slicing data arrays.
+        pos :
+            Position key for slicing data arrays.
+        **kwargs :
+            Additional keyword arguments passed to the internal recursive
+            getter.
 
         Returns
         -------
-        out : Any
-            Attribute(s) value(s).
+        Any
+            A single value if one key is provided, or a tuple of values if
+            multiple keys are given.
 
         """
-        assert "phase_space" not in kwargs
-        val = {key: [] for key in keys}
 
-        # Explicitely look into a specific PhaseSpaceBeamParameters
-        if phase_space_name is not None:
-            phase_space = getattr(self, phase_space_name)
-            val = {key: getattr(phase_space, key) for key in keys}
+        def resolve_key(key: str) -> Any:
+            if phase_space_name:
+                phase = getattr(self, phase_space_name, None)
+                if phase and hasattr(phase, key):
+                    return getattr(phase, key)
 
-        else:
-            for key in keys:
-                if phase_space_name_hidden_in_key(key):
-                    short_key, phase_space_name = (
-                        separate_var_from_phase_space(key)
-                    )
-                    assert hasattr(self, phase_space_name), (
-                        f"{phase_space_name = } not set for current "
-                        "BeamParameters object."
-                    )
-                    phase_space = getattr(self, phase_space_name)
-                    val[key] = getattr(phase_space, short_key)
-                    continue
+            if phase_space_name_hidden_in_key(key):
+                short_key, ps_name = separate_var_from_phase_space(key)
+                phase = getattr(self, ps_name, None)
+                if phase and hasattr(phase, short_key):
+                    return getattr(phase, short_key)
 
-                # Look for key in BeamParameters
-                if self.has(key):
-                    val[key] = getattr(self, key)
-                    continue
+            return recursive_getter(key, vars(self), **kwargs)
 
-                val[key] = None
+        val = {key: resolve_key(key) for key in keys}
 
         if elt is not None:
             idx = self.element_to_index(elt=elt, pos=pos)
             val = {
-                _key: _value[idx] if _value is not None else None
+                _key: (_value[idx] if _value is not None else None)
                 for _key, _value in val.items()
             }
 
         out = [val[key] for key in keys]
+
         if to_numpy:
             out = [
-                np.array(val) if isinstance(val, list) else val for val in out
+                (
+                    np.array(np.nan)
+                    if v is None and none_to_nan
+                    else np.array(v) if isinstance(v, list) else v
+                )
+                for v in out
             ]
-            if none_to_nan:
-                out = [val.astype(float) for val in out]
 
-        if len(out) == 1:
-            return out[0]
-        return tuple(out)
+        return out[0] if len(out) == 1 else tuple(out)
 
     @property
     def sigma(self) -> np.ndarray:
@@ -316,18 +320,16 @@ class BeamParameters(InitialBeamParameters):
         if not hasattr(self, phase_space_name):
             if raise_missing_phase_space_error:
                 raise OSError(
-                    f"Phase space {phase_space_name} not "
-                    "defined in fixed linac. Cannot compute "
-                    "mismatch."
+                    f"Phase space {phase_space_name} not defined in fixed "
+                    "linac. Cannot compute mismatch."
                 )
             return None, None
 
         if not hasattr(reference_beam_parameters, phase_space_name):
             if raise_missing_phase_space_error:
                 raise OSError(
-                    f"Phase space {phase_space_name} not "
-                    "defined in reference linac. Cannot compute "
-                    "mismatch."
+                    f"Phase space {phase_space_name} not defined in reference "
+                    "linac. Cannot compute mismatch."
                 )
             return None, None
 
@@ -347,32 +349,32 @@ class BeamParameters(InitialBeamParameters):
         if not hasattr(self, "x"):
             if raise_missing_phase_space_error:
                 raise OSError(
-                    "Phase space x not defined in fixed linac. "
-                    "Cannot compute transverse mismatch."
+                    "Phase space x not defined in fixed linac. Cannot compute "
+                    "transverse mismatch."
                 )
             return None
 
         if not hasattr(self, "y"):
             if raise_missing_phase_space_error:
                 raise OSError(
-                    "Phase space y not defined in fixed linac. "
-                    "Cannot compute transverse mismatch."
+                    "Phase space y not defined in fixed linac. Cannot compute "
+                    "transverse mismatch."
                 )
             return None
 
         if not hasattr(self.x, "mismatch_factor"):
             if raise_missing_mismatch_error:
                 raise OSError(
-                    "Phase space x has no calculated mismatch. "
-                    "Cannot compute transverse mismatch."
+                    "Phase space x has no calculated mismatch. Cannot compute "
+                    "transverse mismatch."
                 )
             return None
 
         if not hasattr(self.y, "mismatch_factor"):
             if raise_missing_mismatch_error:
                 raise OSError(
-                    "Phase space y has no calculated mismatch. "
-                    "Cannot compute transverse mismatch."
+                    "Phase space y has no calculated mismatch. Cannot compute "
+                    "transverse mismatch."
                 )
             return None
 
@@ -386,11 +388,10 @@ def _to_float_if_necessary(
     alpha: float | np.ndarray,
     beta: float | np.ndarray,
 ) -> tuple[float, float, float]:
-    """
-    Ensure that the data given to TraceWin will be float.
+    """Ensure that the data given to TraceWin will be float.
 
-        .. deprecated:: v3.2.2.3
-            eps, alpha, beta will always be arrays of size 1.
+    .. deprecated:: v3.2.2.3
+        eps, alpha, beta will always be arrays of size 1.
 
     """
     as_arrays = (np.atleast_1d(eps), np.atleast_1d(alpha), np.atleast_1d(beta))

@@ -2,10 +2,10 @@
 
 import logging
 import os
-from typing import Callable
 
 import numpy as np
 
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T
 from lightwin.core.transfer_matrix.factory import TransferMatrixFactory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
 from lightwin.tracewin_utils import load
@@ -25,21 +25,21 @@ class TransferMatrixFactoryTraceWin(TransferMatrixFactory):
 
         Parameters
         ----------
-        filename : str, optional
+        filename :
             The name of the transfer matrix file produced by TraceWin. The
-            default is 'Transfer_matrix1.dat'.
-        high_def : bool, optional
+            default is ``"Transfer_matrix1.dat"``.
+        high_def :
             To get the transfer matrices at all the solver step, instead at the
             elements exit only. The default is False. Currently not
             implemented.
 
         Returns
         -------
-        element_numbers : numpy.ndarray
+        element_numbers :
             Number of the elements.
-        position_in_m : numpy.ndarray
+        position_in_m :
             Position of the elements.
-        transfer_matrices : numpy.ndarray
+        transfer_matrices :
             Cumulated transfer matrices of the elements.
 
         """
@@ -61,24 +61,23 @@ class TransferMatrixFactoryTraceWin(TransferMatrixFactory):
         self,
         tm_cumul_in: np.ndarray,
         path_cal: str,
-        element_to_index: Callable,
+        element_to_index: ELEMENT_TO_INDEX_T,
     ) -> TransferMatrix:
         r"""Load the TraceWin transfer matrix file and create the object.
 
         Parameters
         ----------
-        tm_cumul_in : numpy.ndarray
+        tm_cumul_in :
             Cumulated transfer matrix at entrance of linac or linac subset.
-        path_cal : str
+        path_cal :
             Full path to transfer matrix file.
-        element_to_index : Callable
-         to doc
+        element_to_index :
+            to doc
 
         Returns
         -------
-        transfer_matrix : TransferMatrix
-            Object holding the various transfer matrices in the :math:`[x-x']`,
-            :math:`[y-y']` and :math:`[z-\delta]` planes.
+            The various transfer matrices in the :math:`[x-x']`, :math:`[y-y']`
+            and :math:`[z-\delta]` planes.
 
         """
         _, _, cumulated = self._load_transfer_matrices(path_cal)

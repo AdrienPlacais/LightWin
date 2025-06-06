@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.10.x]
+
+## [0.10.0] - 2025-06-06
+
+### Added
+
+- `release.py` script, `CONTRIBUTING.md` to ease collaboration.
+
+### Changed
+
+- `Accelerator.get`, `SimulationOutput.get`, `ListOfElements.get` now accept arguments found in `FieldMap`.
+  - *e.g.*: `ListOfElements.get("freq_cavity_mhz")` is now valid.
+
+## [0.10.0rc0] -- 2025-05-12
+
+### Changed
+
+- Refactored the `get` methods.
+    - It may introduce some bugs, do not hesitate to reach me out in case of problem.
+
+### Fixed
+
+- `get` refactoring fixed several bugs:
+    - Some `get` methods such as `SimulationOutput.get` did not consider the `phase_space_name` keyword argument.
+    - `get` methods behavior are more consistent.
+
 # [0.9.x]
 
 Adhere to development best practices.

@@ -16,21 +16,21 @@
 """
 
 import logging
-from typing import Any, Callable, Literal
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
 
-from lightwin.core.elements.element import Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, POS_T, Element
 from lightwin.util.typing import GETTABLE_TRANSFER_MATRIX_T
 
 
 class TransferMatrix:
-    """Hold the (n, 6, 6) transfer matrix along the linac.
+    """Hold the ``(n, 6, 6)`` transfer matrix along the linac.
 
     .. note::
-        When the simulation is in 1D only, the values corresponding to the
-        transverse planes are filled with np.nan.
+        When the simulation is 1D only, the values corresponding to the
+        transverse planes are filled with ``np.nan``.
 
     Parameters
     ----------
@@ -46,7 +46,7 @@ class TransferMatrix:
         self,
         is_3d: bool,
         first_cumulated_transfer_matrix: NDArray[np.float64],
-        element_to_index: Callable[[str | Element, str | None], int | slice],
+        element_to_index: ELEMENT_TO_INDEX_T,
         individual: NDArray[np.float64] | None = None,
         cumulated: NDArray[np.float64] | None = None,
     ) -> None:
@@ -65,7 +65,11 @@ class TransferMatrix:
             Cumulated transfer matrices. The default is None, in which case the
             ``individual`` transfer matrices must be given.
         element_to_index :
-            to doc
+            Takes an :class:`.Element`, its name, ``'first'`` or ``'last'`` as
+            argument, and returns corresponding index. Index should be the same
+            in all the arrays attributes of this class: ``z_abs``,
+            ``beam_parameters`` attributes, etc. Used to easily ``get`` the
+            desired properties at the proper position.
 
         """
         self.is_3d = is_3d
@@ -94,54 +98,56 @@ class TransferMatrix:
     def get(
         self,
         *keys: GETTABLE_TRANSFER_MATRIX_T,
-        elt: Element | None = None,
-        pos: Literal["in", "out"] | None = None,
+        elt: Element | str | None = None,
+        pos: POS_T | None = None,
+        to_numpy: bool = True,
+        none_to_nan: bool = False,
         **kwargs: Any,
-    ) -> tuple[NDArray[np.float64] | float, ...]:
-        """Get attributes from this class or its attributes.
+    ) -> Any:
+        """Get attributes from this class.
+
+        Optionally, at a specific element/position.
 
         Parameters
         ----------
         *keys :
-            Name of the desired attributes.
-        to_numpy :
-            If you want the list output to be converted to a
-            :class:`NDArray[np.float64]`.
-        none_to_nan :
-            To convert None to np.nan.
+            Names of the desired attributes.
         elt :
-            If provided, return the attributes only at the considered Element.
+            Element or its name where the value should be extracted.
         pos :
-            If you want the attribute at the entry, exit, or in the whole
-            Element.
+            Position in the element.
+        to_numpy :
+            Convert lists to NumPy arrays.
+        none_to_nan :
+            Replace ``None`` values with ``np.nan``.
         **kwargs :
-            Other arguments passed to recursive getter.
+            Ignored here, but accepted for compatibility.
 
         Returns
         -------
-        out : tuple[NDArray[np.float64] | float, ...]
-            Attribute(s) value(s). Will be floats if only one value is returned
-            (``elt`` is given, ``pos`` is in ``('in', 'out')``).
-
+        Any
+            Attribute(s) at the requested location.
         """
-        val = {key: [] for key in keys}
+        out = []
 
         for key in keys:
-            if not self.has(key):
-                val[key] = None
-                continue
-            val[key] = getattr(self, key)
+            val = getattr(self, key, None)
 
-        if elt is not None:
-            assert self._element_to_index is not None
-            idx = self._element_to_index(elt=elt, pos=pos)
-            val = {_key: _value[idx] for _key, _value in val.items()}
+            if elt is not None:
+                idx = self._element_to_index(elt=elt, pos=pos)
+                val = val[idx] if val is not None else None
 
-        if len(keys) == 1:
-            return val[keys[0]]
+            if none_to_nan and val is None:
+                val = np.nan
 
-        out = [val[key] for key in keys]
-        return tuple(out)
+            if to_numpy and isinstance(val, list):
+                val = np.array(val)
+            elif not to_numpy and isinstance(val, np.ndarray):
+                val = val.tolist()
+
+            out.append(val)
+
+        return out[0] if len(out) == 1 else tuple(out)
 
     def _init_from_individual(
         self,
@@ -210,9 +216,8 @@ class TransferMatrix:
         """
         if cumulated is None:
             logging.error(
-                "You must provide at least one of the two "
-                "arrays: individual transfer matrices or "
-                "cumulated transfer matrices."
+                "You must provide at least one of the two arrays: individual "
+                "transfer matrices or cumulated transfer matrices."
             )
             raise OSError("Wrong input")
         n_points = cumulated.shape[0]

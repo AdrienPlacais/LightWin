@@ -23,6 +23,7 @@ import os
 import sys
 from pprint import pformat
 
+import sphinx
 from sphinx.util import inspect
 
 import lightwin
@@ -162,3 +163,18 @@ inspect.object_description = object_description
 rst_prolog = """
 .. |axplot| replace:: :meth:`matplotlib.axes.Axes.plot`
 """
+
+# -- Bug fixes ---------------------------------------------------------------
+# Fix following warning:
+# <unknown>:1: WARNING: py:class reference target not found: pathlib._local.Path [ref.class]
+# Note that a patch is provided by Sphinx 8.2, but nbsphinx 0.9.7 requires
+# sphinx<8.2
+# Associated issue:
+# https://github.com/sphinx-doc/sphinx/issues/13178
+if sys.version_info[:2] >= (3, 13) and sphinx.version_info[:2] < (8, 2):  # type: ignore
+    import pathlib
+
+    from sphinx.util.typing import _INVALID_BUILTIN_CLASSES
+
+    _INVALID_BUILTIN_CLASSES[pathlib.Path] = "pathlib.Path"  # type: ignore
+    nitpick_ignore.append(("py:class", "pathlib._local.Path"))

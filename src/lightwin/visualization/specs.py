@@ -62,7 +62,7 @@ PLOTS_CONFIG = (
     KeyValConfSpec(
         key="kwargs",
         types=(dict,),
-        description="kwargs passed to :meth:`plt.plot`.",
+        description="kwargs passed to |axplot|.",
         default_value={},
         is_mandatory=False,
     ),
