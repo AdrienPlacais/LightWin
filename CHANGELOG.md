@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [0.10.x]
 
+## [0.10.0]
+
+### Added
+
+- `release.py` script, `CONTRIBUTING.md` to ease collaboration.
+
 ## [0.10.0rc0] -- 2025-05-12
 
 ### Changed
