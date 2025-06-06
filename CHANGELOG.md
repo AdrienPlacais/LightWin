@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [0.10.x]
 
-## [0.10.0]
+## [0.10.0rc1] -- unreleased
 
 ### Added
 
 - `release.py` script, `CONTRIBUTING.md` to ease collaboration.
+
+### Changed
+
+- `Accelerator.get`, `SimulationOutput.get`, `ListOfElements.get` now accept arguments found in `FieldMap`.
+  - *e.g.*: `ListOfElements.get("freq_cavity_mhz")` is now valid.
+  - May break behavior of some of your scripts... Tell me if this is the case.
 
 ## [0.10.0rc0] -- 2025-05-12
 

@@ -38,7 +38,11 @@ from lightwin.tracewin_utils.interface import list_of_elements_to_command
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter, recursive_items
 from lightwin.util.pickling import MyPickler
-from lightwin.util.typing import EXPORT_PHASES_T, GETTABLE_ELTS_T
+from lightwin.util.typing import (
+    CONCATENABLE_ELTS,
+    EXPORT_PHASES_T,
+    GETTABLE_ELTS_T,
+)
 
 element_id = int | str
 elements_id = Sequence[int] | Sequence[str]
@@ -175,6 +179,10 @@ class ListOfElements(list):
     ) -> Any:
         """Get attributes from this class or its contained elements.
 
+        If the desired attribute belongs to :data:`GETTABLE_ELT` or
+        :data:`GETTABLE_FIELD_MAPS`, we concatenate the value of every element
+        in a single list.
+
         Parameters
         ----------
         *keys :
@@ -198,10 +206,7 @@ class ListOfElements(list):
         results = []
 
         for key in keys:
-            if not self.has(key):
-                val = np.nan if none_to_nan else None
-
-            elif self[0].has(key):  # gather per element
+            if key in CONCATENABLE_ELTS:
                 values = []
                 for i, elt in enumerate(self):
                     data = elt.get(key, to_numpy=False, **kwargs)
@@ -212,6 +217,9 @@ class ListOfElements(list):
                     else:
                         values.append(data)
                 val = values
+
+            elif not self.has(key):
+                val = np.nan if none_to_nan else None
 
             else:  # get from self
                 val = recursive_getter(key, vars(self), **kwargs)

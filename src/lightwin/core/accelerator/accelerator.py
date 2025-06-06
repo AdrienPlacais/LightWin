@@ -9,6 +9,7 @@ phase, etc of the beam at the entry of its :class:`.ListOfElements`.
 """
 
 import logging
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Self
 
@@ -28,6 +29,7 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.util.helper import recursive_getter, recursive_items
 from lightwin.util.pickling import MyPickler
 from lightwin.util.typing import (
+    CONCATENABLE_ELTS,
     EXPORT_PHASES_T,
     GETTABLE_ACCELERATOR_T,
     GETTABLE_SIMULATION_OUTPUT,
@@ -109,8 +111,7 @@ class Accelerator:
         pos: POS_T | None = None,
         **kwargs: Any,
     ) -> Any:
-        """
-        Get attributes from this instance or its attributes.
+        """Get attributes from this instance or its attributes.
 
         .. note::
             Simulation-related quantities (e.g., beam parameters, transfer
@@ -143,6 +144,7 @@ class Accelerator:
         -------
         Any
             A single value or tuple of values.
+
         """
         results = []
 
@@ -166,6 +168,16 @@ class Accelerator:
                         f"Cannot resolve special getter with {elt = }."
                     )
                 value = self._special_getters[key](self)
+
+            elif key in CONCATENABLE_ELTS:
+                value = self.elts.get(
+                    key,
+                    to_numpy=to_numpy,
+                    none_to_nan=none_to_nan,
+                    elt=elt,
+                    pos=pos,
+                    **kwargs,
+                )
 
             elif not self.has(key):
                 value = None
@@ -197,7 +209,7 @@ class Accelerator:
 
         return results[0] if len(results) == 1 else tuple(results)
 
-    def _create_special_getters(self) -> dict:
+    def _create_special_getters(self) -> dict[str, Callable]:
         """Create a dict of aliases that can be accessed w/ the get method."""
         # FIXME this won't work with new simulation output
         # TODO also remove the M_ij?

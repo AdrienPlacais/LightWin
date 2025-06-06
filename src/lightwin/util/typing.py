@@ -264,7 +264,7 @@ GETTABLE_ELT = (
 ) + GETTABLE_BEAM_CALC_PARAMETERS
 
 #: Attributes that can be extracted with :meth:`.FieldMap.get` method.
-GETTABLE_FIELD_MAPS_T = (
+GETTABLE_FIELD_MAP_T = (
     Literal[
         "aperture_flag", "field_map_filename", "field_map_folder", "geometry"
     ]
@@ -272,12 +272,25 @@ GETTABLE_FIELD_MAPS_T = (
     | GETTABLE_ELT_T
     | GETTABLE_CAVITY_SETTINGS_T
 )
-GETTABLE_FIELD_MAPS = (
+GETTABLE_FIELD_MAP = (
     ("aperture_flag", "field_map_filename", "field_map_folder", "geometry")
     + GETTABLE_RF_FIELD
     + GETTABLE_ELT
     + GETTABLE_CAVITY_SETTINGS
 )
+
+_UNCONCATENABLE = (
+    # Confusion between energy along linac, and energy at entrance of field
+    # maps used to compute phi_s and v_cav
+    "w_kin",
+)
+#: Attributes from :class:`.Element` or :class:`.FieldMap` to concatenate into
+#: a list when called from :meth:`.ListOfElements.get` (or
+#: :meth:`.SimulationOutput.get`, :meth:`.Accelerator.get`)
+CONCATENABLE_ELTS = tuple(
+    [key for key in GETTABLE_FIELD_MAP if key not in _UNCONCATENABLE]
+)
+CONCATENABLE_ELTS_T = Literal[*CONCATENABLE_ELTS]
 
 #: Attributes that can be extracted with :meth:`.ListOfElements.get` method.
 GETTABLE_ELTS_T = (
@@ -291,7 +304,7 @@ GETTABLE_ELTS_T = (
         "input_particle",
         "tm_cumul_in",
     ]
-    | GETTABLE_ELT_T
+    | GETTABLE_FIELD_MAP_T
     | GETTABLE_PARTICLE_T
     | GETTABLE_BEAM_PARAMETERS_T
 )
@@ -306,7 +319,7 @@ GETTABLE_ELTS = (
         "input_particle",
         "tm_cumul_in",
     )
-    + GETTABLE_ELT
+    + GETTABLE_FIELD_MAP
     + GETTABLE_PARTICLE
     + GETTABLE_BEAM_PARAMETERS
 )

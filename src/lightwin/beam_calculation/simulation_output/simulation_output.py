@@ -40,7 +40,10 @@ from lightwin.util.helper import (
     recursive_items,
 )
 from lightwin.util.pickling import MyPickler
-from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
+from lightwin.util.typing import (
+    CONCATENABLE_ELTS,
+    GETTABLE_SIMULATION_OUTPUT_T,
+)
 
 
 @dataclass
@@ -166,6 +169,29 @@ class SimulationOutput:
         """Get attributes from this class or its subcomponents.
 
         See class docstring for parameter descriptions.
+
+        Parameters
+        ----------
+        *keys :
+            Names of the desired attributes.
+        to_numpy :
+            Convert list outputs to NumPy arrays.
+        to_deg :
+            Multiply keys with ``"phi"`` by ``180 / pi``.
+        elt :
+            Target element name or instance, passed to recursive_getter.
+        pos :
+            Position key for slicing data arrays.
+        none_to_nan :
+            Replace ``None`` values with ``np.nan``.
+        **kwargs :
+            Additional arguments for recursive_getter.
+
+        Returns
+        -------
+        Any
+            A single value or tuple of values.
+
         """
         if not isinstance(elt, str) and isinstance(elt, Collection):
             return list(
@@ -186,15 +212,20 @@ class SimulationOutput:
             )
 
         out: list[Any] = []
-
         for key in keys:
+            if key in CONCATENABLE_ELTS:
+                logging.warning(
+                    f"{key = } is structure-dependent and does not vary from "
+                    "simulation to simulation. You may be better of calling "
+                    "`Accelerator.get` or `ListOfElements.get`."
+                )
+
             # Special case: transfer matrix
             if (
                 "r_" in key
                 and "mismatch_factor_" not in key
                 and self.transfer_matrix
             ):
-                # GETTABLE_TRANSFER_MATRIX_T is in GETTABLE_SIMULATION_OUTPUT_T
                 val = self.transfer_matrix.get(
                     key, to_numpy=False  # type: ignore[arg-type]
                 )
@@ -203,13 +234,12 @@ class SimulationOutput:
                     key, vars(self), to_numpy=False, **kwargs
                 )
 
-            # Post-process
             if val is not None:
                 if to_deg and "phi" in key:
                     val = _to_deg(val)
                 if elt is not None and self.element_to_index:
                     return_elt_idx = False
-                    if key in ("v_cav_mv", "phi_s"):
+                    if key in CONCATENABLE_ELTS:
                         # With these keys, `val` holds one value per
                         # :class:`.Element`, not one per mesh point.
                         return_elt_idx = True

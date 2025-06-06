@@ -35,7 +35,7 @@ from lightwin.util.helper import recursive_getter
 from lightwin.util.typing import (
     ALLOWED_STATUS,
     EXPORT_PHASES_T,
-    GETTABLE_FIELD_MAPS_T,
+    GETTABLE_FIELD_MAP_T,
     STATUS_T,
 )
 
@@ -158,7 +158,7 @@ class FieldMap(Element):
 
     def get(
         self,
-        *keys: GETTABLE_FIELD_MAPS_T,
+        *keys: GETTABLE_FIELD_MAP_T,
         to_numpy: bool = True,
         none_to_nan: bool = False,
         **kwargs: Any,
@@ -256,7 +256,7 @@ class FieldMap(Element):
 
     def get_of_element_for_comparison(
         self,
-        *keys: GETTABLE_FIELD_MAPS_T,
+        *keys: GETTABLE_FIELD_MAP_T,
         to_numpy: bool = True,
         **kwargs: bool | str | None,
     ) -> Any:
