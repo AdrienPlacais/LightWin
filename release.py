@@ -259,7 +259,7 @@ def _update_changelog(version: str, today: str) -> None:
         return
 
     lines = content.splitlines()
-    lines[index] = f"## [{version}] - {today}"
+    lines[index] = f"## [{version}] -- {today}"
 
     path.write_text("\n".join(lines) + "\n")
     run(["git", "add", str(path)])
