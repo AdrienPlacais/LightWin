@@ -139,6 +139,39 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         )
         return simulation_output
 
+def compute_phi_1(phi_s_deg: np.ndarray) -> np.ndarray:
+    """Compute the right boundary of the phase acceptance (phi_1)
+
+    Parameters
+    ----------
+    phi_s_deg : np.ndarray
+        Synchronous phase in degrees
+
+    Returns
+    -------
+    np.ndarray
+        Right boundary of phase acceptance (phi_1) in degrees
+    """
+    return -phi_s_deg
+
+def compute_phi_2(phi_2_rad: float, phi_s_rad: float) -> float:
+    """Function whose root gives the left boundary of the phase acceptance (phi_2)
+
+    Parameters
+    ----------
+    phi_2_rad : float
+        Phase value in radians to test as boundary
+    phi_s_rad : float
+        Synchronous phase in radians
+
+    Returns
+    -------
+    float
+        Function value to find the root of (zero crossing gives phi_2)
+    """
+    term1 = np.sin(phi_2_rad) - phi_2_rad * np.cos(phi_s_rad)
+    term2 = np.sin(phi_s_rad) - phi_s_rad * np.cos(phi_s_rad)
+    return term1 + term2
     
 def solve_scalar_equation_brent(
     func: Callable[[float, float], float],
