@@ -126,8 +126,9 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             element_to_index,
         )
 
-        phi_s_deg = cav_params["phi_s"]
-        phase_acceptance_deg = compute_phase_acceptance_deg(phi_s_deg)
+        phi_s = [x if x is not None else np.nan for x in cav_params['phi_s']]
+        phi_s_array = np.array(phi_s)
+        phase_acceptance = compute_phase_acceptance(phi_s_array)
 
         simulation_output = SimulationOutput(
             out_folder=self.out_folder,
@@ -139,33 +140,33 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             element_to_index=element_to_index,
             transfer_matrix=transfer_matrix,
             set_of_cavity_settings=set_of_cavity_settings,
-            phase_acceptance_deg=phase_acceptance_deg,
+            phase_acceptance=phase_acceptance,
         )
         return simulation_output
 
-def compute_phi_1(phi_s_deg: np.ndarray) -> np.ndarray:
+def compute_phi_1(phi_s: np.ndarray) -> np.ndarray:
     """Compute the right boundary of the phase acceptance (phi_1)
 
     Parameters
     ----------
-    phi_s_deg : np.ndarray
-        Synchronous phase in degrees
+    phi_s : np.ndarray
+        Synchronous phase in radians
 
     Returns
     -------
     np.ndarray
-        Right boundary of phase acceptance (phi_1) in degrees
+        Right boundary of phase acceptance (phi_1) in radians
     """
-    return -phi_s_deg
+    return -phi_s
 
-def compute_phi_2(phi_2_rad: float, phi_s_rad: float) -> float:
+def compute_phi_2(phi_2: float, phi_s: float) -> float:
     """Function whose root gives the left boundary of the phase acceptance (phi_2)
 
     Parameters
     ----------
-    phi_2_rad : float
+    phi_2 : float
         Phase value in radians to test as boundary
-    phi_s_rad : float
+    phi_s : float
         Synchronous phase in radians
 
     Returns
@@ -173,8 +174,8 @@ def compute_phi_2(phi_2_rad: float, phi_s_rad: float) -> float:
     float
         Function value to find the root of (zero crossing gives phi_2)
     """
-    term1 = np.sin(phi_2_rad) - phi_2_rad * np.cos(phi_s_rad)
-    term2 = np.sin(phi_s_rad) - phi_s_rad * np.cos(phi_s_rad)
+    term1 = np.sin(phi_2) - phi_2 * np.cos(phi_s)
+    term2 = np.sin(phi_s) - phi_s * np.cos(phi_s)
     return term1 + term2
     
 def solve_scalar_equation_brent(
@@ -217,22 +218,22 @@ def solve_scalar_equation_brent(
 
     return np.array(solutions)
 
-def compute_phase_acceptance_deg(phi_s_deg: np.ndarray) -> np.ndarray:
-    """Compute the phase acceptance in degrees
+def compute_phase_acceptance(phi_s: np.ndarray) -> list:
+    """Compute the phase acceptance in radians
 
     Parameters
     ----------
-    phi_s_deg : np.ndarray
-        Synchronous phase in degrees
+    phi_s : np.ndarray
+        Synchronous phase in radians
 
     Returns
     -------
     np.ndarray
-        Phase acceptance in degrees (phi_1 - phi_2)
+        Phase acceptance in radians (phi_1 - phi_2)
     """
-    phi_1_deg = compute_phi_1(phi_s_deg)
-    phi_s_rad = np.radians(phi_s_deg)
-    phi_2_rad = solve_scalar_equation_brent(compute_phi_2, phi_s_rad, (-np.pi, 0))
-    phi_2_deg = np.degrees(phi_2_rad)
+    phi_1 = compute_phi_1(phi_s)
+    phi_2 = solve_scalar_equation_brent(compute_phi_2, phi_s, (-np.pi, 0))
 
-    return phi_1_deg - phi_2_deg
+    phase_acceptance_array = phi_1 - phi_2
+
+    return phase_acceptance_array.tolist()

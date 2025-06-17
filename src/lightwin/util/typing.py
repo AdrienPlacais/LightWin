@@ -368,7 +368,7 @@ GETTABLE_SIMULATION_OUTPUT = (
         "synch_trajectory",
         "v_cav_mv",
         "z_abs",
-        "phase_acceptance_deg",
+        "phase_acceptance",
     )
     + GETTABLE_BEAM_PARAMETERS
     + GETTABLE_PARTICLE
@@ -384,7 +384,7 @@ GETTABLE_SIMULATION_OUTPUT_T = (
         "synch_trajectory",
         "v_cav_mv",
         "z_abs",
-        "phase_acceptance_deg",
+        "phase_acceptance",
     ]
     | GETTABLE_BEAM_PARAMETERS_T
     | GETTABLE_PARTICLE_T
