@@ -126,6 +126,9 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             element_to_index,
         )
 
+        phi_s_deg = cav_params["phi_s"]
+        phase_acceptance_deg = compute_phase_acceptance_deg(phi_s_deg)
+
         simulation_output = SimulationOutput(
             out_folder=self.out_folder,
             is_multiparticle=False,  # FIXME
@@ -136,6 +139,7 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             element_to_index=element_to_index,
             transfer_matrix=transfer_matrix,
             set_of_cavity_settings=set_of_cavity_settings,
+            phase_acceptance_deg=phase_acceptance_deg,
         )
         return simulation_output
 
