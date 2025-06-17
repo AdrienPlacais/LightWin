@@ -86,6 +86,8 @@ class SimulationOutput:
     r_zz_elt :
         Cumulated transfer matrices in the [z-delta] plane. The default is
         None.
+    phase_acceptance_deg :
+        Phase acceptance in degrees. The default is None.
 
     """
 
@@ -106,6 +108,8 @@ class SimulationOutput:
     z_abs: np.ndarray | None = None
     in_tw_fashion: pd.DataFrame | None = None
     r_zz_elt: list[np.ndarray] | None = None
+
+    phase_acceptance_deg: np.ndarray | None = None
 
     def __post_init__(self) -> None:
         """Save complementary data, such as :class:`.Element` indexes."""
