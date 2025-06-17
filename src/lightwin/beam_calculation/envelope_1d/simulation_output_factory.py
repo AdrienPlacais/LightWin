@@ -232,7 +232,7 @@ def compute_phase_acceptance_deg(phi_s_deg: np.ndarray) -> np.ndarray:
     """
     phi_1_deg = compute_phi_1(phi_s_deg)
     phi_s_rad = np.radians(phi_s_deg)
-    phi_2_rad = solve_scalar_equation_brent(compute_phi_2, phi_s_rad)
+    phi_2_rad = solve_scalar_equation_brent(compute_phi_2, phi_s_rad, (-np.pi, 0))
     phi_2_deg = np.degrees(phi_2_rad)
 
     return phi_1_deg - phi_2_deg
