@@ -212,3 +212,23 @@ def solve_scalar_equation_brent(
             solutions.append(np.nan)
 
     return np.array(solutions)
+
+def compute_phase_acceptance_deg(phi_s_deg: np.ndarray) -> np.ndarray:
+    """Compute the phase acceptance in degrees
+
+    Parameters
+    ----------
+    phi_s_deg : np.ndarray
+        Synchronous phase in degrees
+
+    Returns
+    -------
+    np.ndarray
+        Phase acceptance in degrees (phi_1 - phi_2)
+    """
+    phi_1_deg = compute_phi_1(phi_s_deg)
+    phi_s_rad = np.radians(phi_s_deg)
+    phi_2_rad = solve_scalar_equation_brent(compute_phi_2, phi_s_rad)
+    phi_2_deg = np.degrees(phi_2_rad)
+
+    return phi_1_deg - phi_2_deg
