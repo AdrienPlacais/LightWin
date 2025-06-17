@@ -3,6 +3,8 @@
 from abc import ABCMeta
 from dataclasses import dataclass
 from pathlib import Path
+from scipy.optimize import brentq
+from typing import Callable
 
 import numpy as np
 
@@ -136,3 +138,44 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             set_of_cavity_settings=set_of_cavity_settings,
         )
         return simulation_output
+
+    
+def solve_scalar_equation_brent(
+    func: Callable[[float, float], float],
+    param_values: np.ndarray,
+    x_bounds: tuple[float, float]
+) -> np.ndarray:
+    """Solve a scalar equation for multiple parameters using Brent's method
+
+    Parameters
+    ----------
+    func : Callable[[float, float], float]
+        Function f(x, param) whose root is to be found for each param
+    param_values : np.ndarray
+        Array of parameter values for which to solve the equation
+    x_bounds : tuple
+        Interval in which to search for the root
+
+    Returns
+    -------
+    np.ndarray
+        Array of roots found (NaN if no root found in interval)
+    """
+    solutions = []
+
+    for param in param_values:
+        f = lambda x: func(x, param)
+        x_left, x_right = x_bounds
+
+        try:
+            if f(x_left) * f(x_right) > 0:
+                solutions.append(np.nan)
+                continue
+
+            sol = brentq(f, x_left, x_right)
+            solutions.append(sol)
+
+        except Exception:
+            solutions.append(np.nan)
+
+    return np.array(solutions)
