@@ -126,9 +126,8 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             element_to_index,
         )
 
-        phi_s = [x if x is not None else np.nan for x in cav_params['phi_s']]
-        phi_s_array = np.array(phi_s)
-        phase_acceptance = compute_phase_acceptance(phi_s_array)
+        phi_s = np.array([x if x is not None else np.nan for x in cav_params['phi_s']])
+        phase_acceptance = compute_phase_acceptance(phi_s)
 
         e_rest_mev = synch_trajectory.beam["e_rest_mev"]
         q_adim = synch_trajectory.beam["q_adim"]
