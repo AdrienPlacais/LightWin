@@ -130,6 +130,21 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         phi_s_array = np.array(phi_s)
         phase_acceptance = compute_phase_acceptance(phi_s_array)
 
+        e_rest_mev = synch_trajectory.beam["e_rest_mev"]
+        q_adim = synch_trajectory.beam["q_adim"]
+        v_cav_mv = np.array([x if x is not None else np.nan for x in cav_params['v_cav_mv']])
+        freq_cavity_mhz = np.array([set_of_cavity_settings[elt].freq_cavity_mhz
+                           if elt in set_of_cavity_settings
+                           else np.nan
+                           for elt in elts
+                           ])
+        length_m = np.array([elt.length_m
+                    for elt in elts
+        ])
+        beta_kin = beam_parameters.beta_kin
+        assert isinstance(beta_kin, np.ndarray)
+        champ_acc = v_cav_mv/length_m
+
         simulation_output = SimulationOutput(
             out_folder=self.out_folder,
             is_multiparticle=False,  # FIXME
