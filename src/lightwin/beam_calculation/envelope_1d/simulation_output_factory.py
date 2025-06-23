@@ -6,7 +6,6 @@ from pathlib import Path
 from scipy.optimize import brentq
 from typing import Callable
 from scipy.constants import c
-import pdb
 
 import numpy as np
 
@@ -149,7 +148,6 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         s_in_0 = elts.get("s_in")[0]
         s_out_corrected = s_out - s_in_0
 
- 
         gamma_kin_converted = index_to_param(s_out=s_out_corrected, param=gamma_kin,)
         beta_kin_converted = index_to_param(s_out=s_out_corrected, param=beta_kin,)
 
@@ -252,7 +250,7 @@ def solve_scalar_equation_brent(
 
     return np.array(solutions)
 
-def compute_phase_acceptance(phi_s: np.ndarray) -> list:
+def compute_phase_acceptance(phi_s: np.ndarray) -> np.ndarray:
     """Compute the phase acceptance in radians
 
     Parameters
@@ -270,7 +268,7 @@ def compute_phase_acceptance(phi_s: np.ndarray) -> list:
 
     phase_acceptance_array = phi_1 - phi_2
 
-    return phase_acceptance_array.tolist()
+    return phase_acceptance_array
 
 def index_to_param(s_out: np.ndarray, param: np.ndarray) -> np.ndarray:
     """
