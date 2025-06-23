@@ -128,7 +128,7 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         )
 
         phi_s = np.array([x if x is not None else np.nan for x in cav_params['phi_s']])
-        phase_acceptance = compute_phase_acceptance(phi_s)
+        phi_acceptance = compute_phase_acceptance(phi_s)
 
         e_rest_mev = synch_trajectory.beam["e_rest_mev"]
         q_adim = synch_trajectory.beam["q_adim"]
@@ -171,7 +171,7 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             element_to_index=element_to_index,
             transfer_matrix=transfer_matrix,
             set_of_cavity_settings=set_of_cavity_settings,
-            phase_acceptance=phase_acceptance,
+            phi_acceptance=phi_acceptance,
             energy_acceptance=energy_acceptance_mev,
         )
         return simulation_output

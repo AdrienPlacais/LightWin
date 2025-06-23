@@ -285,7 +285,7 @@ _UNCONCATENABLE = (
 #: a list when called from :meth:`.ListOfElements.get` (or
 #: :meth:`.SimulationOutput.get`, :meth:`.Accelerator.get`)
 CONCATENABLE_ELTS = tuple(
-    [key for key in GETTABLE_FIELD_MAP if key not in _UNCONCATENABLE] + ["phase_acceptance", "energy_acceptance"]
+    [key for key in GETTABLE_FIELD_MAP if key not in _UNCONCATENABLE] + ["phi_acceptance", "energy_acceptance"]
 )
 CONCATENABLE_ELTS_T = (
     Literal[
@@ -368,7 +368,7 @@ GETTABLE_SIMULATION_OUTPUT = (
         "synch_trajectory",
         "v_cav_mv",
         "z_abs",
-        "phase_acceptance",
+        "phi_acceptance",
     )
     + GETTABLE_BEAM_PARAMETERS
     + GETTABLE_PARTICLE
@@ -384,7 +384,7 @@ GETTABLE_SIMULATION_OUTPUT_T = (
         "synch_trajectory",
         "v_cav_mv",
         "z_abs",
-        "phase_acceptance",
+        "phi_acceptance",
         "energy_acceptance",
     ]
     | GETTABLE_BEAM_PARAMETERS_T

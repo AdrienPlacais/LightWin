@@ -86,7 +86,7 @@ class SimulationOutput:
     r_zz_elt :
         Cumulated transfer matrices in the [z-delta] plane. The default is
         None.
-    phase_acceptance :
+    phi_acceptance :
         Phase acceptance in radians. The default is None.
     energy_acceptance :
         Energy acceptance in MeV. The default is None.
@@ -111,7 +111,7 @@ class SimulationOutput:
     in_tw_fashion: pd.DataFrame | None = None
     r_zz_elt: list[np.ndarray] | None = None
 
-    phase_acceptance: np.ndarray | None = None
+    phi_acceptance: np.ndarray | None = None
     energy_acceptance: np.ndarray | None = None
 
     def __post_init__(self) -> None:
