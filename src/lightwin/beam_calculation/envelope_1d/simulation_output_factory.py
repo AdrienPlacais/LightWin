@@ -265,8 +265,9 @@ def compute_phase_acceptance(phi_s: np.ndarray) -> np.ndarray:
     """
     phi_1 = compute_phi_1(phi_s)
     phi_2 = solve_scalar_equation_brent(compute_phi_2, phi_s, (-np.pi, 0))
+    phi_acceptance = phi_1 - phi_2
 
-    return phi_1 - phi_2
+    return np.where(np.isnan(phi_acceptance), None, phi_acceptance)
 
 def index_to_param(s_out: np.ndarray, param: np.ndarray) -> np.ndarray:
     """
@@ -323,5 +324,6 @@ def compute_energy_acceptance_mev(
 
     factor = 2 * q_adim * e_acc_mvpm * beta_kin**3 * gamma_kin**3 * e_rest_mev * c/ (np.pi * freq_cavity_mhz* 1e6)
     trig_term = phi_s * np.cos(phi_s) - np.sin(phi_s)
+    energy_acceptance = np.sqrt(factor * trig_term) 
 
-    return np.sqrt(factor * trig_term)
+    return np.where(np.isnan(energy_acceptance), None, energy_acceptance)
