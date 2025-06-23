@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from scipy.optimize import brentq
 from typing import Callable
+from scipy.constants import c
+import pdb
 
 import numpy as np
 
@@ -142,7 +144,24 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         ])
         beta_kin = beam_parameters.beta_kin
         assert isinstance(beta_kin, np.ndarray)
-        champ_acc = v_cav_mv/length_m
+        e_acc_mvpm = v_cav_mv/length_m
+        s_out = elts.get("s_out")
+        s_in_0 = elts.get("s_in")[0]
+        s_out_corrected = s_out - s_in_0
+
+ 
+        gamma_kin_converted = index_to_param(s_out=s_out_corrected, param=gamma_kin,)
+        beta_kin_converted = index_to_param(s_out=s_out_corrected, param=beta_kin,)
+
+        energy_acceptance_mev = compute_energy_acceptance_mev(
+            q_adim=q_adim,
+            freq_cavity_mhz=freq_cavity_mhz,
+            e_acc_mvpm=e_acc_mvpm,
+            beta_kin=beta_kin_converted,
+            gamma_kin=gamma_kin_converted,
+            e_rest_mev=e_rest_mev,
+            phi_s=phi_s,
+        )       
 
         simulation_output = SimulationOutput(
             out_folder=self.out_folder,
@@ -155,6 +174,7 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             transfer_matrix=transfer_matrix,
             set_of_cavity_settings=set_of_cavity_settings,
             phase_acceptance=phase_acceptance,
+            energy_acceptance=energy_acceptance_mev,
         )
         return simulation_output
 
@@ -251,3 +271,62 @@ def compute_phase_acceptance(phi_s: np.ndarray) -> list:
     phase_acceptance_array = phi_1 - phi_2
 
     return phase_acceptance_array.tolist()
+
+def index_to_param(s_out: np.ndarray, param: np.ndarray) -> np.ndarray:
+    """
+    Retrieves the parameter values corresponding to the provided element indices.
+
+    Parameters
+    ----------
+    s_out : np.ndarray
+        Mapping from element indices to parameter indices.
+    param : np.ndarray
+        Array of parameter values (e.g., z_abs) to extract from.
+
+    Returns
+    -------
+    np.ndarray
+        Array of parameter values corresponding to the given element indices.
+    """
+    return np.array([param[idx] for idx in s_out])
+
+def compute_energy_acceptance_mev(
+    q_adim: float,
+    freq_cavity_mhz: np.ndarray,
+    e_acc_mvpm: np.ndarray,
+    beta_kin: np.ndarray,
+    gamma_kin: np.ndarray,
+    e_rest_mev: float,
+    phi_s: np.ndarray
+) -> np.ndarray:
+    """
+    Compute the energy acceptance of an accelerating cavity in MeV.
+
+    Parameters
+    ----------
+    q_adim : float
+        Particle charge in units of the elementary charge (e).
+    freq_cavity_mhz : np.ndarray
+        Cavity frequency in megahertz (MHz).
+    e_acc_mvpm : np.ndarray
+        Accelerating gradient of the cavity in megavolts per meter (MV/m).
+    beta_kin : np.ndarray
+        Kinetic relativistic beta (v/c) of the particle.
+    gamma_kin : np.ndarray
+        Kinetic relativistic gamma factor of the particle.
+    e_rest_mev : float
+        Rest energy of the particle in MeV.
+    phi_s : np.ndarray
+        Synchronous phase in radians.
+
+    Returns
+    -------
+    np.ndarray
+        Energy acceptance of the cavity in MeV.
+    """
+
+    factor = 2 * q_adim * e_acc_mvpm * beta_kin**3 * gamma_kin**3 * e_rest_mev * c/ (np.pi * freq_cavity_mhz* 1e6)
+    trig_term = phi_s * np.cos(phi_s) - np.sin(phi_s)
+    acceptance = (np.sqrt(factor * trig_term))
+
+    return acceptance

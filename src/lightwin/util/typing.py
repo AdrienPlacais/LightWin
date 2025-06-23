@@ -385,6 +385,7 @@ GETTABLE_SIMULATION_OUTPUT_T = (
         "v_cav_mv",
         "z_abs",
         "phase_acceptance",
+        "energy_acceptance",
     ]
     | GETTABLE_BEAM_PARAMETERS_T
     | GETTABLE_PARTICLE_T

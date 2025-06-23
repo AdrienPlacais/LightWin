@@ -88,6 +88,8 @@ class SimulationOutput:
         None.
     phase_acceptance :
         Phase acceptance in radians. The default is None.
+    energy_acceptance :
+        Energy acceptance in MeV. The default is None.
 
     """
 
@@ -110,6 +112,7 @@ class SimulationOutput:
     r_zz_elt: list[np.ndarray] | None = None
 
     phase_acceptance: np.ndarray | None = None
+    energy_acceptance: np.ndarray | None = None
 
     def __post_init__(self) -> None:
         """Save complementary data, such as :class:`.Element` indexes."""
