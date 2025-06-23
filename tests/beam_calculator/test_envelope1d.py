@@ -140,3 +140,11 @@ class TestSolver1D:
     def test_r_zdelta(self, simulation_output: SimulationOutput) -> None:
         """Verify that longitudinal transfer matrix is correct."""
         assert wrap_approx("r_zdelta", simulation_output, abs=5e-3)
+
+    def test_phase_acceptance(self, simulation_output: SimulationOutput) -> None:
+        """Verify that phase acceptance is correct."""
+        assert wrap_approx("phase_acceptance", simulation_output, rel=5e-2, elt="FM142")
+
+    def test_energy_acceptance(self, simulation_output: SimulationOutput) -> None:
+        """Verify that energy acceptance is correct."""
+        assert wrap_approx("energy_acceptance", simulation_output, abs=1e-1, elt="FM142")

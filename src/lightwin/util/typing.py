@@ -285,7 +285,7 @@ _UNCONCATENABLE = (
 #: a list when called from :meth:`.ListOfElements.get` (or
 #: :meth:`.SimulationOutput.get`, :meth:`.Accelerator.get`)
 CONCATENABLE_ELTS = tuple(
-    [key for key in GETTABLE_FIELD_MAP if key not in _UNCONCATENABLE]
+    [key for key in GETTABLE_FIELD_MAP if key not in _UNCONCATENABLE] + ["phase_acceptance", "energy_acceptance"]
 )
 CONCATENABLE_ELTS_T = (
     Literal[
