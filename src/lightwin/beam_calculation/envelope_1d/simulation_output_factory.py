@@ -6,6 +6,7 @@ from pathlib import Path
 from scipy.optimize import brentq
 from typing import Callable
 from scipy.constants import c
+import logging
 
 import numpy as np
 
@@ -128,6 +129,14 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         )
 
         phi_s = np.array([x if x is not None else np.nan for x in cav_params['phi_s']])
+        for i in range(len(phi_s)):
+            if not np.isnan(phi_s[i]) and (phi_s[i] < -np.pi or phi_s[i] > 0):
+                logging.warning(
+                    f"Invalid synchronous phase for element phi_s[{i}] = {phi_s[i]}. "
+                    "It should be in the range [-pi, 0]."
+                )
+                phi_s[i] = np.nan
+
         phi_acceptance = compute_phase_acceptance(phi_s)
 
         e_rest_mev = synch_trajectory.beam["e_rest_mev"]
