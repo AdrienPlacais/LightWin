@@ -27,7 +27,7 @@ _REFERENCE_RESULTS = {
     "r_xy": np.array([[0.0, 0.0], [0.0, 0.0]]),
     "r_xz": np.array([[0.0, 0.0], [0.0, 0.0]]),
     "r_yz": np.array([[0.0, 0.0], [0.0, 0.0]]),
-    "phase_acceptance": 1.315342886,
+    "phi_acceptance": 75.36359596,
     "energy_acceptance": 8.9766877522,
 }
 
