@@ -157,8 +157,8 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         s_in_0 = elts.get("s_in")[0]
         s_out_corrected = s_out - s_in_0
 
-        gamma_kin_converted = index_to_param(s_out=s_out_corrected, param=gamma_kin,)
-        beta_kin_converted = index_to_param(s_out=s_out_corrected, param=beta_kin,)
+        gamma_kin_converted = np.array([gamma_kin[idx] for idx in s_out_corrected])
+        beta_kin_converted = np.array([beta_kin[idx] for idx in s_out_corrected])
 
         energy_acceptance_mev = compute_energy_acceptance_mev(
             q_adim=q_adim,
@@ -184,21 +184,6 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             energy_acceptance=energy_acceptance_mev,
         )
         return simulation_output
-
-def compute_phi_1(phi_s: np.ndarray) -> np.ndarray:
-    """Compute the right boundary of the phase acceptance (phi_1)
-
-    Parameters
-    ----------
-    phi_s : np.ndarray
-        Synchronous phase in radians
-
-    Returns
-    -------
-    np.ndarray
-        Right boundary of phase acceptance (phi_1) in radians
-    """
-    return -phi_s
 
 def compute_phi_2(phi_2: float, phi_s: float) -> float:
     """Function whose root gives the left boundary of the phase acceptance (phi_2)
@@ -272,29 +257,11 @@ def compute_phase_acceptance(phi_s: np.ndarray) -> np.ndarray:
     np.ndarray
         Phase acceptance in radians (phi_1 - phi_2)
     """
-    phi_1 = compute_phi_1(phi_s)
+    phi_1 = -phi_s
     phi_2 = solve_scalar_equation_brent(compute_phi_2, phi_s, (-np.pi, 0))
     phi_acceptance = phi_1 - phi_2
 
     return np.where(np.isnan(phi_acceptance), None, phi_acceptance)
-
-def index_to_param(s_out: np.ndarray, param: np.ndarray) -> np.ndarray:
-    """
-    Retrieves the parameter values corresponding to the provided element indices.
-
-    Parameters
-    ----------
-    s_out : np.ndarray
-        Mapping from element indices to parameter indices.
-    param : np.ndarray
-        Array of parameter values (e.g., z_abs) to extract from.
-
-    Returns
-    -------
-    np.ndarray
-        Array of parameter values corresponding to the given element indices.
-    """
-    return np.array([param[idx] for idx in s_out])
 
 def compute_energy_acceptance_mev(
     q_adim: float,
