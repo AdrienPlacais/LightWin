@@ -21,8 +21,10 @@ from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import NoFault
 from lightwin.beam_calculation.envelope_1d.simulation_output_factory import (
     compute_phi_2,
+    solve_scalar_equation_brent, 
 )
 import numpy as np
+from unittest.mock import patch
 
 
 leapfrog_marker = pytest.mark.xfail(
@@ -161,5 +163,31 @@ def test_compute_phi_2() -> None:
     result = compute_phi_2(phi_2, phi_s)
     expected = (np.sin(phi_2) - phi_2 * np.cos(phi_s)) + (np.sin(phi_s) - phi_s * np.cos(phi_s))
     assert np.isclose(result, expected)
+
+
+@patch("lightwin.beam_calculation.envelope_1d.simulation_output_factory.brentq")
+def test_solve_scalar_equation_brent_mocked(mock_brentq):
+    """Test the scalar equation solver using a mocked brentq function."""
+    mock_brentq.side_effect = lambda f, a, b: -0.8
+
+    def mock_func(x, param):
+        return x + param - np.pi
+
+    params = np.array([4.0, 4.2, 4.4])
+
+    result = solve_scalar_equation_brent(mock_func, params, (-np.pi, 0))
+
+    assert np.allclose(result, [-0.8, -0.8, -0.8])
+    assert mock_brentq.call_count == 3
+
+def test_solve_scalar_equation_brent_no_sign_change():
+    """Test the scalar equation when the change of sign condition is not respected"""
+    def mock_func(x, param):
+        return x + param + 10 
+
+    params = np.array([1.0, 2.0])
+    result = solve_scalar_equation_brent(mock_func, params, (-np.pi, 0))
+
+    assert np.isnan(result).all()
 
 
