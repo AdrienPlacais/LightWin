@@ -19,6 +19,11 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import NoFault
+from lightwin.beam_calculation.envelope_1d.simulation_output_factory import (
+    compute_phi_2,
+)
+import numpy as np
+
 
 leapfrog_marker = pytest.mark.xfail(
     condition=True,
@@ -148,3 +153,13 @@ class TestSolver1D:
     def test_energy_acceptance(self, simulation_output: SimulationOutput) -> None:
         """Verify that energy acceptance is correct."""
         assert wrap_approx("energy_acceptance", simulation_output, abs=1e-1, elt="FM142")
+
+def test_compute_phi_2() -> None:
+    """Test the compute_phi_2 function with various inputs."""
+    phi_2 = -0.5
+    phi_s = 1.0
+    result = compute_phi_2(phi_2, phi_s)
+    expected = (np.sin(phi_2) - phi_2 * np.cos(phi_s)) + (np.sin(phi_s) - phi_s * np.cos(phi_s))
+    assert np.isclose(result, expected)
+
+
