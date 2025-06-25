@@ -132,7 +132,7 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         invalid_mask = is_in_range(phi_s, (-np.pi/2, 0,))
         phi_s[invalid_mask] = np.nan
 
-        phi_2_bounds = (-np.pi, 0)
+        phi_2_bounds = (-3*np.pi/2, 0)
         phi_acceptance = compute_phase_acceptance(phi_s, phi_2_bounds)
 
         e_rest_mev = synch_trajectory.beam["e_rest_mev"]
