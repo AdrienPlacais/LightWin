@@ -129,7 +129,7 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         )
 
         phi_s = np.array([x if x is not None else np.nan for x in cav_params['phi_s']])
-        invalid_mask = is_in_range(np.array([]), (-np.pi/2, 0,))
+        invalid_mask = is_in_range(phi_s, (-np.pi/2, 0,))
         phi_s[invalid_mask] = np.nan
 
         phi_2_bounds = (-np.pi, 0)
@@ -186,20 +186,20 @@ def is_in_range(array: np.ndarray, range: tuple[float, float], warning: bool = T
 
     if array.size == 0 and warning:
         logging.warning("The input array of is_in_range() is empty. The result will also be an empty boolean array.")
-    x_left, x_right = range
-    if x_left > x_right:
-        x_left, x_right = x_right, x_left
+    range_left, range_right = range
+    if range_left > range_right:
+        range_left, range_right = range_right, range_left
         if warning:
             logging.warning(
                 f"The range ({range[0]}, {range[1]}) is inverted. "
-                f"It has been corrected to ({x_left}, {x_right})."
+                f"It has been corrected to ({range_left}, {range_right})."
             )
 
-    invalid_mask = ~np.isnan(array) & ((array <= x_left) | (array >= x_right))
+    invalid_mask = ~np.isnan(array) & ((array <= range_left) | (array >= range_right))
     if warning and np.any(invalid_mask):
         logging.warning(
             f"Invalid array {array}"
-            f"All elements should be in the range [{x_left},{x_right}]."
+            f"All elements should be in the range [{range_left},{range_right}]."
         )
     return invalid_mask
 
@@ -225,7 +225,8 @@ def compute_phi_2(phi_2: float, phi_s: float) -> float:
 def solve_scalar_equation_brent(
     func: Callable[[float, float], float],
     param_values: np.ndarray,
-    x_bounds: tuple[float, float]
+    x_bounds: tuple[float, float],
+    warning: bool = True
 ) -> np.ndarray:
     """Solve a scalar equation for multiple parameters using Brent's method
 
@@ -243,14 +244,28 @@ def solve_scalar_equation_brent(
     np.ndarray
         Array of roots found (NaN if no root found in interval)
     """
+
+    if param_values.size == 0 and warning:
+        logging.warning("The input param_values of solve_scalar_equation_brent() is empty. The result will also be an empty float array.")
+    x_left, x_right = x_bounds
+    if x_left > x_right:
+        x_left, x_right = x_right, x_left
+        if warning:
+            logging.warning(
+                f"The range ({range[0]}, {range[1]}) is inverted. "
+                f"It has been corrected to ({x_left}, {x_right})."
+            )
+
     solutions = []
 
     for param in param_values:
         f = lambda x: func(x, param)
-        x_left, x_right = x_bounds
 
         if f(x_left) * f(x_right) > 0:
             solutions.append(np.nan)
+            if warning : 
+                logging.warning(f"{f(x_left)} and {f(x_right)} have the same sign in solve_scalar_equation_brent(). "
+                                "There is no root in this range")
         else:
             try:
                 sol = brentq(f, x_left, x_right)
