@@ -129,7 +129,7 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         )
 
         phi_s = np.array([x if x is not None else np.nan for x in cav_params['phi_s']])
-        invalid_mask = is_in_range(phi_s, (-np.pi/2, 0,))
+        invalid_mask = is_in_range(np.array([]), (-np.pi/2, 0,))
         phi_s[invalid_mask] = np.nan
 
         phi_2_bounds = (-np.pi, 0)
@@ -181,8 +181,20 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         )
         return simulation_output
     
-def is_in_range(array: np.ndarray, range: tuple[float, float], warning: bool = True) -> np.ndarray[bool]: 
+def is_in_range(array: np.ndarray, range: tuple[float, float], warning: bool = True) -> np.ndarray:
+    """ Function that tests if the elements of an array are in a given range"""
+
+    if array.size == 0 and warning:
+        logging.warning("The input array of is_in_range() is empty. The result will also be an empty boolean array.")
     x_left, x_right = range
+    if x_left > x_right:
+        x_left, x_right = x_right, x_left
+        if warning:
+            logging.warning(
+                f"The range ({range[0]}, {range[1]}) is inverted. "
+                f"It has been corrected to ({x_left}, {x_right})."
+            )
+
     invalid_mask = ~np.isnan(array) & ((array <= x_left) | (array >= x_right))
     if warning and np.any(invalid_mask):
         logging.warning(
