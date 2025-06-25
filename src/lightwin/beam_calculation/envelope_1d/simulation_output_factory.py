@@ -129,13 +129,8 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         )
 
         phi_s = np.array([x if x is not None else np.nan for x in cav_params['phi_s']])
-        for i in range(len(phi_s)):
-            if not np.isnan(phi_s[i]) and (phi_s[i] < -np.pi or phi_s[i] > 0):
-                logging.warning(
-                    f"Invalid synchronous phase for element phi_s[{i}] = {phi_s[i]}. "
-                    "It should be in the range [-pi, 0]."
-                )
-                phi_s[i] = np.nan
+        invalid_mask = is_in_range(phi_s, -np.pi/2, 0,)
+        phi_s[invalid_mask] = np.nan
 
         phi_acceptance = compute_phase_acceptance(phi_s)
 
@@ -184,6 +179,15 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             energy_acceptance=energy_acceptance_mev,
         )
         return simulation_output
+    
+def is_in_range(array: np.ndarray, min: float, max: float, warning: bool = True) -> np.ndarray[bool]: 
+    invalid_mask = ~np.isnan(array) & ((array <= min) | (array >= max))
+    if warning and np.any(invalid_mask):
+        logging.warning(
+            f"Invalid array {array}"
+            f"All elements should be in the range [{min},{max}]."
+        )
+    return invalid_mask
 
 def compute_phi_2(phi_2: float, phi_s: float) -> float:
     """Function whose root gives the left boundary of the phase acceptance (phi_2)
@@ -231,16 +235,15 @@ def solve_scalar_equation_brent(
         f = lambda x: func(x, param)
         x_left, x_right = x_bounds
 
-        try:
-            if f(x_left) * f(x_right) > 0:
-                solutions.append(np.nan)
-                continue
-
-            sol = brentq(f, x_left, x_right)
-            solutions.append(sol)
-
-        except Exception:
+        if f(x_left) * f(x_right) > 0:
             solutions.append(np.nan)
+        else:
+            try:
+                sol = brentq(f, x_left, x_right)
+                solutions.append(sol)
+
+            except Exception:
+                solutions.append(np.nan)
 
     return np.array(solutions)
 
