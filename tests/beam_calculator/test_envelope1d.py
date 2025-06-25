@@ -19,8 +19,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import NoFault
-from lightwin.beam_calculation.envelope_1d.simulation_output_factory import (
-    compute_phi_2,
+from lightwin.util.solvers import (
     solve_scalar_equation_brent, 
     is_in_range
 )
