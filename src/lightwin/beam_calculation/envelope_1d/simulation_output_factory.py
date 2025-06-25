@@ -129,10 +129,11 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         )
 
         phi_s = np.array([x if x is not None else np.nan for x in cav_params['phi_s']])
-        invalid_mask = is_in_range(phi_s, -np.pi/2, 0,)
+        invalid_mask = is_in_range(phi_s, (-np.pi/2, 0,))
         phi_s[invalid_mask] = np.nan
 
-        phi_acceptance = compute_phase_acceptance(phi_s)
+        phi_2_bounds = (-np.pi, 0)
+        phi_acceptance = compute_phase_acceptance(phi_s, phi_2_bounds)
 
         e_rest_mev = synch_trajectory.beam["e_rest_mev"]
         q_adim = synch_trajectory.beam["q_adim"]
@@ -180,12 +181,13 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         )
         return simulation_output
     
-def is_in_range(array: np.ndarray, min: float, max: float, warning: bool = True) -> np.ndarray[bool]: 
-    invalid_mask = ~np.isnan(array) & ((array <= min) | (array >= max))
+def is_in_range(array: np.ndarray, range: tuple[float, float], warning: bool = True) -> np.ndarray[bool]: 
+    x_left, x_right = range
+    invalid_mask = ~np.isnan(array) & ((array <= x_left) | (array >= x_right))
     if warning and np.any(invalid_mask):
         logging.warning(
             f"Invalid array {array}"
-            f"All elements should be in the range [{min},{max}]."
+            f"All elements should be in the range [{x_left},{x_right}]."
         )
     return invalid_mask
 
@@ -247,7 +249,7 @@ def solve_scalar_equation_brent(
 
     return np.array(solutions)
 
-def compute_phase_acceptance(phi_s: np.ndarray) -> np.ndarray:
+def compute_phase_acceptance(phi_s: np.ndarray, phi_2_bounds: tuple[float, float]) -> np.ndarray:
     """Compute the phase acceptance in radians
 
     Parameters
@@ -261,7 +263,7 @@ def compute_phase_acceptance(phi_s: np.ndarray) -> np.ndarray:
         Phase acceptance in radians (phi_1 - phi_2)
     """
     phi_1 = -phi_s
-    phi_2 = solve_scalar_equation_brent(compute_phi_2, phi_s, (-np.pi, 0))
+    phi_2 = solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds)
     phi_acceptance = phi_1 - phi_2
 
     return phi_acceptance
