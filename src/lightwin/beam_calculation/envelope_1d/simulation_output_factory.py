@@ -252,7 +252,7 @@ def solve_scalar_equation_brent(
         x_left, x_right = x_right, x_left
         if warning:
             logging.warning(
-                f"The range ({range[0]}, {range[1]}) is inverted. "
+                f"The range ({x_bounds[0]}, {x_bounds[1]}) is inverted. "
                 f"It has been corrected to ({x_left}, {x_right})."
             )
 
