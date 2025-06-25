@@ -1,3 +1,5 @@
+"Gives useful functions used to compute acceptances"
+
 from scipy.optimize import brentq
 from typing import Callable
 import logging
