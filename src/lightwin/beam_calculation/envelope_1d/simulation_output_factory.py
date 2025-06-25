@@ -182,7 +182,26 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         return simulation_output
     
 def is_in_range(array: np.ndarray, range: tuple[float, float], warning: bool = True) -> np.ndarray:
-    """ Function that tests if the elements of an array are in a given range"""
+    """
+    Check which elements of an array are outside a specified numerical range.
+
+    Parameters
+    ----------
+    array : np.ndarray
+        Array of numeric values to validate.
+    range : tuple[float, float]
+        Tuple specifying the lower and upper bounds of the accepted range (inclusive).
+        If the bounds are given in reverse order, they will be corrected automatically.
+    warning : bool, optional
+        If True (default), warnings are issued for empty input, range inversion,
+        and out-of-range elements.
+
+    Returns
+    -------
+    np.ndarray
+        Boolean array where True indicates values that are outside the specified range.
+        NaN values are ignored (returned as False).
+    """
 
     if array.size == 0 and warning:
         logging.warning("The input array of is_in_range() is empty. The result will also be an empty boolean array.")
@@ -204,19 +223,20 @@ def is_in_range(array: np.ndarray, range: tuple[float, float], warning: bool = T
     return invalid_mask
 
 def compute_phi_2(phi_2: float, phi_s: float) -> float:
-    """Function whose root gives the left boundary of the phase acceptance (phi_2)
+    """
+    Function whose root gives the left boundary of the phase acceptance (phi_2).
 
     Parameters
     ----------
     phi_2 : float
-        Phase value in radians to test as boundary
+        Phase value in radians to test as the boundary.
     phi_s : float
-        Synchronous phase in radians
+        Synchronous phase in radians.
 
     Returns
     -------
     float
-        Function value to find the root of (zero crossing gives phi_2)
+        Function value to be used in root-finding (zero crossing corresponds to phi_2).
     """
     term1 = np.sin(phi_2) - phi_2 * np.cos(phi_s)
     term2 = np.sin(phi_s) - phi_s * np.cos(phi_s)
@@ -228,21 +248,26 @@ def solve_scalar_equation_brent(
     x_bounds: tuple[float, float],
     warning: bool = True
 ) -> np.ndarray:
-    """Solve a scalar equation for multiple parameters using Brent's method
+    """
+    Solve a scalar equation for multiple parameters using Brent's method.
 
     Parameters
     ----------
     func : Callable[[float, float], float]
-        Function f(x, param) whose root is to be found for each param
+        Function f(x, param) whose root is to be found for each parameter.
     param_values : np.ndarray
-        Array of parameter values for which to solve the equation
-    x_bounds : tuple
-        Interval in which to search for the root
+        Array of parameter values to use when solving the equation.
+    x_bounds : tuple[float, float]
+        Interval (x_min, x_max) in which to search for the root.
+        The bounds will be swapped if provided in reverse order.
+    warning : bool, optional
+        If True (default), warnings are issued for empty inputs, range inversion,
+        or missing roots in the interval.
 
     Returns
     -------
     np.ndarray
-        Array of roots found (NaN if no root found in interval)
+        Array of roots found for each parameter value. NaN if no root is found.
     """
 
     if param_values.size == 0 and warning:
@@ -277,17 +302,20 @@ def solve_scalar_equation_brent(
     return np.array(solutions)
 
 def compute_phase_acceptance(phi_s: np.ndarray, phi_2_bounds: tuple[float, float]) -> np.ndarray:
-    """Compute the phase acceptance in radians
+    """
+    Compute the phase acceptance in radians for an accelerating cavity.
 
     Parameters
     ----------
     phi_s : np.ndarray
-        Synchronous phase in radians
+        Synchronous phase in radians.
+    phi_2_bounds : tuple[float, float]
+        Search interval for computing the left boundary of the phase acceptance (phi_2).
 
     Returns
     -------
     np.ndarray
-        Phase acceptance in radians (phi_1 - phi_2)
+        Phase acceptance in radians, computed as (phi_1 - phi_2) for each phi_s.
     """
     phi_1 = -phi_s
     phi_2 = solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds)
@@ -314,11 +342,11 @@ def compute_energy_acceptance_mev(
     freq_cavity_mhz : np.ndarray
         Cavity frequency in megahertz (MHz).
     e_acc_mvpm : np.ndarray
-        Accelerating gradient of the cavity in megavolts per meter (MV/m).
+        Accelerating gradient in megavolts per meter (MV/m).
     beta_kin : np.ndarray
-        Kinetic relativistic beta (v/c) of the particle.
+        Relativistic beta (v/c) of the particle.
     gamma_kin : np.ndarray
-        Kinetic relativistic gamma factor of the particle.
+        Relativistic gamma factor of the particle.
     e_rest_mev : float
         Rest energy of the particle in MeV.
     phi_s : np.ndarray
@@ -329,7 +357,6 @@ def compute_energy_acceptance_mev(
     np.ndarray
         Energy acceptance of the cavity in MeV.
     """
-
     factor = 2 * q_adim * e_acc_mvpm * beta_kin**3 * gamma_kin**3 * e_rest_mev * c/ (np.pi * freq_cavity_mhz* 1e6)
     trig_term = phi_s * np.cos(phi_s) - np.sin(phi_s)
     energy_acceptance = np.sqrt(factor * trig_term) 
