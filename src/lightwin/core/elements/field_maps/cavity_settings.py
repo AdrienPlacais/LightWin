@@ -120,6 +120,7 @@ class CavitySettings:
         self._v_cav_mv: float
         self._phi_rf: float
         self._phi_bunch: float
+        # self._phi_acceptance: float
 
         self._status: STATUS_T
         self.status = status
@@ -545,6 +546,7 @@ class CavitySettings:
     def phi_s(self, value: float) -> None:
         """Set the synchronous phase to desired value."""
         self._phi_s = value
+        # del self.phi_acceptance
 
     @phi_s.deleter
     def phi_s(self) -> None:
@@ -552,6 +554,7 @@ class CavitySettings:
         if not hasattr(self, "_phi_s"):
             return
         del self._phi_s
+        # del self.phi_acceptance
 
     @phi_s.getter
     def phi_s(self) -> float | None:
@@ -595,6 +598,7 @@ class CavitySettings:
     def phi_s(self) -> None:
         """Delete attribute."""
         self._phi_s = np.nan
+        # del self.phi_acceptance
 
     def set_cavity_parameters_methods(
         self,
@@ -890,6 +894,28 @@ class CavitySettings:
         assert (
             self.phi_bunch >= 0.0
         ), "The phase of the synchronous particle should never be negative."
+
+    # =============================================================================
+    # Acceptances
+    # =============================================================================
+    # @property
+    # def phi_acceptance(self)->None:
+    
+    # @phi_acceptance.setter
+    # def phi_acceptance(self,value:float)->None:
+    #     self._phi_acceptance=value
+    
+    # @phi_acceptance.getter
+    # def phi_acceptance(self)->float:
+    #     if hasattr(self, "_phi_acceptance"):
+    #         return self._phi_acceptance
+    #     self.phi_acceptance = ...
+    #     return self.phi_acceptance
+    
+    # @phi_acceptance.deleter
+    # def phi_acceptance(self):
+    #     delattr(self, "_phi_acceptance")
+
 
     # .. list-table:: Meaning of status
     #     :widths: 40, 60
