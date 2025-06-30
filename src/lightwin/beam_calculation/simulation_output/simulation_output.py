@@ -43,6 +43,7 @@ from lightwin.util.pickling import MyPickler
 from lightwin.util.typing import (
     CONCATENABLE_ELTS,
     GETTABLE_SIMULATION_OUTPUT_T,
+    GETTABLE_STRUCTURE_DEPENDENT,
 )
 
 
@@ -213,7 +214,7 @@ class SimulationOutput:
 
         out: list[Any] = []
         for key in keys:
-            if key in CONCATENABLE_ELTS:
+            if key in GETTABLE_STRUCTURE_DEPENDENT:
                 logging.warning(
                     f"{key = } is structure-dependent and does not vary from "
                     "simulation to simulation. You may be better of calling "
