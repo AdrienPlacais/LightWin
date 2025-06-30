@@ -14,7 +14,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.beam_parameters.helper import mismatch_from_arrays
 from lightwin.optimisation.objective.objective import Objective
-from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
+from lightwin.util.typing import GETTABLE_BEAM_PARAMETERS_T
 
 
 class MinimizeMismatch(Objective):
@@ -24,7 +24,7 @@ class MinimizeMismatch(Objective):
         self,
         name: str,
         weight: float,
-        get_key: GETTABLE_SIMULATION_OUTPUT_T,
+        get_key: GETTABLE_BEAM_PARAMETERS_T,
         get_kwargs: dict[str, Any],
         reference: SimulationOutput,
         descriptor: str | None = None,
@@ -60,7 +60,7 @@ class MinimizeMismatch(Objective):
             )
             get_key = "twiss"
             get_kwargs["phase_space_name"] = "zdelta"
-        self.get_key = get_key
+        self.get_key: GETTABLE_BEAM_PARAMETERS_T = get_key
         self.get_kwargs = get_kwargs
         super().__init__(name, weight, descriptor=descriptor, ideal_value=0.0)
         self._twiss_ref = self._twiss_getter(reference)
