@@ -256,7 +256,12 @@ class EnergyPhaseMismatch(ObjectiveFactory):
             name=markdown["phi_abs"].replace("deg", "rad"),
             weight=1.0,
             get_key="phi_abs",
-            get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
+            get_kwargs={
+                "elt": elt,
+                "pos": "out",
+                "to_numpy": False,
+                "to_deg": False,
+            },
             reference=self.reference_simulation_output,
             descriptor="""Minimize diff. of phi_abs between ref and fix at the
             end of the compensation zone.
@@ -352,7 +357,12 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
             name=markdown["phi_abs"].replace("deg", "rad"),
             weight=1.0,
             get_key="phi_abs",
-            get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
+            get_kwargs={
+                "elt": elt,
+                "pos": "out",
+                "to_numpy": False,
+                "to_deg": False,
+            },
             reference=self.reference_simulation_output,
             descriptor="""Minimize diff. of phi_abs between ref and fix at the
             end of the compensation zone.
@@ -398,7 +408,12 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
             name=markdown["phi_s"].replace("deg", "rad"),
             weight=50.0,
             get_key="phi_s",
-            get_kwargs={"elt": cavity, "pos": "out", "to_numpy": False},
+            get_kwargs={
+                "elt": cavity,
+                "pos": "out",
+                "to_numpy": False,
+                "to_deg": False,
+            },
             limits=limits,
             descriptor="""Synchronous phase should be between limits.""",
         )
