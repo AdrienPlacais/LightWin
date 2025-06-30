@@ -14,13 +14,13 @@ class Objective(ABC):
 
     Parameters
     ----------
-    name : str
+    name :
         A short string to describe the objective and access to it.
-    weight : float
+    weight :
         A scaling constant to set the weight of current objective.
-    descriptor : str | None, optional
-        A longer string to explain the objective. The default is None.
-    ideal_value : float | tuple[float], optional
+    descriptor :
+        A longer string to explain the objective.
+    ideal_value :
         The ideal value or range of values that we should tend to.
 
     """
@@ -58,13 +58,13 @@ class Objective(ABC):
 
         Parameters
         ----------
-        simulation_output : SimulationOutput | float
+        simulation_output :
             Object containing simulation results of the broken linac.
 
         Returns
         -------
         residue : float
-            Difference between current evaluation and ideal_value value for
+            Difference between current evaluation and ``ideal_value`` value for
             ``self.name``, scaled by ``self.weight``.
 
         """
