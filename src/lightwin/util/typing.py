@@ -308,7 +308,6 @@ CONCATENABLE_ELTS_T = (
         "v_cav_mv",
     ]
     | REFERENCE_PHASES_T
-    | GETTABLE_RF_FIELD_T
 )
 
 #: Attributes that can be extracted with :meth:`.ListOfElements.get` method.
@@ -341,6 +340,22 @@ GETTABLE_ELTS_T = (
     | GETTABLE_FIELD_MAP_T
     | GETTABLE_PARTICLE_T
     | GETTABLE_BEAM_PARAMETERS_T
+)
+
+#: Attributes that are structure-dependent and should not vary from simulation
+#: to simulation
+GETTABLE_STRUCTURE_DEPENDENT = (
+    GETTABLE_ELT
+    + GETTABLE_RF_FIELD
+    + (
+        "aperture_flag",
+        "field_map_filename",
+        "field_map_folder",
+        "geometry",
+        "field",
+        "freq_cavity_mhz",
+        "omega_0_rf",
+    )
 )
 
 #: Attributes that can be extracted with :meth:`.TransferMatrix.get` method.

@@ -126,6 +126,7 @@ def factory(
     accelerators :
         The accelerators holding relatable data. Due to bad implementation, the
         following accelerators are expected:
+
         - Reference linac, first solver
         - Reference linac, second solver
         - Fixed linac, first solver
@@ -312,7 +313,11 @@ def _single_simulation_data(
 ) -> list[float] | None:
     """lightwin.Get single data array from single SimulationOutput."""
     kwargs: dict[str, Any]
-    kwargs = {"to_numpy": False, "to_deg": True}
+    kwargs = {
+        "to_numpy": False,
+        "to_deg": True,
+        "warn_structure_dependent": False,
+    }
 
     # patch to avoid envelopes being converted again to degrees
     if "envelope_pos" in axis:

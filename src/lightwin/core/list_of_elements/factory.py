@@ -329,10 +329,9 @@ class ListOfElementsFactory:
             _ = simulation_output.get("w_kin", elt=input_elt)
         except AttributeError:
             logging.warning(
-                "First element of new list of elements is not in "
-                "the given SimulationOutput. I will consider "
-                "that the last element of the SimulationOutput is "
-                "the first of the new ListOfElements."
+                "First element of new ListOfElements is not in the given "
+                "SimulationOutput. I will consider that the last element of "
+                "the SimulationOutput is the first of the new ListOfElements."
             )
             input_elt, input_pos = "last", "out"
         return input_elt, input_pos

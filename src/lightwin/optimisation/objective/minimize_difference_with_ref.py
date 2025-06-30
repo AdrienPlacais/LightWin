@@ -6,12 +6,13 @@ the linac under tuning.
 """
 
 import logging
+from typing import Any
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from lightwin.core.elements.element import Element
 from lightwin.optimisation.objective.objective import Objective
+from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
 
 
 class MinimizeDifferenceWithRef(Objective):
@@ -21,8 +22,8 @@ class MinimizeDifferenceWithRef(Objective):
         self,
         name: str,
         weight: float,
-        get_key: str,
-        get_kwargs: dict[str, Element | str | bool],
+        get_key: GETTABLE_SIMULATION_OUTPUT_T,
+        get_kwargs: dict[str, Any],
         reference: SimulationOutput,
         descriptor: str | None = None,
     ) -> None:
@@ -31,27 +32,34 @@ class MinimizeDifferenceWithRef(Objective):
 
         Parameters
         ----------
-        get_key : str
-            Name of the quantity to get, which must be an attribute of
-            :class:`.SimulationOutput`.
-        get_kwargs : dict[str, Element | str | bool]
+        name :
+            A short string to describe the objective and access to it.
+        weight :
+            A scaling constant to set the weight of current objective.
+        get_key :
+            Name of the quantity to get.
+        get_kwargs :
             Keyword arguments for the :meth:`.SimulationOutput.get` method. We
             do not check its validity, but in general you will want to define
             the keys ``elt`` and ``pos``. If objective concerns a phase, you
             may want to precise the ``to_deg`` key. You also should explicit
             the ``to_numpy`` key.
-        reference : SimulationOutput
+        reference :
             The reference simulation output from which the ideal value will be
             taken.
+        descriptor :
+            A longer string to explain the objective.
 
         """
-        self.get_key = get_key
+        self._check_get_arguments(get_key, get_kwargs)
+        self.get_key: GETTABLE_SIMULATION_OUTPUT_T = get_key
         self.get_kwargs = get_kwargs
+        self.ideal_value: float
         super().__init__(
             name,
             weight,
             descriptor=descriptor,
-            ideal_value=self._value_getter(reference),
+            ideal_value=self._value_getter(reference, handle_missing_elt=True),
         )
         self._check_ideal_value()
 
@@ -83,9 +91,32 @@ class MinimizeDifferenceWithRef(Objective):
 
         return message
 
-    def _value_getter(self, simulation_output: SimulationOutput) -> float:
-        """Get desired value using :meth:`.SimulationOutput.get` method."""
-        return simulation_output.get(self.get_key, **self.get_kwargs)
+    def _value_getter(
+        self,
+        simulation_output: SimulationOutput,
+        handle_missing_elt: bool = False,
+    ) -> float:
+        """Get desired value using :meth:`.SimulationOutput.get` method.
+
+        .. seealso::
+            :func:`.simulation_output.factory._element_to_index`
+
+        Parameters
+        ----------
+        simulation_output :
+            Object to ``get`` ``self.get_key`` from.
+        handle_missing_elt :
+            Automatically look for an equivalent :class:`.Element` when the
+            current one is not in :class:`.SimulationOutput`. Set it to
+            ``True`` when calculating reference value (reference
+            :class:`.Element` is not in compensating list of elements).
+
+        """
+        return simulation_output.get(
+            self.get_key,
+            **self.get_kwargs,
+            handle_missing_elt=handle_missing_elt,
+        )
 
     def _check_ideal_value(self) -> None:
         """Assert the the reference value is a float."""
@@ -95,10 +126,11 @@ class MinimizeDifferenceWithRef(Objective):
                 f"returned {self.ideal_value} instead of a float."
             )
 
-    def evaluate(self, simulation_output: SimulationOutput) -> float:
+    def evaluate(self, simulation_output: SimulationOutput | float) -> float:
+        assert isinstance(simulation_output, SimulationOutput)
         value = self._value_getter(simulation_output)
-        return self._compute_residues(value)
+        return self._compute_residuals(value)
 
-    def _compute_residues(self, value: float) -> float:
-        """Compute the residues."""
-        return self.weight * (value - self.ideal_value)
+    def _compute_residuals(self, value: float) -> float:
+        """Compute residuals, that we want to minimize."""
+        return self.weight * abs(value - self.ideal_value)

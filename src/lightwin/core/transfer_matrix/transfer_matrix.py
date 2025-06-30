@@ -102,6 +102,7 @@ class TransferMatrix:
         pos: POS_T | None = None,
         to_numpy: bool = True,
         none_to_nan: bool = False,
+        handle_missing_elt: bool = False,
         **kwargs: Any,
     ) -> Any:
         """Get attributes from this class.
@@ -120,6 +121,9 @@ class TransferMatrix:
             Convert lists to NumPy arrays.
         none_to_nan :
             Replace ``None`` values with ``np.nan``.
+        handle_missing_elt :
+            Look for an equivalent element when ``elt`` is not in
+            :attr:`.TransferMatrix.element_to_index` 's ``_elts``.
         **kwargs :
             Ignored here, but accepted for compatibility.
 
@@ -134,7 +138,11 @@ class TransferMatrix:
             val = getattr(self, key, None)
 
             if elt is not None:
-                idx = self._element_to_index(elt=elt, pos=pos)
+                idx = self._element_to_index(
+                    elt=elt,
+                    pos=pos,
+                    handle_missing_elt=handle_missing_elt,
+                )
                 val = val[idx] if val is not None else None
 
             if none_to_nan and val is None:

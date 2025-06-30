@@ -94,6 +94,7 @@ class BeamParameters(InitialBeamParameters):
         phase_space_name: PHASE_SPACE_T | None = None,
         elt: str | Element | None = None,
         pos: POS_T | None = None,
+        handle_missing_elt: bool = False,
         **kwargs: Any,
     ) -> Any:
         """Retrieve attribute values from the beam or its nested phase spaces.
@@ -141,6 +142,9 @@ class BeamParameters(InitialBeamParameters):
             Element name for slicing data arrays.
         pos :
             Position key for slicing data arrays.
+        handle_missing_elt :
+            Look for an equivalent element when ``elt`` is not in
+            :attr:`.BeamParameters.element_to_index` 's ``_elts``.
         **kwargs :
             Additional keyword arguments passed to the internal recursive
             getter.
@@ -170,7 +174,9 @@ class BeamParameters(InitialBeamParameters):
         val = {key: resolve_key(key) for key in keys}
 
         if elt is not None:
-            idx = self.element_to_index(elt=elt, pos=pos)
+            idx = self.element_to_index(
+                elt=elt, pos=pos, handle_missing_elt=handle_missing_elt
+            )
             val = {
                 _key: (_value[idx] if _value is not None else None)
                 for _key, _value in val.items()

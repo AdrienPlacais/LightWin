@@ -82,6 +82,7 @@ def _element_to_index(
     elt: Element | str,
     pos: POS_T | None = None,
     return_elt_idx: bool = False,
+    handle_missing_elt: bool = False,
 ) -> int | slice:
     """Convert ``elt`` and ``pos`` into a mesh index.
 
@@ -114,6 +115,8 @@ def _element_to_index(
     return_elt_idx :
         If True, the returned index is the position of the element in
         ``_elts``.
+    handle_missing_elt :
+        Look for an equivalent element when ``elt`` is not in ``_elts``.
 
     Returns
     -------
@@ -122,6 +125,12 @@ def _element_to_index(
 
     """
     if isinstance(elt, str):
+        elt = equivalent_elt(elts=_elts, elt=elt)
+    elif elt not in _elts and handle_missing_elt:
+        logging.debug(
+            f"{elt = } is not in _elts. Trying to take an element in _elts "
+            "with the same name..."
+        )
         elt = equivalent_elt(elts=_elts, elt=elt)
 
     beam_calc_param = elt.beam_calc_param[_solver_id]

@@ -219,6 +219,7 @@ class ELEMENT_TO_INDEX_T(Protocol):
         elt: str | Element,
         pos: POS_T | None = None,
         return_elt_idx: bool = False,
+        handle_missing_elt: bool = False,
     ) -> int | slice: ...
 
     """Return indexes of element ``elt``.
@@ -235,6 +236,8 @@ class ELEMENT_TO_INDEX_T(Protocol):
     return_elt_idx :
         Return a position in a :class:`.ListOfElements` instance. Used for
         arguments such as `phi_s`, which holds one value per :class:`.Element`.
+    handle_missing_elt :
+        Look for an equivalent element when ``elt`` is not in ``_elts``.
 
     Returns
     -------
@@ -249,6 +252,7 @@ def default_element_to_index(
     elt: str | Element,
     pos: POS_T | None = None,
     return_elt_idx: bool = False,
+    handle_missing_elt: bool = False,
 ) -> int | slice:
     """Return all indexes whatever the inputs are.
 
@@ -266,6 +270,8 @@ def default_element_to_index(
         Return a position in a :class:`.ListOfElements` instance. Used for
         arguments such as `phi_s`, which holds one value per :class:`.Element`.
         Actually unused in this default function.
+    handle_missing_elt :
+        Look for an equivalent element when ``elt`` is not in ``_elts``.
 
     Returns
     -------
@@ -275,6 +281,7 @@ def default_element_to_index(
     """
     logging.warning(
         "Actual ``element_to_index`` was not set, you are calling a default. "
-        f"{elt = }; {pos = }, {return_elt_idx = }."
+        f"{elt = }; {pos = }, {return_elt_idx = }, {handle_missing_elt = }"
+        "."
     )
     return slice(0, -1)

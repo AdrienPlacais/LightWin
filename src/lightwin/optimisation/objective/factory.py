@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -51,10 +52,10 @@ class ObjectiveFactory(ABC):
 
     Parameters
     ----------
-    objective_position_preset : list[str]
+    objective_position_preset :
         List of keys to dynamically select where the objectives should be
         matched.
-    compensation_zone_override_settings : dict[str, bool]
+    compensation_zone_override_settings :
         Keyword arguments that are passed to :func:`.zone_to_recompute`. By
         default, the list of elements in which we propagate the beam is as
         small as possible, but you may want to override this behavior.
@@ -81,17 +82,17 @@ class ObjectiveFactory(ABC):
 
         Parameters
         ----------
-        reference_elts : ListOfElements
+        reference_elts :
             All the reference elements.
-        reference_simulation_output : SimulationOutput
+        reference_simulation_output :
             The reference simulation of the reference linac.
-        broken_elts : ListOfElements
+        broken_elts :
             List containing all the elements of the broken linac.
-        failed_elements : list[Element]
+        failed_elements :
             Cavities that failed.
-        compensating_elements : list[Element]
+        compensating_elements :
             Cavities that will be used for the compensation.
-        design_space_kw : dict[str, str | bool | pathlib.Path | float]
+        design_space_kw :
             Holds information on variables/constraints limits/initial values.
             Used to compute the limits that ``phi_s`` must respect when the
             synchronous phase is defined as an objective.
@@ -255,7 +256,12 @@ class EnergyPhaseMismatch(ObjectiveFactory):
             name=markdown["phi_abs"].replace("deg", "rad"),
             weight=1.0,
             get_key="phi_abs",
-            get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
+            get_kwargs={
+                "elt": elt,
+                "pos": "out",
+                "to_numpy": False,
+                "to_deg": False,
+            },
             reference=self.reference_simulation_output,
             descriptor="""Minimize diff. of phi_abs between ref and fix at the
             end of the compensation zone.
@@ -325,6 +331,7 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
         objectives += [
             self._get_phi_s(element)
             for element in working_and_tunable_elements_in_compensation_zone
+            if isinstance(element, FieldMap)
         ]
 
         self._output_objectives(objectives)
@@ -350,7 +357,12 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
             name=markdown["phi_abs"].replace("deg", "rad"),
             weight=1.0,
             get_key="phi_abs",
-            get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
+            get_kwargs={
+                "elt": elt,
+                "pos": "out",
+                "to_numpy": False,
+                "to_deg": False,
+            },
             reference=self.reference_simulation_output,
             descriptor="""Minimize diff. of phi_abs between ref and fix at the
             end of the compensation zone.
@@ -387,9 +399,8 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
 
         if self.design_space_kw["from_file"]:
             raise OSError(
-                "For now, synchronous phase cannot be taken from "
-                "the variables or constraints.csv files when used as"
-                " objectives."
+                "For now, synchronous phase cannot be taken from the variables"
+                " or constraints.csv files when used as objectives."
             )
         limits = phi_s_limits(reference_cavity, **self.design_space_kw)
 
@@ -397,7 +408,12 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
             name=markdown["phi_s"].replace("deg", "rad"),
             weight=50.0,
             get_key="phi_s",
-            get_kwargs={"elt": cavity, "pos": "out", "to_numpy": False},
+            get_kwargs={
+                "elt": cavity,
+                "pos": "out",
+                "to_numpy": False,
+                "to_deg": False,
+            },
             limits=limits,
             descriptor="""Synchronous phase should be between limits.""",
         )
@@ -455,7 +471,7 @@ class EnergySeveralMismatches(ObjectiveFactory):
                 "phase_space_name": "zdelta",
             },
             reference=self.reference_simulation_output,
-            descriptor="""Minimize mismatch factor in the [z-delta] plane.""",
+            descriptor="Minimize mismatch factor in the [z-delta] plane.",
         )
         return objective
 
@@ -550,26 +566,26 @@ def get_objectives_and_residuals_function(
     design_space_kw: dict[str, float | bool | str | Path],
     objective_factory_class: type[ObjectiveFactory] | None = None,
 ) -> tuple[
-    list[Element], list[Objective], Callable[[SimulationOutput], np.ndarray]
+    list[Element], list[Objective], Callable[[SimulationOutput], NDArray]
 ]:
     """Instantiate objective factory and create objectives.
 
     Parameters
     ----------
-    reference_elts : ListOfElements
+    reference_elts :
         All the reference elements.
-    reference_simulation_output : SimulationOutput
+    reference_simulation_output :
         The reference simulation of the reference linac.
-    broken_elts : ListOfElements
+    broken_elts :
         The elements of the broken linac.
-    failed_elements : list[Element]
+    failed_elements :
         Elements that failed.
-    compensating_elements : list[Element]
+    compensating_elements :
         Elements that will be used for the compensation.
-    design_space_kw : dict | None, optional
+    design_space_kw :
         Used when we need to determine the limits for ``phi_s``. Those limits
         are defined in the ``.ini`` configuration file.
-    objective_factory_class : type[ObjectiveFactory] | None, optional
+    objective_factory_class :
         If provided, will override the ``objective_preset``. Used to let user
         define it's own :class:`.ObjectiveFactory` without altering the source
         code.
@@ -581,9 +597,9 @@ def get_objectives_and_residuals_function(
         process.
     objectives : list[Objective]
         Objectives that the optimisation algorithm will try to match.
-    compute_residuals : Callable[[SimulationOutput], np.ndarray]
+    compute_residuals : Callable[[SimulationOutput], NDArray]
         Function that converts a :class:`.SimulationOutput` to a plain numpy
-        array of residues.
+        array of residuals.
 
     """
     assert isinstance(objective_preset, str)
@@ -615,7 +631,7 @@ def get_objectives_and_residuals_function(
 
 def _compute_residuals(
     simulation_output: SimulationOutput, objectives: Collection[Objective]
-) -> np.ndarray:
+) -> NDArray:
     """Compute residuals on given `Objectives` for given `SimulationOutput`."""
     residuals = [
         objective.evaluate(simulation_output) for objective in objectives

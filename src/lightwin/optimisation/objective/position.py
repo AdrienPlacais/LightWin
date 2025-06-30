@@ -53,24 +53,24 @@ def zone_to_recompute(
 
     Parameters
     ----------
-    broken_elts : ListOfElements
+    broken_elts :
         :class:`.ListOfElements` from the broken linac.
-    objective_position_preset : Collection[str]
+    objective_position_preset :
         Short strings that must be in :data:`.POSITION_TO_INDEX` dictionary to
         determine where the objectives should be evaluated.
-    fault_idx, comp_idx : Iterable[int]
+    fault_idx, comp_idx :
         Cavity index of the faults and compensating cavities, directly
         converted to element index in the routine.
-    full_lattices : bool, optional
+    full_lattices :
         If you want the compensation zone to encompass full lattices only. It
         is a little bit slower as more :class:`.Element` are calculated. Plus,
         it has no impact even with :class:`.TraceWin` solver. Keeping it in
         case it has an impact that I did not see.
-    full_linac : bool, optional
+    full_linac :
         To compute full linac at every step of the optimisation process. Can be
         very time-consuming, but may be necessary with some future
-        :class:`.BeamCalculator`. The default is False.
-    start_at_beginning_of_linac : bool, optional
+        :class:`.BeamCalculator`.
+    start_at_beginning_of_linac :
         To make compensation zone start at the beginning of  the linac. The
         default is False.
 
