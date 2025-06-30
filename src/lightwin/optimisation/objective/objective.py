@@ -55,7 +55,7 @@ class Objective(ABC):
 
     @abstractmethod
     def evaluate(self, simulation_output: SimulationOutput) -> float:
-        """Compute residue of this objective.
+        """Compute residuals of this objective.
 
         Parameters
         ----------
@@ -64,8 +64,17 @@ class Objective(ABC):
 
         Returns
         -------
-        residue : float
+        residual : float
             Difference between current evaluation and ``ideal_value`` value for
             ``self.name``, scaled by ``self.weight``.
 
         """
+
+    def _compute_residuals(self, *args, **kwargs) -> float:
+        """Compute residual (loss), for a given value.
+
+        In general, you will want to call this function from
+        :meth:`.Objective.evaluate`.
+
+        """
+        raise NotImplementedError

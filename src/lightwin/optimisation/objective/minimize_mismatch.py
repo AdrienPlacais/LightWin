@@ -88,9 +88,9 @@ class MinimizeMismatch(Objective):
 
     def evaluate(self, simulation_output: SimulationOutput) -> float:
         twiss_fix = self._twiss_getter(simulation_output)
-        return self._compute_residues(twiss_fix)
+        return self._compute_residuals(twiss_fix)
 
-    def _compute_residues(self, twiss_fix: NDArray) -> float:
-        """Compute the residues."""
+    def _compute_residuals(self, twiss_fix: NDArray) -> float:
+        """Compute residuals, that we want to minimize."""
         res = mismatch_from_arrays(self._twiss_ref, twiss_fix)[0]
         return self.weight * res

@@ -1,7 +1,7 @@
 """Define :class:`Explorator`, a module to explore the design space.
 
 In order to be consistent with the ABC :class:`.OptimisationAlgorithm`,
-it also returns the solution with the lowest residue value -- hence it is also
+it also returns the solution with the lowest residual value -- hence it is also
 a "brute-force" optimisation algorithm.
 
 .. todo::

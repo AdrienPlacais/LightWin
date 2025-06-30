@@ -105,8 +105,8 @@ class MinimizeDifferenceWithRef(Objective):
     def evaluate(self, simulation_output: SimulationOutput | float) -> float:
         assert isinstance(simulation_output, SimulationOutput)
         value = self._value_getter(simulation_output)
-        return self._compute_residues(value)
+        return self._compute_residuals(value)
 
-    def _compute_residues(self, value: float) -> float:
-        """Compute the residues."""
+    def _compute_residuals(self, value: float) -> float:
+        """Compute residuals, that we want to minimize."""
         return self.weight * (value - self.ideal_value)

@@ -584,7 +584,7 @@ def get_objectives_and_residuals_function(
         Objectives that the optimisation algorithm will try to match.
     compute_residuals : Callable[[SimulationOutput], NDArray]
         Function that converts a :class:`.SimulationOutput` to a plain numpy
-        array of residues.
+        array of residuals.
 
     """
     assert isinstance(objective_preset, str)

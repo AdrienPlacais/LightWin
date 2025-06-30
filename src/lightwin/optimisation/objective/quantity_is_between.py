@@ -48,8 +48,8 @@ class QuantityIsBetween(Objective):
         limits :
             Lower and upper bound for the value.
         loss_function :
-            Indicates how the residues are handled whe the quantity is outside
-            the limits. The default is None.
+            Indicates how the residuals are handled when the quantity is
+            outside the limits. Currently not implemented.
 
         """
         self.get_key = get_key
@@ -85,10 +85,32 @@ class QuantityIsBetween(Objective):
     def evaluate(self, simulation_output: SimulationOutput) -> float:
         assert isinstance(simulation_output, SimulationOutput)
         value = self._value_getter(simulation_output)
-        return self._compute_residues(value)
+        return self._compute_residuals(value)
 
-    def _compute_residues(self, value: float) -> float:
-        """Compute the residues."""
+    def _compute_residuals(self, value: float) -> float:
+        """Compute residual for ``value`` with respect to the ideal interval.
+
+        This method applies a quadratic penalty if the value lies outside the
+        target interval defined by ``self.ideal_value``. No penalty is applied
+        when the value is within the interval.
+
+        The loss function is:
+
+        - 0 if ``ideal_value[0] <= value <= ideal_value[1]``
+        - ``weight * (value - bound)^2`` otherwise, where bound is the violated
+          boundary.
+
+        Parameters
+        ----------
+        value :
+            The value to evaluate.
+
+        Returns
+        -------
+        float
+            The computed residual (loss).
+
+        """
         if value < self.ideal_value[0]:
             return self.weight * (value - self.ideal_value[0]) ** 2
         if value > self.ideal_value[1]:
