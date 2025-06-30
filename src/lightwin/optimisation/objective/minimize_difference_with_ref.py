@@ -109,4 +109,4 @@ class MinimizeDifferenceWithRef(Objective):
 
     def _compute_residuals(self, value: float) -> float:
         """Compute residuals, that we want to minimize."""
-        return self.weight * (value - self.ideal_value)
+        return self.weight * abs(value - self.ideal_value)
