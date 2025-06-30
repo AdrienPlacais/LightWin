@@ -59,7 +59,7 @@ class MinimizeDifferenceWithRef(Objective):
             name,
             weight,
             descriptor=descriptor,
-            ideal_value=self._value_getter(reference),
+            ideal_value=self._value_getter(reference, handle_missing_elt=True),
         )
         self._check_ideal_value()
 
@@ -91,9 +91,29 @@ class MinimizeDifferenceWithRef(Objective):
 
         return message
 
-    def _value_getter(self, simulation_output: SimulationOutput) -> float:
-        """Get desired value using :meth:`.SimulationOutput.get` method."""
-        return simulation_output.get(self.get_key, **self.get_kwargs)
+    def _value_getter(
+        self,
+        simulation_output: SimulationOutput,
+        handle_missing_elt: bool = False,
+    ) -> float:
+        """Get desired value using :meth:`.SimulationOutput.get` method.
+
+        Parameters
+        ----------
+        simulation_output :
+            Object to ``get`` ``self.get_key`` from.
+        handle_missing_elt :
+            Raise a warning if the given :class:`.Element` is not present in
+            the :class:`.SimulationOutput` 's :class:`.ListOfElements`. Set it
+            to ``False`` only when calculating the reference value (reference
+            :class:`.Element` is not in compensating list of elements).
+
+        """
+        return simulation_output.get(
+            self.get_key,
+            **self.get_kwargs,
+            handle_missing_elt=handle_missing_elt,
+        )
 
     def _check_ideal_value(self) -> None:
         """Assert the the reference value is a float."""
