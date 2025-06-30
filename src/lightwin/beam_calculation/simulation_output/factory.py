@@ -123,6 +123,12 @@ def _element_to_index(
     """
     if isinstance(elt, str):
         elt = equivalent_elt(elts=_elts, elt=elt)
+    elif elt not in _elts:
+        logging.info(
+            f"{elt = } is not in _elts. Trying to take an element in _elts "
+            "with the same name..."
+        )
+        elt = equivalent_elt(elts=_elts, elt=elt)
 
     beam_calc_param = elt.beam_calc_param[_solver_id]
     if return_elt_idx:
