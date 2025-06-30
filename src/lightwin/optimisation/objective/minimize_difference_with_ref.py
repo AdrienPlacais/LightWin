@@ -51,6 +51,7 @@ class MinimizeDifferenceWithRef(Objective):
             A longer string to explain the objective.
 
         """
+        self._check_get_arguments(get_key, get_kwargs)
         self.get_key: GETTABLE_SIMULATION_OUTPUT_T = get_key
         self.get_kwargs = get_kwargs
         self.ideal_value: float

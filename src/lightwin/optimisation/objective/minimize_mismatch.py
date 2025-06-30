@@ -60,6 +60,7 @@ class MinimizeMismatch(Objective):
             )
             get_key = "twiss"
             get_kwargs["phase_space_name"] = "zdelta"
+        self._check_get_arguments(get_key, get_kwargs)
         self.get_key: GETTABLE_BEAM_PARAMETERS_T = get_key
         self.get_kwargs = get_kwargs
         super().__init__(name, weight, descriptor=descriptor, ideal_value=0.0)

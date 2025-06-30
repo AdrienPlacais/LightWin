@@ -52,6 +52,7 @@ class QuantityIsBetween(Objective):
             outside the limits. Currently not implemented.
 
         """
+        self._check_get_arguments(get_key, get_kwargs)
         self.get_key: GETTABLE_SIMULATION_OUTPUT_T = get_key
         self.get_kwargs = get_kwargs
         self.ideal_value: tuple[float, float]
