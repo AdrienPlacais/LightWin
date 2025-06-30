@@ -6,6 +6,7 @@ from pathlib import Path
 from lightwin.util.solvers import (
     solve_scalar_equation_brent, 
     is_in_range,
+    compute_phi_2,
     )
 from scipy.constants import c
 
@@ -182,26 +183,6 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             energy_acceptance=energy_acceptance_mev,
         )
         return simulation_output
-    
-def compute_phi_2(phi_2: float, phi_s: float) -> float:
-    """
-    Function whose root gives the left boundary of the phase acceptance (phi_2).
-
-    Parameters
-    ----------
-    phi_2 : float
-        Phase value in radians to test as the boundary.
-    phi_s : float
-        Synchronous phase in radians.
-
-    Returns
-    -------
-    float
-        Function value to be used in root-finding (zero crossing corresponds to phi_2).
-    """
-    term1 = np.sin(phi_2) - phi_2 * np.cos(phi_s)
-    term2 = np.sin(phi_s) - phi_s * np.cos(phi_s)
-    return term1 + term2
 
 def compute_phase_acceptance(phi_s: np.ndarray, phi_2_bounds: tuple[float, float]) -> np.ndarray:
     """
