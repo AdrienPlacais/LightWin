@@ -36,7 +36,7 @@ def dummy_phase_space() -> PhaseSpaceBeamParameters:
 @pytest.fixture
 def beam(dummy_phase_space: PhaseSpaceBeamParameters) -> BeamParameters:
     def element_to_index(
-        *, elt: str | Element, pos: POS_T | None = None
+        *, elt: str | Element, pos: POS_T | None = None, **kwargs
     ) -> int | slice:
         """This is just for quick tests, do not use this in real life."""
         allowed = ("ELT1", "ELT2", "ELT3")
