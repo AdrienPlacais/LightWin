@@ -166,6 +166,7 @@ class SimulationOutput:
         pos: POS_T | None = None,
         none_to_nan: bool = False,
         handle_missing_elt: bool = False,
+        warn_structure_dependent: bool = True,
         **kwargs: str | bool | None,
     ) -> Any:
         """Get attributes from this class or its subcomponents.
@@ -189,6 +190,9 @@ class SimulationOutput:
         handle_missing_elt :
             Look for an equivalent element when ``elt`` is not in
             :attr:`.SimulationOutput.element_to_index` 's ``_elts``.
+        warn_structure_dependent :
+            Raise a warning when trying to access data which is
+            structure-related rather than simulation-related.
         **kwargs :
             Additional arguments for recursive_getter.
 
@@ -218,7 +222,10 @@ class SimulationOutput:
 
         out: list[Any] = []
         for key in keys:
-            if key in GETTABLE_STRUCTURE_DEPENDENT:
+            if (
+                warn_structure_dependent
+                and key in GETTABLE_STRUCTURE_DEPENDENT
+            ):
                 logging.warning(
                     f"{key = } is structure-dependent and does not vary from "
                     "simulation to simulation. You may be better of calling "
