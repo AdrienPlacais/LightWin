@@ -98,14 +98,17 @@ class MinimizeDifferenceWithRef(Objective):
     ) -> float:
         """Get desired value using :meth:`.SimulationOutput.get` method.
 
+        .. seealso::
+            :func:`.simulation_output.factory._element_to_index`
+
         Parameters
         ----------
         simulation_output :
             Object to ``get`` ``self.get_key`` from.
         handle_missing_elt :
-            Raise a warning if the given :class:`.Element` is not present in
-            the :class:`.SimulationOutput` 's :class:`.ListOfElements`. Set it
-            to ``False`` only when calculating the reference value (reference
+            Automatically look for an equivalent :class:`.Element` when the
+            current one is not in :class:`.SimulationOutput`. Set it to
+            ``True`` when calculating reference value (reference
             :class:`.Element` is not in compensating list of elements).
 
         """
