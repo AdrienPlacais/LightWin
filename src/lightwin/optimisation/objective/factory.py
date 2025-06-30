@@ -326,6 +326,7 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
         objectives += [
             self._get_phi_s(element)
             for element in working_and_tunable_elements_in_compensation_zone
+            if isinstance(element, FieldMap)
         ]
 
         self._output_objectives(objectives)
@@ -388,9 +389,8 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
 
         if self.design_space_kw["from_file"]:
             raise OSError(
-                "For now, synchronous phase cannot be taken from "
-                "the variables or constraints.csv files when used as"
-                " objectives."
+                "For now, synchronous phase cannot be taken from the variables"
+                " or constraints.csv files when used as objectives."
             )
         limits = phi_s_limits(reference_cavity, **self.design_space_kw)
 
@@ -456,7 +456,7 @@ class EnergySeveralMismatches(ObjectiveFactory):
                 "phase_space_name": "zdelta",
             },
             reference=self.reference_simulation_output,
-            descriptor="""Minimize mismatch factor in the [z-delta] plane.""",
+            descriptor="Minimize mismatch factor in the [z-delta] plane.",
         )
         return objective
 

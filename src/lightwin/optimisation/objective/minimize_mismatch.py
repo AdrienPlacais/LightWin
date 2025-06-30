@@ -86,8 +86,7 @@ class MinimizeMismatch(Objective):
             self.get_key, **self.get_kwargs
         )
 
-    def evaluate(self, simulation_output: SimulationOutput | float) -> float:
-        assert isinstance(simulation_output, SimulationOutput)
+    def evaluate(self, simulation_output: SimulationOutput) -> float:
         twiss_fix = self._twiss_getter(simulation_output)
         return self._compute_residues(twiss_fix)
 

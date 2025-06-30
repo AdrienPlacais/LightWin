@@ -53,6 +53,7 @@ class MinimizeDifferenceWithRef(Objective):
         """
         self.get_key = get_key
         self.get_kwargs = get_kwargs
+        self.ideal_value: float
         super().__init__(
             name,
             weight,

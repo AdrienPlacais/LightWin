@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import Any
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -28,7 +29,7 @@ class Objective(ABC):
     name: str
     weight: float
     descriptor: str | None = None
-    ideal_value: tuple[float, float] | float | None = None
+    ideal_value: Any | None = None
 
     def __post_init__(self) -> None:
         """Avoid line jumps in the descriptor."""
@@ -53,7 +54,7 @@ class Objective(ABC):
         return header
 
     @abstractmethod
-    def evaluate(self, simulation_output: SimulationOutput | float) -> float:
+    def evaluate(self, simulation_output: SimulationOutput) -> float:
         """Compute residue of this objective.
 
         Parameters

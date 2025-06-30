@@ -54,6 +54,7 @@ class QuantityIsBetween(Objective):
         """
         self.get_key = get_key
         self.get_kwargs = get_kwargs
+        self.ideal_value: tuple[float, float]
         super().__init__(
             name, weight, descriptor=descriptor, ideal_value=limits
         )
@@ -81,7 +82,7 @@ class QuantityIsBetween(Objective):
         """Get desired value using :meth:`.SimulationOutput.get` method."""
         return simulation_output.get(self.get_key, **self.get_kwargs)
 
-    def evaluate(self, simulation_output: SimulationOutput | float) -> float:
+    def evaluate(self, simulation_output: SimulationOutput) -> float:
         assert isinstance(simulation_output, SimulationOutput)
         value = self._value_getter(simulation_output)
         return self._compute_residues(value)
