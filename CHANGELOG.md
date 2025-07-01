@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [0.10.x]
 
+## [0.10.4] -- 2025-07-01
+
+### Added
+
+- Introduced `BeamKwargs` typing. Easier to know the values stored in this object.
+
 ## [0.10.3] -- 2025-06-30
 
 ### Fixed

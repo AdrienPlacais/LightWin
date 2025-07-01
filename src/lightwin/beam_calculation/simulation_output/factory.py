@@ -9,7 +9,6 @@ import logging
 from abc import ABC, ABCMeta, abstractmethod
 from dataclasses import dataclass
 from functools import partial
-from typing import Any
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -17,6 +16,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, POS_T, Element
 from lightwin.core.list_of_elements.helper import equivalent_elt
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.util.typing import BeamKwargs
 
 
 @dataclass
@@ -26,7 +26,7 @@ class SimulationOutputFactory(ABC):
     _is_3d: bool
     _is_multipart: bool
     _solver_id: str
-    _beam_kwargs: dict[str, Any]
+    _beam_kwargs: BeamKwargs
 
     def __post_init__(self) -> None:
         """Create the factories.

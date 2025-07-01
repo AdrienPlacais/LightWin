@@ -20,6 +20,7 @@ from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import 
     SuperposedFieldMapEnvelope1DParameters,
 )
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.util.typing import BeamKwargs
 
 try:
     from lightwin.beam_calculation.cy_envelope_1d import (  # type: ignore
@@ -42,7 +43,7 @@ class ElementCyEnvelope1DParameters(ElementEnvelope1DParameters):
         self,
         length_m: float,
         n_steps: int,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         transf_mat_function: Callable | None = None,
         **kwargs: str | int,
     ) -> None:
@@ -111,11 +112,11 @@ class FieldMapCyEnvelope1DParameters(
 
         Parameters
         ----------
-        w_kin : float
+        w_kin :
             Kinetic energy at the entrance of cavity in :unit:`MeV`.
-        cavity_settings : CavitySettings
+        cavity_settings :
             Object holding the cavity parameters that can be changed.
-        phi_0_rel : float | None
+        phi_0_rel :
             Relative entry phase of the cavity. When provided, it means that we
             are trying to find the :math:`\phi_{0,\,\mathrm{rel}}` matching a
             given :math:`\phi_s`. The default is None.

@@ -1,6 +1,8 @@
 """Define types for better code-completion and linting."""
 
-from typing import Literal
+from typing import Literal, TypedDict
+
+from numpy.typing import NDArray
 
 #: List of different phase spaces.
 PHASE_SPACES = ("phiw", "phiw99", "t", "x", "x99", "y", "y99", "z", "zdelta")
@@ -415,3 +417,20 @@ GETTABLE_ACCELERATOR_T = (
     Literal["accelerator_path", "elts", "name", "simulation_outputs"]
     | GETTABLE_ELTS_T
 )
+
+
+class BeamKwargs(TypedDict):
+    """Holds all beam properties."""
+
+    e_mev: float
+    e_rest_mev: float
+    f_bunch_mhz: float
+    i_milli_a: float
+    q_adim: float
+    sigma: NDArray
+    inv_e_rest_mev: float
+    gamma_init: float
+    omega_0_bunch: float
+    lambda_bunch: float
+    q_over_m: float
+    m_over_q: float
