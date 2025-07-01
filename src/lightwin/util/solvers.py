@@ -49,10 +49,10 @@ def is_in_range(array: np.ndarray, range: tuple[float, float], warning: bool = T
 
 def solve_scalar_equation_brent(
     func: Callable[[float, float], float],
-    param_values: np.ndarray,
+    param_value: float,
     x_bounds: tuple[float, float],
     warning: bool = True
-) -> np.ndarray:
+) -> float:
     """
     Solve a scalar equation for multiple parameters using Brent's method.
 
@@ -60,8 +60,8 @@ def solve_scalar_equation_brent(
     ----------
     func : Callable[[float, float], float]
         Function f(x, param) whose root is to be found for each parameter.
-    param_values : np.ndarray
-        Array of parameter values to use when solving the equation.
+    param_value : float
+        Single parameter value to use when solving the equation.
     x_bounds : tuple[float, float]
         Interval (x_min, x_max) in which to search for the root.
         The bounds will be swapped if provided in reverse order.
@@ -71,12 +71,10 @@ def solve_scalar_equation_brent(
 
     Returns
     -------
-    np.ndarray
-        Array of roots found for each parameter value. NaN if no root is found.
+    float
+        Root found for the parameter value. NaN if no root is found.
     """
-
-    if param_values.size == 0 and warning:
-        logging.warning("The input param_values of solve_scalar_equation_brent() is empty. The result will also be an empty float array.")
+    
     x_left, x_right = x_bounds
     if x_left > x_right:
         x_left, x_right = x_right, x_left
@@ -85,26 +83,21 @@ def solve_scalar_equation_brent(
                 f"The range ({x_bounds[0]}, {x_bounds[1]}) is inverted. "
                 f"It has been corrected to ({x_left}, {x_right})."
             )
+    f = lambda x: func(x, param_value)
 
-    solutions = []
+    if f(x_left) * f(x_right) > 0:
+        solution = np.nan
+        if warning : 
+            logging.warning(f"{f(x_left)} and {f(x_right)} have the same sign in solve_scalar_equation_brent(). "
+                            "There is no root in this range")
+    else:
+        try:
+            solution = brentq(f, x_left, x_right)
 
-    for param in param_values:
-        f = lambda x: func(x, param)
+        except Exception:
+            solution = np.nan
 
-        if f(x_left) * f(x_right) > 0:
-            solutions.append(np.nan)
-            if warning : 
-                logging.warning(f"{f(x_left)} and {f(x_right)} have the same sign in solve_scalar_equation_brent(). "
-                                "There is no root in this range")
-        else:
-            try:
-                sol = brentq(f, x_left, x_right)
-                solutions.append(sol)
-
-            except Exception:
-                solutions.append(np.nan)
-
-    return np.array(solutions)
+    return solution
 
 def compute_phi_2(phi_2: float, phi_s: float) -> float:
     """

@@ -40,6 +40,10 @@ from lightwin.util.typing import (
     REFERENCE_PHASES_T,
     STATUS_T,
 )
+from lightwin.util.solvers import (
+    solve_scalar_equation_brent, 
+    compute_phi_2,
+)
 
 
 class CavitySettings:
@@ -68,11 +72,13 @@ class CavitySettings:
         reference: REFERENCE_PHASES_T,
         status: STATUS_T,
         freq_bunch_mhz: float,
+        # length_m: float,
         freq_cavity_mhz: float | None = None,
         transf_mat_func_wrappers: dict[str, Callable] | None = None,
         phi_s_funcs: dict[str, Callable] | None = None,
         rf_field: RfField | None = None,
         field: Field | None = None,
+        
     ) -> None:
         """Instantiate the object.
 
@@ -120,7 +126,9 @@ class CavitySettings:
         self._v_cav_mv: float
         self._phi_rf: float
         self._phi_bunch: float
-        # self._phi_acceptance: float
+        self._phi_acceptance: float
+        self.energy_acceptance: float 
+        # self._length_m = length_m
 
         self._status: STATUS_T
         self.status = status
@@ -192,12 +200,13 @@ class CavitySettings:
             reference = other.reference
         assert reference is not None
         settings = cls(
-            other.k_e,
-            getattr(other, reference),
-            reference,
-            other.status,
-            other._freq_bunch_mhz,
-            other.freq_cavity_mhz,
+            k_e=other.k_e,
+            phi=getattr(other, reference),
+            reference=reference,
+            status=other.status,
+            freq_bunch_mhz=other._freq_bunch_mhz,
+            # length_m=other._length_m,
+            freq_cavity_mhz=other.freq_cavity_mhz,
             transf_mat_func_wrappers=other.transf_mat_func_wrappers,
             phi_s_funcs=other.phi_s_funcs,
             rf_field=other.rf_field,
@@ -240,14 +249,15 @@ class CavitySettings:
             reference = base.reference
         assert reference is not None
         settings = cls(
-            k_e,
-            phi,
-            reference,
-            status,
-            base._freq_bunch_mhz,
-            base.freq_cavity_mhz,
-            base.transf_mat_func_wrappers,
-            base.phi_s_funcs,
+            k_e=k_e,
+            phi=phi,
+            reference=reference,
+            status=status,
+            freq_bunch_mhz=base._freq_bunch_mhz,
+            # length_m=base._length_m,
+            freq_cavity_mhz=base.freq_cavity_mhz,
+            transf_mat_func_wrappers=base.transf_mat_func_wrappers,
+            phi_s_funcs=base.phi_s_funcs,
             rf_field=base.rf_field,
             field=base.field,
         )
@@ -546,7 +556,8 @@ class CavitySettings:
     def phi_s(self, value: float) -> None:
         """Set the synchronous phase to desired value."""
         self._phi_s = value
-        # del self.phi_acceptance
+        del self.phi_acceptance
+        # del self.energy_acceptance
 
     @phi_s.deleter
     def phi_s(self) -> None:
@@ -554,7 +565,8 @@ class CavitySettings:
         if not hasattr(self, "_phi_s"):
             return
         del self._phi_s
-        # del self.phi_acceptance
+        del self.phi_acceptance
+        # del self.energy_acceptance
 
     @phi_s.getter
     def phi_s(self) -> float | None:
@@ -598,7 +610,8 @@ class CavitySettings:
     def phi_s(self) -> None:
         """Delete attribute."""
         self._phi_s = np.nan
-        # del self.phi_acceptance
+        del self.phi_acceptance
+        # del self.energy_acceptance
 
     def set_cavity_parameters_methods(
         self,
@@ -898,23 +911,71 @@ class CavitySettings:
     # =============================================================================
     # Acceptances
     # =============================================================================
+    @property
+    def phi_acceptance(self)->None:
+        """a"""
+
+    @phi_acceptance.setter
+    def phi_acceptance(self,value:float)->None:
+        self._phi_acceptance=value
+    
+    @phi_acceptance.getter
+    def phi_acceptance(self)->float:
+        if hasattr(self, "_phi_acceptance"):
+            return self._phi_acceptance
+        
+        phi_s = self.phi_s
+        if not (-np.pi/2 <= phi_s <= 0):
+            self._phi_acceptance = np.nan
+
+        phi_2_bounds = (-3*np.pi/2, 0)
+        self.phi_acceptance = -(phi_s + solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds))
+
+        return self._phi_acceptance
+    
+
+    @phi_acceptance.deleter
+    def phi_acceptance(self):
+        if hasattr(self, "_phi_acceptance"):
+            del self._phi_acceptance
+
+
     # @property
-    # def phi_acceptance(self)->None:
+    # def energy_acceptance(self)->None:
+    #     """a"""
+
+    # @energy_acceptance.setter
+    # def energy_acceptance(self,value:float)->None:
+    #     self._energy_acceptance=value
     
-    # @phi_acceptance.setter
-    # def phi_acceptance(self,value:float)->None:
-    #     self._phi_acceptance=value
-    
-    # @phi_acceptance.getter
-    # def phi_acceptance(self)->float:
-    #     if hasattr(self, "_phi_acceptance"):
-    #         return self._phi_acceptance
-    #     self.phi_acceptance = ...
-    #     return self.phi_acceptance
-    
-    # @phi_acceptance.deleter
-    # def phi_acceptance(self):
-    #     delattr(self, "_phi_acceptance")
+    # @energy_acceptance.getter
+    # def energy_acceptance(self)->float:
+    #     if hasattr(self, "_energy_acceptance"):
+    #         return self._energy_acceptance
+
+    #     phi_s = self.phi_s
+    #     if not (-np.pi/2 <= phi_s <= 0):
+    #         self._energy_acceptance = np.nan
+
+    #     v_cav_mv = self.v_cav_mv
+
+    #     freq_cavity_mhz = self.freq_cavity_mhz
+
+    #     length_m = self._length_m
+
+    #     w_kin = self.w_kin
+
+    #     beta_kin = energy(w_kin, "kin to beta", 0, 0, 0)
+    #     print(beta_kin)
+
+    #     self.energy_acceptance = 0
+    #     return self._energy_acceptance
+
+
+    # @energy_acceptance.deleter
+    # def energy_acceptance(self):
+    #     if hasattr(self, "_energy_acceptance"):
+    #         del self._energy_acceptance
 
 
     # .. list-table:: Meaning of status

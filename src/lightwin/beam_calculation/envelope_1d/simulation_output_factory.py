@@ -131,43 +131,43 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             element_to_index,
         )
 
-        phi_s = np.array([x if x is not None else np.nan for x in cav_params['phi_s']])
-        invalid_mask = is_in_range(phi_s, (-np.pi/2, 0,))
-        phi_s[invalid_mask] = np.nan
+        # phi_s = np.array([x if x is not None else np.nan for x in cav_params['phi_s']])
+        # invalid_mask = is_in_range(phi_s, (-np.pi/2, 0,))
+        # phi_s[invalid_mask] = np.nan
 
-        phi_2_bounds = (-3*np.pi/2, 0)
-        phi_acceptance = compute_phase_acceptance(phi_s, phi_2_bounds)
+        # phi_2_bounds = (-3*np.pi/2, 0)
+        # phi_acceptance = compute_phase_acceptance(phi_s, phi_2_bounds)
 
-        e_rest_mev = synch_trajectory.beam["e_rest_mev"]
-        q_adim = synch_trajectory.beam["q_adim"]
-        v_cav_mv = np.array([x if x is not None else np.nan for x in cav_params['v_cav_mv']])
-        freq_cavity_mhz = np.array([set_of_cavity_settings[elt].freq_cavity_mhz
-                           if elt in set_of_cavity_settings
-                           else np.nan
-                           for elt in elts
-                           ])
-        length_m = np.array([elt.length_m
-                    for elt in elts
-        ])
-        beta_kin = beam_parameters.beta_kin
-        assert isinstance(beta_kin, np.ndarray)
-        e_acc_mvpm = v_cav_mv/length_m
-        s_out = elts.get("s_out")
-        s_in_0 = elts.get("s_in")[0]
-        s_out_corrected = s_out - s_in_0
+        # e_rest_mev = synch_trajectory.beam["e_rest_mev"]
+        # q_adim = synch_trajectory.beam["q_adim"]
+        # v_cav_mv = np.array([x if x is not None else np.nan for x in cav_params['v_cav_mv']])
+        # freq_cavity_mhz = np.array([set_of_cavity_settings[elt].freq_cavity_mhz
+        #                    if elt in set_of_cavity_settings
+        #                    else np.nan
+        #                    for elt in elts
+        #                    ])
+        # length_m = np.array([elt.length_m
+        #             for elt in elts
+        # ])
+        # beta_kin = beam_parameters.beta_kin
+        # assert isinstance(beta_kin, np.ndarray)
+        # e_acc_mvpm = v_cav_mv/length_m
+        # s_out = elts.get("s_out")
+        # s_in_0 = elts.get("s_in")[0]
+        # s_out_corrected = s_out - s_in_0
 
-        gamma_kin_converted = np.array([gamma_kin[idx] for idx in s_out_corrected])
-        beta_kin_converted = np.array([beta_kin[idx] for idx in s_out_corrected])
+        # gamma_kin_converted = np.array([gamma_kin[idx] for idx in s_out_corrected])
+        # beta_kin_converted = np.array([beta_kin[idx] for idx in s_out_corrected])
 
-        energy_acceptance_mev = compute_energy_acceptance_mev(
-            q_adim=q_adim,
-            freq_cavity_mhz=freq_cavity_mhz,
-            e_acc_mvpm=e_acc_mvpm,
-            beta_kin=beta_kin_converted,
-            gamma_kin=gamma_kin_converted,
-            e_rest_mev=e_rest_mev,
-            phi_s=phi_s,
-        )       
+        # energy_acceptance_mev = compute_energy_acceptance_mev(
+        #     q_adim=q_adim,
+        #     freq_cavity_mhz=freq_cavity_mhz,
+        #     e_acc_mvpm=e_acc_mvpm,
+        #     beta_kin=beta_kin_converted,
+        #     gamma_kin=gamma_kin_converted,
+        #     e_rest_mev=e_rest_mev,
+        #     phi_s=phi_s,
+        # )       
 
         simulation_output = SimulationOutput(
             out_folder=self.out_folder,
@@ -179,69 +179,69 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             element_to_index=element_to_index,
             transfer_matrix=transfer_matrix,
             set_of_cavity_settings=set_of_cavity_settings,
-            phi_acceptance=phi_acceptance,
-            energy_acceptance=energy_acceptance_mev,
+            # phi_acceptance=phi_acceptance,
+            # energy_acceptance=energy_acceptance_mev,
         )
         return simulation_output
 
-def compute_phase_acceptance(phi_s: np.ndarray, phi_2_bounds: tuple[float, float]) -> np.ndarray:
-    """
-    Compute the phase acceptance in radians for an accelerating cavity.
+# def compute_phase_acceptance(phi_s: np.ndarray, phi_2_bounds: tuple[float, float]) -> np.ndarray:
+#     """
+#     Compute the phase acceptance in radians for an accelerating cavity.
 
-    Parameters
-    ----------
-    phi_s : np.ndarray
-        Synchronous phase in radians.
-    phi_2_bounds : tuple[float, float]
-        Search interval for computing the left boundary of the phase acceptance (phi_2).
+#     Parameters
+#     ----------
+#     phi_s : np.ndarray
+#         Synchronous phase in radians.
+#     phi_2_bounds : tuple[float, float]
+#         Search interval for computing the left boundary of the phase acceptance (phi_2).
 
-    Returns
-    -------
-    np.ndarray
-        Phase acceptance in radians, computed as (phi_1 - phi_2) for each phi_s.
-    """
-    phi_1 = -phi_s
-    phi_2 = solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds)
-    phi_acceptance = phi_1 - phi_2
+#     Returns
+#     -------
+#     np.ndarray
+#         Phase acceptance in radians, computed as (phi_1 - phi_2) for each phi_s.
+#     """
+#     phi_1 = -phi_s
+#     phi_2 = solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds)
+#     phi_acceptance = phi_1 - phi_2
 
-    return phi_acceptance
+#     return phi_acceptance
 
-def compute_energy_acceptance_mev(
-    q_adim: float,
-    freq_cavity_mhz: np.ndarray,
-    e_acc_mvpm: np.ndarray,
-    beta_kin: np.ndarray,
-    gamma_kin: np.ndarray,
-    e_rest_mev: float,
-    phi_s: np.ndarray
-) -> np.ndarray:
-    """
-    Compute the energy acceptance of an accelerating cavity in MeV.
+# def compute_energy_acceptance_mev(
+#     q_adim: float,
+#     freq_cavity_mhz: np.ndarray,
+#     e_acc_mvpm: np.ndarray,
+#     beta_kin: np.ndarray,
+#     gamma_kin: np.ndarray,
+#     e_rest_mev: float,
+#     phi_s: np.ndarray
+# ) -> np.ndarray:
+#     """
+#     Compute the energy acceptance of an accelerating cavity in MeV.
 
-    Parameters
-    ----------
-    q_adim : float
-        Particle charge in units of the elementary charge (e).
-    freq_cavity_mhz : np.ndarray
-        Cavity frequency in megahertz (MHz).
-    e_acc_mvpm : np.ndarray
-        Accelerating gradient in megavolts per meter (MV/m).
-    beta_kin : np.ndarray
-        Relativistic beta (v/c) of the particle.
-    gamma_kin : np.ndarray
-        Relativistic gamma factor of the particle.
-    e_rest_mev : float
-        Rest energy of the particle in MeV.
-    phi_s : np.ndarray
-        Synchronous phase in radians.
+#     Parameters
+#     ----------
+#     q_adim : float
+#         Particle charge in units of the elementary charge (e).
+#     freq_cavity_mhz : np.ndarray
+#         Cavity frequency in megahertz (MHz).
+#     e_acc_mvpm : np.ndarray
+#         Accelerating gradient in megavolts per meter (MV/m).
+#     beta_kin : np.ndarray
+#         Relativistic beta (v/c) of the particle.
+#     gamma_kin : np.ndarray
+#         Relativistic gamma factor of the particle.
+#     e_rest_mev : float
+#         Rest energy of the particle in MeV.
+#     phi_s : np.ndarray
+#         Synchronous phase in radians.
 
-    Returns
-    -------
-    np.ndarray
-        Energy acceptance of the cavity in MeV.
-    """
-    factor = 2 * q_adim * e_acc_mvpm * beta_kin**3 * gamma_kin**3 * e_rest_mev * c/ (np.pi * freq_cavity_mhz* 1e6)
-    trig_term = phi_s * np.cos(phi_s) - np.sin(phi_s)
-    energy_acceptance = np.sqrt(factor * trig_term) 
+#     Returns
+#     -------
+#     np.ndarray
+#         Energy acceptance of the cavity in MeV.
+# #     """
+#     factor = 2 * q_adim * e_acc_mvpm * beta_kin**3 * gamma_kin**3 * e_rest_mev * c/ (np.pi * freq_cavity_mhz* 1e6)
+#     trig_term = phi_s * np.cos(phi_s) - np.sin(phi_s)
+#     energy_acceptance = np.sqrt(factor * trig_term) 
 
-    return energy_acceptance
+# #     return energy_acceptance

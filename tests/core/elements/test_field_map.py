@@ -30,6 +30,7 @@ def dummy_cavity_settings() -> CavitySettings:
         status="nominal",
         freq_bunch_mhz=352.0,
         freq_cavity_mhz=352.0,
+        # length_m=0.41516,
     )
     settings.phi_rf = 0.3
     settings.v_cav_mv = 5.67

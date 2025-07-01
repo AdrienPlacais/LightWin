@@ -198,10 +198,12 @@ GETTABLE_RF_FIELD_T = Literal[
 #: Attributes that can be extracted with :meth:`.CavitySettings.get` method.
 GETTABLE_CAVITY_SETTINGS = (
     (
+        "energy_acceptance",
         "field",
         "freq_cavity_mhz",
         "k_e",
         "omega_0_rf",
+        "phi_acceptance",
         "phi_ref",
         "phi_rf",
         "phi_s_func",
@@ -209,17 +211,19 @@ GETTABLE_CAVITY_SETTINGS = (
         "rf_field",
         "status",
         "v_cav_mv",
-        "w_kin",
+        "w_kin", 
     )
     + REFERENCE_PHASES
     + GETTABLE_RF_FIELD
 )
 GETTABLE_CAVITY_SETTINGS_T = (
     Literal[
+        "energy_acceptance",
         "field",
         "freq_cavity_mhz",
         "k_e",
         "omega_0_rf",
+        "phi_acceptance",
         "phi_ref",
         "phi_rf",
         "phi_s_func",
@@ -285,7 +289,7 @@ _UNCONCATENABLE = (
 #: a list when called from :meth:`.ListOfElements.get` (or
 #: :meth:`.SimulationOutput.get`, :meth:`.Accelerator.get`)
 CONCATENABLE_ELTS = tuple(
-    [key for key in GETTABLE_FIELD_MAP if key not in _UNCONCATENABLE] + ["phi_acceptance", "energy_acceptance"]
+    [key for key in GETTABLE_FIELD_MAP if key not in _UNCONCATENABLE] 
 )
 CONCATENABLE_ELTS_T = (
     Literal[
@@ -295,10 +299,12 @@ CONCATENABLE_ELTS_T = (
     | GETTABLE_ELT_T
     # GETTABLE_CAVITY_SETTINGS_T without w_kin
     | Literal[
+        "energy_acceptance",
         "field",
         "freq_cavity_mhz",
         "k_e",
         "omega_0_rf",
+        "phi_acceptance",
         "phi_ref",
         "phi_rf",
         "phi_s_func",
@@ -368,7 +374,6 @@ GETTABLE_SIMULATION_OUTPUT = (
         "synch_trajectory",
         "v_cav_mv",
         "z_abs",
-        "phi_acceptance",
     )
     + GETTABLE_BEAM_PARAMETERS
     + GETTABLE_PARTICLE
@@ -384,8 +389,6 @@ GETTABLE_SIMULATION_OUTPUT_T = (
         "synch_trajectory",
         "v_cav_mv",
         "z_abs",
-        "phi_acceptance",
-        "energy_acceptance",
     ]
     | GETTABLE_BEAM_PARAMETERS_T
     | GETTABLE_PARTICLE_T
