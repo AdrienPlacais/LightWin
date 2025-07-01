@@ -53,6 +53,7 @@ from lightwin.tracewin_utils.dat_files import (
     export_dat_filecontent,
 )
 from lightwin.tracewin_utils.line import DatLine
+from lightwin.util.typing import BeamKwargs
 
 
 class ListOfElementsFactory:
@@ -63,7 +64,7 @@ class ListOfElementsFactory:
         is_3d: bool,
         is_multipart: bool,
         default_field_map_folder: Path,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         load_field_maps: bool = True,
         field_maps_in_3d: bool = False,
         load_cython_field_maps: bool = False,

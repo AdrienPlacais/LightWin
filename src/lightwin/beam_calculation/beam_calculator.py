@@ -34,7 +34,11 @@ from lightwin.core.elements.field_maps.cavity_settings_factory import (
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.util.typing import EXPORT_PHASES_T, REFERENCE_PHASES_T
+from lightwin.util.typing import (
+    EXPORT_PHASES_T,
+    REFERENCE_PHASES_T,
+    BeamKwargs,
+)
 
 
 class BeamCalculator(ABC):
@@ -47,7 +51,7 @@ class BeamCalculator(ABC):
         flag_phi_abs: bool,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         flag_cython: bool = False,
         export_phase: EXPORT_PHASES_T = "as_in_settings",
         **kwargs,

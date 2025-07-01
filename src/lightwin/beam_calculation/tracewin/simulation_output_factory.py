@@ -7,6 +7,7 @@ from functools import partial
 from pathlib import Path
 
 import numpy as np
+from numpy.typing import NDArray
 
 import lightwin.util.converters as convert
 from lightwin.beam_calculation.simulation_output.factory import (
@@ -30,197 +31,18 @@ from lightwin.core.particle import ParticleFullTrajectory, ParticleInitialState
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 
 
-@dataclass
-class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
-    """A class for creating simulation outputs for :class:`.TraceWin`."""
-
-    out_folder: Path
-    _filename: Path
-    beam_calc_parameters_factory: ElementTraceWinParametersFactory
-
-    def __post_init__(self) -> None:
-        """Set filepath-related attributes and create factories.
-
-        The created factories are :class:`.TransferMatrixFactory` and
-        :class:`.BeamParametersFactory`. The sub-class that is used is declared
-        in :meth:`._transfer_matrix_factory_class` and
-        :meth:`._beam_parameters_factory_class`.
-
-        """
-        self.load_results = partial(
-            _load_results_generic, filename=self._filename
-        )
-        # Factories created in ABC's __post_init__
-        return super().__post_init__()
-
-    @property
-    def _transfer_matrix_factory_class(self) -> ABCMeta:
-        """Give the **class** of the transfer matrix factory."""
-        return TransferMatrixFactoryTraceWin
-
-    @property
-    def _beam_parameters_factory_class(self) -> ABCMeta:
-        """Give the **class** of the beam parameters factory."""
-        return BeamParametersFactoryTraceWin
-
-    def run(
-        self,
-        elts: ListOfElements,
-        path_cal: Path,
-        exception: bool,
-        set_of_cavity_settings: SetOfCavitySettings,
-    ) -> SimulationOutput:
-        """
-        Create an object holding all relatable simulation results.
-
-        Parameters
-        ----------
-        elts : ListOfElements
-            Contains all elements or only a fraction or all the elements.
-        path_cal : pathlib.Path
-            Path to results folder.
-        exception : bool
-            Indicates if the run was unsuccessful or not.
-
-        Returns
-        -------
-        simulation_output : SimulationOutput
-            Holds all relatable data in a consistent way between the different
-            :class:`.BeamCalculator` objects.
-
-        """
-        if exception:
-            filepath = Path(path_cal, self._filename)
-            _remove_incomplete_line(filepath)
-            _add_dummy_data(filepath, elts)
-
-        results = self._create_main_results_dictionary(
-            path_cal, elts.input_particle
-        )
-
-        if exception:
-            results = _remove_invalid_values(results)
-
-        self._save_tracewin_meshing_in_elements(
-            elts, results["##"], results["z(m)"]
-        )
-
-        synch_trajectory = ParticleFullTrajectory(
-            w_kin=results["w_kin"],
-            phi_abs=results["phi_abs"],
-            synchronous=True,
-            beam=self._beam_kwargs,
-        )
-
-        cavity_parameters = self._create_cavity_parameters(path_cal, len(elts))
-
-        element_to_index = self._generate_element_to_index_func(elts)
-
-        transfer_matrix = self.transfer_matrix_factory.run(
-            elts.tm_cumul_in, path_cal, element_to_index
-        )
-
-        z_abs = results["z(m)"]
-        gamma_kin = synch_trajectory.get("gamma")
-        beam_parameters = self.beam_parameters_factory.factory_method(
-            z_abs, gamma_kin, results, element_to_index
-        )
-
-        simulation_output = SimulationOutput(
-            out_folder=self.out_folder,
-            is_multiparticle=hasattr(beam_parameters, "phiw99"),
-            is_3d=True,
-            z_abs=results["z(m)"],
-            synch_trajectory=synch_trajectory,
-            cav_params=cavity_parameters,
-            beam_parameters=beam_parameters,
-            element_to_index=element_to_index,
-            transfer_matrix=transfer_matrix,
-            set_of_cavity_settings=set_of_cavity_settings,
-        )
-        simulation_output.z_abs = results["z(m)"]
-
-        # FIXME attribute was not declared
-        simulation_output.pow_lost = results["Powlost"]
-
-        return simulation_output
-
-    def _create_main_results_dictionary(
-        self, path_cal: Path, input_particle: ParticleInitialState
-    ) -> dict[str, np.ndarray]:
-        """Load the TraceWin results, compute common interest quantities."""
-        results = self.load_results(path_cal=path_cal)
-        results = _set_energy_related_results(results, **self._beam_kwargs)
-        results = _set_phase_related_results(
-            results, z_in=input_particle.z_in, phi_in=input_particle.phi_abs
-        )
-        return results
-
-    # TODO FIXME
-    def _save_tracewin_meshing_in_elements(
-        self, elts: ListOfElements, elt_numbers: np.ndarray, z_abs: np.ndarray
-    ) -> None:
-        """Take output files to determine where are evaluated ``w_kin``..."""
-        elt_numbers = elt_numbers.astype(int)
-
-        for elt_number, elt in enumerate(elts, start=1):
-            elt_mesh_indexes = np.where(elt_numbers == elt_number)[0]
-            s_in = elt_mesh_indexes[0] - 1
-            s_out = elt_mesh_indexes[-1]
-            z_element = z_abs[s_in : s_out + 1]
-
-            elt.beam_calc_param[self._solver_id] = (
-                self.beam_calc_parameters_factory.run(
-                    elt, z_element, s_in, s_out
-                )
-            )
-
-    def _create_cavity_parameters(
-        self,
-        path_cal: Path,
-        n_elts: int,
-        filename: Path = Path("Cav_set_point_res.dat"),
-    ) -> dict[str, list[float | None]]:
-        """Load and format a dict containing v_cav and phi_s.
-
-        It has the same format as :class:`.Envelope1D` solver format.
-
-        Parameters
-        ----------
-        path_cal : pathlib.Path
-            Path to the folder where the cavity parameters file is stored.
-        n_elts : int
-            Number of elements under study.
-        filename : pathlib.Path, optional
-            The name of the cavity parameters file produced by TraceWin. The
-            default is Path('Cav_set_point_res.dat').
-
-        Returns
-        -------
-        cavity_param : dict[str, list[float | None]]
-            Contains the cavity parameters. Keys are ``'v_cav_mv'`` and
-            ``'phi_s'``.
-
-        """
-        cavity_parameters = _load_cavity_parameters(path_cal, filename)
-        cavity_parameters = _cavity_parameters_uniform_with_envelope1d(
-            cavity_parameters, n_elts
-        )
-        return cavity_parameters
-
-
 # =============================================================================
 # Main `results` dictionary
 # =============================================================================
-def _0_to_NaN(data: np.ndarray) -> np.ndarray:
+def _0_to_NaN(data: NDArray) -> NDArray:
     """Replace 0 by np.nan in given array."""
     data[np.where(data == 0.0)] = np.nan
     return data
 
 
 def _remove_invalid_values(
-    results: dict[str, np.ndarray],
-) -> dict[str, np.ndarray]:
+    results: dict[str, NDArray],
+) -> dict[str, NDArray]:
     """Remove invalid values that appear when ``exception`` is True."""
     results["SizeX"] = _0_to_NaN(results["SizeX"])
     results["SizeY"] = _0_to_NaN(results["SizeY"])
@@ -230,7 +52,7 @@ def _remove_invalid_values(
 
 def _load_results_generic(
     filename: Path, path_cal: Path
-) -> dict[str, np.ndarray]:
+) -> dict[str, NDArray]:
     """Load the TraceWin results.
 
     This function is not called directly. Instead, every instance of
@@ -241,9 +63,9 @@ def _load_results_generic(
 
     Parameters
     ----------
-    filename : pathlib.Path
+    filename :
         Results file produced by TraceWin.
-    path_cal : pathlib.Path
+    path_cal :
         Folder where the results file is located.
 
     Returns
@@ -274,16 +96,16 @@ def _load_results_generic(
 
 
 def _set_energy_related_results(
-    results: dict[str, np.ndarray], **beam_kwargs: float
-) -> dict[str, np.ndarray]:
+    results: dict[str, NDArray], **beam_kwargs: float | NDArray
+) -> dict[str, NDArray]:
     """
     Compute the energy from ``gama-1`` column.
 
     Parameters
     ----------
-    results : dict[str, numpy.ndarray]
+    results :
         Dictionary holding the TraceWin results.
-    beam_kwargs : dict[str, Any]
+    beam_kwargs :
         Holds beam constants such as ``q_over_m`` or ``e_rest``.
 
     Returns
@@ -303,10 +125,10 @@ def _set_energy_related_results(
 
 
 def _set_phase_related_results(
-    results: dict[str, np.ndarray],
+    results: dict[str, NDArray],
     z_in: float,
     phi_in: float,
-) -> dict[str, np.ndarray]:
+) -> dict[str, NDArray]:
     """
     Compute the phases, pos, frequencies.
 
@@ -318,12 +140,12 @@ def _set_phase_related_results(
 
     Parameters
     ----------
-    results : dict[str, numpy.ndarray]
+    results :
         Dictionary holding the TraceWin results.
-    z_in : float
+    z_in :
         Absolute position in the linac of the beginning of the linac portion
         under study (can be 0.).
-    phi_in : float
+    phi_in :
         Absolute phase of the synch particle at the beginning of the linac
         portion under study (can be 0.).
 
@@ -431,15 +253,15 @@ def _add_dummy_data(filepath: Path, elts: ListOfElements) -> None:
 # =============================================================================
 def _load_cavity_parameters(
     path_cal: Path, filename: Path
-) -> dict[str, np.ndarray]:
+) -> dict[str, NDArray]:
     """
     Get the cavity parameters calculated by TraceWin.
 
     Parameters
     ----------
-    path_cal : pathlib.Path
+    path_cal :
         Path to the folder where the cavity parameters file is stored.
-    filename : pathlib.Path
+    filename :
         The name of the cavity parameters file produced by TraceWin.
 
     Returns
@@ -464,7 +286,7 @@ def _load_cavity_parameters(
 
 
 def _cavity_parameters_uniform_with_envelope1d(
-    cavity_parameters: dict[str, np.ndarray], n_elts: int
+    cavity_parameters: dict[str, NDArray], n_elts: int
 ) -> list[None | dict[str, float]]:
     """Transform the dict so we have the same format as Envelope1D."""
     cavity_numbers = cavity_parameters["Cav#"].astype(int)
@@ -487,3 +309,182 @@ def _cavity_parameters_uniform_with_envelope1d(
         "phi_0": phi_0,
     }
     return compliant_cavity_parameters
+
+
+@dataclass
+class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
+    """A class for creating simulation outputs for :class:`.TraceWin`."""
+
+    out_folder: Path
+    _filename: Path
+    beam_calc_parameters_factory: ElementTraceWinParametersFactory
+
+    def __post_init__(self) -> None:
+        """Set filepath-related attributes and create factories.
+
+        The created factories are :class:`.TransferMatrixFactory` and
+        :class:`.BeamParametersFactory`. The sub-class that is used is declared
+        in :meth:`._transfer_matrix_factory_class` and
+        :meth:`._beam_parameters_factory_class`.
+
+        """
+        self.load_results = partial(
+            _load_results_generic, filename=self._filename
+        )
+        # Factories created in ABC's __post_init__
+        return super().__post_init__()
+
+    @property
+    def _transfer_matrix_factory_class(self) -> ABCMeta:
+        """Give the **class** of the transfer matrix factory."""
+        return TransferMatrixFactoryTraceWin
+
+    @property
+    def _beam_parameters_factory_class(self) -> ABCMeta:
+        """Give the **class** of the beam parameters factory."""
+        return BeamParametersFactoryTraceWin
+
+    def run(
+        self,
+        elts: ListOfElements,
+        path_cal: Path,
+        exception: bool,
+        set_of_cavity_settings: SetOfCavitySettings,
+    ) -> SimulationOutput:
+        """
+        Create an object holding all relatable simulation results.
+
+        Parameters
+        ----------
+        elts :
+            Contains all elements or only a fraction or all the elements.
+        path_cal :
+            Path to results folder.
+        exception :
+            Indicates if the run was unsuccessful or not.
+
+        Returns
+        -------
+        simulation_output : SimulationOutput
+            Holds all relatable data in a consistent way between the different
+            :class:`.BeamCalculator` objects.
+
+        """
+        if exception:
+            filepath = Path(path_cal, self._filename)
+            _remove_incomplete_line(filepath)
+            _add_dummy_data(filepath, elts)
+
+        results = self._create_main_results_dictionary(
+            path_cal, elts.input_particle
+        )
+
+        if exception:
+            results = _remove_invalid_values(results)
+
+        self._save_tracewin_meshing_in_elements(
+            elts, results["##"], results["z(m)"]
+        )
+
+        synch_trajectory = ParticleFullTrajectory(
+            w_kin=results["w_kin"],
+            phi_abs=results["phi_abs"],
+            synchronous=True,
+            beam=self._beam_kwargs,
+        )
+
+        cavity_parameters = self._create_cavity_parameters(path_cal, len(elts))
+
+        element_to_index = self._generate_element_to_index_func(elts)
+
+        transfer_matrix = self.transfer_matrix_factory.run(
+            elts.tm_cumul_in, path_cal, element_to_index
+        )
+
+        z_abs = results["z(m)"]
+        gamma_kin = synch_trajectory.get("gamma")
+        beam_parameters = self.beam_parameters_factory.factory_method(
+            z_abs, gamma_kin, results, element_to_index
+        )
+
+        simulation_output = SimulationOutput(
+            out_folder=self.out_folder,
+            is_multiparticle=hasattr(beam_parameters, "phiw99"),
+            is_3d=True,
+            z_abs=results["z(m)"],
+            synch_trajectory=synch_trajectory,
+            cav_params=cavity_parameters,
+            beam_parameters=beam_parameters,
+            element_to_index=element_to_index,
+            transfer_matrix=transfer_matrix,
+            set_of_cavity_settings=set_of_cavity_settings,
+        )
+        simulation_output.z_abs = results["z(m)"]
+
+        # FIXME attribute was not declared
+        simulation_output.pow_lost = results["Powlost"]
+
+        return simulation_output
+
+    def _create_main_results_dictionary(
+        self, path_cal: Path, input_particle: ParticleInitialState
+    ) -> dict[str, NDArray]:
+        """Load the TraceWin results, compute common interest quantities."""
+        results = self.load_results(path_cal=path_cal)
+        results = _set_energy_related_results(results, **self._beam_kwargs)
+        results = _set_phase_related_results(
+            results, z_in=input_particle.z_in, phi_in=input_particle.phi_abs
+        )
+        return results
+
+    # TODO FIXME
+    def _save_tracewin_meshing_in_elements(
+        self, elts: ListOfElements, elt_numbers: np.ndarray, z_abs: np.ndarray
+    ) -> None:
+        """Take output files to determine where are evaluated ``w_kin``..."""
+        elt_numbers = elt_numbers.astype(int)
+
+        for elt_number, elt in enumerate(elts, start=1):
+            elt_mesh_indexes = np.where(elt_numbers == elt_number)[0]
+            s_in = elt_mesh_indexes[0] - 1
+            s_out = elt_mesh_indexes[-1]
+            z_element = z_abs[s_in : s_out + 1]
+
+            elt.beam_calc_param[self._solver_id] = (
+                self.beam_calc_parameters_factory.run(
+                    elt, z_element, s_in, s_out
+                )
+            )
+
+    def _create_cavity_parameters(
+        self,
+        path_cal: Path,
+        n_elts: int,
+        filename: Path = Path("Cav_set_point_res.dat"),
+    ) -> dict[str, list[float | None]]:
+        """Load and format a dict containing v_cav and phi_s.
+
+        It has the same format as :class:`.Envelope1D` solver format.
+
+        Parameters
+        ----------
+        path_cal :
+            Path to the folder where the cavity parameters file is stored.
+        n_elts :
+            Number of elements under study.
+        filename :
+            The name of the cavity parameters file produced by TraceWin. The
+            default is Path('Cav_set_point_res.dat').
+
+        Returns
+        -------
+        cavity_param : dict[str, list[float | None]]
+            Contains the cavity parameters. Keys are ``'v_cav_mv'`` and
+            ``'phi_s'``.
+
+        """
+        cavity_parameters = _load_cavity_parameters(path_cal, filename)
+        cavity_parameters = _cavity_parameters_uniform_with_envelope1d(
+            cavity_parameters, n_elts
+        )
+        return cavity_parameters

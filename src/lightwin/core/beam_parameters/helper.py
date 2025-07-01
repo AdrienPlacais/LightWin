@@ -6,12 +6,13 @@ For more information on the units that are used in this module, see
 """
 
 import logging
-from typing import Any, overload
+from typing import overload
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.util import converters
-from lightwin.util.typing import PHASE_SPACE_T, PHASE_SPACES
+from lightwin.util.typing import PHASE_SPACE_T, PHASE_SPACES, BeamKwargs
 
 
 # =============================================================================
@@ -19,15 +20,15 @@ from lightwin.util.typing import PHASE_SPACE_T, PHASE_SPACES
 # =============================================================================
 def reconstruct_sigma(
     phase_space_name: str,
-    sigma_00: np.ndarray,
-    sigma_01: np.ndarray,
-    eps: np.ndarray,
+    sigma_00: NDArray,
+    sigma_01: NDArray,
+    eps: NDArray,
     tol: float = 1e-8,
     eps_is_normalized: bool = False,
-    gamma_kin: np.ndarray | None = None,
-    beta_kin: np.ndarray | None = None,
+    gamma_kin: NDArray | None = None,
+    beta_kin: NDArray | None = None,
     **beam,
-) -> np.ndarray:
+) -> NDArray:
     r"""
     Set :math:`\sigma` matrix from the two top components and emittance.
 
@@ -40,34 +41,34 @@ def reconstruct_sigma(
 
     Parameters
     ----------
-    phase_space_name : str
+    phase_space_name :
         Name of the phase space.
-    sigma_00 : numpy.ndarray
+    sigma_00 :
         ``(n, )`` array of top-left sigma matrix components.
-    sigma_01 : numpy.ndarray
+    sigma_01 :
         ``(n, )`` array of top-right (bottom-left) sigma matrix components.
-    eps : numpy.ndarray
+    eps :
         ``(n, )`` un-normalized emittance array, in units consistent with
         ``sigma_00`` and ``sigma_01``.
-    tol : float, optional
+    tol :
         ``sigma_00`` is set to np.nan where it is under ``tol`` to avoid
         ``RuntimeWarning``. The default is ``1e-8``.
-    eps_is_normalized : bool, optional
+    eps_is_normalized :
         To tell if the given emittance is already normalized. The default is
         True. In this case, it is de-normalized and ``gamma_kin`` must be
         provided.
-    gamma_kin : numpy.ndarray | None, optional
+    gamma_kin :
         Lorentz gamma factor. The default is None. It is mandatory to give it
         if the emittance is given unnormalized.
-    beta_kin : numpy.ndarray | None, optional
+    beta_kin :
         Lorentz beta factor. The default is None. In this case, we compute it
         from ``gamma_kin``.
-    beam : dict
+    beam :
         Configuration dictionary holding the beam parameters.
 
     Returns
     -------
-    sigma : numpy.ndarray
+    sigma : NDArray
         ``(n, 2, 2)`` full sigma matrix along the linac.
 
     """
@@ -102,30 +103,30 @@ def reconstruct_sigma(
 @overload
 def eps_from_sigma(
     phase_space_name: str,
-    sigma: np.ndarray,
-    gamma_kin: np.ndarray,
-    beta_kin: np.ndarray,
-    beam_kwargs: dict[str, Any],
-) -> tuple[np.ndarray, np.ndarray]: ...
+    sigma: NDArray,
+    gamma_kin: NDArray,
+    beta_kin: NDArray,
+    beam_kwargs: BeamKwargs,
+) -> tuple[NDArray, NDArray]: ...
 
 
 @overload
 def eps_from_sigma(
     phase_space_name: str,
-    sigma: np.ndarray,
+    sigma: NDArray,
     gamma_kin: float,
     beta_kin: float,
-    beam_kwargs: dict[str, Any],
+    beam_kwargs: BeamKwargs,
 ) -> tuple[float, float]: ...
 
 
 def eps_from_sigma(
     phase_space_name: str,
-    sigma: np.ndarray,
-    gamma_kin: np.ndarray | float,
-    beta_kin: np.ndarray | float,
-    beam_kwargs: dict[str, Any],
-) -> tuple[np.ndarray | float, np.ndarray | float]:
+    sigma: NDArray,
+    gamma_kin: NDArray | float,
+    beta_kin: NDArray | float,
+    beam_kwargs: BeamKwargs,
+) -> tuple[NDArray | float, NDArray | float]:
     r"""Compute emittance from :math:`\sigma` beam matrix.
 
     In the :math:`[z-\delta]` phase space, emittance is in :unit:`\\pi.mm.\\%`.
@@ -134,22 +135,22 @@ def eps_from_sigma(
 
     Parameters
     ----------
-    phase_space_name : str
+    phase_space_name :
         Name of the phase space, used to apply proper normalization factor.
-    sigma : numpy.ndarray
+    sigma :
         ``(n, 2, 2)`` (or ``(2, 2)``) :math:`\sigma` beam matrix in SI units.
-    gamma_kin : numpy.ndarray | float
+    gamma_kin :
         ``(n, )`` (or float) Lorentz gamma factor.
-    beta_kin : numpy.ndarray | float
+    beta_kin :
         ``(n, )`` (or float) Lorentz beta factor.
-    beam_kwargs : dict[str, Any]
+    beam_kwargs :
         Configuration dictionary holding the initial beam parameters.
 
     Returns
     -------
-    eps_no_normalization : numpy.ndarray | float
+    eps_no_normalization : NDArray | float
         ``(n, )`` array (or float) of emittance, not normalized.
-    eps_normalized : numpy.ndarray float
+    eps_normalized : NDArray float
         ``(n, )`` array (or float) of emittance, normalized.
 
     """
@@ -189,10 +190,10 @@ def eps_from_sigma(
 
 def twiss_from_sigma(
     phase_space_name: str,
-    sigma: np.ndarray,
-    eps_no_normalization: np.ndarray | float,
+    sigma: NDArray,
+    eps_no_normalization: NDArray | float,
     tol: float = 1e-8,
-) -> np.ndarray:
+) -> NDArray:
     r"""Compute the Twiss parameters using the :math:`\sigma` matrix.
 
     In the :math:`[z-\delta]` phase space, emittance and Twiss are in
@@ -207,19 +208,19 @@ def twiss_from_sigma(
 
     Parameters
     ----------
-    phase_space_name : str
+    phase_space_name :
         Name of the phase space, used to set the proper normalization.
-    sigma : numpy.ndarray
+    sigma :
         ``(n, 2, 2)`` array (or ``(2, 2)``) holding :math:`\sigma` beam matrix.
-    eps_no_normalization : numpy.ndarray | float
+    eps_no_normalization :
         ``(n, )`` array (or float) of unnormalized emittance.
-    tol : float, optional
+    tol :
         ``eps_no_normalization`` is set to np.nan where it is under ``tol``
         to avoid ``RuntimeWarning``. The default is ``1e-8``.
 
     Returns
     -------
-    twiss : numpy.ndarray
+    twiss : NDArray
         ``(n, 3)`` (or ``(3, )``) array of Twiss parameters.
 
     """
@@ -257,8 +258,8 @@ def twiss_from_sigma(
 # already known
 def envelopes_from_sigma(
     phase_space_name: str,
-    sigma: np.ndarray,
-) -> np.ndarray:
+    sigma: NDArray,
+) -> NDArray:
     r"""Compute the envelopes.
 
     Units are :unit:`mm` for the position envelope in :math:`[z-\delta]`,
@@ -268,14 +269,14 @@ def envelopes_from_sigma(
 
     Parameters
     ----------
-    phase_space_name : str
+    phase_space_name :
         Name of the phase space, used to set the proper normalization.
-    sigma : numpy.ndarray
+    sigma :
         ``(n, 2, 2)`` (or ``(2, 2)``) array holding :math:`\sigma` beam matrix.
 
     Returns
     -------
-    envelopes : numpy.ndarray
+    envelopes : NDArray
         ``(n, 2)`` (or ``(2, )``) array with position envelope in first column,
         energy envelope in second.
 
@@ -301,9 +302,9 @@ def envelopes_from_sigma(
 # Compute quantities from the transfer matrix
 # =============================================================================
 def sigma_from_transfer_matrices(
-    sigma_in: np.ndarray,
-    tm_cumul: np.ndarray,
-) -> np.ndarray:
+    sigma_in: NDArray,
+    tm_cumul: NDArray,
+) -> NDArray:
     r"""
     Compute the :math:`\sigma` beam matrices over the linac.
 
@@ -312,14 +313,14 @@ def sigma_from_transfer_matrices(
 
     Parameters
     ----------
-    tm_cumul : numpy.ndarray
+    tm_cumul :
         ``(n, 2, 2)`` cumulated transfer matrices along the linac.
-    sigma_in : numpy.ndarray
+    sigma_in :
         ``(2, 2)`` :math:`\sigma` beam matrix at the linac entrance.
 
     Returns
     -------
-    sigma : numpy.ndarray
+    sigma : NDArray
         ``(n, 2, 2)`` :math:`\sigma` beam matrix along the linac.
 
     """
@@ -336,23 +337,21 @@ def sigma_from_transfer_matrices(
 # =============================================================================
 # Compute quantities from Twiss and emittance
 # =============================================================================
-def envelopes_from_twiss_eps(
-    twiss: np.ndarray, eps: np.ndarray | float
-) -> np.ndarray:
+def envelopes_from_twiss_eps(twiss: NDArray, eps: NDArray | float) -> NDArray:
     r"""
     Compute the envelopes from the Twiss parameters and emittance.
 
     Parameters
     ----------
-    twiss : numpy.ndarray
+    twiss :
         ``(n, 3)`` (or ``(3, )``) array of Twiss parameters.
-    eps : numpy.ndarray
+    eps :
         ``(n, )`` array of emittance. If the phase space is :math:`[\phi-W]`,
         the emittance should be normalized. Else, it should be un-normalized.
 
     Returns
     -------
-    envelopes : numpy.ndarray
+    envelopes : NDArray
         ``(n, 2)`` (or ``(2, )``) array with position envelope in first column,
         energy envelope in second.
 
@@ -373,11 +372,11 @@ def envelopes_from_twiss_eps(
 def eps_from_other_phase_space(
     other_phase_space_name: str,
     phase_space_name: str,
-    eps_other: np.ndarray,
-    gamma_kin: np.ndarray,
-    beta_kin: np.ndarray,
+    eps_other: NDArray,
+    gamma_kin: NDArray,
+    beta_kin: NDArray,
     **beam_kwargs,
-) -> tuple[np.ndarray, np.ndarray]: ...
+) -> tuple[NDArray, NDArray]: ...
 
 
 @overload
@@ -394,11 +393,11 @@ def eps_from_other_phase_space(
 def eps_from_other_phase_space(
     other_phase_space_name: str,
     phase_space_name: str,
-    eps_other: np.ndarray | float,
-    gamma_kin: np.ndarray | float,
-    beta_kin: np.ndarray | float,
+    eps_other: NDArray | float,
+    gamma_kin: NDArray | float,
+    beta_kin: NDArray | float,
     **beam_kwargs,
-) -> tuple[np.ndarray | float, np.ndarray | float]:
+) -> tuple[NDArray | float, NDArray | float]:
     """Convert emittance from another phase space.
 
     Output emittance is normalized if input is, and is un-normalized if the
@@ -409,25 +408,25 @@ def eps_from_other_phase_space(
 
     Parameters
     ----------
-    other_phase_space_name : str
+    other_phase_space_name :
         Name of the original phase space.
-    phase_space_name : str
+    phase_space_name :
         Name of the phase space, used to ensure correct
         normalization/denormalization.
-    eps_other : numpy.ndarray | float
+    eps_other :
         ``(n, )`` array (or float) of emittance of starting phase-space.
-    gamma_kin : numpy.ndarray | float
+    gamma_kin :
         ``(n, )`` array (or float) of Lorentz gamma.
-    beta_kin : numpy.ndarray | float
+    beta_kin :
         ``(n, )`` array (or float) of Lorentz beta
     beam_kwargs :
         Configuration dictionary holding the initial beam parameters.
 
     Returns
     -------
-    eps_no_normalization : numpy.ndarray | float
+    eps_no_normalization : NDArray | float
         ``(n, )`` array (or float) of emittance, not normalized.
-    eps_normalized : numpy.ndarray | float
+    eps_normalized : NDArray | float
         ``(n, )`` array (or float) of emittance, normalized.
 
     """
@@ -453,31 +452,31 @@ def eps_from_other_phase_space(
 def twiss_from_other_phase_space(
     other_phase_space_name: str,
     phase_space_name: str,
-    twiss_other: np.ndarray,
-    gamma_kin: np.ndarray | float,
-    beta_kin: np.ndarray | float,
+    twiss_other: NDArray,
+    gamma_kin: NDArray | float,
+    beta_kin: NDArray | float,
     **beam,
-) -> np.ndarray:
+) -> NDArray:
     """Compute Twiss parameters from Twiss parameters in another plane.
 
     Parameters
     ----------
-    other_phase_space_name : str
+    other_phase_space_name :
         Name of the original phase space.
-    phase_space_name : str
+    phase_space_name :
         Name of the phase space.
-    twiss_other : numpy.ndarray
+    twiss_other :
         ``(n, 3)`` Twiss array from original phase space.
-    gamma_kin : numpy.ndarray | float
+    gamma_kin :
         ``(n, )`` array (or float) of Lorentz gamma.
-    beta_kin : numpy.ndarray | float
+    beta_kin :
         ``(n, )`` array (or float) of Lorentz beta
     beam :
         Configuration dictionary holding the initial beam parameters.
 
     Returns
     -------
-    twiss : numpy.ndarray
+    twiss : NDArray
         ``(n, 3)`` array of Twiss parameters.
 
     """
@@ -500,8 +499,8 @@ def twiss_from_other_phase_space(
 # Utility
 # =============================================================================
 def mismatch_from_arrays(
-    ref: np.ndarray, fix: np.ndarray, transp: bool = False
-) -> np.ndarray:
+    ref: NDArray, fix: NDArray, transp: bool = False
+) -> NDArray:
     """Compute the mismatch factor between two ellipses."""
     assert isinstance(ref, np.ndarray)
     assert isinstance(fix, np.ndarray)
@@ -527,8 +526,8 @@ def mismatch_from_arrays(
 
 
 def resample_twiss_on_fix(
-    reference_z_abs: np.ndarray, reference_twiss: np.ndarray, z_abs: np.ndarray
-) -> np.ndarray:
+    reference_z_abs: NDArray, reference_twiss: NDArray, z_abs: NDArray
+) -> NDArray:
     """Interpolate ref Twiss on fix Twiss to compute mismatch afterwards."""
     n_points = z_abs.shape[0]
     out_shape = (n_points, 3)

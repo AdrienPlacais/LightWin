@@ -7,17 +7,18 @@
 """
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.constants import c
 
 
 def position(
-    pos_in: float | np.ndarray,
-    beta: float | np.ndarray,
+    pos_in: float | NDArray,
+    beta: float | NDArray,
     key: str,
     omega_0_bunch: float,
     **beam_kwargs,
-) -> float | np.ndarray:
+) -> float | NDArray:
     """Phase/position converters."""
     conversion_functions = {
         "z to phi": lambda pos, bet: -omega_0_bunch * pos / (bet * c),
@@ -27,13 +28,13 @@ def position(
 
 
 def energy(
-    energy_in: float | np.ndarray,
+    energy_in: float | NDArray,
     key: str,
     q_over_m: float,
     m_over_q: float,
     e_rest_mev: float,
     **beam_kwargs,
-) -> float | np.ndarray:
+) -> float | NDArray:
     """Convert energy or Lorentz factor into another related quantity."""
     conversion_functions = {
         "v to kin": lambda x: 0.5 * m_over_q * x**2 * 1e-6,
@@ -56,12 +57,12 @@ def energy(
 
 
 def longitudinal(
-    long_in: float | np.ndarray,
-    ene: float | np.ndarray,
+    long_in: float | NDArray,
+    ene: float | NDArray,
     key: str,
     e_rest_mev: float,
     **beam_kwargs,
-) -> float | np.ndarray:
+) -> float | NDArray:
     """Convert energies between longitudinal phase spaces."""
     conversion_functions = {
         "zprime gamma to zdelta": lambda zp, gam: zp * gam**-2 * 1e-1,
@@ -74,14 +75,14 @@ def longitudinal(
 
 # TODO may be possible to save some operations by using lambda func?
 def emittance(
-    eps_orig: float | np.ndarray,
+    eps_orig: float | NDArray,
     key: str,
-    gamma_kin: float | np.ndarray,
-    beta_kin: float | np.ndarray,
-    lambda_bunch: float | np.ndarray,
-    e_rest_mev: float | np.ndarray,
+    gamma_kin: float | NDArray,
+    beta_kin: float | NDArray,
+    lambda_bunch: float | NDArray,
+    e_rest_mev: float | NDArray,
     **beam_kwargs,
-) -> float | np.ndarray:
+) -> float | NDArray:
     """Convert emittance from a phase space to another, or handle norm."""
     k_1 = 360.0 * e_rest_mev / lambda_bunch
     k_2 = gamma_kin * beta_kin
@@ -114,14 +115,14 @@ def emittance(
 
 
 def twiss(
-    twiss_orig: np.ndarray,
-    gamma_kin: float | np.ndarray,
+    twiss_orig: NDArray,
+    gamma_kin: float | NDArray,
     key: str,
-    lambda_bunch: float | np.ndarray,
-    e_rest_mev: float | np.ndarray,
-    beta_kin: float | np.ndarray | None = None,
+    lambda_bunch: float | NDArray,
+    e_rest_mev: float | NDArray,
+    beta_kin: float | NDArray | None = None,
     **beam_kwargs,
-) -> np.ndarray:
+) -> NDArray:
     """Convert Twiss array from a phase space to another."""
     if beta_kin is None:
         beta_kin = np.sqrt(1.0 - gamma_kin**-2)
