@@ -185,9 +185,7 @@ class Envelope1D(BeamCalculator):
             elt_results = func(w_kin=w_kin, cavity_settings=cavity_settings)
 
             if cavity_settings is not None:
-                v_cav_mv, phi_s = self._compute_cavity_parameters(elt_results)
-                cavity_settings.v_cav_mv = v_cav_mv
-                cavity_settings.phi_s = phi_s
+                self._post_treat_cavity_settings(cavity_settings, elt_results)
 
             single_elts_results.append(elt_results)
 
