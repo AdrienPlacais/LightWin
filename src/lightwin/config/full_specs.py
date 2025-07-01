@@ -22,7 +22,7 @@ class ConfSpec:
 
     Parameters
     ----------
-    MANDATORY_CONFIG_ENTRIES : tuple[str, ...]
+    MANDATORY_CONFIG_ENTRIES :
         Entries that you must declare for this :class:`ConfSpec` to work.
 
     """
@@ -116,9 +116,9 @@ class ConfSpec:
 
         Parameters
         ----------
-        table_id : str
+        table_id :
             Name of the desired table.
-        id_type : Literal["configured_object", "table_entry"], optional
+        id_type :
             If ``table_id`` is the name of the object (eg ``'beam'``) or of the
             table entry in the ``.toml`` (eg ``'my_proton_beam'``, without
             brackets).
@@ -152,13 +152,13 @@ class ConfSpec:
 
         Parameters
         ----------
-        toml_fulldict : dict[str, dict[str, Any]]
+        toml_fulldict :
             Holds the full configuration.
-        id_type : Literal["configured_object", "table_entry"], optional
+        id_type :
             If ``toml_fulldict`` keys are name of the object (eg ``'beam'``) or
             of the table entry in the ``.toml`` (eg ``'my_proton_beam'``,
             without brackets).
-        original_toml_folder : pathlib.Path | None, optional
+        original_toml_folder :
             Where the original ``.toml`` was; this is used to resolve paths
             relative to this location.
 
@@ -193,9 +193,9 @@ class ConfSpec:
 
         Parameters
         ----------
-        toml_fulldict : dict[str, dict[str, Any]]
+        toml_fulldict :
             Holds the full configuration.
-        id_type : Literal["configured_object", "table_entry"], optional
+        id_type :
             If ``toml_fulldict`` keys are name of the object (eg ``'beam'``) or
             of the table entry in the ``.toml`` (eg ``'my_proton_beam'``). Do
             not put the brackets present in the ``TOML`` file.

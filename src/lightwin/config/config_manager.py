@@ -40,18 +40,18 @@ def process_config(
 
     Parameters
     ----------
-    toml_path : pathlib.Path | str | importlib.resources.abc.Traversable
+    toml_path :
         Path to the configuration file. It can be path to a real file or a
         resource reference.
-    config_keys : dict[str, str]
+    config_keys :
         Associate the name of LightWin's group of parameters to the entry in
         the configuration file.
-    warn_mismatch : bool, optional
+    warn_mismatch :
         Raise a warning if a key in a ``override`` sub-dict is not found.
-    override : dict[str, dict[str, Any]] | None, optional
+    override :
         To override entries in the ``TOML``. If not provided, we keep
         defaults.
-    conf_specs_t : type[ConfSpec], optional
+    conf_specs_t :
         The specifications that the ``TOML`` must match to be accepted. If not
         provided, we take a default.
 
@@ -88,7 +88,7 @@ def _load_toml(
 
     Parameters
     ----------
-    toml_path : pathlib.Path | str | importlib.resources.abc.Traversable
+    toml_path :
         Path to the configuration file. It can be path to a real file or a
         resource reference.
 
@@ -141,16 +141,16 @@ def _process_toml(
 
     Parameters
     ----------
-    raw_toml : dict[str, dict[str, Any]]
+    raw_toml :
         Dictionary holding the whole ``TOML`` file.
-    config_keys : dict[str, str]
+    config_keys :
         Keys will be the keys of the output. Values are the name of the tables
         in the configuration file. If ``config_keys = {"beam": "proton_beam"}``
         , the output will look like ``{"beam": {<content of [proton_beam]>}}``.
-    warn_mismatch : bool
+    warn_mismatch :
         Check if there are discrepancies between ``override`` and the keys or
         dicts to override in ``config_keys``.
-    override : dict[str, dict[str, Any]] | None
+    override :
         To override some entries of the output dictionary, before even testing
         it.
 
@@ -211,18 +211,18 @@ def dict_to_toml(
 
     Parameters
     ----------
-    toml_fulldict : dict[str, dict[str, Any]]
+    toml_fulldict :
         The configuration as a nested dictionary. The keys will be used as
         table entries.
-    toml_path : pathlib.Path
+    toml_path :
         Where to save the ``TOML``.
-    conf_specs : ConfSpec
+    conf_specs :
         Holds the template to be respected. In particular, the type of the
         values in the different tables.
-    allow_overwrite : bool, optional
+    allow_overwrite :
         If a pre-existing ``TOML`` can be overwritten. The default is False,
         in which case an error will be raised.
-    original_toml_folder : pathlib.Path | None, optional
+    original_toml_folder :
         Where the original ``TOML`` was; this is used to resolve paths
         relative to this location.
 
