@@ -30,6 +30,11 @@ from lightwin.util.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
+from lightwin.util.solvers import (
+    solve_scalar_equation_brent, 
+    compute_phi_2,
+    )
+import numpy as np
 
 
 class Envelope1D(BeamCalculator):
@@ -259,12 +264,18 @@ class Envelope1D(BeamCalculator):
         return False
 
     def _post_treat_cavity_settings(
-        self, cavity_settings: CavitySettings, results: dict
+        self, cavity_settings: CavitySettings, results: dict, length_m: float
     ) -> None:
-        """Compute synchronous phase and accelerating field."""
+        """Compute synchronous phase, accelerating field and acceptances."""
         v_cav_mv, phi_s = self._compute_cavity_parameters(results)
         cavity_settings.v_cav_mv = v_cav_mv
         cavity_settings.phi_s = phi_s
+
+        if not (-np.pi/2 <= phi_s <= 0):
+            cavity_settings.phi_acceptance = np.nan
+        else:
+            phi_2_bounds = (-3*np.pi/2, 0)
+            cavity_settings.phi_acceptance = -(phi_s + solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds))
 
     def _compute_cavity_parameters(self, results: dict) -> tuple[float, float]:
         """Compute the cavity parameters by calling ``_phi_s_func``.

@@ -72,7 +72,6 @@ class CavitySettings:
         reference: REFERENCE_PHASES_T,
         status: STATUS_T,
         freq_bunch_mhz: float,
-        # length_m: float,
         freq_cavity_mhz: float | None = None,
         transf_mat_func_wrappers: dict[str, Callable] | None = None,
         phi_s_funcs: dict[str, Callable] | None = None,
@@ -128,7 +127,6 @@ class CavitySettings:
         self._phi_bunch: float
         self._phi_acceptance: float
         self.energy_acceptance: float 
-        # self._length_m = length_m
 
         self._status: STATUS_T
         self.status = status
@@ -205,7 +203,6 @@ class CavitySettings:
             reference=reference,
             status=other.status,
             freq_bunch_mhz=other._freq_bunch_mhz,
-            # length_m=other._length_m,
             freq_cavity_mhz=other.freq_cavity_mhz,
             transf_mat_func_wrappers=other.transf_mat_func_wrappers,
             phi_s_funcs=other.phi_s_funcs,
@@ -254,7 +251,6 @@ class CavitySettings:
             reference=reference,
             status=status,
             freq_bunch_mhz=base._freq_bunch_mhz,
-            # length_m=base._length_m,
             freq_cavity_mhz=base.freq_cavity_mhz,
             transf_mat_func_wrappers=base.transf_mat_func_wrappers,
             phi_s_funcs=base.phi_s_funcs,
@@ -924,14 +920,17 @@ class CavitySettings:
         if hasattr(self, "_phi_acceptance"):
             return self._phi_acceptance
         
-        phi_s = self.phi_s
-        if not (-np.pi/2 <= phi_s <= 0):
-            self._phi_acceptance = np.nan
+        # phi_acceptance_calc = getattr(self, "_phi_0_rel_to_phi_acceptance", None)
+        # phi_s = self.phi_s
+        # if not (-np.pi/2 <= phi_s <= 0):
+        #     self._phi_acceptance = np.nan
 
-        phi_2_bounds = (-3*np.pi/2, 0)
-        self.phi_acceptance = -(phi_s + solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds))
+        # phi_2_bounds = (-3*np.pi/2, 0)
+        # self.phi_acceptance = -(phi_s + solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds))
 
-        return self._phi_acceptance
+
+
+        # return self._phi_acceptance
     
 
     @phi_acceptance.deleter
