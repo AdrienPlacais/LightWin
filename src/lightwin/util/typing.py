@@ -211,7 +211,7 @@ GETTABLE_CAVITY_SETTINGS = (
         "rf_field",
         "status",
         "v_cav_mv",
-        "w_kin", 
+        "w_kin",
     )
     + REFERENCE_PHASES
     + GETTABLE_RF_FIELD
@@ -289,7 +289,7 @@ _UNCONCATENABLE = (
 #: a list when called from :meth:`.ListOfElements.get` (or
 #: :meth:`.SimulationOutput.get`, :meth:`.Accelerator.get`)
 CONCATENABLE_ELTS = tuple(
-    [key for key in GETTABLE_FIELD_MAP if key not in _UNCONCATENABLE] 
+    [key for key in GETTABLE_FIELD_MAP if key not in _UNCONCATENABLE]
 )
 CONCATENABLE_ELTS_T = (
     Literal[

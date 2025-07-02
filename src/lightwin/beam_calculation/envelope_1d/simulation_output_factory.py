@@ -3,15 +3,9 @@
 from abc import ABCMeta
 from dataclasses import dataclass
 from pathlib import Path
-from lightwin.util.solvers import (
-    solve_scalar_equation_brent, 
-    is_in_range,
-    compute_phi_2,
-    )
-from scipy.constants import c
-
 
 import numpy as np
+from scipy.constants import c
 
 from lightwin.beam_calculation.envelope_1d.beam_parameters_factory import (
     BeamParametersFactoryEnvelope1D,
@@ -29,6 +23,11 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.core.particle import ParticleFullTrajectory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
+from lightwin.util.solvers import (
+    compute_phi_2,
+    is_in_range,
+    solve_scalar_equation_brent,
+)
 
 
 @dataclass
@@ -167,7 +166,7 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         #     gamma_kin=gamma_kin_converted,
         #     e_rest_mev=e_rest_mev,
         #     phi_s=phi_s,
-        # )       
+        # )
 
         simulation_output = SimulationOutput(
             out_folder=self.out_folder,
@@ -183,6 +182,7 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             # energy_acceptance=energy_acceptance_mev,
         )
         return simulation_output
+
 
 # def compute_phase_acceptance(phi_s: np.ndarray, phi_2_bounds: tuple[float, float]) -> np.ndarray:
 #     """
@@ -242,6 +242,6 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
 # #     """
 #     factor = 2 * q_adim * e_acc_mvpm * beta_kin**3 * gamma_kin**3 * e_rest_mev * c/ (np.pi * freq_cavity_mhz* 1e6)
 #     trig_term = phi_s * np.cos(phi_s) - np.sin(phi_s)
-#     energy_acceptance = np.sqrt(factor * trig_term) 
+#     energy_acceptance = np.sqrt(factor * trig_term)
 
 # #     return energy_acceptance

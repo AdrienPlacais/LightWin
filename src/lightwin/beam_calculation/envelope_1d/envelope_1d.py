@@ -8,6 +8,8 @@ import logging
 from collections.abc import Collection
 from pathlib import Path
 
+import numpy as np
+
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
     ElementEnvelope1DParameters,
@@ -26,15 +28,14 @@ from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
+from lightwin.util.solvers import (
+    compute_phi_2,
+    solve_scalar_equation_brent,
+)
 from lightwin.util.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
-from lightwin.util.solvers import (
-    solve_scalar_equation_brent, 
-    compute_phi_2,
-    )
-import numpy as np
 
 
 class Envelope1D(BeamCalculator):
@@ -271,11 +272,16 @@ class Envelope1D(BeamCalculator):
         cavity_settings.v_cav_mv = v_cav_mv
         cavity_settings.phi_s = phi_s
 
-        if not (-np.pi/2 <= phi_s <= 0):
+        if not (-np.pi / 2 <= phi_s <= 0):
             cavity_settings.phi_acceptance = np.nan
         else:
-            phi_2_bounds = (-3*np.pi/2, 0)
-            cavity_settings.phi_acceptance = -(phi_s + solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds))
+            phi_2_bounds = (-3 * np.pi / 2, 0)
+            cavity_settings.phi_acceptance = -(
+                phi_s
+                + solve_scalar_equation_brent(
+                    compute_phi_2, phi_s, phi_2_bounds
+                )
+            )
 
     def _compute_cavity_parameters(self, results: dict) -> tuple[float, float]:
         """Compute the cavity parameters by calling ``_phi_s_func``.

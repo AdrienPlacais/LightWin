@@ -33,16 +33,16 @@ from lightwin.util.phases import (
     phi_bunch_to_phi_rf,
     phi_rf_to_phi_bunch,
 )
+from lightwin.util.solvers import (
+    compute_phi_2,
+    solve_scalar_equation_brent,
+)
 from lightwin.util.typing import (
     ALLOWED_STATUS,
     GETTABLE_CAVITY_SETTINGS_T,
     REFERENCE_PHASES,
     REFERENCE_PHASES_T,
     STATUS_T,
-)
-from lightwin.util.solvers import (
-    solve_scalar_equation_brent, 
-    compute_phi_2,
 )
 
 
@@ -77,7 +77,6 @@ class CavitySettings:
         phi_s_funcs: dict[str, Callable] | None = None,
         rf_field: RfField | None = None,
         field: Field | None = None,
-        
     ) -> None:
         """Instantiate the object.
 
@@ -126,7 +125,7 @@ class CavitySettings:
         self._phi_rf: float
         self._phi_bunch: float
         self._phi_acceptance: float
-        self.energy_acceptance: float 
+        self.energy_acceptance: float
 
         self._status: STATUS_T
         self.status = status
@@ -908,18 +907,18 @@ class CavitySettings:
     # Acceptances
     # =============================================================================
     @property
-    def phi_acceptance(self)->None:
+    def phi_acceptance(self) -> None:
         """a"""
 
     @phi_acceptance.setter
-    def phi_acceptance(self,value:float)->None:
-        self._phi_acceptance=value
-    
+    def phi_acceptance(self, value: float) -> None:
+        self._phi_acceptance = value
+
     @phi_acceptance.getter
-    def phi_acceptance(self)->float:
+    def phi_acceptance(self) -> float:
         if hasattr(self, "_phi_acceptance"):
             return self._phi_acceptance
-        
+
         # phi_acceptance_calc = getattr(self, "_phi_0_rel_to_phi_acceptance", None)
         # phi_s = self.phi_s
         # if not (-np.pi/2 <= phi_s <= 0):
@@ -928,16 +927,12 @@ class CavitySettings:
         # phi_2_bounds = (-3*np.pi/2, 0)
         # self.phi_acceptance = -(phi_s + solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds))
 
-
-
         # return self._phi_acceptance
-    
 
     @phi_acceptance.deleter
     def phi_acceptance(self):
         if hasattr(self, "_phi_acceptance"):
             del self._phi_acceptance
-
 
     # @property
     # def energy_acceptance(self)->None:
@@ -946,7 +941,7 @@ class CavitySettings:
     # @energy_acceptance.setter
     # def energy_acceptance(self,value:float)->None:
     #     self._energy_acceptance=value
-    
+
     # @energy_acceptance.getter
     # def energy_acceptance(self)->float:
     #     if hasattr(self, "_energy_acceptance"):
@@ -970,12 +965,10 @@ class CavitySettings:
     #     self.energy_acceptance = 0
     #     return self._energy_acceptance
 
-
     # @energy_acceptance.deleter
     # def energy_acceptance(self):
     #     if hasattr(self, "_energy_acceptance"):
     #         del self._energy_acceptance
-
 
     # .. list-table:: Meaning of status
     #     :widths: 40, 60

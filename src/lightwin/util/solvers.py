@@ -1,12 +1,15 @@
 "Gives useful functions used to compute acceptances"
 
-from scipy.optimize import brentq
-from typing import Callable
 import logging
+from typing import Callable
 
 import numpy as np
+from scipy.optimize import brentq
 
-def is_in_range(array: np.ndarray, range: tuple[float, float], warning: bool = True) -> np.ndarray:
+
+def is_in_range(
+    array: np.ndarray, range: tuple[float, float], warning: bool = True
+) -> np.ndarray:
     """
     Check which elements of an array are outside a specified numerical range.
 
@@ -29,7 +32,9 @@ def is_in_range(array: np.ndarray, range: tuple[float, float], warning: bool = T
     """
 
     if array.size == 0 and warning:
-        logging.warning("The input array of is_in_range() is empty. The result will also be an empty boolean array.")
+        logging.warning(
+            "The input array of is_in_range() is empty. The result will also be an empty boolean array."
+        )
     range_left, range_right = range
     if range_left > range_right:
         range_left, range_right = range_right, range_left
@@ -39,7 +44,9 @@ def is_in_range(array: np.ndarray, range: tuple[float, float], warning: bool = T
                 f"It has been corrected to ({range_left}, {range_right})."
             )
 
-    invalid_mask = ~np.isnan(array) & ((array <= range_left) | (array >= range_right))
+    invalid_mask = ~np.isnan(array) & (
+        (array <= range_left) | (array >= range_right)
+    )
     if warning and np.any(invalid_mask):
         logging.warning(
             f"Invalid array {array}"
@@ -47,11 +54,12 @@ def is_in_range(array: np.ndarray, range: tuple[float, float], warning: bool = T
         )
     return invalid_mask
 
+
 def solve_scalar_equation_brent(
     func: Callable[[float, float], float],
     param_value: float,
     x_bounds: tuple[float, float],
-    warning: bool = True
+    warning: bool = True,
 ) -> float:
     """
     Solve a scalar equation for multiple parameters using Brent's method.
@@ -74,7 +82,7 @@ def solve_scalar_equation_brent(
     float
         Root found for the parameter value. NaN if no root is found.
     """
-    
+
     x_left, x_right = x_bounds
     if x_left > x_right:
         x_left, x_right = x_right, x_left
@@ -87,9 +95,11 @@ def solve_scalar_equation_brent(
 
     if f(x_left) * f(x_right) > 0:
         solution = np.nan
-        if warning : 
-            logging.warning(f"{f(x_left)} and {f(x_right)} have the same sign in solve_scalar_equation_brent(). "
-                            "There is no root in this range")
+        if warning:
+            logging.warning(
+                f"{f(x_left)} and {f(x_right)} have the same sign in solve_scalar_equation_brent(). "
+                "There is no root in this range"
+            )
     else:
         try:
             solution = brentq(f, x_left, x_right)
@@ -98,6 +108,7 @@ def solve_scalar_equation_brent(
             solution = np.nan
 
     return solution
+
 
 def compute_phi_2(phi_2: float, phi_s: float) -> float:
     """
