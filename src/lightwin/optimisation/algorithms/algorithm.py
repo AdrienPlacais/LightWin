@@ -213,7 +213,7 @@ class OptimisationAlgorithm(ABC):
         return residuals
 
     def _norm_wrapper_residuals(self, var: np.ndarray) -> float:
-        """Compute norm of residues vector from an array of variable values."""
+        """Compute norm of residuals vector from array of variable values."""
         return float(np.linalg.norm(self._wrapper_residuals(var)))
 
     def _finalize(self, opti_sol: OptiSol, *complementary_info: str) -> None:

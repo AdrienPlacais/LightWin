@@ -43,6 +43,7 @@ from lightwin.util.pickling import MyPickler
 from lightwin.util.typing import (
     CONCATENABLE_ELTS,
     GETTABLE_SIMULATION_OUTPUT_T,
+    GETTABLE_STRUCTURE_DEPENDENT,
 )
 
 
@@ -72,7 +73,7 @@ class SimulationOutput:
         Takes an :class:`.Element`, its name, 'first' or 'last' as argument,
         and returns corresponding index. Index should be the same in all the
         arrays attributes of this class: ``z_abs``, ``beam_parameters``
-        attributes, etc.  Used to easily `get` the desired properties at the
+        attributes, etc.  Used to easily ``get`` the desired properties at the
         proper position.
     set_of_cavity_settings :
         The cavity parameters used for the simulation.
@@ -166,6 +167,8 @@ class SimulationOutput:
         elt: str | Element | Collection[str | Element] | None = None,
         pos: POS_T | None = None,
         none_to_nan: bool = False,
+        handle_missing_elt: bool = False,
+        warn_structure_dependent: bool = True,
         **kwargs: str | bool | None,
     ) -> Any:
         """Get attributes from this class or its subcomponents.
@@ -186,6 +189,12 @@ class SimulationOutput:
             Position key for slicing data arrays.
         none_to_nan :
             Replace ``None`` values with ``np.nan``.
+        handle_missing_elt :
+            Look for an equivalent element when ``elt`` is not in
+            :attr:`.SimulationOutput.element_to_index` 's ``_elts``.
+        warn_structure_dependent :
+            Raise a warning when trying to access data which is
+            structure-related rather than simulation-related.
         **kwargs :
             Additional arguments for recursive_getter.
 
@@ -215,7 +224,10 @@ class SimulationOutput:
 
         out: list[Any] = []
         for key in keys:
-            if key in CONCATENABLE_ELTS:
+            if (
+                warn_structure_dependent
+                and key in GETTABLE_STRUCTURE_DEPENDENT
+            ):
                 logging.warning(
                     f"{key = } is structure-dependent and does not vary from "
                     "simulation to simulation. You may be better of calling "
@@ -246,7 +258,10 @@ class SimulationOutput:
                         # :class:`.Element`, not one per mesh point.
                         return_elt_idx = True
                     idx = self.element_to_index(
-                        elt=elt, pos=pos, return_elt_idx=return_elt_idx
+                        elt=elt,
+                        pos=pos,
+                        return_elt_idx=return_elt_idx,
+                        handle_missing_elt=handle_missing_elt,
                     )
                     val = val[idx]
                 if not to_numpy and isinstance(val, np.ndarray):
@@ -359,6 +374,19 @@ class SimulationOutput:
             }
         )
         return df.plot(x=x_axis, grid=grid, ylabel=markdown[key], **kwargs)
+
+    def elts(self) -> ListOfElements:
+        """Retrieve the elements associated with this object."""
+        assert (
+            self.element_to_index is not None
+        ), "SimulationOutput.element_to_index should be set"
+        keywords = getattr(self.element_to_index, "keywords", None)
+        assert isinstance(
+            keywords, dict
+        ), "SimulationOutput.element_to_index must be set with functools.paritial"
+        _elts = keywords.get("_elts", None)
+        assert _elts is not None, "SimulationOutput._elts incorrectly set"
+        return _elts
 
 
 def _to_deg(

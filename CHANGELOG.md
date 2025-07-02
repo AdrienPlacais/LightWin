@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [0.10.x]
 
+## [0.10.5] -- 2025-07-01
+
+### Fixed
+
+- Missing dependencies in linux Github Actions wheel builder.
+
+## [0.10.4] -- 2025-07-01
+
+### Added
+
+- Introduced `BeamKwargs` typing. Easier to know the values stored in this object.
+
+## [0.10.3] -- 2025-06-30
+
+### Fixed
+
+- Bug introduced in the beam parameters test by 0.10.2.
+
+## [0.10.2] -- 2025-06-30
+
+### Fixed
+
+- `MinimizeDifferenceWithRef` residuals func now returns an always positive value.
+  - Does not make any difference with `OptimisationAlgorithm` such as `LeastSquares` which take the squared residuals. May be a game changer for other algorithms.
+- Flag to handle `SimulationOutput.get(..., elt=elt)` when `elt: Element` is not in `SimulationOutput.elts`.
+  - Fixed some errors at `Objective` creation.
+
 ## [0.10.1] -- 2025-06-06
 
 ### Fixed

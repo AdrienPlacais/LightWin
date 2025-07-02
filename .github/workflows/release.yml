@@ -34,9 +34,6 @@ jobs:
           - [windows-latest, win32]
           ### 64 bits
           - [windows-latest, win_amd64]
-        # Some distribution/OS are not excluded, as the corresponding dependency builds
-        # are not built and they cannot be built here
-        # (I think it is possible to build them, but this is not a priority right now)
         exclude:
           # Do not manage to build scipy
           - buildplat: [ubuntu-24.04-arm, musllinux_aarch64]
@@ -55,6 +52,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: 🛠️ Install system dependencies for Pillow (Linux only)
+        if: runner.os == 'Linux'
+        run: |
+          if command -v yum >/dev/null 2>&1; then
+            sudo yum install -y libjpeg-devel zlib-devel
+          elif command -v apt-get >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y libjpeg-dev zlib1g-dev
+          fi
 
       - name: 🔧 Build wheels
         uses: pypa/cibuildwheel@v2.22.0

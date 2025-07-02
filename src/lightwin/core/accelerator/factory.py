@@ -9,6 +9,7 @@ from typing import Any, Sequence
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.util.typing import BeamKwargs
 
 
 @dataclass
@@ -19,18 +20,18 @@ class AcceleratorFactory(ABC):
         self,
         beam_calculators: BeamCalculator | Sequence[BeamCalculator | None],
         files: dict[str, Any],
-        beam: dict[str, Any],
+        beam: BeamKwargs,
         **kwargs: dict,
     ) -> None:
         """Facilitate creation of :class:`.Accelerator` objects.
 
         Parameters
         ----------
-        beam_calculators : BeamCalculator | Sequence[BeamCalculator | None]
+        beam_calculators :
             Objects that will compute propagation of the beam.
-        files : dict[str, Any]
+        files :
             Configuration entries for the input/output paths.
-        beam : dict[str, Any]
+        beam :
             Configuration dictionary holding the initial beam parameters.
         kwargs :
             Other configuration dictionaries.
@@ -87,7 +88,7 @@ class AcceleratorFactory(ABC):
 
         Parameters
         ----------
-        out_folders : Sequence[pathlib.Path]
+        out_folders :
             Name of the folders that will store outputs. By default, it is the
             name of the solver, preceeded by its position in the list of
             :class:`.BeamCalculator`.
@@ -170,19 +171,19 @@ class NoFault(AcceleratorFactory):
         self,
         beam_calculators: BeamCalculator,
         files: dict[str, Any],
-        beam: dict[str, Any],
+        beam: BeamKwargs,
         **kwargs: dict,
     ) -> None:
         """Facilitate creation of :class:`.Accelerator`.
 
         Parameters
         ----------
-        beam_calculators : BeamCalculator
+        beam_calculators :
             A unique object to compute propagation of the field. Even if there
             is a ``s`` at the end of the variable name.
-        files : dict[str, Any]
+        files :
             Configuration entries for the input/output paths.
-        beam : dict[str, Any]
+        beam :
             Configuration dictionary holding the initial beam parameters.
         kwargs :
             Other configuration dictionaries.
@@ -230,7 +231,7 @@ class WithFaults(AcceleratorFactory):
         self,
         beam_calculators: BeamCalculator | Sequence[BeamCalculator | None],
         files: dict[str, Any],
-        beam: dict[str, Any],
+        beam: BeamKwargs,
         wtf: dict[str, Any],
         **kwargs: dict,
     ) -> None:
@@ -238,13 +239,13 @@ class WithFaults(AcceleratorFactory):
 
         Parameters
         ----------
-        beam_calculators : BeamCalculator | Sequence[BeamCalculator | None]
+        beam_calculators :
             Objects that will compute propagation of the beam.
-        files : dict[str, Any]
+        files :
             Configuration entries for the input/output paths.
-        beam : dict[str, Any]
+        beam :
             Configuration dictionary holding the initial beam parameters.
-        wtf : dict[str, Any]
+        wtf :
             Dictionary holding the information on what to fit.
         kwargs :
             Other configuration dictionaries.

@@ -723,7 +723,7 @@ class CavitySettings:
         cavity_parameters = self.phi_s_func(**results)
         return cavity_parameters
 
-    def residue_func(self, phi_0_rel: float, phi_s: float) -> float:
+    def residual_func(self, phi_0_rel: float, phi_s: float) -> float:
         """Calculate the squared difference between target and computed phi_s.
 
         Parameters
@@ -740,11 +740,11 @@ class CavitySettings:
 
         """
         calculated_phi_s = self.phi_0_rel_to_cavity_parameters(phi_0_rel)[1]
-        residue = diff_angle(phi_s, calculated_phi_s)
-        return residue**2
+        residual = diff_angle(phi_s, calculated_phi_s)
+        return residual**2
 
     def phi_s_to_phi_0_rel(self, phi_s: float) -> float:
-        """Find the relative entry phase that yields the target synchronous phase.
+        """Find the relative entry phase that yields the target sync phase.
 
         Parameters
         ----------
@@ -763,7 +763,7 @@ class CavitySettings:
 
         """
         out = minimize_scalar(
-            self.residue_func, bounds=(0.0, 2.0 * math.pi), args=(phi_s,)
+            self.residual_func, bounds=(0.0, 2.0 * math.pi), args=(phi_s,)
         )
         if not out.success:
             logging.error("Synch phase not found")

@@ -25,7 +25,7 @@ from lightwin.util.helper import (
     recursive_getter,
     recursive_items,
 )
-from lightwin.util.typing import GETTABLE_PARTICLE_T
+from lightwin.util.typing import GETTABLE_PARTICLE_T, BeamKwargs
 
 
 @dataclass
@@ -67,10 +67,10 @@ class ParticleFullTrajectory:
 
     """
 
-    w_kin: np.ndarray | list
-    phi_abs: np.ndarray | list
+    w_kin: NDArray | list
+    phi_abs: NDArray | list
     synchronous: bool
-    beam: dict[str, NDArray[np.float64] | float]
+    beam: BeamKwargs
 
     def __post_init__(self):
         """Ensure that LightWin has everything it needs, with proper format."""
@@ -81,7 +81,7 @@ class ParticleFullTrajectory:
             self.w_kin = np.array(self.w_kin)
 
         self.gamma = convert.energy(self.w_kin, "kin to gamma", **self.beam)
-        self.beta: np.ndarray
+        self.beta: NDArray
 
     def __str__(self) -> str:
         """Show amplitude of phase and energy."""

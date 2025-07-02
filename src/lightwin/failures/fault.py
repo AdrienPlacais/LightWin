@@ -59,7 +59,7 @@ class Fault:
     compute_constraints : Callable[[SimulationOutput], np.ndarray] | None
         Compute the constraint violation for a given `SimulationOutput`.
     compute_residuals : Callable[[SimulationOutput], np.ndarray]
-        A function that takes in a `SimulationOutput` and returns the residues
+        A function that takes in a `SimulationOutput` and returns the residuals
         of every objective w.r.t the reference one.
 
     """

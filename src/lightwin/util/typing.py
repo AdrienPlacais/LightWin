@@ -1,6 +1,8 @@
 """Define types for better code-completion and linting."""
 
-from typing import Literal
+from typing import Literal, TypedDict
+
+from numpy.typing import NDArray
 
 #: List of different phase spaces.
 PHASE_SPACES = ("phiw", "phiw99", "t", "x", "x99", "y", "y99", "z", "zdelta")
@@ -314,7 +316,6 @@ CONCATENABLE_ELTS_T = (
         "v_cav_mv",
     ]
     | REFERENCE_PHASES_T
-    | GETTABLE_RF_FIELD_T
 )
 
 #: Attributes that can be extracted with :meth:`.ListOfElements.get` method.
@@ -347,6 +348,22 @@ GETTABLE_ELTS_T = (
     | GETTABLE_FIELD_MAP_T
     | GETTABLE_PARTICLE_T
     | GETTABLE_BEAM_PARAMETERS_T
+)
+
+#: Attributes that are structure-dependent and should not vary from simulation
+#: to simulation
+GETTABLE_STRUCTURE_DEPENDENT = (
+    GETTABLE_ELT
+    + GETTABLE_RF_FIELD
+    + (
+        "aperture_flag",
+        "field_map_filename",
+        "field_map_folder",
+        "geometry",
+        "field",
+        "freq_cavity_mhz",
+        "omega_0_rf",
+    )
 )
 
 #: Attributes that can be extracted with :meth:`.TransferMatrix.get` method.
@@ -406,3 +423,20 @@ GETTABLE_ACCELERATOR_T = (
     Literal["accelerator_path", "elts", "name", "simulation_outputs"]
     | GETTABLE_ELTS_T
 )
+
+
+class BeamKwargs(TypedDict):
+    """Holds all beam properties."""
+
+    e_mev: float
+    e_rest_mev: float
+    f_bunch_mhz: float
+    i_milli_a: float
+    q_adim: float
+    sigma: NDArray
+    inv_e_rest_mev: float
+    gamma_init: float
+    omega_0_bunch: float
+    lambda_bunch: float
+    q_over_m: float
+    m_over_q: float

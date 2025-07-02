@@ -16,6 +16,7 @@ from collections.abc import Collection, Sequence
 from typing import Any, Callable, Literal
 
 import numpy as np
+from numpy.typing import NDArray
 
 import lightwin.util.converters as convert
 from lightwin.beam_calculation.envelope_1d import transfer_matrices
@@ -34,6 +35,7 @@ from lightwin.util.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
+from lightwin.util.typing import BeamKwargs
 
 
 class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
@@ -48,7 +50,7 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         self,
         length_m: float,
         n_steps: int,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         transf_mat_function: Callable | None = None,
         **kwargs: str | int,
     ) -> None:
@@ -63,7 +65,7 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
 
         self.s_in: int
         self.s_out: int
-        self.abs_mesh: np.ndarray
+        self.abs_mesh: NDArray
 
     def set_absolute_meshes(
         self, pos_in: float, s_in: int
@@ -120,8 +122,8 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
 
     def _transfer_matrix_results_to_dict(
         self,
-        r_zz: np.ndarray,
-        gamma_phi: np.ndarray,
+        r_zz: NDArray,
+        gamma_phi: NDArray,
         integrated_field: float | None,
     ) -> dict:
         """Convert the results given by the transf_mat function to dict."""
@@ -173,7 +175,7 @@ class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
     def __init__(
         self,
         elt: Element,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         n_steps: int = 1,
         **kwargs: str | int,
     ) -> None:
@@ -201,7 +203,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         method: ENVELOPE1D_METHODS_T,
         n_steps_per_cell: int,
         solver_id: str,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         phi_s_model: PHI_S_MODELS = "historical",
         **kwargs: str | int,
     ) -> None:
@@ -299,8 +301,8 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def _transfer_matrix_results_to_dict(
         self,
-        r_zz: np.ndarray,
-        gamma_phi: np.ndarray,
+        r_zz: NDArray,
+        gamma_phi: NDArray,
         integrated_field: float | None,
     ) -> dict:
         """Convert the results given by the transf_mat function to a dict.
@@ -335,8 +337,8 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def _broken_transfer_matrix_results_to_dict(
         self,
-        r_zz: np.ndarray,
-        gamma_phi: np.ndarray,
+        r_zz: NDArray,
+        gamma_phi: NDArray,
         integrated_field: float | None,
     ) -> dict:
         """Convert the results given by the transf_mat function to a dict."""
@@ -381,7 +383,7 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         method: Literal["RK4"],
         n_steps_per_cell: int,
         solver_id: str,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         phi_s_model: PHI_S_MODELS = "historical",
         **kwargs: str | int,
     ) -> None:
@@ -443,8 +445,8 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def _transfer_matrix_results_to_dict(
         self,
-        r_zz: np.ndarray,
-        gamma_phi: np.ndarray,
+        r_zz: NDArray,
+        gamma_phi: NDArray,
         integrated_field: float | None,
     ) -> dict:
         """Convert the results given by the transf_mat function to a dict.
@@ -486,7 +488,7 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
     def __init__(
         self,
         elt: Bend,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         n_steps: int = 1,
         **kwargs: str | int,
     ) -> None:

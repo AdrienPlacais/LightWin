@@ -53,6 +53,7 @@ from lightwin.tracewin_utils.dat_files import (
     export_dat_filecontent,
 )
 from lightwin.tracewin_utils.line import DatLine
+from lightwin.util.typing import BeamKwargs
 
 
 class ListOfElementsFactory:
@@ -63,7 +64,7 @@ class ListOfElementsFactory:
         is_3d: bool,
         is_multipart: bool,
         default_field_map_folder: Path,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         load_field_maps: bool = True,
         field_maps_in_3d: bool = False,
         load_cython_field_maps: bool = False,
@@ -329,10 +330,9 @@ class ListOfElementsFactory:
             _ = simulation_output.get("w_kin", elt=input_elt)
         except AttributeError:
             logging.warning(
-                "First element of new list of elements is not in "
-                "the given SimulationOutput. I will consider "
-                "that the last element of the SimulationOutput is "
-                "the first of the new ListOfElements."
+                "First element of new ListOfElements is not in the given "
+                "SimulationOutput. I will consider that the last element of "
+                "the SimulationOutput is the first of the new ListOfElements."
             )
             input_elt, input_pos = "last", "out"
         return input_elt, input_pos

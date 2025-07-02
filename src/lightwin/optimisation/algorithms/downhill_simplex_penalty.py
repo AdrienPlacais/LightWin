@@ -1,7 +1,7 @@
 """Define a Downhill Simplex with penalty.
 
 It is not intended to be used with ``phi_s fit``. Approach is here to make the
-residues grow when the constraints are not respected.
+residuals grow when the constraints are not respected.
 
 """
 
