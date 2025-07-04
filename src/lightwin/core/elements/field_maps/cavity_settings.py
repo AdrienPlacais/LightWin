@@ -924,16 +924,16 @@ class CavitySettings:
             del self._phi_acceptance
 
     @property
-    def energy_acceptance(self)->None:
+    def energy_acceptance(self) -> None:
         """Get energy acceptance of the cavity."""
 
     @energy_acceptance.setter
-    def energy_acceptance(self,value:float)->None:
+    def energy_acceptance(self, value: float) -> None:
         """Set the energy acceptance to the desired value."""
-        self._energy_acceptance=value
+        self._energy_acceptance = value
 
     @energy_acceptance.getter
-    def energy_acceptance(self)->float:
+    def energy_acceptance(self) -> float:
         """Get the energy acceptance."""
         if hasattr(self, "_energy_acceptance"):
             return self._energy_acceptance

@@ -161,6 +161,7 @@ class TestSolver1D:
             "energy_acceptance", simulation_output, abs=1e-1, elt="FM142"
         )
 
+
 def test_inverted_bounds_warning(caplog):
     """Tests that the method accepts inverted bounds with a warning and still finds the roots."""
 
@@ -169,9 +170,7 @@ def test_inverted_bounds_warning(caplog):
 
     param_value = 1
     with caplog.at_level(logging.WARNING):
-        result = solve_scalar_equation_brent(
-            example_func, param_value, (5, 0)
-        )
+        result = solve_scalar_equation_brent(example_func, param_value, (5, 0))
         assert np.allclose(result, np.array(1.0))
         assert "is inverted" in caplog.text
 

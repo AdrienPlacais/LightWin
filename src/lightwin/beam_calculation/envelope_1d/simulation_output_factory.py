@@ -23,6 +23,7 @@ from lightwin.core.particle import ParticleFullTrajectory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 
+
 @dataclass
 class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
     """A class for creating simulation outputs for :class:`.Envelope1D`."""

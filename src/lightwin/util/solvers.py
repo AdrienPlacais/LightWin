@@ -6,7 +6,6 @@ from typing import Callable
 import numpy as np
 from scipy.optimize import brentq
 
-
 # def is_in_range(
 #     array: np.ndarray, range: tuple[float, float], warning: bool = True
 # ) -> np.ndarray:

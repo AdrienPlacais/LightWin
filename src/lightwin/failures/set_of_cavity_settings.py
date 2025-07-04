@@ -15,6 +15,7 @@ from lightwin.util.typing import CONCATENABLE_CAVITY_SETTINGS
 
 FieldMap = TypeVar("FieldMap")
 
+
 class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
     """Hold several cavity settings, to try during optimisation process."""
 
@@ -45,9 +46,7 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
 
     def __dir__(self) -> Sequence[str]:
         """Return the stored variables and some of :class:`CavitySettings`."""
-        return sorted(
-            dir(self.__class__) + list(CONCATENABLE_CAVITY_SETTINGS)
-        )
+        return sorted(dir(self.__class__) + list(CONCATENABLE_CAVITY_SETTINGS))
 
     @classmethod
     def from_cavity_settings(
