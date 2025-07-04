@@ -107,9 +107,6 @@ class SimulationOutput:
     in_tw_fashion: pd.DataFrame | None = None
     r_zz_elt: list[np.ndarray] | None = None
 
-    # phi_acceptance: np.ndarray | None = None
-    # energy_acceptance: np.ndarray | None = None
-
     def __post_init__(self) -> None:
         """Save complementary data, such as :class:`.Element` indexes."""
         self.elt_idx: list[int]

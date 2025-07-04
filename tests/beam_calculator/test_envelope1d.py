@@ -22,7 +22,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import NoFault
-from lightwin.util.solvers import is_in_range, solve_scalar_equation_brent
+from lightwin.util.solvers import solve_scalar_equation_brent
 
 leapfrog_marker = pytest.mark.xfail(
     condition=True,
@@ -161,73 +161,19 @@ class TestSolver1D:
             "energy_acceptance", simulation_output, abs=1e-1, elt="FM142"
         )
 
-
-def test_not_in_range(caplog):
-    """Tests that out-of-range values trigger a warning and are correctly marked as invalid."""
-    array = np.array([1, 6, 3])
-    with caplog.at_level(logging.WARNING):
-        result = is_in_range(array, (0, 5))
-        assert np.array_equal(result, np.array([False, True, False]))
-        assert "Invalid array" in caplog.text
-
-
-def test_inverted_range(caplog):
-    """Tests that inverted bounds raise a warning and return all values as valid."""
-    array = np.array([1, 2, 3])
-    with caplog.at_level(logging.WARNING):
-        result = is_in_range(array, (5, 0))
-        assert np.array_equal(result, np.array([False, False, False]))
-        assert "is inverted" in caplog.text
-
-
-def test_empty_array(caplog):
-    """Tests that an empty input array raises a warning and returns an empty result."""
-    array = np.array([])
-    with caplog.at_level(logging.WARNING):
-        result = is_in_range(array, (0, 5))
-        assert result.size == 0
-        assert "input array of is_in_range() is empty" in caplog.text
-
-
-def test_matrix_input():
-    """Tests that matrix input is handled correctly."""
-    array = np.array([[1, 2], [3, 4]])
-    result = is_in_range(array, (0, 5), warning=False)
-    expected = np.array([[False, False], [False, False]])
-    assert np.array_equal(result, expected)
-
-
 def test_inverted_bounds_warning(caplog):
     """Tests that the method accepts inverted bounds with a warning and still finds the roots."""
 
     def example_func(x, a):
         return x - a
 
-    param_values = np.array([1, 2])
+    param_value = 1
     with caplog.at_level(logging.WARNING):
         result = solve_scalar_equation_brent(
-            example_func, param_values, (5, 0)
+            example_func, param_value, (5, 0)
         )
-        assert np.allclose(result, np.array([1, 2]))
+        assert np.allclose(result, np.array(1.0))
         assert "is inverted" in caplog.text
-
-
-def test_empty_param_values(caplog):
-    """Tests that an empty parameter array triggers a warning and returns an empty result."""
-
-    def example_func(x, a):
-        return x - a
-
-    param_values = np.array([])
-    with caplog.at_level(logging.WARNING):
-        result = solve_scalar_equation_brent(
-            example_func, param_values, (0, 5)
-        )
-        assert result.size == 0
-        assert (
-            "input param_values of solve_scalar_equation_brent() is empty"
-            in caplog.text
-        )
 
 
 def test_no_sign_change_warning(caplog):
@@ -236,12 +182,12 @@ def test_no_sign_change_warning(caplog):
     def example_func(x, a):
         return x**2 + a
 
-    param_values = np.array([1])
+    param_values = 1
     with caplog.at_level(logging.WARNING):
         result = solve_scalar_equation_brent(
             example_func, param_values, (-5, 5)
         )
-        assert np.isnan(result[0])
+        assert np.isnan(result)
         assert "have the same sign" in caplog.text
 
 

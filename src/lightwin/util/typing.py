@@ -208,6 +208,7 @@ GETTABLE_CAVITY_SETTINGS = (
         "phi_acceptance",
         "phi_ref",
         "phi_rf",
+        "phi_s",
         "phi_s_func",
         "reference",
         "rf_field",
@@ -228,6 +229,7 @@ GETTABLE_CAVITY_SETTINGS_T = (
         "phi_acceptance",
         "phi_ref",
         "phi_rf",
+        "phi_s",
         "phi_s_func",
         "reference",
         "rf_field",
@@ -237,6 +239,21 @@ GETTABLE_CAVITY_SETTINGS_T = (
     ]
     | REFERENCE_PHASES_T
     | GETTABLE_RF_FIELD_T
+)
+
+#: Attributes from :class:`.CavitySettings` to concatenate into
+#: a list when called from :meth:`.SetOfCavitySettings.get` (or
+#: :meth:`.SimulationOutput.get`)
+CONCATENABLE_CAVITY_SETTINGS = (
+    "v_cav_mv",
+    "phi_0_abs",
+    "phi_0_rel",
+    "phi_bunch",
+    "phi_ref",
+    "phi_rf",
+    "phi_s",
+    "phi_acceptance",
+    "energy_acceptance",
 )
 
 #: Attributes that can be extracted with :meth:`.Element.get` method.

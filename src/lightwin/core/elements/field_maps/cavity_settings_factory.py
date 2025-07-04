@@ -39,7 +39,6 @@ class CavitySettingsFactory:
             reference,
             status,
             self.freq_bunch_mhz,
-            # length_m = 1e-3 * float(line.splitted[1])
         )
         return cavity_settings
 

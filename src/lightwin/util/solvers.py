@@ -7,52 +7,52 @@ import numpy as np
 from scipy.optimize import brentq
 
 
-def is_in_range(
-    array: np.ndarray, range: tuple[float, float], warning: bool = True
-) -> np.ndarray:
-    """
-    Check which elements of an array are outside a specified numerical range.
+# def is_in_range(
+#     array: np.ndarray, range: tuple[float, float], warning: bool = True
+# ) -> np.ndarray:
+#     """
+#     Check which elements of an array are outside a specified numerical range.
 
-    Parameters
-    ----------
-    array : np.ndarray
-        Array of numeric values to validate.
-    range : tuple[float, float]
-        Tuple specifying the lower and upper bounds of the accepted range (inclusive).
-        If the bounds are given in reverse order, they will be corrected automatically.
-    warning : bool, optional
-        If True (default), warnings are issued for empty input, range inversion,
-        and out-of-range elements.
+#     Parameters
+#     ----------
+#     array : np.ndarray
+#         Array of numeric values to validate.
+#     range : tuple[float, float]
+#         Tuple specifying the lower and upper bounds of the accepted range (inclusive).
+#         If the bounds are given in reverse order, they will be corrected automatically.
+#     warning : bool, optional
+#         If True (default), warnings are issued for empty input, range inversion,
+#         and out-of-range elements.
 
-    Returns
-    -------
-    np.ndarray
-        Boolean array where True indicates values that are outside the specified range.
-        NaN values are ignored (returned as False).
-    """
+#     Returns
+#     -------
+#     np.ndarray
+#         Boolean array where True indicates values that are outside the specified range.
+#         NaN values are ignored (returned as False).
+#     """
 
-    if array.size == 0 and warning:
-        logging.warning(
-            "The input array of is_in_range() is empty. The result will also be an empty boolean array."
-        )
-    range_left, range_right = range
-    if range_left > range_right:
-        range_left, range_right = range_right, range_left
-        if warning:
-            logging.warning(
-                f"The range ({range[0]}, {range[1]}) is inverted. "
-                f"It has been corrected to ({range_left}, {range_right})."
-            )
+#     if array.size == 0 and warning:
+#         logging.warning(
+#             "The input array of is_in_range() is empty. The result will also be an empty boolean array."
+#         )
+#     range_left, range_right = range
+#     if range_left > range_right:
+#         range_left, range_right = range_right, range_left
+#         if warning:
+#             logging.warning(
+#                 f"The range ({range[0]}, {range[1]}) is inverted. "
+#                 f"It has been corrected to ({range_left}, {range_right})."
+#             )
 
-    invalid_mask = ~np.isnan(array) & (
-        (array <= range_left) | (array >= range_right)
-    )
-    if warning and np.any(invalid_mask):
-        logging.warning(
-            f"Invalid array {array}"
-            f"All elements should be in the range [{range_left},{range_right}]."
-        )
-    return invalid_mask
+#     invalid_mask = ~np.isnan(array) & (
+#         (array <= range_left) | (array >= range_right)
+#     )
+#     if warning and np.any(invalid_mask):
+#         logging.warning(
+#             f"Invalid array {array}"
+#             f"All elements should be in the range [{range_left},{range_right}]."
+#         )
+#     return invalid_mask
 
 
 def solve_scalar_equation_brent(

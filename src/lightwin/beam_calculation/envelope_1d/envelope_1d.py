@@ -36,6 +36,8 @@ from lightwin.util.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
+from lightwin.util.converters import energy
+from scipy.constants import c
 
 
 class Envelope1D(BeamCalculator):
@@ -191,7 +193,7 @@ class Envelope1D(BeamCalculator):
             elt_results = func(w_kin=w_kin, cavity_settings=cavity_settings)
 
             if cavity_settings is not None:
-                self._post_treat_cavity_settings(cavity_settings, elt_results)
+                self._post_treat_cavity_settings(cavity_settings, elt_results, elt.length_m)
 
             single_elts_results.append(elt_results)
 
@@ -272,6 +274,7 @@ class Envelope1D(BeamCalculator):
 
         if not (-np.pi / 2 <= phi_s <= 0):
             cavity_settings.phi_acceptance = np.nan
+            cavity_settings.energy_acceptance = np.nan
         else:
             phi_2_bounds = (-3 * np.pi / 2, 0)
             cavity_settings.phi_acceptance = -(
@@ -280,6 +283,18 @@ class Envelope1D(BeamCalculator):
                     compute_phi_2, phi_s, phi_2_bounds
                 )
             )
+
+            q_adim = self._beam_kwargs["q_adim"]
+            e_rest_mev = self._beam_kwargs["e_rest_mev"]
+            freq_cavity_mhz = cavity_settings.freq_cavity_mhz
+            e_acc_mvpm = v_cav_mv / length_m
+            w_kin = cavity_settings.w_kin
+            beta_kin = energy(w_kin, "kin to beta", 0, 0, e_rest_mev,)
+            gamma_kin = energy(w_kin, "kin to gamma", 0, 0, e_rest_mev,)
+
+            factor = 2 * q_adim * e_acc_mvpm * beta_kin**3 * gamma_kin**3 * e_rest_mev * c/ (np.pi * freq_cavity_mhz* 1e6)
+            trig_term = phi_s * np.cos(phi_s) - np.sin(phi_s)
+            cavity_settings.energy_acceptance = np.sqrt(factor * trig_term)
 
     def _compute_cavity_parameters(self, results: dict) -> tuple[float, float]:
         """Compute the cavity parameters by calling ``_phi_s_func``.

@@ -11,19 +11,9 @@ from collections.abc import Collection, Sequence
 from typing import Self, TypeVar
 
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.util.typing import CONCATENABLE_CAVITY_SETTINGS
 
 FieldMap = TypeVar("FieldMap")
-
-CAVITY_SETTINGS_GETTABLE_ATTRIBUTES = (
-    "v_cav_mv",
-    "phi_0_abs",
-    "phi_0_rel",
-    "phi_bunch",
-    "phi_ref",
-    "phi_rf",
-    "phi_s",
-)
-
 
 class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
     """Hold several cavity settings, to try during optimisation process."""
@@ -43,12 +33,12 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
             when the latter did not lead to a valid output.
 
         .. todo::
-            Add ``CAVITY_SETTINGS_GETTABLE_ATTRIBUTES`` to the __dir__. Also,
+            Add ``CONCATENABLE_CAVITY_SETTINGS`` to the __dir__. Also,
             may set this tuple from CavitySettings.__class__.__dir__ or
             something.
 
         """
-        if key not in CAVITY_SETTINGS_GETTABLE_ATTRIBUTES:
+        if key not in CONCATENABLE_CAVITY_SETTINGS:
             raise AttributeError
 
         return [getattr(settings, key) for settings in self._ordered_settings]
@@ -56,7 +46,7 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
     def __dir__(self) -> Sequence[str]:
         """Return the stored variables and some of :class:`CavitySettings`."""
         return sorted(
-            dir(self.__class__) + list(CAVITY_SETTINGS_GETTABLE_ATTRIBUTES)
+            dir(self.__class__) + list(CONCATENABLE_CAVITY_SETTINGS)
         )
 
     @classmethod

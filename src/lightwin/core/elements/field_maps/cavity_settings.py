@@ -33,10 +33,6 @@ from lightwin.util.phases import (
     phi_bunch_to_phi_rf,
     phi_rf_to_phi_bunch,
 )
-from lightwin.util.solvers import (
-    compute_phi_2,
-    solve_scalar_equation_brent,
-)
 from lightwin.util.typing import (
     ALLOWED_STATUS,
     GETTABLE_CAVITY_SETTINGS_T,
@@ -552,7 +548,7 @@ class CavitySettings:
         """Set the synchronous phase to desired value."""
         self._phi_s = value
         del self.phi_acceptance
-        # del self.energy_acceptance
+        del self.energy_acceptance
 
     @phi_s.deleter
     def phi_s(self) -> None:
@@ -561,7 +557,7 @@ class CavitySettings:
             return
         del self._phi_s
         del self.phi_acceptance
-        # del self.energy_acceptance
+        del self.energy_acceptance
 
     @phi_s.getter
     def phi_s(self) -> float | None:
@@ -606,7 +602,7 @@ class CavitySettings:
         """Delete attribute."""
         self._phi_s = np.nan
         del self.phi_acceptance
-        # del self.energy_acceptance
+        del self.energy_acceptance
 
     def set_cavity_parameters_methods(
         self,
@@ -908,67 +904,45 @@ class CavitySettings:
     # =============================================================================
     @property
     def phi_acceptance(self) -> None:
-        """a"""
+        """Get phase acceptance of the cavity."""
 
     @phi_acceptance.setter
     def phi_acceptance(self, value: float) -> None:
+        """Set the phase acceptance to the desired value."""
         self._phi_acceptance = value
 
     @phi_acceptance.getter
     def phi_acceptance(self) -> float:
+        """Get the phase acceptance."""
         if hasattr(self, "_phi_acceptance"):
             return self._phi_acceptance
 
-        # phi_acceptance_calc = getattr(self, "_phi_0_rel_to_phi_acceptance", None)
-        # phi_s = self.phi_s
-        # if not (-np.pi/2 <= phi_s <= 0):
-        #     self._phi_acceptance = np.nan
-
-        # phi_2_bounds = (-3*np.pi/2, 0)
-        # self.phi_acceptance = -(phi_s + solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds))
-
-        # return self._phi_acceptance
-
     @phi_acceptance.deleter
     def phi_acceptance(self):
+        """Delete the phase acceptance."""
         if hasattr(self, "_phi_acceptance"):
             del self._phi_acceptance
 
-    # @property
-    # def energy_acceptance(self)->None:
-    #     """a"""
+    @property
+    def energy_acceptance(self)->None:
+        """Get energy acceptance of the cavity."""
 
-    # @energy_acceptance.setter
-    # def energy_acceptance(self,value:float)->None:
-    #     self._energy_acceptance=value
+    @energy_acceptance.setter
+    def energy_acceptance(self,value:float)->None:
+        """Set the energy acceptance to the desired value."""
+        self._energy_acceptance=value
 
-    # @energy_acceptance.getter
-    # def energy_acceptance(self)->float:
-    #     if hasattr(self, "_energy_acceptance"):
-    #         return self._energy_acceptance
+    @energy_acceptance.getter
+    def energy_acceptance(self)->float:
+        """Get the energy acceptance."""
+        if hasattr(self, "_energy_acceptance"):
+            return self._energy_acceptance
 
-    #     phi_s = self.phi_s
-    #     if not (-np.pi/2 <= phi_s <= 0):
-    #         self._energy_acceptance = np.nan
-
-    #     v_cav_mv = self.v_cav_mv
-
-    #     freq_cavity_mhz = self.freq_cavity_mhz
-
-    #     length_m = self._length_m
-
-    #     w_kin = self.w_kin
-
-    #     beta_kin = energy(w_kin, "kin to beta", 0, 0, 0)
-    #     print(beta_kin)
-
-    #     self.energy_acceptance = 0
-    #     return self._energy_acceptance
-
-    # @energy_acceptance.deleter
-    # def energy_acceptance(self):
-    #     if hasattr(self, "_energy_acceptance"):
-    #         del self._energy_acceptance
+    @energy_acceptance.deleter
+    def energy_acceptance(self):
+        """Delete the energy acceptance."""
+        if hasattr(self, "_energy_acceptance"):
+            del self._energy_acceptance
 
     # .. list-table:: Meaning of status
     #     :widths: 40, 60
