@@ -15,3 +15,4 @@ Troubleshooting
 
    troubles/windows_c_compiler
    troubles/module_not_found
+   troubles/setuptools_error
