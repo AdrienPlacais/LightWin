@@ -1,4 +1,8 @@
-"Gives useful functions used to compute acceptances"
+"""Define equation solvers.
+
+For now, used only in acceptance computations.
+
+"""
 
 import logging
 from typing import Callable
