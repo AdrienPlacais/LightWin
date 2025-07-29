@@ -60,8 +60,12 @@ def solve_scalar_equation_brent(
         try:
             solution = brentq(f, x_left, x_right)
 
-        except Exception:
+        except (ValueError, RuntimeError) as e:
             solution = np.nan
+            if warning:
+                logging.warning(
+                    f"Root finding failed in solve_scalar_equation_brent() with param={param_value}: {e}"
+                )
 
     return solution
 
