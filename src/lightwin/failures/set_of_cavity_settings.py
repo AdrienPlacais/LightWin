@@ -40,7 +40,9 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
 
         """
         if key not in CONCATENABLE_CAVITY_SETTINGS:
-            raise AttributeError
+            raise AttributeError(
+                f"{key = } not in {CONCATENABLE_CAVITY_SETTINGS = }"
+            )
 
         return [getattr(settings, key) for settings in self._ordered_settings]
 
