@@ -22,14 +22,14 @@ def solve_scalar_equation_brent(
 
     Parameters
     ----------
-    func : Callable[[float, float], float]
+    func
         Function f(x, param) whose root is to be found for each parameter.
-    param_value : float
+    param_value
         Single parameter value to use when solving the equation.
-    x_bounds : tuple[float, float]
+    x_bounds
         Interval (x_min, x_max) in which to search for the root.
         The bounds will be swapped if provided in reverse order.
-    warning : bool, optional
+    warning
         If True (default), warnings are issued for empty inputs, range inversion,
         or missing roots in the interval.
 
@@ -68,13 +68,13 @@ def solve_scalar_equation_brent(
 
 def compute_phi_2(phi_2: float, phi_s: float) -> float:
     """
-    Function whose root gives the left boundary of the phase acceptance (phi_2).
+    Compute the left boundary of the phase acceptance (phi_2).
 
     Parameters
     ----------
-    phi_2 : float
+    phi_2
         Phase value in radians to test as the boundary.
-    phi_s : float
+    phi_s
         Synchronous phase in radians.
 
     Returns
