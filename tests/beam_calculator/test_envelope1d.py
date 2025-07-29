@@ -162,10 +162,10 @@ class TestSolver1D:
         )
 
 
-def test_inverted_bounds_warning(caplog):
+def test_inverted_bounds_warning(caplog: pytest.LogCaptureFixture) -> None:
     """Tests that the method accepts inverted bounds with a warning and still finds the roots."""
 
-    def example_func(x, a):
+    def example_func(x: float, a: float) -> float:
         return x - a
 
     param_value = 1
@@ -175,10 +175,10 @@ def test_inverted_bounds_warning(caplog):
         assert "is inverted" in caplog.text
 
 
-def test_no_sign_change_warning(caplog):
+def test_no_sign_change_warning(caplog: pytest.LogCaptureFixture) -> None:
     """Tests that lack of sign change in Brent's method triggers a warning and returns NaN."""
 
-    def example_func(x, a):
+    def example_func(x: float, a: float) -> float:
         return x**2 + a
 
     param_values = 1
