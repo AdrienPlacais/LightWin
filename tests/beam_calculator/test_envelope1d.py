@@ -162,29 +162,32 @@ class TestSolver1D:
         )
 
 
-def test_inverted_bounds_warning(caplog: pytest.LogCaptureFixture) -> None:
+def test_inverted_bounds_warning() -> None:
     """Tests that the method accepts inverted bounds with a warning and still finds the roots."""
 
     def example_func(x: float, a: float) -> float:
         return x - a
 
     param_value = 1
-    with caplog.at_level(logging.WARNING):
+    with patch("logging.warning") as mock_warning:
         result = solve_scalar_equation_brent(example_func, param_value, (5, 0))
         assert np.allclose(result, np.array(1.0))
-        assert "is inverted" in caplog.text
+        mock_warning.assert_any_call(
+            "The range (5, 0) is inverted. It has been corrected to (0, 5)."
+        )
 
 
-def test_no_sign_change_warning(caplog: pytest.LogCaptureFixture) -> None:
+def test_no_sign_change_warning() -> None:
     """Tests that lack of sign change in Brent's method triggers a warning and returns NaN."""
 
     def example_func(x: float, a: float) -> float:
         return x**2 + a
 
     param_values = 1
-    with caplog.at_level(logging.WARNING):
+    with patch("logging.warning") as mock_warning:
         result = solve_scalar_equation_brent(
             example_func, param_values, (-5, 5)
         )
         assert np.isnan(result)
-        assert "have the same sign" in caplog.text
+        calls = [str(call.args[0]) for call in mock_warning.call_args_list]
+        assert any("have the same sign" in msg for msg in calls)
