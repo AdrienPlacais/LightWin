@@ -275,12 +275,12 @@ class Envelope1D(BeamCalculator):
         cavity_settings.phi_s = phi_s
 
         if not (-np.pi / 2 <= phi_s <= 0):
-            cavity_settings.phi_acceptance = np.nan
-            cavity_settings.energy_acceptance = np.nan
+            cavity_settings.acceptance_phi = np.nan
+            cavity_settings.acceptance_energy = np.nan
             return
 
         phi_2_bounds = (-3 * np.pi / 2, 0)
-        cavity_settings.phi_acceptance = -(
+        cavity_settings.acceptance_phi = -(
             phi_s
             + solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds)
         )
@@ -316,7 +316,7 @@ class Envelope1D(BeamCalculator):
             / (np.pi * freq_cavity_mhz * 1e6)
         )
         trig_term = phi_s * np.cos(phi_s) - np.sin(phi_s)
-        cavity_settings.energy_acceptance = np.sqrt(factor * trig_term)
+        cavity_settings.acceptance_energy = np.sqrt(factor * trig_term)
 
     def _compute_cavity_parameters(self, results: dict) -> tuple[float, float]:
         """Compute the cavity parameters by calling ``_phi_s_func``.

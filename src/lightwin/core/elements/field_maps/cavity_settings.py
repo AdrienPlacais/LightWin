@@ -120,8 +120,8 @@ class CavitySettings:
         self._v_cav_mv: float
         self._phi_rf: float
         self._phi_bunch: float
-        self._phi_acceptance: float
-        self._energy_acceptance: float
+        self._acceptance_phi: float
+        self._acceptance_energy: float
 
         self._status: STATUS_T
         self.status = status
@@ -547,8 +547,8 @@ class CavitySettings:
     def phi_s(self, value: float) -> None:
         """Set the synchronous phase to desired value."""
         self._phi_s = value
-        del self.phi_acceptance
-        del self.energy_acceptance
+        del self.acceptance_phi
+        del self.acceptance_energy
 
     @phi_s.deleter
     def phi_s(self) -> None:
@@ -556,8 +556,8 @@ class CavitySettings:
         if not hasattr(self, "_phi_s"):
             return
         del self._phi_s
-        del self.phi_acceptance
-        del self.energy_acceptance
+        del self.acceptance_phi
+        del self.acceptance_energy
 
     @phi_s.getter
     def phi_s(self) -> float | None:
@@ -601,8 +601,8 @@ class CavitySettings:
     def phi_s(self) -> None:
         """Delete attribute."""
         self._phi_s = np.nan
-        del self.phi_acceptance
-        del self.energy_acceptance
+        del self.acceptance_phi
+        del self.acceptance_energy
 
     def set_cavity_parameters_methods(
         self,
@@ -903,46 +903,46 @@ class CavitySettings:
     # Acceptances
     # =============================================================================
     @property
-    def phi_acceptance(self) -> None:
+    def acceptance_phi(self) -> None:
         """Get phase acceptance of the cavity."""
 
-    @phi_acceptance.setter
-    def phi_acceptance(self, value: float) -> None:
+    @acceptance_phi.setter
+    def acceptance_phi(self, value: float) -> None:
         """Set the phase acceptance to the desired value."""
-        self._phi_acceptance = value
+        self._acceptance_phi = value
 
-    @phi_acceptance.getter
-    def phi_acceptance(self) -> float:
+    @acceptance_phi.getter
+    def acceptance_phi(self) -> float:
         """Get the phase acceptance."""
-        if hasattr(self, "_phi_acceptance"):
-            return self._phi_acceptance
+        if hasattr(self, "_acceptance_phi"):
+            return self._acceptance_phi
 
-    @phi_acceptance.deleter
-    def phi_acceptance(self):
+    @acceptance_phi.deleter
+    def acceptance_phi(self):
         """Delete the phase acceptance."""
-        if hasattr(self, "_phi_acceptance"):
-            del self._phi_acceptance
+        if hasattr(self, "_acceptance_phi"):
+            del self._acceptance_phi
 
     @property
-    def energy_acceptance(self) -> None:
+    def acceptance_energy(self) -> None:
         """Get energy acceptance of the cavity."""
 
-    @energy_acceptance.setter
-    def energy_acceptance(self, value: float) -> None:
+    @acceptance_energy.setter
+    def acceptance_energy(self, value: float) -> None:
         """Set the energy acceptance to the desired value."""
-        self._energy_acceptance = value
+        self._acceptance_energy = value
 
-    @energy_acceptance.getter
-    def energy_acceptance(self) -> float:
+    @acceptance_energy.getter
+    def acceptance_energy(self) -> float:
         """Get the energy acceptance."""
-        if hasattr(self, "_energy_acceptance"):
-            return self._energy_acceptance
+        if hasattr(self, "_acceptance_energy"):
+            return self._acceptance_energy
 
-    @energy_acceptance.deleter
-    def energy_acceptance(self):
+    @acceptance_energy.deleter
+    def acceptance_energy(self):
         """Delete the energy acceptance."""
-        if hasattr(self, "_energy_acceptance"):
-            del self._energy_acceptance
+        if hasattr(self, "_acceptance_energy"):
+            del self._acceptance_energy
 
     # .. list-table:: Meaning of status
     #     :widths: 40, 60

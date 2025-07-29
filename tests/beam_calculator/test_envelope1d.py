@@ -150,15 +150,15 @@ class TestSolver1D:
     ) -> None:
         """Verify that phase acceptance is correct."""
         assert wrap_approx(
-            "phi_acceptance", simulation_output, abs=5, elt="FM142"
+            "acceptance_phi", simulation_output, abs=5, elt="FM142"
         )
 
-    def test_energy_acceptance(
+    def test_acceptance_energy(
         self, simulation_output: SimulationOutput
     ) -> None:
         """Verify that energy acceptance is correct."""
         assert wrap_approx(
-            "energy_acceptance", simulation_output, abs=1e-1, elt="FM142"
+            "acceptance_energy", simulation_output, abs=1e-1, elt="FM142"
         )
 
 

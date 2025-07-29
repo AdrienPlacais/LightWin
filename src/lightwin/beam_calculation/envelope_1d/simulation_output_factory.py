@@ -106,17 +106,17 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
                 )
                 for elt in elts
             ],
-            "phi_acceptance": [
+            "acceptance_phi": [
                 (
-                    set_of_cavity_settings[elt].phi_acceptance
+                    set_of_cavity_settings[elt].acceptance_phi
                     if elt in set_of_cavity_settings
                     else None
                 )
                 for elt in elts
             ],
-            "energy_acceptance": [
+            "acceptance_energy": [
                 (
-                    set_of_cavity_settings[elt].energy_acceptance
+                    set_of_cavity_settings[elt].acceptance_energy
                     if elt in set_of_cavity_settings
                     else None
                 )
