@@ -56,16 +56,16 @@ def solve_scalar_equation_brent(
                 f"{f(x_left)} and {f(x_right)} have the same sign in solve_scalar_equation_brent(). "
                 "There is no root in this range"
             )
-    else:
-        try:
-            solution = brentq(f, x_left, x_right)
+            return solution
+    try:
+        solution = brentq(f, x_left, x_right)
 
-        except (ValueError, RuntimeError) as e:
-            solution = np.nan
-            if warning:
-                logging.warning(
-                    f"Root finding failed in solve_scalar_equation_brent() with param={param_value}: {e}"
-                )
+    except (ValueError, RuntimeError) as e:
+        solution = np.nan
+        if warning:
+            logging.warning(
+                f"Root finding failed in solve_scalar_equation_brent() with param={param_value}: {e}"
+            )
 
     return solution
 
