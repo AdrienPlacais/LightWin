@@ -121,7 +121,7 @@ class CavitySettings:
         self._phi_rf: float
         self._phi_bunch: float
         self._phi_acceptance: float
-        self.energy_acceptance: float
+        self._energy_acceptance: float
 
         self._status: STATUS_T
         self.status = status
