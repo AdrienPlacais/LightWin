@@ -32,7 +32,7 @@ from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
 from lightwin.core.em_fields.rf_field import compute_param_cav
-from lightwin.util.synchronous_phases import (
+from lightwin.physics.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )

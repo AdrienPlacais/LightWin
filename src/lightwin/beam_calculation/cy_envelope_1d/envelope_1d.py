@@ -19,7 +19,7 @@ from lightwin.beam_calculation.cy_envelope_1d.util import (
     CY_ENVELOPE1D_METHODS_T,
 )
 from lightwin.beam_calculation.envelope_1d.envelope_1d import Envelope1D
-from lightwin.util.synchronous_phases import PHI_S_MODELS
+from lightwin.physics.synchronous_phases import PHI_S_MODELS
 
 
 class CyEnvelope1D(Envelope1D):
