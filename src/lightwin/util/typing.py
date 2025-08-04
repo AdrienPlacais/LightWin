@@ -200,12 +200,15 @@ GETTABLE_RF_FIELD_T = Literal[
 #: Attributes that can be extracted with :meth:`.CavitySettings.get` method.
 GETTABLE_CAVITY_SETTINGS = (
     (
+        "acceptance_energy",
         "field",
         "freq_cavity_mhz",
         "k_e",
         "omega_0_rf",
+        "acceptance_phi",
         "phi_ref",
         "phi_rf",
+        "phi_s",
         "phi_s_func",
         "reference",
         "rf_field",
@@ -218,12 +221,15 @@ GETTABLE_CAVITY_SETTINGS = (
 )
 GETTABLE_CAVITY_SETTINGS_T = (
     Literal[
+        "acceptance_energy",
         "field",
         "freq_cavity_mhz",
         "k_e",
         "omega_0_rf",
+        "acceptance_phi",
         "phi_ref",
         "phi_rf",
+        "phi_s",
         "phi_s_func",
         "reference",
         "rf_field",
@@ -233,6 +239,21 @@ GETTABLE_CAVITY_SETTINGS_T = (
     ]
     | REFERENCE_PHASES_T
     | GETTABLE_RF_FIELD_T
+)
+
+#: Attributes from :class:`.CavitySettings` to concatenate into
+#: a list when called from :meth:`.SetOfCavitySettings.get` (or
+#: :meth:`.SimulationOutput.get`)
+CONCATENABLE_CAVITY_SETTINGS = (
+    "v_cav_mv",
+    "phi_0_abs",
+    "phi_0_rel",
+    "phi_bunch",
+    "phi_ref",
+    "phi_rf",
+    "phi_s",
+    "acceptance_phi",
+    "acceptance_energy",
 )
 
 #: Attributes that can be extracted with :meth:`.Element.get` method.
@@ -297,10 +318,12 @@ CONCATENABLE_ELTS_T = (
     | GETTABLE_ELT_T
     # GETTABLE_CAVITY_SETTINGS_T without w_kin
     | Literal[
+        "acceptance_energy",
         "field",
         "freq_cavity_mhz",
         "k_e",
         "omega_0_rf",
+        "acceptance_phi",
         "phi_ref",
         "phi_rf",
         "phi_s_func",

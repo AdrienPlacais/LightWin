@@ -65,7 +65,7 @@ class SimulationOutput:
         Holds energy, phase of the synchronous particle.
     cav_params :
         Holds amplitude, synchronous phase, absolute phase, relative phase of
-        cavities.
+        cavities, phase acceptance, energy acceptance.
     beam_parameters :
         Holds emittance, Twiss parameters, envelopes in the various phase
         spaces.
@@ -87,7 +87,6 @@ class SimulationOutput:
     r_zz_elt :
         Cumulated transfer matrices in the [z-delta] plane. The default is
         None.
-
     """
 
     out_folder: Path

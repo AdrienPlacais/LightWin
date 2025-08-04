@@ -5,8 +5,11 @@
 
 """
 
+import logging
 from typing import Any
+from unittest.mock import patch
 
+import numpy as np
 import pytest
 from tests.pytest_helpers.simulation_output import wrap_approx
 
@@ -19,6 +22,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import NoFault
+from lightwin.util.solvers import solve_scalar_equation_brent
 
 leapfrog_marker = pytest.mark.xfail(
     condition=True,
@@ -140,3 +144,50 @@ class TestSolver1D:
     def test_r_zdelta(self, simulation_output: SimulationOutput) -> None:
         """Verify that longitudinal transfer matrix is correct."""
         assert wrap_approx("r_zdelta", simulation_output, abs=5e-3)
+
+    def test_phase_acceptance(
+        self, simulation_output: SimulationOutput
+    ) -> None:
+        """Verify that phase acceptance is correct."""
+        assert wrap_approx(
+            "acceptance_phi", simulation_output, abs=5, elt="FM142"
+        )
+
+    def test_acceptance_energy(
+        self, simulation_output: SimulationOutput
+    ) -> None:
+        """Verify that energy acceptance is correct."""
+        assert wrap_approx(
+            "acceptance_energy", simulation_output, abs=1e-1, elt="FM142"
+        )
+
+
+def test_inverted_bounds_warning() -> None:
+    """Tests that the method accepts inverted bounds with a warning and still finds the roots."""
+
+    def example_func(x: float, a: float) -> float:
+        return x - a
+
+    param_value = 1
+    with patch("logging.warning") as mock_warning:
+        result = solve_scalar_equation_brent(example_func, param_value, (5, 0))
+        assert np.allclose(result, np.array(1.0))
+        mock_warning.assert_any_call(
+            "The range (5, 0) is inverted. It has been corrected to (0, 5)."
+        )
+
+
+def test_no_sign_change_warning() -> None:
+    """Tests that lack of sign change in Brent's method triggers a warning and returns NaN."""
+
+    def example_func(x: float, a: float) -> float:
+        return x**2 + a
+
+    param_values = 1
+    with patch("logging.warning") as mock_warning:
+        result = solve_scalar_equation_brent(
+            example_func, param_values, (-5, 5)
+        )
+        assert np.isnan(result)
+        calls = [str(call.args[0]) for call in mock_warning.call_args_list]
+        assert any("have the same sign" in msg for msg in calls)
