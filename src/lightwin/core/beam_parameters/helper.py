@@ -11,7 +11,7 @@ from typing import overload
 import numpy as np
 from numpy.typing import NDArray
 
-from lightwin.util import converters
+from lightwin.physics import converters
 from lightwin.util.typing import PHASE_SPACE_T, PHASE_SPACES, BeamKwargs
 
 

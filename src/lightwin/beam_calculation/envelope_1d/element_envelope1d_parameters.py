@@ -18,7 +18,7 @@ from typing import Any, Callable, Literal
 import numpy as np
 from numpy.typing import NDArray
 
-import lightwin.util.converters as convert
+import lightwin.physics.converters as convert
 from lightwin.beam_calculation.envelope_1d import transfer_matrices
 from lightwin.beam_calculation.envelope_1d.util import ENVELOPE1D_METHODS_T
 from lightwin.beam_calculation.parameters.element_parameters import (

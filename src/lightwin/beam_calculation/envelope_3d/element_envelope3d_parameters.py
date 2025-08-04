@@ -18,7 +18,7 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
-import lightwin.util.converters as convert
+import lightwin.physics.converters as convert
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
     ElementEnvelope1DParameters,
 )
