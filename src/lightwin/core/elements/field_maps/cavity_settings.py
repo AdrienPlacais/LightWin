@@ -26,7 +26,7 @@ from scipy.optimize import minimize_scalar
 
 from lightwin.core.em_fields.field import Field
 from lightwin.core.em_fields.rf_field import RfField
-from lightwin.util.phases import (
+from lightwin.physics.phases import (
     diff_angle,
     phi_0_abs_to_rel,
     phi_0_rel_to_abs,
