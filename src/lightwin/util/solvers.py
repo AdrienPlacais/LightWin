@@ -68,24 +68,3 @@ def solve_scalar_equation_brent(
             )
 
     return solution
-
-
-def compute_phi_2(phi_2: float, phi_s: float) -> float:
-    """
-    Compute the left boundary of the phase acceptance (phi_2).
-
-    Parameters
-    ----------
-    phi_2
-        Phase value in radians to test as the boundary.
-    phi_s
-        Synchronous phase in radians.
-
-    Returns
-    -------
-    float
-        Function value to be used in root-finding (zero crossing corresponds to phi_2).
-    """
-    term1 = np.sin(phi_2) - phi_2 * np.cos(phi_s)
-    term2 = np.sin(phi_s) - phi_s * np.cos(phi_s)
-    return term1 + term2

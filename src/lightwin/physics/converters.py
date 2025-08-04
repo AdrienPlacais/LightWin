@@ -35,7 +35,13 @@ def energy(
     e_rest_mev: float,
     **beam_kwargs,
 ) -> float | NDArray:
-    """Convert energy or Lorentz factor into another related quantity."""
+    """Convert energy or Lorentz factor into another related quantity.
+
+    .. todo::
+       ``q_over_m`` and ``m_over_q`` should not be mandatory arguments if they
+       are not always used.
+
+    """
     conversion_functions = {
         "v to kin": lambda x: 0.5 * m_over_q * x**2 * 1e-6,
         "kin to v": lambda x: np.sqrt(2e6 * q_over_m * x),

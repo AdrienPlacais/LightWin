@@ -8,8 +8,6 @@ import logging
 from collections.abc import Collection
 from pathlib import Path
 
-import numpy as np
-
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
     ElementEnvelope1DParameters,
@@ -24,19 +22,14 @@ from lightwin.beam_calculation.envelope_1d.util import ENVELOPE1D_METHODS_T
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from lightwin.constants import c
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.physics.converters import energy
+from lightwin.physics.acceptance import compute_acceptances
 from lightwin.physics.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
-)
-from lightwin.util.solvers import (
-    compute_phi_2,
-    solve_scalar_equation_brent,
 )
 
 
@@ -269,73 +262,25 @@ class Envelope1D(BeamCalculator):
     def _post_treat_cavity_settings(
         self, cavity_settings: CavitySettings, results: dict, length_m: float
     ) -> None:
-        """Compute synchronous phase, accelerating field and acceptances."""
-        v_cav_mv, phi_s = self._compute_cavity_parameters(results)
-        cavity_settings.v_cav_mv = v_cav_mv
-        cavity_settings.phi_s = phi_s
+        """Compute synchronous phase, accelerating field and acceptances.
 
-        if not (-np.pi / 2 <= phi_s <= 0):
-            cavity_settings.acceptance_phi = np.nan
-            cavity_settings.acceptance_energy = np.nan
-            return
-
-        phi_2_bounds = (-3 * np.pi / 2, 0)
-        cavity_settings.acceptance_phi = -(
-            phi_s
-            + solve_scalar_equation_brent(compute_phi_2, phi_s, phi_2_bounds)
-        )
-
-        q_adim = self._beam_kwargs["q_adim"]
-        e_rest_mev = self._beam_kwargs["e_rest_mev"]
-        freq_cavity_mhz = cavity_settings.freq_cavity_mhz
-        e_acc_mvpm = v_cav_mv / length_m
-        w_kin = cavity_settings.w_kin
-        beta_kin = energy(
-            w_kin,
-            "kin to beta",
-            0,
-            0,
-            e_rest_mev,
-        )
-        gamma_kin = energy(
-            w_kin,
-            "kin to gamma",
-            0,
-            0,
-            e_rest_mev,
-        )
-
-        factor = (
-            2
-            * q_adim
-            * e_acc_mvpm
-            * beta_kin**3
-            * gamma_kin**3
-            * e_rest_mev
-            * c
-            / (np.pi * freq_cavity_mhz * 1e6)
-        )
-        trig_term = phi_s * np.cos(phi_s) - np.sin(phi_s)
-        cavity_settings.acceptance_energy = np.sqrt(factor * trig_term)
-
-    def _compute_cavity_parameters(self, results: dict) -> tuple[float, float]:
-        """Compute the cavity parameters by calling ``_phi_s_func``.
-
-        Parameters
-        ----------
-        results
-            The dictionary of results as returned by the transfer matrix
-            function wrapper.
-
-        Returns
-        -------
-        tuple[float, float]
-            Accelerating voltage in MV and synchronous phase in radians. If the
-            cavity is failed, two ``np.nan`` are returned.
+        Also store these quantities in ``cavity_settings``.
 
         """
         v_cav_mv, phi_s = self._phi_s_func(**results)
-        return v_cav_mv, phi_s
+        cavity_settings.v_cav_mv = v_cav_mv
+        cavity_settings.phi_s = phi_s
+
+        acceptance_phi, acceptance_energy = compute_acceptances(
+            phi_s,
+            cavity_settings.freq_cavity_mhz,
+            getattr(cavity_settings, "w_kin", None),
+            v_cav_mv,
+            length_m,
+            self._beam_kwargs,
+        )
+        cavity_settings.acceptance_phi = acceptance_phi
+        cavity_settings.acceptance_energy = acceptance_energy
 
 
 def _store_entry_phase_in_settings(
