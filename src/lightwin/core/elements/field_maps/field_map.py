@@ -137,7 +137,7 @@ class FieldMap(Element):
 
         """
         self.filepaths = [
-            Path(self.field_map_folder, self.filename).with_suffix("." + ext)
+            Path(self.field_map_folder, self.filename + f".{ext}").resolve()
             for extension in extensions.values()
             for ext in extension
         ]
