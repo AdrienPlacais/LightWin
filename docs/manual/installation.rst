@@ -4,9 +4,9 @@ Installation
 .. toctree::
    :maxdepth: 5
 
-   installation.download
-   installation.python
-   installation.cython
+   installation.pypi
+   installation.building
    installation.tracewin
+   installation.cython
    installation.testing
    installation.troubleshooting

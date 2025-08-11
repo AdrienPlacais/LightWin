@@ -9,7 +9,7 @@ These files hold the initial value and bounds for every cavity :math:`k_e`,
 import logging
 from pathlib import Path
 
-import lightwin.config_manager as con
+import lightwin.config.config_manager as con
 from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.optimisation.design_space.factory import get_design_space_factory
 from lightwin.scripts.scripts_shorthands import compute_beam

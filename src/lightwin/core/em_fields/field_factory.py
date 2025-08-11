@@ -48,12 +48,11 @@ class FieldFactory:
 
         Parameters
         ----------
-        field_maps : Collection[FieldMap | SuperposedFieldMap]
+        field_maps :
             All the :class:`.FieldMap` instances requiring a :class:`.Field`.
 
         Returns
         -------
-        dict[tuple[pathlib.Path, str, float, float], list[FieldMap]]
             A dictionary where each key is the tuple of arguments to
             instantiate a :class:`.Field`, and value is the list of
             :class:`.FieldMap` that will share this object.
@@ -100,6 +99,7 @@ class FieldFactory:
             )
 
             for fm in corresp_maps:
+                fm.field = field
                 fm.cavity_settings.field = field
         self._create_superposed(field_maps)
         return

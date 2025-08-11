@@ -18,7 +18,6 @@ from lightwin.core.elements.dummy import DummyElement
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.field_map import FieldMap
-from lightwin.core.em_fields.rf_field import RfField
 from lightwin.core.em_fields.superposed_fields import SuperposedFields
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
@@ -49,7 +48,6 @@ class SuperposedFieldMap(Element):
         lattice: int,
         section: int,
         field_maps: Collection[FieldMap],
-        rf_fields: Collection[RfField],
         **kwargs,
     ) -> None:
         """Save length of the superposed field maps."""
@@ -68,7 +66,6 @@ class SuperposedFieldMap(Element):
         # self.aperture_flag: int   # useless
         self.cavities_settings = list(cavities_settings)
 
-        self.rf_fields = list(rf_fields)
         self._can_be_retuned: bool = False
 
         self._is_accelerating = is_accelerating
@@ -90,7 +87,7 @@ class SuperposedFieldMap(Element):
         field_maps_n_superpose: Sequence[Instruction],
         dat_idx: int,
         total_length_m: float,
-        starting_positions: Collection[float],
+        z_0s: Collection[float],
     ) -> Self:
         """Instantiate object from several field maps.
 
@@ -102,15 +99,13 @@ class SuperposedFieldMap(Element):
             x for x in field_maps_n_superpose if isinstance(x, FieldMap)
         ]
         args = cls._extract_args_from_field_maps(field_maps)
-        cavities_settings, rf_fields, is_accelerating = args
+        cavities_settings, is_accelerating = args
 
         original_line = field_maps_n_superpose[0].line.original_line
         assert "SUPERPOSE_MAP" in original_line
 
-        for rf_field, starting_position in zip(
-            rf_fields, starting_positions, strict=True
-        ):
-            rf_field.starting_position = starting_position
+        for cavity_settings, z_0 in zip(cavities_settings, z_0s, strict=True):
+            cavity_settings.field.z_0 = z_0
 
         # original_lines = [x.line.line for x in field_maps_n_superpose]
         idx_in_lattice = field_maps[0].idx["idx_in_lattice"]
@@ -122,7 +117,6 @@ class SuperposedFieldMap(Element):
             total_length_m=total_length_m,
             original_line=original_line,
             cavities_settings=cavities_settings,
-            rf_fields=rf_fields,
             is_accelerating=is_accelerating,
             idx_in_lattice=idx_in_lattice,
             lattice=lattice,
@@ -158,20 +152,15 @@ class SuperposedFieldMap(Element):
     @classmethod
     def _extract_args_from_field_maps(
         cls, field_maps: Collection[FieldMap]
-    ) -> tuple[list[CavitySettings], list[RfField], bool]:
+    ) -> tuple[list[CavitySettings], bool]:
         """Go over the field maps to gather essential arguments."""
         cavity_settings = [
             field_map.cavity_settings for field_map in field_maps
         ]
-        rf_fields = [field_map.rf_field for field_map in field_maps]
 
         are_accelerating = [x.is_accelerating for x in field_maps]
         is_accelerating = any(are_accelerating)
-        return (
-            cavity_settings,
-            rf_fields,
-            is_accelerating,
-        )
+        return cavity_settings, is_accelerating
 
     @property
     def status(self) -> str:

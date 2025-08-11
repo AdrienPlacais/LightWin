@@ -49,6 +49,8 @@ markdown = {
     "k_e": r"$k_e$ [1]",
     "phi_0_abs": r"$\phi_{0, abs}$ [deg]",
     "phi_0_rel": r"$\phi_{0, rel}$ [deg]",
+    "acceptance_phi": "Phase acceptance [deg]",
+    "acceptance_energy": "Energy acceptance [MeV]",
     # Particle
     "z_abs": "Synch. position [m]",
     "w_kin": "Beam energy [MeV]",

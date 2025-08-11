@@ -1,3 +1,5 @@
+.. _installation-tracewin:
+
 TraceWin (facultative)
 ----------------------
 

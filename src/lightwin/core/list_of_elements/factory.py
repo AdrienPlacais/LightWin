@@ -53,6 +53,7 @@ from lightwin.tracewin_utils.dat_files import (
     export_dat_filecontent,
 )
 from lightwin.tracewin_utils.line import DatLine
+from lightwin.util.typing import BeamKwargs
 
 
 class ListOfElementsFactory:
@@ -63,9 +64,8 @@ class ListOfElementsFactory:
         is_3d: bool,
         is_multipart: bool,
         default_field_map_folder: Path,
-        beam_kwargs: dict[str, Any],
-        load_rf_field: bool,
-        load_field: bool,
+        load_fields: bool,
+        beam_kwargs: BeamKwargs,
         field_maps_in_3d: bool = False,
         load_cython_field_maps: bool = False,
         elements_to_dump: ABCMeta | tuple[ABCMeta, ...] = (),
@@ -83,27 +83,9 @@ class ListOfElementsFactory:
 
         Parameters
         ----------
-        is_3d : bool
-            If the simulation is in 3D.
-        is_multipart : bool
-            If the simulation is a multiparticle simulation.
-        default_field_map_folder : Path
-            Where field map files are stored.
-        beam_kwargs : dict[str, Any]
-            Content of the ``beam`` section in the TOML configuration file.
-        load_rf_field : bool
-            If the :class:`.RfField` should be loaded and used.
-        load_field : bool
-            If the :class:`.Field` should be loaded and used. Will replace
-            :class:`.RfField` in the future.
-        field_maps_in_3d : bool, optional
-            If the field maps should be loaded in 3D -- which is not yet
-            supported, btw. The default is False.
-        load_cython_field_maps : bool, optional
-            If the field maps should be loaded in a Cython-compatible way. The
-            default is False.
-        elements_to_dump : ABCMeta | tuple[ABCMeta, ...]
-            All the elements that should be completely skipped.
+            Definition for the synchronous phases that will be used. Allowed
+            values are in :data:`.PHI_S_MODELS`. The default is
+            ``'historical'``.
 
         """
         freq_bunch_mhz = beam_kwargs["f_bunch_mhz"]
@@ -118,10 +100,9 @@ class ListOfElementsFactory:
         )
 
         self.instructions_factory = InstructionsFactory(
-            freq_bunch_mhz,
-            default_field_map_folder,
-            load_field=load_field,
-            load_rf_field=load_rf_field,
+            freq_bunch_mhz=freq_bunch_mhz,
+            default_field_map_folder=default_field_map_folder,
+            load_field=load_fields,
             field_maps_in_3d=field_maps_in_3d,
             load_cython_field_maps=load_cython_field_maps,
             elements_to_dump=elements_to_dump,
@@ -140,12 +121,12 @@ class ListOfElementsFactory:
 
         Parameters
         ----------
-        dat_file : pathlib.Path
+        dat_file :
             Absolute path to the ``.dat`` file.
         accelerator_path : pathlib.Path
             Absolute path where results for each :class:`.BeamCalculator` will
             be stored.
-        instructions_to_insert : Collection[Instruction], optional
+        instructions_to_insert :
             Some elements or commands that are not present in the ``.dat`` file
             but that you want to add. The default is an empty tuple.
         kwargs :
@@ -153,7 +134,6 @@ class ListOfElementsFactory:
 
         Returns
         -------
-        list_of_elements : ListOfElements
             Contains all the :class:`.Element` of the linac, as well as the
             proper particle and beam properties at its entry.
 
@@ -225,18 +205,17 @@ class ListOfElementsFactory:
 
         Parameters
         ----------
-        elts : list[Element]
+        elts :
             A plain list containing the elements objects that the object should
             contain.
-        simulation_output : SimulationOutput
+        simulation_output :
             Holds the results of the pre-existing list of elements.
-        files_from_full_list_of_elements : FilesInfo
+        files_from_full_list_of_elements :
             The `files` attribute of :class:`.ListOfElements` from the full
             :class:`.ListOfElements`.
 
         Returns
         -------
-        list_of_elements : ListOfElements
             Contains all the elements that will be recomputed during the
             optimisation, as well as the proper particle and beam properties at
             its entry.
@@ -300,7 +279,7 @@ class ListOfElementsFactory:
         folder: Path | str = Path("tmp"),
         dat_name: Path | str = Path("tmp.dat"),
     ) -> FilesInfo:
-        """Set the new ``.dat`` file containing only elements of ``elts``."""
+        """Set the new ``DAT`` file containing only elements of ``elts``."""
         accelerator_path = files_from_full_list_of_elements["accelerator_path"]
         out = accelerator_path / folder
         out.mkdir(exist_ok=True)
@@ -348,10 +327,9 @@ class ListOfElementsFactory:
             _ = simulation_output.get("w_kin", elt=input_elt)
         except AttributeError:
             logging.warning(
-                "First element of new list of elements is not in "
-                "the given SimulationOutput. I will consider "
-                "that the last element of the SimulationOutput is "
-                "the first of the new ListOfElements."
+                "First element of new ListOfElements is not in the given "
+                "SimulationOutput. I will consider that the last element of "
+                "the SimulationOutput is the first of the new ListOfElements."
             )
             input_elt, input_pos = "last", "out"
         return input_elt, input_pos

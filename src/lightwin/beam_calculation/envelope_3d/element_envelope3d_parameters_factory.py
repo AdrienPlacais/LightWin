@@ -1,7 +1,6 @@
 """Create the solver parameters for :class:`.Envelope3D`."""
 
 import logging
-from typing import Any
 
 from lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters import (
     BendEnvelope3DParameters,
@@ -24,7 +23,8 @@ from lightwin.core.elements.field_maps.field_map_70 import FieldMap70
 from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
-from lightwin.util.synchronous_phases import PHI_S_MODELS
+from lightwin.physics.synchronous_phases import PHI_S_MODELS
+from lightwin.util.typing import BeamKwargs
 
 PARAMETERS_3D = {
     Bend: BendEnvelope3DParameters,
@@ -46,7 +46,7 @@ class ElementEnvelope3DParametersFactory(
         method: ENVELOPE3D_METHODS_T,
         n_steps_per_cell: int,
         solver_id: str,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         phi_s_definition: PHI_S_MODELS = "historical",
     ) -> None:
         """Prepare import of proper functions."""
@@ -61,7 +61,7 @@ class ElementEnvelope3DParametersFactory(
 
         Parameters
         ----------
-        elt : Element
+        elt :
             Element under study.
 
         Returns

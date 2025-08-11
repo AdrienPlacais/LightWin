@@ -19,54 +19,26 @@ import logging
 import math
 from collections.abc import Callable
 from functools import partial
-from typing import Any, Literal, Self
+from typing import Any, Self
 
 import numpy as np
 from scipy.optimize import minimize_scalar
 
 from lightwin.core.em_fields.field import Field
-from lightwin.core.em_fields.rf_field import RfField
-from lightwin.util.phases import (
+from lightwin.physics.phases import (
     diff_angle,
     phi_0_abs_to_rel,
     phi_0_rel_to_abs,
     phi_bunch_to_phi_rf,
     phi_rf_to_phi_bunch,
 )
-
-REFERENCE_PHASES_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
-REFERENCE_PHASES = ("phi_0_abs", "phi_0_rel", "phi_s")  #:
-
-EXPORT_PHASES_T = (
-    REFERENCE_PHASES_T | Literal["as_in_settings", "as_in_original_dat"]
+from lightwin.util.typing import (
+    ALLOWED_STATUS,
+    GETTABLE_CAVITY_SETTINGS_T,
+    REFERENCE_PHASES,
+    REFERENCE_PHASES_T,
+    STATUS_T,
 )
-EXPORT_PHASES = (
-    "phi_0_abs",
-    "phi_0_rel",
-    "phi_s",
-    "as_in_settings",
-    "as_in_original_dat",
-)  #:
-
-# warning: doublon with field_map.IMPLEMENTED_STATUS
-STATUS_T = Literal[
-    "nominal",
-    "rephased (in progress)",
-    "rephased (ok)",
-    "failed",
-    "compensate (in progress)",
-    "compensate (ok)",
-    "compensate (not ok)",
-]
-ALLOWED_STATUS = (
-    "nominal",
-    "rephased (in progress)",
-    "rephased (ok)",
-    "failed",
-    "compensate (in progress)",
-    "compensate (ok)",
-    "compensate (not ok)",
-)  #:
 
 
 class CavitySettings:
@@ -98,41 +70,40 @@ class CavitySettings:
         freq_cavity_mhz: float | None = None,
         transf_mat_func_wrappers: dict[str, Callable] | None = None,
         phi_s_funcs: dict[str, Callable] | None = None,
-        rf_field: RfField | None = None,
         field: Field | None = None,
     ) -> None:
         """Instantiate the object.
 
         Parameters
         ----------
-        k_e : float
+        k_e :
             Amplitude of the electric field.
-        phi : float
-            Input phase. Must be absolute or relative entry phase, or
-            synchronous phase.
-        reference : REFERENCE_T
+        phi :
+            Input phase in radians. Must be absolute or relative entry phase,
+            or synchronous phase.
+        reference :
             Name of the phase used for reference. When a particle enters the
             cavity, this is the phase that is not recomputed.
-        status : STATUS_T
-            A value in :data:`ALLOWED_STATUS`.
-        freq_bunch_mhz : float
+        status :
+            A value in :data:`.ALLOWED_STATUS`.
+        freq_bunch_mhz :
             Bunch frequency in MHz.
-        freq_cavity_mhz : float | None, optional
-            Frequency of the cavity in :unit:`MHz`. The default is None, which
-            happens when the :class:`.ListOfElements` is under creation and we
-            did not process the ``FREQ`` commands yet.
-        transf_mat_func_wrappers : dict[str, Callable] | None, optional
+        freq_cavity_mhz :
+            Frequency of the cavity in MHz. The default is None, which happens
+            when the :class:`.ListOfElements` is under creation and we did not
+            process the ``FREQ`` commands yet.
+        transf_mat_func_wrappers :
             A dictionary which keys are the different :class:`.BeamCalculator`
             ids, and values are corresponding functions to compute propagation
             of the beam. The default is None, in which case attribute is not
             set.
-        phi_s_funcs : dict[str, Callable] | None, optional
+        phi_s_funcs :
             A dictionary which keys are the different :class:`.BeamCalculator`
             ids, and values are corresponding functions to compute synchronous
             phase and accelerating voltage from the ouput of corresponding
             ``transf_mat_func_wrapper``. The default is None, in which case
             attribute is not set.
-        field : Field | None, optional
+        field :
             Holds the constant parameters, such as interpolated field maps.
 
         """
@@ -147,6 +118,8 @@ class CavitySettings:
         self._v_cav_mv: float
         self._phi_rf: float
         self._phi_bunch: float
+        self._acceptance_phi: float
+        self._acceptance_energy: float
 
         self._status: STATUS_T
         self.status = status
@@ -164,10 +137,6 @@ class CavitySettings:
         self.freq_cavity_mhz: float
         self.omega0_rf: float
         self.set_bunch_to_rf_freq_func(freq_cavity_mhz)
-
-        self.rf_field: RfField
-        if rf_field is not None:
-            self.rf_field = rf_field
 
         self.field: Field
         if field is not None:
@@ -217,15 +186,14 @@ class CavitySettings:
             reference = other.reference
         assert reference is not None
         settings = cls(
-            other.k_e,
-            getattr(other, reference),
-            reference,
-            other.status,
-            other._freq_bunch_mhz,
-            other.freq_cavity_mhz,
+            k_e=other.k_e,
+            phi=getattr(other, reference),
+            reference=reference,
+            status=other.status,
+            freq_bunch_mhz=other._freq_bunch_mhz,
+            freq_cavity_mhz=other.freq_cavity_mhz,
             transf_mat_func_wrappers=other.transf_mat_func_wrappers,
             phi_s_funcs=other.phi_s_funcs,
-            rf_field=other.rf_field,
             field=other.field,
         )
         return settings
@@ -243,17 +211,16 @@ class CavitySettings:
 
         Parameters
         ----------
-        base : Self
+        base :
             The reference :class:`CavitySettings`. A priori, this is the
             nominal settings.
-        k_e : float
+        k_e :
             New field amplitude.
-        phi : float
+        phi :
             New reference phase. Its nature is defined by ``reference``.
-        status : Literal["compensate (in progress)", "compensate (ok)", \
-                "compensate (not ok)"]
+        status :
             Status of the created settings.
-        reference : Literal["phi_0_rel", "phi_0_abs", "phi_s"]
+        reference :
             The phase used as a reference.
 
         Returns
@@ -266,15 +233,14 @@ class CavitySettings:
             reference = base.reference
         assert reference is not None
         settings = cls(
-            k_e,
-            phi,
-            reference,
-            status,
-            base._freq_bunch_mhz,
-            base.freq_cavity_mhz,
-            base.transf_mat_func_wrappers,
-            base.phi_s_funcs,
-            rf_field=base.rf_field,
+            k_e=k_e,
+            phi=phi,
+            reference=reference,
+            status=status,
+            freq_bunch_mhz=base._freq_bunch_mhz,
+            freq_cavity_mhz=base.freq_cavity_mhz,
+            transf_mat_func_wrappers=base.transf_mat_func_wrappers,
+            phi_s_funcs=base.phi_s_funcs,
             field=base.field,
         )
         return settings
@@ -295,15 +261,21 @@ class CavitySettings:
         return hasattr(self, key)
 
     def get(
-        self, *keys: str, to_deg: bool = False, **kwargs: bool | str | None
+        self,
+        *keys: GETTABLE_CAVITY_SETTINGS_T,
+        to_deg: bool = False,
+        **kwargs: Any,
     ) -> Any:
-        """Shorthand to get attributes from this class or its attributes.
+        r"""Get attributes from this class or its nested members.
 
         Parameters
         ----------
-        *keys : str
+        *keys :
             Name of the desired attributes.
-        **kwargs : bool | str | None
+        to_deg :
+            Wether keys with ``"phi"`` in their name should be multiplied by
+            :math:`360 / 2\pi`.
+        **kwargs :
             Other arguments passed to recursive getter.
 
         Returns
@@ -312,6 +284,15 @@ class CavitySettings:
             Attribute(s) value(s).
 
         """
+        values = [getattr(self, key, None) for key in keys]
+
+        if to_deg:
+            values = [
+                math.degrees(v) if "phi" in key and v is not None else v
+                for v, key in zip(values, keys)
+            ]
+
+        return values[0] if len(values) == 1 else tuple(values)
         val: dict[str, Any] = {key: [] for key in keys}
 
         for key in keys:
@@ -349,13 +330,14 @@ class CavitySettings:
 
         Parameters
         ----------
-        freq_cavity_mhz : float | None, optional
+        freq_cavity_mhz :
             Frequency in the cavity in :unit:`MHz`. If it is not provided, we
             set it to the bunch frequency.
 
         """
         if freq_cavity_mhz is None:
             freq_cavity_mhz = self._freq_bunch_mhz
+
         self.freq_cavity_mhz = freq_cavity_mhz
         bunch_phase_to_rf_phase = partial(
             phi_bunch_to_phi_rf, freq_cavity_mhz / self._freq_bunch_mhz
@@ -394,7 +376,7 @@ class CavitySettings:
         return self._reference
 
     @reference.setter
-    def reference(self, value: REFERENCE_PHASES) -> None:
+    def reference(self, value: REFERENCE_PHASES_T) -> None:
         """Set the value of reference, check that it is valid."""
         assert value in REFERENCE_PHASES
         self._reference = value
@@ -564,6 +546,8 @@ class CavitySettings:
     def phi_s(self, value: float) -> None:
         """Set the synchronous phase to desired value."""
         self._phi_s = value
+        del self.acceptance_phi
+        del self.acceptance_energy
 
     @phi_s.deleter
     def phi_s(self) -> None:
@@ -571,6 +555,8 @@ class CavitySettings:
         if not hasattr(self, "_phi_s"):
             return
         del self._phi_s
+        del self.acceptance_phi
+        del self.acceptance_energy
 
     @phi_s.getter
     def phi_s(self) -> float | None:
@@ -614,6 +600,8 @@ class CavitySettings:
     def phi_s(self) -> None:
         """Delete attribute."""
         self._phi_s = np.nan
+        del self.acceptance_phi
+        del self.acceptance_energy
 
     def set_cavity_parameters_methods(
         self,
@@ -634,11 +622,11 @@ class CavitySettings:
 
         Parameters
         ----------
-        solver_id : str
+        solver_id :
             The name of the solver for which functions must be changed.
-        transf_mat_function_wrapper : Callable
+        transf_mat_function_wrapper :
             A function that compute the propagation of the beam.
-        phi_s_func : Callable | None, optional
+        phi_s_func :
             A function that takes in the ouptut of
             ``transf_mat_function_wrapper`` and return the accelerating voltage
             in MV and the synchronous phase in rad. The default is None, which
@@ -669,10 +657,10 @@ class CavitySettings:
 
         Parameters
         ----------
-        solver_id : str
+        solver_id :
             Name of the solver that will compute :math:`V_\mathrm{cav}` and
             :math:`\phi_s`.
-        w_kin : float
+        w_kin :
             Kinetic energy of the synchronous particle at the entry of the
             cavity.
         kwargs :
@@ -701,7 +689,7 @@ class CavitySettings:
 
         Parameters
         ----------
-        phi_0_rel : float
+        phi_0_rel :
             Relative entry phase in radians.
 
         Returns
@@ -730,14 +718,14 @@ class CavitySettings:
         cavity_parameters = self.phi_s_func(**results)
         return cavity_parameters
 
-    def residue_func(self, phi_0_rel: float, phi_s: float) -> float:
+    def residual_func(self, phi_0_rel: float, phi_s: float) -> float:
         """Calculate the squared difference between target and computed phi_s.
 
         Parameters
         ----------
-        phi_0_rel : float
+        phi_0_rel :
             Relative entry phase in radians.
-        phi_s_target : float
+        phi_s_target :
             Target synchronous phase in radians.
 
         Returns
@@ -747,15 +735,15 @@ class CavitySettings:
 
         """
         calculated_phi_s = self.phi_0_rel_to_cavity_parameters(phi_0_rel)[1]
-        residue = diff_angle(phi_s, calculated_phi_s)
-        return residue**2
+        residual = diff_angle(phi_s, calculated_phi_s)
+        return residual**2
 
     def phi_s_to_phi_0_rel(self, phi_s: float) -> float:
-        """Find the relative entry phase that yields the target synchronous phase.
+        """Find the relative entry phase that yields the target sync phase.
 
         Parameters
         ----------
-        phi_s : float
+        phi_s :
             Target synchronous phase in radians.
 
         Returns
@@ -770,7 +758,7 @@ class CavitySettings:
 
         """
         out = minimize_scalar(
-            self.residue_func, bounds=(0.0, 2.0 * math.pi), args=(phi_s,)
+            self.residual_func, bounds=(0.0, 2.0 * math.pi), args=(phi_s,)
         )
         if not out.success:
             logging.error("Synch phase not found")
@@ -804,17 +792,16 @@ class CavitySettings:
         # We omit the _ in front of phi_0_rel to compute it if necessary
         if self.phi_0_rel is None:
             logging.error(
-                "You must declare the particle entry phase in the "
-                "cavity to compute phi_0_rel and then v_cav_mv."
+                "You must declare the particle entry phase in the cavity to "
+                "compute phi_0_rel and then v_cav_mv."
             )
             return None
 
         v_cav_mv_calc = getattr(self, "_phi_0_rel_to_v_cav_mv", None)
         if v_cav_mv_calc is None:
             logging.debug(
-                "You must set a function to compute v_cav_mv from "
-                "phi_0_rel with CavitySettings.set_cavity_parameters_arguments"
-                " method."
+                "You must set a function to compute v_cav_mv from phi_0_rel "
+                "with CavitySettings.set_cavity_parameters_arguments method."
             )
             return None
 
@@ -840,7 +827,7 @@ class CavitySettings:
 
         Parameters
         ----------
-        value : float
+        value :
             New rf phase of the synchronous particle at the entrance of the
             cavity.
 
@@ -890,7 +877,7 @@ class CavitySettings:
 
         Parameters
         ----------
-        delta_phi_bunch : float
+        delta_phi_bunch :
             Phase difference between the new first element of the linac and the
             previous first element of the linac.
 
@@ -910,6 +897,51 @@ class CavitySettings:
         assert (
             self.phi_bunch >= 0.0
         ), "The phase of the synchronous particle should never be negative."
+
+    # =============================================================================
+    # Acceptances
+    # =============================================================================
+    @property
+    def acceptance_phi(self) -> None:
+        """Get phase acceptance of the cavity."""
+
+    @acceptance_phi.setter
+    def acceptance_phi(self, value: float) -> None:
+        """Set the phase acceptance to the desired value."""
+        self._acceptance_phi = value
+
+    @acceptance_phi.getter
+    def acceptance_phi(self) -> float:
+        """Get the phase acceptance."""
+        if hasattr(self, "_acceptance_phi"):
+            return self._acceptance_phi
+
+    @acceptance_phi.deleter
+    def acceptance_phi(self):
+        """Delete the phase acceptance."""
+        if hasattr(self, "_acceptance_phi"):
+            del self._acceptance_phi
+
+    @property
+    def acceptance_energy(self) -> None:
+        """Get energy acceptance of the cavity."""
+
+    @acceptance_energy.setter
+    def acceptance_energy(self, value: float) -> None:
+        """Set the energy acceptance to the desired value."""
+        self._acceptance_energy = value
+
+    @acceptance_energy.getter
+    def acceptance_energy(self) -> float:
+        """Get the energy acceptance."""
+        if hasattr(self, "_acceptance_energy"):
+            return self._acceptance_energy
+
+    @acceptance_energy.deleter
+    def acceptance_energy(self):
+        """Delete the energy acceptance."""
+        if hasattr(self, "_acceptance_energy"):
+            del self._acceptance_energy
 
     # .. list-table:: Meaning of status
     #     :widths: 40, 60

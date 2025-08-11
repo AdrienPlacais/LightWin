@@ -16,6 +16,7 @@ def load_electromagnetic_fields_for_cython(
     field_maps: Collection[FieldMap], loadable: Collection[Path]
 ) -> None:
     """Load one electric field per section."""
+    raise NotImplementedError("Should not be used anymore")
     nested_filepaths = [
         field_map.filepaths
         for field_map in field_maps

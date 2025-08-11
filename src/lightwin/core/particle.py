@@ -2,7 +2,7 @@
 
 - :class:`ParticleInitialState` is just here to save the position and
   energy of a particle at the entrance of the linac. Saved as an
-  :class:`.Accelerator` attribute.
+  :class:`.ListOfElements` attribute.
 
 - :class:`ParticleFullTrajectory` saves the energy, phase, position of a
   particle along the linac. As a single :class:`ParticleInitialState` can
@@ -16,21 +16,23 @@ from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 
-import lightwin.util.converters as convert
+import lightwin.physics.converters as convert
 from lightwin.tracewin_utils.interface import particle_initial_state_to_command
 from lightwin.util.helper import (
     range_vals_object,
     recursive_getter,
     recursive_items,
 )
+from lightwin.util.typing import GETTABLE_PARTICLE_T, BeamKwargs
 
 
 @dataclass
 class ParticleInitialState:
     """Hold the initial energy/phase of a particle, and if it is synchronous.
 
-    It is stored in Accelerator, and is parent of ParticleFullTrajectory.
+    It is used for :class:`.ListOfElements` attribute.
 
     """
 
@@ -49,24 +51,26 @@ class ParticleInitialState:
 
 @dataclass
 class ParticleFullTrajectory:
-    """
-    Hold the full energy, phase, etc of a particle.
+    r"""Hold the full energy, phase, etc of a particle.
 
-    It is stored in a SimulationOutput. A single Accelerator can have several
-    SimulationOutput, hence an Accelerator.ParticleInitialState can have
-    several SimulationOutput.ParticleFullTrajectory.
+    It is stored in a :class:`.SimulationOutput`.
 
     Phase is defined as:
-        phi = omega_0_bunch * t
-    while in electric_field it is:
-        phi = omega_0_rf * t
+
+    .. math::
+        \phi = \omega_{0,\,\mathrm{bunch}} t
+
+    while in :class:`.Field` it is:
+
+    .. math::
+        \phi = \omega_{0,\,\mathrm{rf}} t
 
     """
 
-    w_kin: np.ndarray | list
-    phi_abs: np.ndarray | list
+    w_kin: NDArray | list
+    phi_abs: NDArray | list
     synchronous: bool
-    beam: dict[str, Any]
+    beam: BeamKwargs
 
     def __post_init__(self):
         """Ensure that LightWin has everything it needs, with proper format."""
@@ -76,10 +80,8 @@ class ParticleFullTrajectory:
         if isinstance(self.w_kin, list):
             self.w_kin = np.array(self.w_kin)
 
-        self.gamma = convert.energy(
-            self.get("w_kin"), "kin to gamma", **self.beam
-        )
-        self.beta: np.ndarray
+        self.gamma = convert.energy(self.w_kin, "kin to gamma", **self.beam)
+        self.beta: NDArray
 
     def __str__(self) -> str:
         """Show amplitude of phase and energy."""
@@ -95,37 +97,64 @@ class ParticleFullTrajectory:
 
     def compute_complementary_data(self):
         """Compute some data necessary to do the post-treatment."""
-        self.beta = convert.energy(
-            self.get("gamma"), "gamma to beta", **self.beam
-        )
+        self.beta = convert.energy(self.gamma, "gamma to beta", **self.beam)
 
     def has(self, key: str) -> bool:
-        """Tell if the required attribute is in this class."""
+        """Tell if the required attribute is in this class or its subfields."""
         return key in recursive_items(vars(self))
 
     def get(
-        self, *keys: tuple[str], to_deg: bool = False, **kwargs: dict
-    ) -> tuple[Any]:
-        """Shorthand to get attributes."""
-        val = {}
-        for key in keys:
-            val[key] = []
+        self,
+        *keys: GETTABLE_PARTICLE_T,
+        to_numpy: bool = True,
+        none_to_nan: bool = False,
+        to_deg: bool = False,
+        **kwargs: Any,
+    ) -> Any:
+        """Get attributes from this class or its nested attributes.
+
+        Parameters
+        ----------
+        *keys :
+            Names of the desired attributes.
+        to_numpy :
+            Convert list outputs to NumPy arrays.
+        none_to_nan :
+            Convert ``None`` values to ``np.nan``.
+        to_deg :
+            Convert phase attributes (containing "phi") to degrees.
+        **kwargs :
+            Passed to recursive_getter.
+
+        Returns
+        -------
+        Any
+            A single value if one key is given, or a tuple of values.
+
+        """
+        results = []
 
         for key in keys:
-            if not self.has(key):
-                val[key] = None
-                continue
+            value = (
+                recursive_getter(key, vars(self), **kwargs)
+                if self.has(key)
+                else None
+            )
 
-            val[key] = recursive_getter(key, vars(self), **kwargs)
+            if value is None and none_to_nan:
+                value = np.nan
 
-            if val[key] is not None and to_deg and "phi" in key:
-                val[key] = np.rad2deg(val[key])
+            if to_deg and value is not None and "phi" in key:
+                value = np.rad2deg(value)
 
-        out = [val[key] for key in keys]
+            if to_numpy and isinstance(value, list):
+                value = np.array(value)
+            elif not to_numpy and isinstance(value, np.ndarray):
+                value = value.tolist()
 
-        if len(out) == 1:
-            return out[0]
-        return tuple(out)
+            results.append(value)
+
+        return results[0] if len(results) == 1 else tuple(results)
 
 
 # def create_rand_particles(e_0_mev):

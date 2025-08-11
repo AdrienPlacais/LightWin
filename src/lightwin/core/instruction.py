@@ -80,7 +80,7 @@ class Instruction(ABC):
 
     @property
     def name(self) -> str:
-        """Give personal. name of instruction if exists, default otherwise."""
+        """Give personalized name of instruction if exists, default otherwise."""
         if hasattr(self, "_personalized_name") and self._personalized_name:
             return self._personalized_name
         if hasattr(self, "_default_name"):

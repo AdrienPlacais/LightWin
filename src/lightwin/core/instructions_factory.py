@@ -51,7 +51,6 @@ class InstructionsFactory:
         self,
         freq_bunch_mhz: float,
         default_field_map_folder: Path,
-        load_rf_field: bool,
         load_field: bool,
         field_maps_in_3d: bool,
         load_cython_field_maps: bool,
@@ -67,10 +66,6 @@ class InstructionsFactory:
         default_field_map_folder : pathlib.Path
             Where to look for field maps when no ``FIELD_MAP_PATH`` is
             precised. This is also the folder where the ``.dat`` is.
-        load_rf_field : bool
-            To create or not the :class:`.RfField`. This is still necessary for
-            :class:`.CyEnvelope1D` and :class:`.Envelope3D`, but not for
-            :class:`.Envelope1D` and :class:`.TraceWin`.
         load_field : bool
             To create or not the :class:`.Field`. This is not yer supported for
             :class:`.CyEnvelope1D` and :class:`.Envelope3D`, but it is
@@ -94,7 +89,7 @@ class InstructionsFactory:
         # arguments for commands
         self._freq_bunch_mhz = freq_bunch_mhz
 
-        if load_field or load_rf_field:
+        if load_field:
             assert default_field_map_folder.is_dir()
 
         # factories
@@ -108,7 +103,6 @@ class InstructionsFactory:
         )
         self._elements_to_dump = elements_to_dump
 
-        self._load_rf_field = load_rf_field
         self._load_field = load_field
         if field_maps_in_3d:
             raise NotImplementedError(
@@ -144,10 +138,6 @@ class InstructionsFactory:
         self._check_every_elt_has_lattice_and_section(elts)
         self._check_last_lattice_of_every_lattice_is_complete(elts)
         self._filter_out_elements_to_dump(elts)
-
-        if self._load_rf_field:
-            field_maps = [elt for elt in elts if isinstance(elt, FieldMap)]
-            load_electromagnetic_fields(field_maps, cython=True)
 
         if self._load_field:
             field_maps = [elt for elt in elts if isinstance(elt, FieldMap)]

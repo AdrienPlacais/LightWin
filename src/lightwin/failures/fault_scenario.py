@@ -118,7 +118,6 @@ class FaultScenario(list):
             objective_factory_class=objective_factory_class,
         )
         super().__init__(faults)
-        self._set_optimisation_algorithms()
 
         # Change status of cavities after the first one that is down. Idea
         # is to keep relative phi_0 between ref and fix linacs (linac

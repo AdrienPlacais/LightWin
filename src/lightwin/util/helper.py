@@ -33,7 +33,7 @@ def recursive_items(dictionary: dict[Any, Any]) -> Iterator[str]:
 
 
 def recursive_getter(
-    wanted_key: str, dictionary: dict, **kwargs: bool | str | int
+    wanted_key: str, dictionary: dict[str, Any], **kwargs: Any
 ) -> Any:
     """Get first key in a possibly nested dictionary."""
     for key, value in dictionary.items():

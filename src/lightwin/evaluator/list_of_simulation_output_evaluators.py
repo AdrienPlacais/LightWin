@@ -41,7 +41,25 @@ class ListOfSimulationOutputEvaluators(list):
         project_folder: Path | None = None,
         **files_kw,
     ) -> pd.DataFrame:
-        """Run all the evaluations."""
+        """Run all the evaluations.
+
+        Parameters
+        ----------
+        simulation_outputs : SimulationOutput
+            All the simulation output instances.
+        other_evals : dict[str, list[Any]] | None
+            Dictionary with over evaluations to put in the output file. Keys
+            are the column headers, values are corresponding values stored as
+            lists. The default is None, in which case nothing is added.
+        project_folder : pathlib.Path | None
+            Where to save the output file.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A dataframe holding the evaluations.
+
+        """
         index = self._set_indexes(*simulation_outputs)
         other_columns, other_data = self._unpack_other_evals(other_evals)
         columns = self._set_columns(other_columns)

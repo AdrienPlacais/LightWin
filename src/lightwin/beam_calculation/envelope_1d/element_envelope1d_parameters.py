@@ -16,8 +16,9 @@ from collections.abc import Collection
 from typing import Any, Callable, Literal
 
 import numpy as np
+from numpy.typing import NDArray
 
-import lightwin.util.converters as convert
+import lightwin.physics.converters as convert
 from lightwin.beam_calculation.envelope_1d import transfer_matrices
 from lightwin.beam_calculation.envelope_1d.util import ENVELOPE1D_METHODS_T
 from lightwin.beam_calculation.parameters.element_parameters import (
@@ -34,10 +35,11 @@ from lightwin.core.em_fields.types import (
     FieldFuncComplexTimedComponent,
     FieldFuncTimedComponent,
 )
-from lightwin.util.synchronous_phases import (
+from lightwin.physics.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
+from lightwin.util.typing import BeamKwargs
 
 
 class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
@@ -52,7 +54,7 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         self,
         length_m: float,
         n_steps: int,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         transf_mat_function: Callable | None = None,
         **kwargs: str | int,
     ) -> None:
@@ -67,7 +69,7 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
 
         self.s_in: int
         self.s_out: int
-        self.abs_mesh: np.ndarray
+        self.abs_mesh: NDArray
 
     def set_absolute_meshes(
         self, pos_in: float, s_in: int
@@ -100,11 +102,7 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         cavity_settings: Any = None,
         **kwargs,
     ) -> dict:
-        """Calculate beam propagation in the :class:`.Element`.
-
-        kwargs can be cavity_settings rf_field
-
-        """
+        """Calculate beam propagation in the :class:`.Element`."""
         gamma_in = convert.energy(w_kin, "kin to gamma", **self._beam_kwargs)
         tm_kwargs = self.transfer_matrix_kw(
             w_kin=w_kin,
@@ -123,8 +121,8 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
 
     def _transfer_matrix_results_to_dict(
         self,
-        r_zz: np.ndarray,
-        gamma_phi: np.ndarray,
+        r_zz: NDArray,
+        gamma_phi: NDArray,
         integrated_field: float | None,
     ) -> dict:
         """Convert the results given by the transf_mat function to dict."""
@@ -176,7 +174,7 @@ class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
     def __init__(
         self,
         elt: Element,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         n_steps: int = 1,
         **kwargs: str | int,
     ) -> None:
@@ -204,7 +202,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         method: ENVELOPE1D_METHODS_T,
         n_steps_per_cell: int,
         solver_id: str,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         phi_s_model: PHI_S_MODELS = "historical",
         **kwargs: str | int,
     ) -> None:
@@ -217,9 +215,9 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         ]
 
         self.solver_id = solver_id
-        n_cell = elt.cavity_settings.field.n_cell
+        self.n_cell = elt.cavity_settings.field.n_cell
         self._rf_to_bunch = elt.cavity_settings.rf_phase_to_bunch_phase
-        n_steps = n_cell * n_steps_per_cell
+        n_steps = self.n_cell * n_steps_per_cell
         super().__init__(
             elt.length_m,
             n_steps,
@@ -245,22 +243,23 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
         Parameters
         ----------
-        w_kin : float
+        w_kin :
             Kinetic energy at the entrance of cavity in :unit:`MeV`.
-        cavity_settings : CavitySettings
+        cavity_settings :
             Object holding the cavity parameters that can be changed.
-        phi_0_rel : float | None
+        phi_0_rel :
             Relative entry phase of the cavity. When provided, it means that we
             are trying to find the :math:`\phi_{0,\,\mathrm{rel}}` matching a
-            given :math:`\phi_s`. The default is None.
+            given :math:`\phi_s`.
 
         Returns
         -------
-        dict[str, Any]
             Keyword arguments that will be passed to the 1D transfer matrix
             function defined in :mod:`.envelope_1d.transfer_matrices`.
 
         """
+        assert cavity_settings.status != "failed"
+
         geometry_kwargs = {
             "d_z": self.d_z,
             "n_steps": self.n_steps,
@@ -277,7 +276,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
                 cavity_settings.set_cavity_parameters_arguments(
                     self.solver_id,
                     w_kin,
-                    **rf_kwargs,  # Note that phi_0_rel is not set
+                    **rf_kwargs,  # Note that phi_0_rel is absent from kwargs
                 )
                 # phi_0_rel will be set when trying to access
                 # CavitySettings.phi_0_rel (this is the case #2)
@@ -312,8 +311,8 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def _transfer_matrix_results_to_dict(
         self,
-        r_zz: np.ndarray,
-        gamma_phi: np.ndarray,
+        r_zz: NDArray,
+        gamma_phi: NDArray,
         integrated_field: float | None,
     ) -> dict:
         """Convert the results given by the transf_mat function to a dict.
@@ -348,8 +347,8 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def _broken_transfer_matrix_results_to_dict(
         self,
-        r_zz: np.ndarray,
-        gamma_phi: np.ndarray,
+        r_zz: NDArray,
+        gamma_phi: NDArray,
         integrated_field: float | None,
     ) -> dict:
         """Convert the results given by the transf_mat function to a dict."""
@@ -394,7 +393,7 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         method: Literal["RK4"],
         n_steps_per_cell: int,
         solver_id: str,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         phi_s_model: PHI_S_MODELS = "historical",
         **kwargs: str | int,
     ) -> None:
@@ -472,8 +471,8 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
 
     def _transfer_matrix_results_to_dict(
         self,
-        r_zz: np.ndarray,
-        gamma_phi: np.ndarray,
+        r_zz: NDArray,
+        gamma_phi: NDArray,
         integrated_field: float | None,
     ) -> dict:
         """Convert the results given by the transf_mat function to a dict.
@@ -515,7 +514,7 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
     def __init__(
         self,
         elt: Bend,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         n_steps: int = 1,
         **kwargs: str | int,
     ) -> None:
@@ -523,14 +522,12 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
 
         Parameters
         ----------
-        transf_mat_module : types.ModuleType
-            Module where the transfer matrix function is defined.
-        elt : Bend
+        elt :
             ``BEND`` element.
-        beam_kwargs : dict[str, Any]
+        beam_kwargs :
             Configuration dict holding all initial beam properties.
-        n_steps : int, optional
-            Number of integration steps. The default is 1.
+        n_steps :
+            Number of integration steps.
 
         """
         transf_mat_function = self._proper_transfer_matrix_func("Bend")

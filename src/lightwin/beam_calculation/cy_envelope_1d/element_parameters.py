@@ -21,7 +21,8 @@ from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import 
 )
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.field_map import FieldMap
-from lightwin.util.synchronous_phases import PHI_S_MODELS
+from lightwin.physics.synchronous_phases import PHI_S_MODELS
+from lightwin.util.typing import BeamKwargs
 
 try:
     from lightwin.beam_calculation.cy_envelope_1d import (
@@ -44,7 +45,7 @@ class ElementCyEnvelope1DParameters(ElementEnvelope1DParameters):
         self,
         length_m: float,
         n_steps: int,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         transf_mat_function: Callable | None = None,
         **kwargs: str | int,
     ) -> None:
@@ -107,7 +108,7 @@ class FieldMapCyEnvelope1DParameters(
         method: CY_ENVELOPE1D_METHODS_T,
         n_steps_per_cell: int,
         solver_id: str,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         phi_s_model: PHI_S_MODELS = "historical",
         **kwargs: str | int,
     ) -> None:
@@ -135,18 +136,17 @@ class FieldMapCyEnvelope1DParameters(
 
         Parameters
         ----------
-        w_kin : float
+        w_kin :
             Kinetic energy at the entrance of cavity in :unit:`MeV`.
-        cavity_settings : CavitySettings
+        cavity_settings :
             Object holding the cavity parameters that can be changed.
-        phi_0_rel : float | None
+        phi_0_rel :
             Relative entry phase of the cavity. When provided, it means that we
             are trying to find the :math:`\phi_{0,\,\mathrm{rel}}` matching a
             given :math:`\phi_s`. The default is None.
 
         Returns
         -------
-        dict[str, Any]
             Keyword arguments that will be passed to the 1D transfer matrix
             function defined in :mod:`.cy_envelope_1d.transfer_matrices`.
 
@@ -156,6 +156,9 @@ class FieldMapCyEnvelope1DParameters(
             "n_steps": self.n_steps,
             "filename": self.first_filepath_as_str,
         }
+        raise NotImplementedError(
+            "Store section_idx in Field instead of RfField"
+        )
         rf_field = cavity_settings.rf_field
         rf_kwargs = {
             "bunch_to_rf": cavity_settings.bunch_phase_to_rf_phase,

@@ -17,11 +17,13 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+from __future__ import annotations
 
 import os
 import sys
 from pprint import pformat
 
+import sphinx
 from sphinx.util import inspect
 
 import lightwin
@@ -30,10 +32,8 @@ import lightwin
 sys.path.append(os.path.abspath("./_ext"))
 
 project = "LightWin"
-copyright = (
-    "2024, A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
-)
 author = "A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
+copyright = "2025, " + author
 
 # See https://protips.readthedocs.io/git-tag-version.html
 # The full version, including alpha/beta/rc tags.
@@ -46,18 +46,18 @@ version = lightwin.__version__
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "sphinxcontrib.bibtex",  # Integrate citations
-    "sphinx.ext.napoleon",  # handle numpy style
-    "sphinx.ext.autodoc",
-    "sphinx.ext.mathjax",  # some math options such as matrix
-    "sphinx_rtd_theme",  # ReadTheDocs theme
-    "myst_parser",
-    "sphinx.ext.intersphinx",  # interlink with other docs, such as numpy
-    "sphinx.ext.todo",  # allow use of TODO
-    # "sphinx.ext.viewcode",
-    "nbsphinx",
-    "sphinx_multiversion",
     "lightwin_sphinx_extensions",
+    "myst_parser",
+    "nbsphinx",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.todo",
+    "sphinx.ext.viewcode",
+    "sphinx_autodoc_typehints",
+    "sphinx_rtd_theme",
+    "sphinx_tabs.tabs",
+    "sphinxcontrib.bibtex",
 ]
 
 autodoc_default_options = {
@@ -67,6 +67,7 @@ autodoc_default_options = {
     "special-members": "__init__, __post_init__, __str__",  # Document those special members
     "undoc-members": True,  # Document members without doc
 }
+autodoc_mock_imports = ["pso", "lightwin.optimisation.algorithms.pso"]
 
 add_module_names = False
 default_role = "literal"
@@ -88,6 +89,11 @@ nitpick_ignore = [
     # Not recognized by Sphinx, don't know if this is normal
     ("py:class", "optional"),
     ("py:class", "T"),
+    ("py:class", "numpy.float64"),
+    ("py:class", "numpy.typing.NDArray"),
+    ("py:class", "NDArray[np.float64]"),
+    ("py:class", "NDArray"),
+    ("py:class", "np.float64"),
     # pymoo fixes should be temporary
     ("py:class", "ElementwiseProblem"),
     ("py:class", "pymoo.core.algorithm.Algorithm"),
@@ -109,8 +115,6 @@ nitpick_ignore = [
     ("py:class", "ref_value_t"),
     ("py:class", "tester_t"),
     ("py:class", "value_t"),
-    ("py:class", "REFERENCE_T"),
-    ("py:class", "STATUS_T"),
 ]
 
 # Link to other libraries
@@ -122,12 +126,18 @@ intersphinx_mapping = {
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 
+autodoc_type_aliases = {
+    "np.float64": "numpy.float64",
+    "NDArray": "numpy.typing.NDArray",
+}
+# Parameters for sphinx-autodoc-typehints
+always_document_param_types = True
+always_use_bars_union = True
+typehints_defaults = "comma"
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 html_theme = "sphinx_rtd_theme"
-html_theme_options = {
-    "display_version": True,
-}
 html_static_path = ["_static"]
 html_sidebars = {
     "**": [
@@ -139,16 +149,6 @@ html_sidebars = {
 # https://stackoverflow.com/questions/28454217/how-to-avoid-the-too-deeply-nested-error-when-creating-pdfs-with-sphinx
 latex_elements = {"preamble": r"\usepackage{enumitem}\setlistdepth{99}"}
 
-# -- Options for multiversion in doc -----------------------------------------
-smv_tag_whitelist = (
-    # r"^v\d+\.\d+.*$|latest"  # would keep all the versions (unnecessary)
-    r"^(v0\.7\.0|v0\.8\.2)$"  # keep only major tags
-)
-smv_branch_whitelist = "main"
-smv_remote_whitelist = None
-smv_released_pattern = r"v.*"
-smv_latest_version = version
-
 
 # -- Constants display fix ---------------------------------------------------
 # https://stackoverflow.com/a/65195854
@@ -158,3 +158,23 @@ def object_description(obj: object) -> str:
 
 
 inspect.object_description = object_description
+
+# -- Shortcuts ---------------------------------------------------
+rst_prolog = """
+.. |axplot| replace:: :meth:`matplotlib.axes.Axes.plot`
+"""
+
+# -- Bug fixes ---------------------------------------------------------------
+# Fix following warning:
+# <unknown>:1: WARNING: py:class reference target not found: pathlib._local.Path [ref.class]
+# Note that a patch is provided by Sphinx 8.2, but nbsphinx 0.9.7 requires
+# sphinx<8.2
+# Associated issue:
+# https://github.com/sphinx-doc/sphinx/issues/13178
+if sys.version_info[:2] >= (3, 13) and sphinx.version_info[:2] < (8, 2):  # type: ignore
+    import pathlib
+
+    from sphinx.util.typing import _INVALID_BUILTIN_CLASSES
+
+    _INVALID_BUILTIN_CLASSES[pathlib.Path] = "pathlib.Path"  # type: ignore
+    nitpick_ignore.append(("py:class", "pathlib._local.Path"))

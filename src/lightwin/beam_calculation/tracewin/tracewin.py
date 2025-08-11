@@ -45,6 +45,7 @@ from lightwin.tracewin_utils.interface import (
     failed_cavities_to_command,
     set_of_cavity_settings_to_command,
 )
+from lightwin.util.typing import BeamKwargs
 
 
 class TraceWin(BeamCalculator):
@@ -52,23 +53,23 @@ class TraceWin(BeamCalculator):
 
     Parameters
     ----------
-    executable : pathlib.Path
+    executable :
         Path to the TraceWin executable.
-    ini_path : pathlib.Path
+    ini_path :
         Path to the ``.ini`` TraceWin file.
-    base_kwargs : dict[str, str | bool | int | None | float]
+    base_kwargs :
         TraceWin optional arguments. Override what is defined in ``.ini``, but
         overriden by arguments from :class:`.ListOfElements` and
         :class:`.SimulationOutput`.
-    _tracewin_command : list[str] | None, optional
+    _tracewin_command :
         Attribute to hold the value of the base command to call TraceWin.
-    out_folder : pathlib.Path | str
+    out_folder :
         Name of the results folder (not a complete path, just a folder name).
-    path_cal : pathlib.Path
+    path_cal :
         Name of the results folder. Updated at every call of the
         :func:`init_solver_parameters` method, using
         ``Accelerator.accelerator_path`` and ``self.out_folder`` attributes.
-    dat_file : pathlib.Path
+    dat_file :
         Base name for the ``.dat`` file. ??
 
     """
@@ -80,7 +81,7 @@ class TraceWin(BeamCalculator):
         base_kwargs: dict[str, str | int | float | bool | None],
         out_folder: Path | str,
         default_field_map_folder: Path | str,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         flag_phi_abs: bool = False,
         cal_file: Path | None = None,
         **kwargs: Any,
@@ -119,12 +120,11 @@ class TraceWin(BeamCalculator):
         self.list_of_elements_factory = ListOfElementsFactory(
             self.is_a_3d_simulation,
             self.is_a_multiparticle_simulation,
-            beam_kwargs=self._beam_kwargs,
             default_field_map_folder=self.default_field_map_folder,
-            load_rf_field=True,
-            load_field=True,
-            load_cython_field_maps=False,
+            load_fields=True,
+            beam_kwargs=self._beam_kwargs,
             field_maps_in_3d=False,  # not implemented anyway
+            load_cython_field_maps=False,
             elements_to_dump=(),
         )
 
@@ -223,14 +223,14 @@ class TraceWin(BeamCalculator):
 
         Parameters
         ----------
-        elts : ListOfElements
+        elts :
             List of elements in which the beam must be propagated.
-        update_reference_phase : bool, optional
+        update_reference_phase :
             To change the reference phase of cavities when it is different from
             the one asked in the ``.toml``. To use after the first calculation,
             if ``BeamCalculator.flag_phi_abs`` does not correspond to
             ``CavitySettings.reference``. The default is False.
-        specific_kwargs : dict
+        specific_kwargs :
             ``TraceWin`` optional arguments. Overrides what is defined in
             ``base_kwargs`` and ``.ini``.
 
@@ -257,12 +257,12 @@ class TraceWin(BeamCalculator):
 
         Parameters
         ----------
-        set_of_cavity_settings : SetOfCavitySettings | None
+        set_of_cavity_settings :
             The new cavity settings to try. If it is None, then the cavity
             settings are taken from the FieldMap objects.
-        elts : ListOfElements
+        elts :
             List of elements in which the beam should be propagated.
-        use_a_copy_for_nominal_settings : bool, optional
+        use_a_copy_for_nominal_settings :
             To copy the nominal :class:`.CavitySettings` and avoid altering
             their nominal counterpart. Set it to True during optimisation, to
             False when you want to keep the current settings. The default is
@@ -327,9 +327,9 @@ class TraceWin(BeamCalculator):
 
         Parameters
         ----------
-        optimized_cavity_settings : SetOfCavitySettings
+        optimized_cavity_settings :
             Optimized parameters.
-        full_elts : ListOfElements
+        full_elts :
             Contains the full linac.
 
         Returns

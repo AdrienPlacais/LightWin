@@ -73,6 +73,7 @@ def load_electromagnetic_fields(
         -> different loading func?
 
     """
+    raise NotImplementedError("RF field should not be used anymore.")
     for field_map in field_maps:
         if isinstance(superposed := field_map, SuperposedFieldMap):
             load_electromagnetic_fields(

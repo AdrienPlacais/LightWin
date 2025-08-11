@@ -1,7 +1,6 @@
 """Create the solver parameters for :class:`.Envelope1D`."""
 
 import logging
-from typing import Any
 
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
     BendEnvelope1DParameters,
@@ -32,7 +31,8 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
 from lightwin.core.elements.thin_steering import ThinSteering
-from lightwin.util.synchronous_phases import PHI_S_MODELS
+from lightwin.physics.synchronous_phases import PHI_S_MODELS
+from lightwin.util.typing import BeamKwargs
 
 
 class ElementEnvelope1DParametersFactory(
@@ -59,7 +59,7 @@ class ElementEnvelope1DParametersFactory(
         method: ENVELOPE1D_METHODS_T,
         n_steps_per_cell: int,
         solver_id: str,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         phi_s_definition: PHI_S_MODELS = "historical",
     ) -> None:
         """Prepare import of proper functions."""
@@ -79,7 +79,7 @@ class ElementEnvelope1DParametersFactory(
 
         Parameters
         ----------
-        elt : Element
+        elt :
             Element under study.
 
         Returns

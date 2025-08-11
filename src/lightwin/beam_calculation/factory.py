@@ -10,6 +10,7 @@ from lightwin.beam_calculation.cy_envelope_1d.envelope_1d import CyEnvelope1D
 from lightwin.beam_calculation.envelope_1d.envelope_1d import Envelope1D
 from lightwin.beam_calculation.envelope_3d.envelope_3d import Envelope3D
 from lightwin.beam_calculation.tracewin.tracewin import TraceWin
+from lightwin.util.typing import BeamKwargs
 
 BEAM_CALCULATORS = (
     "Envelope1D",
@@ -50,7 +51,7 @@ class BeamCalculatorsFactory:
         self,
         beam_calculator: dict[str, Any],
         files: dict[str, Any],
-        beam: dict[str, Any],
+        beam: BeamKwargs,
         beam_calculator_post: dict[str, Any] | None = None,
         **other_kw: dict,
     ) -> None:
@@ -59,18 +60,18 @@ class BeamCalculatorsFactory:
 
         Parameters
         ----------
-        beam_calculator : dict[str, Any]
+        beam_calculator :
             Configuration entries for the first :class:`.BeamCalculator`, used
             for optimisation.
-        files : dict[str, Any]
+        files :
             Configuration entries for the input/output paths.
-        beam : dict[str, Any]
+        beam :
             Configuration dictionary holding the initial beam parameters.
-        beam_calculator_post : dict[str, Any] | None
+        beam_calculator_post :
             Configuration entries for the second optional
             :class:`.BeamCalculator`, used for a more thorough calculation of
             the beam propagation once the compensation settings are found.
-        other_kw : dict
+        other_kw :
             Other keyword arguments, not used for the moment.
 
         """
@@ -117,7 +118,7 @@ class BeamCalculatorsFactory:
 
         Parameters
         ----------
-        tool : Literal["Envelope1D", "TraceWin", "Envelope3D"]
+        tool :
             The name of the beam calculator to construct.
 
         Returns

@@ -7,7 +7,7 @@
 """
 
 import logging
-from typing import Any
+from typing import Any, Literal, Protocol
 
 import numpy as np
 
@@ -18,6 +18,7 @@ from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter, recursive_items
+from lightwin.util.typing import GETTABLE_ELT_T, STATUS_T
 
 
 class Element(Instruction):
@@ -25,18 +26,16 @@ class Element(Instruction):
 
     Parameters
     ----------
-    base_name : str, optional
+    base_name :
         Short name for the element according to TraceWin. Should be overriden.
-        The default is ``"ELT"``.
-    increment_elt_idx : bool, optional
+    increment_elt_idx :
         If the element should be considered when counting the elements. If
-        False, ``elt_idx`` will keep  its default value of ``-1``. The default
-        is True. As for now, there is no element with this attribute set to
-        False.
-    increment_lattice_idx : bool, optional
+        False, ``elt_idx`` will keep  its default value of ``-1``. As for now,
+        there is no element with this attribute set to False.
+    increment_lattice_idx :
         If the element should be considered when determining the lattice.
         Should be True for physical elements, such as ``DRIFT``, and False for
-        other elements such as ``DIAGNOSTIC``. The default is True.
+        other elements such as ``DIAGNOSTIC``.
 
     """
 
@@ -58,14 +57,14 @@ class Element(Instruction):
 
         Parameters
         ----------
-        line : list[str]
-            A line of the ``.dat`` file. If the element was given a name, it
+        line :
+            A line of the ``DAT`` file. If the element was given a name, it
             must not appear in ``line`` but rather in ``name``. First
             element of the list must be in :data:`.implemented_elements`.
-        dat_idx : int
-            Position in the ``.dat`` file.
-        name : str | None, optional
-            Non-default name of the element, as given in the ``.dat`` file. The
+        dat_idx :
+            Position in the ``DAT`` file.
+        name :
+            Non-default name of the element, as given in the ``DAT`` file. The
             default is None, in which case an automatic name will be given
             later.
 
@@ -88,69 +87,69 @@ class Element(Instruction):
         self.idx = self.idx | new_idx
         self.beam_calc_param: dict[str, ElementBeamCalculatorParameters] = {}
 
-    def has(self, key: str) -> bool:
-        """Tell if the required attribute is in this class."""
-        return key in recursive_items(vars(self))
+    @property
+    def name(self) -> str:
+        """Give personalized name of element if exists, default otherwise."""
+        return super().name
 
-    def get(
-        self, *keys: str, to_numpy: bool = True, **kwargs: bool | str | None
-    ) -> Any:
-        """
-        Shorthand to get attributes from this class or its attributes.
+    def has(self, key: str) -> bool:
+        """Check if the given key exists in this element or its nested members.
 
         Parameters
         ----------
-        *keys: str
-            Name of the desired attributes.
-        to_numpy : bool, optional
-            If you want the list output to be converted to a np.ndarray. The
-            default is True.
-        **kwargs : bool | str | None
-            Other arguments passed to recursive getter.
+        key :
+            Name of the attribute to check.
 
         Returns
         -------
-        out : Any
-            Attribute(s) value(s).
+            True if the key exists, False otherwise.
 
         """
-        val = {key: [] for key in keys}
+        if key == "name":  # @property are not caught by vars(self)
+            return True
+        return key in recursive_items(vars(self))
 
-        for key in keys:
+    def get(
+        self, *keys: GETTABLE_ELT_T, to_numpy: bool = True, **kwargs: Any
+    ) -> Any:
+        """Get attributes from this class or its nested members.
+
+        Parameters
+        ----------
+        *keys :
+            Names of the desired attributes.
+        to_numpy :
+            If True, convert lists to NumPy arrays. If False, convert NumPy
+            arrays to lists.
+        **kwargs :
+            Other arguments passed to the recursive getter.
+
+        Returns
+        -------
+            A single attribute value if one key is provided, otherwise a tuple
+            of values.
+
+        """
+
+        def resolve_key(key: str) -> Any:
             if key == "name":
-                val[key] = self.name
-                continue
-
+                return self.name
             if not self.has(key):
-                val[key] = None
-                continue
+                return None
+            return recursive_getter(key, vars(self), **kwargs)
 
-            val[key] = recursive_getter(key, vars(self), **kwargs)
-            if not to_numpy and isinstance(val[key], np.ndarray):
-                val[key] = val[key].tolist()
+        values = [resolve_key(key) for key in keys]
 
-        out = [
-            (
-                np.array(val[key])
-                if to_numpy and not isinstance(val[key], str)
-                else val[key]
-            )
-            for key in keys
-        ]
+        if to_numpy:
+            values = [
+                np.array(v) if isinstance(v, list) else v for v in values
+            ]
+        else:
+            values = [
+                v.tolist() if isinstance(v, np.ndarray) else v for v in values
+            ]
 
-        if len(out) == 1:
-            return out[0]
-        return tuple(out)
-
-    def keep_rf_field(self, *args, **kwargs) -> None:
-        """Save data calculated by :meth:`.BeamCalculator.run_with_this`.
-
-        .. deprecated:: 0.6.16
-            Prefer :meth:`keep_cavity_settings`
-
-        """
-        logging.warning("prefer keep_cavity_settings")
-        return self.keep_cavity_settings(*args, **kwargs)
+        return values[0] if len(values) == 1 else tuple(values)
 
     def keep_cavity_settings(
         self,
@@ -177,7 +176,7 @@ class Element(Instruction):
         """
         return False
 
-    def update_status(self, new_status: str) -> None:
+    def update_status(self, new_status: STATUS_T) -> None:
         """Change the status of the element. To override."""
         if not self.can_be_retuned:
             logging.error(
@@ -191,3 +190,88 @@ class Element(Instruction):
             f"You want to give {new_status = } to the element f{self.name}, "
             "which update_status method is not defined."
         )
+
+
+#: Allowed values for the ``pos`` keyword argument in ``get`` methods.
+POS_T = Literal["in", "out"]
+
+
+class ELEMENT_TO_INDEX_T(Protocol):
+    """Type for function linking an :class:`Element` or its name to its index.
+
+    In particular, it is used for the ``get`` methods.
+
+    """
+
+    def __call__(
+        self,
+        *,
+        elt: str | Element,
+        pos: POS_T | None = None,
+        return_elt_idx: bool = False,
+        handle_missing_elt: bool = False,
+    ) -> int | slice: ...
+
+    """Return indexes of element ``elt``.
+
+    Parameters
+    ----------
+    elt :
+        :class:`.Element` for which you want position. Can be the
+        :attr:`.Element.name` attribute or the :class:`.Element` instance
+        itself.
+    pos :
+        Position within the :class:`.Element`. If not provided, all indexes of
+        :class:`.Element` will be returned.
+    return_elt_idx :
+        Return a position in a :class:`.ListOfElements` instance. Used for
+        arguments such as `phi_s`, which holds one value per :class:`.Element`.
+    handle_missing_elt :
+        Look for an equivalent element when ``elt`` is not in ``_elts``.
+
+    Returns
+    -------
+        Index(es) of given ``elt``, at given ``pos``. Returns all indexes in
+        this default function.
+
+    """
+
+
+def default_element_to_index(
+    *,
+    elt: str | Element,
+    pos: POS_T | None = None,
+    return_elt_idx: bool = False,
+    handle_missing_elt: bool = False,
+) -> int | slice:
+    """Return all indexes whatever the inputs are.
+
+    Parameters
+    ----------
+    elt :
+        :class:`.Element` for which you want position. Can be the
+        :attr:`.Element.name` attribute or the :class:`.Element` instance
+        itself. Actually unused in this default function.
+    pos :
+        Position within the :class:`.Element`. If not provided, all indexes of
+        :class:`.Element` will be returned. Actually unused in this default
+        function.
+    return_elt_idx :
+        Return a position in a :class:`.ListOfElements` instance. Used for
+        arguments such as `phi_s`, which holds one value per :class:`.Element`.
+        Actually unused in this default function.
+    handle_missing_elt :
+        Look for an equivalent element when ``elt`` is not in ``_elts``.
+
+    Returns
+    -------
+        Index(es) of given ``elt``, at given ``pos``. Returns all indexes in
+        this default function.
+
+    """
+    logging.warning(
+        "Actual ``element_to_index`` was not set, you are calling a default. "
+        f"{elt = }; {pos = }, {return_elt_idx = }, {handle_missing_elt = }"
+        "."
+    )
+    return slice(0, -1)

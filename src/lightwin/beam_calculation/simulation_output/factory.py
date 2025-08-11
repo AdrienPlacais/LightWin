@@ -9,14 +9,14 @@ import logging
 from abc import ABC, ABCMeta, abstractmethod
 from dataclasses import dataclass
 from functools import partial
-from typing import Any, Callable, Literal
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from lightwin.core.elements.element import Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, POS_T, Element
 from lightwin.core.list_of_elements.helper import equivalent_elt
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.util.typing import BeamKwargs
 
 
 @dataclass
@@ -26,7 +26,7 @@ class SimulationOutputFactory(ABC):
     _is_3d: bool
     _is_multipart: bool
     _solver_id: str
-    _beam_kwargs: dict[str, Any]
+    _beam_kwargs: BeamKwargs
 
     def __post_init__(self) -> None:
         """Create the factories.
@@ -63,7 +63,7 @@ class SimulationOutputFactory(ABC):
 
     def _generate_element_to_index_func(
         self, elts: ListOfElements
-    ) -> Callable[[Element, str | None], int | slice]:
+    ) -> ELEMENT_TO_INDEX_T:
         """Create the func to easily get data at proper mesh index."""
         shift = elts[0].beam_calc_param[self._solver_id].s_in
         element_to_index = partial(
@@ -80,8 +80,9 @@ def _element_to_index(
     _shift: int,
     _solver_id: str,
     elt: Element | str,
-    pos: Literal["in", "out"] | None = None,
+    pos: POS_T | None = None,
     return_elt_idx: bool = False,
+    handle_missing_elt: bool = False,
 ) -> int | slice:
     """Convert ``elt`` and ``pos`` into a mesh index.
 
@@ -96,24 +97,26 @@ def _element_to_index(
 
     Parameters
     ----------
-    _elts : ListOfElements
+    _elts :
         List of :class:`.Element` where ``elt`` should be. Must be set by a
         ``functools.partial``.
-    _shift : int
+    _shift :
         Mesh index of first :class:`.Element`. Used when the first
         :class:`.Element` of ``_elts`` is not the first of the
         :class:`.Accelerator`. Must be set by ``functools.partial``.
-    _solver_id : str
+    _solver_id :
         Name of the solver, to identify and take the proper
         :class:`.ElementBeamCalculatorParameters`.
-    elt : Element | str
+    elt :
         Element of which you want the index.
-    pos : Literal["in", "out"] | None, optional
+    pos :
         Index of entry or exit of the :class:`.Element`. If None, return full
-        indexes array. The default is None.
-    return_elt_idx : bool, optional
+        indexes array.
+    return_elt_idx :
         If True, the returned index is the position of the element in
         ``_elts``.
+    handle_missing_elt :
+        Look for an equivalent element when ``elt`` is not in ``_elts``.
 
     Returns
     -------
@@ -122,6 +125,12 @@ def _element_to_index(
 
     """
     if isinstance(elt, str):
+        elt = equivalent_elt(elts=_elts, elt=elt)
+    elif elt not in _elts and handle_missing_elt:
+        logging.debug(
+            f"{elt = } is not in _elts. Trying to take an element in _elts "
+            "with the same name..."
+        )
         elt = equivalent_elt(elts=_elts, elt=elt)
 
     beam_calc_param = elt.beam_calc_param[_solver_id]

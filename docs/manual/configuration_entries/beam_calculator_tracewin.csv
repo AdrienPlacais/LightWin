@@ -34,7 +34,7 @@ etnx1,``float``,Input XX’ emittance (mm.mrad) of main beam,,❌
 etnx2,``float``,Input XX’ emittance (mm.mrad) of second beam,,❌
 etny1,``float``,Input YY’ emittance (mm.mrad) of main beam,,❌
 etny2,``float``,Input YY’ emittance (mm.mrad) of second beam,,❌
-export_phase,``str``,"The type of phases that should be exported in the final DAT file. Note that ``'as_in_original_dat'`` is not implemented yet, but ``'as_in_settings'`` should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.","('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_settings', 'as_in_original_dat')",❌
+export_phase,``str``,"The type of phases that should be exported in the final DAT file. Note that ``'as_in_original_dat'`` is not implemented yet, but ``'as_in_settings'`` should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.","('as_in_original_dat', 'as_in_settings', 'phi_0_abs', 'phi_0_rel', 'phi_s')",❌
 freq1,``float``,Input beam frequency (MHz) of main beam,,❌
 freq2,``float``,Input beam frequency (MHz) of second beam,,❌
 hide,``bool``,"Hide the GUI, or cancel console output (no parameter).",,✅

@@ -24,7 +24,6 @@ from lightwin.core.beam_parameters.initial_beam_parameters import (
     InitialBeamParameters,
 )
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.cavity_settings import EXPORT_PHASES_T
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
@@ -43,6 +42,11 @@ from lightwin.tracewin_utils.interface import list_of_elements_to_command
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter, recursive_items
 from lightwin.util.pickling import MyPickler
+from lightwin.util.typing import (
+    CONCATENABLE_ELTS,
+    EXPORT_PHASES_T,
+    GETTABLE_ELTS_T,
+)
 
 element_id = int | str
 elements_id = Sequence[int] | Sequence[str]
@@ -79,18 +83,17 @@ class ListOfElements(list):
 
         Parameters
         ----------
-        elts : list[Element]
+        elts :
             List containing the element objects.
-        input_particle : ParticleInitialState
+        input_particle :
             An object to hold initial energy and phase of the particle at the
-            entry of the first element/
-        input_beam : InitialBeamParameters
+            entry of the first element.
+        input_beam :
             An object to hold emittances, Twiss, sigma beam matrix, etc at the
             entry of the first element.
-        first_init : bool, optional
+        first_init :
             To indicate if this a full linac or only a portion (fit process).
-            The default is True.
-        files : FilesInfo
+        files :
             A dictionary to hold information on the source and output
             files/folders of the object.
 
@@ -99,7 +102,7 @@ class ListOfElements(list):
             * ``accelerator_path``: where calculation results for each
               :class:`.BeamCalculator` will be stored.
             * ``dat_filecontent``: list of list of str, holding content of the
-              ``.dat``.
+              ``DAT``.
 
         """
         self.input_particle = input_particle
@@ -200,68 +203,69 @@ class ListOfElements(list):
 
     def get(
         self,
-        *keys: str,
+        *keys: GETTABLE_ELTS_T,
         to_numpy: bool = True,
+        none_to_nan: bool = False,
         remove_first: bool = False,
-        **kwargs: bool | str | Element | None,
+        **kwargs: Any,
     ) -> Any:
-        """Shorthand to get attributes from this class or its attributes.
+        """Get attributes from this class or its contained elements.
 
-        This method also looks into the first :class:`.Element` of self. If the
-        desired ``key`` is in this :class:`.Element`, we recursively get ``key``
-        from every :class:`.Element` and concatenate the output.
+        If the desired attribute belongs to :data:`GETTABLE_ELT` or
+        :data:`GETTABLE_FIELD_MAPS`, we concatenate the value of every element
+        in a single list.
 
         Parameters
         ----------
-        *keys : str
-            Name of the desired attributes.
-        to_numpy : bool, optional
-            If you want the list output to be converted to a np.ndarray. The
-            default is True.
-        remove_first : bool, optional
-            If you want to remove the first item of every :class:`.Element`
-            ``key``.
-            It the element is the first of the list, we do not remove its first
-            item.  It is useful when the last item of an element is the same as
-            the first item of the next element. For example, ``z_abs``. The
-            default is False.
-        **kwargs : bool | str | Element | None
-            Other arguments passed to recursive getter.
+        *keys :
+            Names of the desired attributes.
+        to_numpy :
+            Convert list outputs to NumPy arrays.
+        none_to_nan :
+            Replace ``None`` values with ``np.nan``.
+        remove_first :
+            Remove the first item of each element's attribute except for the
+            first element itself.
+        **kwargs :
+            Passed to recursive getter or :meth:`.Element.get`.
 
         Returns
         -------
-        out : Any
-            Attribute(s) value(s).
+        Any
+            A single value or tuple of values.
 
         """
-        val: dict[str, Any] = {key: [] for key in keys}
+        results = []
 
         for key in keys:
-            if not self.has(key):
-                val[key] = None
-                continue
-
-            # Specific case: key is in Element
-            if self[0].has(key):
-                for elt in self:
+            if key in CONCATENABLE_ELTS:
+                values = []
+                for i, elt in enumerate(self):
                     data = elt.get(key, to_numpy=False, **kwargs)
-
-                    if remove_first and elt is not self[0]:
+                    if remove_first and i > 0:
                         data = data[1:]
                     if isinstance(data, list):
-                        val[key] += data
-                        continue
-                    val[key].append(data)
-            else:
-                val[key] = recursive_getter(key, vars(self), **kwargs)
+                        values.extend(data)
+                    else:
+                        values.append(data)
+                val = values
 
-        out = [val[key] for key in keys]
-        if to_numpy:
-            out = [np.array(val) for val in out]
+            elif not self.has(key):
+                val = np.nan if none_to_nan else None
 
-        if len(keys) == 1:
-            return out[0]
-        return tuple(out)
+            else:  # get from self
+                val = recursive_getter(key, vars(self), **kwargs)
+
+            if val is None and none_to_nan:
+                val = np.nan
+            if to_numpy and isinstance(val, list):
+                val = np.array(val)
+            elif not to_numpy and isinstance(val, np.ndarray):
+                val = val.tolist()
+
+            results.append(val)
+
+        return results[0] if len(results) == 1 else tuple(results)
 
     def _first_init(self) -> None:
         """Set structure, elements name, some indexes."""
@@ -304,23 +308,22 @@ class ListOfElements(list):
     ) -> None:
         r"""Update the DAT file, save it if asked.
 
-        This method is called by the :class:`.FaultScenario` ``fix_all``
-        method several times:
+        This method is called by the :meth:`.FaultScenario.fix_all` method
+        several times:
 
         * Once per :class:`.Fault` (only the compensation zone is saved).
         * When all the :class:`.Fault` were dealt with.
 
-        It is also called by :class:`.Accelerator` ``keep_settings`` method.
+        It is also called by :meth:`.Accelerator.keep_settings` method.
 
         Parameters
         ----------
-        dat_file : pathlib.Path
-            Where the output ``.dat`` should be saved.
-        export_phase : Literal["phi_0_abs", "phi_0_rel", "phi_s",
-                "as_in_settings", "as_in_original_dat"], optional
+        dat_file :
+            Where the output ``DAT`` should be saved.
+        export_phase :
             Which phase should be put in the output DAT file.
-        save : bool, optional
-            If the output file should be created. The default is True.
+        save :
+            If the output file should be created.
 
         Note
         ----

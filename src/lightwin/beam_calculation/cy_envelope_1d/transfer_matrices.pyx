@@ -1,5 +1,4 @@
 #cython: language_level=3
-# -*- coding: utf-8 -*-
 """Define same functions as :mod:`.envelope_1d.transfer_matrices`, but Cython.
 
 Cython needs to be compiled to work. Check the instructions in

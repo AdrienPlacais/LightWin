@@ -6,7 +6,8 @@ from collections.abc import Sequence
 import numpy as np
 
 from lightwin.core.elements.field_maps.cavity_settings import (
-    REFERENCE_PHASES,
+    REFERENCE_PHASES_T,
+    STATUS_T,
     CavitySettings,
 )
 from lightwin.tracewin_utils.line import DatLine
@@ -45,8 +46,8 @@ class CavitySettingsFactory:
         self,
         base_settings: Sequence[CavitySettings],
         var: np.ndarray,
-        reference: str,
-        status: str,
+        reference: REFERENCE_PHASES_T,
+        status: STATUS_T,
     ) -> list[CavitySettings]:
         """Create the cavity settings to try during an optimisation."""
         amplitudes = list(var[var.shape[0] // 2 :])
@@ -64,7 +65,7 @@ class CavitySettingsFactory:
     def from_other_cavity_settings(
         self,
         cavity_settings: Sequence[CavitySettings],
-        reference: str = "",
+        reference: REFERENCE_PHASES_T | None = None,
     ) -> list[CavitySettings]:
         """Create a copy of ``cavity_settings``, reference can be updated.
 
@@ -81,7 +82,7 @@ class CavitySettingsFactory:
         self,
         absolute_phase_flag: bool,
         set_sync_phase: bool,
-    ) -> REFERENCE_PHASES:
+    ) -> REFERENCE_PHASES_T:
         """Determine which phase will be the reference one."""
         if set_sync_phase:
             return "phi_s"

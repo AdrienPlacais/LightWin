@@ -144,7 +144,7 @@ class SuperposeMap(Command):
             instructions_to_merge,
             dat_idx=indexes.pop(0),
             total_length_m=total_length_m,
-            starting_positions=_starting_positions(instructions_to_merge),
+            z_0s=_starting_positions(instructions_to_merge),
         )
         idx_in_lattice = superposed.idx["idx_in_lattice"]
         lattice = superposed.idx["lattice"]

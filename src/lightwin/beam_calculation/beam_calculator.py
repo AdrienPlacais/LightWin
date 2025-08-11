@@ -28,16 +28,17 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.accelerator.accelerator import Accelerator
-from lightwin.core.elements.field_maps.cavity_settings import (
-    EXPORT_PHASES_T,
-    REFERENCE_PHASES,
-)
 from lightwin.core.elements.field_maps.cavity_settings_factory import (
     CavitySettingsFactory,
 )
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
+from lightwin.util.typing import (
+    EXPORT_PHASES_T,
+    REFERENCE_PHASES_T,
+    BeamKwargs,
+)
 
 
 class BeamCalculator(ABC):
@@ -50,7 +51,7 @@ class BeamCalculator(ABC):
         flag_phi_abs: bool,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         flag_cython: bool = False,
         export_phase: EXPORT_PHASES_T = "as_in_settings",
         **kwargs,
@@ -59,7 +60,7 @@ class BeamCalculator(ABC):
 
         Parameters
         ----------
-        flag_phi_abs : bool
+        flag_phi_abs :
             If the entry phase of the cavities :math:`\phi_0` are absolute or
             relative. See the examples for an illustration of what it implies.
         out_folder : pathlib.Path | str
@@ -68,12 +69,12 @@ class BeamCalculator(ABC):
             not a full path.
         default_field_map_folder : pathlib.Path | str
             Where to look for field map files by default.
-        flag_cython : bool, optional
+        flag_cython :
             If the beam calculator involves loading cython field maps. The
             default is False.
-        beam_kwargs : dict[str, Any]
+        beam_kwargs :
             The config dictionary holding all the initial beam properties.
-        export_phase : Literal["phi_0_abs", "phi_0_rel", "phi_s",
+        export_phase :
                 "as_in_settings", "as_in_original_dat"], optional
             The type of phase you want to export for your ``FIELD_MAP``. The
             default is ``"as_in_settings"``, which should be the same phases
@@ -136,9 +137,9 @@ class BeamCalculator(ABC):
 
         Parameters
         ----------
-        elts : ListOfElements
+        elts :
             List of elements in which the beam must be propagated.
-        update_reference_phase : bool, optional
+        update_reference_phase :
             To change the reference phase of cavities when it is different from
             the one asked in the ``.toml``. To use after the first calculation,
             if ``BeamCalculator.flag_phi_abs`` does not correspond to
@@ -175,11 +176,11 @@ class BeamCalculator(ABC):
 
         Parameters
         ----------
-        set_of_cavity_settings : SetOfCavitySettings | None
+        set_of_cavity_settings :
             Holds the norms and phases of the compensating cavities.
-        elts: ListOfElements
+        elts :
             List of elements in which the beam should be propagated.
-        use_a_copy_for_nominal_settings : bool, optional
+        use_a_copy_for_nominal_settings :
             To copy the nominal :class:`.CavitySettings` and avoid altering
             their nominal counterpart. Set it to True during optimisation, to
             False when you want to keep the current settings. The default is
@@ -219,7 +220,7 @@ class BeamCalculator(ABC):
         return self.simulation_output_factory.run(*args, **kwargs)
 
     @property
-    def reference_phase(self) -> REFERENCE_PHASES:
+    def reference_phase(self) -> REFERENCE_PHASES_T:
         """Give the reference phase.
 
         .. todo::
@@ -254,16 +255,16 @@ class BeamCalculator(ABC):
 
         Parameters
         ----------
-        accelerator : Accelerator
+        accelerator :
             Accelerator under study.
-        keep_settings : bool, optional
+        keep_settings :
             If settings/simulation output should be saved. The default is True.
-        recompute_reference : bool, optional
+        recompute_reference :
             If results should be taken from a file instead of recomputing
             everything each time. The default is True.
-        output_time : bool, optional
+        output_time :
             To print in log the time the calculation took. The default is True.
-        ref_simulation_output : SimulationOutput | None, optional
+        ref_simulation_output :
             For calculation of mismatch factors. The default is None, in which
             case the calculation is simply skipped.
 

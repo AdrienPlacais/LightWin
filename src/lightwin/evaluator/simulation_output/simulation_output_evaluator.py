@@ -7,6 +7,9 @@
 .. todo::
     different factories for evaluation during the fit and evaluation after
 
+.. todo::
+    Clean this.
+
 """
 
 import logging
@@ -33,7 +36,13 @@ from lightwin.evaluator.types import (
     value_t,
 )
 from lightwin.util.helper import resample
-from lightwin.visualization import plot
+from lightwin.visualization.helper import (
+    clean_axes,
+    create_fig_if_not_exists,
+    remove_artists,
+    savefig,
+)
+from lightwin.visualization.structure import plot_structure
 
 
 # =============================================================================
@@ -182,7 +191,7 @@ class SimulationOutputEvaluator(ABC):
 
         """
         if self.main_ax is not None:
-            plot.remove_artists(self.main_ax)
+            remove_artists(self.main_ax)
             self._add_structure_plot(simulation_output)
 
         plt_kw = {}
@@ -211,6 +220,7 @@ class SimulationOutputEvaluator(ABC):
         if self.tester is not None:
             y_data = self._apply_test(x_data, y_data, **plt_kw)
 
+        assert self.plt_kwargs is not None
         self._save_plot(simulation_output.out_path, **self.plt_kwargs)
         return y_data
 
@@ -304,7 +314,7 @@ class SimulationOutputEvaluator(ABC):
         if fignum is None:
             return
 
-        fig, axx = plot.create_fig_if_not_exists(num=fignum, **kwargs)
+        fig, axx = create_fig_if_not_exists(num=fignum, **kwargs)
         fig.suptitle(self.descriptor, fontsize=14)
         axx[0].set_ylabel(self.markdown)
         axx[0].grid(True)
@@ -319,9 +329,9 @@ class SimulationOutputEvaluator(ABC):
     ) -> None:
         """Add a plot of the structure in the bottom ax."""
         elts = simulation_output.element_to_index.keywords["_elts"]
-        plot.clean_axes((self._struct_ax,))
+        clean_axes((self._struct_ax,))
         self._struct_ax.set_xlabel(dic.markdown["z_abs"])
-        plot._plot_structure(elts, self._struct_ax)
+        plot_structure(elts, self._struct_ax)
 
     def _add_a_value_plot(
         self,
@@ -371,11 +381,11 @@ class SimulationOutputEvaluator(ABC):
         self,
         out_path: Path,
         fignum: int | None = None,
-        savefig: bool = False,
+        to_save: bool = False,
         **kwargs,
     ) -> None:
         """Save the figure if asked, and if ``out_path`` is defined."""
-        if not savefig or self._fig is None:
+        if not to_save or self._fig is None:
             return
 
         if out_path is None:
@@ -389,7 +399,7 @@ class SimulationOutputEvaluator(ABC):
 
         filename = f"simulation_output_evaluator_{fignum}.png"
         filepath = Path(out_path, filename)
-        plot._savefig(self._fig, filepath)
+        savefig(self._fig, filepath)
 
 
 def _descriptor(descriptor: str) -> str:

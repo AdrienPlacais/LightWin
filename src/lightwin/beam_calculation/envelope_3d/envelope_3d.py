@@ -26,7 +26,7 @@ from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.util.synchronous_phases import (
+from lightwin.physics.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
@@ -50,8 +50,8 @@ class Envelope3D(BeamCalculator):
     ) -> None:
         """Set the proper motion integration function, according to inputs."""
         self.n_steps_per_cell = n_steps_per_cell
-        self.method = method
-        self._phi_s_definition = phi_s_definition
+        self.method: ENVELOPE3D_METHODS_T = method
+        self._phi_s_definition: PHI_S_MODELS = phi_s_definition
         self._phi_s_func = SYNCHRONOUS_PHASE_FUNCTIONS[self._phi_s_definition]
         super().__init__(
             flag_phi_abs=flag_phi_abs,
@@ -93,10 +93,9 @@ class Envelope3D(BeamCalculator):
         self.list_of_elements_factory = ListOfElementsFactory(
             self.is_a_3d_simulation,
             self.is_a_multiparticle_simulation,
-            beam_kwargs=self._beam_kwargs,
             default_field_map_folder=self.default_field_map_folder,
-            load_rf_field=True,
-            load_field=True,
+            load_fields=True,
+            beam_kwargs=self._beam_kwargs,
             load_cython_field_maps=False,
             field_maps_in_3d=False,  # not implemented anyway
             elements_to_dump=(),
@@ -112,17 +111,16 @@ class Envelope3D(BeamCalculator):
 
         Parameters
         ----------
-        elts : ListOfElements
+        elts :
             List of elements in which the beam must be propagated.
-        update_reference_phase : bool, optional
+        update_reference_phase :
             To change the reference phase of cavities when it is different from
             the one asked in the ``.toml``. To use after the first calculation,
             if ``BeamCalculator.flag_phi_abs`` does not correspond to
-            ``CavitySettings.reference``. The default is False.
+            ``CavitySettings.reference``.
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -139,12 +137,12 @@ class Envelope3D(BeamCalculator):
 
         Parameters
         ----------
-        set_of_cavity_settings : SetOfCavitySettings | None
+        set_of_cavity_settings :
             The new cavity settings to try. If it is None, then the cavity
             settings are taken from the FieldMap objects.
-        elts : ListOfElements
+        elts :
             List of elements in which the beam must be propagated.
-        use_a_copy_for_nominal_settings : bool, optional
+        use_a_copy_for_nominal_settings :
             To copy the nominal :class:`.CavitySettings` and avoid altering
             their nominal counterpart. Set it to True during optimisation, to
             False when you want to keep the current settings. The default is
@@ -152,7 +150,6 @@ class Envelope3D(BeamCalculator):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -195,8 +192,7 @@ class Envelope3D(BeamCalculator):
         full_elts: ListOfElements,
         **specific_kwargs,
     ) -> SimulationOutput:
-        """
-        Run Envelope3D with optimized cavity settings.
+        """Run Envelope3D with optimized cavity settings.
 
         With this solver, we have nothing to do, nothing to update. Just call
         the regular `run_with_this` method.
@@ -218,7 +214,7 @@ class Envelope3D(BeamCalculator):
 
         Parameters
         ----------
-        accelerator : Accelerator
+        accelerator :
             Object which :class:`.ListOfElements` must be initialized.
 
         """
@@ -259,7 +255,6 @@ class Envelope3D(BeamCalculator):
 
         Returns
         -------
-        tuple[float, float]
             Accelerating voltage in MV and synchronous phase in radians. If the
             cavity is failed, two ``np.nan`` are returned.
 

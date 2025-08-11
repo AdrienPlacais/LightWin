@@ -3,20 +3,18 @@
 SPHINXOPTS    ?=
 # Builders
 SPHINXBUILD   ?= sphinx-build
-SPHINXMULTI   ?= sphinx-multiversion
 SPHINXAPIDOC  ?= sphinx-apidoc
 # Dirs
 SOURCEDIR     = .
-BUILDDIR      = ../../_tmp_LightWin-docs
+BUILDDIR      = _build/
 SRC_DIR       = ../src
 EXCLUDE_DIR   = ../src/lightwin/experimental/*
 APIDOC_DIR    = lightwin
 CONFIG_ENTRIES_DIR = manual/configuration_entries
-MULTIVERSION_OUTPUT = ../../LightWin-docs/html
 
 GENERATE_CSV  = scripts/generate_config_csv.py
 
-.PHONY: help clean apidoc generate_csv html multiversion
+.PHONY: help clean apidoc generate_csv html 
 
 # Default target: help
 .DEFAULT_GOAL := help
@@ -30,7 +28,6 @@ help:
 	@echo "  apidoc          Generate API documentation"
 	@echo "  generate_csv    Generate CSV configuration files"
 	@echo "  html            Build unversioned HTML documentation"
-	@echo "  multiversion    Build versioned documentation using sphinx-multiversion"
 
 # Clean build artifacts
 clean:
@@ -57,11 +54,6 @@ generate_csv:
 html:
 	@echo "Building unversioned HTML documentation..."
 	@$(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)/html" $(SPHINXOPTS) $(O)
-
-# Build versioned documentation using sphinx-multiversion
-multiversion:
-	@echo "Building versioned documentation..."
-	@$(SPHINXMULTI) "$(SOURCEDIR)" "$(MULTIVERSION_OUTPUT)"
 
 # Catch-all target: route all unknown targets to Sphinx using the new "make mode" option
 %:

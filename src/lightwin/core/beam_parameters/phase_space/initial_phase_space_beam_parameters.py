@@ -9,14 +9,15 @@ For a list of the units associated with every parameter, see
 """
 
 from dataclasses import dataclass
-from typing import Any, Self
+from typing import Self
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters import (
-    PHASE_SPACE_T,
     IPhaseSpaceBeamParameters,
 )
+from lightwin.util.typing import PHASE_SPACE_T, BeamKwargs
 
 
 @dataclass
@@ -29,10 +30,10 @@ class InitialPhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
     mismatch_factor: float | None = None
 
     # Already with proper type in mother class:
-    # envelopes: np.ndarray | None = None
-    # twiss: np.ndarray | None = None
-    # tm_cumul: np.ndarray | None = None
-    # sigma: np.ndarray | None = None
+    # envelopes: NDArray | None = None
+    # twiss: NDArray | None = None
+    # tm_cumul: NDArray | None = None
+    # sigma: NDArray | None = None
 
     def __post_init__(self) -> None:
         """Ensure that the phase space exists."""
@@ -44,11 +45,11 @@ class InitialPhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
     def from_sigma(
         cls,
         phase_space_name: PHASE_SPACE_T,
-        sigma: np.ndarray,
+        sigma: NDArray,
         gamma_kin: float,
         beta_kin: float,
-        beam_kwargs: dict[str, Any],
-        **kwargs: np.ndarray,  # tm_cumul
+        beam_kwargs: BeamKwargs,
+        **kwargs: NDArray,  # tm_cumul
     ) -> Self:
         """Compute Twiss, eps, envelopes just from sigma matrix."""
         return super().from_sigma(
@@ -67,8 +68,8 @@ class InitialPhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
         phase_space_name: PHASE_SPACE_T,
         gamma_kin: float,
         beta_kin: float,
-        beam_kwargs: dict[str, Any],
-        **kwargs: np.ndarray,  # sigma, tm_cumul
+        beam_kwargs: BeamKwargs,
+        **kwargs: NDArray,  # sigma, tm_cumul
     ) -> Self:
         """Fully initialize from another phase space."""
         return super().from_other_phase_space(

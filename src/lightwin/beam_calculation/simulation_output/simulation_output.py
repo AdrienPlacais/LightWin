@@ -20,14 +20,14 @@ import math
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Literal, Self
+from typing import Any, Self
 
 import numpy as np
 import pandas as pd
 from matplotlib.axes import Axes
 
 from lightwin.core.beam_parameters.beam_parameters import BeamParameters
-from lightwin.core.elements.element import Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, POS_T, Element
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.core.particle import ParticleFullTrajectory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
@@ -40,6 +40,11 @@ from lightwin.util.helper import (
     recursive_items,
 )
 from lightwin.util.pickling import MyPickler
+from lightwin.util.typing import (
+    CONCATENABLE_ELTS,
+    GETTABLE_SIMULATION_OUTPUT_T,
+    GETTABLE_STRUCTURE_DEPENDENT,
+)
 
 
 @dataclass
@@ -50,40 +55,38 @@ class SimulationOutput:
 
     Parameters
     ----------
-    out_folder : pathlib.Path
+    out_folder :
         Results folder used by the :class:`.BeamCalculator` that created this.
-    is_multiparticle : bool
+    is_multiparticle :
         Tells if the simulation is a multiparticle simulation.
-    is_3d : bool
+    is_3d :
         Tells if the simulation is in 3D.
-    synch_trajectory : ParticleFullTrajectory | None
+    synch_trajectory :
         Holds energy, phase of the synchronous particle.
-    cav_params : dict[str, float | None] | None
+    cav_params :
         Holds amplitude, synchronous phase, absolute phase, relative phase of
-        cavities.
-    beam_parameters : BeamParameters | None
+        cavities, phase acceptance, energy acceptance.
+    beam_parameters :
         Holds emittance, Twiss parameters, envelopes in the various phase
         spaces.
-    element_to_index : Callable[[str | Element, str | None], int | slice] |\
-    None
+    element_to_index :
         Takes an :class:`.Element`, its name, 'first' or 'last' as argument,
         and returns corresponding index. Index should be the same in all the
         arrays attributes of this class: ``z_abs``, ``beam_parameters``
-        attributes, etc.  Used to easily `get` the desired properties at the
+        attributes, etc.  Used to easily ``get`` the desired properties at the
         proper position.
-    set_of_cavity_settings : SetOfCavitySettings
+    set_of_cavity_settings :
         The cavity parameters used for the simulation.
-    transfer_matrix : TransferMatrix
+    transfer_matrix :
          Holds absolute and relative transfer matrices in all planes.
-    z_abs : numpy.ndarray | None, optional
+    z_abs :
         Absolute position in the linac in m. The default is None.
-    in_tw_fashion : pandas.DataFrame | None, optional
+    in_tw_fashion :
         A way to output the :class:`.SimulationOutput` in the same way as the
         ``Data`` tab of TraceWin. The default is None.
-    r_zz_elt : list[numpy.ndarray] | None, optional
+    r_zz_elt :
         Cumulated transfer matrices in the [z-delta] plane. The default is
         None.
-
     """
 
     out_folder: Path
@@ -96,7 +99,7 @@ class SimulationOutput:
 
     beam_parameters: BeamParameters
 
-    element_to_index: Callable[[str | Element, str | None], int | slice] | None
+    element_to_index: ELEMENT_TO_INDEX_T | None
     set_of_cavity_settings: SetOfCavitySettings
 
     transfer_matrix: TransferMatrix | None = None
@@ -105,12 +108,12 @@ class SimulationOutput:
     r_zz_elt: list[np.ndarray] | None = None
 
     def __post_init__(self) -> None:
-        """Save complementary data, such as `Element` indexes."""
+        """Save complementary data, such as :class:`.Element` indexes."""
         self.elt_idx: list[int]
         if self.cav_params is None:
             logging.error(
-                "Failed to init SimulationOutput.elt_idx as "
-                ".cav_params was not provided."
+                "Failed to init SimulationOutput.elt_idx as .cav_params was "
+                "not provided."
             )
         else:
             self.elt_idx = [
@@ -147,120 +150,143 @@ class SimulationOutput:
         return (
             key in recursive_items(vars(self))
             or self.beam_parameters.has(key)
-            or self.transfer_matrix.has(key)
+            or (
+                self.transfer_matrix is not None
+                and self.transfer_matrix.has(key)
+            )
         )
 
     def get(
         self,
-        *keys: str,
+        *keys: GETTABLE_SIMULATION_OUTPUT_T,
         to_numpy: bool = True,
         to_deg: bool = False,
-        elt: (
-            Element | str | Collection[Element] | Collection[str] | None
-        ) = None,
-        pos: Literal["in", "out"] | None = None,
+        elt: str | Element | Collection[str | Element] | None = None,
+        pos: POS_T | None = None,
         none_to_nan: bool = False,
+        handle_missing_elt: bool = False,
+        warn_structure_dependent: bool = True,
         **kwargs: str | bool | None,
     ) -> Any:
-        """
-        Shorthand to get attributes from this class or its attributes.
+        """Get attributes from this class or its subcomponents.
+
+        See class docstring for parameter descriptions.
 
         Parameters
         ----------
-        *keys : str
-            Name of the desired attributes.
-        to_numpy : bool, optional
-            If you want the list output to be converted to a np.ndarray. The
-            default is True.
-        to_deg : bool, optional
-            To apply np.rad2deg function over every ``key`` containing the
-            string.
-        elt : Element | str | Collection[Element] | Collection[str] | None, optional
-            If provided, return the attributes only at the considered
-            element(s).
-        pos : Literal["in", "out"] | None, optional
-            If you want the attribute at the entry, exit, or in the whole
-            element.
-        none_to_nan : bool, optional
-            To convert None to np.nan. The default is False.
-        **kwargs : str | bool | None
-            Other arguments passed to recursive getter.
+        *keys :
+            Names of the desired attributes.
+        to_numpy :
+            Convert list outputs to NumPy arrays.
+        to_deg :
+            Multiply keys with ``"phi"`` by ``180 / pi``.
+        elt :
+            Target element name or instance, passed to recursive_getter.
+        pos :
+            Position key for slicing data arrays.
+        none_to_nan :
+            Replace ``None`` values with ``np.nan``.
+        handle_missing_elt :
+            Look for an equivalent element when ``elt`` is not in
+            :attr:`.SimulationOutput.element_to_index` 's ``_elts``.
+        warn_structure_dependent :
+            Raise a warning when trying to access data which is
+            structure-related rather than simulation-related.
+        **kwargs :
+            Additional arguments for recursive_getter.
 
         Returns
         -------
-        out : Any
-            Attribute(s) value(s).
+        Any
+            A single value or tuple of values.
 
         """
         if not isinstance(elt, str) and isinstance(elt, Collection):
-            out = [
-                self.get(
-                    *keys,
-                    to_numpy=to_numpy,
-                    to_deg=to_deg,
-                    elt=x,
-                    pos=pos,
-                    none_to_nan=none_to_nan,
-                    **kwargs,
+            return list(
+                flatten(
+                    [
+                        self.get(
+                            *keys,
+                            to_numpy=to_numpy,
+                            to_deg=to_deg,
+                            elt=e,
+                            pos=pos,
+                            none_to_nan=none_to_nan,
+                            **kwargs,
+                        )
+                        for e in elt
+                    ]
                 )
-                for x in elt
-            ]
-            return list(flatten(out))
-        val = {key: [] for key in keys}
+            )
 
+        out: list[Any] = []
         for key in keys:
-            if not self.has(key):
-                val[key] = None
-                continue
-
-            if "r_" in key and "mismatch_factor_" not in key:
-                val[key] = self.transfer_matrix.get(
-                    key, elt=elt, pos=pos, to_numpy=False, **kwargs
+            if (
+                warn_structure_dependent
+                and key in GETTABLE_STRUCTURE_DEPENDENT
+            ):
+                logging.warning(
+                    f"{key = } is structure-dependent and does not vary from "
+                    "simulation to simulation. You may be better of calling "
+                    "`Accelerator.get` or `ListOfElements.get`."
                 )
-                continue
 
-            val[key] = recursive_getter(
-                key, vars(self), to_numpy=False, **kwargs
-            )
-
-            if val[key] is None:
-                continue
-
-            if to_deg and "phi" in key:
-                val[key] = _to_deg(val[key])
-
-            if not to_numpy and isinstance(val[key], np.ndarray):
-                val[key] = val[key].tolist()
-
-            if None not in (self.element_to_index, elt):
-                return_elt_idx = False
-                if key in ("v_cav_mv", "phi_s"):
-                    return_elt_idx = True
-                idx = self.element_to_index(
-                    elt=elt, pos=pos, return_elt_idx=return_elt_idx
+            # Special case: transfer matrix
+            if (
+                "r_" in key
+                and "mismatch_factor_" not in key
+                and self.transfer_matrix
+            ):
+                val = self.transfer_matrix.get(
+                    key, to_numpy=False  # type: ignore[arg-type]
                 )
-                val[key] = val[key][idx]
+            else:
+                val = recursive_getter(
+                    key, vars(self), to_numpy=False, **kwargs
+                )
 
-        out = [
-            (
-                np.array(val[key])
-                if to_numpy and not isinstance(val[key], str)
-                else val[key]
-            )
-            for key in keys
-        ]
+            if val is not None:
+                if to_deg and "phi" in key:
+                    val = _to_deg(val)
+                if elt is not None and self.element_to_index:
+                    return_elt_idx = False
+                    if key in CONCATENABLE_ELTS:
+                        # With these keys, `val` holds one value per
+                        # :class:`.Element`, not one per mesh point.
+                        return_elt_idx = True
+                    idx = self.element_to_index(
+                        elt=elt,
+                        pos=pos,
+                        return_elt_idx=return_elt_idx,
+                        handle_missing_elt=handle_missing_elt,
+                    )
+                    val = val[idx]
+                if not to_numpy and isinstance(val, np.ndarray):
+                    val = val.tolist()
+
+            out.append(val)
 
         if none_to_nan:
             if not to_numpy:
                 logging.error(
-                    f"{none_to_nan = } while {to_numpy = }, which "
-                    "is not supported."
+                    f"{none_to_nan = } while {to_numpy = }, which is not "
+                    "supported."
                 )
-            out = [val.astype(float) for val in out]
+            out = [
+                (
+                    np.array(np.nan)
+                    if val is None
+                    else np.asarray(val, dtype=float)
+                )
+                for val in out
+            ]
+        elif to_numpy:
+            out = [
+                np.array(val) if not isinstance(val, str) else val
+                for val in out
+            ]
 
-        if len(out) == 1:
-            return out[0]
-        return tuple(out)
+        return out[0] if len(out) == 1 else tuple(out)
 
     def compute_complementary_data(
         self,
@@ -274,10 +300,10 @@ class SimulationOutput:
 
         Parameters
         ----------
-        elts : ListOfElements
+        elts :
             Must be a full :class:`.ListOfElements`, containing all the
             elements of the linac.
-        ref_simulation_output : SimulationOutput | None, optional
+        ref_simulation_output :
             For calculation of mismatch factors. The default is None, in which
             case the calculation is simply skipped.
 
@@ -345,6 +371,19 @@ class SimulationOutput:
             }
         )
         return df.plot(x=x_axis, grid=grid, ylabel=markdown[key], **kwargs)
+
+    def elts(self) -> ListOfElements:
+        """Retrieve the elements associated with this object."""
+        assert (
+            self.element_to_index is not None
+        ), "SimulationOutput.element_to_index should be set"
+        keywords = getattr(self.element_to_index, "keywords", None)
+        assert isinstance(
+            keywords, dict
+        ), "SimulationOutput.element_to_index must be set with functools.paritial"
+        _elts = keywords.get("_elts", None)
+        assert _elts is not None, "SimulationOutput._elts incorrectly set"
+        return _elts
 
 
 def _to_deg(

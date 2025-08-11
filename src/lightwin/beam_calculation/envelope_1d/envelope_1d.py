@@ -30,7 +30,8 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.util.synchronous_phases import (
+from lightwin.physics.acceptance import compute_acceptances
+from lightwin.physics.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
@@ -93,14 +94,43 @@ class Envelope1D(BeamCalculator):
         self.list_of_elements_factory = ListOfElementsFactory(
             self.is_a_3d_simulation,
             self.is_a_multiparticle_simulation,
-            beam_kwargs=self._beam_kwargs,
             default_field_map_folder=self.default_field_map_folder,
-            load_rf_field=False,
-            load_field=True,
-            load_cython_field_maps=False,
+            load_fields=True,
+            beam_kwargs=self._beam_kwargs,
             field_maps_in_3d=False,  # not implemented anyway
+            load_cython_field_maps=False,
             elements_to_dump=(),
         )
+
+    def alternative_run(
+        self,
+        elts: ListOfElements,
+        update_reference_phase: bool = False,
+        **kwargs,
+    ) -> SimulationOutput:
+        """Compute beam propagation in 1D, envelope calculation.
+
+        This is the same as run, but without type hints in the docstring. Also
+        without printing the default value in the docstring.
+        Should have the same appearance as the classic :meth:`run`.
+
+        Parameters
+        ----------
+        elts :
+            List of elements in which the beam must be propagated.
+        update_reference_phase :
+            To change the reference phase of cavities when it is different from
+            the one asked in the ``.toml``. To use after the first calculation,
+            if ``BeamCalculator.flag_phi_abs`` does not correspond to
+            ``CavitySettings.reference``.
+
+        Returns
+        -------
+            Holds energy, phase, transfer matrices (among others) packed into a
+            single object.
+
+        """
+        return super().run(elts, update_reference_phase, **kwargs)
 
     def run(
         self,
@@ -112,9 +142,9 @@ class Envelope1D(BeamCalculator):
 
         Parameters
         ----------
-        elts : ListOfElements
+        elts :
             List of elements in which the beam must be propagated.
-        update_reference_phase : bool, optional
+        update_reference_phase :
             To change the reference phase of cavities when it is different from
             the one asked in the ``.toml``. To use after the first calculation,
             if ``BeamCalculator.flag_phi_abs`` does not correspond to
@@ -122,7 +152,6 @@ class Envelope1D(BeamCalculator):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -139,12 +168,12 @@ class Envelope1D(BeamCalculator):
 
         Parameters
         ----------
-        set_of_cavity_settings : SetOfCavitySettings | None
+        set_of_cavity_settings :
             The new cavity settings to try. If it is None, then the cavity
             settings are taken from the :class:`.FieldMap` objects.
-        elts : ListOfElements
+        elts :
             List of elements in which the beam must be propagated.
-        use_a_copy_for_nominal_settings : bool, optional
+        use_a_copy_for_nominal_settings :
             To copy the nominal :class:`.CavitySettings` and avoid altering
             their nominal counterpart. Set it to True during optimisation, to
             False when you want to keep the current settings. The default is
@@ -152,7 +181,6 @@ class Envelope1D(BeamCalculator):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -178,9 +206,9 @@ class Envelope1D(BeamCalculator):
             elt_results = func(w_kin=w_kin, cavity_settings=cavity_settings)
 
             if cavity_settings is not None:
-                v_cav_mv, phi_s = self._compute_cavity_parameters(elt_results)
-                cavity_settings.v_cav_mv = v_cav_mv
-                cavity_settings.phi_s = phi_s
+                self._post_treat_cavity_settings(
+                    cavity_settings, elt_results, elt.length_m
+                )
 
             single_elts_results.append(elt_results)
 
@@ -220,7 +248,6 @@ class Envelope1D(BeamCalculator):
 
         Parameters
         ----------
-        accelerator : Accelerator
             Object which :class:`.ListOfElements` must be initialized.
 
         """
@@ -252,31 +279,27 @@ class Envelope1D(BeamCalculator):
         return False
 
     def _post_treat_cavity_settings(
-        self, cavity_settings: CavitySettings, results: dict
+        self, cavity_settings: CavitySettings, results: dict, length_m: float
     ) -> None:
-        """Compute synchronous phase and accelerating field."""
-        v_cav_mv, phi_s = self._compute_cavity_parameters(results)
-        cavity_settings.v_cav_mv = v_cav_mv
-        cavity_settings.phi_s = phi_s
+        """Compute synchronous phase, accelerating field and acceptances.
 
-    def _compute_cavity_parameters(self, results: dict) -> tuple[float, float]:
-        """Compute the cavity parameters by calling ``_phi_s_func``.
-
-        Parameters
-        ----------
-        results
-            The dictionary of results as returned by the transfer matrix
-            function wrapper.
-
-        Returns
-        -------
-        tuple[float, float]
-            Accelerating voltage in MV and synchronous phase in radians. If the
-            cavity is failed, two ``np.nan`` are returned.
+        Also store these quantities in ``cavity_settings``.
 
         """
         v_cav_mv, phi_s = self._phi_s_func(**results)
-        return v_cav_mv, phi_s
+        cavity_settings.v_cav_mv = v_cav_mv
+        cavity_settings.phi_s = phi_s
+
+        acceptance_phi, acceptance_energy = compute_acceptances(
+            phi_s,
+            cavity_settings.freq_cavity_mhz,
+            getattr(cavity_settings, "w_kin", None),
+            v_cav_mv,
+            length_m,
+            self._beam_kwargs,
+        )
+        cavity_settings.acceptance_phi = acceptance_phi
+        cavity_settings.acceptance_energy = acceptance_energy
 
 
 def _store_entry_phase_in_settings(

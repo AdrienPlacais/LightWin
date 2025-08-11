@@ -10,7 +10,7 @@ import logging
 from collections.abc import Collection
 from pathlib import Path
 
-import lightwin.config_manager as con
+import lightwin.config.config_manager as con
 from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,

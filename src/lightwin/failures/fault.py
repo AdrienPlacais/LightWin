@@ -59,7 +59,7 @@ class Fault:
     compute_constraints : Callable[[SimulationOutput], np.ndarray] | None
         Compute the constraint violation for a given `SimulationOutput`.
     compute_residuals : Callable[[SimulationOutput], np.ndarray]
-        A function that takes in a `SimulationOutput` and returns the residues
+        A function that takes in a `SimulationOutput` and returns the residuals
         of every objective w.r.t the reference one.
 
     """
@@ -167,6 +167,18 @@ class Fault:
         """
         self.opti_sol = optimisation_algorithm.optimize()
         return self.opti_sol
+
+    @property
+    def info(self) -> dict:
+        """Return the dictionary holding information on the solution.
+
+        .. deprecated :: 0.8.2
+            Prefer using the ``opti_sol`` attribute.
+
+        """
+        info = dict(self.opti_sol)
+        info["objectives_values"] = self.opti_sol["objectives"]
+        return info
 
     @property
     def optimized_cavity_settings(self) -> SetOfCavitySettings:

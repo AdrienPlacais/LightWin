@@ -5,8 +5,6 @@ import re
 from collections.abc import Collection
 from pathlib import Path
 from pprint import pformat
-from tkinter import Tk
-from tkinter.filedialog import askopenfilename
 from typing import Literal
 
 import numpy as np
@@ -163,13 +161,12 @@ def results(path: Path, prop: str) -> np.ndarray:
 
     """
     if not path.is_file():
-        logging.warning(
-            "Filepath to results is incorrect. Provide another one."
-        )
-        Tk().withdraw()
-        path = Path(
-            askopenfilename(filetypes=[("TraceWin energies file", ".txt")])
-        )
+        logging.error("Filepath to results is incorrect.")
+        raise FileNotFoundError()
+        # Tk().withdraw()
+        # path = Path(
+        #     askopenfilename(filetypes=[("TraceWin energies file", ".txt")])
+        # )
 
     idx = TRACEWIN_IMPORT_DATA_TABLE[prop]
 

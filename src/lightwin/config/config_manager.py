@@ -9,14 +9,28 @@
 import logging
 import shutil
 import tomllib
+from importlib import resources
+from importlib.resources.abc import Traversable
 from pathlib import Path
 from typing import Any
 
 from lightwin.config.full_specs import ConfSpec
 
 
+class ConfigFileNotFoundError(FileNotFoundError):
+    """Custom exception raised when the configuration file is not found."""
+
+    pass
+
+
+class InvalidTomlSyntaxError(ValueError):
+    """Custom exception raised for invalid TOML syntax."""
+
+    pass
+
+
 def process_config(
-    toml_path: Path,
+    toml_path: Path | str | Traversable,
     config_keys: dict[str, str],
     warn_mismatch: bool = False,
     override: dict[str, dict[str, Any]] | None = None,
@@ -26,79 +40,140 @@ def process_config(
 
     Parameters
     ----------
-    toml_path : pathlib.Path
-        Path to the configuration file. It must be a ```.toml`` file.
-    config_keys : dict[str, str]
+    toml_path :
+        Path to the configuration file. It can be path to a real file or a
+        resource reference.
+    config_keys :
         Associate the name of LightWin's group of parameters to the entry in
         the configuration file.
-    warn_mismatch : bool, optional
+    warn_mismatch :
         Raise a warning if a key in a ``override`` sub-dict is not found.
-    override : dict[str, dict[str, Any]] | None, optional
-        To override entries in the ``.toml``. If not provided, we keep
+    override :
+        To override entries in the ``TOML``. If not provided, we keep
         defaults.
-    conf_specs_t : type[ConfSpec], optional
-        The specifications that the ``.toml`` must match to be accepted. If not
+    conf_specs_t :
+        The specifications that the ``TOML`` must match to be accepted. If not
         provided, we take a default.
 
     Returns
     -------
     toml_fulldict : dict[str, dict[str, Any]]
-        A dictonary holding all the keyword arguments that will be passed to
+        A dictionary holding all the keyword arguments that will be passed to
         LightWin objects, eg ``beam_calculator`` will be passed to
         :class:`.BeamCalculator`.
 
     """
-    assert toml_path.is_file(), f"{toml_path = } does not exist."
-    toml_fulldict = load_toml(toml_path, config_keys, warn_mismatch, override)
+    raw_toml = _load_toml(toml_path)
+    toml_fulldict = _process_toml(
+        raw_toml, config_keys, warn_mismatch=warn_mismatch, override=override
+    )
 
     conf_specs = conf_specs_t(**config_keys)
-    conf_specs.prepare(toml_fulldict, toml_folder=toml_path.parent)
-    return toml_fulldict
+    if isinstance(toml_path, str):
+        toml_path = Path(toml_path)
+
+    if isinstance(toml_path, Path):
+        conf_specs.prepare(toml_fulldict, toml_folder=toml_path.parent)
+        return toml_fulldict
+
+    with resources.as_file(toml_path) as extracted_path:
+        conf_specs.prepare(toml_fulldict, toml_folder=extracted_path.parent)
+        return toml_fulldict
 
 
-def load_toml(
-    config_path: Path,
-    config_keys: dict[str, str],
-    warn_mismatch: bool,
-    override: dict[str, dict[str, Any]] | None,
+def _load_toml(
+    toml_path: Path | str | Traversable,
 ) -> dict[str, dict[str, Any]]:
-    """Load the ``.toml`` and extract the dicts asked by user.
+    """Load the ``TOML`` and extract the dicts asked by user.
 
     Parameters
     ----------
-    config_path : pathlib.Path
-        Path to the configuration file.
-    config_keys : dict[str, str]
+    toml_path :
+        Path to the configuration file. It can be path to a real file or a
+        resource reference.
+
+    Returns
+    -------
+    raw_toml : dict[str, dict[str, Any]]
+        Dictionary holding the whole ``TOML`` file.
+
+    """
+    if isinstance(toml_path, (str, Path)):
+        toml_path = Path(toml_path)
+        if not toml_path.is_file():
+            raise ConfigFileNotFoundError(
+                f"The file {toml_path} does not exist."
+            )
+        try:
+            with open(toml_path, "rb") as f:
+                raw_toml = tomllib.load(f)
+        except tomllib.TOMLDecodeError as e:
+            raise InvalidTomlSyntaxError(
+                f"Invalid TOML syntax in file {toml_path}: {e}"
+            )
+
+        return raw_toml
+
+    if isinstance(toml_path, Traversable):
+        try:
+            with toml_path.open("rb") as f:
+                raw_toml = tomllib.load(f)
+        except tomllib.TOMLDecodeError as e:
+            raise InvalidTomlSyntaxError(
+                f"Invalid TOML syntax in resource {toml_path}: {e}"
+            )
+        return raw_toml
+
+    raise TypeError(
+        f"Unsupported type for `config_path`: {type(toml_path)}. Expected "
+        "str, Path, or Traversable."
+    )
+
+
+def _process_toml(
+    raw_toml: dict[str, dict[str, Any]],
+    config_keys: dict[str, str],
+    *,
+    warn_mismatch: bool,
+    override: dict[str, dict[str, Any]] | None,
+) -> dict[str, dict[str, Any]]:
+    """Extract the dicts asked by user. Override some keys if requested.
+
+    Parameters
+    ----------
+    raw_toml :
+        Dictionary holding the whole ``TOML`` file.
+    config_keys :
         Keys will be the keys of the output. Values are the name of the tables
         in the configuration file. If ``config_keys = {"beam": "proton_beam"}``
         , the output will look like ``{"beam": {<content of [proton_beam]>}}``.
-    warn_mismatch : bool
+    warn_mismatch :
         Check if there are discrepancies between ``override`` and the keys or
         dicts to override in ``config_keys``.
-    override : dict[str, dict[str, Any]] | None
+    override :
         To override some entries of the output dictionary, before even testing
         it.
 
     Returns
     -------
-    dict[str, dict[str, Any]]
+    toml_fulldict : dict[str, dict[str, Any]]
         A dictionary which keys are the keys of ``config_keys``, and the values
         are dictionaries holding corresponding table entries from the
         configuration file.
 
     """
-    all_toml: dict[str, dict[str, Any]]
-    with open(config_path, "rb") as f:
-        all_toml = tomllib.load(f)
+    toml_fulldict = {}
+    for key, value in config_keys.items():
+        if value not in raw_toml:
+            raise KeyError(
+                f"Expected table '{value}' for key '{key}' not found in the "
+                "TOML file."
+            )
+        toml_fulldict[key] = raw_toml[value]
 
-    toml_fulldict = {
-        key: all_toml[value] for key, value in config_keys.items()
-    }
+    if override:
+        _override_some_toml_entries(toml_fulldict, warn_mismatch, **override)
 
-    if override is None:
-        return toml_fulldict
-
-    _override_some_toml_entries(toml_fulldict, warn_mismatch, **override)
     return toml_fulldict
 
 
@@ -118,8 +193,8 @@ def _override_some_toml_entries(
         for key, val in over_subdict.items():
             if warn_mismatch and key not in conf_subdict:
                 logging.warning(
-                    f"You want to override {key = }, which was "
-                    f"not found in {conf_subdict.keys() = }"
+                    f"You want to override {key = }, which was not found in "
+                    f"{conf_subdict.keys() = }. Setting it anyway..."
                 )
             conf_subdict[key] = val
 
@@ -132,23 +207,23 @@ def dict_to_toml(
     original_toml_folder: Path | None = None,
     **kwargs,
 ) -> None:
-    """Write the provided configuration dict to a ``.toml`` file.
+    """Write the provided configuration dict to a ``TOML`` file.
 
     Parameters
     ----------
-    toml_fulldict : dict[str, dict[str, Any]]
+    toml_fulldict :
         The configuration as a nested dictionary. The keys will be used as
         table entries.
-    toml_path : pathlib.Path
-        Where to save the ``.toml``.
-    conf_specs : ConfSpec
+    toml_path :
+        Where to save the ``TOML``.
+    conf_specs :
         Holds the template to be respected. In particular, the type of the
         values in the different tables.
-    allow_overwrite : bool, optional
-        If a pre-existing ``.toml`` can be overwritten. The default is False,
+    allow_overwrite :
+        If a pre-existing ``TOML`` can be overwritten. The default is False,
         in which case an error will be raised.
-    original_toml_folder : pathlib.Path | None, optional
-        Where the original ``.toml`` was; this is used to resolve paths
+    original_toml_folder :
+        Where the original ``TOML`` was; this is used to resolve paths
         relative to this location.
 
     """
@@ -163,7 +238,7 @@ def dict_to_toml(
             f.write(dict_entry_string)
             f.write("\n")
 
-    logging.info(f"New ``.toml`` written in {toml_path}")
+    logging.info(f"New ``TOML`` written in {toml_path}")
     return
 
 
@@ -171,7 +246,7 @@ def _indue_overwritting(
     toml_path: Path,
     allow_overwrite: bool = False,
 ) -> bool:
-    """Ensure that ``.toml`` will not be overwritten if not wanted."""
+    """Ensure that ``TOML`` will not be overwritten if not wanted."""
     if not toml_path.exists():
         return False
 

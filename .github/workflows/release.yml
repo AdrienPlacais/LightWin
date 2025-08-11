@@ -1,0 +1,114 @@
+name: 🚀🏷️ Release tagged versions
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build_wheels:
+    name: 🎡 Build wheels ${{ matrix.python }}-${{ matrix.buildplat[1] }}
+    runs-on: ${{ matrix.buildplat[0] }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["cp312", "cp313"]
+        # This is taken from numpy's wheel.yml
+        # See also: https://github.com/github/feedback/discussions/7835#discussioncomment-1769026
+        buildplat:
+          # MacOS
+          - [macos-13, macosx_x86_64]
+          - [macos-latest, macosx_arm64]
+          # Ubuntu
+          ### 32 bits
+          - [ubuntu-latest, manylinux_i686]
+          - [ubuntu-latest, musllinux_i686]
+          ### 64 bits
+          - [ubuntu-latest, manylinux_x86_64]
+          - [ubuntu-latest, musllinux_x86_64]
+          - [ubuntu-24.04-arm, manylinux_aarch64]
+          - [ubuntu-24.04-arm, musllinux_aarch64]
+          # Windows
+          ### 32 bits
+          - [windows-latest, win32]
+          ### 64 bits
+          - [windows-latest, win_amd64]
+        exclude:
+          # Do not manage to build scipy
+          - buildplat: [ubuntu-24.04-arm, musllinux_aarch64]
+          - buildplat: [ubuntu-latest, manylinux_i686]
+          - buildplat: [ubuntu-latest, musllinux_i686]
+          # Does not manage to build matplotlib
+          - buildplat: [windows-latest, win32]
+
+    steps:
+      - name: 🔍 Checkout current repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🐍 Setup Python ${{ matrix.python }} on ${{ matrix.buildplat[0] }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 🛠️ Install system dependencies for Pillow (Linux only)
+        if: runner.os == 'Linux'
+        run: |
+          if command -v yum >/dev/null 2>&1; then
+            sudo yum install -y libjpeg-devel zlib-devel
+          elif command -v apt-get >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y libjpeg-dev zlib1g-dev
+          fi
+
+      - name: 🔧 Build wheels
+        uses: pypa/cibuildwheel@v2.22.0
+        env:
+          CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
+
+      - name: 📤 Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.python }}-${{ matrix.buildplat[0] }}-${{ matrix.buildplat[1] }}
+          path: ./wheelhouse/*.whl
+
+  make_sdist:
+    name: 📁 Make SDist
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🔍 Checkout current repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 🔧 Build SDist
+      run: pipx run build --sdist
+
+    - name: 📤 Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: cibw-sdist
+        path: dist/*.tar.gz
+
+  release_wheels_and_sdist:
+    name: 🚀 Release wheel and SDist
+    needs: [build_wheels, make_sdist]
+    environment: release
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    steps:
+    - name: 📥 Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        pattern: cibw-*
+        path: dist
+        merge-multiple: true
+
+    - name: 🚀 Release on PyPi
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        verbose: true
