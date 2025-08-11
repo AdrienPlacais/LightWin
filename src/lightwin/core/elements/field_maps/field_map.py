@@ -60,7 +60,7 @@ class FieldMap(Element):
         #: All the field map files to load, with an extension. This variable
         #: is set after instantiation, by calling :meth:`.set_full_path` from
         #: :func:`.electromagnetic_fields.load_electromagnetic_fields`.
-        self.filepaths: list[Path]
+        # self.filepaths: list[Path]
 
         self.z_0 = 0.0
 
@@ -127,6 +127,7 @@ class FieldMap(Element):
         :func:`.electromagnetic_fields._get_filemaps_extensions`
 
         """
+        raise NotImplementedError("deprecated")
         self.filepaths = [
             Path(self.field_map_folder, self.filename + f".{ext}").resolve()
             for extension in extensions.values()

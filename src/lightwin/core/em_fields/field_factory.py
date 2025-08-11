@@ -42,7 +42,10 @@ class FieldFactory:
     def __post_init__(self) -> None:
         """Raise an error if Cython is asked."""
         if self.load_cython_field_maps:
-            raise NotImplementedError("Field objects do not handle Cython")
+            raise NotImplementedError(
+                "Field objects do not handle Cython yet. Switch back to the "
+                "main branch, or deactivate Cython."
+            )
 
     def _gather_primary_files_to_load(
         self, field_maps: Collection[FieldMap | SuperposedFieldMap]
