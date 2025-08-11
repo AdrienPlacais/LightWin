@@ -41,7 +41,9 @@ class SimulationOutputFactory(ABC):
             self._is_3d
         )
         self.beam_parameters_factory = self._beam_parameters_factory_class(
-            self._is_3d, self._is_multipart, beam_kwargs=self._beam_kwargs,
+            self._is_3d,
+            self._is_multipart,
+            beam_kwargs=self._beam_kwargs,
         )
 
     @property
@@ -136,4 +138,4 @@ def _element_to_index(
         return beam_calc_param.s_out - _shift
 
     logging.error(f"{pos = }, while it must be 'in', 'out' or None")
-    raise IOError(f"{pos = }, while it must be 'in', 'out' or None")
+    raise OSError(f"{pos = }, while it must be 'in', 'out' or None")

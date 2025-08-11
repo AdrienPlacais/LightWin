@@ -39,7 +39,7 @@ class SetSyncPhase(Command):
                 stop = start + 1
                 self.influenced = slice(start, stop)
                 return
-        raise IOError(
+        raise OSError(
             "Reached end of file without finding associated FIELD_MAP."
         )
 

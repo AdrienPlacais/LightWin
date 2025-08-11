@@ -10,7 +10,7 @@ The compensation settings are sorted against a column in the
 ``evaluations.csv`` files.
 
 Reminder on the directory structure and conventions:
-    
+
 simulation_1            <- project folder
     | 000000_ref        <- simulation folder (holds a fault scenario)
         | 0_Envelope1D

@@ -106,9 +106,9 @@ def plot_additional_objectives(
 ) -> Axis | np.ndarray | list:
     """Plot evolution of additional objectives."""
     do_not_logify = ("phi_s", "v_cav_mv")
-    set_of_quantities = set(
+    set_of_quantities = {
         _qty_sim_output(col) for col in simulation_output_cols
-    )
+    }
     axis = []
     for quantity in set_of_quantities:
         cols_to_plot = [

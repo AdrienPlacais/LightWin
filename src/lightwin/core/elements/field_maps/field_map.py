@@ -299,7 +299,7 @@ class FieldMap(Element):
                 phase = getattr(settings, to_get)
                 reference = to_get
             case _:
-                raise IOError("{which_phase = } not understood.")
+                raise OSError("{which_phase = } not understood.")
 
         assert phase is not None, (
             f"In {self}, the required phase ({which_phase = }) is not defined."

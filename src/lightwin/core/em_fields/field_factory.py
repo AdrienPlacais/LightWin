@@ -82,7 +82,7 @@ class FieldFactory:
     ) -> None:
         """Check that for a file name, all corresp. object have same geom."""
         for (_, filename, _, _), field_maps in to_load.items():
-            different_types = set([type(x) for x in field_maps])
+            different_types = {type(x) for x in field_maps}
             if len(different_types) != 1:
                 raise NotImplementedError(
                     "Several FIELD_MAP with different types use the same "

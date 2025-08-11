@@ -53,7 +53,7 @@ def load_dat_file(
     """
     dat_filecontent = []
 
-    with open(dat_path, "r", encoding="utf-8") as file:
+    with open(dat_path, encoding="utf-8") as file:
         for line in file:
             sliced = slice_dat_line(line)
 
@@ -133,7 +133,7 @@ def table_structure_file(
 ) -> list[list[str]]:
     """Load the file produced by ``Data`` ``Save table to file``."""
     file_content = []
-    with open(path, "r", encoding="utf-8") as file:
+    with open(path, encoding="utf-8") as file:
         for line in file:
             line_content = line.split()
 
@@ -195,7 +195,7 @@ def transfer_matrices(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     position_in_m = []
     elements_numbers = []
 
-    with open(path, "r", encoding="utf-8") as file:
+    with open(path, encoding="utf-8") as file:
         lines = []
         for i, line in enumerate(file):
             lines.append(line)

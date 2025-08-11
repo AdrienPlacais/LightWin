@@ -117,12 +117,10 @@ class AcceleratorFactory(ABC):
         if len(cavities) == 0:
             return
         beam_calculators = [x for x in self.beam_calculators if x is not None]
-        beam_calculators_flags = set(
-            [
-                beam_calculator.flag_phi_abs
-                for beam_calculator in beam_calculators
-            ]
-        )
+        beam_calculators_flags = {
+            beam_calculator.flag_phi_abs
+            for beam_calculator in beam_calculators
+        }
 
         if len(beam_calculators_flags) > 1:
             logging.debug(

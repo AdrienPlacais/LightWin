@@ -45,7 +45,7 @@ class RepeatEle(Command):
 
             stop += 1
             if isinstance(instruction, RepeatEle):
-                raise IOError("I think nested REPEAT_ELE are not allowed.")
+                raise OSError("I think nested REPEAT_ELE are not allowed.")
 
             if isinstance(instruction, (Lattice, LatticeEnd)):
                 logging.info(
@@ -63,7 +63,7 @@ class RepeatEle(Command):
                 continue
 
             number_of_elements += 1
-        raise IOError("Reached end of file without completing REPEAT_ELE.")
+        raise OSError("Reached end of file without completing REPEAT_ELE.")
 
     def apply(
         self, instructions: list[Instruction], **kwargs: float

@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Define a class to evaluate a :class:`.SimulationOutput`.
 
 This object is generally created within two contexts:

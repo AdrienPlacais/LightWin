@@ -1,7 +1,8 @@
 """Define some types to lighten the typing."""
 
-import numpy as np
 from typing import Callable
+
+import numpy as np
 
 value_t = np.ndarray | float
 ref_value_t = np.ndarray | float

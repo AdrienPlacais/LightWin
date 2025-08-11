@@ -12,7 +12,7 @@
 from typing import Any
 
 import pytest
-from tests.reference import compare_with_reference
+from tests.pytest_helpers.simulation_output import compare_with_reference
 
 import lightwin.config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator

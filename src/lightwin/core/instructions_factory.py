@@ -269,7 +269,7 @@ class InstructionsFactory:
         ]
         n_removed = len(removed_elts)
         if n_removed > 0:
-            types = set([elt.__class__.__name__ for elt in removed_elts])
+            types = {elt.__class__.__name__ for elt in removed_elts}
             logging.warning(
                 f"Removed {n_removed} elements, according to the "
                 "InstructionsFactory._elements_to_dump key. The removed "

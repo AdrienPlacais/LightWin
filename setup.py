@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Define function to build the Cython module(s).
 
 Should be automatically handled by the ``pyproject.toml`` when running
@@ -9,6 +8,7 @@ If necessary, you can recompile the Cython module(s):
     2. Run ``python setup.py build_ext --inplace``
 
 """
+
 import numpy as np
 from Cython.Build import cythonize
 from Cython.Compiler import Options

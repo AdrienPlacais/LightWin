@@ -3,7 +3,7 @@
 from typing import Any
 
 import pytest
-from tests.reference import compare_with_other
+from tests.pytest_helpers.simulation_output import compare_with_other
 
 import lightwin.config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
@@ -14,7 +14,10 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import WithFaults
-from lightwin.failures.fault_scenario import FaultScenario, fault_scenario_factory
+from lightwin.failures.fault_scenario import (
+    FaultScenario,
+    fault_scenario_factory,
+)
 
 params = [
     pytest.param(

@@ -8,7 +8,7 @@ to work.
 from typing import Any
 
 import pytest
-from tests.reference import compare_with_other
+from tests.pytest_helpers.simulation_output import compare_with_other
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.factory import BeamCalculatorsFactory

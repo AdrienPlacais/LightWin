@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Python dual-logging setup (console and log file).
 
 It supports different log levels and colorized output.
@@ -12,6 +11,7 @@ https://uran198.github.io/en/python/2016/07/12/colorful-python-logging.html
 https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
 
 """
+
 import logging
 import subprocess
 import sys

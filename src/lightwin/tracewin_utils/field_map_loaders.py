@@ -52,7 +52,7 @@ def load_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
 
     f_z = []
     try:
-        with open(path, "r", encoding="utf-8") as file:
+        with open(path, encoding="utf-8") as file:
             for i, line in enumerate(file):
                 if i == 0:
                     line_splitted = line.split(" ")
@@ -155,7 +155,7 @@ def load_field_3d(
     """
     field_values = []
     try:
-        with open(path, "r", encoding="utf-8") as file:
+        with open(path, encoding="utf-8") as file:
             n_z, zmax = map(float, file.readline().split())
             n_z = int(n_z)
 

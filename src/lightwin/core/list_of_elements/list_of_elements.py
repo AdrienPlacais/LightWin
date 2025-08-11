@@ -404,7 +404,7 @@ class ListOfElements(list):
                 assert isinstance(name, str)
                 output = first(self, condition=lambda elt: elt.name == name)
             case _:
-                raise IOError(f"{id_nature = } not understood.")
+                raise OSError(f"{id_nature = } not understood.")
         return output
 
     def pickle(

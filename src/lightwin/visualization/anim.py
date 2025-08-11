@@ -9,7 +9,7 @@ import numpy as np
 from matplotlib import animation
 
 
-class AnimatedScatterDesign(object):
+class AnimatedScatterDesign:
     """An animated scatter plot using matplotlib.animations.FuncAnimation."""
 
     def __init__(
@@ -70,5 +70,4 @@ class AnimatedScatterDesign(object):
     def data_stream(self):
         """Create the generator object."""
         generator_data = (algo.pop.get("X") for algo in self.hist)
-        for data in generator_data:
-            yield data
+        yield from generator_data

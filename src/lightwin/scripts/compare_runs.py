@@ -1,6 +1,4 @@
-"""Define functions to compare several runs based on their ``evaluations.csv``.
-
-"""
+"""Define functions to compare several runs based on their ``evaluations.csv``."""
 
 from pathlib import Path
 

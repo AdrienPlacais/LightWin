@@ -168,7 +168,7 @@ def equivalent_elt_idx(
 
     logging.error(f"Element {elt} not found in this list of elements.")
     logging.debug(f"List of elements is:\n{elts}")
-    raise IOError(f"Element {elt} not found in this list of elements.")
+    raise OSError(f"Element {elt} not found in this list of elements.")
 
 
 def equivalent_elt(
@@ -356,9 +356,7 @@ def _get_first_key_of_idx_dict_higher_than(
     return -1
 
 
-def first[
-    T
-](
+def first[T](
     iterable: Iterable[T],
     default: T | None = None,
     condition: Callable[[T], bool] = lambda _: True,

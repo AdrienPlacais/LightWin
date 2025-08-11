@@ -120,7 +120,7 @@ def _zone(preset: POSITION_TO_INDEX_T, *args) -> list[int]:
     """Give compensation zone, and position where objectives are checked."""
     if preset not in POSITION_TO_INDEX:
         logging.error(f"Position {preset} not recognized.")
-        raise IOError(f"Position {preset} not recognized.")
+        raise OSError(f"Position {preset} not recognized.")
     index = POSITION_TO_INDEX[preset](*args)
     if isinstance(index, int):
         index = [index]

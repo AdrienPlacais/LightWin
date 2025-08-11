@@ -1,14 +1,14 @@
 """Define objects to store initial state/trajectory of a particle.
 
-    - :class:`ParticleInitialState` is just here to save the position and
-      energy of a particle at the entrance of the linac. Saved as an
-      :class:`.Accelerator` attribute.
+- :class:`ParticleInitialState` is just here to save the position and
+  energy of a particle at the entrance of the linac. Saved as an
+  :class:`.Accelerator` attribute.
 
-    - :class:`ParticleFullTrajectory` saves the energy, phase, position of a
-      particle along the linac. As a single :class:`ParticleInitialState` can
-      lead to several :class:`ParticleFullTrajectory` (according to size of the
-      mesh, the solver, etc), :class:`.ParticleFullTrajectory` are stored in
-      :class:`.SimulationOutput`.
+- :class:`ParticleFullTrajectory` saves the energy, phase, position of a
+  particle along the linac. As a single :class:`ParticleInitialState` can
+  lead to several :class:`ParticleFullTrajectory` (according to size of the
+  mesh, the solver, etc), :class:`.ParticleFullTrajectory` are stored in
+  :class:`.SimulationOutput`.
 
 """
 
@@ -91,7 +91,7 @@ class ParticleFullTrajectory:
     @property
     def tracewin_command(self) -> list[str]:
         """Raise an error, this method should be called from InitialPart."""
-        raise IOError("This method should not be used from here.")
+        raise OSError("This method should not be used from here.")
 
     def compute_complementary_data(self):
         """Compute some data necessary to do the post-treatment."""
