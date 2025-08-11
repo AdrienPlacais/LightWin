@@ -4,10 +4,7 @@
     Last compatibility check: TraceWin v2.22.1.0
 
 .. todo::
-    some functions are not used anymore I guess...
-
-.. todo::
-    Better handling of the module import
+    Remove this module when :class:`.Field` is completely implemented.
 
 """
 
@@ -88,7 +85,7 @@ def load_electromagnetic_fields(
 
         field_map.set_full_path(extensions)
 
-        args = load_field_map_file(field_map, loadable)
+        args = _load_field_map_file(field_map, loadable)
         if args is None:
             continue
 
@@ -280,7 +277,7 @@ def _get_field_components(first_words_field_geometry: str) -> list[str]:
     return third_characters
 
 
-def load_field_map_file(
+def _load_field_map_file(
     field_map: FieldMap, loadable: Collection[str]
 ) -> tuple[FieldFuncComponent1D, int, int] | None:
     """Go across the field map file names and load the first recognized.

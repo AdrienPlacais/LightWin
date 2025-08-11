@@ -57,7 +57,9 @@ class FieldMap(Element):
         self.field_map_folder = default_field_map_folder
         #: Base name of all field map files, without extension.
         self.filename = line.splitted[9]
-        #: All the field map files to load, with an extension.
+        #: All the field map files to load, with an extension. This variable
+        #: is set after instantiation, by calling :meth:`.set_full_path` from
+        #: :func:`.electromagnetic_fields.load_electromagnetic_fields`.
         self.filepaths: list[Path]
 
         self.z_0 = 0.0
@@ -147,7 +149,6 @@ class FieldMap(Element):
 
         Returns
         -------
-        bool
             True if the key is found in ``self`` or ``self.cavity_settings``.
 
         """
@@ -173,7 +174,6 @@ class FieldMap(Element):
 
         Returns
         -------
-        out : Any
             Attribute(s) value(s).
 
         """

@@ -37,6 +37,12 @@ class FieldFactory:
     """Create the :class:`.Field` and load the field maps."""
 
     default_field_map_folder: Path
+    load_cython_field_maps: bool = False
+
+    def __post_init__(self) -> None:
+        """Raise an error if Cython is asked."""
+        if self.load_cython_field_maps:
+            raise NotImplementedError("Field objects do not handle Cython")
 
     def _gather_primary_files_to_load(
         self, field_maps: Collection[FieldMap | SuperposedFieldMap]
@@ -98,9 +104,8 @@ class FieldFactory:
                 folder=folder, filename=filename, length_m=length_m, z_0=z_0
             )
 
-            for fm in corresp_maps:
-                fm.field = field
-                fm.cavity_settings.field = field
+            for field_map in corresp_maps:
+                field_map.cavity_settings.field = field
         self._create_superposed(field_maps)
         return
 

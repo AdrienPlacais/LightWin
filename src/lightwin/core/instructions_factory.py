@@ -9,9 +9,6 @@
     maybe ElementFactory and CommandFactory should be instantiated from this?
     Or from another class, but they do have a lot in common
 
-.. todo::
-    for now, forcing loading of cython field maps
-
 """
 
 import logging
@@ -38,9 +35,6 @@ from lightwin.core.list_of_elements.helper import (
     group_elements_by_section,
     group_elements_by_section_and_lattice,
 )
-from lightwin.tracewin_utils.electromagnetic_fields import (
-    load_electromagnetic_fields,
-)
 from lightwin.tracewin_utils.line import DatLine
 
 
@@ -61,27 +55,27 @@ class InstructionsFactory:
 
         Parameters
         ----------
-        freq_bunch_mhz : float
-            Beam bunch frequency in MHz.
-        default_field_map_folder : pathlib.Path
+        freq_bunch_mhz :
+            Beam bunch frequency in :unit:`MHz`.
+        default_field_map_folder :
             Where to look for field maps when no ``FIELD_MAP_PATH`` is
-            precised. This is also the folder where the ``.dat`` is.
-        load_field : bool
+            precised. This is also the folder where the ``DAT`` is.
+        load_field :
             To create or not the :class:`.Field`. This is not yer supported for
             :class:`.CyEnvelope1D` and :class:`.Envelope3D`, but it is
             mandatory for :class:`.Envelope1D`.
-        field_maps_in_3d : bool
+        field_maps_in_3d :
             To load or not the field maps in 3D (useful only with
             :class:`.Envelope3D`... Except that this is not supported yet, so
             it is never useful.
-        load_cython_field_maps : bool
+        load_cython_field_maps :
             To load or not the field maps for Cython (useful only with
             :class:`.Envelope1D` and :class:`.Envelope3D` used with Cython).
-        elements_to_dump : abc.ABCMeta | tuple[abc.ABCMeta, ...], optional
+        elements_to_dump :
             Class of Elements that you want to remove. If you want to skip an
             Element because it is not implemented, prefer assigning it to a
             :class:`.DummyElement`. The default is an empty tuple.
-        factory_kw : Any
+        factory_kw :
             Other parameters passed to the :class:`.CommandFactory` and
             :class:`.ElementFactory`.
 
@@ -112,7 +106,10 @@ class InstructionsFactory:
             )
         self._field_maps_in_3d = field_maps_in_3d
         self._load_cython_field_maps = load_cython_field_maps
-        self._field_factory = FieldFactory(default_field_map_folder)
+        self._field_factory = FieldFactory(
+            default_field_map_folder,
+            load_cython_field_maps=load_cython_field_maps,
+        )
 
     def run(self, dat_filecontent: Collection[DatLine]) -> list[Instruction]:
         """Create all the elements and commands.
@@ -122,7 +119,7 @@ class InstructionsFactory:
 
         Parameters
         ----------
-        dat_filecontent : Collection[DatLine]
+        dat_filecontent :
             List containing all the lines of ``dat_filepath``.
 
         """
@@ -159,21 +156,20 @@ class InstructionsFactory:
 
         Parameters
         ----------
-        line : DatLine
+        line :
             A single line of the ``.dat`` file.
-        dat_idx : int, optional
+        dat_idx :
             Line number of the line (starts at 0). If not provided, taken from
             ``line``.
-        command_fac : CommandFactory
+        command_fac :
             A factory to create :class:`.Command`.
-        element_fac : ElementFactory
+        element_fac :
             A factory to create :class:`.Element`.
-        instruction_kw : dict
+        instruction_kw :
             Keywords given to the ``run`` method of the proper factory.
 
         Returns
         -------
-        Instruction
             Proper :class:`.Command` or :class:`.Element`, or :class:`.Dummy`,
             or :class:`.Comment`.
 

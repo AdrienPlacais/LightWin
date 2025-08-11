@@ -19,6 +19,7 @@ from lightwin.beam_calculation.cy_envelope_1d.util import (
     CY_ENVELOPE1D_METHODS_T,
 )
 from lightwin.beam_calculation.envelope_1d.envelope_1d import Envelope1D
+from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.physics.synchronous_phases import PHI_S_MODELS
 
 
@@ -70,4 +71,14 @@ class CyEnvelope1D(Envelope1D):
                 solver_id=self.id,
                 beam_kwargs=self._beam_kwargs,
             )
+        )
+        self.list_of_elements_factory = ListOfElementsFactory(
+            self.is_a_3d_simulation,
+            self.is_a_multiparticle_simulation,
+            default_field_map_folder=self.default_field_map_folder,
+            load_fields=True,
+            beam_kwargs=self._beam_kwargs,
+            field_maps_in_3d=False,  # not implemented anyway
+            load_cython_field_maps=True,
+            elements_to_dump=(),
         )
