@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Objective position was plotted at the wrong place when the x-axis of plot was index of elements.
+- `r_zdelta` components can be `get` and plotted using `transfer_matrix` plot preset.
 
 # [0.10.x]
 
