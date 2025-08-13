@@ -266,7 +266,15 @@ def _plot_preset(
     if usr_kwargs is None:
         usr_kwargs = {}
     for i, (ax, y_axis) in enumerate(zip(axx, all_y_axis)):
-        _make_a_subplot(ax, x_axis, y_axis, colors, *args, **usr_kwargs)
+        try:
+            _make_a_subplot(ax, x_axis, y_axis, colors, *args, **usr_kwargs)
+        except ValueError as e:
+            logging.error(
+                f"A ValueError was raised when trying to plot {y_axis} vs "
+                f"{x_axis}. This likely an error caused by inconsistent "
+                f"x and y data.\n{e}"
+            )
+            raise e
         if i == 0:
             colors = _used_colors(ax)
 
