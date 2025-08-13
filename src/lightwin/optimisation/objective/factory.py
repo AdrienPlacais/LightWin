@@ -546,13 +546,14 @@ class Spiral2(ObjectiveFactory):
 # Interface with LightWin
 # =============================================================================
 OBJECTIVE_PRESETS = {
-    "EnergyPhaseMismatch": EnergyPhaseMismatch,
-    "simple_ADS": EnergyPhaseMismatch,
     "EnergyMismatch": EnergyMismatch,
-    "rephased_ADS": EnergyMismatch,
+    "EnergyPhaseMismatch": EnergyPhaseMismatch,
+    "EnergySeveralMismatches": EnergySeveralMismatches,
     "EnergySyncPhaseMismatch": EnergySyncPhaseMismatch,
-    "sync_phase_as_objective_ADS": EnergySyncPhaseMismatch,
     "experimental": Spiral2,
+    "rephased_ADS": EnergyMismatch,
+    "simple_ADS": EnergyPhaseMismatch,
+    "sync_phase_as_objective_ADS": EnergySyncPhaseMismatch,
 }  #:
 
 
