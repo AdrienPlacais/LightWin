@@ -42,7 +42,7 @@ sigma = [
 failed = [["FM11"]]
 id_nature = "name"
 k = 5
-objective_preset = "simple_ADS"
+objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
@@ -51,7 +51,7 @@ strategy = "k out of n"
 failed = [["FM11"]]
 id_nature = "name"
 k = 3
-objective_preset = "simple_ADS"
+objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
@@ -66,7 +66,7 @@ save_interval = 512
 failed = [["FM11"]]
 id_nature = "name"
 l = 3
-objective_preset = "simple_ADS"
+objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "l neighboring lattices"
@@ -75,7 +75,7 @@ strategy = "l neighboring lattices"
 compensating_manual = [[["FM9", "FM10", "FM12"]]]
 failed = [[["FM11"]]]
 id_nature = "name"
-objective_preset = "simple_ADS"
+objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "manual"
@@ -100,7 +100,7 @@ variables_filepath = "variables.csv"
 failed = [["FM11"]]
 id_nature = "name"
 k = 3
-objective_preset = "simple_ADS"
+objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
@@ -133,13 +133,13 @@ min_absolute_sync_phase_in_deg = -90.0
 [plots_minimal]
 acceptance = true
 add_objectives = true
-cav = false
-emittance = false
-energy = false
+cav = true
+emittance = true
+energy = true
 envelopes = true
-phase = false
-transfer_matrices = false
-twiss = false
+phase = true
+transfer_matrices = true
+twiss = true
 
 [evaluators]
 simulation_output = [
