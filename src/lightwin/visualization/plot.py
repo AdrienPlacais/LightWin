@@ -50,38 +50,35 @@ plt.rcParams["axes.prop_cycle"] = cycler(color=Dark2_8.mpl_colors)
 
 FALLBACK_PRESETS = {"x_axis": "z_abs", "plot_section": True, "sharex": True}
 PLOT_PRESETS = {
-    "energy": {
-        "x_axis": "z_abs",
-        "all_y_axis": ["w_kin", "w_kin_err", "struct"],
-        "num": 21,
-    },
-    "phase": {
-        "x_axis": "z_abs",
-        "all_y_axis": ["phi_abs", "phi_abs_err", "struct"],
-        "num": 22,
+    "acceptance": {
+        "x_axis": "elt_idx",
+        "all_y_axis": ("acceptance_phi", "acceptance_energy", "struct"),
+        "num": 28,
+        "symetric_plot": True,
+        "to_deg": True,
     },
     "cav": {
         "x_axis": "elt_idx",
-        "all_y_axis": ["v_cav_mv", "phi_s", "struct"],
+        "all_y_axis": ("v_cav_mv", "phi_s", "struct"),
         "num": 23,
     },
     "emittance": {
         "x_axis": "z_abs",
-        "all_y_axis": ["eps_phiw", "struct"],
+        "all_y_axis": ("eps_phiw", "struct"),
         "num": 24,
     },
-    "twiss": {
+    "energy": {
         "x_axis": "z_abs",
-        "all_y_axis": ["alpha_phiw", "beta_phiw", "gamma_phiw"],
-        "num": 25,
+        "all_y_axis": ("w_kin", "w_kin_err", "struct"),
+        "num": 21,
     },
     "envelopes": {
         "x_axis": "z_abs",
-        "all_y_axis": [
+        "all_y_axis": (
             "envelope_pos_phiw",
             "envelope_energy_zdelta",
             "struct",
-        ],
+        ),
         "num": 26,
         "to_deg": False,
         "symetric_plot": True,
@@ -91,12 +88,25 @@ PLOT_PRESETS = {
         "all_y_axis": ["mismatch_factor_zdelta", "struct"],
         "num": 27,
     },
-    "acceptance": {
-        "x_axis": "elt_idx",
-        "all_y_axis": ("acceptance_phi", "acceptance_energy", "struct"),
-        "num": 28,
-        "symetric_plot": True,
-        "to_deg": True,
+    "phase": {
+        "x_axis": "z_abs",
+        "all_y_axis": ("phi_abs", "phi_abs_err", "struct"),
+        "num": 22,
+    },
+    "transfer_matrices": {
+        "x_axis": "z_abs",
+        "all_y_axis": [
+            "r_zdelta_11",
+            "r_zdelta_12",
+            "r_zdelta_21",
+            "r_zdelta_22",
+        ],
+        "num": 29,
+    },
+    "twiss": {
+        "x_axis": "z_abs",
+        "all_y_axis": ("alpha_phiw", "beta_phiw", "gamma_phiw"),
+        "num": 25,
     },
 }
 ERROR_PRESETS = {
@@ -266,7 +276,15 @@ def _plot_preset(
     if usr_kwargs is None:
         usr_kwargs = {}
     for i, (ax, y_axis) in enumerate(zip(axx, all_y_axis)):
-        _make_a_subplot(ax, x_axis, y_axis, colors, *args, **usr_kwargs)
+        try:
+            _make_a_subplot(ax, x_axis, y_axis, colors, *args, **usr_kwargs)
+        except ValueError as e:
+            logging.error(
+                f"A ValueError was raised when trying to plot {y_axis} vs "
+                f"{x_axis}. This likely an error caused by inconsistent "
+                f"x and y data.\n{e}"
+            )
+            raise e
         if i == 0:
             colors = _used_colors(ax)
 

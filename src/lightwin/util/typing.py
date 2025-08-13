@@ -396,10 +396,24 @@ GETTABLE_TRANSFER_MATRIX = (
     "r_xx",
     "r_yy",
     "r_zdelta",
+    "r_zdelta_11",
+    "r_zdelta_12",
+    "r_zdelta_21",
+    "r_zdelta_22",
     "r_zz",
 )
 GETTABLE_TRANSFER_MATRIX_T = Literal[
-    "cumulated", "individual", "n_points", "r_xx", "r_yy", "r_zdelta", "r_zz"
+    "cumulated",
+    "individual",
+    "n_points",
+    "r_xx",
+    "r_yy",
+    "r_zdelta",
+    "r_zz",
+    "r_zdelta_11",
+    "r_zdelta_12",
+    "r_zdelta_21",
+    "r_zdelta_22",
 ]
 
 #: Attributes that can be extracted with :meth:`.SimulationOutput.get` method.

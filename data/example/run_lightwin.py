@@ -83,4 +83,8 @@ if __name__ == "__main__":
         config,
         # objective_factory_class=my_objective_factory,
     )
+    fs = fault_scenarios[0]
+    acc = fs.ref_acc
+    so = list(acc.simulation_outputs.values())[0]
+    __import__("pdb").set_trace()
     plt.show()
