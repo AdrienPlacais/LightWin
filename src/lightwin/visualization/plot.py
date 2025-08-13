@@ -91,6 +91,13 @@ PLOT_PRESETS = {
         "all_y_axis": ["mismatch_factor_zdelta", "struct"],
         "num": 27,
     },
+    "acceptance": {
+        "x_axis": "elt_idx",
+        "all_y_axis": ("acceptance_phi", "acceptance_energy", "struct"),
+        "num": 28,
+        "symetric_plot": True,
+        "to_deg": True,
+    },
 }
 ERROR_PRESETS = {
     "w_kin_err": {"scale": 1.0, "diff": "simple"},

@@ -97,6 +97,8 @@ plot_kwargs = {
     "envelope_energy_z": {"marker": None},
     "envelope_energy_phiw": {"marker": None},
     "mismatch_factor_zdelta": {"marker": None},
+    "acceptance_energy": {"marker": "s"},
+    "acceptance_phi": {"marker": "s"},
     # Element
     "elt_idx": {"marker": None},
     # RfField
