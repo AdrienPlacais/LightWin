@@ -35,7 +35,7 @@ def patch_kwargs(
 ) -> dict:
     """Give kwargs for the patch function."""
     if idx is None:
-        idx = elt.idx["dat_idx"]
+        idx = elt.idx["elt_idx"]
 
     kwargs = {
         "x_0": idx,
