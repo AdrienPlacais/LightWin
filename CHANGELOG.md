@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Calculation of energy and phase acceptances (#5).
 - New `physics` package holding helper physical functions (#6).
+- New plot preset: `acceptance`
+
+### Fixed
+
+- Objective position was plotted at the wrong place when the x-axis of plot was index of elements.
 
 # [0.10.x]
 
