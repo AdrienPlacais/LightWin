@@ -30,12 +30,12 @@ f_bunch_mhz = 100.0
 i_milli_a = 0.0
 q_adim = 1.0
 sigma = [
-   [+8.409896e-06, +3.548736e-06, +0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00],
-   [+3.548736e-06, +1.607857e-06, +0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00],
-   [+0.000000e+00, +0.000000e+00, +2.941564e-06, +6.094860e-07, +0.000000e+00, +0.000000e+00],
-   [+0.000000e+00, +0.000000e+00, +6.094860e-07, +4.418911e-07, +0.000000e+00, +0.000000e+00],
-   [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, +3.593136e-06, -2.552518e-07],
-   [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, -2.552518e-07, +5.994771e-07],
+  [+8.409896e-06, +3.548736e-06, +0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00],
+  [+3.548736e-06, +1.607857e-06, +0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00],
+  [+0.000000e+00, +0.000000e+00, +2.941564e-06, +6.094860e-07, +0.000000e+00, +0.000000e+00],
+  [+0.000000e+00, +0.000000e+00, +6.094860e-07, +4.418911e-07, +0.000000e+00, +0.000000e+00],
+  [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, +3.593136e-06, -2.552518e-07],
+  [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, -2.552518e-07, +5.994771e-07],
 ]
 
 [generic_wtf]
@@ -96,6 +96,14 @@ design_space_preset = "abs_phase_amplitude"
 from_file = true
 variables_filepath = "variables.csv"
 
+[tiny_wtf]
+failed = [["FM11"]]
+id_nature = "name"
+k = 3
+objective_preset = "simple_ADS"
+optimisation_algorithm = "downhill_simplex"
+optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
+strategy = "k out of n"
 [tiny_design_space]
 design_space_preset = "rel_phase_amplitude"
 from_file = true
@@ -123,20 +131,21 @@ min_absolute_sync_phase_in_deg = -90.0
 
 
 [plots_minimal]
+acceptance = true
 add_objectives = true
-cav = true
+cav = false
 emittance = false
-energy = true
-envelopes = false
-phase = true
+energy = false
+envelopes = true
+phase = false
 transfer_matrices = false
-twiss = true
+twiss = false
 
 [evaluators]
 simulation_output = [
-   # { name = "LongitudinalEmittance", max_percentage_rel_increase = 0.005 },
-   # { name = "PowerLoss", max_percentage_increase = 10.0 },
-   # { name = "TransverseMismatchFactor", max_mismatch = 1.0 },
-   # { name = "LongitudinalMismatchFactor", max_mismatch = 1.0 },
-   # { name = "SynchronousPhases", min_phi_s_deg = -90.0, max_phi_s_deg = 0.0 },
+  # { name = "LongitudinalEmittance", max_percentage_rel_increase = 0.005 },
+  # { name = "PowerLoss", max_percentage_increase = 10.0 },
+  # { name = "TransverseMismatchFactor", max_mismatch = 1.0 },
+  # { name = "LongitudinalMismatchFactor", max_mismatch = 1.0 },
+  # { name = "SynchronousPhases", min_phi_s_deg = -90.0, max_phi_s_deg = 0.0 },
 ]

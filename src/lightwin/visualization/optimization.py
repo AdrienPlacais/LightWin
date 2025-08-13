@@ -48,7 +48,7 @@ def mark_objectives_position(
     """Show where objectives are evaluated."""
     if fault_scenarios is None:
         logging.info(
-            "The ``fault_scenarios`` must be give to plot.factory for the "
+            "The ``fault_scenarios`` must be given to plot.factory for the "
             "objectives to be displayed."
         )
         return
