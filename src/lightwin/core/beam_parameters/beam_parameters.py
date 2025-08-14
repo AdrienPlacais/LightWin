@@ -24,13 +24,16 @@ from lightwin.core.beam_parameters.phase_space.phase_space_beam_parameters impor
 )
 from lightwin.core.elements.element import (
     ELEMENT_TO_INDEX_T,
-    POS_T,
     Element,
     default_element_to_index,
 )
 from lightwin.tracewin_utils.interface import beam_parameters_to_command
 from lightwin.util.helper import recursive_getter
-from lightwin.util.typing import GETTABLE_BEAM_PARAMETERS_T, PHASE_SPACE_T
+from lightwin.util.typing import (
+    GETTABLE_BEAM_PARAMETERS_T,
+    PHASE_SPACE_T,
+    POS_T,
+)
 
 
 @dataclass

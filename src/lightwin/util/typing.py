@@ -455,6 +455,9 @@ GETTABLE_ACCELERATOR_T = (
     | GETTABLE_ELTS_T
 )
 
+#: Allowed values for the ``pos`` keyword argument in ``get`` methods.
+POS_T = Literal["in", "out"]
+
 
 class BeamKwargs(TypedDict):
     """Holds all beam properties."""

@@ -5,7 +5,7 @@
 
 """
 
-from typing import Literal
+from typing import Any, Literal
 
 import matplotlib.patches as pat
 import numpy as np
@@ -23,6 +23,7 @@ from lightwin.core.elements.field_maps.field_map_1100 import FieldMap1100
 from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
 from lightwin.core.elements.quad import Quad
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.util.typing import POS_T
 from lightwin.visualization.helper import X_AXIS_T
 
 

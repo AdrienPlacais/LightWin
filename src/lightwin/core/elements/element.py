@@ -7,7 +7,7 @@
 """
 
 import logging
-from typing import Any, Literal, Protocol
+from typing import Any, Protocol
 
 import numpy as np
 
@@ -18,7 +18,7 @@ from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter, recursive_items
-from lightwin.util.typing import GETTABLE_ELT_T, STATUS_T
+from lightwin.util.typing import GETTABLE_ELT_T, POS_T, STATUS_T
 
 
 class Element(Instruction):
@@ -200,10 +200,6 @@ class Element(Instruction):
             f"You want to give {new_status = } to the element f{self.name}, "
             "which update_status method is not defined."
         )
-
-
-#: Allowed values for the ``pos`` keyword argument in ``get`` methods.
-POS_T = Literal["in", "out"]
 
 
 class ELEMENT_TO_INDEX_T(Protocol):
