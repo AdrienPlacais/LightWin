@@ -270,8 +270,10 @@ class SimulationOutput:
             if not to_numpy:
                 logging.error(
                     f"{none_to_nan = } while {to_numpy = }, which is not "
-                    "supported."
+                    "supported. Forcing to_numpy = True and hoping for the "
+                    "best."
                 )
+                to_numpy = True
             out = [
                 (
                     np.array(np.nan)

@@ -15,10 +15,9 @@
 
 """
 
-import itertools
 import logging
 from pathlib import Path
-from typing import Any, Callable, Literal, Sequence
+from typing import Any, Literal, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -29,14 +28,11 @@ from matplotlib.typing import ColorType
 from palettable.colorbrewer.qualitative import Dark2_8  # type: ignore
 
 import lightwin.util.dicts_output as dic
-from lightwin.beam_calculation.simulation_output.simulation_output import (
-    SimulationOutput,
-)
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.failures.fault import Fault
-from lightwin.util import helper
 from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
 from lightwin.visualization import structure
+from lightwin.visualization.data_getter import all_accelerators_data
 from lightwin.visualization.helper import (
     X_AXIS_T,
     create_fig_if_not_exists,
@@ -44,7 +40,7 @@ from lightwin.visualization.helper import (
 )
 from lightwin.visualization.optimization import mark_objectives_position
 
-font = {"family": "serif"}  # , 'size': 25}
+font = {"family": "serif"}
 plt.rc("font", **font)
 plt.rcParams["axes.prop_cycle"] = cycler(color=Dark2_8.mpl_colors)
 
@@ -54,8 +50,7 @@ PLOT_PRESETS = {
         "x_axis": "elt_idx",
         "all_y_axis": ("acceptance_phi", "acceptance_energy", "struct"),
         "num": 28,
-        "symetric_plot": True,
-        "to_deg": True,
+        "symmetric_plot": True,
     },
     "cav": {
         "x_axis": "elt_idx",
@@ -76,16 +71,15 @@ PLOT_PRESETS = {
         "x_axis": "z_abs",
         "all_y_axis": (
             "envelope_pos_phiw",
-            "envelope_energy_zdelta",
+            "envelope_energy_phiw",
             "struct",
         ),
         "num": 26,
-        "to_deg": False,
-        "symetric_plot": True,
+        "symmetric_plot": True,
     },
     "mismatch_factor": {
         "x_axis": "z_abs",
-        "all_y_axis": ["mismatch_factor_zdelta", "struct"],
+        "all_y_axis": ("mismatch_factor_zdelta", "struct"),
         "num": 27,
     },
     "phase": {
@@ -95,12 +89,12 @@ PLOT_PRESETS = {
     },
     "transfer_matrices": {
         "x_axis": "z_abs",
-        "all_y_axis": [
+        "all_y_axis": (
             "r_zdelta_11",
             "r_zdelta_12",
             "r_zdelta_21",
             "r_zdelta_22",
-        ],
+        ),
         "num": 29,
     },
     "twiss": {
@@ -164,7 +158,6 @@ def factory(
 
     Returns
     -------
-    figs : list[matplotlib.figure.Figure]
         The created figures.
 
     """
@@ -241,6 +234,8 @@ def _plot_preset(
     add_objectives: bool = False,
     fault_scenarios: Sequence[list[Fault]] | None = None,
     usr_kwargs: dict[str, Any] | None = None,
+    get_kwargs: dict[str, bool] | None = None,
+    symmetric_plot: bool = False,
     **kwargs,
 ) -> Figure:
     """Plot a preset.
@@ -264,6 +259,10 @@ def _plot_preset(
         To plot the objectives, if ``add_objectives == True``.
     usr_kwargs :
         User-defined ``kwargs``, passed to the |axplot| method.
+    get_kwargs :
+        Keyword arguments for the :meth:`.SimulationOutput.get` methods.
+    symmetric_plot :
+        If plot should be symmetric.
     **kwargs :
         Holds all complementary data on the plots.
 
@@ -273,11 +272,18 @@ def _plot_preset(
     )
 
     colors = None
-    if usr_kwargs is None:
-        usr_kwargs = {}
     for i, (ax, y_axis) in enumerate(zip(axx, all_y_axis)):
         try:
-            _make_a_subplot(ax, x_axis, y_axis, colors, *args, **usr_kwargs)
+            _make_a_subplot(
+                ax,
+                x_axis,
+                y_axis,
+                colors,
+                *args,
+                get_kwargs=get_kwargs,
+                symmetric_plot=symmetric_plot,
+                **(usr_kwargs or {}),
+            )
         except ValueError as e:
             logging.error(
                 f"A ValueError was raised when trying to plot {y_axis} vs "
@@ -332,185 +338,6 @@ def _y_label(y_axis: str) -> str:
     return y_label
 
 
-# Data getters
-def _single_simulation_data(
-    axis: GETTABLE_SIMULATION_OUTPUT_T, simulation_output: SimulationOutput
-) -> list[float] | None:
-    """lightwin.Get single data array from single SimulationOutput."""
-    kwargs: dict[str, Any]
-    kwargs = {
-        "to_numpy": False,
-        "to_deg": True,
-        "warn_structure_dependent": False,
-    }
-
-    # patch to avoid envelopes being converted again to degrees
-    if "envelope_pos" in axis:
-        kwargs["to_deg"] = False
-    data = simulation_output.get(axis, **kwargs)
-    return data
-
-
-def _single_simulation_all_data(
-    x_axis: X_AXIS_T, y_axis: str, simulation_output: SimulationOutput
-) -> tuple[np.ndarray, np.ndarray, dict[str, Any]]:
-    """Get x data, y data, kwargs from a SimulationOutput."""
-    x_data = _single_simulation_data(x_axis, simulation_output)
-    y_data = _single_simulation_data(y_axis, simulation_output)
-
-    if None in (x_data, y_data):
-        x_data = np.full((10, 1), np.nan)
-        y_data = np.full((10, 1), np.nan)
-        logging.warning(
-            f"{x_axis} or {y_axis} not found in {simulation_output}"
-        )
-        return x_data, y_data, {}
-
-    x_data = np.array(x_data)
-    y_data = np.array(y_data)
-    plt_kwargs = dic.plot_kwargs[y_axis].copy()
-    return x_data, y_data, plt_kwargs
-
-
-def _single_accelerator_all_simulations_data(
-    x_axis: X_AXIS_T, y_axis: str, accelerator: Accelerator
-) -> tuple[list[np.ndarray], list[np.ndarray], list[dict[str, Any]]]:
-    """Get x_data, y_data, kwargs from all SimulationOutputs of Accelerator."""
-    x_data, y_data, plt_kwargs = [], [], []
-    ls = "-"
-    for solver, simulation_output in accelerator.simulation_outputs.items():
-        x_dat, y_dat, plt_kw = _single_simulation_all_data(
-            x_axis, y_axis, simulation_output
-        )
-        short_solver = solver.split("(")[0]
-        if simulation_output.is_multiparticle:
-            short_solver += " (multipart)"
-
-        plt_kw["label"] = " ".join([accelerator.name, short_solver])
-        plt_kw["ls"] = ls
-        ls = "--"
-
-        x_data.append(x_dat)
-        y_data.append(y_dat)
-        plt_kwargs.append(plt_kw)
-
-    return x_data, y_data, plt_kwargs
-
-
-def _all_accelerators_data(
-    x_axis: X_AXIS_T, y_axis: str, *accelerators: Accelerator
-) -> tuple[list[np.ndarray], list[np.ndarray], list[dict[str, Any]]]:
-    """Get x_data, y_data, kwargs from all Accelerators (<=> for 1 subplot)."""
-    x_data, y_data, plt_kwargs = [], [], []
-
-    key = y_axis
-    error_plot = y_axis[-4:] == "_err"
-    if error_plot:
-        key = y_axis[:-4]
-
-    for accelerator in accelerators:
-        x_dat, y_dat, plt_kw = _single_accelerator_all_simulations_data(
-            x_axis, key, accelerator
-        )
-        x_data += x_dat
-        y_data += y_dat
-        plt_kwargs += plt_kw
-
-    if error_plot:
-        fun_error = _error_calculation_function(y_axis)
-        x_data, y_data, plt_kwargs = _compute_error(
-            x_data, y_data, plt_kwargs, fun_error
-        )
-
-    plt_kwargs = _avoid_similar_labels(plt_kwargs)
-
-    return x_data, y_data, plt_kwargs
-
-
-def _avoid_similar_labels(plt_kwargs: list[dict]) -> list[dict]:
-    """Append a number at the end of labels in doublons."""
-    my_labels = []
-    for kwargs in plt_kwargs:
-        label = kwargs["label"]
-        if label not in my_labels:
-            my_labels.append(label)
-            continue
-
-        while kwargs["label"] in my_labels:
-            try:
-                i = int(label[-1])
-                kwargs["label"] += str(i + 1)
-            except ValueError:
-                kwargs["label"] += "_0"
-
-        my_labels.append(kwargs["label"])
-    return plt_kwargs
-
-
-# Error related
-def _error_calculation_function(
-    y_axis: str,
-) -> tuple[Callable[[np.ndarray, np.ndarray], np.ndarray], str]:
-    """Set the function called to compute error."""
-    scale = ERROR_PRESETS[y_axis]["scale"]
-    error_computers = {
-        "simple": lambda y_ref, y_lin: scale * (y_ref - y_lin),
-        "abs": lambda y_ref, y_lin: scale * np.abs(y_ref - y_lin),
-        "rel": lambda y_ref, y_lin: scale * (y_ref - y_lin) / y_ref,
-        "log": lambda y_ref, y_lin: scale * np.log10(np.abs(y_lin / y_ref)),
-    }
-    key = ERROR_PRESETS[y_axis]["diff"]
-    fun_error = error_computers[key]
-    return fun_error
-
-
-def _compute_error(
-    x_data: list[np.ndarray],
-    y_data: list[np.ndarray],
-    plt_kwargs: dict[str, Any],
-    fun_error: Callable[[np.ndarray, np.ndarray], np.ndarray],
-) -> tuple[list[np.ndarray], list[np.ndarray]]:
-    """Compute error with proper reference and proper function."""
-    simulation_indexes = range(len(x_data))
-    if ERROR_REFERENCE == "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)":
-        i_ref = [i for i in range(len(x_data) // 2)]
-    elif ERROR_REFERENCE == "ref accelerator (1st solver)":
-        i_ref = [0]
-    elif ERROR_REFERENCE == "ref accelerator (2nd solver)":
-        i_ref = [1]
-        if len(x_data) < 4:
-            logging.error(
-                f"{ERROR_REFERENCE = } not supported when only one "
-                "simulation is performed."
-            )
-
-            return np.full((10, 1), np.nan), np.full((10, 1), np.nan)
-    else:
-        logging.error(
-            f"{ERROR_REFERENCE = }, which is not allowed. Check "
-            "allowed values in _compute_error."
-        )
-        return np.full((10, 1), np.nan), np.full((10, 1), np.nan)
-
-    i_err = [i for i in simulation_indexes if i not in i_ref]
-    indexes_ref_with_err = itertools.zip_longest(
-        i_ref, i_err, fillvalue=i_ref[0]
-    )
-
-    x_data_error, y_data_error = [], []
-    for ref, err in indexes_ref_with_err:
-        x_interp, y_ref, _, y_err = helper.resample(
-            x_data[ref], y_data[ref], x_data[err], y_data[err]
-        )
-        error = fun_error(y_ref, y_err)
-
-        x_data_error.append(x_interp)
-        y_data_error.append(error)
-
-    plt_kwargs = [plt_kwargs[i] for i in i_err]
-    return x_data_error, y_data_error, plt_kwargs
-
-
 # Actual interface with matplotlib
 def _make_a_subplot(
     axe: Axes,
@@ -519,7 +346,8 @@ def _make_a_subplot(
     colors: dict[str, ColorType] | None,
     *accelerators: Accelerator,
     plot_section: bool = True,
-    symetric_plot: bool = False,
+    symmetric_plot: bool = False,
+    get_kwargs: dict[str, bool] | None = None,
     **usr_kwargs,
 ) -> None:
     """Get proper data and plot it on an Axe.
@@ -539,8 +367,10 @@ def _make_a_subplot(
         Objects from which we take ``y_axis``.
     plot_section :
         To outline the different sections in the background of the plots.
-    symetric_plot :
-        If a symetric plot (wrt x axis) should be added.
+    symmetric_plot :
+        If a symmetric plot (wrt x axis) should be added.
+    get_kwargs :
+        Keyword arguments for the :meth:`.SimulationOutput.get` method.
     usr_kwargs :
         User-defined ``kwargs``, passed to the |axplot| method.
 
@@ -553,8 +383,13 @@ def _make_a_subplot(
             accelerators[-1].elts, axe, x_axis=x_axis
         )
 
-    x_data, y_data, plt_kwargs = _all_accelerators_data(
-        x_axis, y_axis, *accelerators
+    x_data, y_data, plt_kwargs = all_accelerators_data(
+        x_axis,
+        y_axis,
+        *accelerators,
+        error_presets=ERROR_PRESETS,
+        error_reference=ERROR_REFERENCE,
+        **(get_kwargs or {}),
     )
 
     # Alternate markers for the "cav" preset
@@ -571,12 +406,12 @@ def _make_a_subplot(
 
         (line,) = axe.plot(x, y, **_plt_kwargs | usr_kwargs)
 
-        if symetric_plot:
-            symetric_kwargs = _plt_kwargs | {
+        if symmetric_plot:
+            symmetric_kwargs = _plt_kwargs | {
                 "color": line.get_color(),
                 "label": None,
             }
-            axe.plot(x, -y, **symetric_kwargs)
+            axe.plot(x, -y, **symmetric_kwargs)
 
     axe.grid(True)
     axe.set_ylabel(_y_label(y_axis))
