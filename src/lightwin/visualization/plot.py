@@ -99,12 +99,12 @@ PLOT_PRESETS = {
     },
     "twiss": {
         "x_axis": "z_abs",
-        "all_y_axis": ("alpha_phiw", "beta_phiw", "gamma_phiw"),
+        "all_y_axis": ("alpha_phiw", "beta_phiw", "struct"),
         "num": 25,
     },
 }
 ERROR_PRESETS = {
-    "w_kin_err": {"scale": 1.0, "diff": "simple"},
+    "w_kin_err": {"scale": 1.0, "diff": "rel"},
     "phi_abs_err": {"scale": 1.0, "diff": "simple"},
 }
 #: List of implemented presets for the plots
@@ -113,7 +113,7 @@ ALLOWED_PLOT_PRESETS = list(PLOT_PRESETS.keys())
 # The one you generally want
 ERROR_REFERENCE = "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)"
 
-# These two are mostly useful when you want to study the differences between
+# These two are useful when you want to study the differences between
 # two solvers
 # ERROR_REFERENCE = "ref accelerator (1st solver)"
 # ERROR_REFERENCE = "ref accelerator (2nd solver)"
