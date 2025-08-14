@@ -21,8 +21,8 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
-from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, POS_T, Element
-from lightwin.util.typing import GETTABLE_TRANSFER_MATRIX_T
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, Element
+from lightwin.util.typing import GETTABLE_TRANSFER_MATRIX_T, POS_T
 
 
 class TransferMatrix:

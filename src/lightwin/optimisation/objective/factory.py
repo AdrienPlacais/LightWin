@@ -121,7 +121,7 @@ class ObjectiveFactory(ABC):
     ) -> tuple[list[Element], list[Element]]:
         """Determine which (sub)list of elements should be recomputed.
 
-        Also gives the elements where objectives are evaluated. You can
+        Also determine the elements where objectives are evaluated. You can
         override this method for your specific preset.
 
         """

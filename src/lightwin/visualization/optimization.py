@@ -56,7 +56,7 @@ def mark_objectives_position(
     objectives_by_element: dict[Element, list[Objective]]
     objectives_by_element = by_element(_get_objectives(fault_scenarios[0]))
     for elt in objectives_by_element:
-        kwargs = patch_kwargs(elt, x_axis, color=color, alpha=alpha)
+        kwargs = patch_kwargs(elt, x_axis, color=color, alpha=alpha, pos="out")
 
         if y_axis != "struct":
             _line_objective(ax, **kwargs)

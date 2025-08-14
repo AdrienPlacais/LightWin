@@ -27,7 +27,7 @@ import pandas as pd
 from matplotlib.axes import Axes
 
 from lightwin.core.beam_parameters.beam_parameters import BeamParameters
-from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, POS_T, Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, Element
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.core.particle import ParticleFullTrajectory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
@@ -44,6 +44,7 @@ from lightwin.util.typing import (
     CONCATENABLE_ELTS,
     GETTABLE_SIMULATION_OUTPUT_T,
     GETTABLE_STRUCTURE_DEPENDENT,
+    POS_T,
 )
 
 
