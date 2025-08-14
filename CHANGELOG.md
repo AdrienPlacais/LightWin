@@ -13,12 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Calculation of energy and phase acceptances (#5).
 - New `physics` package holding helper physical functions (#6).
-- New plot preset: `acceptance`
+- New plot preset: `acceptance`.
+- Explicit error message when trying to plot some bugged quantities:
+  - Transfer matrix components (TraceWin)
+  - Phase acceptance (TraceWin)
 
 ### Fixed
 
 - Objective position was plotted at the wrong place when the x-axis of plot was index of elements.
 - `r_zdelta` components can be `get` and plotted using `transfer_matrix` plot preset.
+- Symmetric plot (`envelope`, `acceptance`) work as expected.
 
 # [0.10.x]
 
