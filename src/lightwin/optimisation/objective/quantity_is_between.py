@@ -6,7 +6,7 @@
 """
 
 import logging
-from typing import Any
+from typing import Any, Self
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -62,6 +62,71 @@ class QuantityIsBetween(Objective):
         if loss_function is not None:
             logging.warning("Loss functions not implemented.")
 
+    @classmethod
+    def relative_to_reference(
+        cls,
+        name: str,
+        weight: float,
+        get_key: GETTABLE_SIMULATION_OUTPUT_T,
+        get_kwargs: dict[str, Any],
+        relative_limits: tuple[float, float],
+        reference_value: float,
+        descriptor: str | None = None,
+        loss_function: str | None = None,
+    ) -> Self:
+        r"""
+        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+
+        Parameters
+        ----------
+        name :
+            A short string to describe the objective and access to it.
+        weight :
+            A scaling constant to set the weight of current objective.
+        get_key :
+            Name of the quantity to get.
+        get_kwargs :
+            Keyword arguments for the :meth:`.SimulationOutput.get` method. We
+            do not check its validity, but in general you will want to define
+            the keys ``elt`` and ``pos``. If objective concerns a phase, you
+            may want to precise the ``to_deg`` key. You also should explicit
+            the ``to_numpy`` key.
+        relative_limits :
+            Lower and upper bound for the value, in :unit:`\%` wrt
+            ``reference_value``. First value should be lower than
+            :math:`100\%`, second value higher than :math:`100\%`.
+        reference_value :
+            Ideal value.
+        loss_function :
+            Indicates how the residuals are handled when the quantity is
+            outside the limits. Currently not implemented.
+
+        """
+        assert relative_limits[0] <= 100.0 and relative_limits[1] >= 100.0, (
+            f"{relative_limits = } but should look like `(80, 135)` (which "
+            "means: objective must be 80% and 135% of reference value."
+        )
+        limits: tuple[float, float]
+        limits = (
+            reference_value * 1e-2 * relative_limits[0],
+            reference_value * 1e-2 * relative_limits[1],
+        )
+        if reference_value <= 0.0:
+            logging.info(
+                f"{reference_value = } is negative. Inverting bounds to keep "
+                "limits[0] < limits[1]."
+            )
+            limits = (limits[1], limits[0])
+        return cls(
+            name=name,
+            weight=weight,
+            get_key=get_key,
+            get_kwargs=get_kwargs,
+            limits=limits,
+            descriptor=descriptor,
+            loss_function=loss_function,
+        )
+
     def base_str(self) -> str:
         """Tell nature and position of objective."""
         message = f"{self.get_key:>23}"
@@ -108,7 +173,6 @@ class QuantityIsBetween(Objective):
 
         Returns
         -------
-        float
             The computed residual (loss).
 
         """
