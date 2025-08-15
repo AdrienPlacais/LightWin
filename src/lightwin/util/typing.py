@@ -458,6 +458,10 @@ GETTABLE_ACCELERATOR_T = (
 #: Allowed values for the ``pos`` keyword argument in ``get`` methods.
 POS_T = Literal["in", "out"]
 
+#: Implemented optimization variables
+VARIABLES = ("k_e",) + REFERENCE_PHASES
+VARIABLES_T = Literal["k_e"] | REFERENCE_PHASES_T
+
 
 class BeamKwargs(TypedDict):
     """Holds all beam properties."""
