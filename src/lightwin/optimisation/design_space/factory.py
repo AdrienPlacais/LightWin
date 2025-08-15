@@ -11,7 +11,6 @@ from abc import ABC
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal
 
 from lightwin.core.elements.element import Element
 from lightwin.core.list_of_elements.helper import equivalent_elt
@@ -22,6 +21,7 @@ from lightwin.optimisation.design_space.helper import (
     same_value_as_nominal,
 )
 from lightwin.optimisation.design_space.variable import Variable
+from lightwin.util.typing import VARIABLES_T
 
 
 @dataclass
@@ -31,21 +31,21 @@ class DesignSpaceFactory(ABC):
 
     Parameters
     ----------
-    reference_elements : list[Element]
+    reference_elements :
        All the elements with the reference setting.
-    compensating_elements : list[Element]
+    compensating_elements :
         The elements from the linac under fixing that will be used for
         compensation.
-    design_space_kw : dict[str, float | bool
+    design_space_kw :
         The entries of ``[design_space]`` in ``.ini`` file.
 
     """
 
-    design_space_kw: dict[str, float | bool | str | Path]
+    design_space_kw: dict[str, Path]
 
     def __post_init__(self):
         """Declare complementary variables."""
-        self.variables_names: Sequence[str]
+        self.variables_names: Sequence[VARIABLES_T]
         self.variables_filepath: Path
         if not hasattr(self, "variables_names"):
             raise OSError("You must define at least one variable name.")
@@ -75,9 +75,9 @@ class DesignSpaceFactory(ABC):
 
         Parameters
         ----------
-        variables_filepath : pathlib.Path
+        variables_filepath :
             Path to the ``variables.csv`` file.
-        constraints_filepath : pathlib.Path | None
+        constraints_filepath :
             Path to the ``constraints.csv`` file. The default is None.
 
         """
@@ -148,7 +148,7 @@ class DesignSpaceFactory(ABC):
 
     def _get_initial_value_from_kw(
         self,
-        variable: Literal["k_e", "phi_0_rel", "phi_0_abs", "phi_s"],
+        variable: VARIABLES_T,
         reference_element: Element,
     ) -> float:
         """Select initial value for given variable.
@@ -158,14 +158,13 @@ class DesignSpaceFactory(ABC):
 
         Parameters
         ----------
-        variable : Literal["k_e", "phi_0_rel", "phi_0_abs", "phi_s"]
+        variable :
             The variable from which you want the limits.
-        reference_element : Element
+        reference_element :
             The element in its nominal tuning.
 
         Returns
         -------
-        float
             Initial value.
 
         """
@@ -173,27 +172,25 @@ class DesignSpaceFactory(ABC):
 
     def _get_limits_from_kw(
         self,
-        variable: Literal["k_e", "phi_0_rel", "phi_0_abs", "phi_s"],
+        variable: VARIABLES_T,
         reference_element: Element,
         reference_elements: list[Element],
     ) -> tuple[float, float]:
-        """
-        Select limits for given variable.
+        """Select limits for given variable.
 
         Call this method for classic limits.
 
         Parameters
         ----------
-        variable : Literal["k_e", "phi_0_rel", "phi_0_abs", "phi_s"]
+        variable :
             The variable from which you want the limits.
-        reference_element : Element
+        reference_element :
             The element in its nominal tuning.
-        reference_elements : list[Element]
+        reference_elements :
             List of reference elements.
 
         Returns
         -------
-        tuple[float | None]
             Lower and upper limit for current variable.
 
         """
@@ -214,14 +211,10 @@ class DesignSpaceFactory(ABC):
 
         Parameters
         ----------
-        variables_names : tuple[str, ...]
+        variables_names :
             Name of the variables to create.
-        constraints_names : tuple[str, ...] | None, optional
+        constraints_names :
             Name of the constraints to create. The default is None.
-
-        Returns
-        -------
-        DesignSpace
 
         """
         self._check_can_be_retuned(compensating_elements)
@@ -406,14 +399,10 @@ def get_design_space_factory(
 
     Parameters
     ----------
-    design_space_preset : str
+    design_space_preset :
         design_space_preset
-    design_space_kw : float | bool
+    design_space_kw :
         design_space_kw
-
-    Returns
-    -------
-    DesignSpaceFactory
 
     """
     design_space_factory_class = DESIGN_SPACE_FACTORY_PRESETS[

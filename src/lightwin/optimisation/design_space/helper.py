@@ -1,15 +1,30 @@
 """Set initial values/limits in :class:`.DesignSpaceFactory`."""
 
 import math
+from typing import overload
 
 import numpy as np
 
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.util.typing import GETTABLE_ELT_T, GETTABLE_FIELD_MAP_T
+
+
+@overload
+def same_value_as_nominal(
+    variable: GETTABLE_ELT_T, reference_element: Element, **kwargs
+) -> float: ...
+
+
+@overload
+def same_value_as_nominal(
+    variable: GETTABLE_FIELD_MAP_T, reference_element: FieldMap, **kwargs
+) -> float: ...
 
 
 def same_value_as_nominal(
-    variable: str,
-    reference_element: Element,
+    variable: GETTABLE_ELT_T | GETTABLE_FIELD_MAP_T,
+    reference_element: Element | FieldMap,
     **kwargs,
 ) -> float:
     """Return ``variable`` value in ``reference_element``.
@@ -22,7 +37,7 @@ def same_value_as_nominal(
 
 
 def phi_s_limits(
-    reference_element: Element,
+    reference_element: FieldMap,
     max_increase_sync_phase_in_percent: float,
     max_absolute_sync_phase_in_deg: float = 0.0,
     min_absolute_sync_phase_in_deg: float = -90.0,
@@ -37,19 +52,18 @@ def phi_s_limits(
 
     Parameters
     ----------
-    reference_element : Element
+    reference_element :
         Element in its nominal tuning.
-    max_increase_in_percent : float
+    max_increase_in_percent :
         Maximum increase of the synchronous phase in percent.
-    max_absolute_sync_phase_in_deg : float, optional
+    max_absolute_sync_phase_in_deg :
         Maximum absolute synchronous phase in radians. The default is 0.
-    min_absolute_sync_phase_in_deg : float, optional
+    min_absolute_sync_phase_in_deg :
         Minimum absolute synchronous phase in radians. The default is
         :math:`-\pi / 2`.
 
     Returns
     -------
-    tuple[float, float]
         Lower and upper limits for the synchronous phase.
 
     """
@@ -67,7 +81,6 @@ def phi_0_limits(**kwargs) -> tuple[float, float]:
 
     Returns
     -------
-    tuple[float, float]
         Always :math:`(-2\pi, 2\pi)`.
 
     """
@@ -75,7 +88,7 @@ def phi_0_limits(**kwargs) -> tuple[float, float]:
 
 
 def k_e_limits(
-    reference_element: Element,
+    reference_element: FieldMap,
     max_decrease_k_e_in_percent: float,
     max_increase_k_e_in_percent: float,
     maximum_k_e_is_calculated_wrt_maximum_k_e_of_section: bool = False,
@@ -86,24 +99,22 @@ def k_e_limits(
 
     Parameters
     ----------
-    reference_element : Element
+    reference_element :
         The nominal element.
-    max_decrease_in_percent : float
+    max_decrease_in_percent :
         Allowed decrease in percent with respect to the nominal ``k_e``.
-    max_increase_in_percent : float
+    max_increase_in_percent :
         Allowed increase in percent with respect to the nominal ``k_e``.
-    maximum_k_e_is_calculated_wrt_maximum_k_e_of_section : bool, optional
+    maximum_k_e_is_calculated_wrt_maximum_k_e_of_section :
         Use this flag to compute allowed increase of ``k_e`` with respect to
         the maximum ``k_e`` of the section, instead of the ``k_e`` of the
-        nominal cavity. This is what we used in :cite:`Placais2022a`. The
-        default is False.
-    reference_elements : list[Element] | None
+        nominal cavity. This is what we used in :cite:`Placais2022a`.
+    reference_elements :
         List of the nominal elements. Must be provided if
         ``maximum_k_e_is_calculated_wrt_maximum_k_e_of_section`` is True.
 
     Returns
     -------
-    tuple[float, float]
         Lower and upper bounds for ``k_e``.
 
     """
@@ -135,7 +146,11 @@ def _get_maximum_k_e_of_section(
         )
     )
     k_e_in_current_section = [
-        element.get("k_e", to_numpy=False)
+        (
+            element.get("k_e", to_numpy=False)
+            if isinstance(element, FieldMap)
+            else np.nan
+        )
         for element in elements_in_current_section
     ]
     maximum_k_e = np.nanmax(k_e_in_current_section)
