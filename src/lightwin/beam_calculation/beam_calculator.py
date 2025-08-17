@@ -16,7 +16,6 @@ import time
 from abc import ABC, abstractmethod
 from itertools import count
 from pathlib import Path
-from typing import Any
 
 from lightwin.beam_calculation.parameters.factory import (
     ElementBeamCalculatorParametersFactory,
@@ -161,7 +160,6 @@ class BeamCalculator(ABC):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -199,7 +197,6 @@ class BeamCalculator(ABC):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -281,7 +278,6 @@ class BeamCalculator(ABC):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Object holding simulation results.
 
         """
@@ -306,9 +302,8 @@ class BeamCalculator(ABC):
 
         if not recompute_reference:
             raise NotImplementedError(
-                "idea is to take results from file if "
-                "simulations are too long. will be easy "
-                "for tracewin."
+                "idea is to take results from file if simulations are too "
+                "long. will be easy for tracewin."
             )
         return simulation_output
 
