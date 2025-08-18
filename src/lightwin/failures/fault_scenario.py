@@ -19,7 +19,6 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.beam_calculation.tracewin.tracewin import TraceWin
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.cavity_settings import REFERENCE_PHASES
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.evaluator.list_of_simulation_output_evaluators import (
@@ -41,6 +40,7 @@ from lightwin.optimisation.design_space.factory import (
 from lightwin.optimisation.objective.factory import ObjectiveFactory
 from lightwin.util import debug
 from lightwin.util.pickling import MyPickler
+from lightwin.util.typing import REFERENCE_PHASES_T
 
 DISPLAY_CAVITIES_INFO = True
 
@@ -68,29 +68,29 @@ class FaultScenario(list):
 
         Parameters
         ----------
-        ref_acc : Accelerator
+        ref_acc :
             The reference linac (nominal or baseline).
-        fix_acc : Accelerator
+        fix_acc :
             The broken linac to be fixed.
-        beam_calculator : BeamCalculator
+        beam_calculator :
             The solver that will be called during the optimisation process.
-        initial_beam_parameters_factory : InitialBeamParametersFactory
+        initial_beam_parameters_factory :
             An object to create beam parameters at the entrance of the linac
             portion.
-        wtf : dict[str, str | int | bool | list[str] | list[float]]
+        wtf :
             What To Fit dictionary. Holds information on the fixing method.
-        design_space_factory : DesignSpaceFactory
+        design_space_factory :
             An object to easily create the proper :class:`.DesignSpace`.
-        fault_idx : list[int | list[int]]
+        fault_idx :
             List containing the position of the errors. If ``strategy`` is
             manual, it is a list of lists (faults already gathered).
-        comp_idx : list[list[int]], optional
+        comp_idx :
             List containing the position of the compensating cavities. If
-            ``strategy`` is manual, it must be provided. The default is None.
-        info_other_sol : list[dict], optional
+            ``strategy`` is manual, it must be provided.
+        info_other_sol :
             Contains information on another fit, for comparison purposes. The
             default is None.
-        objective_factory_class : type[ObjectiveFactory] | None, optional
+        objective_factory_class :
             If provided, will override the ``objective_preset``. Used to let
             user define it's own :class:`.ObjectiveFactory` without altering
             the source code.
@@ -138,23 +138,19 @@ class FaultScenario(list):
 
         Parameters
         ----------
-        reference_simulation_output : SimulationOutput
+        reference_simulation_output :
             The simulation of the nominal linac we'll try to match.
-        list_of_elements_factory : ListOfElementsFactory
+        list_of_elements_factory :
             An object that can create :class:`.ListOfElements`.
-        design_space_factory : DesignSpaceFactory
+        design_space_factory :
             An object that can create :class:`.DesignSpace`.
-        *cavities : Sequence[Sequence[FieldMap]]
+        *cavities :
             First if the list of gathered failed cavities. Second is the list
             of corresponding compensating cavities.
-        objective_factory_class : type[ObjectiveFactory] | None, optional
+        objective_factory_class :
             If provided, will override the ``objective_preset``. Used to let
             user define it's own :class:`.ObjectiveFactory` without altering
             the source code.
-
-        Returns
-        -------
-        list[Fault]
 
         """
         faults = []
@@ -209,7 +205,6 @@ class FaultScenario(list):
 
         Returns
         -------
-        optimisation_algorithms : list[OptimisationAlgorithm]
             The optimisation algorithm for each fault in ``self``.
 
         """
@@ -360,11 +355,12 @@ class FaultScenario(list):
 
         for ref, fix in zip(ref_settings, fix_settings):
             phi_0_ref = getattr(ref, self._reference_phase)
+            setattr(fix, self._reference_phase, phi_0_ref)
             fix.reference = self._reference_phase
-            fix.phi_ref = phi_0_ref
+            # fix.phi_ref = phi_0_ref
 
     @property
-    def _reference_phase(self) -> REFERENCE_PHASES:
+    def _reference_phase(self) -> REFERENCE_PHASES_T:
         """Give the reference phase ``"phi_0_rel"`` or ``"phi_0_abs"``."""
         return self.beam_calculator.reference_phase
 
@@ -378,13 +374,13 @@ class FaultScenario(list):
 
         Parameters
         ----------
-        save : bool, optional
-            To tell if you want to save the evaluation. The default is True.
-        id_solver_ref : str | None, optional
+        save :
+            To tell if you want to save the evaluation.
+        id_solver_ref :
             Id of the solver from which you want reference results. The default
             is None. In this case, the first solver is taken
             (``beam_calc_param``).
-        id_solver_fix : str | None, optional
+        id_solver_fix :
             Id of the solver from which you want fixed results. The default is
             None. In this case, the solver is the same as for reference.
 
@@ -480,23 +476,22 @@ def fault_scenario_factory(
 
     Parameters
     ----------
-    accelerators : list[Accelerator]
+    accelerators :
         Holds all the linacs. The first one must be the reference linac,
         while all the others will be to be fixed.
-    beam_calc : BeamCalculator
+    beam_calc :
         The solver that will be called during the optimisation process.
-    wtf : dict[str, Any]
+    wtf :
         The WhatToFit table of the TOML configuration file.
-    design_space_kw : dict[str, Any]
+    design_space_kw :
         The design space table from the TOML configuration file.
-    objective_factory_class : type[ObjectiveFactory] | None, optional
+    objective_factory_class :
         If provided, will override the ``objective_preset``. Used to let user
         define it's own :class:`.ObjectiveFactory` without altering the source
         code.
 
     Returns
     -------
-    fault_scenarios : list[FaultScenario]
         Holds all the initialized :class:`FaultScenario` objects, holding their
         already initialied :class:`.Fault` objects.
 
