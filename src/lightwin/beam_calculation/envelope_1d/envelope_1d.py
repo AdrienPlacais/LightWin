@@ -266,6 +266,9 @@ class Envelope1D(BeamCalculator):
 
         Also store these quantities in ``cavity_settings``.
 
+        .. todo::
+           Integrate this to :class:`.CavitySettings`.
+
         """
         v_cav_mv, phi_s = self._phi_s_func(**results)
         cavity_settings.v_cav_mv = v_cav_mv

@@ -19,6 +19,9 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.beam_calculation.tracewin.tracewin import TraceWin
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.cavity_settings import (
+    transfer_reference_phase,
+)
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.evaluator.list_of_simulation_output_evaluators import (
@@ -350,18 +353,17 @@ class FaultScenario(list):
         want to avoid when ``beam_calculator.flag_phi_abs == True``.
 
         """
-        ref_settings = [x.cavity_settings for x in self.ref_acc.l_cav]
-        fix_settings = [x.cavity_settings for x in self.fix_acc.l_cav]
+        ref_settings = (x.cavity_settings for x in self.ref_acc.l_cav)
+        fix_settings = (x.cavity_settings for x in self.fix_acc.l_cav)
 
         for ref, fix in zip(ref_settings, fix_settings):
-            phi_0_ref = getattr(ref, self._reference_phase)
-            setattr(fix, self._reference_phase, phi_0_ref)
-            fix.reference = self._reference_phase
-            # fix.phi_ref = phi_0_ref
+            transfer_reference_phase(
+                giver=ref, receiver=fix, reference_phase=self._reference_phase
+            )
 
     @property
     def _reference_phase(self) -> REFERENCE_PHASES_T:
-        """Give the reference phase ``"phi_0_rel"`` or ``"phi_0_abs"``."""
+        """Give the reference phase used for every cavity."""
         return self.beam_calculator.reference_phase
 
     def _evaluate_fit_quality(
