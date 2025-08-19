@@ -8,11 +8,10 @@
 """
 
 markdown = {
-    # Accelerator
-    "M_11": r"$M_{11}$",
-    "M_12": r"$M_{12}$",
-    "M_21": r"$M_{21}$",
-    "M_22": r"$M_{22}$",
+    "r_zdelta_11": r"$(M_{z\delta})_{1,\,1}$",
+    "r_zdelta_12": r"$(M_{z\delta})_{1,\,2}$",
+    "r_zdelta_21": r"$(M_{z\delta})_{2,\,1}$",
+    "r_zdelta_22": r"$(M_{z\delta})_{2,\,2}$",
     # Beam Parameters
     "eps_zdelta": r"Norm. $\epsilon_{z\delta}$ [$\pi$.mm.%]",
     "non_norm_eps_zdelta": r"$\epsilon_{z\delta}$ [$\pi$.mm.%]",
@@ -49,6 +48,8 @@ markdown = {
     "k_e": r"$k_e$ [1]",
     "phi_0_abs": r"$\phi_{0, abs}$ [deg]",
     "phi_0_rel": r"$\phi_{0, rel}$ [deg]",
+    "acceptance_phi": "Phase acceptance [deg]",
+    "acceptance_energy": "Energy acceptance [MeV]",
     # Particle
     "z_abs": "Synch. position [m]",
     "w_kin": "Beam energy [MeV]",
@@ -95,6 +96,8 @@ plot_kwargs = {
     "envelope_energy_z": {"marker": None},
     "envelope_energy_phiw": {"marker": None},
     "mismatch_factor_zdelta": {"marker": None},
+    "acceptance_energy": {"marker": "s"},
+    "acceptance_phi": {"marker": "s"},
     # Element
     "elt_idx": {"marker": None},
     # RfField
@@ -112,4 +115,9 @@ plot_kwargs = {
     "err_rel": {"marker": None},
     "err_log": {"marker": None},
     # ListOfElements
+    #
+    "r_zdelta_11": {"marker": None},
+    "r_zdelta_12": {"marker": None},
+    "r_zdelta_21": {"marker": None},
+    "r_zdelta_22": {"marker": None},
 }

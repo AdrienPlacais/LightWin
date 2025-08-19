@@ -18,7 +18,7 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
-import lightwin.util.converters as convert
+import lightwin.physics.converters as convert
 from lightwin.tracewin_utils.interface import particle_initial_state_to_command
 from lightwin.util.helper import (
     range_vals_object,

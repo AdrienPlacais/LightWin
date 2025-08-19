@@ -5,7 +5,7 @@
 
 """
 
-from typing import Literal
+from typing import Any, Literal
 
 import matplotlib.patches as pat
 import numpy as np
@@ -23,6 +23,7 @@ from lightwin.core.elements.field_maps.field_map_1100 import FieldMap1100
 from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
 from lightwin.core.elements.quad import Quad
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.util.typing import POS_T
 from lightwin.visualization.helper import X_AXIS_T
 
 
@@ -32,21 +33,43 @@ def patch_kwargs(
     idx: int | None = None,
     color: ColorType | None = None,
     alpha: float | None = None,
-) -> dict:
-    """Give kwargs for the patch function."""
+    pos: POS_T = "in",
+) -> dict[str, Any]:
+    """Give kwargs for the patch function.
+
+    In particular: position and color.
+
+    Parameters
+    ----------
+    elt :
+        The element corresponding to the ``patch``.
+    x_axis :
+        Nature of current x axis.
+    idx :
+        Element index.
+    color :
+        Color the ``patch``.
+    alpha :
+        Transparency of the ``patch``.
+    pos :
+        Where the patch should start. Set it to ``"out"`` to mark an
+        :class:`.Objective` position, which are generally evaluated at the exit
+        of an :class:`.Element`.
+
+    """
     if idx is None:
-        idx = elt.idx["dat_idx"]
+        idx = elt.idx["elt_idx"]
 
     kwargs = {
-        "x_0": idx,
+        "x_0": idx if pos == "in" else idx + 1,
         "width": 1,
         "elt": elt,
         "color": color,
         "alpha": alpha,
     }
     if x_axis == "z_abs":
-        kwargs["x_0"] = elt.get("abs_mesh")[0]
-        kwargs["width"] = elt.length_m
+        kwargs["x_0"] = elt.get("abs_mesh")[0 if pos == "in" else -1]
+        kwargs["width"] = elt.length_m if pos == "in" else -elt.length_m
     return kwargs
 
 

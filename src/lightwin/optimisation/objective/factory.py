@@ -121,7 +121,7 @@ class ObjectiveFactory(ABC):
     ) -> tuple[list[Element], list[Element]]:
         """Determine which (sub)list of elements should be recomputed.
 
-        Also gives the elements where objectives are evaluated. You can
+        Also determine the elements where objectives are evaluated. You can
         override this method for your specific preset.
 
         """
@@ -546,13 +546,14 @@ class Spiral2(ObjectiveFactory):
 # Interface with LightWin
 # =============================================================================
 OBJECTIVE_PRESETS = {
-    "EnergyPhaseMismatch": EnergyPhaseMismatch,
-    "simple_ADS": EnergyPhaseMismatch,
     "EnergyMismatch": EnergyMismatch,
-    "rephased_ADS": EnergyMismatch,
+    "EnergyPhaseMismatch": EnergyPhaseMismatch,
+    "EnergySeveralMismatches": EnergySeveralMismatches,
     "EnergySyncPhaseMismatch": EnergySyncPhaseMismatch,
-    "sync_phase_as_objective_ADS": EnergySyncPhaseMismatch,
     "experimental": Spiral2,
+    "rephased_ADS": EnergyMismatch,
+    "simple_ADS": EnergyPhaseMismatch,
+    "sync_phase_as_objective_ADS": EnergySyncPhaseMismatch,
 }  #:
 
 

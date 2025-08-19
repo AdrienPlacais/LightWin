@@ -27,7 +27,7 @@ import pandas as pd
 from matplotlib.axes import Axes
 
 from lightwin.core.beam_parameters.beam_parameters import BeamParameters
-from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, POS_T, Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, Element
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.core.particle import ParticleFullTrajectory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
@@ -44,6 +44,7 @@ from lightwin.util.typing import (
     CONCATENABLE_ELTS,
     GETTABLE_SIMULATION_OUTPUT_T,
     GETTABLE_STRUCTURE_DEPENDENT,
+    POS_T,
 )
 
 
@@ -65,7 +66,7 @@ class SimulationOutput:
         Holds energy, phase of the synchronous particle.
     cav_params :
         Holds amplitude, synchronous phase, absolute phase, relative phase of
-        cavities.
+        cavities, phase acceptance, energy acceptance.
     beam_parameters :
         Holds emittance, Twiss parameters, envelopes in the various phase
         spaces.
@@ -87,7 +88,6 @@ class SimulationOutput:
     r_zz_elt :
         Cumulated transfer matrices in the [z-delta] plane. The default is
         None.
-
     """
 
     out_folder: Path
@@ -271,8 +271,10 @@ class SimulationOutput:
             if not to_numpy:
                 logging.error(
                     f"{none_to_nan = } while {to_numpy = }, which is not "
-                    "supported."
+                    "supported. Forcing to_numpy = True and hoping for the "
+                    "best."
                 )
+                to_numpy = True
             out = [
                 (
                     np.array(np.nan)

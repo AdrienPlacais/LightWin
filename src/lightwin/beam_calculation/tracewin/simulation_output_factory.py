@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 from numpy.typing import NDArray
 
-import lightwin.util.converters as convert
+import lightwin.physics.converters as convert
 from lightwin.beam_calculation.simulation_output.factory import (
     SimulationOutputFactory,
 )

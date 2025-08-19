@@ -106,6 +106,22 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
                 )
                 for elt in elts
             ],
+            "acceptance_phi": [
+                (
+                    set_of_cavity_settings[elt].acceptance_phi
+                    if elt in set_of_cavity_settings
+                    else None
+                )
+                for elt in elts
+            ],
+            "acceptance_energy": [
+                (
+                    set_of_cavity_settings[elt].acceptance_energy
+                    if elt in set_of_cavity_settings
+                    else None
+                )
+                for elt in elts
+            ],
         }
 
         element_to_index = self._generate_element_to_index_func(elts)

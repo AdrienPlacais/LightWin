@@ -26,7 +26,7 @@ from scipy.optimize import minimize_scalar
 
 from lightwin.core.em_fields.field import Field
 from lightwin.core.em_fields.rf_field import RfField
-from lightwin.util.phases import (
+from lightwin.physics.phases import (
     diff_angle,
     phi_0_abs_to_rel,
     phi_0_rel_to_abs,
@@ -120,6 +120,8 @@ class CavitySettings:
         self._v_cav_mv: float
         self._phi_rf: float
         self._phi_bunch: float
+        self._acceptance_phi: float
+        self._acceptance_energy: float
 
         self._status: STATUS_T
         self.status = status
@@ -191,12 +193,12 @@ class CavitySettings:
             reference = other.reference
         assert reference is not None
         settings = cls(
-            other.k_e,
-            getattr(other, reference),
-            reference,
-            other.status,
-            other._freq_bunch_mhz,
-            other.freq_cavity_mhz,
+            k_e=other.k_e,
+            phi=getattr(other, reference),
+            reference=reference,
+            status=other.status,
+            freq_bunch_mhz=other._freq_bunch_mhz,
+            freq_cavity_mhz=other.freq_cavity_mhz,
             transf_mat_func_wrappers=other.transf_mat_func_wrappers,
             phi_s_funcs=other.phi_s_funcs,
             rf_field=other.rf_field,
@@ -239,14 +241,14 @@ class CavitySettings:
             reference = base.reference
         assert reference is not None
         settings = cls(
-            k_e,
-            phi,
-            reference,
-            status,
-            base._freq_bunch_mhz,
-            base.freq_cavity_mhz,
-            base.transf_mat_func_wrappers,
-            base.phi_s_funcs,
+            k_e=k_e,
+            phi=phi,
+            reference=reference,
+            status=status,
+            freq_bunch_mhz=base._freq_bunch_mhz,
+            freq_cavity_mhz=base.freq_cavity_mhz,
+            transf_mat_func_wrappers=base.transf_mat_func_wrappers,
+            phi_s_funcs=base.phi_s_funcs,
             rf_field=base.rf_field,
             field=base.field,
         )
@@ -545,6 +547,8 @@ class CavitySettings:
     def phi_s(self, value: float) -> None:
         """Set the synchronous phase to desired value."""
         self._phi_s = value
+        del self.acceptance_phi
+        del self.acceptance_energy
 
     @phi_s.deleter
     def phi_s(self) -> None:
@@ -552,6 +556,8 @@ class CavitySettings:
         if not hasattr(self, "_phi_s"):
             return
         del self._phi_s
+        del self.acceptance_phi
+        del self.acceptance_energy
 
     @phi_s.getter
     def phi_s(self) -> float | None:
@@ -595,6 +601,8 @@ class CavitySettings:
     def phi_s(self) -> None:
         """Delete attribute."""
         self._phi_s = np.nan
+        del self.acceptance_phi
+        del self.acceptance_energy
 
     def set_cavity_parameters_methods(
         self,
@@ -890,6 +898,51 @@ class CavitySettings:
         assert (
             self.phi_bunch >= 0.0
         ), "The phase of the synchronous particle should never be negative."
+
+    # =============================================================================
+    # Acceptances
+    # =============================================================================
+    @property
+    def acceptance_phi(self) -> None:
+        """Get phase acceptance of the cavity."""
+
+    @acceptance_phi.setter
+    def acceptance_phi(self, value: float) -> None:
+        """Set the phase acceptance to the desired value."""
+        self._acceptance_phi = value
+
+    @acceptance_phi.getter
+    def acceptance_phi(self) -> float:
+        """Get the phase acceptance."""
+        if hasattr(self, "_acceptance_phi"):
+            return self._acceptance_phi
+
+    @acceptance_phi.deleter
+    def acceptance_phi(self):
+        """Delete the phase acceptance."""
+        if hasattr(self, "_acceptance_phi"):
+            del self._acceptance_phi
+
+    @property
+    def acceptance_energy(self) -> None:
+        """Get energy acceptance of the cavity."""
+
+    @acceptance_energy.setter
+    def acceptance_energy(self, value: float) -> None:
+        """Set the energy acceptance to the desired value."""
+        self._acceptance_energy = value
+
+    @acceptance_energy.getter
+    def acceptance_energy(self) -> float:
+        """Get the energy acceptance."""
+        if hasattr(self, "_acceptance_energy"):
+            return self._acceptance_energy
+
+    @acceptance_energy.deleter
+    def acceptance_energy(self):
+        """Delete the energy acceptance."""
+        if hasattr(self, "_acceptance_energy"):
+            del self._acceptance_energy
 
     # .. list-table:: Meaning of status
     #     :widths: 40, 60

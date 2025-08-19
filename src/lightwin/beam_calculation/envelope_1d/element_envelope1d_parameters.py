@@ -18,7 +18,7 @@ from typing import Any, Callable, Literal
 import numpy as np
 from numpy.typing import NDArray
 
-import lightwin.util.converters as convert
+import lightwin.physics.converters as convert
 from lightwin.beam_calculation.envelope_1d import transfer_matrices
 from lightwin.beam_calculation.envelope_1d.util import ENVELOPE1D_METHODS_T
 from lightwin.beam_calculation.parameters.element_parameters import (
@@ -31,7 +31,7 @@ from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
 )
-from lightwin.util.synchronous_phases import (
+from lightwin.physics.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )

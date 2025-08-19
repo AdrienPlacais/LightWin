@@ -28,7 +28,7 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
 )
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
-from lightwin.util.synchronous_phases import PHI_S_MODELS
+from lightwin.physics.synchronous_phases import PHI_S_MODELS
 from lightwin.util.typing import BeamKwargs
 
 

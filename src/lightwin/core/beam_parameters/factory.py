@@ -21,7 +21,7 @@ from lightwin.core.beam_parameters.phase_space.phase_space_beam_parameters impor
     PhaseSpaceBeamParameters,
 )
 from lightwin.core.elements.element import Element
-from lightwin.util import converters
+from lightwin.physics import converters
 from lightwin.util.typing import PHASE_SPACE_T, BeamKwargs
 
 

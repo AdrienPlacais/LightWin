@@ -21,8 +21,8 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
-from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, POS_T, Element
-from lightwin.util.typing import GETTABLE_TRANSFER_MATRIX_T
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, Element
+from lightwin.util.typing import GETTABLE_TRANSFER_MATRIX_T, POS_T
 
 
 class TransferMatrix:
@@ -129,7 +129,6 @@ class TransferMatrix:
 
         Returns
         -------
-        Any
             Attribute(s) at the requested location.
         """
         out = []
@@ -264,7 +263,6 @@ class TransferMatrix:
 
         Returns
         -------
-        cumulated :
             Cumulated transfer matrix.
 
         .. todo::
@@ -338,3 +336,23 @@ class TransferMatrix:
     def r_zdelta(self, r_zdelta: NDArray[np.float64]) -> None:
         r"""Set the transfer matrix of :math:`[z-\delta]` plane."""
         self.cumulated[:, 4:, 4:] = r_zdelta
+
+    @property
+    def r_zdelta_11(self) -> NDArray[np.float64]:
+        r"""Return first component of transfer matrix in :math:`[z-\delta]`."""
+        return self.r_zdelta[:, 0, 0]
+
+    @property
+    def r_zdelta_12(self) -> NDArray[np.float64]:
+        r"""Return 2nd component of transfer matrix in :math:`[z-\delta]`."""
+        return self.r_zdelta[:, 0, 1]
+
+    @property
+    def r_zdelta_21(self) -> NDArray[np.float64]:
+        r"""Return 3rd component of transfer matrix in :math:`[z-\delta]`."""
+        return self.r_zdelta[:, 1, 0]
+
+    @property
+    def r_zdelta_22(self) -> NDArray[np.float64]:
+        r"""Return 4td component of transfer matrix in :math:`[z-\delta]`."""
+        return self.r_zdelta[:, 1, 1]

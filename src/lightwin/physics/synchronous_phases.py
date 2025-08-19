@@ -15,16 +15,16 @@ def phi_s_legacy(
 
     Parameters
     ----------
-    integrated_field : complex | None
+    integrated_field
         Complex electric field felt by the synchronous particle. It is None
         if the cavity is failed.
 
     Returns
     -------
-    v_cav_mv : float
+    v_cav_mv
         Accelerating voltage in MV. It is ``np.nan`` if ``integrated_field`` is
         None.
-    phi_s : float
+    phi_s
         Synchronous phase of the cavity in rad. It is ``np.nan`` if
         ``integrated_field`` is None.
 
@@ -38,21 +38,15 @@ def phi_s_legacy(
 def phi_s_lagniel(
     simulation_output: object, *args, **kwargs
 ) -> tuple[float, float]:
-    """Compute cavity parameters with phi_s model proposed by JM Lagniel.
-
-    See  Longitudinal beam dynamics at high accelerating fields, what changes?
-    ROSCOFF 2021.
+    """Compute cavity parameters with new phi_s model :cite:`Lagniel2021`.
 
     Parameters
     ----------
-    transf_mat_21 : float
-        (2, 1) component of the field map transfer matrix.
-    delta_w_kin : float
-        Energy gained by the synchronous particle in the cavity.
+    simulation_output
+        Holds results of a simulation.
 
     Returns
     -------
-    phi_s : float
         Corrected synchronous phase of the cavity.
 
     """

@@ -26,7 +26,8 @@ from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.util.synchronous_phases import (
+from lightwin.physics.acceptance import compute_acceptances
+from lightwin.physics.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
@@ -185,7 +186,9 @@ class Envelope1D(BeamCalculator):
             elt_results = func(w_kin=w_kin, cavity_settings=cavity_settings)
 
             if cavity_settings is not None:
-                self._post_treat_cavity_settings(cavity_settings, elt_results)
+                self._post_treat_cavity_settings(
+                    cavity_settings, elt_results, elt.length_m
+                )
 
             single_elts_results.append(elt_results)
 
@@ -257,31 +260,27 @@ class Envelope1D(BeamCalculator):
         return False
 
     def _post_treat_cavity_settings(
-        self, cavity_settings: CavitySettings, results: dict
+        self, cavity_settings: CavitySettings, results: dict, length_m: float
     ) -> None:
-        """Compute synchronous phase and accelerating field."""
-        v_cav_mv, phi_s = self._compute_cavity_parameters(results)
-        cavity_settings.v_cav_mv = v_cav_mv
-        cavity_settings.phi_s = phi_s
+        """Compute synchronous phase, accelerating field and acceptances.
 
-    def _compute_cavity_parameters(self, results: dict) -> tuple[float, float]:
-        """Compute the cavity parameters by calling ``_phi_s_func``.
-
-        Parameters
-        ----------
-        results
-            The dictionary of results as returned by the transfer matrix
-            function wrapper.
-
-        Returns
-        -------
-        tuple[float, float]
-            Accelerating voltage in MV and synchronous phase in radians. If the
-            cavity is failed, two ``np.nan`` are returned.
+        Also store these quantities in ``cavity_settings``.
 
         """
         v_cav_mv, phi_s = self._phi_s_func(**results)
-        return v_cav_mv, phi_s
+        cavity_settings.v_cav_mv = v_cav_mv
+        cavity_settings.phi_s = phi_s
+
+        acceptance_phi, acceptance_energy = compute_acceptances(
+            phi_s,
+            cavity_settings.freq_cavity_mhz,
+            getattr(cavity_settings, "w_kin", None),
+            v_cav_mv,
+            length_m,
+            self._beam_kwargs,
+        )
+        cavity_settings.acceptance_phi = acceptance_phi
+        cavity_settings.acceptance_energy = acceptance_energy
 
 
 def _store_entry_phase_in_settings(

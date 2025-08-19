@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.11.x]
+
+## [0.11.0] -- 2025-08-19
+
+### Added
+
+- Calculation of energy and phase acceptances (#5).
+- New `physics` package holding helper physical functions (#6).
+- New plot preset: `acceptance`.
+- Explicit error message when trying to plot some bugged quantities:
+  - Transfer matrix components (TraceWin)
+  - Phase acceptance (TraceWin)
+
+### Fixed
+
+- Objective position was plotted at the wrong place when the x-axis of plot was index of elements.
+- `r_zdelta` components can be `get` and plotted using `transfer_matrix` plot preset.
+- Symmetric plot (`envelope`, `acceptance`) work as expected.
+
 # [0.10.x]
 
 ## [0.10.6] -- 2025-07-04
@@ -55,20 +74,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `Accelerator.get`, `SimulationOutput.get`, `ListOfElements.get` now accept arguments found in `FieldMap`.
-  - *e.g.*: `ListOfElements.get("freq_cavity_mhz")` is now valid.
+  - _e.g._: `ListOfElements.get("freq_cavity_mhz")` is now valid.
 
 ## [0.10.0rc0] -- 2025-05-12
 
 ### Changed
 
 - Refactored the `get` methods.
-    - It may introduce some bugs, do not hesitate to reach me out in case of problem.
+  - It may introduce some bugs, do not hesitate to reach me out in case of problem.
 
 ### Fixed
 
 - `get` refactoring fixed several bugs:
-    - Some `get` methods such as `SimulationOutput.get` did not consider the `phase_space_name` keyword argument.
-    - `get` methods behavior are more consistent.
+  - Some `get` methods such as `SimulationOutput.get` did not consider the `phase_space_name` keyword argument.
+  - `get` methods behavior are more consistent.
 
 # [0.9.x]
 
@@ -106,31 +125,31 @@ In particular, follow advices listed in the great [Scientific Python library dev
 ### Added
 
 - When tagging a version:
-    - The package is built and tested on several platforms, before being released to PyPI.
-    - `CITATION.cff` is automatically updated accordingly.
+  - The package is built and tested on several platforms, before being released to PyPI.
+  - `CITATION.cff` is automatically updated accordingly.
 - Package on `pip` (simpler installation with `pip install lightwin`).
 
 ### Changed
 
 - Data used for examples was moved from `data/example/` to `src/lightwin/data/ads/`.
-    - It can now be imported for testing purposes.
-    - See also: [Including data files](https://learn.scientific-python.org/development/patterns/data-files/)
+  - It can now be imported for testing purposes.
+  - See also: [Including data files](https://learn.scientific-python.org/development/patterns/data-files/)
 
 ## [0.9.0] -- 2025-01-21
 
 ### Added
 
 - CI/CD tasks:
-    - Automatic linting with `pre-commit.ci`.
-    - Automatic checking of common mistakes with `pre-commit.ci`.
-    - Run automatic tests using `pytest` and GitHub workflows.
+  - Automatic linting with `pre-commit.ci`.
+  - Automatic checking of common mistakes with `pre-commit.ci`.
+  - Run automatic tests using `pytest` and GitHub workflows.
 - Badges to quickly see if something went wrong.
 
 ### Changed
 
 - Introduced optional dependencies.
-    - Install them with `pip install -e .[docs]` or `pip install -e .[test]`.
-    - It is recommended to install LightWin with the test optional dependencies.
+  - Install them with `pip install -e .[docs]` or `pip install -e .[test]`.
+  - It is recommended to install LightWin with the test optional dependencies.
 
 # [0.8.x]
 
@@ -151,7 +170,6 @@ In particular, follow advices listed in the great [Scientific Python library dev
 - Properly handle opening/closing log files.
 - Display of some objective values.
 
-
 ## [0.8.2] 2024-11-11
 
 ### Added
@@ -165,7 +183,6 @@ In particular, follow advices listed in the great [Scientific Python library dev
 - Utility scripts in `ui/workflow_setup.py` defining generic LightWin workflows.
 - User can provide `fault_scenario_factory` with a `ObjectivesFactory` to define objectives without altering the source code.
 - The `add_objective` in the [plots] TOML table to show position of objective.
-
 
 ## [0.8.0b4] 2024-11-08
 
@@ -213,7 +230,7 @@ In particular, follow advices listed in the great [Scientific Python library dev
 
 ### Changed
 
-- Creation of `DatLine` object, holding a line of the ``.dat`` file. Solves several bugs, e.g. with hyphens in personalized names.
+- Creation of `DatLine` object, holding a line of the `.dat` file. Solves several bugs, e.g. with hyphens in personalized names.
 - Makefile for docs is up-to-date. Instructions in README.
 - Changed location of `RfField` object, now in `core/em_field/rf_field`.
 - The solver `Envelope1D` is now `CyEnvelope1D` when user wants Cython.
@@ -229,9 +246,9 @@ In particular, follow advices listed in the great [Scientific Python library dev
 ### Deleted
 
 - Constants were removed from the config module to fix circular dependency and bad design issues.
- - `BeamCalculator` objects now need to be given the `beam` configuration dict. Easiest is to instantiate `BeamCalculatorFactory` with `**config`.
- - `Accelerator` will also use data from `beam`. Instantiate `AcceleratorFactory` with `**config`.
- - `SimulationOutputFactory` instantiated with `_beam_kwargs`.
+- `BeamCalculator` objects now need to be given the `beam` configuration dict. Easiest is to instantiate `BeamCalculatorFactory` with `**config`.
+- `Accelerator` will also use data from `beam`. Instantiate `AcceleratorFactory` with `**config`.
+- `SimulationOutputFactory` instantiated with `_beam_kwargs`.
 
 # [0.7.x]
 
@@ -287,10 +304,10 @@ In particular, follow advices listed in the great [Scientific Python library dev
 ### Changed
 
 - The code is packaged.
- - Installation instructions were updated.
- - It is not necessary to add LightWin to your `PATH`.
- - Imports of LightWin modules and functions must be imported from `lightwin`: `from lightwin.<foo> import <fee>`.
- - Cython compilation is automatic.
+- Installation instructions were updated.
+- It is not necessary to add LightWin to your `PATH`.
+- Imports of LightWin modules and functions must be imported from `lightwin`: `from lightwin.<foo> import <fee>`.
+- Cython compilation is automatic.
 
 # [0.6.x]
 
@@ -311,15 +328,15 @@ In particular, follow advices listed in the great [Scientific Python library dev
 
 - Basic support for `ADJUST` commands
 - New functionality: pass beauty.
- - After a `FaultScenario` is fixed, use `insert_beauty_pass_instructions` from `util.beauty_pass` to add diagnostics and adjust and let TraceWin refine the settings.
- - Prefer providing `TraceWin` with `cancel_matchingP = true` (would be too long).
- - Do NOT provide `cancel_matching = true` nor `cancel_matching = false`. Just drop this argument out (FIXME).
- - Compensating, rephased and failed cavities will be incorrectly displayed as nominal (green) cavities in the output figures (FIXME).
+- After a `FaultScenario` is fixed, use `insert_beauty_pass_instructions` from `util.beauty_pass` to add diagnostics and adjust and let TraceWin refine the settings.
+- Prefer providing `TraceWin` with `cancel_matchingP = true` (would be too long).
+- Do NOT provide `cancel_matching = true` nor `cancel_matching = false`. Just drop this argument out (FIXME).
+- Compensating, rephased and failed cavities will be incorrectly displayed as nominal (green) cavities in the output figures (FIXME).
 
 ### Fixed
 
 - Personalized name of field maps 1100, 100 and of quadrupoles are now exported in output dat file.
- - Note that this is a temporary patch, a more robust solution will be implemented in future updates.
+- Note that this is a temporary patch, a more robust solution will be implemented in future updates.
 
 ## [0.6.19] 2024-05-27
 
@@ -334,7 +351,7 @@ In particular, follow advices listed in the great [Scientific Python library dev
 - `Variable`/`Constraint` limits can be changed after creation with the `change_limits` method.
 - You can override the default kwargs in the `OptimisationAlgorithm` actual algo.
 - Support for pickling/unpickling objects.
-    - In other words: some objects such as `Accelerator` or `SimulationOutput` can be saved in binary format, so they can be reloaded and reused in a later Python instance without the hassle of recreating and recomputing everything.
+  - In other words: some objects such as `Accelerator` or `SimulationOutput` can be saved in binary format, so they can be reloaded and reused in a later Python instance without the hassle of recreating and recomputing everything.
 
 ### Changed
 
@@ -356,13 +373,14 @@ In particular, follow advices listed in the great [Scientific Python library dev
 
 - New typing features impose the use of Python 3.12.
 - The `idx` key in the `wtf` dictionary is now called `id_nature`, which can be one of the following:
-    - `cavity`: we consider that `failed = [[10]]` means "the 10th cavity is down".
-    - `element`: we consider that `failed = [[10]]` means "the 10th element is down". If the 10th element is not a cavity, an error is raised.
-    - `name`: we consider that `failed = [["FM10"]]` means "the first element which name is 'FM10' is down".
+  - `cavity`: we consider that `failed = [[10]]` means "the 10th cavity is down".
+  - `element`: we consider that `failed = [[10]]` means "the 10th element is down". If the 10th element is not a cavity, an error is raised.
+  - `name`: we consider that `failed = [["FM10"]]` means "the first element which name is 'FM10' is down".
 - With the `l neighboring lattices` strategy, `l` can now be odd.
 - You can provide `tie_strategy = "downstream first"` or `tie_strategy = "upstream first"` to favour up/downstream cavities when there is a tie in distance between compensating cavities/lattices and failed.
 
 ### Fixed
+
 - Colors in Evaluator plots are now reset between executions
 
 ## [0.6.17] 2024-04-19
@@ -386,10 +404,10 @@ In particular, follow advices listed in the great [Scientific Python library dev
 ### Deprecated
 
 - Some design space names are not to be used.
- - `"unconstrained"` -> `"abs_phase_amplitude"`
- - `"unconstrained_rel"` -> `"rel_phase_amplitude"`
- - `"constrained_sync_phase"` -> `"abs_phase_amplitude_with_constrained_sync_phase"`
- - `"sync_phase_as_variable"` -> `"sync_phase_amplitude"`
+- `"unconstrained"` -> `"abs_phase_amplitude"`
+- `"unconstrained_rel"` -> `"rel_phase_amplitude"`
+- `"constrained_sync_phase"` -> `"abs_phase_amplitude_with_constrained_sync_phase"`
+- `"sync_phase_as_variable"` -> `"sync_phase_amplitude"`
 
 ### Removed
 
@@ -416,7 +434,6 @@ In particular, follow advices listed in the great [Scientific Python library dev
 
 - `FIELD_MAP 70` does not raise error (warning issued with `Envelope3D`: no transverse tracking).
 - `SUPERPOSE_MAP` will be implemented for 1D maps (warning issued with `Envelope3D`: no transverse tracking).
-
 
 <!-- ## [0.0.0] 1312-01-01 -->
 <!---->

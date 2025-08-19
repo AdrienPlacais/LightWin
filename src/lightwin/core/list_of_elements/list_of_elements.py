@@ -366,14 +366,37 @@ class ListOfElements(list):
         match id_nature:
             case "cavity":
                 assert isinstance(ids, int)
-                output = self.l_cav[ids]
+                try:
+                    output = self.l_cav[ids]
+                except IndexError:
+                    logging.error(
+                        f"{ids = } is outside of list of elements of length "
+                        f"{len(self)}"
+                    )
+                    raise IndexError
+
             case "element":
                 assert isinstance(ids, int)
-                output = self[ids]
+                try:
+                    output = self[ids]
+                except IndexError:
+                    logging.error(
+                        f"{ids = } is outside of list of cavities of length "
+                        f"{len(self.l_cav)}"
+                    )
+                    raise IndexError
             case "name":
                 name = ids
                 assert isinstance(name, str)
-                output = first(self, condition=lambda elt: elt.name == name)
+                try:
+                    output = first(
+                        self, condition=lambda elt: elt.name == name
+                    )
+                except StopIteration:
+                    logging.error(
+                        f"No element named {name} was found in self."
+                    )
+                    raise StopIteration
             case _:
                 raise OSError(f"{id_nature = } not understood.")
         return output

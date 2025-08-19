@@ -60,6 +60,13 @@ PLOTS_CONFIG = (
         is_mandatory=False,
     ),
     KeyValConfSpec(
+        key="acceptance",
+        types=(bool,),
+        description="Plot acceptances?",
+        default_value=False,
+        is_mandatory=False,
+    ),
+    KeyValConfSpec(
         key="kwargs",
         types=(dict,),
         description="kwargs passed to |axplot|.",

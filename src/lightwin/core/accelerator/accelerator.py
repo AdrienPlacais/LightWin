@@ -19,7 +19,7 @@ import pandas as pd
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from lightwin.core.elements.element import POS_T, Element
+from lightwin.core.elements.element import Element
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.helper import (
     elt_at_this_s_idx,
@@ -33,6 +33,7 @@ from lightwin.util.typing import (
     EXPORT_PHASES_T,
     GETTABLE_ACCELERATOR_T,
     GETTABLE_SIMULATION_OUTPUT,
+    POS_T,
 )
 
 

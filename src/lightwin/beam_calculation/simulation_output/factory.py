@@ -13,10 +13,10 @@ from functools import partial
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, POS_T, Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, Element
 from lightwin.core.list_of_elements.helper import equivalent_elt
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
-from lightwin.util.typing import BeamKwargs
+from lightwin.util.typing import POS_T, BeamKwargs
 
 
 @dataclass
