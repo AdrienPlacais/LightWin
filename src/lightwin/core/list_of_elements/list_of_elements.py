@@ -42,6 +42,7 @@ from lightwin.util.typing import (
     CONCATENABLE_ELTS,
     EXPORT_PHASES_T,
     GETTABLE_ELTS_T,
+    REFERENCE_PHASES_T,
 )
 
 element_id = int | str
@@ -253,7 +254,7 @@ class ListOfElements(list):
         for i, elt in enumerate(elts_with_a_number):
             elt.idx["elt_idx"] = i
 
-    def force_reference_phases_to(self, new_reference_phase: str) -> None:
+    def force_reference_phases_to(self, reference: REFERENCE_PHASES_T) -> None:
         """Change the reference phase of the cavities in ``self``.
 
         This method is called by the :class:`.BeamCalculator`. It is used after
@@ -264,9 +265,9 @@ class ListOfElements(list):
         """
         for cavity in self.l_cav:
             settings = cavity.cavity_settings
-            if settings.reference == new_reference_phase:
+            if settings.reference == reference:
                 continue
-            settings.reference = new_reference_phase
+            settings.set_reference(reference)
 
     def store_settings_in_dat(
         self,

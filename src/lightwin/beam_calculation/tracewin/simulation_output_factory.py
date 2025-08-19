@@ -1,10 +1,12 @@
 """Define a class to easily generate the :class:`.SimulationOutput`."""
 
 import logging
+import math
 from abc import ABCMeta
 from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
+from typing import TypedDict
 
 import numpy as np
 from numpy.typing import NDArray
@@ -70,7 +72,6 @@ def _load_results_generic(
 
     Returns
     -------
-    results : dict[str, numpy.ndarray]
         Dictionary containing the raw outputs from TraceWin.
 
     """
@@ -98,8 +99,7 @@ def _load_results_generic(
 def _set_energy_related_results(
     results: dict[str, NDArray], **beam_kwargs: float | NDArray
 ) -> dict[str, NDArray]:
-    """
-    Compute the energy from ``gama-1`` column.
+    """Compute the energy from ``gama-1`` column.
 
     Parameters
     ----------
@@ -110,7 +110,6 @@ def _set_energy_related_results(
 
     Returns
     -------
-    results : dict[str, numpy.ndarray]
         Same as input, but with ``gamma``, ``w_kin``, ``beta`` keys defined.
 
     """
@@ -129,8 +128,7 @@ def _set_phase_related_results(
     z_in: float,
     phi_in: float,
 ) -> dict[str, NDArray]:
-    """
-    Compute the phases, pos, frequencies.
+    """Compute the phases, pos, frequencies.
 
     Also shift position and phase if :class:`.ListOfElements` under study does
     not start at the beginning of the linac.
@@ -151,12 +149,10 @@ def _set_phase_related_results(
 
     Returns
     -------
-    results : dict[str, numpy.ndarray]
         Same as input, but with ``lambda`` and ``phi_abs`` keys defined.
-        ``phi_abs``
-        and ``z(m)`` keys are modified in order to be 0. at the beginning of
-        the linac, not at the beginning of the :class:`.ListOfElements` under
-        study.
+        ``phi_abs`` and ``z(m)`` keys are modified in order to be null the
+        beginning of the linac (not at the beginning of the
+        :class:`.ListOfElements` under study!).
 
     """
     results["z(m)"] += z_in
@@ -180,8 +176,7 @@ def _set_phase_related_results(
 # Handle errors
 # =============================================================================
 def _remove_incomplete_line(filepath: Path) -> None:
-    """
-    Remove incomplete line from ``.out`` file.
+    """Remove incomplete line from ``OUT`` file.
 
     .. todo::
         fix possible unbound error for ``n_columns``.
@@ -205,7 +200,7 @@ def _remove_incomplete_line(filepath: Path) -> None:
     if i_last_valid == -1:
         return
     logging.warning(
-        f"Not enough columns in `.out` after line {i_last_valid}. "
+        f"Not enough columns in `OUT` after line {i_last_valid}. "
         "Removing all lines after this one..."
     )
     with open(filepath, "w", encoding="utf-8") as file:
@@ -217,7 +212,7 @@ def _remove_incomplete_line(filepath: Path) -> None:
 
 def _add_dummy_data(filepath: Path, elts: ListOfElements) -> None:
     """
-    Add dummy data at the end of the ``.out`` to reach end of linac.
+    Add dummy data at the end of the ``OUT`` to reach end of linac.
 
     We also round the column 'z', to avoid a too big mismatch between the z
     column and what we should have.
@@ -234,7 +229,7 @@ def _add_dummy_data(filepath: Path, elts: ListOfElements) -> None:
 
         if last_element_in_file is not elts[-1]:
             logging.warning(
-                "Incomplete `.out` file. Trying to complete with "
+                "Incomplete `OUT` file. Trying to complete with "
                 "dummy data..."
             )
             elts_to_add = elts[last_idx_in_file:]
@@ -251,64 +246,72 @@ def _add_dummy_data(filepath: Path, elts: ListOfElements) -> None:
 # =============================================================================
 # Cavity parameters
 # =============================================================================
-def _load_cavity_parameters(
+def _load_parameters_of_cavities(
     path_cal: Path, filename: Path
-) -> dict[str, NDArray]:
-    """
-    Get the cavity parameters calculated by TraceWin.
+) -> dict[str, NDArray[np.float64]]:
+    """Get the cavity parameters calculated by TraceWin.
 
     Parameters
     ----------
     path_cal :
         Path to the folder where the cavity parameters file is stored.
     filename :
-        The name of the cavity parameters file produced by TraceWin.
-
+        The name of the cavity parameters file produced by TraceWin, generally
+        ``Cav_set_point_res.dat``.
     Returns
     -------
-    cavity_param : dict[float, numpy.ndarray]
-        Contains the cavity parameters.
+        Contains the cavity parameters. The keys should be:
+
+        - ``"Cav#"``
+        - ``"SyncPhase_Ref[°]"``
+        - ``"SyncPhase[°]"``
+        - ``"Voltage_ref[MV]"``
+        - ``"Voltage[MV]"``
+        - ``"RF_phase[°]"``
 
     """
     f_p = Path(path_cal, filename)
     n_lines_header = 1
 
+    headers = None
     with open(f_p, encoding="utf-8") as file:
         for i, line in enumerate(file):
             if i == n_lines_header - 1:
                 headers = line.strip().split()
                 break
+    assert headers is not None, (
+        "There was an error trying to read the cavity parameters file produced"
+        f" by TraceWin: {f_p}, no header was found"
+    )
 
     out = np.loadtxt(f_p, skiprows=n_lines_header)
-    cavity_parameters = {key: out[:, i] for i, key in enumerate(headers)}
+    parameters = {key: out[:, i] for i, key in enumerate(headers)}
     logging.debug(f"successfully loaded {f_p}")
-    return cavity_parameters
+    return parameters
 
 
-def _cavity_parameters_uniform_with_envelope1d(
-    cavity_parameters: dict[str, NDArray], n_elts: int
-) -> list[None | dict[str, float]]:
-    """Transform the dict so we have the same format as Envelope1D."""
-    cavity_numbers = cavity_parameters["Cav#"].astype(int)
+def _uniformize_parameters_of_cavities(
+    parameters: dict[str, NDArray], n_elts: int
+) -> dict[str, list[float | None]]:
+    """Transform the dict so we have consistent format with other solvers."""
+    cavity_numbers = parameters["Cav#"].astype(int)
     v_cav, phi_s, phi_0 = [], [], []
     cavity_idx = 0
     for elt_idx in range(1, n_elts + 1):
         if elt_idx not in cavity_numbers:
-            v_cav.append(None), phi_s.append(None), phi_0.append(None)
+            v_cav.append(None)
+            phi_s.append(None)
+            phi_0.append(None)
             continue
 
-        v_cav.append(cavity_parameters["Voltage[MV]"][cavity_idx])
-        phi_s.append(np.deg2rad(cavity_parameters["SyncPhase[°]"][cavity_idx]))
-        phi_0.append(np.deg2rad(cavity_parameters["RF_phase[°]"][cavity_idx]))
+        v_cav.append(float(parameters["Voltage[MV]"][cavity_idx]))
+        phi_s.append(math.radians(parameters["SyncPhase[°]"][cavity_idx]))
+        phi_0.append(math.radians(parameters["RF_phase[°]"][cavity_idx]))
 
         cavity_idx += 1
 
-    compliant_cavity_parameters = {
-        "v_cav_mv": v_cav,
-        "phi_s": phi_s,
-        "phi_0": phi_0,
-    }
-    return compliant_cavity_parameters
+    compliant_parameters = {"v_cav_mv": v_cav, "phi_s": phi_s, "phi_0": phi_0}
+    return compliant_parameters
 
 
 @dataclass
@@ -365,7 +368,6 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds all relatable data in a consistent way between the different
             :class:`.BeamCalculator` objects.
 
@@ -393,7 +395,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             beam=self._beam_kwargs,
         )
 
-        cavity_parameters = self._create_cavity_parameters(path_cal, len(elts))
+        cav_params = self._get_parameters_of_cavities(path_cal, len(elts))
 
         element_to_index = self._generate_element_to_index_func(elts)
 
@@ -413,7 +415,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             is_3d=True,
             z_abs=results["z(m)"],
             synch_trajectory=synch_trajectory,
-            cav_params=cavity_parameters,
+            cav_params=cav_params,
             beam_parameters=beam_parameters,
             element_to_index=element_to_index,
             transfer_matrix=transfer_matrix,
@@ -456,7 +458,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
                 )
             )
 
-    def _create_cavity_parameters(
+    def _get_parameters_of_cavities(
         self,
         path_cal: Path,
         n_elts: int,
@@ -474,17 +476,14 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             Number of elements under study.
         filename :
             The name of the cavity parameters file produced by TraceWin. The
-            default is Path('Cav_set_point_res.dat').
+            default is ``Path('Cav_set_point_res.dat')``.
 
         Returns
         -------
-        cavity_param : dict[str, list[float | None]]
-            Contains the cavity parameters. Keys are ``'v_cav_mv'`` and
-            ``'phi_s'``.
+            Contains the cavity parameters. Keys are ``"v_cav_mv"``,
+            ``"phi_s"``, ``"phi_0"``.
 
         """
-        cavity_parameters = _load_cavity_parameters(path_cal, filename)
-        cavity_parameters = _cavity_parameters_uniform_with_envelope1d(
-            cavity_parameters, n_elts
-        )
-        return cavity_parameters
+        parameters = _load_parameters_of_cavities(path_cal, filename)
+        parameters = _uniformize_parameters_of_cavities(parameters, n_elts)
+        return parameters

@@ -19,9 +19,6 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.beam_calculation.tracewin.tracewin import TraceWin
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.cavity_settings import (
-    transfer_reference_phase,
-)
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.evaluator.list_of_simulation_output_evaluators import (
@@ -357,8 +354,10 @@ class FaultScenario(list):
         fix_settings = (x.cavity_settings for x in self.fix_acc.l_cav)
 
         for ref, fix in zip(ref_settings, fix_settings):
-            transfer_reference_phase(
-                giver=ref, receiver=fix, reference_phase=self._reference_phase
+            fix.set_reference(
+                reference=self._reference_phase,
+                phi_ref=getattr(ref, self._reference_phase),
+                ensure_can_be_calculated=False,
             )
 
     @property

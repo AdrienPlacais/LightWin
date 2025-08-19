@@ -126,8 +126,9 @@ class CavitySettings:
         """
         self.k_e = k_e
         self._reference: REFERENCE_PHASES_T
-        self.reference = reference
-        self.phi_ref = phi
+        self.set_reference(
+            reference, phi_ref=phi, ensure_can_be_calculated=False
+        )
 
         self._phi_0_abs: float
         self._phi_0_rel: float
@@ -387,23 +388,58 @@ class CavitySettings:
         not in the ``__init__``, we also check that the new reference phase can
         be created.
 
+        .. deprecated:: 0.11.0
+           Prefer using :meth:`.CavitySettings.set_reference`.
+
         """
-        assert (
-            value in REFERENCE_PHASES
-        ), f"{value = } not in {REFERENCE_PHASES = }"
+        logging.warning(
+            "Deprecated method, prefer using CavitySettings.set_reference"
+        )
+        return self.set_reference(value)
 
-        object_under_creation = not hasattr(self, "_reference")
-        self._reference = value
+    def set_reference(
+        self,
+        reference: REFERENCE_PHASES_T,
+        phi_ref: float | None = None,
+        ensure_can_be_calculated: bool = True,
+    ) -> None:
+        """Change the reference phase.
 
-        if object_under_creation:
+        Parameters
+        ----------
+        reference :
+            The name of the new reference.
+        phi_ref :
+            The new value for the reference phase in :unit:`rad`.
+        ensure_can_be_calculated :
+            To check that the new reference phase is already set or can be
+            calculated.
+
+        Raises
+        ------
+        MissingAttributeError
+            When ``ensure_can_be_calculated = True`` and the new reference
+            phase cannot be calculated.
+
+        """
+        if reference not in REFERENCE_PHASES:
+            raise ValueError(f"{reference = } not in {REFERENCE_PHASES = }")
+
+        self._reference = reference
+
+        if phi_ref is not None:
+            self.phi_ref = phi_ref
+
+        if not ensure_can_be_calculated:
             return
 
         try:
             self.phi_ref
         except MissingAttributeError as e:
             raise MissingAttributeError(
-                f"The new reference phase ({value}) cannot be calculated.\n{e}"
-            )
+                f"The new reference phase ({reference}) cannot be "
+                f"calculated."
+            ) from e
 
     @property
     def phi_ref(self) -> float:
@@ -412,23 +448,22 @@ class CavitySettings:
         assert isinstance(phi, float), f"Reference phase = {phi} is invalid."
         return phi
 
+    @phi_ref.setter
+    def phi_ref(self, value: float) -> None:
+        """Update the value of the reference entry phase, delete other phases.
+
+        We delete non-reference phase to force their re-calculation.
+
+        """
+        self._delete_non_reference_phases()
+        setattr(self, self.reference, value)
+
     def _delete_non_reference_phases(self) -> None:
         """Reset the phases that are not the reference to None."""
         for phase in REFERENCE_PHASES:
             if phase == self.reference:
                 continue
             delattr(self, phase)
-
-    @phi_ref.setter
-    def phi_ref(self, value: float) -> None:
-        """Update the value of the reference entry phase.
-
-        Also delete the other ones that are now outdated to avoid any
-        confusion.
-
-        """
-        self._delete_non_reference_phases()
-        setattr(self, self.reference, value)
 
     # =============================================================================
     # Status
@@ -751,7 +786,14 @@ class CavitySettings:
         """
         if hasattr(self, "_v_cav_mv"):
             return self._v_cav_mv
-        raise NotImplementedError()
+        try:
+            self.phi_s
+            return self._v_cav_mv
+        except MissingAttributeError as e:
+            raise MissingAttributeError(
+                "Calculating phi_s should set self.v_cav_mv as well, but this"
+                " operation failed with error:"
+            ) from e
 
     @v_cav_mv.setter
     def v_cav_mv(self, value: float) -> None:
@@ -875,28 +917,3 @@ class CavitySettings:
         """Delete the energy acceptance."""
         if hasattr(self, "_acceptance_energy"):
             del self._acceptance_energy
-
-
-def transfer_reference_phase(
-    giver: CavitySettings,
-    receiver: CavitySettings,
-    reference_phase: REFERENCE_PHASES_T,
-) -> None:
-    """Give ``giver`` reference phase to ``receiver``.
-
-    This is used in :class:`.FaultScenario` when we want the broken linac to
-    use reference linac's reference phase.
-
-    Parameters
-    ----------
-    giver :
-        The original settings.
-    receiver :
-        New settings.
-    reference_phase :
-        Type of phase that ``receiver`` should obey.
-
-    """
-    phi_ref = getattr(giver, reference_phase)
-    setattr(receiver, reference_phase, phi_ref)
-    receiver.reference = reference_phase

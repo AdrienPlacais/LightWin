@@ -96,7 +96,7 @@ class SimulationOutput:
 
     synch_trajectory: ParticleFullTrajectory
 
-    cav_params: dict[str, float | None] | None
+    cav_params: dict[str, list[float | None]] | None
 
     beam_parameters: BeamParameters
 
