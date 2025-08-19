@@ -16,7 +16,6 @@ from lightwin.optimisation.design_space_specs import (
     DESIGN_SPACE_FROM_FILE,
 )
 from lightwin.optimisation.wtf_specs import (
-    WTF_CONFIGS,
     WTF_K_OUT_OF_N,
     WTF_L_NEIGHBORING_LATTICES,
     WTF_MANUAL,
@@ -31,9 +30,9 @@ def write_specs_to_csv(
 
     Parameters
     ----------
-    specs_list : Sequence[KeyValConfSpec]
+    specs_list :
         List of :class:`.KeyValConfSpec` objects.
-    output_file : Path
+    output_file :
         Path to the output CSV file.
 
     """

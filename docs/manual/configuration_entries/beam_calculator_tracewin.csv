@@ -1,86 +1,86 @@
 Entry,Type,Description,Allowed values,Mandatory?
-algo,``int``,"Optimization using algorithm (0: Owner, 1: Simplex, 2: Diff. evo.)",,❌
-alpx1,``float``,Input twiss parameter alpXX’ of main beam,,❌
-alpx2,``float``,Input twiss parameter alpXX’ of second beam,,❌
-alpy1,``float``,Input twiss parameter alpYY’ of main beam,,❌
-alpy2,``float``,Input twiss parameter alpYY’ of second beam,,❌
-alpz1,``float``,Input twiss parameter alpZZ’ of main beam,,❌
-alpz2,``float``,Input twiss parameter alpZZ’ of second beam,,❌
-betx1,``float``,Input twiss parameter betXX’ of main beam,,❌
-betx2,``float``,Input twiss parameter betXX’ of second beam,,❌
-bety1,``float``,Input twiss parameter betYY’ of main beam,,❌
-bety2,``float``,Input twiss parameter betYY’ of second beam,,❌
-betz1,``float``,Input twiss parameter betZZ’ of main beam,,❌
-betz2,``float``,Input twiss parameter betZZ’ of second beam,,❌
-cancel_matching,``bool``,Cancel all matching procedure (Envelope),,❌
-cancel_matchingP,``bool``,Cancel all matching procedure (Tracking),,❌
-charge1,``float``,Input particle charge state of main beam,,❌
-charge2,``float``,Input particle charge state of second beam,,❌
-current1,``float``,Input beam current (mA) of main beam,,❌
-current2,``float``,Input beam current (mA) of second beam,,❌
-dst_file1,``str`` or ``Path``,Full name Input dst of main beam (*),,❌
-dst_file2,``str`` or ``Path``,Full name Input dst of second beam (*),,❌
-duty1,``float``,Duty cycle of main beam,,❌
-duty2,``float``,Duty cycle of second beam,,❌
-dw1,``float``,Input Dw of main beam,,❌
-dw2,``float``,Input Dw of second beam,,❌
-eln1,``float``,Input ZZ’ emittance (mm.mrad) of main beam,,❌
-eln2,``float``,Input ZZ’ emittance (mm.mrad) of second beam,,❌
-emit_e_limit,``float``,Particle is excluded form emit. calculation if \|W-Ws\|/ Ws > emit_e_limit,,❌
-emit_p_limit,``float``,Particle is excluded form emit. calculation if \|Ф- Ф s\| > emit_p_limit,,❌
-energy1,``float``,Input kinetic energy (MeV) of main beam,,❌
-energy2,``float``,Input kinetic energy (MeV) of second beam,,❌
-etnx1,``float``,Input XX’ emittance (mm.mrad) of main beam,,❌
-etnx2,``float``,Input XX’ emittance (mm.mrad) of second beam,,❌
-etny1,``float``,Input YY’ emittance (mm.mrad) of main beam,,❌
-etny2,``float``,Input YY’ emittance (mm.mrad) of second beam,,❌
-export_phase,``str``,"The type of phases that should be exported in the final DAT file. Note that ``'as_in_original_dat'`` is not implemented yet, but ``'as_in_settings'`` should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.","('as_in_original_dat', 'as_in_settings', 'phi_0_abs', 'phi_0_rel', 'phi_s')",❌
-freq1,``float``,Input beam frequency (MHz) of main beam,,❌
-freq2,``float``,Input beam frequency (MHz) of second beam,,❌
-hide,``bool``,"Hide the GUI, or cancel console output (no parameter).",,✅
-input_dist_type,``int``,"Input distribution type from 1 to 5, see GUI menu","range(1, 6)",❌
-long_dist_mask,``int``,"Mask of the longitudinal input distribution from 1 to 7, see GUI menu","range(1, 8)",❌
-lost_e_limit,``float``,Particle is lost if \|W-Ws\| > lost_e_limit,,❌
-lost_p_limit,``float``,Particle is lost if \|Ф- Ф s\| > lost_p_limit,,❌
-mass1,``float``,Input beam mass (eV) of main beam,,❌
-mass2,``float``,Input beam mass (eV) of second beam,,❌
-nbr_part1,``int``,Number of particle of main beam,,❌
-nbr_part2,``int``,Number of particle of second beam,,❌
-nbr_thread,``int``,Set the max. number of core/thread used,,❌
-partran,``int`` or ``bool``,To activate/deactivate partran tracking.,"(0, 1, True, False)",❌
-part_step,``int``,Partran calculation step per meter (per beta.lambda if < 0),,❌
-picnic_2d,``bool``,Space-charge routine is defined as picnic2D,,❌
-picnic_3d,``bool``,Space-charge routine is defined as picnic3D,,❌
-picnic_r_mesh,``float``,R mesh of picnic 2D,,❌
-picnic_xy_mesh,``float``,X&Y mesh of picnic 3D,,❌
-picnic_z_mesh,``float``,Z mesh of picnic 3D,,❌
-picnir_z_mesh,``float``,Z mesh of picnir 2D,,❌
-random_seed,``int``,Set the random seed,,❌
-spreadw1,``float``,Input spread energy for CW beam of main beam,,❌
-spreadw2,``float``,Input spread energy for CW beam of second beam,,❌
-synoptic_file,``str`` or ``Path``,"Save the geometric layout at (entance (=1), middle (=2), exit (=3) of elements. (See “Synoptic” tools for file name).",,❌
-tab_file,``str`` or ``Path``,Save to file the data sheet at the end of calcul (by default in calculation directory).,,❌
-toutatis,``float`` or ``bool``,Force or avoid Toutatis simulation (1 / 0),"(0, 1, True, False)",❌
-trans_dist_mask,``int``,"Mask of the transverse input distribution from 1 to 7, see GUI menu","range(1, 8)",❌
-upgrade,``str``,To update LightWin,,❌
-use_dst_file,``bool``,dst file is used as input beam distribution,,❌
-vfac,``float``,"Change RFQ Ucav (ex : “vfac 0.5”, half reduce of Ucav)",,❌
-x1,``float``,Input X position of main beam,,❌
-x2,``float``,Input X position of second beam,,❌
-xp1,``float``,Input X angle of main beam,,❌
-xp2,``float``,Input X angle of second beam,,❌
-y1,``float``,Input Y position of main beam,,❌
-y2,``float``,Input Y position of second beam,,❌
-yp1,``float``,Input Y angle of main beam,,❌
-yp2,``float``,Input Y angle of second beam,,❌
-z1,``float``,Input Z position of main beam,,❌
-z2,``float``,Input Z position of second beam,,❌
-zp1,``float``,Input Z angle of main beam,,❌
-zp2,``float``,Input Z angle of second beam,,❌
-executable,``str`` or ``Path``,"Direct path to the TraceWin executable. If given, will override the definition in the machine_config_file.",,❌
-flag_phi_abs,``bool``,If the field maps phases should be absolute (no implicit rephasing after a failure).,,❌
-ini_path,``str`` or ``Path``,Path to the ``.ini`` TraceWin file.,,✅
-machine_config_file,``str`` or ``Path``,Path to a file holding the paths to TW executables,,✅
-machine_name,``str``,"Name of current machine. Must be a table name in ``machine_config_file``. By default, do not provide it and let LightWin handle this part.",,❌
-simulation_type,``str``,A key in the machine_config.toml file,,✅
-tool,``str``,Name of the tool.,"('TraceWin', 'tracewin')",✅
+`algo`,``int``,"Optimization using algorithm (0: Owner, 1: Simplex, 2: Diff. evo.)",,❌
+`alpx1`,``float``,Input twiss parameter alpXX’ of main beam,,❌
+`alpx2`,``float``,Input twiss parameter alpXX’ of second beam,,❌
+`alpy1`,``float``,Input twiss parameter alpYY’ of main beam,,❌
+`alpy2`,``float``,Input twiss parameter alpYY’ of second beam,,❌
+`alpz1`,``float``,Input twiss parameter alpZZ’ of main beam,,❌
+`alpz2`,``float``,Input twiss parameter alpZZ’ of second beam,,❌
+`betx1`,``float``,Input twiss parameter betXX’ of main beam,,❌
+`betx2`,``float``,Input twiss parameter betXX’ of second beam,,❌
+`bety1`,``float``,Input twiss parameter betYY’ of main beam,,❌
+`bety2`,``float``,Input twiss parameter betYY’ of second beam,,❌
+`betz1`,``float``,Input twiss parameter betZZ’ of main beam,,❌
+`betz2`,``float``,Input twiss parameter betZZ’ of second beam,,❌
+`cancel_matching`,``bool``,Cancel all matching procedure (Envelope),,❌
+`cancel_matchingP`,``bool``,Cancel all matching procedure (Tracking),,❌
+`charge1`,``float``,Input particle charge state of main beam,,❌
+`charge2`,``float``,Input particle charge state of second beam,,❌
+`current1`,``float``,Input beam current (mA) of main beam,,❌
+`current2`,``float``,Input beam current (mA) of second beam,,❌
+`dst_file1`,``str`` or ``Path``,Full name Input dst of main beam (*),,❌
+`dst_file2`,``str`` or ``Path``,Full name Input dst of second beam (*),,❌
+`duty1`,``float``,Duty cycle of main beam,,❌
+`duty2`,``float``,Duty cycle of second beam,,❌
+`dw1`,``float``,Input Dw of main beam,,❌
+`dw2`,``float``,Input Dw of second beam,,❌
+`eln1`,``float``,Input ZZ’ emittance (mm.mrad) of main beam,,❌
+`eln2`,``float``,Input ZZ’ emittance (mm.mrad) of second beam,,❌
+`emit_e_limit`,``float``,Particle is excluded form emit. calculation if \|W-Ws\|/ Ws > emit_e_limit,,❌
+`emit_p_limit`,``float``,Particle is excluded form emit. calculation if \|Ф- Ф s\| > emit_p_limit,,❌
+`energy1`,``float``,Input kinetic energy (MeV) of main beam,,❌
+`energy2`,``float``,Input kinetic energy (MeV) of second beam,,❌
+`etnx1`,``float``,Input XX’ emittance (mm.mrad) of main beam,,❌
+`etnx2`,``float``,Input XX’ emittance (mm.mrad) of second beam,,❌
+`etny1`,``float``,Input YY’ emittance (mm.mrad) of main beam,,❌
+`etny2`,``float``,Input YY’ emittance (mm.mrad) of second beam,,❌
+`export_phase`,``str``,"The type of phases that should be exported in the final DAT file. Note that ``'as_in_original_dat'`` is not implemented yet, but ``'as_in_settings'`` should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.","('as_in_original_dat', 'as_in_settings', 'phi_0_abs', 'phi_0_rel', 'phi_s')",❌
+`freq1`,``float``,Input beam frequency (MHz) of main beam,,❌
+`freq2`,``float``,Input beam frequency (MHz) of second beam,,❌
+`hide`,``bool``,"Hide the GUI, or cancel console output (no parameter).",,✅
+`input_dist_type`,``int``,"Input distribution type from 1 to 5, see GUI menu","range(1, 6)",❌
+`long_dist_mask`,``int``,"Mask of the longitudinal input distribution from 1 to 7, see GUI menu","range(1, 8)",❌
+`lost_e_limit`,``float``,Particle is lost if \|W-Ws\| > lost_e_limit,,❌
+`lost_p_limit`,``float``,Particle is lost if \|Ф- Ф s\| > lost_p_limit,,❌
+`mass1`,``float``,Input beam mass (eV) of main beam,,❌
+`mass2`,``float``,Input beam mass (eV) of second beam,,❌
+`nbr_part1`,``int``,Number of particle of main beam,,❌
+`nbr_part2`,``int``,Number of particle of second beam,,❌
+`nbr_thread`,``int``,Set the max. number of core/thread used,,❌
+`partran`,``int`` or ``bool``,To activate/deactivate partran tracking.,"(0, 1, True, False)",❌
+`part_step`,``int``,Partran calculation step per meter (per beta.lambda if < 0),,❌
+`picnic_2d`,``bool``,Space-charge routine is defined as picnic2D,,❌
+`picnic_3d`,``bool``,Space-charge routine is defined as picnic3D,,❌
+`picnic_r_mesh`,``float``,R mesh of picnic 2D,,❌
+`picnic_xy_mesh`,``float``,X&Y mesh of picnic 3D,,❌
+`picnic_z_mesh`,``float``,Z mesh of picnic 3D,,❌
+`picnir_z_mesh`,``float``,Z mesh of picnir 2D,,❌
+`random_seed`,``int``,Set the random seed,,❌
+`spreadw1`,``float``,Input spread energy for CW beam of main beam,,❌
+`spreadw2`,``float``,Input spread energy for CW beam of second beam,,❌
+`synoptic_file`,``str`` or ``Path``,"Save the geometric layout at (entance (=1), middle (=2), exit (=3) of elements. (See “Synoptic” tools for file name).",,❌
+`tab_file`,``str`` or ``Path``,Save to file the data sheet at the end of calcul (by default in calculation directory).,,❌
+`toutatis`,``float`` or ``bool``,Force or avoid Toutatis simulation (1 / 0),"(0, 1, True, False)",❌
+`trans_dist_mask`,``int``,"Mask of the transverse input distribution from 1 to 7, see GUI menu","range(1, 8)",❌
+`upgrade`,``str``,To update LightWin,,❌
+`use_dst_file`,``bool``,dst file is used as input beam distribution,,❌
+`vfac`,``float``,"Change RFQ Ucav (ex : “vfac 0.5”, half reduce of Ucav)",,❌
+`x1`,``float``,Input X position of main beam,,❌
+`x2`,``float``,Input X position of second beam,,❌
+`xp1`,``float``,Input X angle of main beam,,❌
+`xp2`,``float``,Input X angle of second beam,,❌
+`y1`,``float``,Input Y position of main beam,,❌
+`y2`,``float``,Input Y position of second beam,,❌
+`yp1`,``float``,Input Y angle of main beam,,❌
+`yp2`,``float``,Input Y angle of second beam,,❌
+`z1`,``float``,Input Z position of main beam,,❌
+`z2`,``float``,Input Z position of second beam,,❌
+`zp1`,``float``,Input Z angle of main beam,,❌
+`zp2`,``float``,Input Z angle of second beam,,❌
+`executable`,``str`` or ``Path``,"Direct path to the TraceWin executable. If given, will override the definition in the machine_config_file.",,❌
+`flag_phi_abs`,``bool``,If the field maps phases should be absolute (no implicit rephasing after a failure).,,❌
+`ini_path`,``str`` or ``Path``,Path to the ``.ini`` TraceWin file.,,✅
+`machine_config_file`,``str`` or ``Path``,Path to a file holding the paths to TW executables,,✅
+`machine_name`,``str``,"Name of current machine. Must be a table name in ``machine_config_file``. By default, do not provide it and let LightWin handle this part.",,❌
+`simulation_type`,``str``,A key in the machine_config.toml file,,✅
+`tool`,``str``,Name of the tool.,"('TraceWin', 'tracewin')",✅

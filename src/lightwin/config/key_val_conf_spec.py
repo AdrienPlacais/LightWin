@@ -16,41 +16,41 @@ class KeyValConfSpec:
 
     Parameters
     ----------
-    key : str
+    key :
         Name of the attribute.
-    types : tuple[type, ...]
+    types :
         Allowed types for the value. Used to check validity of input. When
         creating a config ``.toml`` file, the first type of the tuple is used
         for proper formatting. Prefer giving a tuple of types, even if there is
         only one possible type.
-    description : str
+    description :
         A markdown string to describe the property. Will be displayed in the
         documentation.
-    default_value : Any
+    default_value :
         A default value for the property. Used when generating dummy
         configurations; also used if the property is not mandatory and was not
         provided.
-    allowed_values : Collection[Any] | None, optional
+    allowed_values :
         A set of allowed values, or range of allowed values. The default is
         None, in which case no checking is performed.
-    is_mandatory : bool, optional
+    is_mandatory :
         If the property must be given. The default is True.
-    is_a_path_that_must_exists : bool, optional
+    is_a_path_that_must_exists :
         If the property is a string/path and its existence must be checked
         before running the code.
-    action : Literal["store_true", "store_false"] | None = None
+    action :
         on/off flag, also check the ``argparse`` documentation. Will skip
         testing over type and allowed values.
-    warning_message : str | None, optional
+    warning_message :
         If provided, using current key will print a warning with this message.
         The default is None.
-    error_message : str | None, optional
+    error_message :
         If provided, using current key will raise an IOError with this error
         message. The default is None.
-    overrides_previously_defined : bool, optional
+    overrides_previously_defined :
         If the current object should remove a previously defined
         :class:`KeyValConfSpec` with the same name.
-    derived : bool, optional
+    derived :
         If the property is calculated from other properties. The default is
         False, in which case it must be set by the user. Note that derived keys
         will not appear in the ``.toml`` output strings.
@@ -139,16 +139,15 @@ class KeyValConfSpec:
 
         Parameters
         ----------
-        toml_value : Any | None, optional
+        toml_value :
             The value to put in the file. If not provided, we issue a warnign
             and set at default value.
-        original_toml_folder : pathlib.Path | None, optional
+        original_toml_folder :
             Where the original ``.toml`` was; this is used to resolve paths
             relative to this location.
 
         Returns
         -------
-        str
             The ``.toml`` line corresponding to current object.
 
         """
@@ -175,15 +174,15 @@ class KeyValConfSpec:
 
         Returns
         -------
-        key : str
+        key :
             Name of variable.
-        types : str
+        types :
             List of allowed types.
-        description : str
+        description :
             Description of the input.
-        allowed_values : str
+        allowed_values :
             List of allowed values if relatable.
-        is_mandatory : str
+        is_mandatory :
             If the variable is mandatory or not.
 
         """
@@ -198,7 +197,7 @@ class KeyValConfSpec:
         )
         fmt_mandatory = "✅" if self.is_mandatory else "❌"
         out = (
-            self.key,
+            f"`{self.key}`",
             fmt_types,
             self.description,
             fmt_allowed,

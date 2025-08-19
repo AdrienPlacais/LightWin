@@ -1,5 +1,5 @@
 Entry,Type,Description,Allowed values,Mandatory?
-design_space_preset,``str``,What are the variables and constraints.,"('abs_phase_amplitude', 'rel_phase_amplitude', 'sync_phase_amplitude', 'abs_phase_amplitude_with_constrained_sync_phase', 'rel_phase_amplitude_with_constrained_sync_phase', 'everything', 'unconstrained', 'unconstrained_rel', 'constrained_sync_phase', 'sync_phase_as_variable')",✅
-from_file,``bool``,If variable limits/constraints should be taken from a file.,,✅
-constraints_filepath,``str`` or ``Path``,Path to the ``.csv`` holding constraints. Mandatory if ``from_file`` is ``True``.,,❌
-variables_filepath,``str`` or ``Path``,Path to the ``.csv`` holding variables. Mandatory if ``from_file`` is ``True``.,,✅
+`design_space_preset`,``str``,What are the variables and constraints.,"('abs_phase_amplitude', 'rel_phase_amplitude', 'sync_phase_amplitude', 'abs_phase_amplitude_with_constrained_sync_phase', 'rel_phase_amplitude_with_constrained_sync_phase', 'everything', 'unconstrained', 'unconstrained_rel', 'constrained_sync_phase', 'sync_phase_as_variable')",✅
+`from_file`,``bool``,If variable limits/constraints should be taken from a file.,,✅
+`constraints_filepath`,``str`` or ``Path``,Path to the ``.csv`` holding constraints. Mandatory if ``from_file`` is ``True``.,,❌
+`variables_filepath`,``str`` or ``Path``,Path to the ``.csv`` holding variables. Mandatory if ``from_file`` is ``True``.,,✅

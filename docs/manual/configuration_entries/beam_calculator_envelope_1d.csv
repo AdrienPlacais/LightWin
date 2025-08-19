@@ -1,7 +1,7 @@
 Entry,Type,Description,Allowed values,Mandatory?
-export_phase,``str``,"The type of phases that should be exported in the final DAT file. Note that ``'as_in_original_dat'`` is not implemented yet, but ``'as_in_settings'`` should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.","('as_in_original_dat', 'as_in_settings', 'phi_0_abs', 'phi_0_rel', 'phi_s')",❌
-flag_cython,``bool``,If we should use the Cython implementation (faster).,,❌
-flag_phi_abs,``bool``,If the field maps phases should be absolute (no implicit rephasing after a failure).,,❌
-method,``str``,Integration method.,"('RK4', 'leapfrog')",❌
-n_steps_per_cell,``int``,Number of integrating steps per cavity cell. Recommended values are 40 for RK4 and 20 for leapfrog.,,❌
-tool,``str``,Name of the tool.,"('Envelope1D', 'envelope1d', 'Envelope_1D', 'envelope_1d')",✅
+`export_phase`,``str``,"The type of phases that should be exported in the final DAT file. Note that ``'as_in_original_dat'`` is not implemented yet, but ``'as_in_settings'`` should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.","('as_in_original_dat', 'as_in_settings', 'phi_0_abs', 'phi_0_rel', 'phi_s')",❌
+`flag_cython`,``bool``,If we should use the Cython implementation (faster).,,❌
+`flag_phi_abs`,``bool``,If the field maps phases should be absolute (no implicit rephasing after a failure).,,❌
+`method`,``str``,Integration method.,"('RK4', 'leapfrog')",❌
+`n_steps_per_cell`,``int``,Number of integrating steps per cavity cell. Recommended values are 40 for RK4 and 20 for leapfrog.,,❌
+`tool`,``str``,Name of the tool.,"('Envelope1D', 'envelope1d', 'Envelope_1D', 'envelope_1d')",✅
