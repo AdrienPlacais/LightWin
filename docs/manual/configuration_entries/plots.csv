@@ -7,4 +7,5 @@ emittance,``bool``,Plot evolution of emittance?,,❌
 twiss,``bool``,Plot Twiss parameters?,,❌
 envelopes,``bool``,Plot envelopes?,,❌
 transfer_matrices,``bool``,Plot transfer matrix components?,,❌
+acceptance,``bool``,Plot acceptances?,,❌
 kwargs,``dict``,kwargs passed to |axplot|.,,❌

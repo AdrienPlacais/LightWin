@@ -13,6 +13,7 @@ Submodules
    :maxdepth: 5
 
    lightwin.visualization.anim
+   lightwin.visualization.data_getter
    lightwin.visualization.ellipse
    lightwin.visualization.helper
    lightwin.visualization.optimization
