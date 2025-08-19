@@ -10,21 +10,18 @@ If you want to use the *k out of n* method:
 
 .. csv-table::
    :file: configuration_entries/wtf_k_out_of_n.csv
-   :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
 If you want to use the *l neighboring lattices* method:
 
 .. csv-table::
    :file: configuration_entries/wtf_l_neighboring_lattices.csv
-   :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
 If you want to manually associate each failed cavity with its compensating cavities:
 
 .. csv-table::
    :file: configuration_entries/wtf_manual.csv
-   :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
 .. note::

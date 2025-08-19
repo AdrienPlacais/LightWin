@@ -16,9 +16,9 @@ There are two ways to specify the design space limits and initial values.
 The first is to let LightWin calculate them from the nominal linac settings.
 This approach is easier to use for initial runs.
 
+
 .. csv-table::
    :file: configuration_entries/design_space_calculated.csv
-   :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
 .. important::
@@ -52,5 +52,4 @@ You can also re-use following files in `data/example`:
 
 .. csv-table::
    :file: configuration_entries/design_space_from_file.csv
-   :widths: 30, 5, 50, 10, 5
    :header-rows: 1

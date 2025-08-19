@@ -6,7 +6,7 @@ from pathlib import Path
 from lightwin.beam_calculation.envelope_1d.specs import ENVELOPE1D_CONFIG
 from lightwin.beam_calculation.envelope_3d.specs import ENVELOPE3D_CONFIG
 from lightwin.beam_calculation.tracewin.specs import TRACEWIN_CONFIG
-from lightwin.config.key_val_conf_spec import KeyValConfSpec
+from lightwin.config.key_val_conf_spec import CSV_HEADER, KeyValConfSpec
 from lightwin.constants import doc_folder
 from lightwin.core.beam_specs import BEAM_CONFIG
 from lightwin.core.files_specs import FILES_CONFIG
@@ -26,23 +26,21 @@ from lightwin.visualization.specs import PLOTS_CONFIG
 def write_specs_to_csv(
     specs_list: Sequence[KeyValConfSpec], output_file: Path
 ) -> None:
-    """Write a list of :class:`.KeyValConfSpec` objects to a CSV file.
+    """Write a list of :class:`.KeyValConfSpec` objects to a ``CSV`` file.
 
     Parameters
     ----------
     specs_list :
         List of :class:`.KeyValConfSpec` objects.
     output_file :
-        Path to the output CSV file.
+        Path to the output ``CSV`` file.
 
     """
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
     with output_file.open("w", newline="", encoding="utf-8") as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(
-            ["Entry", "Type", "Description", "Allowed values", "Mandatory?"]
-        )
+        writer.writerow(CSV_HEADER)
 
         for spec in specs_list:
             line = spec.to_csv_line()

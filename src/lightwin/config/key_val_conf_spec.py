@@ -1,6 +1,7 @@
 """Define the base objects constraining values/types of config parameters."""
 
 import logging
+import textwrap
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
@@ -8,6 +9,8 @@ from typing import Any, Literal
 
 from lightwin.config.helper import find_path
 from lightwin.config.toml_formatter import format_for_toml
+
+CSV_HEADER = ["Entry", "Type", "Description", "Mandatory?", "Allowed values"]
 
 
 @dataclass
@@ -20,7 +23,7 @@ class KeyValConfSpec:
         Name of the attribute.
     types :
         Allowed types for the value. Used to check validity of input. When
-        creating a config ``.toml`` file, the first type of the tuple is used
+        creating a config ``TOML`` file, the first type of the tuple is used
         for proper formatting. Prefer giving a tuple of types, even if there is
         only one possible type.
     description :
@@ -53,7 +56,7 @@ class KeyValConfSpec:
     derived :
         If the property is calculated from other properties. The default is
         False, in which case it must be set by the user. Note that derived keys
-        will not appear in the ``.toml`` output strings.
+        will not appear in the ``TOML`` output strings.
 
     """
 
@@ -135,7 +138,7 @@ class KeyValConfSpec:
         original_toml_folder: Path | None = None,
         **kwargs,
     ) -> str:
-        """Convert the value into a line that can be put in a ``.toml``.
+        """Convert the value into a line that can be put in a ``TOML``.
 
         Parameters
         ----------
@@ -143,12 +146,12 @@ class KeyValConfSpec:
             The value to put in the file. If not provided, we issue a warnign
             and set at default value.
         original_toml_folder :
-            Where the original ``.toml`` was; this is used to resolve paths
+            Where the original ``TOML`` was; this is used to resolve paths
             relative to this location.
 
         Returns
         -------
-            The ``.toml`` line corresponding to current object.
+            The ``TOML`` line corresponding to current object.
 
         """
         if self.derived:
@@ -170,7 +173,12 @@ class KeyValConfSpec:
         return formatted
 
     def to_csv_line(self) -> tuple[str, str, str, str, str] | None:
-        """Convert object to a line for the documentation CSV.
+        """Convert object to a line for the documentation ``CSV``.
+
+        .. todo::
+           Handle units (avoid premature line skip).
+           Automatic detection of backticks format
+           Better display of allowed values
 
         Returns
         -------
@@ -192,15 +200,108 @@ class KeyValConfSpec:
         type_names = [f"``{t.__name__}``" for t in self.types]
         fmt_types = " or ".join(type_names)
 
+        fmt_mandatory = "✅" if self.is_mandatory else "❌"
         fmt_allowed = (
             f"{self.allowed_values}" if self.allowed_values is not None else ""
         )
-        fmt_mandatory = "✅" if self.is_mandatory else "❌"
-        out = (
+        long = (
             f"`{self.key}`",
             fmt_types,
             self.description,
-            fmt_allowed,
             fmt_mandatory,
+            fmt_allowed,
         )
-        return out
+        widths = (20, 10, 30, 1000, 1000)
+        codelikes = (True, False, False, False, False)
+        shortened = [
+            format_long_columns(text, width, codelike)
+            for text, width, codelike in zip(long, widths, codelikes)
+        ]
+        return shortened
+
+
+def format_long_columns(
+    long: str, max_width: int, codelike: bool = False
+) -> str:
+    """Format cell content to fit within ``max_width``.
+
+    A cell spanning over several lines should start and end by a single ``"``
+    character. Two line skips should be inserted where the line breaks.
+
+    """
+    if len(long) < max_width:
+        return long
+    chunker = chunk_with_hyphen
+    if codelike:
+        chunker = chunk_backtick_string
+    chunks = chunker(long, max_width)
+    joined = "\n\n".join(chunks)
+    return joined
+
+
+def chunk(long: str, max_width: int) -> list[str]:
+    """Slice string in chunks of max ``max_width``."""
+    return [long[i : i + max_width] for i in range(0, len(long), max_width)]
+
+
+def chunk_with_hyphen(text: str, max_width: int) -> list[str]:
+    """Split text into chunks at spaces.
+
+    Words longer than max_width are hyphenated.
+
+    """
+    wrapped = []
+    for word in text.split():
+        while len(word) > max_width:
+            wrapped.append(word[: max_width - 1] + "-")  # add hyphen
+            word = word[max_width - 1 :]
+        wrapped.append(word)
+
+    # Now merge words into lines of max_width
+    lines = []
+    current_line = ""
+    for word in wrapped:
+        if (
+            len(current_line) + len(word) + (1 if current_line else 0)
+            <= max_width
+        ):
+            current_line += (" " if current_line else "") + word
+        else:
+            lines.append(current_line)
+            current_line = word
+    if current_line:
+        lines.append(current_line)
+
+    return lines
+
+
+def chunk_backtick_string(text: str, max_width: int) -> list[str]:
+    """
+    Slice a string enclosed in backticks into chunks of max_width.
+    Prefer splitting at underscores. No hyphenation is used.
+    """
+    if not (text.startswith("`") and text.endswith("`")):
+        raise ValueError("String must be enclosed in backticks")
+
+    content = text[1:-1]  # remove backticks
+    parts = content.split("_")
+
+    chunks = []
+    current = ""
+    for part in parts:
+        if current:
+            candidate = current + "_" + part
+        else:
+            candidate = part
+
+        if len(candidate) + 2 <= max_width:  # +2 for backticks
+            current = candidate
+        else:
+            if current:
+                chunks.append(f"`{current}`")
+            current = part
+
+    if current:
+        chunks.append(f"`{current}`")
+
+    return chunks
