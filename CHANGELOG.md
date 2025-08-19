@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.12.x]
+
+## [0.12.0rc0]
+
+### Changed
+
+- The `CavitySettings` object, and in particular its handling of phases and reference phases, is more robust.
+  - This update introduced significant changes: do not hesitate [to file an issue](https://github.com/AdrienPlacais/LightWin/issues) if you encounter `MissingAttributeError`, or any phase-related error.
+
 # [0.11.x]
 
 ## [0.11.0]
