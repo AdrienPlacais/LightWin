@@ -410,7 +410,9 @@ class CavitySettings:
         reference :
             The name of the new reference.
         phi_ref :
-            The new value for the reference phase in :unit:`rad`.
+            The new value for the reference phase in :unit:`rad`. Remember that
+            when the value of the reference phase is updated, all other phases
+            are invalidated.
         ensure_can_be_calculated :
             To check that the new reference phase is already set or can be
             calculated.
