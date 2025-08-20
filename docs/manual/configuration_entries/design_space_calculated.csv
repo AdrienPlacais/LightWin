@@ -1,47 +1,39 @@
 Entry,Type,Description,Mandatory?,Allowed values
-"`design_space`
-
-`preset`",``str``,"What are the variables and
+`design_space_preset`,`str`,"What are the variables and
 
 constraints.",✅,"('abs_phase_amplitude', 'rel_phase_amplitude', 'sync_phase_amplitude', 'abs_phase_amplitude_with_constrained_sync_phase', 'rel_phase_amplitude_with_constrained_sync_phase', 'everything', 'unconstrained', 'unconstrained_rel', 'constrained_sync_phase', 'sync_phase_as_variable')"
-`from_file`,``bool``,"If variable limits/constraints
+`from_file`,`bool`,"If variable limits/constraints
 
 should be taken from a file.",✅,
-"`max_increase_sync`
+"`max_increase_sync_`
 
-`phase_in_percent`",``float``,"Max relative increase of
+`phase_in_percent`",`float`,"Max relative increase of:math:`\phi_s`
 
-:math:`\phi_s` wrt nominal in
+wrt nominal in:unit:`\\%`",✅,
+"`max_absolute_sync_`
 
-:unit:`\\%`",✅,
-"`max_absolute_sync`
+`phase_in_deg`",`float`,Max absolute:math:`\phi_s` in:unit:`deg`,❌,
+"`min_absolute_sync_`
 
-`phase_in_deg`",``float``,"Max absolute :math:`\phi_s` in
+`phase_in_deg`",`float`,Min absolute:math:`\phi_s` in:unit:`deg`,❌,
+"`max_decrease_k_e_in_`
 
-:unit:`deg`",❌,
-"`min_absolute_sync`
+`percent`",`float`,"Max decrease of:math:`k_e` wrt nominal
 
-`phase_in_deg`",``float``,"Min absolute :math:`\phi_s` in
+in:unit:`\\%`",✅,
+"`max_increase_k_e_in_`
 
-:unit:`deg`",❌,
-"`max_decrease_k_e`
+`percent`",`float`,"Max increase of:math:`k_e` wrt nominal
 
-`in_percent`",``float``,"Max decrease of :math:`k_e`
+in:unit:`\\%`",✅,
+"`maximum_k_e_is_`
 
-wrt nominal in :unit:`\\%`",✅,
-"`max_increase_k_e`
+`calculated_wrt_`
 
-`in_percent`",``float``,"Max increase of :math:`k_e`
+`maximum_k_e_of_`
 
-wrt nominal in :unit:`\\%`",✅,
-"`maximum_k_e_is`
+`section`",`bool`,"If max:math:`k_e` should be the same
 
-`calculated_wrt`
+for all the cavities of the
 
-`maximum_k_e_of`
-
-`section`",``bool``,"If max :math:`k_e` should be
-
-the same for all the cavities
-
-of the section",❌,
+section",❌,

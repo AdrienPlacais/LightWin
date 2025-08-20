@@ -1,7 +1,5 @@
 Entry,Type,Description,Mandatory?,Allowed values
-`beam_calc_post`,``list``,The names of the evaluators.,❌,
-`simulation_output`,``list``,"Keyword arguments for the
+`beam_calc_post`,`list`,The names of the evaluators.,❌,
+`simulation_output`,`list`,"Keyword arguments for the
 
-:class:`.SimulationOutputEval-
-
-uator`.",❌,
+:class:`.SimulationOutputEvaluator`.",❌,

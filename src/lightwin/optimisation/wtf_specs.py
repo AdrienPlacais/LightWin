@@ -18,8 +18,8 @@ _WTF_BASE = (
         key="failed",
         types=(list,),
         description=(
-            "Index/name of failed cavities. Must be a list[list[int]] or "
-            "list[list[str]]."
+            "Index/name of failed cavities. Must be a `list[list[int]]` or "
+            "`list[list[str]]`."
         ),
         default_value=[[5]],
     ),
@@ -35,7 +35,7 @@ _WTF_BASE = (
         types=(str,),
         description=(
             "Indicates if failed is element index/cavity index/name, "
-            "``element`` or ``cavity`` or ``name``."
+            "`element` or `cavity` or `name`."
         ),
         allowed_values=("element", "cavity", "name"),
         default_value="element",
@@ -86,8 +86,8 @@ _WTF_BASE_AUTOMATIC = _WTF_BASE + (
         key="shift",
         types=(int,),
         description=(
-            "Distance increase for downstream elements (``shift < 0``) or "
-            "upstream elements (``shift > 0``). Used to have a window of "
+            "Distance increase for downstream elements (`shift < 0`) or "
+            "upstream elements (`shift > 0`). Used to have a window of "
             "compensating cavities which is not centered around the failed "
             "elements."
         ),
@@ -134,8 +134,8 @@ WTF_MANUAL = _WTF_BASE + (
         key="failed",
         types=(list,),
         description=(
-            "Index/name of failed cavities. Must be a list[list[list[int]]] or"
-            " list[list[list[str]]]."
+            "Index/name of failed cavities. Must be a `list[list[list[int]]]` "
+            "or `list[list[list[str]]]`."
         ),
         default_value=[[[5]]],
         overrides_previously_defined=True,
@@ -145,10 +145,10 @@ WTF_MANUAL = _WTF_BASE + (
         types=(list,),
         description=(
             "Index/name of compensating cavities cavities. Must be a "
-            "list[list[list[int]]] or list[list[list[str]]]. The number of "
-            "FaultScenarios (length of most outer list) must match ``failed``."
-            " The number of groups of compensating cavities (second level) "
-            "must match ``failed``."
+            "`list[list[list[int]]]` or `list[list[list[str]]]`. The number of"
+            " :class:`.FaultScenarios` (length of most outer list) must match "
+            "`failed`. The number of groups of compensating cavities (second "
+            "level) must match `failed`."
         ),
         default_value=[[[3, 4, 6, 7]]],
     ),

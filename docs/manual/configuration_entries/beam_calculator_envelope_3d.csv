@@ -1,39 +1,39 @@
 Entry,Type,Description,Mandatory?,Allowed values
-`export_phase`,``str``,"The type of phases that should
+`export_phase`,`str`,"The type of phases that should
 
 be exported in the final DAT
 
-file. Note that
+file. Note that `'as_in_`
 
-``'as_in_original_dat'`` is
+`original_dat'` is not
 
-not implemented yet, but
+implemented yet, but `'as_in_`
 
-``'as_in_settings'`` should
+`settings'` should behave the
 
-behave the same way, provided
+same way, provided that you
 
-that you alter no
+alter no
 
 FieldMap.CavitySettings.refer-
 
 ence attribute.",❌,"('as_in_original_dat', 'as_in_settings', 'phi_0_abs', 'phi_0_rel', 'phi_s')"
-`flag_cython`,``bool``,"Not implemented yet. If we
+`flag_cython`,`bool`,"Not implemented yet. If we
 
 should use the Cython
 
 implementation (faster).",❌,"(False,)"
-`flag_phi_abs`,``bool``,"If the field maps phases
+`flag_phi_abs`,`bool`,"If the field maps phases
 
 should be absolute (no
 
 implicit rephasing after a
 
 failure).",❌,
-`method`,``str``,Integration method.,❌,"('RK4',)"
-`n_steps_per_cell`,``int``,"Number of integrating steps
+`method`,`str`,Integration method.,❌,"('RK4',)"
+`n_steps_per_cell`,`int`,"Number of integrating steps
 
 per cavity cell. Recommended
 
 value is 40.",❌,
-`tool`,``str``,Name of the tool.,✅,"('Envelope3D', 'envelope3d', 'Envelope_3D', 'envelope_3d')"
+`tool`,`str`,Name of the tool.,✅,"('Envelope3D', 'envelope3d', 'Envelope_3D', 'envelope_3d')"
