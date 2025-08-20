@@ -1,8 +1,6 @@
 """Define :class:`.KeyValConfSpec` tests."""
 
-import pytest
-
-from lightwin.config.key_val_conf_spec import chunk
+from lightwin.config.csv_formatter import chunk
 
 
 def test_split_simple_line() -> None:
