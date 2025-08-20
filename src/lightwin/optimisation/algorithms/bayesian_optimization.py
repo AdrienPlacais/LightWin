@@ -54,9 +54,11 @@ class BayesianOptimization(OptimisationAlgorithm):
         kwargs = {"init_points": 50, "n_iter": 300}
         return kwargs
 
-    def _generate_opti_sol(self, result: dict[str, Any]) -> OptiSol:
+    def _generate_opti_sol(self, result: dict[str, Any] | None) -> OptiSol:
         """Store the optimization results."""
         status = "compensate (ok)"
+        if result is None:
+            raise ValueError("Optimization failed.")
 
         for key in ("params", "target"):
             if key in result:
