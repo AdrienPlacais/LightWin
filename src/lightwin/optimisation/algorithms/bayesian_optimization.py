@@ -56,7 +56,7 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
     @property
     def _default_kwargs(self) -> dict[str, Any]:
         """Create the ``kwargs`` for the optimisation."""
-        kwargs = {"init_points": 50, "n_iter": 300}
+        kwargs = {"init_points": 10, "n_iter": 500}
         return kwargs
 
     def _generate_opti_sol(self, result: dict[str, Any] | None) -> OptiSol:

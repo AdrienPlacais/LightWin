@@ -39,9 +39,9 @@ sigma = [
 ]
 
 [generic_wtf]
-failed = [["FM11"]]
+failed = [["FM10"]]
 id_nature = "name"
-k = 5
+k = 3
 objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "experimental"
 # optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
