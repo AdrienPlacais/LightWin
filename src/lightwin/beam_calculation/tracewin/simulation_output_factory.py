@@ -136,7 +136,7 @@ def _set_phase_related_results(
     not start at the beginning of the linac.
 
     TraceWin always starts with ``z=0`` and ``phi_abs=0``, even when we are not
-    at the beginning of the linac (sub ``.dat``).
+    at the beginning of the linac (sub ``DAT``).
 
     Parameters
     ----------
@@ -181,7 +181,7 @@ def _set_phase_related_results(
 # =============================================================================
 def _remove_incomplete_line(filepath: Path) -> None:
     """
-    Remove incomplete line from ``.out`` file.
+    Remove incomplete line from ``OUT`` file.
 
     .. todo::
         fix possible unbound error for ``n_columns``.
@@ -205,7 +205,7 @@ def _remove_incomplete_line(filepath: Path) -> None:
     if i_last_valid == -1:
         return
     logging.warning(
-        f"Not enough columns in `.out` after line {i_last_valid}. "
+        f"Not enough columns in `OUT` after line {i_last_valid}. "
         "Removing all lines after this one..."
     )
     with open(filepath, "w", encoding="utf-8") as file:
@@ -217,7 +217,7 @@ def _remove_incomplete_line(filepath: Path) -> None:
 
 def _add_dummy_data(filepath: Path, elts: ListOfElements) -> None:
     """
-    Add dummy data at the end of the ``.out`` to reach end of linac.
+    Add dummy data at the end of the ``OUT`` to reach end of linac.
 
     We also round the column 'z', to avoid a too big mismatch between the z
     column and what we should have.
@@ -234,7 +234,7 @@ def _add_dummy_data(filepath: Path, elts: ListOfElements) -> None:
 
         if last_element_in_file is not elts[-1]:
             logging.warning(
-                "Incomplete `.out` file. Trying to complete with "
+                "Incomplete `OUT` file. Trying to complete with "
                 "dummy data..."
             )
             elts_to_add = elts[last_idx_in_file:]

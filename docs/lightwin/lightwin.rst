@@ -19,6 +19,7 @@ Subpackages
    lightwin.evaluator
    lightwin.failures
    lightwin.optimisation
+   lightwin.physics
    lightwin.scripts
    lightwin.tracewin_utils
    lightwin.ui

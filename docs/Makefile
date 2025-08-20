@@ -40,7 +40,7 @@ clean:
 	fi
 
 # Generate API documentation using sphinx-apidoc
-apidoc:
+apidoc: generate_csv
 	@echo "Generating API documentation..."
 	@$(SPHINXAPIDOC) -o "$(APIDOC_DIR)" -d 5 -f -e -M "$(SRC_DIR)" "$(EXCLUDE_DIR)"
 	@cd "$(APIDOC_DIR)" && perl -i -pe 's/^\S*\.(\S*) (package|module)/$$1 $$2/' *.rst

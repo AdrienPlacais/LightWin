@@ -16,7 +16,7 @@ from lightwin.tracewin_utils.line import DatLine
 
 
 class Instruction(ABC):
-    """An object corresponding to a line in a ``.dat`` file."""
+    """An object corresponding to a line in a ``DAT`` file."""
 
     line: DatLine
     idx: dict[str, int]
@@ -29,14 +29,14 @@ class Instruction(ABC):
         dat_idx: int | None = None,
         **kwargs,
     ) -> None:
-        """Instantiate corresponding line and line number in ``.dat`` file.
+        """Instantiate corresponding line and line number in ``DAT`` file.
 
         Parameters
         ----------
         line : list[str]
             Line containing the instructions.
         dat_idx : int
-            Position in the ``.dat``. Note that this index will vary if some
+            Position in the ``DAT``. Note that this index will vary if some
             instructions (empty lines, comments in particular) are removed from
             the dat content.
 
@@ -88,7 +88,7 @@ class Instruction(ABC):
         return str(self.line)
 
     def to_line(self, *args, **kwargs) -> list[str]:
-        """Convert the object back into a ``.dat`` line."""
+        """Convert the object back into a ``DAT`` line."""
         return self.line.splitted_full
 
     def increment_dat_position(self, increment: int = 1) -> None:
@@ -175,9 +175,9 @@ class Dummy(Instruction):
         Parameters
         ----------
         line : DatLine
-            Arguments of the line in the ``.dat`` file.
+            Arguments of the line in the ``DAT`` file.
         dat_idx : int
-            Line number in the ``.dat`` file.
+            Line number in the ``DAT`` file.
         warning : bool, optional
             To raise a warning when the element is not implemented. The default
             is False.
@@ -207,9 +207,9 @@ class Comment(Dummy):
         Parameters
         ----------
         line : list[str]
-            Arguments of the line in the ``.dat`` file.
+            Arguments of the line in the ``DAT`` file.
         dat_idx : int
-            Line number in the ``.dat`` file.
+            Line number in the ``DAT`` file.
 
         """
         super().__init__(line, warning=False, **kwargs)

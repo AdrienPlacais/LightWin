@@ -13,6 +13,7 @@ Submodules
    :maxdepth: 5
 
    lightwin.config.config_manager
+   lightwin.config.csv_formatter
    lightwin.config.full_specs
    lightwin.config.helper
    lightwin.config.key_val_conf_spec

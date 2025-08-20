@@ -109,7 +109,7 @@ class AcceleratorFactory(ABC):
     def _check_consistency_absolute_phases(
         self, cavities: Sequence[FieldMap]
     ) -> None:
-        """Check that solvers phases are consistent with ``.dat`` file."""
+        """Check that solvers phases are consistent with ``DAT`` file."""
         if len(cavities) == 0:
             return
         beam_calculators = [x for x in self.beam_calculators if x is not None]

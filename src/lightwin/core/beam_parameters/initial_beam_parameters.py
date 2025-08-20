@@ -238,7 +238,7 @@ class InitialBeamParameters:
         Turn emittance, alpha, beta from the proper phase-spaces into command.
 
         When phase-spaces were not created, we return np.nan which will
-        ultimately lead TraceWin to take this data from its ``.ini`` file.
+        ultimately lead TraceWin to take this data from its ``INI`` file.
 
         """
         args = []
@@ -248,9 +248,8 @@ class InitialBeamParameters:
                 phase_spaces_are_needed = self.z_abs > 1e-10
                 if warn_missing_phase_space and phase_spaces_are_needed:
                     logging.warning(
-                        f"{phase_space_name} phase space not "
-                        "defined, keeping default inputs from the "
-                        "`.ini.`."
+                        f"{phase_space_name} phase space not defined, keeping "
+                        "default inputs from the `INI`."
                     )
             else:
                 phase_space = getattr(self, phase_space_name)

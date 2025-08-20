@@ -11,6 +11,7 @@ For a list of the units associated with every parameter, see
 from dataclasses import dataclass
 from typing import Self
 
+import numpy as np
 from numpy.typing import NDArray
 
 from lightwin.core.beam_parameters.helper import (
@@ -29,24 +30,24 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
     """Hold Twiss, emittance, envelopes of a single phase-space."""
 
     # Override some types from mother class
-    eps_no_normalization: NDArray
-    eps_normalized: NDArray
-    mismatch_factor: NDArray | None = None
+    eps_no_normalization: NDArray[np.float64]
+    eps_normalized: NDArray[np.float64]
+    mismatch_factor: NDArray[np.float64] | None = None
 
     # Already with proper type in mother class:
-    # envelopes: NDArray | None = None
-    # twiss: NDArray | None = None
-    # tm_cumul: NDArray | None = None
-    # sigma: NDArray | None = None
+    # envelopes: NDArray[np.float64] | None = None
+    # twiss: NDArray[np.float64] | None = None
+    # tm_cumul: NDArray[np.float64] | None = None
+    # sigma: NDArray[np.float64] | None = None
 
     @classmethod
     def from_cumulated_transfer_matrices(
         cls,
         phase_space_name: str,
-        sigma_in: NDArray,
-        tm_cumul: NDArray,
-        gamma_kin: NDArray,
-        beta_kin: NDArray,
+        sigma_in: NDArray[np.float64],
+        tm_cumul: NDArray[np.float64],
+        gamma_kin: NDArray[np.float64],
+        beta_kin: NDArray[np.float64],
         beam_kwargs: BeamKwargs,
     ) -> Self:
         r"""Compute :math:`\sigma` matrix, and everything from it."""
@@ -65,11 +66,11 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
     def from_sigma(
         cls,
         phase_space_name: str,
-        sigma: NDArray,
-        gamma_kin: NDArray,
-        beta_kin: NDArray,
+        sigma: NDArray[np.float64],
+        gamma_kin: NDArray[np.float64],
+        beta_kin: NDArray[np.float64],
         beam_kwargs: BeamKwargs,
-        **kwargs: NDArray,  # tm_cumul
+        **kwargs: NDArray[np.float64],  # tm_cumul
     ) -> Self:
         """Compute Twiss, eps, envelopes just from sigma matrix."""
         return super().from_sigma(
@@ -86,10 +87,10 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
         cls,
         other_phase_space: Self,
         phase_space_name: str,
-        gamma_kin: NDArray,
-        beta_kin: NDArray,
+        gamma_kin: NDArray[np.float64],
+        beta_kin: NDArray[np.float64],
         beam_kwargs: BeamKwargs,
-        **kwargs: NDArray,  # sigma, tm_cumul
+        **kwargs: NDArray[np.float64],  # sigma, tm_cumul
     ) -> Self:
         """Fully initialize from another phase space."""
         return super().from_other_phase_space(
@@ -139,82 +140,82 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
         return phase_space
 
     @property
-    def alpha(self) -> NDArray | None:
+    def alpha(self) -> NDArray[np.float64] | None:
         """Get first column of ``self.twiss``."""
         if self.twiss is None:
             return None
         return self.twiss[:, 0]
 
     @alpha.setter
-    def alpha(self, value: NDArray) -> None:
+    def alpha(self, value: NDArray[np.float64]) -> None:
         """Set first column of ``self.twiss``."""
         assert self.twiss is not None
         self.twiss[:, 0] = value
 
     @property
-    def beta(self) -> NDArray | None:
+    def beta(self) -> NDArray[np.float64] | None:
         """Get second column of ``self.twiss``."""
         if self.twiss is None:
             return None
         return self.twiss[:, 1]
 
     @beta.setter
-    def beta(self, value: NDArray) -> None:
+    def beta(self, value: NDArray[np.float64]) -> None:
         """Set second column of ``self.twiss``."""
         assert self.twiss is not None
         self.twiss[:, 1] = value
 
     @property
-    def gamma(self) -> NDArray | None:
+    def gamma(self) -> NDArray[np.float64] | None:
         """Get third column of ``self.twiss``."""
         if self.twiss is None:
             return None
         return self.twiss[:, 2]
 
     @gamma.setter
-    def gamma(self, value: NDArray) -> None:
+    def gamma(self, value: NDArray[np.float64]) -> None:
         """Set third column of ``self.twiss``."""
         assert self.twiss is not None
         self.twiss[:, 2] = value
 
     @property
-    def envelope_pos(self) -> NDArray | None:
+    def envelope_pos(self) -> NDArray[np.float64] | None:
         """Get first column of ``self.envelopes``."""
         if self.envelopes is None:
             return None
         return self.envelopes[:, 0]
 
     @envelope_pos.setter
-    def envelope_pos(self, value: NDArray) -> None:
+    def envelope_pos(self, value: NDArray[np.float64]) -> None:
         """Set first column of ``self.envelopes``."""
         assert self.envelopes is not None
         self.envelopes[:, 0] = value
 
     @property
-    def envelope_energy(self) -> NDArray | None:
+    def envelope_energy(self) -> NDArray[np.float64] | None:
         """Get second column of ``self.envelopes``."""
         if self.envelopes is None:
             return None
         return self.envelopes[:, 1]
 
     @envelope_energy.setter
-    def envelope_energy(self, value: NDArray) -> None:
+    def envelope_energy(self, value: NDArray[np.float64]) -> None:
         """Set second column of ``self.envelopes``."""
         assert self.envelopes is not None
         self.envelopes[:, 1] = value
 
     @property
-    def eps(self) -> NDArray:
+    def eps(self) -> NDArray[np.float64]:
         """Return the normalized emittance."""
         return self.eps_normalized
 
     @property
-    def non_norm_eps(self) -> NDArray:
+    def non_norm_eps(self) -> NDArray[np.float64]:
         """Return the non-normalized emittance."""
         return self.eps_no_normalization
 
     @property
-    def sigma_in(self) -> NDArray:
+    def sigma_in(self) -> NDArray[np.float64]:
         r"""Return the first :math:`\sigma` beam matrix."""
         assert self.sigma is not None
         return self.sigma[0]
@@ -222,8 +223,8 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
     def set_mismatch(
         self,
         reference_phase_space: Self,
-        reference_z_abs: NDArray,
-        z_abs: NDArray,
+        reference_z_abs: NDArray[np.float64],
+        z_abs: NDArray[np.float64],
         raise_missing_twiss_error: bool = True,
         **mismatch_kw: bool,
     ) -> None:

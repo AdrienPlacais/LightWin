@@ -40,7 +40,7 @@ class DummyCommand(Command):
         Parameters
         ----------
         dat_indexes : list[int]
-            Indexes in the ``.dat`` file of the sub-list of elements under
+            Indexes in the ``DAT`` file of the sub-list of elements under
             creation.
 
         """

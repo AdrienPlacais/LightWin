@@ -65,7 +65,7 @@ class InstructionsFactory:
             Beam bunch frequency in MHz.
         default_field_map_folder : pathlib.Path
             Where to look for field maps when no ``FIELD_MAP_PATH`` is
-            precised. This is also the folder where the ``.dat`` is.
+            precised. This is also the folder where the ``DAT`` is.
         load_field_maps : bool
             To load or not the field maps (useless to do it with
             :class:`.TraceWin`).
@@ -160,7 +160,7 @@ class InstructionsFactory:
         Parameters
         ----------
         line : DatLine
-            A single line of the ``.dat`` file.
+            A single line of the ``DAT`` file.
         dat_idx : int, optional
             Line number of the line (starts at 0). If not provided, taken from
             ``line``.

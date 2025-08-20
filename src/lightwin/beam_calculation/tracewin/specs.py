@@ -640,7 +640,7 @@ TRACEWIN_CONFIG = _PURE_TRACEWIN_CONFIG + (
     KeyValConfSpec(
         key="ini_path",
         types=(str, Path),
-        description="Path to the ``.ini`` TraceWin file.",
+        description="Path to the `INI` TraceWin file.",
         default_value=example_ini,
         is_a_path_that_must_exists=True,
     ),
@@ -656,7 +656,7 @@ TRACEWIN_CONFIG = _PURE_TRACEWIN_CONFIG + (
         types=(str,),
         description=(
             "Name of current machine. Must be a table name in "
-            "``machine_config_file``. By default, do not provide it and let "
+            "`machine_config_file`. By default, do not provide it and let "
             "LightWin handle this part."
         ),
         default_value=None,

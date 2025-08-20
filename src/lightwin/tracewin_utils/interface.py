@@ -174,7 +174,7 @@ def particle_initial_state_to_command(w_kin: float) -> list[str]:
     We could use the `zp` command to modify the phase at the entry of the first
     element (when it is not the first element of the linac).
     We rather keep the absolute phase at the beginning of the zone to 0. and
-    modify the `.dat` file in `subset_of_pre_existing_list_of_elements`
+    modify the `DAT` file in `subset_of_pre_existing_list_of_elements`
     function in order to always keep the same relative phi_0.
 
     """

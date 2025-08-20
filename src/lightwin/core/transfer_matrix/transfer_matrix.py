@@ -89,6 +89,11 @@ class TransferMatrix:
         self.n_points = n_points
 
         self.cumulated = cumulated
+        #: Takes an :class:`.Element`, its name, ``'first'`` or ``'last'`` as
+        #: argument, and returns corresponding index. Index should be the same
+        #: in all the arrays attributes of this class: ``z_abs``,
+        #: ``beam_parameters`` attributes, etc. Used to easily ``get`` the
+        #: desired properties at the proper position.
         self._element_to_index = element_to_index
 
     def has(self, key: str) -> bool:
@@ -123,7 +128,7 @@ class TransferMatrix:
             Replace ``None`` values with ``np.nan``.
         handle_missing_elt :
             Look for an equivalent element when ``elt`` is not in
-            :attr:`.TransferMatrix.element_to_index` 's ``_elts``.
+            :attr:`.TransferMatrix._element_to_index` 's ``_elts``.
         **kwargs :
             Ignored here, but accepted for compatibility.
 

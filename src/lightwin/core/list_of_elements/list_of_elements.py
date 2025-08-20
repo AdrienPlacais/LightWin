@@ -93,7 +93,7 @@ class ListOfElements(list):
             A dictionary to hold information on the source and output
             files/folders of the object.
 
-            * ``dat_file``: absolute path to the ``.dat`` file
+            * ``dat_file``: absolute path to the ``DAT`` file
             * ``elts_n_cmds``: list of objects representing dat content
             * ``accelerator_path``: where calculation results for each
               :class:`.BeamCalculator` will be stored.
@@ -179,8 +179,8 @@ class ListOfElements(list):
     ) -> Any:
         """Get attributes from this class or its contained elements.
 
-        If the desired attribute belongs to :data:`GETTABLE_ELT` or
-        :data:`GETTABLE_FIELD_MAPS`, we concatenate the value of every element
+        If the desired attribute belongs to :data:`.GETTABLE_ELT` or
+        :data:`.GETTABLE_FIELD_MAP`, we concatenate the value of every element
         in a single list.
 
         Parameters
@@ -259,7 +259,7 @@ class ListOfElements(list):
         This method is called by the :class:`.BeamCalculator`. It is used after
         the first propagation of the beam in the full :class:`ListOfElements`,
         to force every :class:`.CavitySettings` to use the reference phase
-        specified by the ``beam_calculator`` entry of the ``.toml``.
+        specified by the ``beam_calculator`` entry of the ``TOML``.
 
         """
         for cavity in self.l_cav:

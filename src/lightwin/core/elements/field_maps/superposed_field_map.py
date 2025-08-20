@@ -2,7 +2,7 @@
 
 .. note::
     The initialisation of this class is particular, as it does not correspond
-    to a specific line of the ``.dat`` file.
+    to a specific line of the ``DAT`` file.
 
 .. todo::
     Could be cleaned and simplified.
@@ -195,7 +195,7 @@ class SuperposedFieldMap(Element):
         raise NotImplementedError
 
     def to_line(self, *args, **kwargs):
-        """Convert the object back into a line in the ``.dat`` file."""
+        """Convert the object back into a line in the ``DAT`` file."""
         logging.warning("Calling the to_line for superpose")
         return super().to_line(*args, **kwargs)
 

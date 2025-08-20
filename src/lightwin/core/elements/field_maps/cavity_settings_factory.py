@@ -25,7 +25,7 @@ class CavitySettingsFactory:
         line: DatLine,
         set_sync_phase: bool = False,
     ) -> CavitySettings:
-        """Create the cavity settings as read in the ``.dat`` file."""
+        """Create the cavity settings as read in the ``DAT`` file."""
         k_e = float(line.splitted[6])
         phi_0 = math.radians(float(line.splitted[3]))
         reference = self._reference(

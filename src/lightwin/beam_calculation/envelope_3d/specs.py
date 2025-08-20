@@ -10,8 +10,8 @@ ENVELOPE3D_CONFIG = (
         types=(str,),
         description=(
             "The type of phases that should be exported in the final DAT "
-            "file. Note that ``'as_in_original_dat'`` is not implemented "
-            "yet, but ``'as_in_settings'`` should behave the same way, "
+            "file. Note that `'as_in_original_dat'` is not implemented "
+            "yet, but `'as_in_settings'` should behave the same way, "
             "provided that you alter no FieldMap.CavitySettings.reference "
             "attribute."
         ),

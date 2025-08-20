@@ -344,7 +344,7 @@ def _from_file(
     parameters_names: Sequence[str],
     delimiter: str = ",",
 ) -> list[Variable] | list[Constraint]:
-    """Generate list of variables or constraints from a given ``.csv``.
+    """Generate list of variables or constraints from a given ``CSV``.
 
     .. todo::
         Add support for when all element do not have the same
@@ -355,13 +355,13 @@ def _from_file(
     parameter_class : type[Variable] | type[Constraint]
         Object which ``from_pd_series`` method will be called.
     filepath : pathlib.Path
-        Path to the ``.csv``.
+        Path to the ``CSV``.
     elements_names : Sequence[str]
         Name of the elements.
     parameters_names : Sequence[str]
         Name of the parameters.
     delimiter : str
-        Delimiter in the ``.csv``.
+        Delimiter in the ``CSV``.
 
     Returns
     -------

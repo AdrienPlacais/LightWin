@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [0.11.x]
 
+## [0.11.1] -- 2025-08-20
+
+### Changed
+
+- Tables listing configuration options are more consistent in the html documentation.
+
 ## [0.11.0] -- 2025-08-19
 
 ### Added

@@ -1,4 +1,4 @@
-"""Define several helper functions for proper ``.toml`` formatting."""
+"""Define several helper functions for proper ``TOML`` formatting."""
 
 import logging
 from typing import Any

@@ -9,21 +9,18 @@ If the desired :class:`.BeamCalculator` is :class:`.Envelope1D`:
 
 .. csv-table::
    :file: configuration_entries/beam_calculator_envelope_1d.csv
-   :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
 If the desired :class:`.BeamCalculator` is :class:`.Envelope3D`:
 
 .. csv-table::
    :file: configuration_entries/beam_calculator_envelope_3d.csv
-   :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
 If the desired :class:`.BeamCalculator` is :class:`.TraceWin`:
 
 .. csv-table::
    :file: configuration_entries/beam_calculator_tracewin.csv
-   :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
 Check TraceWin's documentation for the list of command line arguments.

@@ -1,4 +1,4 @@
-"""Define utility functions to test out the ``.toml`` config file."""
+"""Define utility functions to test out the ``TOML`` config file."""
 
 import functools
 import logging
@@ -60,7 +60,7 @@ def find_path(
     Parameters
     ----------
     toml_folder : pathlib.Path | None
-        Folder where the ``.toml`` configuration file is.
+        Folder where the ``TOML`` configuration file is.
     path : str | pathlib.Path
         Path to look for.
     nature : Literal["file", "folder"] | None,  optional

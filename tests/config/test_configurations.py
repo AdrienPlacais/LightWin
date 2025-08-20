@@ -14,11 +14,9 @@ import pytest
 
 from lightwin.config.config_manager import (
     _load_toml,
-    dict_to_toml,
-    process_config,
 )
 from lightwin.config.full_specs import ConfSpec
-from lightwin.constants import example_config, example_folder
+from lightwin.constants import example_config
 
 CONFIG_KEYS = (
     pytest.param(({"beam": "beam"},), id="Beam configuration"),

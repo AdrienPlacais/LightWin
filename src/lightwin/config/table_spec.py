@@ -56,14 +56,14 @@ class TableConfSpec:
             | None
         ) = None,
     ) -> None:
-        """Set a table of properties. Correspond to a [table] in the ``.toml``.
+        """Set a table of properties. Correspond to a [table] in the ``TOML``.
 
         Parameters
         ----------
         configured_object : str
             Name of the object that will receive associated parameters.
         table_entry : str
-            Name of the table in the ``.toml`` file, without brackets.
+            Name of the table in the ``TOML`` file, without brackets.
         specs : Collection[KeyValConfSpec] | dict[str, Collection[KeyValConfSpec]] | dict[str, Collection[KeyValConfSpec]]
             The :class:`.KeyValConfSpec` objects in the current table. When the
             format of the table depends on the value of a key, provide a
@@ -73,7 +73,7 @@ class TableConfSpec:
             If the current table must be provided. The default is True.
         can_have_untested_keys : bool, optional
             If LightWin should remain calm when some keys are provided in the
-            ``.toml`` but do not correspond to any :class:`.KeyValConfSpec`.
+            ``TOML`` but do not correspond to any :class:`.KeyValConfSpec`.
             The default is False.
         selectkey_n_default : tuple[str, str | bool] | None, optional
             Must be given if ``specs`` is a dict. First value is name of the
@@ -112,7 +112,7 @@ class TableConfSpec:
         """Get the proper list of :class:`.KeyValConfSpec`.
 
         Used when we need to read the value of ``_selectkey_n_default``
-        in the ``.toml`` to choose precisely which configuration we should
+        in the ``TOML`` to choose precisely which configuration we should
         match.
 
         Parameters
@@ -155,7 +155,7 @@ class TableConfSpec:
         """Set the dict of specifications.
 
         Used when we need to read the value of ``_selectkey_n_default``
-        in the ``.toml`` to choose precisely which configuration we should
+        in the ``TOML`` to choose precisely which configuration we should
         match.
         If ``toml_subdict`` is not provided, we use a default value.
 
@@ -184,20 +184,20 @@ class TableConfSpec:
         original_toml_folder: Path | None = None,
         **kwargs,
     ) -> list[str]:
-        """Convert the given dict in string that can be put in a ``.toml``.
+        """Convert the given dict in string that can be put in a ``TOML``.
 
         Parameters
         ----------
         toml_subdict : dict[str, Any]
-            A dictionary corresponding to a ``.toml`` table.
+            A dictionary corresponding to a ``TOML`` table.
         original_toml_folder : pathlib.Path | None, optional
-            Where the original ``.toml`` was; this is used to resolve paths
+            Where the original ``TOML`` was; this is used to resolve paths
             relative to this location.
 
         Returns
         -------
         list[str]
-            All the ``.toml`` lines corresponding to the table under study.
+            All the ``TOML`` lines corresponding to the table under study.
 
         """
         strings = [f"[{self.table_entry}]"]
