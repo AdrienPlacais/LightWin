@@ -1,4 +1,5 @@
 from typing import Any
+
 import numpy as np
 from scipy.optimize import Bounds, OptimizeResult, dual_annealing
 
@@ -14,7 +15,9 @@ class SimulatedAnnealing(OptimisationAlgorithm):
     All attributes but ``solution`` are inherited from the ABC :class:`.OptimisationAlgorithm`.
     """
 
-    supports_constraints = False  # scipy's dual_annealing supports bounds but not constraints
+    supports_constraints = (
+        False  # scipy's dual_annealing supports bounds but not constraints
+    )
 
     def optimize(self) -> OptiSol:
         """Set up and run the simulated annealing algorithm.

@@ -16,6 +16,9 @@ from lightwin.core.elements.field_maps.cavity_settings_factory import (
 )
 from lightwin.failures.fault import Fault
 from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
+from lightwin.optimisation.algorithms.bayesian_optimization import (
+    BayesianOptimizationLW,
+)
 from lightwin.optimisation.algorithms.differential_evolution import (
     DifferentialEvolution,
 )
@@ -29,37 +32,38 @@ from lightwin.optimisation.algorithms.least_squares_penalty import (
     LeastSquaresPenalty,
 )
 from lightwin.optimisation.algorithms.nsga import NSGA
-from lightwin.optimisation.algorithms.simulated_annealing import SimulatedAnnealing
+from lightwin.optimisation.algorithms.simulated_annealing import (
+    SimulatedAnnealing,
+)
+
 # from lightwin.optimisation.algorithms.bayesian_optimization import BayesianOptimization
 
 
 ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
-    "least_squares": LeastSquares,
-    "least_squares_penalty": LeastSquaresPenalty,
-    "nsga": NSGA,
+    "bayesian_optimization": BayesianOptimizationLW,
+    "differential_evolution": DifferentialEvolution,
     "downhill_simplex": DownhillSimplex,
     "downhill_simplex_penalty": DownhillSimplexPenalty,
+    "experimental": BayesianOptimizationLW,
+    "explorator": Explorator,
+    "least_squares": LeastSquares,
+    "least_squares_penalty": LeastSquaresPenalty,
     "nelder_mead": DownhillSimplex,
     "nelder_mead_penalty": DownhillSimplexPenalty,
-    "differential_evolution": DifferentialEvolution,
-    "explorator": Explorator,
-    "experimental": Explorator,
-    "simulated_annealing": SimulatedAnnealing,
-    # "bayesian_optimization": BayesianOptimization,
+    "nsga": NSGA,
 }  #:
 ALGORITHMS_T = Literal[
-    "least_squares",
-    "least_squares_penalty",
-    "nsga",
+    "bayesian_optimization",
+    "differential_evolution",
     "downhill_simplex",
     "downhill_simplex_penalty",
+    "experimental",
+    "explorator",
+    "least_squares",
+    "least_squares_penalty",
     "nelder_mead",
     "nelder_mead_penalty",
-    "differential_evolution",
-    "explorator",
-    "experimental",
-    "simulated_annealing",
-    # "bayesian_optimization"
+    "nsga",
 ]
 
 

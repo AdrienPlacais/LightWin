@@ -1,9 +1,10 @@
-"""Define the Bayesian optimization algorithm using bayes_opt."""
+"""Define bayesian optimization algorithms."""
 
 from typing import Any
+
 import numpy as np
-from bayes_opt import BayesianOptimization as BO
-from bayes_opt.util import UtilityFunction
+from bayes_opt.bayesian_optimization import BayesianOptimization
+from numpy.typing import NDArray
 
 from lightwin.optimisation.algorithms.algorithm import (
     OptimisationAlgorithm,
@@ -11,71 +12,81 @@ from lightwin.optimisation.algorithms.algorithm import (
 )
 
 
-class BayesianOptimization(OptimisationAlgorithm):
-    """Bayesian optimization method using bayes_opt.BayesianOptimization.
+class BayesianOptimizationLW(OptimisationAlgorithm):
+    """Bayesian optimization algorithm.
 
-    All the attributes but ``solution`` are inherited from the Abstract Base
-    Class :class:`.OptimisationAlgorithm`.
+    Under the hood, relies on :class:`bayes_opt.BayesianOptimization`.
+
     """
 
     supports_constraints = False
 
     def optimize(self) -> OptiSol:
-        """Set up the optimization and solve the problem."""
-        pbounds = self._format_bounds()
-        # Remove init_points and n_iter from kwargs for the constructor
-        bo_kwargs = {k: v for k, v in self.optimisation_algorithm_kwargs.items() if k not in ("init_points", "n_iter")}
-        optimizer = BO(
-            f=self._norm_wrapper_residuals_bayes,
-            pbounds=pbounds,
-            verbose=2,
-            **bo_kwargs,
+        """Set up the optimization and solve the problem.
+
+        Returns
+        -------
+            Gives list of solutions, corresponding objective, convergence
+            violation if applicable, etc.
+
+        """
+        pbounds = self._format_variables()
+        optimizer = BayesianOptimization(
+            f=self._to_maximise, pbounds=pbounds, random_state=1
         )
-        utility = UtilityFunction(kind="ei", kappa=0.1, xi=1)
-        # Get init_points and n_iter from kwargs or defaults
-        init_points = self.optimisation_algorithm_kwargs.get("init_points", self._default_kwargs["init_points"])
-        n_iter = self.optimisation_algorithm_kwargs.get("n_iter", self._default_kwargs["n_iter"])
-        optimizer.maximize(
-            init_points=init_points,
-            n_iter=n_iter,
-            acq=utility.kind,
-            kappa=utility.kappa,
-            xi=utility.xi,
-        )
-        x_best = np.array([optimizer.max["params"][name] for name in pbounds])
-        self.opti_sol = self._generate_opti_sol(x_best, optimizer)
-        complementary_info = ("Bayesian Optimization", "Finished")
-        self._finalize(self.opti_sol, *complementary_info)
+        optimizer.maximize(**self._default_kwargs)
+        self.opti_sol = self._generate_opti_sol(optimizer.max)
+        self._finalize(self.opti_sol)
         return self.opti_sol
+
+    def _to_maximise(self, **kwargs) -> float:
+        """The function to maximize by BO.
+
+        This is the classic
+        :meth:`.OptimisationAlgorithm._norm_wrapper_residuals`, with two
+        adaptations:
+
+        - Multiplied by ``-1.0`` to maximize instead of minimize
+        - Takes arguments as floats instead of numpy array.
+          - Keys are ``Variable.__str__()``
+
+        """
+        return -self._norm_wrapper_residuals(self._to_numpy(**kwargs))
 
     @property
     def _default_kwargs(self) -> dict[str, Any]:
         """Create the ``kwargs`` for the optimisation."""
-        kwargs = {
-            "init_points": 5,
-            "n_iter": 500,
-        }
+        kwargs = {"init_points": 10, "n_iter": 500}
         return kwargs
 
-    def _generate_opti_sol(self, x_best: np.ndarray, optimizer: BO) -> OptiSol:
+    def _generate_opti_sol(self, result: dict[str, Any] | None) -> OptiSol:
         """Store the optimization results."""
         status = "compensate (ok)"
-        cavity_settings = self._create_set_of_cavity_settings(x_best, status)
+        if result is None:
+            raise ValueError("Optimization failed.")
+
+        for key in ("params", "target"):
+            if key in result:
+                continue
+            raise ValueError(f"Output of BO should have a {key = }.\n{result}")
+
+        sol = self._to_numpy(**result["params"])
+        cavity_settings = self._create_set_of_cavity_settings(sol, status)
 
         opti_sol: OptiSol = {
-            "var": x_best,
+            "var": sol,
             "cavity_settings": cavity_settings,
-            "fun": optimizer.max["target"],
-            "objectives": self._get_objective_values(x_best),
+            "fun": result["target"],
+            "objectives": self._get_objective_values(sol),
             "success": True,
         }
         return opti_sol
 
-    def _format_bounds(self) -> dict[str, tuple[float, float]]:
-        """Convert the :class:`.Variable` to a dict for bayes_opt."""
-        return {f"x{i}": tuple(var.limits) for i, var in enumerate(self.variables)}
+    def _format_variables(self) -> dict[str, tuple[float, float]]:
+        """Map every variable name with its limits."""
+        pbounds = {str(var): var.limits for var in self.variables}
+        return pbounds
 
-    def _norm_wrapper_residuals_bayes(self, **kwargs) -> float:
-        """Wraps the objective for bayes_opt, mapping dict to array."""
-        x = np.array([kwargs[f"x{i}"] for i in range(len(self.variables))])
-        return -self._norm_wrapper_residuals(x)  # bayes_opt maximizes, so negate
+    def _to_numpy(self, **kwargs) -> NDArray:
+        """Convert dict of variables to numpy array."""
+        return np.array([kwargs[str(var)] for var in self.variables])
