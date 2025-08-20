@@ -13,6 +13,7 @@ Submodules
    :maxdepth: 5
 
    lightwin.optimisation.algorithms.algorithm
+   lightwin.optimisation.algorithms.bayesian_optimization
    lightwin.optimisation.algorithms.differential_evolution
    lightwin.optimisation.algorithms.downhill_simplex
    lightwin.optimisation.algorithms.downhill_simplex_penalty
@@ -21,3 +22,4 @@ Submodules
    lightwin.optimisation.algorithms.least_squares
    lightwin.optimisation.algorithms.least_squares_penalty
    lightwin.optimisation.algorithms.nsga
+   lightwin.optimisation.algorithms.simulated_annealing
