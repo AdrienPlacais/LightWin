@@ -119,6 +119,10 @@ nitpick_ignore = [
 
 # Link to other libraries
 intersphinx_mapping = {
+    "bayes_opt": (
+        "https://bayesian-optimization.github.io/BayesianOptimization/master/",
+        None,
+    ),
     "matplotlib": ("https://matplotlib.org/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
     "pandas": ("https://pandas.pydata.org/docs", None),
