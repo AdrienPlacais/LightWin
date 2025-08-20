@@ -43,8 +43,8 @@ failed = [["FM11"]]
 id_nature = "name"
 k = 5
 objective_preset = "EnergyPhaseMismatch"
-optimisation_algorithm = "downhill_simplex"
-optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
+optimisation_algorithm = "experimental"
+# optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
 
 [save_wtf]

@@ -16,6 +16,9 @@ from lightwin.core.elements.field_maps.cavity_settings_factory import (
 )
 from lightwin.failures.fault import Fault
 from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
+from lightwin.optimisation.algorithms.bayesian_optimization import (
+    BayesianOptimization,
+)
 from lightwin.optimisation.algorithms.differential_evolution import (
     DifferentialEvolution,
 )
@@ -31,28 +34,30 @@ from lightwin.optimisation.algorithms.least_squares_penalty import (
 from lightwin.optimisation.algorithms.nsga import NSGA
 
 ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
-    "least_squares": LeastSquares,
-    "least_squares_penalty": LeastSquaresPenalty,
-    "nsga": NSGA,
+    "bayesian_optimization": BayesianOptimization,
+    "differential_evolution": DifferentialEvolution,
     "downhill_simplex": DownhillSimplex,
     "downhill_simplex_penalty": DownhillSimplexPenalty,
+    "experimental": BayesianOptimization,
+    "explorator": Explorator,
+    "least_squares": LeastSquares,
+    "least_squares_penalty": LeastSquaresPenalty,
     "nelder_mead": DownhillSimplex,
     "nelder_mead_penalty": DownhillSimplexPenalty,
-    "differential_evolution": DifferentialEvolution,
-    "explorator": Explorator,
-    "experimental": Explorator,
+    "nsga": NSGA,
 }  #:
 ALGORITHMS_T = Literal[
-    "least_squares",
-    "least_squares_penalty",
-    "nsga",
+    "bayesian_optimization",
+    "differential_evolution",
     "downhill_simplex",
     "downhill_simplex_penalty",
+    "experimental",
+    "explorator",
+    "least_squares",
+    "least_squares_penalty",
     "nelder_mead",
     "nelder_mead_penalty",
-    "differential_evolution",
-    "explorator",
-    "experimental",
+    "nsga",
 ]
 
 
