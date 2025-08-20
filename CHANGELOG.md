@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [0.11.x]
 
+## [0.11.2] -- 2025-08-20
+
+### Fixed
+
+- Dummy import error in test suite.
+
 ## [0.11.1] -- 2025-08-20
 
 ### Changed
