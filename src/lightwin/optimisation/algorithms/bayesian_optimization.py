@@ -1,10 +1,9 @@
 """Define bayesian optimization algorithms."""
 
-import logging
 from typing import Any
 
 import numpy as np
-from bayes_opt import BayesianOptimization as BO
+from bayes_opt.bayesian_optimization import BayesianOptimization
 from numpy.typing import NDArray
 
 from lightwin.optimisation.algorithms.algorithm import (
@@ -13,8 +12,12 @@ from lightwin.optimisation.algorithms.algorithm import (
 )
 
 
-class BayesianOptimization(OptimisationAlgorithm):
-    """Bayesian optimization algorithm."""
+class BayesianOptimizationLW(OptimisationAlgorithm):
+    """Bayesian optimization algorithm.
+
+    Under the hood, relies on :class:`bayes_opt.BayesianOptimization`.
+
+    """
 
     supports_constraints = False
 
@@ -28,7 +31,9 @@ class BayesianOptimization(OptimisationAlgorithm):
 
         """
         pbounds = self._format_variables()
-        optimizer = BO(f=self._to_maximise, pbounds=pbounds, random_state=1)
+        optimizer = BayesianOptimization(
+            f=self._to_maximise, pbounds=pbounds, random_state=1
+        )
         optimizer.maximize(**self._default_kwargs)
         self.opti_sol = self._generate_opti_sol(optimizer.max)
         self._finalize(self.opti_sol)

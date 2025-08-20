@@ -17,7 +17,7 @@ from lightwin.core.elements.field_maps.cavity_settings_factory import (
 from lightwin.failures.fault import Fault
 from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
 from lightwin.optimisation.algorithms.bayesian_optimization import (
-    BayesianOptimization,
+    BayesianOptimizationLW,
 )
 from lightwin.optimisation.algorithms.differential_evolution import (
     DifferentialEvolution,
@@ -34,11 +34,11 @@ from lightwin.optimisation.algorithms.least_squares_penalty import (
 from lightwin.optimisation.algorithms.nsga import NSGA
 
 ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
-    "bayesian_optimization": BayesianOptimization,
+    "bayesian_optimization": BayesianOptimizationLW,
     "differential_evolution": DifferentialEvolution,
     "downhill_simplex": DownhillSimplex,
     "downhill_simplex_penalty": DownhillSimplexPenalty,
-    "experimental": BayesianOptimization,
+    "experimental": BayesianOptimizationLW,
     "explorator": Explorator,
     "least_squares": LeastSquares,
     "least_squares_penalty": LeastSquaresPenalty,
