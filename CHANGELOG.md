@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [0.11.x]
 
+## [0.11.3]
+
+### Added
+
+- New optimization algorithms: 
+  - simulated annealing 
+  - bayesian optimization
+
 ## [0.11.2] -- 2025-08-20
 
 ### Fixed

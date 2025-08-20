@@ -29,6 +29,9 @@ from lightwin.optimisation.algorithms.least_squares_penalty import (
     LeastSquaresPenalty,
 )
 from lightwin.optimisation.algorithms.nsga import NSGA
+from lightwin.optimisation.algorithms.simulated_annealing import SimulatedAnnealing
+# from lightwin.optimisation.algorithms.bayesian_optimization import BayesianOptimization
+
 
 ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
     "least_squares": LeastSquares,
@@ -41,6 +44,8 @@ ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
     "differential_evolution": DifferentialEvolution,
     "explorator": Explorator,
     "experimental": Explorator,
+    "simulated_annealing": SimulatedAnnealing,
+    # "bayesian_optimization": BayesianOptimization,
 }  #:
 ALGORITHMS_T = Literal[
     "least_squares",
@@ -53,6 +58,8 @@ ALGORITHMS_T = Literal[
     "differential_evolution",
     "explorator",
     "experimental",
+    "simulated_annealing",
+    # "bayesian_optimization"
 ]
 
 
