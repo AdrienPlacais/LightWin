@@ -1,7 +1,7 @@
 """Define :class:`Diagnostic`.
 
 As for now, diagnostics are not used by LightWin. However, LightWin can add
-diagnostics (as well as ADJUST) to the final ``.dat`` in order to perform a
+diagnostics (as well as ADJUST) to the final ``DAT`` in order to perform a
 "pass beauty".
 
 .. note::

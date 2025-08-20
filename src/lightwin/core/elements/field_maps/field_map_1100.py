@@ -30,13 +30,13 @@ class FieldMap1100(FieldMap):
         inplace: bool = False,
         **kwargs,
     ) -> list[str]:
-        r"""Convert the object back into a line in the ``.dat`` file.
+        r"""Convert the object back into a line in the ``DAT`` file.
 
         Parameters
         ----------
         which_phase : Literal["phi_0_abs", "phi_0_rel", "phi_s", \
                 "as_in_settings", "as_in_original_dat"]
-            Which phase should be put in the output ``.dat``.
+            Which phase should be put in the output ``DAT``.
         inplace : bool, optional
             To modify the :class:`.Element` inplace. The default is False, in
             which case, we return a modified copy.
@@ -44,7 +44,7 @@ class FieldMap1100(FieldMap):
         Returns
         -------
         list[str]
-            The line in the ``.dat``, with updated amplitude and phase from
+            The line in the ``DAT``, with updated amplitude and phase from
             current object.
 
         """

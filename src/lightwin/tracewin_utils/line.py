@@ -1,4 +1,4 @@
-"""Define an object corresponding to a single line of the ``.dat``."""
+"""Define an object corresponding to a single line of the ``DAT``."""
 
 import re
 from collections.abc import Collection
@@ -6,16 +6,16 @@ from typing import Any
 
 
 class DatLine:
-    """Hold a single line of the ``.dat`` file.
+    """Hold a single line of the ``DAT`` file.
 
     Attributes
     ----------
     _original_line : str
-        Line in the ``.dat`` given as a user-input.
+        Line in the ``DAT`` given as a user-input.
     idx : int
-        Position in the ``.dat`` file.
+        Position in the ``DAT`` file.
     personalized_name : str | None, optional
-        The name given by the user in the ``.dat``. The default is None.
+        The name given by the user in the ``DAT``. The default is None.
     weight : float | None, optional
         The weight of the diagnostic. The default is None.
     splitted : list[str]

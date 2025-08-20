@@ -951,7 +951,7 @@ class CavitySettings:
     #     * - LightWin's ``status``
     #       - Meaning
     #     * - ``'nominal'``
-    #       - ``phi_0`` and ``k_e`` match the original ``.dat`` file
+    #       - ``phi_0`` and ``k_e`` match the original ``DAT`` file
     #     * - ``'rephased (in progress)'``
     #       - ``k_e`` unchanged, trying to find the proper ``phi_0`` (usually,\
     #       just keep the ``phi_0_rel``)

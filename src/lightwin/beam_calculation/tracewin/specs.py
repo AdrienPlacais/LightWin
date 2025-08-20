@@ -640,7 +640,7 @@ TRACEWIN_CONFIG = _PURE_TRACEWIN_CONFIG + (
     KeyValConfSpec(
         key="ini_path",
         types=(str, Path),
-        description="Path to the `.ini` TraceWin file.",
+        description="Path to the `INI` TraceWin file.",
         default_value=example_ini,
         is_a_path_that_must_exists=True,
     ),

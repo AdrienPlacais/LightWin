@@ -585,7 +585,7 @@ def get_objectives_and_residuals_function(
         Elements that will be used for the compensation.
     design_space_kw :
         Used when we need to determine the limits for ``phi_s``. Those limits
-        are defined in the ``.ini`` configuration file.
+        are defined in the ``INI`` configuration file.
     objective_factory_class :
         If provided, will override the ``objective_preset``. Used to let user
         define it's own :class:`.ObjectiveFactory` without altering the source

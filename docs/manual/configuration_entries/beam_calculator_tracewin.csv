@@ -259,9 +259,7 @@ implicit rephasing after a
 failure).",❌,
 `ini_path`,"`str` or
 
-`Path`","Path to the `.ini` TraceWin
-
-file.",✅,
+`Path`",Path to the `INI` TraceWin file.,✅,
 `machine_config_file`,"`str` or
 
 `Path`","Path to a file holding the

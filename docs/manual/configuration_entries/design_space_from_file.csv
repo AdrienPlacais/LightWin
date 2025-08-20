@@ -7,14 +7,14 @@ constraints.",✅,"('abs_phase_amplitude', 'rel_phase_amplitude', 'sync_phase_am
 should be taken from a file.",✅,
 `constraints_filepath`,"`str` or
 
-`Path`","Path to the `.csv` holding
+`Path`","Path to the `CSV` holding
 
 constraints. Mandatory if
 
 `from_file` is `True`.",❌,
 `variables_filepath`,"`str` or
 
-`Path`","Path to the `.csv` holding
+`Path`","Path to the `CSV` holding
 
 variables. Mandatory if
 

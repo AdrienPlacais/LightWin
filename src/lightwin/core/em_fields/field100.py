@@ -34,12 +34,12 @@ class Field100(Field):
     def _load_fieldmap(
         self, path: Path, **validity_check_kwargs
     ) -> tuple[Callable[[Pos1D], float], tuple[int], int]:
-        r"""Load a 1D field (``.edz`` extension).
+        r"""Load a 1D field (``EDZ`` extension).
 
         Parameters
         ----------
         path : pathlib.Path
-            The path to the ``.edz`` file to load.
+            The path to the ``EDZ`` file to load.
 
         Returns
         -------

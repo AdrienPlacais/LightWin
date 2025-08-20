@@ -37,7 +37,7 @@ class DesignSpaceFactory(ABC):
         The elements from the linac under fixing that will be used for
         compensation.
     design_space_kw :
-        The entries of ``[design_space]`` in ``.ini`` file.
+        The entries of ``[design_space]`` in ``INI`` file.
 
     """
 
@@ -312,7 +312,7 @@ class Everything(DesignSpaceFactory):
     """This class creates all possible variables and constraints.
 
     This is not to be used in an optimisation problem, but rather to save in a
-    ``.csv`` all the limits and initial values for every variable/constraint.
+    ``CSV`` all the limits and initial values for every variable/constraint.
 
     """
 

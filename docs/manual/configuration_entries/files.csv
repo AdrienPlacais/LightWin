@@ -1,7 +1,7 @@
 Entry,Type,Description,Mandatory?,Allowed values
 `dat_file`,"`str` or
 
-`Path`",Path to the `.dat` file,✅,
+`Path`",Path to the `DAT` file,✅,
 "`logfile_console_`
 
 `level`",`str`,"Level of messages written in

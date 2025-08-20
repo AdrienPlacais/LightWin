@@ -104,7 +104,7 @@ class Envelope3D(BeamCalculator):
             List of elements in which the beam must be propagated.
         update_reference_phase : bool, optional
             To change the reference phase of cavities when it is different from
-            the one asked in the ``.toml``. To use after the first calculation,
+            the one asked in the ``TOML``. To use after the first calculation,
             if ``BeamCalculator.flag_phi_abs`` does not correspond to
             ``CavitySettings.reference``. The default is False.
 

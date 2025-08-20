@@ -9,7 +9,7 @@ a full :class:`.ListOfElements` from scratch.
 :class:`.ListOfElements` that contains only a fraction of the linac.
 
 .. todo::
-    Also handle ``.dst`` file in :meth:`.subset_list_run`.
+    Also handle ``DST`` file in :meth:`.subset_list_run`.
 
 .. todo::
     Maybe it will be necessary to handle cases where the synch particle is not
@@ -123,12 +123,12 @@ class ListOfElementsFactory:
         Parameters
         ----------
         dat_file : pathlib.Path
-            Absolute path to the ``.dat`` file.
+            Absolute path to the ``DAT`` file.
         accelerator_path : pathlib.Path
             Absolute path where results for each :class:`.BeamCalculator` will
             be stored.
         instructions_to_insert : Collection[Instruction], optional
-            Some elements or commands that are not present in the ``.dat`` file
+            Some elements or commands that are not present in the ``DAT`` file
             but that you want to add. The default is an empty tuple.
         kwargs :
             Arguments to instantiate the input particle and beam properties.
@@ -282,7 +282,7 @@ class ListOfElementsFactory:
         folder: Path | str = Path("tmp"),
         dat_name: Path | str = Path("tmp.dat"),
     ) -> FilesInfo:
-        """Set the new ``.dat`` file containing only elements of ``elts``."""
+        """Set the new ``DAT`` file containing only elements of ``elts``."""
         accelerator_path = files_from_full_list_of_elements["accelerator_path"]
         out = accelerator_path / folder
         out.mkdir(exist_ok=True)

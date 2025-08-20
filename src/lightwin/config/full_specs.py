@@ -120,7 +120,7 @@ class ConfSpec:
             Name of the desired table.
         id_type :
             If ``table_id`` is the name of the object (eg ``'beam'``) or of the
-            table entry in the ``.toml`` (eg ``'my_proton_beam'``, without
+            table entry in the ``TOML`` (eg ``'my_proton_beam'``, without
             brackets).
 
         Returns
@@ -148,7 +148,7 @@ class ConfSpec:
         original_toml_folder: Path | None = None,
         **kwargs,
     ) -> list[str]:
-        """Convert the given dict in string that can be put in a ``.toml``.
+        """Convert the given dict in string that can be put in a ``TOML``.
 
         Parameters
         ----------
@@ -156,16 +156,16 @@ class ConfSpec:
             Holds the full configuration.
         id_type :
             If ``toml_fulldict`` keys are name of the object (eg ``'beam'``) or
-            of the table entry in the ``.toml`` (eg ``'my_proton_beam'``,
+            of the table entry in the ``TOML`` (eg ``'my_proton_beam'``,
             without brackets).
         original_toml_folder :
-            Where the original ``.toml`` was; this is used to resolve paths
+            Where the original ``TOML`` was; this is used to resolve paths
             relative to this location.
 
         Returns
         -------
         list[str]
-            The ``.toml`` content that can be directly written to a ``.toml``
+            The ``TOML`` content that can be directly written to a ``TOML``
             file.
 
         """
@@ -197,7 +197,7 @@ class ConfSpec:
             Holds the full configuration.
         id_type :
             If ``toml_fulldict`` keys are name of the object (eg ``'beam'``) or
-            of the table entry in the ``.toml`` (eg ``'my_proton_beam'``). Do
+            of the table entry in the ``TOML`` (eg ``'my_proton_beam'``). Do
             not put the brackets present in the ``TOML`` file.
 
         Returns

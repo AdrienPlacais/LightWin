@@ -84,7 +84,7 @@ DESIGN_SPACE_FROM_FILE = _DESIGN_SPACE_BASE + (
         key="constraints_filepath",
         types=(str, Path),
         description=(
-            "Path to the `.csv` holding constraints. Mandatory if "
+            "Path to the `CSV` holding constraints. Mandatory if "
             "`from_file` is `True`."
         ),
         default_value=example_constraints,
@@ -95,7 +95,7 @@ DESIGN_SPACE_FROM_FILE = _DESIGN_SPACE_BASE + (
         key="variables_filepath",
         types=(str, Path),
         description=(
-            "Path to the `.csv` holding variables. Mandatory if "
+            "Path to the `CSV` holding variables. Mandatory if "
             "`from_file` is `True`."
         ),
         default_value=example_variables,

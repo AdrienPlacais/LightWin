@@ -35,12 +35,12 @@ def load_dat_file(
     Parameters
     ----------
     dat_path : pathlib.Path
-        Filepath to the ``.dat`` file, as understood by TraceWin.
+        Filepath to the ``DAT`` file, as understood by TraceWin.
     keep : Literal["none", "comments", "empty lines", "all"], optional
         To determine which un-necessary lines in the dat file should be kept.
         The default is `'none'`.
     instructions_to_insert : Collection[Instruction], optional
-        Some elements or commands that are not present in the ``.dat`` file but
+        Some elements or commands that are not present in the ``DAT`` file but
         that you want to add. The default is an empty tuple.
 
     Returns

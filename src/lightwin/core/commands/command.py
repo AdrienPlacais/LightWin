@@ -15,10 +15,10 @@ class Command(Instruction):
     ----------
     idx : dict[str, int]
         Dictionary holding useful indexes. Keys are ``'dat_idx'`` (position in
-        the ``.dat`` file) and ``'influenced_elements'`` (position in the
-        ``.dat`` file of the elements concerned by current command).
+        the ``DAT`` file) and ``'influenced_elements'`` (position in the
+        ``DAT`` file of the elements concerned by current command).
     line : list[str]
-        Line in the ``.dat`` file corresponding to current command.
+        Line in the ``DAT`` file corresponding to current command.
 
     See Also
     --------
@@ -61,7 +61,7 @@ class Command(Instruction):
         Parameters
         ----------
         dat_indexes : list[int]
-            Indexes in the ``.dat`` file of the sub-list of elements under
+            Indexes in the ``DAT`` file of the sub-list of elements under
             creation.
 
         """

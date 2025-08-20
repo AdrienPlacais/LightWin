@@ -1,4 +1,4 @@
-"""Define functions to load, modify and create ``.dat`` structure files.
+"""Define functions to load, modify and create ``DAT`` structure files.
 
 .. todo::
     Insert line skip at each section change in the output.dat
@@ -29,14 +29,14 @@ def dat_filecontent_from_file(
     Parameters
     ----------
     dat_path : pathlib.Path
-        Filepath to the ``.dat`` file, as understood by TraceWin.
+        Filepath to the ``DAT`` file, as understood by TraceWin.
     keep : Literal["none", "comments", "all"], optional
         To determine which un-necessary lines in the dat file should be kept.
         The default is `'none'`.
     filter_func : Callable
         You can provide your own filters here. Takes precedence over ``keep``.
     instructions_to_insert : Collection[Instruction | DatLine], optional
-        Some elements or commands that are not present in the ``.dat`` file but
+        Some elements or commands that are not present in the ``DAT`` file but
         that you want to add. The default is an empty tuple.
 
     Returns
@@ -65,7 +65,7 @@ def _filter_lines(
     Parameters
     ----------
     dat_filecontent : Sequence[DatLine]
-        Content loaded from the ``.dat`` file.
+        Content loaded from the ``DAT`` file.
     keep : Literal["none", "comments", "all"], optional
         To determine which un-necessary lines in the dat file should be kept.
         The default is `'none'`.
@@ -75,7 +75,7 @@ def _filter_lines(
     Returns
     -------
     list[DatLine]
-        Content of the ``.dat`` file without undesirable content.
+        Content of the ``DAT`` file without undesirable content.
 
     """
     if keep == "all":
@@ -121,7 +121,7 @@ def dat_filecontent_from_smaller_list_of_elements(
     elts: Collection[Element],
 ) -> tuple[list[DatLine], list[Instruction]]:
     """
-    Create a ``.dat`` with only elements of ``elts`` (and concerned commands).
+    Create a ``DAT`` with only elements of ``elts`` (and concerned commands).
 
     Properties of the FIELD_MAP, i.e. amplitude and phase, remain untouched.
 
@@ -173,14 +173,14 @@ def export_dat_filecontent(
     dat_filecontent: Collection[Collection[str]] | Collection[DatLine],
     dat_path: Path,
 ) -> None:
-    """Save the content of the updated dat to a ``.dat``.
+    """Save the content of the updated dat to a ``DAT``.
 
     Parameters
     ----------
     dat_filecontent : Collection[Collection[str]]
-        Content of the ``.dat``, line per line, word per word.
+        Content of the ``DAT``, line per line, word per word.
     dat_path : pathlib.Path
-        Where to save the ``.dat``.
+        Where to save the ``DAT``.
 
     """
     with open(dat_path, "w", encoding="utf-8") as file:

@@ -110,7 +110,7 @@ class BeamCalculator(ABC):
 
         .. todo::
             ``default_field_map_folder`` has a wrong default value. Should take
-            path to the ``.dat`` file, that is not known at this point. Maybe
+            path to the ``DAT`` file, that is not known at this point. Maybe
             handle this directly in the :class:`.InstructionsFactory` or
             whatever.
 
@@ -152,7 +152,7 @@ class BeamCalculator(ABC):
             List of elements in which the beam must be propagated.
         update_reference_phase :
             To change the reference phase of cavities when it is different from
-            the one asked in the ``.toml``. To use after the first calculation,
+            the one asked in the ``TOML``. To use after the first calculation,
             if ``BeamCalculator.flag_phi_abs`` does not correspond to
             ``CavitySettings.reference``. The default is False.
         kwargs

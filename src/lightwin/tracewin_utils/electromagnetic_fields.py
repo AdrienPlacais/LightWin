@@ -282,7 +282,7 @@ def load_field_map_file(
 ) -> tuple[FieldFuncComponent1D, int, int] | None:
     """Go across the field map file names and load the first recognized.
 
-    For now, only ``.edz`` files (1D electric RF) are implemented. This will be
+    For now, only ``EDZ`` files (1D electric RF) are implemented. This will be
     a problem with :class:`.Envelope1D`, but :class:`.TraceWin` does not care.
 
     """

@@ -10,8 +10,8 @@ the particles in envelope or multipart, in 3D. In contrary to
     You should ensure that you are working with *absolute* phases, i.e. that
     last argument of ``FIELD_MAP`` commands is ``1``.
     You can run a simulation with :class:`.Envelope1D` solver and
-    ``flag_phi_abs=True``. The ``.dat`` file created in the ``000001_ref``
-    folder should be the original ``.dat`` but converted to absolute phases.
+    ``flag_phi_abs=True``. The ``DAT`` file created in the ``000001_ref``
+    folder should be the original ``DAT`` but converted to absolute phases.
 
 .. todo::
     This absolute phase thing should be fixed now. Check this.
@@ -55,9 +55,9 @@ class TraceWin(BeamCalculator):
     executable :
         Path to the TraceWin executable.
     ini_path :
-        Path to the ``.ini`` TraceWin file.
+        Path to the ``INI`` TraceWin file.
     base_kwargs :
-        TraceWin optional arguments. Override what is defined in ``.ini``, but
+        TraceWin optional arguments. Override what is defined in ``INI``, but
         overriden by arguments from :class:`.ListOfElements` and
         :class:`.SimulationOutput`.
     _tracewin_command :
@@ -69,7 +69,7 @@ class TraceWin(BeamCalculator):
         :func:`init_solver_parameters` method, using
         ``Accelerator.accelerator_path`` and ``self.out_folder`` attributes.
     dat_file :
-        Base name for the ``.dat`` file. ??
+        Base name for the ``DAT`` file. ??
 
     """
 
@@ -134,7 +134,7 @@ class TraceWin(BeamCalculator):
 
         This part of the command is the same for every :class:`.ListOfElements`
         and every :class:`.Fault`. It sets the TraceWin executable, the
-        ``.ini`` file.  It also defines ``base_kwargs``, which should be the
+        ``INI`` file.  It also defines ``base_kwargs``, which should be the
         same for every calculation. Finally, it sets ``path_cal``.
         But this path is more :class:`.ListOfElements` dependent...
         ``Accelerator.accelerator_path`` + ``out_folder``
@@ -168,9 +168,9 @@ class TraceWin(BeamCalculator):
 
         It contains the 'base' command, which includes every argument that is
         common to every calculation with this :class:`.BeamCalculator`: path to
-        ``.ini`` file, to executable...
+        ``INI`` file, to executable...
 
-        It contains the :class:`.ListOfElements` command: path to the ``.dat``
+        It contains the :class:`.ListOfElements` command: path to the ``DAT``
         file, initial energy and beam properties.
 
         It can contain some :class:`.SetOfCavitySettings` commands: ``ele``
@@ -216,12 +216,12 @@ class TraceWin(BeamCalculator):
             List of elements in which the beam must be propagated.
         update_reference_phase :
             To change the reference phase of cavities when it is different from
-            the one asked in the ``.toml``. To use after the first calculation,
+            the one asked in the ``TOML``. To use after the first calculation,
             if ``BeamCalculator.flag_phi_abs`` does not correspond to
             ``CavitySettings.reference``. The default is False.
         specific_kwargs :
             ``TraceWin`` optional arguments. Overrides what is defined in
-            ``base_kwargs`` and ``.ini``.
+            ``base_kwargs`` and ``INI``.
 
         Returns
         -------
@@ -310,7 +310,7 @@ class TraceWin(BeamCalculator):
         * Updating the ``index`` ``n`` of the cavities in the ``ele[n][v]``
           command.
 
-        Note that at this point, the ``.dat`` has not been updated yet.
+        Note that at this point, the ``DAT`` has not been updated yet.
 
         Parameters
         ----------

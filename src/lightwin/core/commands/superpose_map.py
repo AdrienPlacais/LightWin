@@ -84,7 +84,7 @@ class SuperposeMap(Command):
         """Apply the command.
 
         Only the first :class:`SuperposeMap` of a bunch of field maps should be
-        applied. In order to avoid messing with indexes in the ``.dat`` file,
+        applied. In order to avoid messing with indexes in the ``DAT`` file,
         all Commands are replaced by dummy commands. All field maps are
         replaced by dummy elements of length 0, except the first field_map that
         is replaced by a SuperposedFieldMap.
