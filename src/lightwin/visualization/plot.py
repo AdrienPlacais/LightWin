@@ -142,6 +142,7 @@ def factory(
         - Reference linac, second solver
         - Fixed linac, first solver
         - Fixed linac, second solver
+
         If you provide only the two first linacs, the function will still work
         but they will be plotted twice.
     plots :

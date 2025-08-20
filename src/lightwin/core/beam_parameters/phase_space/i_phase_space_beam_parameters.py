@@ -4,7 +4,7 @@ For a list of the units associated with every parameter, see
 :ref:`units-label`.
 
 .. note::
-    In this module, angles are stored in deg, not in rad!
+    In this module, angles are stored in :unit:`deg`, not in :unit:`rad`!
 
 """
 
@@ -12,6 +12,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Self
 
+import numpy as np
 from numpy.typing import NDArray
 
 from lightwin.core.beam_parameters.helper import (
@@ -31,14 +32,14 @@ class IPhaseSpaceBeamParameters(ABC):
     """Hold Twiss, emittance, envelopes of single phase-space @ single pos."""
 
     phase_space_name: PHASE_SPACE_T
-    eps_no_normalization: NDArray | float
-    eps_normalized: NDArray | float
+    eps_no_normalization: NDArray[np.float64] | float
+    eps_normalized: NDArray[np.float64] | float
     # _beam_kwargs: BeamKwargs
-    envelopes: NDArray | None = None
-    twiss: NDArray | None = None
-    sigma: NDArray | None = None
-    tm_cumul: NDArray | None = None
-    mismatch_factor: NDArray | float | None = None
+    envelopes: NDArray[np.float64] | None = None
+    twiss: NDArray[np.float64] | None = None
+    sigma: NDArray[np.float64] | None = None
+    tm_cumul: NDArray[np.float64] | None = None
+    mismatch_factor: NDArray[np.float64] | float | None = None
 
     def __post_init__(self) -> None:
         """Ensure that the phase space exists."""
@@ -48,11 +49,11 @@ class IPhaseSpaceBeamParameters(ABC):
     def from_sigma(
         cls,
         phase_space_name: PHASE_SPACE_T,
-        sigma: NDArray,
-        gamma_kin: NDArray | float,
-        beta_kin: NDArray | float,
+        sigma: NDArray[np.float64],
+        gamma_kin: NDArray[np.float64] | float,
+        beta_kin: NDArray[np.float64] | float,
         beam_kwargs: BeamKwargs,
-        **kwargs: NDArray,
+        **kwargs: NDArray[np.float64],
     ) -> Self:
         """Compute Twiss, eps, envelopes just from sigma matrix."""
         eps_no_normalization, eps_normalized = eps_from_sigma(
@@ -81,10 +82,10 @@ class IPhaseSpaceBeamParameters(ABC):
         cls,
         other_phase_space: Self,
         phase_space_name: PHASE_SPACE_T,
-        gamma_kin: NDArray | float,
-        beta_kin: NDArray | float,
+        gamma_kin: NDArray[np.float64] | float,
+        beta_kin: NDArray[np.float64] | float,
         beam_kwargs: BeamKwargs,
-        **kwargs: NDArray,  # sigma, tm_cumul
+        **kwargs: NDArray[np.float64],  # sigma, tm_cumul
     ) -> Self:
         """Fully initialize from another phase space."""
         other_phase_space_name = other_phase_space.phase_space_name
@@ -144,72 +145,72 @@ class IPhaseSpaceBeamParameters(ABC):
 
     @property
     @abstractmethod
-    def alpha(self) -> NDArray | float | None:
+    def alpha(self) -> NDArray[np.float64] | float | None:
         """Get first element/column of ``self.twiss``."""
         pass
 
     @alpha.setter
     @abstractmethod
-    def alpha(self, value: NDArray | float) -> None:
+    def alpha(self, value: NDArray[np.float64] | float) -> None:
         """Set first element/column of ``self.twiss``."""
         pass
 
     @property
     @abstractmethod
-    def beta(self) -> NDArray | float | None:
+    def beta(self) -> NDArray[np.float64] | float | None:
         """Get second element/column of ``self.twiss``."""
         pass
 
     @beta.setter
     @abstractmethod
-    def beta(self, value: NDArray | float) -> None:
+    def beta(self, value: NDArray[np.float64] | float) -> None:
         """Set second element/column of ``self.twiss``."""
         pass
 
     @property
     @abstractmethod
-    def gamma(self) -> NDArray | float | None:
+    def gamma(self) -> NDArray[np.float64] | float | None:
         """Get third element/column of ``self.twiss``."""
         pass
 
     @gamma.setter
     @abstractmethod
-    def gamma(self, value: NDArray | float) -> None:
+    def gamma(self, value: NDArray[np.float64] | float) -> None:
         """Set third element/column of ``self.twiss``."""
         pass
 
     @property
     @abstractmethod
-    def envelope_pos(self) -> NDArray | float | None:
+    def envelope_pos(self) -> NDArray[np.float64] | float | None:
         """Get first element/column of ``self.envelopes``."""
         pass
 
     @envelope_pos.setter
     @abstractmethod
-    def envelope_pos(self, value: NDArray | float) -> None:
+    def envelope_pos(self, value: NDArray[np.float64] | float) -> None:
         """Set first element/column of ``self.envelopes``."""
         pass
 
     @property
     @abstractmethod
-    def envelope_energy(self) -> NDArray | float | None:
+    def envelope_energy(self) -> NDArray[np.float64] | float | None:
         """Get second element/column of ``self.envelopes``."""
         pass
 
     @envelope_energy.setter
     @abstractmethod
-    def envelope_energy(self, value: NDArray | float) -> None:
+    def envelope_energy(self, value: NDArray[np.float64] | float) -> None:
         """Set second element/column of ``self.envelopes``."""
         pass
 
     @property
     @abstractmethod
-    def eps(self) -> NDArray | float:
+    def eps(self) -> NDArray[np.float64] | float:
         """Return the normalized emittance."""
         pass
 
     @property
     @abstractmethod
-    def non_norm_eps(self) -> NDArray | float:
+    def non_norm_eps(self) -> NDArray[np.float64] | float:
         """Return the non-normalized emittance."""
         pass

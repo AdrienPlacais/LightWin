@@ -242,7 +242,7 @@ GETTABLE_CAVITY_SETTINGS_T = (
 )
 
 #: Attributes from :class:`.CavitySettings` to concatenate into
-#: a list when called from :meth:`.SetOfCavitySettings.get` (or
+#: a list when called from :meth:`.ListOfElements.get` (or
 #: :meth:`.SimulationOutput.get`)
 CONCATENABLE_CAVITY_SETTINGS = (
     "v_cav_mv",

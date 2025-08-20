@@ -179,8 +179,8 @@ class ListOfElements(list):
     ) -> Any:
         """Get attributes from this class or its contained elements.
 
-        If the desired attribute belongs to :data:`GETTABLE_ELT` or
-        :data:`GETTABLE_FIELD_MAPS`, we concatenate the value of every element
+        If the desired attribute belongs to :data:`.GETTABLE_ELT` or
+        :data:`.GETTABLE_FIELD_MAP`, we concatenate the value of every element
         in a single list.
 
         Parameters
