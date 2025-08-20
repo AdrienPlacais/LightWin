@@ -1,7 +1,8 @@
+"""Define the simulated annealing algorithm."""
+
 from typing import Any
 
-import numpy as np
-from scipy.optimize import Bounds, OptimizeResult, dual_annealing
+from scipy.optimize import OptimizeResult, dual_annealing
 
 from lightwin.optimisation.algorithms.algorithm import (
     OptimisationAlgorithm,
@@ -10,22 +11,17 @@ from lightwin.optimisation.algorithms.algorithm import (
 
 
 class SimulatedAnnealing(OptimisationAlgorithm):
-    """Simulated Annealing method for global optimization.
+    """Simulated Annealing method for global optimization."""
 
-    All attributes but ``solution`` are inherited from the ABC :class:`.OptimisationAlgorithm`.
-    """
-
-    supports_constraints = (
-        False  # scipy's dual_annealing supports bounds but not constraints
-    )
+    supports_constraints = False
 
     def optimize(self) -> OptiSol:
         """Set up and run the simulated annealing algorithm.
 
         Returns
         -------
-        opti_sol : OptiSol
             Contains solution(s), objective value(s), status, etc.
+
         """
         bounds = self._format_bounds()
         result = dual_annealing(
@@ -70,4 +66,4 @@ class SimulatedAnnealing(OptimisationAlgorithm):
 
     def _format_bounds(self) -> list[tuple[float, float]]:
         """Convert Variable objects to a list of bounds."""
-        return [tuple(var.limits) for var in self.variables]
+        return [var.limits for var in self.variables]
