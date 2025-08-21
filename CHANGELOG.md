@@ -7,13 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [0.11.x]
 
+## [0.11.4] -- 2025-08-21
+
+### Added
+
+- New Sphinx directive to nicely display dictionaries.
+  - Check [example](https://lightwin.readthedocs.io/en/0.11.x/manual/configuration.wtf.html#wtf-section)
+- Support for Bayesian Optimization `kwargs`.
+
+### Fixed
+
+- Selection of `simulated_annealing` was in fact not possible.
+
 ## [0.11.3] -- 2025-08-20
 
 ### Added
 
-- New optimization algorithms: 
-  - simulated annealing 
-  - bayesian optimization
+- New optimization algorithms:
+  - Simulated Annealing.
+  - Bayesian Optimization.
 
 ## [0.11.2] -- 2025-08-20
 

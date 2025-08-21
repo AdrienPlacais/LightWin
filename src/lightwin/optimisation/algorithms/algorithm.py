@@ -63,34 +63,34 @@ class OptimisationAlgorithm(ABC):
 
     Parameters
     ----------
-    compensating_elements : list[Element]
+    compensating_elements :
         Cavity objects used to compensate for the faults.
-    elts : ListOfElements
+    elts :
         Holds the whole compensation zone under study.
-    objectives : list[Objective]
+    objectives :
         Holds objectives, initial values, bounds.
-    variables : list[Variable]
+    variables :
         Holds variables, their initial values, their limits.
-    constraints : list[Constraint] | None, optional
-        Holds constraints and their limits. The default is None.
-    opti_sol : OptiSol
+    constraints :
+        Holds constraints and their limits.
+    opti_sol :
         Holds information on the solution that was found.
-    supports_constraints : bool
+    supports_constraints :
         If the method handles constraints or not.
     compute_beam_propagation: ComputeBeamPropagationT
         Method to compute propagation of the beam with the given settings.
         Defined by a :meth:`.BeamCalculator.run_with_this` method, the
         positional argument ``elts`` being set by a ``functools.partial``.
-    compute_residuals : ComputeResidualsT
+    compute_residuals :
         Method to compute residuals from a :class:`.SimulationOutput`.
-    compute_constraints : ComputeConstraintsT | None, optional
-        Method to compute constraint violation. The default is None.
-    cavity_settings_factory : CavitySettingsFactory
+    compute_constraints :
+        Method to compute constraint violation.
+    cavity_settings_factory :
         A factory to easily create the cavity settings to try at each iteration
         of the optimisation algorithm.
-    history_kwargs : dict | None, optional
+    history_kwargs :
         kwargs for the :class:`.OptimizationHistory` creation.
-    reference_simulation_output : SimulationOutput
+    reference_simulation_output :
         Used for the :class:`.OptimizationHistory`.
 
     """
@@ -133,18 +133,14 @@ class OptimisationAlgorithm(ABC):
         self.opti_sol: OptiSol
         self.supports_constraints: bool
 
-        if optimisation_algorithm_kwargs is None:
-            optimisation_algorithm_kwargs = {}
-        self.optimisation_algorithm_kwargs = (
-            self._default_kwargs | optimisation_algorithm_kwargs
+        self.optimisation_algorithm_kwargs = self._default_kwargs | (
+            optimisation_algorithm_kwargs or {}
         )
 
-        if history_kwargs is None:
-            history_kwargs = {}
         self.history = OptimizationHistory(
             reference_simulation_output,
             [obj.base_str().strip() for obj in objectives],
-            **history_kwargs,
+            **(history_kwargs or {}),
         )
 
     @property
@@ -182,7 +178,7 @@ class OptimisationAlgorithm(ABC):
 
         Returns
         -------
-        info : OptiSol
+        info :
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 
@@ -232,7 +228,7 @@ class OptimisationAlgorithm(ABC):
         ----------
         var
             An array holding the variables to try.
-        status : str, optional
+        status :
             mmmh
 
         Returns
@@ -313,16 +309,16 @@ class OptimizationHistory:
 
         Parameters
         ----------
-        get_args, get_kwargs : tuple[str, ...], dict[str, Any], optional
+        get_args, get_kwargs :
             args and kwargs passed to the ``SimulationOutput.get`` method. Used
             to add some values to the output files.
-        get_kwargs : dict[str, Any] | None, optional
+        get_kwargs :
             Keyword arguments for the SimulationOutput.get method.
-        folder : pathlib.Path | str | None, optional
+        folder :
             Where the histories will be saved. If not provided or None is
             given, this class will not have any effect and every public method
             wil be overriden with dummy methods.
-        save_interval : int, optional
+        save_interval :
             Files will be saved every ``save_interval`` iteration.
 
         """
@@ -473,9 +469,9 @@ def _save_values(
 
     Parameters
     ----------
-    filepath : pathlib.Path
+    filepath :
        Where to save the values.
-    values : list[list[float] | numpy.ndarray | None]
+    values :
         The list of values to save (objectives or constraints), starting in
         the third column. If a value is None, it is represented as 'None' in
         the file.
