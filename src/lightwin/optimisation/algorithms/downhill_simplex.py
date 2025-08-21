@@ -30,7 +30,6 @@ class DownhillSimplex(OptimisationAlgorithm):
 
         Returns
         -------
-        opti_sol : OptiSol
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 

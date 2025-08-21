@@ -36,9 +36,8 @@ from lightwin.optimisation.algorithms.simulated_annealing import (
     SimulatedAnnealing,
 )
 
-# from lightwin.optimisation.algorithms.bayesian_optimization import BayesianOptimization
-
-
+#: Maps the ``optimisation_algorithm`` key in the ``TOML`` file to the actual
+#: :class:`.OptimisationAlgorithm` we use.
 ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
     "bayesian_optimization": BayesianOptimizationLW,
     "differential_evolution": DifferentialEvolution,
@@ -51,7 +50,10 @@ ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
     "nelder_mead": DownhillSimplex,
     "nelder_mead_penalty": DownhillSimplexPenalty,
     "nsga": NSGA,
-}  #:
+    "simulated_annealing": SimulatedAnnealing,
+}
+
+#: Implemented optimization algorithms.
 ALGORITHMS_T = Literal[
     "bayesian_optimization",
     "differential_evolution",
@@ -64,6 +66,7 @@ ALGORITHMS_T = Literal[
     "nelder_mead",
     "nelder_mead_penalty",
     "nsga",
+    "simulated_annealing",
 ]
 
 
