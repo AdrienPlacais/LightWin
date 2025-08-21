@@ -47,8 +47,6 @@ class ConfigMapDirective(Directive):
 
         return [self._make_table(grouped, value_header, keys_header)]
 
-    # --- helpers ------------------------------------------------------------
-
     @staticmethod
     def _load_mapping(dotted_path: str) -> dict[str, Any]:
         """Import and return the dictionary given by dotted path."""
