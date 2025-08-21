@@ -1,8 +1,10 @@
 """Define bayesian optimization algorithms."""
 
+import logging
 from typing import Any
 
 import numpy as np
+from bayes_opt import acquisition
 from bayes_opt.bayesian_optimization import BayesianOptimization
 from numpy.typing import NDArray
 
@@ -17,6 +19,14 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
 
     Under the hood, relies on :class:`bayes_opt.BayesianOptimization`.
 
+    The keys defined in ``TOML`` key: ``optimisation_algorithm_kwargs`` are
+    passed to :meth:`bayes_opt.BayesianOptimization.maximize`.
+
+    Special keys:
+
+    - ``"acquisition"`` table is used to set the acquisition function. See
+      :meth:`.BayesianOptimizationLW.acquisition_function`.
+
     """
 
     supports_constraints = False
@@ -30,11 +40,19 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
             violation if applicable, etc.
 
         """
-        pbounds = self._format_variables()
+        x_0, pbounds = self._format_variables()
+
         optimizer = BayesianOptimization(
-            f=self._to_maximise, pbounds=pbounds, random_state=1
+            f=self._to_maximise,
+            pbounds=pbounds,
+            random_state=1,
+            acquisition_function=self.acquisition_function(),
         )
-        optimizer.maximize(**self._default_kwargs)
+
+        # Force evaluation at nominal working point
+        optimizer.register(params=x_0, target=self._to_maximise(**x_0))
+
+        optimizer.maximize(**self.optimisation_algorithm_kwargs)
         self.opti_sol = self._generate_opti_sol(optimizer.max)
         self._finalize(self.opti_sol)
         return self.opti_sol
@@ -56,7 +74,14 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
     @property
     def _default_kwargs(self) -> dict[str, Any]:
         """Create the ``kwargs`` for the optimisation."""
-        kwargs = {"init_points": 10, "n_iter": 500}
+        kwargs = {
+            "init_points": 10,
+            "n_iter": 500,
+            "acquisition": {
+                "acquisition_function": "UpperConfidenceBound",
+                "kwargs": {"kappa": 10},
+            },
+        }
         return kwargs
 
     def _generate_opti_sol(self, result: dict[str, Any] | None) -> OptiSol:
@@ -82,11 +107,58 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
         }
         return opti_sol
 
-    def _format_variables(self) -> dict[str, tuple[float, float]]:
+    def _format_variables(
+        self,
+    ) -> tuple[dict[str, float], dict[str, tuple[float, float]]]:
         """Map every variable name with its limits."""
+        x_0 = {str(var): var.x_0 for var in self.variables}
         pbounds = {str(var): var.limits for var in self.variables}
-        return pbounds
+        return x_0, pbounds
 
     def _to_numpy(self, **kwargs) -> NDArray:
         """Convert dict of variables to numpy array."""
         return np.array([kwargs[str(var)] for var in self.variables])
+
+    def acquisition_function(self) -> acquisition.AcquisitionFunction | None:
+        """Get acquisition function.
+
+        .. todo::
+           Allow for user-defined acquisition function.
+
+        We use ``kwargs`` from the ``"acquisition"`` key. It can look like:
+
+        .. code-block:: toml
+
+            [wtf.optimisation_algorithm_kwargs]
+            # arguments passed to `BayesianOptimization.maximize` method
+
+            [wtf.optimisation_algorithm_kwargs.acquisition]
+            # arguments used to define acquisition function
+            # Name of a func in `bayes_opt.acquisition`:
+            acquisition_name = "UpperConfidenceBound"
+            # Kwargs passed to this function:
+            kwargs = { kappa = 2.576, random_state = 42 }
+
+        """
+        acquisition_kwargs = self.optimisation_algorithm_kwargs.pop(
+            "acquisition", None
+        )
+        if acquisition_kwargs is None:
+            logging.info(
+                "No `acquisition` key in `optimisation_algorithm_kwargs`. "
+                "Using default acquisition function."
+            )
+            return
+
+        acquisition_name = acquisition_kwargs.get("acquisition_function", None)
+        if not hasattr(acquisition, acquisition_name):
+            logging.error(
+                "`acquisition` package from `bayes_opt` module does not have "
+                f"an `acquisition_function` named {acquisition_name}. Using "
+                "default instead."
+            )
+            return
+
+        kwargs = acquisition_kwargs["kwargs"]
+        acquisition_function = getattr(acquisition, acquisition_name)(**kwargs)
+        return acquisition_function
