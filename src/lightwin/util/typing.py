@@ -149,17 +149,15 @@ GETTABLE_BEAM_CALC_PARAMETERS_T = Literal[
 REFERENCE_PHASES = ("phi_0_abs", "phi_0_rel", "phi_s")
 REFERENCE_PHASES_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
 
-#: How phases can be saved in the output ``DAT`` file.
-EXPORT_PHASES = (
-    "as_in_original_dat",
-    "as_in_settings",
-    "phi_0_abs",
-    "phi_0_rel",
-    "phi_s",
-)
-EXPORT_PHASES_T = (
-    REFERENCE_PHASES_T | Literal["as_in_settings", "as_in_original_dat"]
-)
+#: Reference phase policy at :class:`.BeamCalculator` creation. Note that some
+#: cavities can see their reference phase change during execution of the code,
+#: according to the compensations strategy.
+REFERENCE_PHASE_POLICY = REFERENCE_PHASES + ("as_in_original_dat",)
+REFERENCE_PHASE_POLICY_T = REFERENCE_PHASES_T | Literal["as_in_original_dat"]
+
+#: How phases shall be saved in the output ``DAT`` file.
+EXPORT_PHASES = REFERENCE_PHASE_POLICY + ("as_in_settings",)
+EXPORT_PHASES_T = REFERENCE_PHASE_POLICY_T | Literal["as_in_settings"]
 
 #: Different status for cavities
 ALLOWED_STATUS = (
