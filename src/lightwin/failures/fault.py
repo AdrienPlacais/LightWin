@@ -21,7 +21,10 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.core.elements.element import Element
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.helper import equivalent_elt
-from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.core.list_of_elements.list_of_elements import (
+    FilesInfo,
+    ListOfElements,
+)
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.algorithms.algorithm import (
     OptimisationAlgorithm,
@@ -40,25 +43,25 @@ class Fault:
 
     Parameters
     ----------
-    failed_elements : list[Element]
+    failed_elements :
         Holds the failed elements.
-    compensating_elements : list[Element]
+    compensating_elements :
         Holds the compensating elements.
-    elts : ListOfElements
+    elts :
         Holds the portion of the linac that will be computed again and again in
         the optimization process. It is as short as possible, but must contain
         all `failed_elements`, `compensating_elements` and
         `elt_eval_objectives`.
-    variables : list[Variable]
+    variables :
         Holds information on the optimization variables.
-    constraints : list[Constraint] | None
+    constraints :
         Holds infomation on the optimization constraints.
 
     Methods
     -------
-    compute_constraints : Callable[[SimulationOutput], np.ndarray] | None
+    compute_constraints :
         Compute the constraint violation for a given `SimulationOutput`.
-    compute_residuals : Callable[[SimulationOutput], np.ndarray]
+    compute_residuals :
         A function that takes in a `SimulationOutput` and returns the residuals
         of every objective w.r.t the reference one.
 
@@ -68,7 +71,7 @@ class Fault:
         self,
         reference_elts: ListOfElements,
         reference_simulation_output: SimulationOutput,
-        files_from_full_list_of_elements: dict[str, Any],
+        files_from_full_list_of_elements: FilesInfo,
         wtf: dict[str, Any],
         design_space_factory: DesignSpaceFactory,
         broken_elts: ListOfElements,
@@ -81,28 +84,28 @@ class Fault:
 
         Parameters
         ----------
-        reference_elts : ListOfElements
+        reference_elts :
             List of elements of the reference linac. In particular, these
             elements hold the original element settings.
-        reference_simulation_output : SimulationOutput
+        reference_simulation_output :
             Nominal simulation.
-        files_from_full_list_of_elements : dict
+        files_from_full_list_of_elements :
             ``files`` attribute from the linac under fixing. Used to set
             calculation paths.
-        wtf : dict[str, str | int | bool | list[str] | list[float]]
+        wtf :
             What To Fit dictionary. Holds information on the fixing method.
-        design_space_factory : DesignSpaceFactory
+        design_space_factory :
             An object to easily create the proper :class:`.DesignSpace`.
-        failed_elements : list[Element]
+        failed_elements :
             Holds the failed elements.
-        compensating_elements : list[Element]
+        compensating_elements :
             Holds the compensating elements.
-        elts : list[Element]
+        elts :
             Holds the portion of the linac that will be computed again and
             again in the optimization process. It is as short as possible, but
             must contain all altered elements as well as the elements where
             objectives will be evaluated.
-        objective_factory_class : type[ObjectiveFactory] | None, optional
+        objective_factory_class :
             If provided, will override the ``objective_preset``. Used to let
             user define it's own :class:`.ObjectiveFactory` without altering
             the source code.
@@ -156,12 +159,11 @@ class Fault:
 
         Parameters
         ----------
-        optimisation_algorithm : OptimisationAlgorithm
+        optimisation_algorithm :
             The optimization algorithm to be used, already initialized.
 
         Returns
         -------
-        self.opti_sol : OptiSol
             Useful information, such as the best solution.
 
         """
@@ -196,7 +198,7 @@ class Fault:
         """Update status of compensating and failed elements."""
         if optimisation not in ("not started", "finished"):
             logging.error(
-                "{optimisation = } not understood. Not changing any status..."
+                f"{optimisation = } not understood. Not changing any status..."
             )
             return
 

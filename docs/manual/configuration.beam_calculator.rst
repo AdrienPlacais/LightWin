@@ -11,6 +11,9 @@ If the desired :class:`.BeamCalculator` is :class:`.Envelope1D`:
    :file: configuration_entries/beam_calculator_envelope_1d.csv
    :header-rows: 1
 
+Note that the role of the `reference_phase_policy` is extremely important.
+More details and an example in the `dedicated notebook`.
+
 If the desired :class:`.BeamCalculator` is :class:`.Envelope3D`:
 
 .. csv-table::
@@ -30,3 +33,5 @@ See `data/examples/machine_config_file.toml` for an example.
 The ``[beam_calculator_post]`` follows the same format.
 It is used to store a second :class:`.BeamCalculator`.
 This is mainly useful for defining a more precise -- but more time-consuming -- beam dynamics tool, for example to check your compensation settings.
+
+.. _dedicated notebook: notebooks/cavities_reference_phase.ipynb

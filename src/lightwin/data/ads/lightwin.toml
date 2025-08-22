@@ -5,14 +5,16 @@ project_folder = "lw_results/"
 [generic_envelope1d]
 export_phase = "phi_0_abs"
 flag_cython = false
-flag_phi_abs = true
+# flag_phi_abs = true  # Deprecated! Use ``reference_phase_policy``.
 method = "RK4"
 n_steps_per_cell = 40
+reference_phase_policy = "phi_0_abs"
 tool = "Envelope1D"
 
 [generic_envelope3d]
-flag_phi_abs = true
+# flag_phi_abs = true  # Deprecated! Use ``reference_phase_policy``.
 n_steps_per_cell = 40
+reference_phase_policy = "phi_0_abs"
 tool = "Envelope3D"
 
 [generic_tracewin]
@@ -30,12 +32,12 @@ f_bunch_mhz = 100.0
 i_milli_a = 0.0
 q_adim = 1.0
 sigma = [
-   [+8.409896e-06, +3.548736e-06, +0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00],
-   [+3.548736e-06, +1.607857e-06, +0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00],
-   [+0.000000e+00, +0.000000e+00, +2.941564e-06, +6.094860e-07, +0.000000e+00, +0.000000e+00],
-   [+0.000000e+00, +0.000000e+00, +6.094860e-07, +4.418911e-07, +0.000000e+00, +0.000000e+00],
-   [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, +3.593136e-06, -2.552518e-07],
-   [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, -2.552518e-07, +5.994771e-07],
+  [+8.409896e-06, +3.548736e-06, +0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00],
+  [+3.548736e-06, +1.607857e-06, +0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00],
+  [+0.000000e+00, +0.000000e+00, +2.941564e-06, +6.094860e-07, +0.000000e+00, +0.000000e+00],
+  [+0.000000e+00, +0.000000e+00, +6.094860e-07, +4.418911e-07, +0.000000e+00, +0.000000e+00],
+  [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, +3.593136e-06, -2.552518e-07],
+  [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, -2.552518e-07, +5.994771e-07],
 ]
 
 [generic_wtf]
@@ -133,9 +135,9 @@ twiss = true
 
 [evaluators]
 simulation_output = [
-   # { name = "LongitudinalEmittance", max_percentage_rel_increase = 0.005 },
-   # { name = "PowerLoss", max_percentage_increase = 10.0 },
-   # { name = "TransverseMismatchFactor", max_mismatch = 1.0 },
-   # { name = "LongitudinalMismatchFactor", max_mismatch = 1.0 },
-   # { name = "SynchronousPhases", min_phi_s_deg = -90.0, max_phi_s_deg = 0.0 },
+  # { name = "LongitudinalEmittance", max_percentage_rel_increase = 0.005 },
+  # { name = "PowerLoss", max_percentage_increase = 10.0 },
+  # { name = "TransverseMismatchFactor", max_mismatch = 1.0 },
+  # { name = "LongitudinalMismatchFactor", max_mismatch = 1.0 },
+  # { name = "SynchronousPhases", min_phi_s_deg = -90.0, max_phi_s_deg = 0.0 },
 ]

@@ -13,13 +13,17 @@
 import socket
 import tomllib
 from pathlib import Path
+from types import NoneType
 from typing import Any
 
+from lightwin.beam_calculation.deprecated_specs import (
+    apply_deprecated_flag_phi_abs,
+)
 from lightwin.config.helper import find_file
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
 from lightwin.config.table_spec import TableConfSpec
 from lightwin.constants import example_ini, example_machine_config
-from lightwin.util.typing import EXPORT_PHASES
+from lightwin.util.typing import EXPORT_PHASES, REFERENCE_PHASE_POLICY
 
 _PURE_TRACEWIN_CONFIG = (
     KeyValConfSpec(
@@ -628,14 +632,31 @@ TRACEWIN_CONFIG = _PURE_TRACEWIN_CONFIG + (
         ),
     ),
     KeyValConfSpec(
-        key="flag_phi_abs",
-        types=(bool,),
+        key="reference_phase_policy",
+        types=(str,),
         description=(
+            "Controls how cavities reference phase will be initialized."
+        ),
+        default_value="phi_0_abs",
+        allowed_values=REFERENCE_PHASE_POLICY,
+        is_mandatory=False,
+    ),
+    KeyValConfSpec(
+        key="flag_phi_abs",
+        types=(bool, NoneType),
+        description=(
+            "DEPRECATED, prefer use of `reference_phase_policy`. "
             "If the field maps phases should be absolute (no implicit "
             "rephasing after a failure)."
         ),
-        default_value=True,
+        default_value=None,
         is_mandatory=False,
+        warning_message=(
+            "The ``flag_phi_abs`` option is deprecated, prefer using the "
+            "``reference_phase_policy``.\nflag_phi_abs=False -> "
+            "reference_phase_policy='phi_0_rel'\nflag_phi_abs=True -> "
+            "reference_phase_policy='phi_0_abs'"
+        ),
     ),
     KeyValConfSpec(
         key="ini_path",
@@ -682,6 +703,7 @@ def tracewin_pre_treat(
     self: TableConfSpec, toml_subdict: dict[str, Any], **kwargs
 ) -> None:
     """Set the TW executable."""
+    apply_deprecated_flag_phi_abs(self, toml_subdict, **kwargs)
     if "executable" in toml_subdict:
         declare = getattr(
             self, "_declare_that_machine_config_is_not_mandatory_anymore"

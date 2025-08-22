@@ -5,17 +5,6 @@ the particles in envelope or multipart, in 3D. In contrary to
 :class:`.Envelope1D` solver, it is not a real solver but an interface with
 ``TraceWin`` which must be installed on your machine.
 
-.. warning::
-    For now, :class:`TraceWin` behavior with relative phases is undetermined.
-    You should ensure that you are working with *absolute* phases, i.e. that
-    last argument of ``FIELD_MAP`` commands is ``1``.
-    You can run a simulation with :class:`.Envelope1D` solver and
-    ``flag_phi_abs=True``. The ``DAT`` file created in the ``000001_ref``
-    folder should be the original ``DAT`` but converted to absolute phases.
-
-.. todo::
-    This absolute phase thing should be fixed now. Check this.
-
 """
 
 import logging
@@ -44,7 +33,7 @@ from lightwin.tracewin_utils.interface import (
     failed_cavities_to_command,
     set_of_cavity_settings_to_command,
 )
-from lightwin.util.typing import BeamKwargs
+from lightwin.util.typing import REFERENCE_PHASE_POLICY_T, BeamKwargs
 
 
 class TraceWin(BeamCalculator):
@@ -81,7 +70,7 @@ class TraceWin(BeamCalculator):
         out_folder: Path | str,
         default_field_map_folder: Path | str,
         beam_kwargs: BeamKwargs,
-        flag_phi_abs: bool = False,
+        reference_phase_policy: REFERENCE_PHASE_POLICY_T = "phi_0_rel",
         cal_file: Path | None = None,
         **kwargs: Any,
     ) -> None:
@@ -97,7 +86,7 @@ class TraceWin(BeamCalculator):
             filename = Path("partran1.out")
         self._filename = filename
         super().__init__(
-            flag_phi_abs=flag_phi_abs,
+            reference_phase_policy=reference_phase_policy,
             out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
             beam_kwargs=beam_kwargs,
@@ -217,8 +206,8 @@ class TraceWin(BeamCalculator):
         update_reference_phase :
             To change the reference phase of cavities when it is different from
             the one asked in the ``TOML``. To use after the first calculation,
-            if ``BeamCalculator.flag_phi_abs`` does not correspond to
-            ``CavitySettings.reference``. The default is False.
+            if :attr:`.BeamCalculator.reference_phase_policy` does not align
+            with :attr:`.CavitySettings.reference`.
         specific_kwargs :
             ``TraceWin`` optional arguments. Overrides what is defined in
             ``base_kwargs`` and ``INI``.

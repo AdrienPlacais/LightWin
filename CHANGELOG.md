@@ -9,10 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.12.0rc0]
 
+### Added
+
+- The cavities reference phase is now determined by `reference_phase_policy`.
+  - This is more permissive than `flag_phi_abs`, that could only be `True` or `False`.
+  - Now, reference phase can be `phi_0_abs`, `phi_0_rel`, `phi_s` or `as_in_dat_file`!
+
 ### Changed
 
 - The `CavitySettings` object, and in particular its handling of phases and reference phases, is more robust.
   - This update introduced significant changes: do not hesitate [to file an issue](https://github.com/AdrienPlacais/LightWin/issues) if you encounter `MissingAttributeError`, or any phase-related error.
+
+### Deprecated
+
+- Do not use the `TOML` `flag_phi_abs` configuration entry anymore, prefer `reference_phase_policy`.
+  - If `flag_phi_abs` is found, a deprecation warning is raised.
+  - For now, `flag_phi_abs` as precedence over `reference_phase_policy` to keep backward compatibility.
 
 # [0.11.x]
 

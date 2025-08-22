@@ -116,7 +116,7 @@ def _default_kwargs(
     """Set default arguments to instantiate the optimisation algorithm.
 
     The kwargs for :class:`.OptimisationAlgorithm` that are defined in
-    :meth:`.FaultScenario._set_optimisation_algorithms` will override the ones
+    :meth:`.FaultScenario._optimisation_algorithms` will override the ones
     defined here.
 
     Parameters
@@ -162,7 +162,7 @@ def _check_common_keys(
     ----------
     user_kwargs :
         kwargs as defined in the
-        :meth:`.FaultScenario._set_optimisation_algorithms` (they have
+        :meth:`.FaultScenario._optimisation_algorithms` (they have
         precedence).
     default_kwargs :
         kwargs as defined in the `_optimisation_algorithm_kwargs` (they

@@ -325,12 +325,24 @@ class CavitySettings:
         return values[0] if len(values) == 1 else tuple(values)
 
     def _check_consistency_of_status_and_reference(self) -> None:
-        """Perform some tests on ``status`` and ``reference``."""
+        r"""Perform some tests on ``status`` and ``reference``.
+
+        1. We check that if the cavity is rephased, its reference phase is
+           not :math:`phi_{0,\,\mathrm{abs}}`
+        2. If the cavity is broken, we check that its reference phase is not
+           synchronous because it is not defined.
+
+        """
         if "rephased" in self.status:
-            assert self.reference == "phi_0_rel"
+            assert self.reference in ("phi_0_rel", "phi_s"), (
+                f"Reference of {self} is {self.reference}, which is not "
+                "consistent with it's `rephased` status."
+            )
             return
         if "failed" in self.status:
-            assert self.reference != "phi_s"
+            assert (
+                self.reference != "phi_s"
+            ), "Failed cavities with synchronous phase ref leads to bugs."
 
     def set_bunch_to_rf_freq_func(self, freq_cavity_mhz: float) -> None:
         """Use cavity frequency to set a bunch -> rf freq function.
@@ -497,6 +509,8 @@ class CavitySettings:
             self.k_e = 0.0
             self.phi_s = np.nan
             self.v_cav_mv = np.nan
+            if self.reference == "phi_s":
+                self.set_reference("phi_0_rel", phi_ref=0.0)
 
         self._check_consistency_of_status_and_reference()
 

@@ -178,7 +178,6 @@ class OptimisationAlgorithm(ABC):
 
         Returns
         -------
-        info :
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 

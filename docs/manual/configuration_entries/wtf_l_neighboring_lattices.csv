@@ -19,7 +19,7 @@ optimisation algorithm.",✅,"('EnergyMismatch', 'EnergyPhaseMismatch', 'EnergyS
 
 `algorithm`",`str`,"Name of optimisation
 
-algorithm.",✅,"('bayesian_optimization', 'differential_evolution', 'downhill_simplex', 'downhill_simplex_penalty', 'experimental', 'explorator', 'least_squares', 'least_squares_penalty', 'nelder_mead', 'nelder_mead_penalty', 'nsga')"
+algorithm.",✅,"('bayesian_optimization', 'differential_evolution', 'downhill_simplex', 'downhill_simplex_penalty', 'experimental', 'explorator', 'least_squares', 'least_squares_penalty', 'nelder_mead', 'nelder_mead_penalty', 'nsga', 'simulated_annealing')"
 "`optimisation_`
 
 `algorithm_kwargs`",`dict`,"Keyword arguments passed to

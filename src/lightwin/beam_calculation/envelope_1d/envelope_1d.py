@@ -31,6 +31,7 @@ from lightwin.physics.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
+from lightwin.util.typing import REFERENCE_PHASE_POLICY_T
 
 
 class Envelope1D(BeamCalculator):
@@ -41,7 +42,7 @@ class Envelope1D(BeamCalculator):
     def __init__(
         self,
         *,
-        flag_phi_abs: bool,
+        reference_phase_policy: REFERENCE_PHASE_POLICY_T,
         n_steps_per_cell: int,
         method: ENVELOPE1D_METHODS_T,
         out_folder: Path | str,
@@ -53,7 +54,7 @@ class Envelope1D(BeamCalculator):
         self.n_steps_per_cell = n_steps_per_cell
         self.method: ENVELOPE1D_METHODS_T = method
         super().__init__(
-            flag_phi_abs=flag_phi_abs,
+            reference_phase_policy=reference_phase_policy,
             out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
             **kwargs,
@@ -101,12 +102,11 @@ class Envelope1D(BeamCalculator):
         update_reference_phase :
             To change the reference phase of cavities when it is different from
             the one asked in the ``TOML``. To use after the first calculation,
-            if ``BeamCalculator.flag_phi_abs`` does not correspond to
-            ``CavitySettings.reference``.
+            if :attr:`.BeamCalculator.reference_phase_policy` does not align
+            with :attr:`.CavitySettings.reference`.
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -123,17 +123,16 @@ class Envelope1D(BeamCalculator):
 
         Parameters
         ----------
-        elts : ListOfElements
+        elts :
             List of elements in which the beam must be propagated.
-        update_reference_phase : bool, optional
+        update_reference_phase :
             To change the reference phase of cavities when it is different from
             the one asked in the ``TOML``. To use after the first calculation,
-            if ``BeamCalculator.flag_phi_abs`` does not correspond to
-            ``CavitySettings.reference``. The default is False.
+            if :attr:`.BeamCalculator.reference_phase_policy` does not align
+            with :attr:`.CavitySettings.reference`.
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -150,12 +149,12 @@ class Envelope1D(BeamCalculator):
 
         Parameters
         ----------
-        set_of_cavity_settings : SetOfCavitySettings | None
+        set_of_cavity_settings :
             The new cavity settings to try. If it is None, then the cavity
             settings are taken from the :class:`.FieldMap` objects.
-        elts : ListOfElements
+        elts :
             List of elements in which the beam must be propagated.
-        use_a_copy_for_nominal_settings : bool, optional
+        use_a_copy_for_nominal_settings :
             To copy the nominal :class:`.CavitySettings` and avoid altering
             their nominal counterpart. Set it to True during optimisation, to
             False when you want to keep the current settings. The default is
@@ -163,7 +162,6 @@ class Envelope1D(BeamCalculator):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -228,7 +226,6 @@ class Envelope1D(BeamCalculator):
 
         Parameters
         ----------
-        accelerator : Accelerator
             Object which :class:`.ListOfElements` must be initialized.
 
         """

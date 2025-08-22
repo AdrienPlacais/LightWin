@@ -125,7 +125,6 @@ class ConfSpec:
 
         Returns
         -------
-        TableConfSpec
             The desired object.
 
         """
@@ -164,7 +163,6 @@ class ConfSpec:
 
         Returns
         -------
-        list[str]
             The ``TOML`` content that can be directly written to a ``TOML``
             file.
 
@@ -202,7 +200,6 @@ class ConfSpec:
 
         Returns
         -------
-        all_is_validated : bool
             If the dict is valid or not.
 
         """

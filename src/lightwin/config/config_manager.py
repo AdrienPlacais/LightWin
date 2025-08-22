@@ -49,15 +49,13 @@ def process_config(
     warn_mismatch :
         Raise a warning if a key in a ``override`` sub-dict is not found.
     override :
-        To override entries in the ``TOML``. If not provided, we keep
-        defaults.
+        To override entries in the ``TOML``. If not provided, we keep defaults.
     conf_specs_t :
         The specifications that the ``TOML`` must match to be accepted. If not
         provided, we take a default.
 
     Returns
     -------
-    toml_fulldict : dict[str, dict[str, Any]]
         A dictionary holding all the keyword arguments that will be passed to
         LightWin objects, eg ``beam_calculator`` will be passed to
         :class:`.BeamCalculator`.
@@ -94,7 +92,6 @@ def _load_toml(
 
     Returns
     -------
-    raw_toml : dict[str, dict[str, Any]]
         Dictionary holding the whole ``TOML`` file.
 
     """
@@ -156,7 +153,6 @@ def _process_toml(
 
     Returns
     -------
-    toml_fulldict : dict[str, dict[str, Any]]
         A dictionary which keys are the keys of ``config_keys``, and the values
         are dictionaries holding corresponding table entries from the
         configuration file.
