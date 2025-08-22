@@ -66,8 +66,12 @@ class FieldMap(Element):
 
         self._can_be_retuned: bool = True
         self.rf_field = RfField(section_idx=self.idx["section"])
+        #: Stores the settings of the cavity, such as amplitude or phase.
         self.cavity_settings = cavity_settings
         self.cavity_settings.rf_field = self.rf_field
+        #: Stores the field properties, such as interpolated field or
+        #: frequency. This object is shared by all the caviities with the same
+        #: geometry.
         self.field: Field
 
     @property

@@ -80,11 +80,11 @@ def optimisation_algorithm_factory(
 
     Parameters
     ----------
-    opti_method : str
+    opti_method :
         Name of the desired optimisation algorithm.
-    fault : Fault
+    fault :
         Fault that will be compensated by the optimisation algorithm.
-    beam_calculator : BeamCalculator
+    beam_calculator :
         Object that will be used to computte propagation of the beam.
     kwargs :
         Other keyword arguments that will be passed to the
@@ -92,7 +92,6 @@ def optimisation_algorithm_factory(
 
     Returns
     -------
-    algorithm : OptimisationAlgorithm
         Instantiated optimisation algorithm.
 
     """
@@ -122,16 +121,15 @@ def _default_kwargs(
 
     Parameters
     ----------
-    fault : Fault
+    fault :
         Fault that will be compensated by the optimisation algorithm.
-    compute_beam_propagation : Callable
+    compute_beam_propagation :
         Function that takes in a set of cavity settings and a list of elements,
         computes the beam propagation with these, and returns a simulation
         output.
 
     Returns
     -------
-    default_kwargs : dict[str, Any]
         A dictionary of keyword arguments for the initialisation of
         :class:`.OptimisationAlgorithm`.
 
@@ -162,11 +160,11 @@ def _check_common_keys(
 
     Parameters
     ----------
-    user_kwargs : dict[str, Any]
+    user_kwargs :
         kwargs as defined in the
         :meth:`.FaultScenario._set_optimisation_algorithms` (they have
         precedence).
-    default_kwargs : [str, Any]
+    default_kwargs :
         kwargs as defined in the `_optimisation_algorithm_kwargs` (they
         will be overriden as they are considered as "default" or "fallback"
         values).

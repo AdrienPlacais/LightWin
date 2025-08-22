@@ -225,7 +225,6 @@ class TraceWin(BeamCalculator):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -259,7 +258,6 @@ class TraceWin(BeamCalculator):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -289,7 +287,7 @@ class TraceWin(BeamCalculator):
             exception,
             set_of_cavity_settings=set_of_cavity_settings,
         )
-        self._save_cavities_entry_phases(
+        self._post_treat_cavity_setttings(
             set_of_cavity_settings, elts.l_cav, simulation_output
         )
         return simulation_output
@@ -321,7 +319,6 @@ class TraceWin(BeamCalculator):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Necessary information on the run.
 
         """
@@ -384,37 +381,44 @@ class TraceWin(BeamCalculator):
         """Tell if the simulation is in 3D."""
         return True
 
-    def _save_cavities_entry_phases(
+    def _post_treat_cavity_setttings(
         self,
         set_of_cavity_settings: SetOfCavitySettings | None,
         cavities: Sequence[FieldMap],
         simulation_output: SimulationOutput,
     ) -> None:
-        """Store the synchronous particle entry phase.
+        """Store cavity settings in the appropriate :class:`.CavitySettings`.
 
-        This quantity is required to switch between the different definitions
-        of the phase. Note that, with :class:`.Envelope1D` and
-        :class:`.Envelope3D`, it is done during the propagation of the beam, in
-        the ``for elt in elts`` loop.
-
-        .. todo::
-            Maybe I should also store the synchronous phase?
+        .. note::
+           When we are under a fitting process, *i.e.* when
+           ``set_of_cavity_settings`` is not ``None``, we update the
+           :class:`.CavitySettings` in the ``set_of_cavity_settings``, not the
+           ones in :attr:`.FieldMap.cavity_settings`.
 
         """
         for cavity in cavities:
-            phi_bunch = simulation_output.get(
-                "phi_abs", to_deg=False, elt=cavity, pos="in", to_numpy=False
+            phi_abs, v_cav_mv, phi_s = simulation_output.get(
+                "phi_abs",
+                "v_cav_mv",
+                "phi_s",
+                elt=cavity,
+                pos="in",
+                to_deg=False,
+                to_numpy=False,
             )
             if set_of_cavity_settings is None:
-                cavity.cavity_settings.phi_bunch = phi_bunch
+                # Any cavity during a "normal" run
+                settings = cavity.cavity_settings
+            elif cavity in set_of_cavity_settings:
+                # Compensating cavity during a fit
+                settings = set_of_cavity_settings[cavity]
+            else:
+                # Non-compensating cavity during a fit
                 continue
-            if cavity in set_of_cavity_settings:
-                # when a cavity is concerned by a fit, we do not modify its
-                # cavity settings but rather the one in the SetOfCavitySettings
-                cavity_settings = set_of_cavity_settings[cavity]
-                cavity_settings.phi_bunch = phi_bunch
-                continue
-            cavity.cavity_settings.phi_bunch = phi_bunch
+
+            settings.phi_bunch = phi_abs
+            settings.phi_s = phi_s
+            settings.v_cav_mv = v_cav_mv
         return
 
 
