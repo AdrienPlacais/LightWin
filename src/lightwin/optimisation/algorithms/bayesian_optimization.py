@@ -45,7 +45,7 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
         optimizer = BayesianOptimization(
             f=self._to_maximise,
             pbounds=pbounds,
-            random_state=1,
+            verbose=1,
             acquisition_function=self.acquisition_function(),
         )
 
@@ -77,10 +77,6 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
         kwargs = {
             "init_points": 10,
             "n_iter": 500,
-            "acquisition": {
-                "acquisition_function": "UpperConfidenceBound",
-                "kwargs": {"kappa": 10},
-            },
         }
         return kwargs
 
