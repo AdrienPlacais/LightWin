@@ -43,12 +43,12 @@ params = [
     ),
     pytest.param(
         ("RK4", False, "phi_s", 40),
-        marks=(pytest.mark.smoke, pytest.mark.implementation),
+        marks=pytest.mark.smoke,
         id="1D RK4 synchronous phase",
     ),
     pytest.param(
         ("RK4", False, "as_in_original_dat", 40),
-        marks=(pytest.mark.smoke, pytest.mark.implementation),
+        marks=pytest.mark.smoke,
         id="1D RK4 different phases, matching original ``DAT``",
     ),
     pytest.param(
@@ -63,12 +63,12 @@ params = [
     ),
     pytest.param(
         ("RK4", False, "phi_s", 40),
-        marks=(pytest.mark.cython, pytest.mark.implementation),
+        marks=pytest.mark.cython,
         id="1D RK4 synchronous phase Cython",
     ),
     pytest.param(
         ("RK4", False, "as_in_original_dat", 40),
-        marks=(pytest.mark.cython, pytest.mark.implementation),
+        marks=pytest.mark.cython,
         id="1D RK4 different phases, matching original ``DAT`` Cython",
     ),
     pytest.param(
@@ -227,7 +227,6 @@ def test_no_sign_change_warning() -> None:
 
 
 @pytest.mark.envelope1d
-@pytest.mark.implementation
 def test_deprecated_flag_phi_abs_false(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
@@ -270,7 +269,6 @@ def test_deprecated_flag_phi_abs_false(
 
 
 @pytest.mark.envelope1d
-@pytest.mark.implementation
 def test_deprecated_flag_phi_abs_true(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:

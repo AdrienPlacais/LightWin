@@ -142,7 +142,6 @@ class TestSolver3D:
 
 
 @pytest.mark.tracewin
-@pytest.mark.implementation
 def test_deprecated_flag_phi_abs_false(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
@@ -185,7 +184,6 @@ def test_deprecated_flag_phi_abs_false(
 
 
 @pytest.mark.tracewin
-@pytest.mark.implementation
 def test_deprecated_flag_phi_abs_true(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:

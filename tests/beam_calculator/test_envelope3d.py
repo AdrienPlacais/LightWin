@@ -35,12 +35,12 @@ params = [
     ),
     pytest.param(
         ("phi_s", 40),
-        marks=(pytest.mark.smoke, pytest.mark.implementation),
+        marks=pytest.mark.smoke,
         id="Envelope3D synchronous phase",
     ),
     pytest.param(
         ("as_in_original_dat", 40),
-        marks=(pytest.mark.smoke, pytest.mark.implementation),
+        marks=pytest.mark.smoke,
         id="Envelope3D different phases, matching original ``DAT``",
     ),
 ]
@@ -146,7 +146,6 @@ class TestSolver3D:
 
 
 @pytest.mark.envelope3d
-@pytest.mark.implementation
 def test_deprecated_flag_phi_abs_false(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
@@ -189,7 +188,6 @@ def test_deprecated_flag_phi_abs_false(
 
 
 @pytest.mark.envelope3d
-@pytest.mark.implementation
 def test_deprecated_flag_phi_abs_true(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> None:
