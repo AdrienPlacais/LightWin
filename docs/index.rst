@@ -9,12 +9,14 @@
 Welcome to LightWin's documentation!
 ====================================
 
+.. include:: ../README.md
+   :parser: myst_parser.sphinx_
+
+Documentation structure
+=======================
+
 .. toctree::
-   :maxdepth: 5
-   :caption: LightWin
-   :titlesonly:
-   :glob:
-   :includehidden:
+   :maxdepth: 1
 
    manual/installation
    manual/usage
@@ -26,8 +28,8 @@ Welcome to LightWin's documentation!
    manual/bibliography
    API Reference <lightwin/lightwin>
    Contributing <manual/contributing>
+   Changelog <manual/changelog>
 
-.. todolist::
 
 Indices and tables
 ==================
