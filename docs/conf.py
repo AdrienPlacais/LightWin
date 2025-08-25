@@ -149,6 +149,12 @@ html_sidebars = {
     ],
 }
 
+# -- Options for IPYNB --------------------------------------------------------
+# auto-execute jupyter notebooks
+# (they are auto-cleaned by pre-commit to avoid cluttering github repo)
+# This `NB_EXEC` is defined in the Makefile
+nbsphinx_execute = os.environ.get("NB_EXEC", "never")
+
 # -- Options for LaTeX output ------------------------------------------------
 # https://stackoverflow.com/questions/28454217/how-to-avoid-the-too-deeply-nested-error-when-creating-pdfs-with-sphinx
 latex_elements = {"preamble": r"\usepackage{enumitem}\setlistdepth{99}"}
@@ -166,8 +172,10 @@ inspect.object_description = object_description
 # -- Shortcuts ---------------------------------------------------
 rst_prolog = """
 .. |axplot| replace:: :meth:`matplotlib.axes.Axes.plot`
+
 .. |issue| replace:: issue
 .. _issue: https://github.com/AdrienPlacais/LightWin/issues
+
 """
 
 # -- Bug fixes ---------------------------------------------------------------

@@ -14,7 +14,7 @@ CONFIG_ENTRIES_DIR = manual/configuration_entries
 
 GENERATE_CSV  = scripts/generate_config_csv.py
 
-.PHONY: help clean apidoc generate_csv html 
+.PHONY: help clean apidoc generate_csv html ci
 
 # Default target: help
 .DEFAULT_GOAL := help
@@ -50,10 +50,13 @@ generate_csv:
 	@echo "Generating CSV configuration files..."
 	@python "$(GENERATE_CSV)"
 
-# Build unversioned HTML documentation
 html:
-	@echo "Building unversioned HTML documentation..."
-	@$(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)/html" $(SPHINXOPTS) $(O)
+	@echo "Building unversioned HTML documentation, no Jupyter execution..."
+	@NB_EXEC=never $(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)/html" $(SPHINXOPTS) $(O)
+
+ci:
+	@echo "Building versioned HTML documentation, with Jupyter execution..."
+	@NB_EXEC=auto $(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)/html" $(SPHINXOPTS) $(O)
 
 # Catch-all target: route all unknown targets to Sphinx using the new "make mode" option
 %:
