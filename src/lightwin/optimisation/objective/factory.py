@@ -545,6 +545,8 @@ class Spiral2(ObjectiveFactory):
 # =============================================================================
 # Interface with LightWin
 # =============================================================================
+#: Maps the ``objective_preset`` key in ``TOML`` ``wtf`` subsection with actual
+#: objects in LightWin
 OBJECTIVE_PRESETS = {
     "EnergyMismatch": EnergyMismatch,
     "EnergyPhaseMismatch": EnergyPhaseMismatch,
@@ -554,7 +556,7 @@ OBJECTIVE_PRESETS = {
     "rephased_ADS": EnergyMismatch,
     "simple_ADS": EnergyPhaseMismatch,
     "sync_phase_as_objective_ADS": EnergySyncPhaseMismatch,
-}  #:
+}
 
 
 def get_objectives_and_residuals_function(

@@ -7,7 +7,7 @@
 
 
 Note that the role of the `reference_phase_policy` is extremely important, as it controls how cavities are rephased after failure.
-More details and an example in the `dedicated notebook`_.
+More details and an example in the :ref:`dedicated notebook<notebooks-cavities-reference-phase>`.
 
 :class:`.Envelope1D` solver
 ===========================
@@ -67,5 +67,3 @@ See `data/examples/machine_config_file.toml` for an example.
 The ``[beam_calculator_post]`` follows the same format.
 It is used to store a second :class:`.BeamCalculator`.
 This is mainly useful for defining a more precise -- but more time-consuming -- beam dynamics tool, for example to check your compensation settings.
-
-.. _dedicated notebook: notebooks/cavities_reference_phase.ipynb

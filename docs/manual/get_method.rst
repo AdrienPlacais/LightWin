@@ -72,6 +72,4 @@ Here are a few commonly used ones:
 
 If the requested key is not found, the method does **not** raise an error -- it simply returns an empty array.
 
-Some examples are provided at the end of the `example notebook`_.
-
-.. _example notebook: notebooks/example.ipynb#Accessing-data
+Some examples are provided at the end of the :ref:`example notebook<notebooks-lightwin-example>`.
