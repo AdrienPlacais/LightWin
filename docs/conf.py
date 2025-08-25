@@ -150,10 +150,18 @@ html_sidebars = {
 }
 
 # -- Options for IPYNB --------------------------------------------------------
-# auto-execute jupyter notebooks
+# In particular: options for automatic re-execution
 # (they are auto-cleaned by pre-commit to avoid cluttering github repo)
-# This `NB_EXEC` is defined in the Makefile
-nbsphinx_execute = os.environ.get("NB_EXEC", "never")
+
+on_rtd = os.environ.get("READTHEDOCS") == "True"
+
+# We should rebuild if we are on ReadTheDocs
+if on_rtd:
+    nbsphinx_execute = "auto"
+# Locally, we rebuild if we ran `make ci`, but not if we `make html`
+else:
+    # This `NB_EXEC` env constant is defined in the docs/Makefile
+    nbsphinx_execute = os.environ.get("NB_EXEC", "auto")
 
 # -- Options for LaTeX output ------------------------------------------------
 # https://stackoverflow.com/questions/28454217/how-to-avoid-the-too-deeply-nested-error-when-creating-pdfs-with-sphinx
