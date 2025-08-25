@@ -166,6 +166,8 @@ inspect.object_description = object_description
 # -- Shortcuts ---------------------------------------------------
 rst_prolog = """
 .. |axplot| replace:: :meth:`matplotlib.axes.Axes.plot`
+.. |issue| replace:: issue
+.. _issue: https://github.com/AdrienPlacais/LightWin/issues
 """
 
 # -- Bug fixes ---------------------------------------------------------------

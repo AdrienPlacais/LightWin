@@ -5,22 +5,52 @@
 .. toctree::
    :maxdepth: 5
 
-If the desired :class:`.BeamCalculator` is :class:`.Envelope1D`:
+
+Note that the role of the `reference_phase_policy` is extremely important, as it controls how cavities are rephased after failure.
+More details and an example in the `dedicated notebook`_.
+
+:class:`.Envelope1D` solver
+===========================
+
+This solver computes the propagation of the beam in the longitudinal phase space and in envelope.
+Space charge effects are not considered.
+It is adapted to high energy problems, such as ADS linacs.
+
+.. todo::
+   Insert list of implemented elements.
 
 .. csv-table::
    :file: configuration_entries/beam_calculator_envelope_1d.csv
    :header-rows: 1
 
-Note that the role of the `reference_phase_policy` is extremely important.
-More details and an example in the `dedicated notebook`.
+:class:`.Envelope3D` solver
+===========================
 
-If the desired :class:`.BeamCalculator` is :class:`.Envelope3D`:
+Envelope solver in 3D, without space charge.
 
 .. csv-table::
    :file: configuration_entries/beam_calculator_envelope_3d.csv
    :header-rows: 1
 
-If the desired :class:`.BeamCalculator` is :class:`.TraceWin`:
+.. note::
+
+   As transverse effects are generally not predominant, I do not use this solver very often and a lot of elements are not implemented.
+   The current list of implemented elements is:
+
+   .. configkeys:: lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.PARAMETERS_3D
+     :n_cols: 2
+
+  The default behavior when an element in the input `DAT` file is not recognized, is to issue a warning and replace this element by a `DRIFT`.
+
+   Do not hesitate to file an |issue|_ if you need me to implement some elements.
+
+:class:`.TraceWin` solver
+===========================
+
+3D solver, can be used in multiparticle or envelope.
+You will need a valid TraceWin license.
+It can be used during the optimization process, though this approach relies on a lot of file writing/reading and is very slow.
+Generally, I use it to re-compute the propagation of the beam in the linac when compensation settings were found (`beam_calculator_post`).
 
 .. csv-table::
    :file: configuration_entries/beam_calculator_tracewin.csv

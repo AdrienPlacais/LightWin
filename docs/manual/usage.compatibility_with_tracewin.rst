@@ -29,7 +29,10 @@ If you choose :class:`.TraceWin` solver for the optimization, both LightWin and 
 How to implement commands or elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can implement the desired elements and `git push` them, or file an issue on GitHub and I will try to add the desired element(s) as soon as possible.
+You can implement the desired elements and `git push` them, or file an |issue|_ on GitHub and I will try to add the desired element(s) as soon as possible.
+
+.. todo::
+   Proper `CONTRIBUTING.md` ref
 
 .. note::
    Add an example.
