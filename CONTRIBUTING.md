@@ -1,6 +1,6 @@
 # Contributing to LightWin
 
-Thank you for considering contributing to `LightWin`! 🎉  
+If you implement your own :class:`.OptimisationAlgorithm` or add support for some :class:`.Element`, we encourage you to integrate your work in LightWin source code.
 
 ---
 
@@ -24,12 +24,14 @@ pytest -m "not implementation"
 ```
 
 You will need to install development dependencies:
+
 ```bash
 pip install lightwin -e ".[test]"
 ```
+
 ## 🎯 Pre-commit Hooks
 
-We use [`pre-commit`](https://pre-commit.com) to enforce formatting and static checks.  
+We use [`pre-commit`](https://pre-commit.com) to enforce formatting and static checks.
 It should be automatically installed when running `pip install lightwin`.
 Set it up as follows:
 
@@ -60,23 +62,28 @@ To run all hooks manually:
 ```bash
 pre-commit run --all-files
 ```
+
 ---
 
 ## ✨ Contributing Code
 
 1. **Fork** the repository and clone your fork.
 2. Create a branch from the appropriate `X.Y.x` branch:
+
    ```bash
    git checkout -b fix/some-bug 1.7.x
    ```
+
 3. Make your changes.
 4. Ensure pre-commit hooks pass.
 5. Add tests if applicable.
 6. Commit and push:
+
    ```bash
    git commit -m "Fix: correct bug in XYZ"
    git push origin fix/some-bug
    ```
+
 7. Open a **pull request** into the corresponding `X.Y.x` branch.
 
 ---
@@ -84,8 +91,9 @@ pre-commit run --all-files
 ## 🧾 Changelog and Versioning
 
 Please **add an entry** to `CHANGELOG.md` under the appropriate unreleased version header:
+
 ```
-## [X.Y.Z] -- unreleased
+## [X.Y.Z]
 ```
 
 We use [Semantic Versioning](https://semver.org/spec/v2.0.0.html): `MAJOR.MINOR.PATCH`.
@@ -98,5 +106,6 @@ Open an [issue](https://github.com/AdrienPlacais/LightWin/issues) or start a dis
 
 ---
 
-Thank you again for contributing 🙏 
-   -- Adrien
+Thank you again for contributing 🙏
+
+-- Adrien

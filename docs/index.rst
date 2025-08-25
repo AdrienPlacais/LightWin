@@ -25,6 +25,7 @@ Welcome to LightWin's documentation!
    Utility scripts <manual/scripts>
    manual/bibliography
    API Reference <lightwin/lightwin>
+   Contributing <manual/contributing>
 
 .. todolist::
 
