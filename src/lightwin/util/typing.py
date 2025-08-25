@@ -149,17 +149,15 @@ GETTABLE_BEAM_CALC_PARAMETERS_T = Literal[
 REFERENCE_PHASES = ("phi_0_abs", "phi_0_rel", "phi_s")
 REFERENCE_PHASES_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
 
-#: How phases can be saved in the output ``DAT`` file.
-EXPORT_PHASES = (
-    "as_in_original_dat",
-    "as_in_settings",
-    "phi_0_abs",
-    "phi_0_rel",
-    "phi_s",
-)
-EXPORT_PHASES_T = (
-    REFERENCE_PHASES_T | Literal["as_in_settings", "as_in_original_dat"]
-)
+#: Reference phase policy at :class:`.BeamCalculator` creation. Note that some
+#: cavities can see their reference phase change during execution of the code,
+#: according to the compensations strategy.
+REFERENCE_PHASE_POLICY = REFERENCE_PHASES + ("as_in_original_dat",)
+REFERENCE_PHASE_POLICY_T = REFERENCE_PHASES_T | Literal["as_in_original_dat"]
+
+#: How phases shall be saved in the output ``DAT`` file.
+EXPORT_PHASES = REFERENCE_PHASE_POLICY + ("as_in_settings",)
+EXPORT_PHASES_T = REFERENCE_PHASE_POLICY_T | Literal["as_in_settings"]
 
 #: Different status for cavities
 ALLOWED_STATUS = (
@@ -201,20 +199,18 @@ GETTABLE_RF_FIELD_T = Literal[
 GETTABLE_CAVITY_SETTINGS = (
     (
         "acceptance_energy",
+        "acceptance_phi",
         "field",
         "freq_cavity_mhz",
         "k_e",
         "omega_0_rf",
-        "acceptance_phi",
         "phi_ref",
         "phi_rf",
         "phi_s",
-        "phi_s_func",
         "reference",
         "rf_field",
         "status",
         "v_cav_mv",
-        "w_kin",
     )
     + REFERENCE_PHASES
     + GETTABLE_RF_FIELD
@@ -222,20 +218,18 @@ GETTABLE_CAVITY_SETTINGS = (
 GETTABLE_CAVITY_SETTINGS_T = (
     Literal[
         "acceptance_energy",
+        "acceptance_phi",
         "field",
         "freq_cavity_mhz",
         "k_e",
         "omega_0_rf",
-        "acceptance_phi",
         "phi_ref",
         "phi_rf",
         "phi_s",
-        "phi_s_func",
         "reference",
         "rf_field",
         "status",
         "v_cav_mv",
-        "w_kin",
     ]
     | REFERENCE_PHASES_T
     | GETTABLE_RF_FIELD_T
@@ -245,15 +239,15 @@ GETTABLE_CAVITY_SETTINGS_T = (
 #: a list when called from :meth:`.ListOfElements.get` (or
 #: :meth:`.SimulationOutput.get`)
 CONCATENABLE_CAVITY_SETTINGS = (
-    "v_cav_mv",
+    "acceptance_energy",
+    "acceptance_phi",
     "phi_0_abs",
     "phi_0_rel",
     "phi_bunch",
     "phi_ref",
     "phi_rf",
     "phi_s",
-    "acceptance_phi",
-    "acceptance_energy",
+    "v_cav_mv",
 )
 
 #: Attributes that can be extracted with :meth:`.Element.get` method.

@@ -149,6 +149,20 @@ html_sidebars = {
     ],
 }
 
+# -- Options for IPYNB --------------------------------------------------------
+# In particular: options for automatic re-execution
+# (they are auto-cleaned by pre-commit to avoid cluttering github repo)
+
+on_rtd = os.environ.get("READTHEDOCS") == "True"
+
+# We should rebuild if we are on ReadTheDocs
+if on_rtd:
+    nbsphinx_execute = "auto"
+# Locally, we rebuild if we ran `make ci`, but not if we `make html`
+else:
+    # This `NB_EXEC` env constant is defined in the docs/Makefile
+    nbsphinx_execute = os.environ.get("NB_EXEC", "auto")
+
 # -- Options for LaTeX output ------------------------------------------------
 # https://stackoverflow.com/questions/28454217/how-to-avoid-the-too-deeply-nested-error-when-creating-pdfs-with-sphinx
 latex_elements = {"preamble": r"\usepackage{enumitem}\setlistdepth{99}"}
@@ -166,6 +180,10 @@ inspect.object_description = object_description
 # -- Shortcuts ---------------------------------------------------
 rst_prolog = """
 .. |axplot| replace:: :meth:`matplotlib.axes.Axes.plot`
+
+.. |issue| replace:: issue
+.. _issue: https://github.com/AdrienPlacais/LightWin/issues
+
 """
 
 # -- Bug fixes ---------------------------------------------------------------

@@ -24,19 +24,21 @@ from lightwin.failures.fault_scenario import (
     fault_scenario_factory,
 )
 
+# Arguments are:
+# ``beam_calculator``, ``reference_phase_policy``, ``flag_cython``
 params = [
     pytest.param(
-        ("generic_envelope1d", True, False),
+        ("generic_envelope1d", "phi_0_abs", False),
         marks=(pytest.mark.smoke, pytest.mark.envelope1d),
         id="Compensation with Envelope1D",
     ),
     pytest.param(
-        ("generic_envelope1d", True, True),
+        ("generic_envelope1d", "phi_0_abs", True),
         marks=(pytest.mark.envelope1d, pytest.mark.cython),
         id="Compensation with Envelope1D (Cython)",
     ),
     pytest.param(
-        ("generic_envelope3d", True, False),
+        ("generic_envelope3d", "phi_0_abs", False),
         marks=(pytest.mark.smoke, pytest.mark.envelope3d),
         id="Compensation with Envelope3D",
     ),
@@ -55,7 +57,7 @@ def config(
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration."""
     out_folder = tmp_path_factory.mktemp("tmp")
-    (solver_key, flag_phi_abs, flag_cython) = request.param
+    (solver_key, reference_phase_policy, flag_cython) = request.param
 
     config_keys = {
         "files": "files",
@@ -72,7 +74,7 @@ def config(
         "beam_calculator": {
             k: v
             for k, v in {
-                "flag_phi_abs": flag_phi_abs,
+                "reference_phase_policy": reference_phase_policy,
                 "flag_cython": flag_cython,
             }.items()
             if v is not None

@@ -1,4 +1,9 @@
-"""Validate the implementation of the :class:`.ConfSpec`."""
+"""Validate the implementation of the :class:`.ConfSpec`.
+
+.. warning::
+    Tests actually desactivated!
+
+"""
 
 from typing import Any
 

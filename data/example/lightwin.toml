@@ -5,14 +5,16 @@ project_folder = "results_tests/"
 [generic_envelope1d]
 export_phase = "phi_0_abs"
 flag_cython = true
-flag_phi_abs = true
+# flag_phi_abs = true  # Deprecated! Use ``reference_phase_policy``.
 method = "RK4"
 n_steps_per_cell = 40
+reference_phase_policy = "phi_0_abs"
 tool = "Envelope1D"
 
 [generic_envelope3d]
-flag_phi_abs = true
+# flag_phi_abs = true  # Deprecated! Use ``reference_phase_policy``.
 n_steps_per_cell = 40
+reference_phase_policy = "phi_0_abs"
 tool = "Envelope3D"
 
 [generic_tracewin]

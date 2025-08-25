@@ -70,17 +70,17 @@ class MyObjectiveFactory(ObjectiveFactory):
 
         Parameters
         ----------
-        reference_elts : ListOfElements
+        reference_elts :
             All the reference elements.
-        reference_simulation_output : SimulationOutput
+        reference_simulation_output :
             The reference simulation of the reference linac.
-        broken_elts : ListOfElements
+        broken_elts :
             List containing all the elements of the broken linac.
-        failed_elements : list[Element]
+        failed_elements :
             Cavities that failed.
-        compensating_elements : list[Element]
+        compensating_elements :
             Cavities that will be used for the compensation.
-        design_space_kw : dict[str, str | bool | pathlib.Path | float]
+        design_space_kw :
             Holds information on variables/constraints limits/initial values.
             Used to compute the limits that ``phi_s`` must respect when the
             synchronous phase is defined as an objective.

@@ -33,7 +33,8 @@ def _get_beam_calculator(
             return Envelope3D
         case "Envelope3D", True:
             logging.warning(
-                "No Cython implementation for Envelope3D. Using Python implementation."
+                "No Cython implementation for Envelope3D. Using Python "
+                "implementation."
             )
             return Envelope3D
         case "TraceWin", _:
@@ -123,7 +124,6 @@ class BeamCalculatorsFactory:
 
         Returns
         -------
-        BeamCalculator
             An instance of the proper beam calculator.
 
         """
@@ -145,22 +145,4 @@ class BeamCalculatorsFactory:
             self.run(**beam_calculator_kw)
             for beam_calculator_kw in self.all_beam_calculator_kw
         ]
-        self._check_consistency_absolute_phases(beam_calculators)
         return tuple(beam_calculators)
-
-    def _check_consistency_absolute_phases(
-        self, beam_calculators: Sequence[BeamCalculator]
-    ) -> None:
-        """Check that ``flag_phi_abs`` is the same for all solvers."""
-        flag_phi_abs = {
-            beam_calculator: beam_calculator.flag_phi_abs
-            for beam_calculator in beam_calculators
-        }
-        n_unique_values = len(set(flag_phi_abs.values()))
-
-        if n_unique_values > 1:
-            logging.warning(
-                "The different BeamCalculator objects have different values "
-                "for flag_phi_abs. This may lead to inconstencies when "
-                f"cavities fail.\n{flag_phi_abs = }"
-            )

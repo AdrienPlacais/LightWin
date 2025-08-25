@@ -60,27 +60,27 @@ class TableConfSpec:
 
         Parameters
         ----------
-        configured_object : str
+        configured_object :
             Name of the object that will receive associated parameters.
-        table_entry : str
+        table_entry :
             Name of the table in the ``TOML`` file, without brackets.
-        specs : Collection[KeyValConfSpec] | dict[str, Collection[KeyValConfSpec]] | dict[str, Collection[KeyValConfSpec]]
+        specs :
             The :class:`.KeyValConfSpec` objects in the current table. When the
             format of the table depends on the value of a key, provide a
             dictionary linking every possible table with the corresponding
             value.
-        is_mandatory : bool, optional
+        is_mandatory :
             If the current table must be provided. The default is True.
-        can_have_untested_keys : bool, optional
+        can_have_untested_keys :
             If LightWin should remain calm when some keys are provided in the
             ``TOML`` but do not correspond to any :class:`.KeyValConfSpec`.
             The default is False.
-        selectkey_n_default : tuple[str, str | bool] | None, optional
+        selectkey_n_default :
             Must be given if ``specs`` is a dict. First value is name of the
             spec, second value is default value. We will look for this spec in
             the configuration file and select the proper ``Collection`` of
             ``KeyValConfSpec`` accordingly.
-        monkey_patches : dict[str, dict[str, Callable]] | dict[bool, dict[str, Callable]] | None, optional
+        monkey_patches :
             Same keys as ``specs``, to override some default methods. The
             default is None.
 
@@ -117,7 +117,7 @@ class TableConfSpec:
 
         Parameters
         ----------
-        toml_subdict : dict[str, Any] | None, optional
+        toml_subdict :
             The content of the toml file. We use it only if ``self._specs`` is
             not already a Collection. We look for the value of
             ``self._selectkey_n_default[0]`` and use it to select the
@@ -188,9 +188,9 @@ class TableConfSpec:
 
         Parameters
         ----------
-        toml_subdict : dict[str, Any]
+        toml_subdict :
             A dictionary corresponding to a ``TOML`` table.
-        original_toml_folder : pathlib.Path | None, optional
+        original_toml_folder :
             Where the original ``TOML`` was; this is used to resolve paths
             relative to this location.
 

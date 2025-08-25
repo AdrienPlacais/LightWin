@@ -16,7 +16,6 @@ import time
 from abc import ABC, abstractmethod
 from itertools import count
 from pathlib import Path
-from typing import Any
 
 from lightwin.beam_calculation.parameters.factory import (
     ElementBeamCalculatorParametersFactory,
@@ -36,6 +35,8 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.util.typing import (
     EXPORT_PHASES_T,
+    REFERENCE_PHASE_POLICY_T,
+    REFERENCE_PHASES,
     REFERENCE_PHASES_T,
     BeamKwargs,
 )
@@ -48,7 +49,7 @@ class BeamCalculator(ABC):
 
     def __init__(
         self,
-        flag_phi_abs: bool,
+        reference_phase_policy: REFERENCE_PHASE_POLICY_T,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
         beam_kwargs: BeamKwargs,
@@ -60,14 +61,14 @@ class BeamCalculator(ABC):
 
         Parameters
         ----------
-        flag_phi_abs :
-            If the entry phase of the cavities :math:`\phi_0` are absolute or
-            relative. See the examples for an illustration of what it implies.
-        out_folder : pathlib.Path | str
+        reference_phase_policy :
+            How reference phase of :class:`.CavitySettings` will be
+            initialized.
+        out_folder :
             Name of the folder where results should be stored, for each
             :class:`.Accelerator` under study. This is the name of a folder,
             not a full path.
-        default_field_map_folder : pathlib.Path | str
+        default_field_map_folder :
             Where to look for field map files by default.
         flag_cython :
             If the beam calculator involves loading cython field maps. The
@@ -75,13 +76,15 @@ class BeamCalculator(ABC):
         beam_kwargs :
             The config dictionary holding all the initial beam properties.
         export_phase :
-                "as_in_settings", "as_in_original_dat"], optional
             The type of phase you want to export for your ``FIELD_MAP``. The
             default is ``"as_in_settings"``, which should be the same phases
-            as in the original DAT file.
+            as in the original ``DAT`` file.
 
         """
-        self.flag_phi_abs = flag_phi_abs
+        #: How reference phase of :class:`.CavitySettings` will be initialized.
+        self.reference_phase_policy: REFERENCE_PHASE_POLICY_T = (
+            reference_phase_policy
+        )
         self.flag_cython = flag_cython
         self.id: str = f"{self.__class__.__name__}_{next(self._ids)}"
         self._export_phase: EXPORT_PHASES_T = export_phase
@@ -153,15 +156,14 @@ class BeamCalculator(ABC):
         update_reference_phase :
             To change the reference phase of cavities when it is different from
             the one asked in the ``TOML``. To use after the first calculation,
-            if ``BeamCalculator.flag_phi_abs`` does not correspond to
-            ``CavitySettings.reference``. The default is False.
+            if :attr:`.BeamCalculator.reference_phase_policy` does not align
+            with :attr:`.CavitySettings.reference`.
         kwargs
             Other keyword arguments passed to :meth:`run_with_this`. As for
             now, only used by :class:`.TraceWin`.
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -170,6 +172,11 @@ class BeamCalculator(ABC):
             None, elts, use_a_copy_for_nominal_settings=False, **kwargs
         )
         if update_reference_phase:
+            if self.reference_phase == "phi_s":
+                logging.warning(
+                    "Did not check how elts.force_reference_phases_to handles "
+                    "synch phase"
+                )
             elts.force_reference_phases_to(self.reference_phase)
         return simulation_output
 
@@ -194,12 +201,10 @@ class BeamCalculator(ABC):
         use_a_copy_for_nominal_settings :
             To copy the nominal :class:`.CavitySettings` and avoid altering
             their nominal counterpart. Set it to True during optimisation, to
-            False when you want to keep the current settings. The default is
-            True.
+            False when you want to keep the current settings.
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -235,12 +240,13 @@ class BeamCalculator(ABC):
         """Give the reference phase.
 
         .. todo::
-            Handle reference synchronous phase.
+            Handle ``"as_in_original_dat"``.
 
         """
-        if self.flag_phi_abs:
-            return "phi_0_abs"
-        return "phi_0_rel"
+        assert (
+            self.reference_phase_policy in REFERENCE_PHASES
+        ), "Different reference phase for each cavity not handled yet."
+        return self.reference_phase_policy
 
     @property
     @abstractmethod
@@ -269,19 +275,17 @@ class BeamCalculator(ABC):
         accelerator :
             Accelerator under study.
         keep_settings :
-            If settings/simulation output should be saved. The default is True.
+            If settings/simulation output should be saved.
         recompute_reference :
             If results should be taken from a file instead of recomputing
-            everything each time. The default is True.
+            everything each time.
         output_time :
-            To print in log the time the calculation took. The default is True.
+            To print in log the time the calculation took.
         ref_simulation_output :
-            For calculation of mismatch factors. The default is None, in which
-            case the calculation is simply skipped.
+            For calculation of mismatch factors. Skipped by default.
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Object holding simulation results.
 
         """
@@ -306,9 +310,8 @@ class BeamCalculator(ABC):
 
         if not recompute_reference:
             raise NotImplementedError(
-                "idea is to take results from file if "
-                "simulations are too long. will be easy "
-                "for tracewin."
+                "idea is to take results from file if simulations are too "
+                "long. will be easy for tracewin."
             )
         return simulation_output
 

@@ -3,7 +3,8 @@
 import cmath
 import logging
 import math
-from typing import Literal
+from collections.abc import Callable
+from typing import Any, Literal
 
 import numpy as np
 
@@ -22,10 +23,10 @@ def phi_s_legacy(
     Returns
     -------
     v_cav_mv
-        Accelerating voltage in MV. It is ``np.nan`` if ``integrated_field`` is
-        None.
+        Accelerating voltage in :unit:`MV`. It is ``np.nan`` if
+        ``integrated_field`` is None.
     phi_s
-        Synchronous phase of the cavity in rad. It is ``np.nan`` if
+        Synchronous phase of the cavity in :unit:`rad`. It is ``np.nan`` if
         ``integrated_field`` is None.
 
     """
@@ -73,7 +74,10 @@ def phi_s_from_tracewin_file(
     return 14.0, -math.pi / 4.0
 
 
-SYNCHRONOUS_PHASE_FUNCTIONS = {
+#: A function that takes in the output of a transfer matrix function wrapper,
+#: and returns the accelerating field and the synchronous phase.
+PHI_S_FUNC_T = Callable[[Any], tuple[float, float]]
+SYNCHRONOUS_PHASE_FUNCTIONS: dict[str, PHI_S_FUNC_T] = {
     "legacy": phi_s_legacy,
     "historical": phi_s_legacy,
     "lagniel": phi_s_lagniel,

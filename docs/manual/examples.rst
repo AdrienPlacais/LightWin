@@ -1,10 +1,10 @@
 .. _examples:
 
-Examples
-========
+Example notebooks
+=================
 
 .. toctree::
    :maxdepth: 4
 
    notebooks/example.ipynb
-   notebooks/absolute_vs_relative_phases.ipynb
+   notebooks/cavities_reference_phase.ipynb

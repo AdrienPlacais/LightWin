@@ -78,6 +78,9 @@ def k_out_of_n[T](
 ) -> Sequence[T]:
     """Return ``k`` compensating cavities per failed in ``elts_of_interest``.
 
+    Compensate the :math:`n` failed cavities with :math:`k\times n` closest
+    cavities :cite:`saini_assessment_2021,Yee-Rendon2022a`.
+
     .. note::
         ``T`` can represent a :class:`.Element`, or a list of
         :class:`.Element`. Returned type/data structure will be the same as
@@ -86,24 +89,22 @@ def k_out_of_n[T](
 
     Parameters
     ----------
-    elements : Sequence[T]
+    elements :
         All the tunable elements/lattices/sections.
-    failed_elements : Sequence[T]
+    failed_elements :
         Failed cavities/lattice.
-    k : int
+    k :
         Number of compensating cavity per failure.
-    tie_politics : Literal['upstream first', 'downstream first'], optional
+    tie_politics :
         When two elements have the same position, will you want to have the
-        upstream or the downstream first? The default is ``"upstream first"``.
-    shift : int, optional
+        upstream or the downstream first?
+    shift :
         Distance increase for downstream elements (``shift < 0``) or upstream
         elements (``shift > 0``). Used to have a window of compensating
-        cavities which is not centered around the failed elements. The default
-        is 0.
+        cavities which is not centered around the failed elements.
 
     Returns
     -------
-    altered : list[T]
         Contains all the altered elements/lattices. The ``n`` first are failed,
         the ``k * n`` following are compensating.
 
@@ -140,32 +141,29 @@ def l_neighboring_lattices[T](
 
     Parameters
     ----------
-    elements_by_lattice : Sequence[Sequence[T]]
+    elements_by_lattice :
         Tunable elements sorted by lattice.
-    failed_elements : Sequence[T]
+    failed_elements :
         Failed cavities/lattice.
-    l : int
+    l :
         Number of compensating lattice per failure.
-    tie_politics : Literal['upstream first', 'downstream first'], optional
+    tie_politics :
         When two elements have the same position, will you want to have the
-        upstream or the downstream first? The default is ``"upstream first"``.
-    shift : int, optional
+        upstream or the downstream first?
+    shift :
         Distance increase for downstream elements (``shift < 0``) or upstream
         elements (``shift > 0``). Used to have a window of compensating
-        cavities which is not centered around the failed elements. The default
-        is 0.
-    remove_failed : bool, optional
-        To remove the failed lattices from the output. The default is True.
-    min_number_of_cavities_in_lattice : int, optional
+        cavities which is not centered around the failed elements.
+    remove_failed :
+        To remove the failed lattices from the output.
+    min_number_of_cavities_in_lattice :
         If a lattice has less than this number of functional cavities, we
         look for another lattice. This is designed to removed lattices which
-        have no cavities (default value: 1). Note that lattices that have
-        some functional cavities but not enough will be used for compensation
-        anyway.
+        have no cavities. Note that lattices that have some functional cavities
+        but not enough will be used for compensation anyway.
 
     Returns
     -------
-    altered : list[T]
         Contains all the altered cavities.
 
     """
@@ -240,14 +238,13 @@ def global_compensation[T](
 
     Parameters
     ----------
-    elements : Sequence[T]
+    elements :
         All the tunable elements.
-    failed_elements : Sequence[T]
+    failed_elements :
         Failed cavities.
 
     Returns
     -------
-    altered : list[T]
         Contains all the altered elements.
 
     """
@@ -268,14 +265,13 @@ def global_downstream[T](
 
     Parameters
     ----------
-    elements : Sequence[T]
+    elements :
         All tunable the elements.
-    failed_elements : Sequence[T]
+    failed_elements :
         Failed cavities.
 
     Returns
     -------
-    altered : list[T]
         Contains all the altered elements.
 
     """

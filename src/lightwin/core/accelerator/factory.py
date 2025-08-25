@@ -51,7 +51,7 @@ class AcceleratorFactory(ABC):
     def run(self, *args, **kwargs) -> Accelerator:
         """Create the object."""
         accelerator = Accelerator(*args, **kwargs)
-        self._check_consistency_absolute_phases(accelerator.l_cav)
+        self._check_consistency_reference_phase_policies(accelerator.l_cav)
         return accelerator
 
     def _generate_folders_tree_structure(
@@ -106,62 +106,32 @@ class AcceleratorFactory(ABC):
                 path.mkdir(parents=True, exist_ok=True)
         return accelerator_paths
 
-    def _check_consistency_absolute_phases(
+    def _check_consistency_reference_phase_policies(
         self, cavities: Sequence[FieldMap]
     ) -> None:
         """Check that solvers phases are consistent with ``DAT`` file."""
         if len(cavities) == 0:
             return
         beam_calculators = [x for x in self.beam_calculators if x is not None]
-        beam_calculators_flags = {
-            beam_calculator.flag_phi_abs
+        policies = {
+            beam_calculator: beam_calculator.reference_phase_policy
             for beam_calculator in beam_calculators
         }
 
-        if len(beam_calculators_flags) > 1:
-            logging.debug(
-                "BeamCalculator objects have different flag_phi_abs values."
-                " Warning already raised in BeamCalculatorsFactory"
+        n_unique = len(set(policies.values()))
+        if n_unique > 1:
+            logging.warning(
+                "The different BeamCalculator objects have different "
+                "reference phase policies. This may lead to inconsistencies "
+                f"when cavities fail.\n{policies = }"
             )
             return
 
-        cavities_references = [x.cavity_settings.reference for x in cavities]
-        if len(set(cavities_references)) > 1:
-            logging.warning(
-                "The cavities do not all have the same reference phase. This "
-                "may lead to inconsistencies."
+        references = {x.cavity_settings.reference for x in cavities}
+        if len(references) > 1:
+            logging.info(
+                "The cavities do not all have the same reference phase."
             )
-            return
-
-        if (
-            cavities_references[0] == "phi_0_abs"
-            and not beam_calculators[0].flag_phi_abs
-        ):
-            logging.warning(
-                "You asked LW a simulation in relative phase, while there "
-                "is at least one cavity in absolute phase in the .dat file "
-                "used by TW. You can expect a phase difference between "
-                "LightWin results and TraceWin results for the same input "
-                ".dat, after the first failed cavity. No difference should "
-                "appear with the output .dat, or when using TraceWin solver "
-                "within LightWin."
-            )
-            return
-
-        if (
-            cavities_references[0] == "phi_0_rel"
-            and beam_calculators[0].flag_phi_abs
-        ):
-            logging.warning(
-                "You asked LW a simulation in absolute phase, while there "
-                "is at least one cavity in relative phase in the .dat file "
-                "used by TW. You can expect a phase difference between "
-                "LightWin results and TraceWin results for the same input "
-                ".dat, after the first failed cavity. No difference should "
-                "appear with the output .dat, or when using TraceWin solver "
-                "within LightWin."
-            )
-            return
 
 
 class NoFault(AcceleratorFactory):

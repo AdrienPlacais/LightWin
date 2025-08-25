@@ -124,7 +124,7 @@ that you alter no
 
 FieldMap.CavitySettings.refer-
 
-ence attribute.",❌,"('as_in_original_dat', 'as_in_settings', 'phi_0_abs', 'phi_0_rel', 'phi_s')"
+ence attribute.",❌,"('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_original_dat', 'as_in_settings')"
 `freq1`,`float`,"Input beam frequency (MHz) of
 
 main beam",❌,
@@ -250,13 +250,24 @@ executable. If given, will
 override the definition in the
 
 machine_config_file.",❌,
-`flag_phi_abs`,`bool`,"If the field maps phases
+"`reference_phase_`
 
-should be absolute (no
+`policy`",`str`,"Controls how cavities
 
-implicit rephasing after a
+reference phase will be
 
-failure).",❌,
+initialized.",❌,"('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_original_dat')"
+`flag_phi_abs`,"`bool` or
+
+`NoneType`","DEPRECATED, prefer use of
+
+`reference_phase_policy`. If the
+
+field maps phases should be
+
+absolute (no implicit
+
+rephasing after a failure).",❌,
 `ini_path`,"`str` or
 
 `Path`",Path to the `INI` TraceWin file.,✅,
