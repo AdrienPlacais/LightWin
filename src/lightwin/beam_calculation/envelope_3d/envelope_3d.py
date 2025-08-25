@@ -33,7 +33,23 @@ from lightwin.util.typing import REFERENCE_PHASE_POLICY_T
 
 
 class Envelope3D(BeamCalculator):
-    """A 3D envelope solver."""
+    """A 3D envelope solver.
+
+    As transverse effects are generally not predominant, I do not use this
+    solver very often and a lot of elements are not implemented.
+    The current list of explicitly supported elements is:
+
+    .. configkeys:: lightwin.beam_calculation.envelope_3d.element_envelope3d_\
+parameters_factory.PARAMETERS_3D
+       :n_cols: 2
+
+    The default behavior when an element in the input ``DAT`` file is not
+    recognized, is to issue a warning and replace this element by a ``DRIFT``.
+
+    Do not hesitate to file an |issue|_ if you need me to implement some
+    elements.
+
+    """
 
     flag_cython = False
 

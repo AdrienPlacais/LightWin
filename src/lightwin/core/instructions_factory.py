@@ -25,7 +25,7 @@ from lightwin.core.commands.factory import IMPLEMENTED_COMMANDS, CommandFactory
 from lightwin.core.commands.helper import apply_commands
 from lightwin.core.elements.dummy import DummyElement
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.factory import ElementFactory, implemented_elements
+from lightwin.core.elements.factory import IMPLEMENTED_ELEMENTS, ElementFactory
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.helper import (
     force_a_lattice_for_every_element,
@@ -61,26 +61,26 @@ class InstructionsFactory:
 
         Parameters
         ----------
-        freq_bunch_mhz : float
-            Beam bunch frequency in MHz.
-        default_field_map_folder : pathlib.Path
+        freq_bunch_mhz :
+            Beam bunch frequency in :unit:`MHz`.
+        default_field_map_folder :
             Where to look for field maps when no ``FIELD_MAP_PATH`` is
             precised. This is also the folder where the ``DAT`` is.
-        load_field_maps : bool
+        load_field_maps :
             To load or not the field maps (useless to do it with
             :class:`.TraceWin`).
-        field_maps_in_3d : bool
+        field_maps_in_3d :
             To load or not the field maps in 3D (useful only with
             :class:`.Envelope3D`... Except that this is not supported yet, so
             it is never useful.
-        load_cython_field_maps : bool
+        load_cython_field_maps :
             To load or not the field maps for Cython (useful only with
             :class:`.Envelope1D` and :class:`.Envelope3D` used with Cython).
-        elements_to_dump : abc.ABCMeta | tuple[abc.ABCMeta, ...], optional
+        elements_to_dump :
             Class of Elements that you want to remove. If you want to skip an
             Element because it is not implemented, prefer assigning it to a
-            :class:`.DummyElement`. The default is an empty tuple.
-        factory_kw : Any
+            :class:`.DummyElement`.
+        factory_kw :
             Other parameters passed to the :class:`.CommandFactory` and
             :class:`.ElementFactory`.
 
@@ -121,7 +121,7 @@ class InstructionsFactory:
 
         Parameters
         ----------
-        dat_filecontent : Collection[DatLine]
+        dat_filecontent :
             List containing all the lines of ``dat_filepath``.
 
         """
@@ -159,21 +159,20 @@ class InstructionsFactory:
 
         Parameters
         ----------
-        line : DatLine
+        line :
             A single line of the ``DAT`` file.
-        dat_idx : int, optional
+        dat_idx :
             Line number of the line (starts at 0). If not provided, taken from
             ``line``.
-        command_fac : CommandFactory
+        command_fac :
             A factory to create :class:`.Command`.
-        element_fac : ElementFactory
+        element_fac :
             A factory to create :class:`.Element`.
-        instruction_kw : dict
+        instruction_kw :
             Keywords given to the ``run`` method of the proper factory.
 
         Returns
         -------
-        Instruction
             Proper :class:`.Command` or :class:`.Element`, or :class:`.Dummy`,
             or :class:`.Comment`.
 
@@ -186,7 +185,7 @@ class InstructionsFactory:
             return self._command_factory.run(
                 dat_line, dat_idx, **instruction_kw
             )
-        if dat_line.instruction in implemented_elements:
+        if dat_line.instruction in IMPLEMENTED_ELEMENTS:
             return self.element_factory.run(
                 dat_line, dat_idx, **instruction_kw
             )

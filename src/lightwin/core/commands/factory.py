@@ -1,9 +1,4 @@
-"""Define a class to easily create :class:`.Command` objects.
-
-.. todo::
-    handle personalized name of commands (marker)
-
-"""
+"""Define a class to easily create :class:`.Command` objects."""
 
 from pathlib import Path
 from typing import Any
@@ -45,6 +40,7 @@ from lightwin.core.commands.steerer import Steerer
 from lightwin.core.commands.superpose_map import SuperposeMap
 from lightwin.tracewin_utils.line import DatLine
 
+#: Commands handled by LightWin.
 IMPLEMENTED_COMMANDS = {
     "ADJUST": Adjust,
     "ADJUST_STEERER": DummyCommand,
@@ -81,7 +77,7 @@ IMPLEMENTED_COMMANDS = {
     "SHIFT": Shift,
     "STEERER": Steerer,
     "SUPERPOSE_MAP": SuperposeMap,
-}  #:
+}
 
 
 class CommandFactory:

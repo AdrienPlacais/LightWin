@@ -54,7 +54,8 @@ from lightwin.core.elements.solenoid import Solenoid
 from lightwin.core.elements.thin_steering import ThinSteering
 from lightwin.tracewin_utils.line import DatLine
 
-implemented_elements = {
+#: Elements handled by LightWin.
+IMPLEMENTED_ELEMENTS = {
     "APERTURE": Aperture,
     "BEND": Bend,
     "DIAG_CURRENT": DiagCurrent,
@@ -100,7 +101,7 @@ implemented_elements = {
     "QUAD": Quad,
     "SOLENOID": Solenoid,
     "THIN_STEERING": ThinSteering,
-}  #:
+}
 
 
 class ElementFactory:
@@ -117,7 +118,7 @@ class ElementFactory:
             default_field_map_folder, freq_bunch_mhz, **factory_kw
         )
         self.field_map_factory = field_map_factory
-        implemented_elements["FIELD_MAP"] = field_map_factory.run
+        IMPLEMENTED_ELEMENTS["FIELD_MAP"] = field_map_factory.run
 
     def run(
         self, line: DatLine, dat_idx: int | None = None, **kwargs
@@ -132,8 +133,8 @@ class ElementFactory:
 
 def _get_constructor(instruction: str, dat_idx: int) -> type:
     """Get the proper constructor."""
-    if instruction in implemented_elements:
-        return implemented_elements[instruction]
+    if instruction in IMPLEMENTED_ELEMENTS:
+        return IMPLEMENTED_ELEMENTS[instruction]
     raise OSError(
         f"No Element matching {instruction} at line {dat_idx + 1} was found."
     )

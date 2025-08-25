@@ -16,12 +16,16 @@ This solver computes the propagation of the beam in the longitudinal phase space
 Space charge effects are not considered.
 It is adapted to high energy problems, such as ADS linacs.
 
-.. todo::
-   Insert list of implemented elements.
-
 .. csv-table::
    :file: configuration_entries/beam_calculator_envelope_1d.csv
    :header-rows: 1
+
+The following elements are explicitly supported.
+Note that, by default, an element that is implemented but not explicitly supported is replaced by a `DRIFT`.
+In 1D, this is perfectly acceptable for most non-implemented elements that act on the transverse dynamics, such as `THIN_LENS`.
+
+.. configkeys:: lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory.PARAMETERS_1D
+   :n_cols: 3
 
 :class:`.Envelope3D` solver
 ===========================
@@ -35,14 +39,14 @@ Envelope solver in 3D, without space charge.
 .. note::
 
    As transverse effects are generally not predominant, I do not use this solver very often and a lot of elements are not implemented.
-   The current list of implemented elements is:
+   The current list of explicitly supported elements is:
 
    .. configkeys:: lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.PARAMETERS_3D
      :n_cols: 2
 
   The default behavior when an element in the input `DAT` file is not recognized, is to issue a warning and replace this element by a `DRIFT`.
 
-   Do not hesitate to file an |issue|_ if you need me to implement some elements.
+  Do not hesitate to file an |issue|_ if you need me to implement some elements.
 
 :class:`.TraceWin` solver
 ===========================

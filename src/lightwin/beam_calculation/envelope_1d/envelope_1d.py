@@ -35,7 +35,19 @@ from lightwin.util.typing import REFERENCE_PHASE_POLICY_T
 
 
 class Envelope1D(BeamCalculator):
-    """The fastest beam calculator, adapted to high energies."""
+    """The fastest beam calculator, adapted to high energies.
+
+    The following elements are explicitly supported.
+    Note that, by default, an element that is implemented but not explicitly
+    supported is replaced by a ``DRIFT``.
+    In 1D, this is perfectly acceptable for most non-implemented elements that
+    act on the transverse dynamics, such as ``THIN_LENS``.
+
+    .. configkeys:: lightwin.beam_calculation.envelope_1d.element_envelope1d_p\
+arameters_factory.PARAMETERS_1D
+        :n_cols: 3
+
+    """
 
     flag_cython = False
 
