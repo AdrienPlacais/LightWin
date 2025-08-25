@@ -1,3 +1,4 @@
+ipykernel>=6.29,<7
 lightwin>=0.12
 sphinx>=8,<9
 sphinx-rtd-theme>=3,<4
