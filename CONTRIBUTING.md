@@ -17,7 +17,8 @@ We use long-lived branches for each major series (e.g., `1.7.x`).
 
 ### 🧪 Running Tests
 
-The project uses `pytest`. From the root of the repository:
+The project uses `pytest`.
+From the root of the repository:
 
 ```bash
 pytest -m "not implementation"
