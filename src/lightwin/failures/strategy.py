@@ -105,8 +105,8 @@ def k_out_of_n[T](
     shift: int = 0,
     remove_failed: bool = True,
     **kwargs,
-) -> Sequence[T]:
-    """Return ``k`` compensating cavities per failed in ``elts_of_interest``.
+) -> list[T]:
+    r"""Return ``k`` compensating cavities per failed in ``elts_of_interest``.
 
     Compensate the :math:`n` failed cavities with :math:`k\times n` closest
     cavities :cite:`saini_assessment_2021,Yee-Rendon2022a`.
@@ -135,8 +135,8 @@ def k_out_of_n[T](
 
     Returns
     -------
-        Contains all the altered elements/lattices. The ``n`` first are failed,
-        the ``k * n`` following are compensating.
+        Contains all the altered elements/lattices. The :math:`n` first are
+        failed, the :math:`k \times n` following are compensating.
 
     """
     sorted_by_position = sort_by_position(
@@ -162,7 +162,7 @@ def l_neighboring_lattices[T](
     remove_failed: bool = True,
     min_number_of_cavities_in_lattice: int = 1,
     **kwargs,
-) -> Sequence[T]:
+) -> list[T]:
     """Select full lattices neighboring the failed cavities.
 
     Every fault will be compensated by ``l`` full lattices, direct neighbors of
@@ -263,7 +263,7 @@ def global_compensation[T](
     *,
     remove_failed: bool = True,
     **kwargs,
-) -> Sequence[T]:
+) -> list[T]:
     """Give all the cavities of the linac.
 
     Parameters
@@ -279,7 +279,7 @@ def global_compensation[T](
 
     """
     if not remove_failed:
-        return elements
+        return list(elements)
     altered = [x for x in elements if x not in failed_elements]
     return altered
 
@@ -290,8 +290,8 @@ def global_downstream[T](
     *,
     remove_failed: bool = True,
     **kwargs,
-) -> Sequence[T]:
-    """Give all the cavities after failure of the linac.
+) -> list[T]:
+    """Give all the cavities of the linac after the first failed cavity.
 
     Parameters
     ----------
@@ -309,7 +309,7 @@ def global_downstream[T](
     first_index = min(indexes)
     altered = elements[first_index:]
     if not remove_failed:
-        return altered
+        return list(altered)
     altered = [x for x in altered if x not in failed_elements]
     return altered
 

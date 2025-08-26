@@ -17,7 +17,6 @@ Compensating cavities are selected according to the `strategy` keyword; actual f
 
 Every strategy requires user to set specific parameters, as listed below.
 
-
 *k out of n* method
 -------------------
 

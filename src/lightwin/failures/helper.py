@@ -89,7 +89,7 @@ def sort_by_position[T](
     failed: Sequence[T],
     tie_politics: TIE_POLITICS_T = "upstream first",
     shift: int = 0,
-) -> Sequence[T]:
+) -> list[T]:
     """Sort given list by how far its elements are from ``elements[idx]``.
 
     We go across every element in ``all_elements`` and get their index-distance
@@ -126,10 +126,10 @@ def sort_by_position[T](
 
 
 def remove_lists_with_less_than_n_elements[T](
-    elements: list[Sequence[T]], minimum_size: int = 1
-) -> list[Sequence[T]]:
+    elements: Sequence[Sequence[T]], minimum_size: int = 1
+) -> list[list[T]]:
     """Return a list where objects have a minimum length of ``minimum_size``."""
-    out = [x for x in elements if len(x) >= minimum_size]
+    out = [list(x) for x in elements if len(x) >= minimum_size]
     return out
 
 
@@ -210,7 +210,7 @@ def gather[T](
 def nested_containing_desired[T](
     nested: Collection[Sequence[T]],
     desired_elements: Collection[T],
-) -> list[Sequence[T]]:
+) -> list[list[T]]:
     """Return collections of ``nested`` containing some ``desired_elements``.
 
     Example
@@ -220,6 +220,6 @@ def nested_containing_desired[T](
 
     """
     nested_with_desired_elements = [
-        x for x in nested if not set(desired_elements).isdisjoint(x)
+        list(x) for x in nested if not set(desired_elements).isdisjoint(x)
     ]
     return nested_with_desired_elements

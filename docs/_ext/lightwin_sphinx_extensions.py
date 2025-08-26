@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from collections import defaultdict
 from importlib import import_module
-from os import stat
 from typing import Any
 
 from docutils import nodes
@@ -190,8 +189,9 @@ def _render(raw: Any) -> str:
     """Transform an object into a clickable ReST role.
 
     Specific behaviors according to ``raw`` type:
-    - ``None``: return an empty string
-    - Class: return class name within the ReST class role
+    - ``None``: return an empty string.
+    - Class: return class name within the ReST class role.
+    - Has a ``__call__`` method: return ``func`` ReSt role.
     - Default: return the ``raw.__repr__()`` within backticks.
 
     """
@@ -199,6 +199,8 @@ def _render(raw: Any) -> str:
         return ""
     if isinstance(raw, type):
         return f":class:`.{raw.__name__}`"
+    if callable(raw):
+        return f":func:`.{raw.__name__}`"
     # !r to use ``__repr__`` instead of ``__str__``
     return f"``{raw!r}``"
 
