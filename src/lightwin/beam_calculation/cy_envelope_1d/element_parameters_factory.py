@@ -3,11 +3,9 @@
 from lightwin.beam_calculation.cy_envelope_1d.element_parameters import (
     BendCyEnvelope1DParameters,
     DriftCyEnvelope1DParameters,
+    ElementCyEnvelope1DParameters,
     FieldMapCyEnvelope1DParameters,
     SuperposedFieldMapCyEnvelope1DParameters,
-)
-from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
-    ElementEnvelope1DParameters,
 )
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory import (
     ElementEnvelope1DParametersFactory,
@@ -25,23 +23,27 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
 
+#: Implemented elements; a non-implemented element will be replaced by a Drift.
+#: A warning will be raised.
+CY_PARAMETERS_1D = {
+    Aperture: DriftCyEnvelope1DParameters,
+    Bend: BendCyEnvelope1DParameters,
+    Diagnostic: DriftCyEnvelope1DParameters,
+    Drift: DriftCyEnvelope1DParameters,
+    Edge: DriftCyEnvelope1DParameters,
+    FieldMap: FieldMapCyEnvelope1DParameters,
+    Quad: DriftCyEnvelope1DParameters,
+    Solenoid: DriftCyEnvelope1DParameters,
+    SuperposedFieldMap: SuperposedFieldMapCyEnvelope1DParameters,
+}
+
 
 class ElementCyEnvelope1DParametersFactory(ElementEnvelope1DParametersFactory):
     """Define a method to easily create the solver parameters."""
 
-    parameters = {
-        Aperture: DriftCyEnvelope1DParameters,
-        Bend: BendCyEnvelope1DParameters,
-        Diagnostic: DriftCyEnvelope1DParameters,
-        Drift: DriftCyEnvelope1DParameters,
-        Edge: DriftCyEnvelope1DParameters,
-        FieldMap: FieldMapCyEnvelope1DParameters,
-        Quad: DriftCyEnvelope1DParameters,
-        Solenoid: DriftCyEnvelope1DParameters,
-        SuperposedFieldMap: SuperposedFieldMapCyEnvelope1DParameters,
-    }  #:
+    _parameters = CY_PARAMETERS_1D
 
-    def run(self, elt: Element) -> ElementEnvelope1DParameters:
+    def run(self, elt: Element) -> ElementCyEnvelope1DParameters:
         """Create the proper subclass of solver parameters, instantiate it.
 
         .. note::
