@@ -110,7 +110,9 @@ def zone_to_recompute(
         idx_start_compensation_zone = 0
         idx_end_compensation_zone = len(broken_elts) - 2
 
-    elts_of_compensation_zone = broken_elts[idx_start_compensation_zone:]
+    elts_of_compensation_zone = broken_elts[
+        idx_start_compensation_zone : idx_end_compensation_zone + 1
+    ]
     return elts_of_compensation_zone, objective_elements
 
 
