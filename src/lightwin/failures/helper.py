@@ -12,12 +12,15 @@ from collections.abc import Callable, Collection, Sequence
 from functools import partial
 from typing import Literal
 
+TIE_POLITICS = ("upstream first", "downstream first")
+TIE_POLITICS_T = Literal["upstream first", "downstream first"]
+
 
 def _distance_to_ref[T](
     element: T,
     failed: Sequence[T],
     all_elements: Sequence[T],
-    tie_politics: Literal["upstream first", "downstream first"],
+    tie_politics: TIE_POLITICS_T,
     shift: int = 0,
 ) -> tuple[int, int]:
     """Give distance between ``element`` and closest of ``failed``.
@@ -84,9 +87,7 @@ def _penalty(index: int, failure_index: int, shift: int) -> int:
 def sort_by_position[T](
     all_elements: Sequence[T],
     failed: Sequence[T],
-    tie_politics: Literal[
-        "upstream first", "downstream first"
-    ] = "upstream first",
+    tie_politics: TIE_POLITICS_T = "upstream first",
     shift: int = 0,
 ) -> Sequence[T]:
     """Sort given list by how far its elements are from ``elements[idx]``.

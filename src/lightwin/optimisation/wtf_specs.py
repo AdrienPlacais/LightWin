@@ -9,6 +9,7 @@
 from typing import Any
 
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
+from lightwin.failures.helper import TIE_POLITICS
 from lightwin.failures.strategy import COMPENSATING_SELECTOR
 from lightwin.optimisation.algorithms.factory import ALGORITHM_SELECTOR
 from lightwin.optimisation.objective.factory import OBJECTIVE_PRESETS
@@ -78,7 +79,7 @@ _WTF_BASE_AUTOMATIC = _WTF_BASE + (
             "How to select the compensating elements when several are "
             "equidistant to the failure."
         ),
-        allowed_values=("upstream first", "downstream first"),
+        allowed_values=TIE_POLITICS,
         default_value="downstream first",
         is_mandatory=False,
     ),

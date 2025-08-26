@@ -21,6 +21,7 @@ from lightwin.core.list_of_elements.helper import (
 )
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.helper import (
+    TIE_POLITICS_T,
     gather,
     nested_containing_desired,
     sort_by_position,
@@ -71,7 +72,7 @@ def k_out_of_n[T](
     failed_elements: Sequence[T],
     *,
     k: int,
-    tie_politics: str = "upstream first",
+    tie_politics: TIE_POLITICS_T = "upstream first",
     shift: int = 0,
     remove_failed: bool = True,
     **kwargs,
@@ -127,7 +128,7 @@ def l_neighboring_lattices[T](
     failed_elements: Sequence[T],
     *,
     l: int,
-    tie_politics: str = "upstream first",
+    tie_politics: TIE_POLITICS_T = "upstream first",
     shift: int = 0,
     remove_failed: bool = True,
     min_number_of_cavities_in_lattice: int = 1,
@@ -284,10 +285,12 @@ def global_downstream[T](
     return altered
 
 
+#: Defines the compensation strategies, *i.e.* selection of compensating
+#: cavities for given failures
 COMPENSATING_SELECTOR = {
     "k out of n": k_out_of_n,
     "l neighboring lattices": l_neighboring_lattices,
     "global": global_compensation,
     "global_downstream": global_downstream,
     "manual": manual,
-}  #:
+}
