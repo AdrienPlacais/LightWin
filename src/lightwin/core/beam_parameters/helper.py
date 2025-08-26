@@ -68,7 +68,6 @@ def reconstruct_sigma(
 
     Returns
     -------
-    sigma : NDArray
         ``(n, 2, 2)`` full sigma matrix along the linac.
 
     """
@@ -148,9 +147,9 @@ def eps_from_sigma(
 
     Returns
     -------
-    eps_no_normalization : NDArray | float
+    eps_no_normalization
         ``(n, )`` array (or float) of emittance, not normalized.
-    eps_normalized : NDArray float
+    eps_normalized
         ``(n, )`` array (or float) of emittance, normalized.
 
     """
@@ -220,7 +219,6 @@ def twiss_from_sigma(
 
     Returns
     -------
-    twiss : NDArray
         ``(n, 3)`` (or ``(3, )``) array of Twiss parameters.
 
     """
@@ -276,7 +274,6 @@ def envelopes_from_sigma(
 
     Returns
     -------
-    envelopes : NDArray
         ``(n, 2)`` (or ``(2, )``) array with position envelope in first column,
         energy envelope in second.
 
@@ -320,7 +317,6 @@ def sigma_from_transfer_matrices(
 
     Returns
     -------
-    sigma : NDArray
         ``(n, 2, 2)`` :math:`\sigma` beam matrix along the linac.
 
     """
@@ -351,7 +347,6 @@ def envelopes_from_twiss_eps(twiss: NDArray, eps: NDArray | float) -> NDArray:
 
     Returns
     -------
-    envelopes : NDArray
         ``(n, 2)`` (or ``(2, )``) array with position envelope in first column,
         energy envelope in second.
 
@@ -424,9 +419,9 @@ def eps_from_other_phase_space(
 
     Returns
     -------
-    eps_no_normalization : NDArray | float
+    eps_no_normalization :
         ``(n, )`` array (or float) of emittance, not normalized.
-    eps_normalized : NDArray | float
+    eps_normalized :
         ``(n, )`` array (or float) of emittance, normalized.
 
     """
@@ -476,7 +471,6 @@ def twiss_from_other_phase_space(
 
     Returns
     -------
-    twiss : NDArray
         ``(n, 3)`` array of Twiss parameters.
 
     """

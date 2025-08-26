@@ -10,8 +10,6 @@ import logging
 from collections.abc import Collection, Sequence
 
 from lightwin.core.commands.command import Command
-from lightwin.core.commands.dummy_command import DummyCommand
-from lightwin.core.elements.dummy import DummyElement
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
@@ -19,7 +17,6 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedPlaceHolderCmd,
     SuperposedPlaceHolderElt,
 )
-from lightwin.core.em_fields.rf_field import RfField
 from lightwin.core.instruction import Comment, Instruction
 from lightwin.tracewin_utils.line import DatLine
 
@@ -29,7 +26,7 @@ class SuperposeMap(Command):
 
     Parameters
     ----------
-    z_0 : float
+    z_0 :
         Position at which the next field map should be inserted.
 
     """

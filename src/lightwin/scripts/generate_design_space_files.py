@@ -22,9 +22,9 @@ def generate_design_space_files(
 
     Parameters
     ----------
-    toml_filepath : pathlib.Path
+    toml_filepath :
         Path to the configuration file.
-    toml_keys : dict[str, str]
+    toml_keys :
         Keys of the configuration file.
 
     """

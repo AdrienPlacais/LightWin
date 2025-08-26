@@ -191,17 +191,16 @@ def set_of_cavity_settings_to_command(
 
     Parameters
     ----------
-    set_of_cavity_settings : SetOfCavitySettings
+    set_of_cavity_settings :
         All the new cavity settings.
-    phi_bunch_first_element : float
+    phi_bunch_first_element :
         Phase of synchronous particle at entry of first element of
         :class:`.ListOfElements` under study.
-    idx_first_element : int
+    idx_first_element :
         Index of first element of :class:`.ListOfElements` under study.
 
     Returns
     -------
-    list[str]
         Full command that will alter the TraceWin exection to match the
         desired ``set_of_cavity_settings``.
 
@@ -246,20 +245,18 @@ def _cavity_settings_to_command(
 
     Parameters
     ----------
-    field_map : FieldMap
+    field_map :
         Cavity under study.
-    cavity_settings : CavitySettings
+    cavity_settings :
         Settings to try.
-    delta_phi_bunch : float, optional
+    delta_phi_bunch :
         Phase at entry of first element of :class:`.ListOfElements` under
-        study. The default is 0.
-    delta_index : int, optional
-        Index of the first element of :class:`.ListOfElements` under study. The
-        default is 0.
+        study.
+    delta_index :
+        Index of the first element of :class:`.ListOfElements` under study.
 
     Returns
     -------
-    command : list[str]
         Piece of command to alter ``field_map`` with ``cavity_settings``.
 
     """

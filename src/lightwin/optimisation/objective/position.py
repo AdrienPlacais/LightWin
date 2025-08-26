@@ -76,9 +76,9 @@ def zone_to_recompute(
 
     Returns
     -------
-    elts_of_compensation_zone : list[Element]
+    elts_of_compensation_zone :
         :class:`.Element` objects of the compensation zone.
-    objective_elements : list[Element]
+    objective_elements :
         Where objectives are evaluated.
 
     """
@@ -110,9 +110,7 @@ def zone_to_recompute(
         idx_start_compensation_zone = 0
         idx_end_compensation_zone = len(broken_elts) - 2
 
-    elts_of_compensation_zone = broken_elts[
-        idx_start_compensation_zone : idx_end_compensation_zone + 1
-    ]
+    elts_of_compensation_zone = broken_elts[idx_start_compensation_zone:]
     return elts_of_compensation_zone, objective_elements
 
 

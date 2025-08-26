@@ -206,11 +206,11 @@ def _separate_plot_presets_from_plot_modificators(
 
     Returns
     -------
-    plot_presets : dict[str, bool]
+    plot_presets :
         Subset of ``plots``, with only the keys that can be found in
         :data:`ALLOWED_PLOT_PRESETS`. Indicates which plots presets will be plotted:
         ``"cav"``, ``"emittance"``...
-    plot_kwargs : dict[str, Any]
+    plot_kwargs :
         Subset of ``plots``, with only the keys corresponding to a plot
         modificator, eg ``"add_objectives"``.
 

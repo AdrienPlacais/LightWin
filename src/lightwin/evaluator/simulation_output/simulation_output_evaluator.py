@@ -110,14 +110,14 @@ class SimulationOutputEvaluator(ABC):
 
     Arguments
     ---------
-    value_getter : Callable[[SimulationOutput], value_t]
+    value_getter :
         A function that takes the simulation output under study as argument,
         and returns the value to be studied.
-    ref_simulation_output : SimulationOutput
+    ref_simulation_output :
         The simulation output of a nominal :class:`.Accelerator`. It is up to
         the user to verify that the :class:`.BeamCalculator` is the same
         between the reference and the fixed :class:`.SimulationOutput`.
-    ref_value_getter : Callable[[SimulationOutput, SimulationOutput],\
+    ref_value_getter :
                                  ref_value_t] | None, optional
         A function that takes the reference simulation ouput and the simulation
         output under study as arguments, and returns the reference value. In
@@ -131,19 +131,19 @@ class SimulationOutputEvaluator(ABC):
         an update ``value``, which is passed to the next function in
         ``post_treaters``. The default is a tuple containing only
         :func:`.do_nothing`.
-    tester : tester_t | None, optional
+    tester :
         A function that takes post-treated ``value`` and test it. It can return
         a boolean or a float. The default is None.
-    fignum : int | None, optional
+    fignum :
         The Figure number. The default is None, in which case no plot is
         produced.
-    descriptor : str, optional
+    descriptor :
         A sentence or two to describe what the test is about. The default is an
         empty string.
-    markdown : str, optional
+    markdown :
         A markdown name for this quantity, used in plots y label. The default
         is an empty string.
-    plt_kwargs : dict[str, Any] | None, optional
+    plt_kwargs :
         A dictionary with keyword arguments passed to the ``plt.Figure``. The
         default is None.
 

@@ -66,7 +66,6 @@ class Objective(ABC):
 
         Returns
         -------
-        residual : float
             Difference between current evaluation and ``ideal_value`` value for
             ``self.name``, scaled by ``self.weight``.
 

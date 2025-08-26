@@ -41,14 +41,14 @@ class SimulationOutputEvaluatorsFactory:
 
         Parameters
         ----------
-        evaluator_kwargs : Collection[EvaluatorKwargs]
+        evaluator_kwargs :
             Dictionaries holding necessary information to instantiate the
             evaluators. The only mandatory key-value pair is "name" of type
             str.
-        user_evaluators : dict[str, type] | None, optional
+        user_evaluators :
             Additional user-defined evaluators; keys should be in PascalCase,
             values :class:`.ISimulationOutputEvaluator` constructors.
-        plotter : IPlotter, optional
+        plotter :
             An object used to produce plots. The default is
             :class:`.PandasPlotter`.
 
@@ -75,12 +75,11 @@ class SimulationOutputEvaluatorsFactory:
 
         Parameters
         ----------
-        reference : SimulationOutput
+        reference :
             The reference simulation output.
 
         Returns
         -------
-        list[ISimulationOutputEvaluator]
             All the created evaluators.
 
         """
@@ -147,16 +146,15 @@ def _constructors_n_kwargs(
 
     Parameters
     ----------
-    evaluator_kwargs : Collection[dict[str, str | float | bool]]
+    evaluator_kwargs :
         Dictionaries holding necessary information to instantiate the
         evaluators. The only mandatory key-value pair is "name" of type str.
-    user_evaluators : dict[str, type] | None, optional
+    user_evaluators :
         Additional user-defined evaluators; keys should be in PascalCase,
         values :class:`.ISimulationOutputEvaluator` constructors.
 
     Returns
     -------
-    dict[type, dict[str | float | bool]]
         Keys are class constructor, values associated keyword arguments.
 
     """

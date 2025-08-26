@@ -28,20 +28,18 @@ def dat_filecontent_from_file(
 
     Parameters
     ----------
-    dat_path : pathlib.Path
+    dat_path :
         Filepath to the ``DAT`` file, as understood by TraceWin.
-    keep : Literal["none", "comments", "all"], optional
+    keep :
         To determine which un-necessary lines in the dat file should be kept.
-        The default is `'none'`.
-    filter_func : Callable
+    filter_func :
         You can provide your own filters here. Takes precedence over ``keep``.
-    instructions_to_insert : Collection[Instruction | DatLine], optional
+    instructions_to_insert :
         Some elements or commands that are not present in the ``DAT`` file but
         that you want to add. The default is an empty tuple.
 
     Returns
     -------
-    dat_filecontent : list[DatLine]
         List containing all the lines of dat_path.
 
     """
@@ -64,17 +62,16 @@ def _filter_lines(
 
     Parameters
     ----------
-    dat_filecontent : Sequence[DatLine]
+    dat_filecontent :
         Content loaded from the ``DAT`` file.
-    keep : Literal["none", "comments", "all"], optional
+    keep :
         To determine which un-necessary lines in the dat file should be kept.
         The default is `'none'`.
-    filter_func : Callable[[DatLine], bool], optional
+    filter_func :
         You can provide your own filters here. Takes precedence over ``keep``.
 
     Returns
     -------
-    list[DatLine]
         Content of the ``DAT`` file without undesirable content.
 
     """
@@ -177,9 +174,9 @@ def export_dat_filecontent(
 
     Parameters
     ----------
-    dat_filecontent : Collection[Collection[str]]
+    dat_filecontent :
         Content of the ``DAT``, line per line, word per word.
-    dat_path : pathlib.Path
+    dat_path :
         Where to save the ``DAT``.
 
     """

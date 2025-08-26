@@ -423,7 +423,6 @@ class InitialBeamParametersFactory(ABC):
 
         Returns
         -------
-        initial_phase_spaces_kw : dict[str, dict[str, float | numpy.ndarray]]
             Keys are the name of the phase spaces.
             The values are other dictionaries, which keys-values are
             :class:`.InitialPhaseSpaceBeamParameters` attributes.

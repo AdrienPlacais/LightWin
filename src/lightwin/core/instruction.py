@@ -33,9 +33,9 @@ class Instruction(ABC):
 
         Parameters
         ----------
-        line : list[str]
+        line :
             Line containing the instructions.
-        dat_idx : int
+        dat_idx :
             Position in the ``DAT``. Note that this index will vary if some
             instructions (empty lines, comments in particular) are removed from
             the dat content.
@@ -107,9 +107,9 @@ class Instruction(ABC):
 
         Parameters
         ----------
-        dat_filecontent : list[Collection[str]]
+        dat_filecontent :
             The list of instructions, in the form of a list of lines.
-        previously_inserted : int, optional
+        previously_inserted :
             Number of :class:`.Instruction` that were already inserted in the
             given ``dat_filecontent``.
 
@@ -128,9 +128,9 @@ class Instruction(ABC):
 
         Parameters
         ----------
-        dat_filecontent : list[Collection[str]]
+        dat_filecontent :
             The list of instructions, in the form of a list of lines.
-        previously_inserted : int, optional
+        previously_inserted :
             Number of :class:`.Instruction` that were already inserted in the
             given ``dat_filecontent``.
 
@@ -174,11 +174,11 @@ class Dummy(Instruction):
 
         Parameters
         ----------
-        line : DatLine
+        line :
             Arguments of the line in the ``DAT`` file.
-        dat_idx : int
+        dat_idx :
             Line number in the ``DAT`` file.
-        warning : bool, optional
+        warning :
             To raise a warning when the element is not implemented. The default
             is False.
 
@@ -206,9 +206,9 @@ class Comment(Dummy):
 
         Parameters
         ----------
-        line : list[str]
+        line :
             Arguments of the line in the ``DAT`` file.
-        dat_idx : int
+        dat_idx :
             Line number in the ``DAT`` file.
 
         """

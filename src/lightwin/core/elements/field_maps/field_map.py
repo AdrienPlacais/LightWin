@@ -180,7 +180,6 @@ class FieldMap(Element):
 
         Returns
         -------
-        out : Any
             Attribute(s) value(s).
 
         """
@@ -277,7 +276,6 @@ class FieldMap(Element):
 
         Returns
         -------
-        out : Any
             Attribute(s) value(s).
 
         """

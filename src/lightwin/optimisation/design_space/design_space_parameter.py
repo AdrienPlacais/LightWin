@@ -17,13 +17,13 @@ class DesignSpaceParameter(ABC):
 
     Parameters
     ----------
-    name : str
+    name :
         Name of the parameter. Must be compatible with the
         :meth:`.SimulationOutput.get` method, and be in
         :data:`.IMPLEMENTED_VARIABLES` or :data:`.IMPLEMENTED_CONSTRAINTS`.
-    element_name : str
+    element_name :
         Name of the element concerned by the parameter.
-    limits : tuple[float, float]
+    limits :
         Lower and upper bound for the variable. ``np.nan`` deactivates a bound.
 
     """
@@ -45,20 +45,19 @@ class DesignSpaceParameter(ABC):
 
         Parameters
         ----------
-        name : str
+        name :
             Name of the parameter. Must be compatible with the
             :meth:`.SimulationOutput.get` method, and be in
             :data:`.IMPLEMENTED_VARIABLES` or :data:`.IMPLEMENTED_CONSTRAINTS`.
-        element_name : str
+        element_name :
             Name of the element concerned by the parameter.
-        x_min : float
+        x_min :
             Lower limit. ``np.nan`` to deactivate lower bound.
-        x_max : float
+        x_max :
             Upper limit. ``np.nan`` to deactivate lower bound.
 
         Returns
         -------
-        Self
             A DesignSpaceParameter with limits = (x_min, x_max).
 
         """

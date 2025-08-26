@@ -52,12 +52,11 @@ class ElementCyEnvelope1DParametersFactory(ElementEnvelope1DParametersFactory):
 
         Parameters
         ----------
-        elt : Element
+        elt :
             Element under study.
 
         Returns
         -------
-        ElementCyEnvelope1DParameters
             Proper instantiated subclass of
             :class:`.ElementCyEnvelope1DParameters`.
 

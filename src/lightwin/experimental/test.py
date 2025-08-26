@@ -22,9 +22,9 @@ def assert_are_field_maps(elements: Sequence[Element], detail: str) -> None:
 
     Parameters
     ----------
-    elements : Sequence[Element]
+    elements :
         List of elements to test.
-    detail : str
+    detail :
         More information that will be printed if not all elements are field
         maps.
 

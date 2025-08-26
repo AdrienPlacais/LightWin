@@ -184,19 +184,18 @@ def create_fig_if_not_exists(
 
     Parameters
     ----------
-    axnum : int | Sequence[int]
+    axnum :
         Axes indexes as understood by fig.add_subplot or number of desired
         axes.
-    title : str, optional
+    title :
         Title of the figure. The default is an empty string. It will not
         override a pre-existing title.
-    sharex : bool, optional
-        If x axis should be shared. The default is False.
-    num : int, optional
-        Fig number. The default is 1.
-    clean_fig: bool, optional
-        If the previous plot should be erased from Figure. The default is
-        False.
+    sharex :
+        If x axis should be shared.
+    num :
+        Fig number.
+    clean_fig :
+        If the previous plot should be erased from Figure.
 
     """
     if isinstance(axnum, int):

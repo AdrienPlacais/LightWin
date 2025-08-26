@@ -51,12 +51,11 @@ def _compute_ellipse_parameters(ell_eq: EllipseEqParams):
 
     Parameters
     ----------
-    ell_eq : EllipseEqParams
+    ell_eq :
         Holds ellipe equations parameters.
 
-    Return
-    ------
-    ell_param : EllipseParams
+    Returns
+    -------
         Holds semi axis, center of ellipse, angle.
 
     """

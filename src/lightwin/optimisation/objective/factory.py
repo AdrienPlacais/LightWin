@@ -595,12 +595,12 @@ def get_objectives_and_residuals_function(
 
     Returns
     -------
-    elts_of_compensation_zone : list[Element]
+    elts_of_compensation_zone :
         Portion of the linac that will be recomputed during the optimisation
         process.
-    objectives : list[Objective]
+    objectives :
         Objectives that the optimisation algorithm will try to match.
-    compute_residuals : Callable[[SimulationOutput], NDArray]
+    compute_residuals :
         Function that converts a :class:`.SimulationOutput` to a plain numpy
         array of residuals.
 

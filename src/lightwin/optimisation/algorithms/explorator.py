@@ -48,7 +48,6 @@ class Explorator(OptimisationAlgorithm):
 
         Returns
         -------
-        opti_sol : OptiSol
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 
@@ -144,20 +143,20 @@ class Explorator(OptimisationAlgorithm):
 
         Parameters
         ----------
-        variable_comb : numpy.ndarray
+        variable_comb :
             All the set of variables (cavity parameters) that were tried.
-        objectives_values : numpy.ndarray
+        objectives_values :
             The values of the objective corresponding to ``variable_comb``.
-        criterion : Literal['minimize norm of objective']
+        criterion :
             Name of the criterion that will determine which solution is the
             "best". Only one is implemented for now, may add others in the
             future.
 
         Returns
         -------
-        best_solution : numpy.ndarray | None
+        best_solution :
             "Best" solution.
-        best_objective : numpy.ndarray | None
+        best_objective :
             Objective values corresponding to ``best_solution``.
 
         """
