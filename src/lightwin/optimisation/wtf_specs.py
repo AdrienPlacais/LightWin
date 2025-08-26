@@ -10,7 +10,7 @@ from typing import Any
 
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
 from lightwin.failures.helper import TIE_POLITICS
-from lightwin.failures.strategy import COMPENSATING_SELECTOR
+from lightwin.failures.strategy import STRATEGIES_MAPPING
 from lightwin.optimisation.algorithms.factory import ALGORITHM_SELECTOR
 from lightwin.optimisation.objective.factory import OBJECTIVE_PRESETS
 
@@ -66,7 +66,7 @@ _WTF_BASE = (
         key="strategy",
         types=(str,),
         description="How compensating cavities are selected.",
-        allowed_values=tuple(COMPENSATING_SELECTOR.keys()),
+        allowed_values=tuple(STRATEGIES_MAPPING.keys()),
         default_value="k out of n",
     ),
 )

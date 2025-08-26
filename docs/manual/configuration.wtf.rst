@@ -9,6 +9,15 @@ This section parametrizes the failed cavities, as well as how they are fixed.
 Selecting compensating cavities
 ===============================
 
+Compensating cavities are selected according to the `strategy` keyword; actual functions mapping failures with failed cavities are listed here:
+
+.. configmap:: lightwin.failures.strategy.STRATEGIES_MAPPING
+   :value-header: Strategy function
+   :keys-header: Corresponding keyword
+
+Every strategy requires user to set specific parameters, as listed below.
+
+
 *k out of n* method
 -------------------
 
@@ -50,6 +59,13 @@ If you want to manually associate each failed cavity with its compensating cavit
       [0],          # Second simulation only first cavity is down
       [1, 45]       # Third simulation second and 46th cavity are down
    ]
+
+Global, global downstream compensation
+--------------------------------------
+
+Use either all cavities of the linac, or all cavities downstream of the failure.
+These methods require a very large number of compensating cavities and therefore significant numerical resources.
+As a result, they are only lightly tested.
 
 Settings optimization problem
 =============================

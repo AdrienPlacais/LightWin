@@ -5,10 +5,11 @@ In particular, it answers the question:
 
 .. note::
     In order to add a compensation strategy, you must add it to the
-    :data:`COMPENSATING_SELECTOR` dict, and also to the list of supported
-    strategies in :mod:`.optimisation.wtf_specs` module.
+    :data:`STRATEGIES_MAPPING` dict.
 
 """
+
+from __future__ import annotations
 
 from collections.abc import Sequence
 from functools import partial
@@ -36,11 +37,39 @@ def failed_and_compensating(
     elts: ListOfElements,
     failed: cavities_id | nested_cavities_id,
     id_nature: Literal["cavity", "element", "name"],
-    strategy: str,
+    strategy: STRATEGIES_T,
     compensating_manual: nested_cavities_id | None = None,
     **wtf: Any,
 ) -> tuple[list[list[FieldMap]], list[list[FieldMap]]]:
-    """Determine the compensating cavities for every failure."""
+    """Determine the compensating cavities for every failure.
+
+    Parameters
+    ----------
+    elts :
+        Contains the failed linac.
+    failed :
+        Identify the failed cavities.
+    id_nature :
+        Nature of information stored in ``failed``.
+    strategy :
+        Compensation strategy.
+    compensating_gathered :
+        Associates every group of failed cavities in ``failed`` with a group
+        of compensating cavities; both must hold a list of list of cavity
+        identifier.
+    wtf :
+        Other keyword arguments passed to the actual strategy function.
+
+    Returns
+    -------
+    failed_gathered :
+        Failed cavities; cavities that will be compensated together are
+        gathered.
+    compensating_gathered :
+        Same size as ``failed_gathered``. Associates every group of failed
+        cavities to a group of compensating cavities.
+
+    """
     failed_cavities = elts.take(failed, id_nature=id_nature)
     assert [cavity.can_be_retuned for cavity in flatten(failed_cavities)]
     elements = elts.tunable_cavities
@@ -55,7 +84,7 @@ def failed_and_compensating(
         return manual(failed_cavities, compensating_cavities)
 
     fun_sort = partial(
-        COMPENSATING_SELECTOR[strategy],
+        STRATEGIES_MAPPING[strategy],
         elements=elements,
         elements_gathered_by_lattice=group_elements_by_lattice(elements),
         remove_failed=False,
@@ -287,10 +316,17 @@ def global_downstream[T](
 
 #: Defines the compensation strategies, *i.e.* selection of compensating
 #: cavities for given failures
-COMPENSATING_SELECTOR = {
+STRATEGIES_MAPPING = {
     "k out of n": k_out_of_n,
     "l neighboring lattices": l_neighboring_lattices,
     "global": global_compensation,
     "global_downstream": global_downstream,
     "manual": manual,
 }
+STRATEGIES_T = Literal[
+    "k out of n",
+    "l neighboring lattices",
+    "global",
+    "global downstream",
+    "manual",
+]
