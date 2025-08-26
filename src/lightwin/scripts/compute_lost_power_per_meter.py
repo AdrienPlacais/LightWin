@@ -51,19 +51,19 @@ def compute(
 
     Parameters
     ----------
-    path : pathlib.Path | str
+    path :
         Path to a single ``partran1.out`` file, or to a full LightWin project.
-    full_project : bool, optional
+    full_project :
         Indicate if the given path is a full project. If True, we take all the
         LightWin out folders in ``path`` with a name like ``000000_ref`` or
         ``000032`` (we look for folders with 6 digits in it). In each one, we
         treat ``1_TraceWin/partran1.out`` file. If False, we try to find
         ``patran1.out`` in ``path/``, ``path/1_TraceWin`` (if ``path`` is not
-        already a file). The default is False.
-    z_min, z_max : float | None, optional
+        already a file).
+    z_min, z_max :
         If provided, points outside of this range will be filtered out. The
         default is None, in which case all points are kept.
-    definitions : definitions_t
+    definitions :
         How the lost power should be calculated.
 
     """

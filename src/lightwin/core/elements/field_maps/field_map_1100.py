@@ -1,8 +1,7 @@
 """Define a field map with 1D rf electro-magnetic field."""
 
-from typing import Literal
-
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.util.typing import EXPORT_PHASES_T
 
 
 class FieldMap1100(FieldMap):
@@ -19,13 +18,7 @@ class FieldMap1100(FieldMap):
 
     def to_line(
         self,
-        which_phase: Literal[
-            "phi_0_abs",
-            "phi_0_rel",
-            "phi_s",
-            "as_in_settings",
-            "as_in_original_dat",
-        ] = "phi_0_rel",
+        which_phase: EXPORT_PHASES_T,
         *args,
         inplace: bool = False,
         **kwargs,
@@ -34,16 +27,14 @@ class FieldMap1100(FieldMap):
 
         Parameters
         ----------
-        which_phase : Literal["phi_0_abs", "phi_0_rel", "phi_s", \
-                "as_in_settings", "as_in_original_dat"]
+        which_phase :
             Which phase should be put in the output ``DAT``.
-        inplace : bool, optional
+        inplace :
             To modify the :class:`.Element` inplace. The default is False, in
             which case, we return a modified copy.
 
         Returns
         -------
-        list[str]
             The line in the ``DAT``, with updated amplitude and phase from
             current object.
 

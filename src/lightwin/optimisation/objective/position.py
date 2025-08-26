@@ -76,9 +76,9 @@ def zone_to_recompute(
 
     Returns
     -------
-    elts_of_compensation_zone : list[Element]
+    elts_of_compensation_zone :
         :class:`.Element` objects of the compensation zone.
-    objective_elements : list[Element]
+    objective_elements :
         Where objectives are evaluated.
 
     """

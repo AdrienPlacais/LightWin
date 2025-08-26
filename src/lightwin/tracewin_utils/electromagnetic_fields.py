@@ -143,13 +143,12 @@ def _get_filemaps_extensions(
 
     Parameters
     ----------
-    field_map_type : dict[str, str]
+    field_map_type :
         Dictionary which keys are in :data:`FIELD_TYPES` and values are values
         of :data:`.FIELD_GEOMETRIES`.
 
     Returns
     -------
-    extensions : dict[str, list[str]]
         Dictionary with the same keys as input. The values are lists containing
         all the extensions of the files to load, without a '.'.
 
@@ -168,15 +167,14 @@ def _get_filemap_extensions(field_type: str, field_geometry: str) -> list[str]:
 
     Parameters
     ----------
-    field_type : str
+    field_type :
         Type of the field/aperture. Allowed values are in :data:`FIELD_TYPES`.
-    field_geometry : str
+    field_geometry :
         Name of the geometry of the field, as in TraceWin. Allowed values are
         values of :data:`FIELD_GEOMETRIES`.
 
     Returns
     -------
-    extensions : list[str]
         Extension without '.' of every file to load.
 
     """
@@ -204,12 +202,11 @@ def _get_field_nature(second_word_field_type: str) -> Literal["e", "b"]:
 
     Parameters
     ----------
-    second_word_field_type : Literal["electric", "magnetic"]
+    second_word_field_type :
         This is the second word in a :data:`FIELD_TYPES` entry.
 
     Returns
     -------
-    first_character : Literal["e", "b"]
         First character in the file extension.
 
     """
@@ -228,12 +225,11 @@ def _get_type(first_word_field_type: str) -> Literal["s", "d"]:
 
     Parameters
     ----------
-    first_word_field_type : Literal["static", "RF"]
+    first_word_field_type :
         The first word in a :data:`FIELD_TYPES` entry.
 
     Returns
     -------
-    second_character : Literal["s", "d"]
         Second character in the file extension.
 
     """
@@ -251,13 +247,11 @@ def _get_field_components(first_words_field_geometry: str) -> list[str]:
 
     Parameters
     ----------
-    first_words_field_geometry : Literal['1D:', '2D cylindrical', \
-            '2D cartesian', '3D cartesian', '3D cylindrical']
+    first_words_field_geometry :
         Beginning of a :data:`FIELD_GEOMETRIES` value.
 
     Returns
     -------
-    third_characters : list[str]
         Last extension character of every file to load.
 
     """

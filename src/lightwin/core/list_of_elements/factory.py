@@ -83,7 +83,7 @@ class ListOfElementsFactory:
 
         Parameters
         ----------
-        phi_s_definition : str, optional
+        phi_s_definition :
             Definition for the synchronous phases that will be used. Allowed
             values are in :data:`.PHI_S_MODELS`. The default is
             ``'historical'``.
@@ -122,12 +122,12 @@ class ListOfElementsFactory:
 
         Parameters
         ----------
-        dat_file : pathlib.Path
+        dat_file :
             Absolute path to the ``DAT`` file.
-        accelerator_path : pathlib.Path
+        accelerator_path :
             Absolute path where results for each :class:`.BeamCalculator` will
             be stored.
-        instructions_to_insert : Collection[Instruction], optional
+        instructions_to_insert :
             Some elements or commands that are not present in the ``DAT`` file
             but that you want to add. The default is an empty tuple.
         kwargs :
@@ -135,7 +135,6 @@ class ListOfElementsFactory:
 
         Returns
         -------
-        list_of_elements : ListOfElements
             Contains all the :class:`.Element` of the linac, as well as the
             proper particle and beam properties at its entry.
 
@@ -207,18 +206,17 @@ class ListOfElementsFactory:
 
         Parameters
         ----------
-        elts : list[Element]
+        elts :
             A plain list containing the elements objects that the object should
             contain.
-        simulation_output : SimulationOutput
+        simulation_output :
             Holds the results of the pre-existing list of elements.
-        files_from_full_list_of_elements : FilesInfo
+        files_from_full_list_of_elements :
             The `files` attribute of :class:`.ListOfElements` from the full
             :class:`.ListOfElements`.
 
         Returns
         -------
-        list_of_elements : ListOfElements
             Contains all the elements that will be recomputed during the
             optimisation, as well as the proper particle and beam properties at
             its entry.

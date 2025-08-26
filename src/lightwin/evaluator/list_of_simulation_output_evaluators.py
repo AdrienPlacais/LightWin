@@ -45,18 +45,17 @@ class ListOfSimulationOutputEvaluators(list):
 
         Parameters
         ----------
-        simulation_outputs : SimulationOutput
+        simulation_outputs :
             All the simulation output instances.
-        other_evals : dict[str, list[Any]] | None
+        other_evals :
             Dictionary with over evaluations to put in the output file. Keys
             are the column headers, values are corresponding values stored as
             lists. The default is None, in which case nothing is added.
-        project_folder : pathlib.Path | None
+        project_folder :
             Where to save the output file.
 
         Returns
         -------
-        pandas.DataFrame
             A dataframe holding the evaluations.
 
         """

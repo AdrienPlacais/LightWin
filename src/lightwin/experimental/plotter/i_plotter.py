@@ -46,32 +46,31 @@ class IPlotter(ABC):
 
         Parameters
         ----------
-        data : Any
+        data :
             Data to be plotted. According to the subclass, it can be a numpy
             array, a pandas dataframe...
-        ref_data : Sequence[float] | None, optional
+        ref_data :
             Reference data, to plot if provided.
-        png_path : Path | None, optional
+        png_path :
             Where the figure will be saved. The default is None, in which case
             figure is not plotted.
-        elts : ListOfElements | None, optional
+        elts :
             Elements to plot if :attr:`_structure` is True. If not provided, we
             take default :attr:`_elts` instead. Note that the colour of the
             failed, compensating, rephased cavities is given by this object.
             The default is None.
-        fignum : int, optional
+        fignum :
             Figure number. The default is 1.
-        axes_index : int, optional
+        axes_index :
             Axes identifier. The default is 0, corresponding to the topmost
             sub-axes.
-        title : str, optional
-            Title of the figure. The default is an empty string.
-        plot_kwargs : Any, optional
+        title :
+            Title of the figure.
+        plot_kwargs :
             Other keyword arguments passed to the :meth:`_actual_plotting`.
 
         Returns
         -------
-        Any
             The created axes object(s).
 
         """

@@ -22,7 +22,6 @@ class LeastSquares(DownhillSimplex):
 
         Returns
         -------
-        info : OptiSol
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 

@@ -222,8 +222,9 @@ def save_energy_phase_tm(lin: object) -> None:
 
     Parameters
     ----------
-    lin : Accelerator
+    lin :
         Object of corresponding to desired output.
+
     """
     n_z = lin.get("z_abs").shape[0]
     data = np.column_stack(

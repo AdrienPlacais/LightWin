@@ -170,14 +170,13 @@ def z_field_map_rk4(
 
         Parameters
         ----------
-        z : float
+        z :
             Position where variation is calculated.
-        u : numpy.ndarray
+        u :
             First component is gamma. Second is phase in rad.
 
         Return
         ------
-        v : numpy.ndarray
             First component is :math:`\Delta \gamma / \Delta z` in
             :unit:`MeV/m`. Second is :math:`\Delta \phi / \Delta z` in
             :unit:`rad/m`.
@@ -260,18 +259,17 @@ def z_superposed_field_maps_rk4(
 
         Parameters
         ----------
-        z : float
+        z :
             Position where variation is calculated.
-        u : numpy.ndarray
-            First component is gamma. Second is phase in rad.
+        u :
+            First component is gamma. Second is phase in :unit:`rad`.
 
         Return
         ------
-        v : numpy.ndarray
+        v :
             First component is :math:`\Delta \gamma / \Delta z` in
-            :math:`\mathrm{MeV / m}`.
-            Second is :math:`\Delta \phi / \Delta z` in
-            :math:`\mathrm{rad / m}`.
+            :unit:`MeV / m`.
+            Second is :math:`\Delta \phi / \Delta z` in :unit:`rad / m`.
 
         """
         # v0 = k_k * e_func(z, e_spat, u[1], phi_0_rel)
@@ -445,20 +443,19 @@ def z_thin_lense_new(
 
     Parameters
     ----------
-    gamma_in : float
+    gamma_in :
         gamma at entrance of first drift.
-    gamma_out : float
+    gamma_out :
         gamma at exit of first drift.
-    gamma_middle : float
+    gamma_middle :
         gamma at the thin acceleration drift.
-    half_dz : float
-        Half a spatial step in m.
-    omega0_rf : float
+    half_dz :
+        Half a spatial step in :unit:`m`.
+    omega0_rf :
         Pulsation of the cavity.
 
     Return
     ------
-    r_zz_array : numpy.ndarray
         Transfer matrix of the thin lense.
 
     """
@@ -494,26 +491,25 @@ def z_thin_lense(
 
     Parameters
     ----------
-    gamma_in : float
+    gamma_in :
         gamma at entrance of first drift.
-    gamma_out : float
+    gamma_out :
         gamma at exit of first drift.
-    gamma_phi_m : numpy.ndarray
+    gamma_phi_m :
         gamma and phase at the thin acceleration drift.
-    half_dz : float
+    half_dz :
         Half a spatial step in m.
-    delta_gamma_m_max : float
+    delta_gamma_m_max :
         Max gamma increase if the cos(phi + phi_0) of the acc. field is 1.
-    phi_0 : float
+    phi_0 :
         Input phase of the cavity.
-    omega0_rf : float
+    omega0_rf :
         Pulsation of the cavity.
-    omega_0_bunch : float
+    omega_0_bunch :
         Pulsation of the beam.
 
     Return
     ------
-    r_zz_array : numpy.ndarray
         Transfer matrix of the thin lense.
 
     """
@@ -555,26 +551,25 @@ def z_thin_lense_superposed(
 
     Parameters
     ----------
-    gamma_in : float
+    gamma_in :
         gamma at entrance of first drift.
-    gamma_out : float
+    gamma_out :
         gamma at exit of first drift.
-    gamma_phi_m : numpy.ndarray
+    gamma_phi_m :
         gamma and phase at the thin acceleration drift.
-    half_dz : float
+    half_dz :
         Half a spatial step in m.
-    delta_gamma_m_maxs : float
+    delta_gamma_m_maxs :
         Max gamma increase if the cos(phi + phi_0) of the acc. field is 1.
-    phi_0s : float
+    phi_0s :
         Input phases of the elements.
-    omega0_rf : float
+    omega0_rf :
         Pulsation of the elements.
-    omega_0_bunch : float
+    omega_0_bunch :
         Bunch pulsation.
 
     Return
     ------
-    r_zz_array : numpy.ndarray
         Transfer matrix of the thin lense.
 
     """

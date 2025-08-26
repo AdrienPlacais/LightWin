@@ -32,18 +32,17 @@ def output_comparison(
 
     Parameters
     ----------
-    sim1, sim2 : SimulationOutput
+    sim1, sim2 :
         Objects to compate.
-    element : Element | str
+    element :
         Element at which look for ``qty``.
-    qty : str
+    qty :
         Quantity that will be compared.
-    single_value : bool
+    single_value :
         True if a single value is expected, False if it is an array.
 
     Returns
     -------
-    msg : str
         Holds requested information.
 
     """
@@ -74,11 +73,11 @@ def compare_beam_calculators(
 
     Parameters
     ----------
-    toml_filepath : pathlib.Path
+    toml_filepath :
         Path to the configuration file.
-    toml_keys : dict[str, str]
+    toml_keys :
         Keys in the configuration file.
-    tests : Collection[dict[str, str | bool]]
+    tests :
         kwargs for the :func:`output_comparison`.
 
     """

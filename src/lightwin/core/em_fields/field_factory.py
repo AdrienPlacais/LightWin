@@ -44,12 +44,11 @@ class FieldFactory:
 
         Parameters
         ----------
-        field_maps : Collection[FieldMap]
+        field_maps :
             All the :class:`.FieldMap` instances requiring a :class:`.Field`.
 
         Returns
         -------
-        dict[pathlib.Path, list[FieldMap]]
             A dictionary where each key is a path to a field map file, and each
             value is a list of :class:`.FieldMap` instances that use that file.
 

@@ -13,11 +13,11 @@ class Command(Instruction):
 
     Parameters
     ----------
-    idx : dict[str, int]
+    idx :
         Dictionary holding useful indexes. Keys are ``'dat_idx'`` (position in
         the ``DAT`` file) and ``'influenced_elements'`` (position in the
         ``DAT`` file of the elements concerned by current command).
-    line : list[str]
+    line :
         Line in the ``DAT`` file corresponding to current command.
 
     See Also
@@ -60,7 +60,7 @@ class Command(Instruction):
 
         Parameters
         ----------
-        dat_indexes : list[int]
+        dat_indexes :
             Indexes in the ``DAT`` file of the sub-list of elements under
             creation.
 
@@ -85,16 +85,15 @@ class Command(Instruction):
 
         Parameters
         ----------
-        instructions_after_self : Sequence[Instruction]
+        instructions_after_self :
             All instructions after ``self`` (``self`` not included).
-        stop_types : type
+        stop_types :
             Type(s) of commands after which ``self`` has no influence. If not
             provided, we set it to the type of ``self``. In other words, a
             ``FREQ`` influences every element up to the following ``FREQ``.
 
         Returns
         -------
-        slice
             All the indexes of the instrutions that will be affected by self.
 
         """

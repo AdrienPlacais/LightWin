@@ -38,15 +38,13 @@ class ElementTraceWinParameters(ElementBeamCalculatorParameters):
 
         Parameters
         ----------
-        self :
-            self
-        length_m : float
+        length_m :
             length_m
-        z_of_this_element_from_tw : numpy.ndarray
+        z_of_this_element_from_tw :
             z_of_this_element_from_tw
-        s_in : int
+        s_in :
             s_in
-        s_out : int
+        s_out :
             s_out
 
         """

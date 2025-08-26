@@ -48,11 +48,11 @@ class NSGA(OptimisationAlgorithm):
 
         Returns
         -------
-        success : bool
+        success :
             Tells if the optimisation algorithm managed to converge.
-        optimized_cavity_settings : SetOfCavitySettings
+        optimized_cavity_settings :
             Best solution found by the optimization algorithm.
-        info : dict[str, list[float]]] | None
+        info :
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 

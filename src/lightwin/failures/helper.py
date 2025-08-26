@@ -24,18 +24,18 @@ def _distance_to_ref[T](
 
     Parameters
     ----------
-    element : T
+    element :
         First object from which you want distance. Often, an :class:`.Element`
         of a lattice that will potentially be used for compensation.
-    failed : Sequence[T]
+    failed :
         Second object or list of object from which you want distance. Often, a
         list of failed :class:`.Element` or a list of lattices with a fault.
-    all_elements : Sequence[T]
+    all_elements :
         All the elements/lattices/sections.
-    tie_politics : Literal["upstream first", "downstream first"]
+    tie_politics :
         When two elements have the same position, will you want to have the
         upstream or the downstream first?
-    shift : int, optional
+    shift :
         Distance increase for downstream elements (``shift < 0``) or upstream
         elements (``shift > 0``). Used to have a window of compensating
         cavities which is not centered around the failed elements. The default
@@ -43,10 +43,10 @@ def _distance_to_ref[T](
 
     Returns
     -------
-    lowest_distance : int
+    lowest_distance :
         Index-distance between ``element`` and closest element of ``failed``.
         Will be used as a primary sorting key.
-    index : int
+    index :
         Index of ``element``. Will be used as a secondary index key, to sort
         ties in distance.
 
@@ -98,21 +98,20 @@ def sort_by_position[T](
 
     Parameters
     ----------
-    failed : Sequence[T]
+    failed :
         Second object or list of object from which you want distance. Often, a
         list of failed :class:`.Element` or a list of lattices with a fault.
-    all_elements : Sequence[T]
+    all_elements :
         All the elements/lattices/sections.
-    tie_politics : Literal["upstream first", "downstream first"]
+    tie_politics :
         When two elements have the same position, will you want to have the
         upstream or the downstream first?
-    shift : int, optional
+    shift :
         Distance increase for downstream elements (``shift < 0``) or upstream
         elements (``shift > 0``). Used to have a window of compensating
         cavities which is not centered around the failed elements. Useful when
         upstream cavities have more important power margins, or when you want
-        more downstream cavities because a full cryomodule is down. The default
-        is 0.
+        more downstream cavities because a full cryomodule is down.
 
     """
     sorter = partial(
@@ -141,18 +140,18 @@ def gather[T](
 
     Parameters
     ----------
-    failed_elements : list[T]
+    failed_elements :
         Holds ungathered failed cavities.
-    fun_sort : Callable[[Sequence[T] | Sequence[Sequence[T]]], list[T]]
+    fun_sort :
         Takes in a list or a list of list of failed cavities, returns the list
         or list of list of altered cavities (failed + compensating).
 
     Returns
     -------
-    failed_gathered : list[list[T]]
+    failed_gathered :
         Failures, gathered by faults that require the same compensating
         cavities.
-    compensating_gathered : list[list[T]]
+    compensating_gathered :
         Corresponding compensating cavities.
 
     """

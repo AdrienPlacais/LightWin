@@ -27,22 +27,22 @@ def field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
 
     Parameters
     ----------
-    path : pathlib.Path
+    path :
         The path to the file to load.
 
     Returns
     -------
-    n_z : int
+    n_z :
         Number of steps in the array.
-    zmax : float
+    zmax :
         z position of the filemap end.
-    norm : float
+    norm :
         Electric field normalisation factor. It is different from ``k_e`` (6th
         argument of the FIELD_MAP command). Electric fields are normalised by
         ``k_e/norm``, hence norm should be unity by default.
-    f_z : numpy.ndarray
+    f_z :
         Array holding field. If electric, will be in :unit:`MV/m`.
-    n_cell : int
+    n_cell :
         Number of cells in the cavity.
 
     """
@@ -100,30 +100,30 @@ def field_3d(
 
     Parameters
     ----------
-    path : pathlib.Path
+    path :
         The path to the file to load.
 
     Returns
     -------
-    n_z : int
+    n_z :
         Number of steps along the z-axis.
-    zmax : float
+    zmax :
         Maximum z position.
-    n_x : int
+    n_x :
         Number of steps along the x-axis.
-    xmin : float
+    xmin :
         Minimum x position.
-    xmax : float
+    xmax :
         Maximum x position.
-    n_y : int
+    n_y :
         Number of steps along the y-axis.
-    ymin : float
+    ymin :
         Minimum y position.
-    ymax : float
+    ymax :
         Maximum y position.
-    norm : float
+    norm :
         Field normalization factor.
-    field : numpy.ndarray
+    field :
         3D array holding field values. If electric, will be in :unit:`MV/m`.
 
     """

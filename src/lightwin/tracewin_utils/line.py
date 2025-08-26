@@ -10,15 +10,15 @@ class DatLine:
 
     Attributes
     ----------
-    _original_line : str
+    _original_line :
         Line in the ``DAT`` given as a user-input.
-    idx : int
+    idx :
         Position in the ``DAT`` file.
-    personalized_name : str | None, optional
-        The name given by the user in the ``DAT``. The default is None.
-    weight : float | None, optional
-        The weight of the diagnostic. The default is None.
-    splitted : list[str]
+    personalized_name :
+        The name given by the user in the ``DAT``.
+    weight :
+        The weight of the diagnostic.
+    splitted :
         The line divided into a list of arguments. It is used by LightWin to
         instantiate the :class:`.Instruction`. Note that the name and the
         weight of the object are not present to keep the position of other

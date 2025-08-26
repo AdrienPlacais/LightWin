@@ -28,11 +28,10 @@ def set_up_solvers(
     Parameters
     ----------
     config :
-        The full TOML configuration dictionary.
+        The full ``TOML`` configuration dictionary.
 
     Returns
     -------
-    beam_calculators : tuple[BeamCalculator, ...]
         The objects that will compute the beam propagation.
 
     """
@@ -50,13 +49,12 @@ def set_up_accelerators(
     Parameters
     ----------
     config :
-        The full TOML configuration dictionary.
+        The full ``TOML`` configuration dictionary.
     beam_calculators :
         The objects that will compute the beam propagation.
 
     Returns
     -------
-    list[Accelerator]
         The instantiated :class:`.Accelerator`. If there is no fault defined,
         we return a single :class:`.Accelerator`. If there is a fault, we
         return a reference :class:`.Accelerator` and a broken one.
@@ -98,7 +96,6 @@ def set_up_faults(
 
     Returns
     -------
-    list[FaultScenario]
         The instantiated fault scenarios.
 
     """
@@ -126,20 +123,20 @@ def set_up(
     Parameters
     ----------
     config :
-        The full TOML configuration dictionary.
+        The full ``TOML`` configuration dictionary.
 
     Returns
     -------
-    beam_calculators : tuple[BeamCalculator, ...]
+    beam_calculators :
         The objects to compute the beam. Typically, they are two: one for the
         optimization, and a second slower one to run a more precise simulation.
-    accelerators : list[Accelerator]
+    accelerators :
         The objects that will store a linac design. Typically, they are two:
         one for the reference linac, and one for the broken/fixed linac.
-     fault_scenarios : list[FaultScenario] | None
+     fault_scenarios :
         The created failures. Will be None if no ``"wtf"`` entry was given in
         ``config``.
-     ref_simulations_outputs : list[SimulationOutput]
+     ref_simulations_outputs :
         A reference :class:`.SimulationOutput` corresponding to the nominal
         linac per :class:`.BeamCalculator`.
 

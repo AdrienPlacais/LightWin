@@ -59,17 +59,16 @@ def find_path(
 
     Parameters
     ----------
-    toml_folder : pathlib.Path | None
+    toml_folder :
         Folder where the ``TOML`` configuration file is.
-    path : str | pathlib.Path
+    path :
         Path to look for.
-    nature : Literal["file", "folder"] | None,  optional
+    nature :
         The type of path to check: "file" or "folder", or None to simply check
         existence.
 
     Returns
     -------
-    path : pathlib.Path
         Absolute path, whose existence has been checked.
 
     Raises

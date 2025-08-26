@@ -23,7 +23,7 @@ class TransferMatrixFactory(ABC):
 
         Parameters
         ----------
-        is_3d : bool
+        is_3d :
             If the simulation is 3D or not.
 
         """
