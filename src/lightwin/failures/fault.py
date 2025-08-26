@@ -32,6 +32,7 @@ from lightwin.optimisation.algorithms.algorithm import (
 )
 from lightwin.optimisation.design_space.factory import DesignSpaceFactory
 from lightwin.optimisation.objective.factory import (
+    OBJECTIVE_PRESETS,
     ObjectiveFactory,
     get_objectives_and_residuals_function,
 )
@@ -50,8 +51,8 @@ class Fault:
     elts :
         Holds the portion of the linac that will be computed again and again in
         the optimization process. It is as short as possible, but must contain
-        all `failed_elements`, `compensating_elements` and
-        `elt_eval_objectives`.
+        all ``failed_elements``, ``compensating_elements`` and
+        ``elt_eval_objectives``.
     variables :
         Holds information on the optimization variables.
     constraints :
@@ -132,7 +133,7 @@ class Fault:
         self.reference_simulation_output = reference_simulation_output
 
         objective_preset = wtf["objective_preset"]
-        assert isinstance(objective_preset, str)
+        assert objective_preset in OBJECTIVE_PRESETS
         elts_of_compensation_zone, self.objectives, self.compute_residuals = (
             get_objectives_and_residuals_function(
                 objective_preset=objective_preset,

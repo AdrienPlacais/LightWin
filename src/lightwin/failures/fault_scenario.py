@@ -93,8 +93,7 @@ class FaultScenario(list[Fault]):
             List containing the position of the compensating cavities. If
             ``strategy`` is manual, it must be provided.
         info_other_sol :
-            Contains information on another fit, for comparison purposes. The
-            default is None.
+            Contains information on another fit, for comparison purposes.
         objective_factory_class :
             If provided, will override the ``objective_preset``. Used to let
             user define it's own :class:`.ObjectiveFactory` without altering

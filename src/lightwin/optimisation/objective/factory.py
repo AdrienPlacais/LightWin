@@ -14,7 +14,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Collection
 from functools import partial
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Literal
 
 import numpy as np
 from numpy.typing import NDArray
@@ -557,10 +557,19 @@ OBJECTIVE_PRESETS = {
     "simple_ADS": EnergyPhaseMismatch,
     "sync_phase_as_objective_ADS": EnergySyncPhaseMismatch,
 }
+OBJECTIVE_PRESETS_T = Literal[
+    "EnergyMismatch",
+    "EnergyPhaseMismatch",
+    "EnergySeveralMismatches",
+    "EnergySyncPhaseMismatch",
+    "experimental",
+    "rephased_ADS",
+    "simple_ADS",
+]
 
 
 def get_objectives_and_residuals_function(
-    objective_preset: str,
+    objective_preset: OBJECTIVE_PRESETS_T,
     reference_elts: ListOfElements,
     reference_simulation_output: SimulationOutput,
     broken_elts: ListOfElements,
@@ -605,8 +614,6 @@ def get_objectives_and_residuals_function(
         array of residuals.
 
     """
-    assert isinstance(objective_preset, str)
-
     if objective_factory_class is None:
         objective_factory_class = OBJECTIVE_PRESETS[objective_preset]
     else:
