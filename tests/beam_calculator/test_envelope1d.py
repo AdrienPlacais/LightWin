@@ -57,17 +57,17 @@ params = [
         id="1D RK4 relative phase Cython",
     ),
     pytest.param(
-        ("RK4", False, "phi_0_abs", 40),
+        ("RK4", True, "phi_0_abs", 40),
         marks=pytest.mark.cython,
         id="1D RK4 absolute phase Cython",
     ),
     pytest.param(
-        ("RK4", False, "phi_s", 40),
+        ("RK4", True, "phi_s", 40),
         marks=pytest.mark.cython,
         id="1D RK4 synchronous phase Cython",
     ),
     pytest.param(
-        ("RK4", False, "as_in_original_dat", 40),
+        ("RK4", True, "as_in_original_dat", 40),
         marks=pytest.mark.cython,
         id="1D RK4 different phases, matching original ``DAT`` Cython",
     ),
