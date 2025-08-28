@@ -62,22 +62,6 @@ class CavitySettingsFactory:
         ]
         return several_cavity_settings
 
-    def from_other_cavity_settings(
-        self,
-        cavity_settings: Sequence[CavitySettings],
-        reference: REFERENCE_PHASES_T | None = None,
-    ) -> list[CavitySettings]:
-        """Create a copy of ``cavity_settings``, reference can be updated.
-
-        Not used for the moment.
-
-        """
-        new_cavity_settings = [
-            CavitySettings.from_other_cavity_settings(other, reference)
-            for other in cavity_settings
-        ]
-        return new_cavity_settings
-
     def _reference(
         self,
         absolute_phase_flag: bool,
