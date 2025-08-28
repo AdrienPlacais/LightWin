@@ -28,17 +28,15 @@ from lightwin.core.list_of_elements.helper import equivalent_elt
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.experimental.test import assert_are_field_maps
 from lightwin.optimisation.design_space.helper import phi_s_limits
-from lightwin.optimisation.objective.minimize_difference_with_ref import (
+from lightwin.optimisation.objective.objective import (
     MinimizeDifferenceWithRef,
+    MinimizeMismatch,
+    Objective,
+    QuantityIsBetween,
 )
-from lightwin.optimisation.objective.minimize_mismatch import MinimizeMismatch
-from lightwin.optimisation.objective.objective import Objective
 from lightwin.optimisation.objective.position import (
     POSITION_TO_INDEX_T,
     zone_to_recompute,
-)
-from lightwin.optimisation.objective.quantity_is_between import (
-    QuantityIsBetween,
 )
 from lightwin.util.dicts_output import markdown
 

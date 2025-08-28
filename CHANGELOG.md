@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [0.12.x]
 
+## [0.12.2]
+
+### Deprecated
+
+- All the `Objective` subclasses are now in the `lightwin.optimisation.objective.objective` module.
+  Old import paths still work but raise a warning when used.
+  The `Objective` subclasses are:
+  - `MinimizeDifferenceWithRef`
+  - `MinimizeMismatch`
+  - `QuantityIsBetween`
+
 ## [0.12.1] -- 2025-08-26
 
 ### Changed
