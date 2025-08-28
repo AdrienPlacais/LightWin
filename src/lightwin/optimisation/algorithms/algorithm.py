@@ -114,7 +114,46 @@ class OptimisationAlgorithm(ABC):
         history_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ) -> None:
-        """Instantiate the object."""
+        """Instantiate the object.
+
+        Parameters
+        ----------
+        compensating_elements :
+            Tunable elements performing compensation.
+        elts :
+            Represents accelerator with the failure.
+        objectives :
+            Objectives for current failure.
+        variables :
+            Variables for current failure, linked to ``compensating_elements``.
+        compute_beam_propagation :
+            Takes in a :class:`.SetOfCavitySettings`, propages the beam in a
+            version of ``elts`` that uses them, and produce a
+            :class:`.SimulationOutput`.
+        compute_residuals :
+            Takes in the :class:`.SimulationOutput` produced by
+            ``compute_beam_propagation`` and returns a float that we which to
+            minimize; if current optimization algorithm can optimized several
+            objectives, residuals could be array-like.
+        cavity_settings_factory :
+            An object that can create :class:`.SetOfCavitySettings` easily.
+        reference_simulation_output :
+            The reference simulation output on the reference accelerator.
+        constraints :
+            Additional optimization constraints; not supported by all
+            optimization algorithms.
+        compute_constraints :
+            Similarly to ``compute_residuals``, takes in the
+            :class:`.SimulationOutput` produced by ``compute_beam_propagation``
+            and returns evaluated constraints.
+        optimisation_algorithm_kwargs :
+            Additional kwargs for algorithm, set by user in the configuration
+            ``TOML``.
+        history_kwargs :
+            If given, records in a file the different evaluations of residuals
+            during optimization.
+
+        """
         assert all([elt.can_be_retuned for elt in compensating_elements])
         self.compensating_elements = compensating_elements
         self.elts = elts
@@ -267,12 +306,10 @@ class OptimisationAlgorithm(ABC):
     ) -> None:
         """Show the most useful data from optimization."""
         objectives_values = opti_sol["objectives"]
-
-        width_objective = len(Objective.str_header())
         header = (
             f"{'#':>3} | "
             + Objective.str_header()
-            + f" | {'final val.': ^21}\n"
+            + f" | {'final residuals': ^21}\n"
         )
         info_string = "Objective functions results:\n" + header
         for i, (str_objective, value) in enumerate(objectives_values.items()):
