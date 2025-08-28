@@ -207,7 +207,11 @@ class Objective(ABC):
 
 
 class RetrieveArbitrary(Objective):
-    """Retrieve arbitrary value given by user."""
+    """Retrieve arbitrary value given by user.
+
+    You can also use it to minimize or maximize an objective.
+
+    """
 
     def __init__(
         self,
@@ -253,38 +257,6 @@ class RetrieveArbitrary(Objective):
 
     def _compute_residuals(self, objective_value: float) -> float:
         return self.weight * abs(objective_value - self.ideal_value)
-
-
-class Minimize(Objective):
-    """Minimize the given quantity."""
-
-    def __init__(
-        self,
-        name: str,
-        weight: float,
-        get_key: GETTABLE_SIMULATION_OUTPUT_T,
-        get_kwargs: dict[str, Any],
-        descriptor: str | None = None,
-    ) -> None:
-        self.ideal_value: None
-        super().__init__(
-            name=name,
-            weight=weight,
-            get_key=get_key,
-            get_kwargs=get_kwargs,
-            ideal_value=None,
-            descriptor=descriptor,
-        )
-
-    def _compute_residuals(self, objective_value: float) -> float:
-        return self.weight * objective_value
-
-
-class Maximize(Minimize):
-    """Maximize the given quantity."""
-
-    def _compute_residuals(self, objective_value: float) -> float:
-        return -super()._compute_residuals(objective_value)
 
 
 class MinimizeDifferenceWithRef(Objective):
