@@ -32,7 +32,7 @@ class Objective(ABC):
         weight: float,
         get_key: GETTABLE_SIMULATION_OUTPUT_T,
         get_kwargs: dict[str, Any],
-        ideal_value: float | tuple[float, float],
+        ideal_value: float | tuple[float, float] | None,
         descriptor: str | None = None,
     ) -> None:
         """Hold an objective and methods to evaluate it.
@@ -52,16 +52,28 @@ class Objective(ABC):
             may want to precise the ``to_deg`` key. You also should explicit
             the ``to_numpy`` key.
         ideal_value :
-            The ideal value or range of values that we should tend to.
+            Ideal value to match.
+            - It is a float when we want to be as close as possible of a value.
+            - It is a tuple of floats when we want to be within two bounds.
+            - It is not defined (``None``) when we want to minimize or maximize
+              an objective.
         descriptor :
             A longer string to explain the objective.
 
         """
         get_key, get_kwargs = self._check_get_arguments(get_key, get_kwargs)
         self.name: str = name
+        #: Weight :math:`w` of current objective.
         self.weight: float = weight
+        #: Name of the quantity to get from :class:`.SimulationOutput`,
         self.get_key: GETTABLE_SIMULATION_OUTPUT_T = get_key
+        #: Keyword arguments for the :meth:`.SimulationOutput.get` method.
         self.get_kwargs: dict[str, Any] = get_kwargs
+        #: Ideal value to match.
+        #: - It is a float when we want to be as close as possible of a value.
+        #: - It is a tuple of floats when we want to be within two bounds.
+        #: - It is not defined (``None``) when we want to minimize or maximize
+        #:   an objective.
         self.ideal_value: Any = ideal_value
         self.descriptor = " ".join((descriptor or "").split())
 
@@ -158,17 +170,27 @@ class Objective(ABC):
         return header
 
     @abstractmethod
-    def _compute_residuals(self, *args, **kwargs) -> float:
-        """Compute residual (loss), for a given value.
+    def _compute_residuals(self, objective_value: Any) -> float:
+        """Compute residual (loss), *ie* what we want to minimize.
 
         In general, you will want to call this function from
         :meth:`.Objective.evaluate`.
 
+        Parameters
+        ----------
+        objective_value :
+            Value of :attr:`.Objective.name`, taken from a
+            :class:`.SimulationOutput`.
+
+        Returns
+        -------
+            Residue for current objective, scaled by :attr:`.Objective.weight`.
+
+
         """
-        raise NotImplementedError
 
     def evaluate(self, simulation_output: SimulationOutput) -> float:
-        """Compute residuals of this objective.
+        """Get desired value from ``simulation_output`` and compute residues.
 
         Parameters
         ----------
@@ -177,12 +199,11 @@ class Objective(ABC):
 
         Returns
         -------
-            Difference between current evaluation and ``ideal_value`` value for
-            ``self.name``, scaled by ``self.weight``.
+            Residue for current objective, scaled by :attr:`.Objective.weight`.
 
         """
-        value = self._value_getter(simulation_output)
-        return self._compute_residuals(value)
+        objective_value = self._value_getter(simulation_output)
+        return self._compute_residuals(objective_value)
 
 
 class RetrieveArbitrary(Objective):
@@ -230,9 +251,40 @@ class RetrieveArbitrary(Objective):
             ideal_value=ideal_value,
         )
 
-    def _compute_residuals(self, value: float) -> float:
-        """Compute residuals, that we want to minimize."""
-        return self.weight * abs(value - self.ideal_value)
+    def _compute_residuals(self, objective_value: float) -> float:
+        return self.weight * abs(objective_value - self.ideal_value)
+
+
+class Minimize(Objective):
+    """Minimize the given quantity."""
+
+    def __init__(
+        self,
+        name: str,
+        weight: float,
+        get_key: GETTABLE_SIMULATION_OUTPUT_T,
+        get_kwargs: dict[str, Any],
+        descriptor: str | None = None,
+    ) -> None:
+        self.ideal_value: None
+        super().__init__(
+            name=name,
+            weight=weight,
+            get_key=get_key,
+            get_kwargs=get_kwargs,
+            ideal_value=None,
+            descriptor=descriptor,
+        )
+
+    def _compute_residuals(self, objective_value: float) -> float:
+        return self.weight * objective_value
+
+
+class Maximize(Minimize):
+    """Maximize the given quantity."""
+
+    def _compute_residuals(self, objective_value: float) -> float:
+        return -super()._compute_residuals(objective_value)
 
 
 class MinimizeDifferenceWithRef(Objective):
@@ -290,9 +342,8 @@ class MinimizeDifferenceWithRef(Objective):
                 f"returned {self.ideal_value} instead of a float."
             )
 
-    def _compute_residuals(self, value: float) -> float:
-        """Compute residuals, that we want to minimize."""
-        return self.weight * abs(value - self.ideal_value)
+    def _compute_residuals(self, objective_value: float) -> float:
+        return self.weight * abs(objective_value - self.ideal_value)
 
 
 class MinimizeMismatch(Objective):
@@ -368,9 +419,8 @@ class MinimizeMismatch(Objective):
         twiss_fix = self._twiss_getter(simulation_output)
         return self._compute_residuals(twiss_fix)
 
-    def _compute_residuals(self, twiss_fix: NDArray) -> float:
-        """Compute residuals, that we want to minimize."""
-        res = mismatch_from_arrays(self._twiss_ref, twiss_fix)[0]
+    def _compute_residuals(self, objective_value: NDArray) -> float:
+        res = mismatch_from_arrays(self._twiss_ref, objective_value)[0]
         return self.weight * res
 
 
@@ -494,31 +544,32 @@ class QuantityIsBetween(Objective):
         message += f"{self.ideal_value[0]:+.2e} ~ {self.ideal_value[1]:+.2e}"  # type: ignore
         return message
 
-    def _compute_residuals(self, value: float) -> float:
-        """Compute residual for ``value`` with respect to the ideal interval.
+    def _compute_residuals(self, objective_value: float) -> float:
+        r"""Compute residual (loss), *ie* what we want to minimize.
 
         This method applies a quadratic penalty if the value lies outside the
         target interval defined by ``self.ideal_value``. No penalty is applied
         when the value is within the interval.
 
-        The loss function is:
-
-        - 0 if ``ideal_value[0] <= value <= ideal_value[1]``
-        - ``weight * (value - bound)^2`` otherwise, where bound is the violated
-          boundary.
-
         Parameters
         ----------
-        value :
-            The value to evaluate.
+        objective_value :
+            Value of :attr:`.Objective.name`, taken from a
+            :class:`.SimulationOutput`.
 
         Returns
         -------
-            The computed residual (loss).
+            Residue for current objective, scaled by :attr:`.Objective.weight`.
+            The loss function is defined as:
+            - :math:`0` if :math:`x_l \leq x \leq x_u`, *ie* if
+              ``objective_value`` is within the bounds defined by
+              :attr:`.Objective.ideal_value`
+            - :math:`w * (x - x_{l\,u})^2` otherwise, where :math:`x_{l,u}` is
+              the violated boundary and :math:`w` is :attr:`.Objective.weight`.
 
         """
-        if value < self.ideal_value[0]:
-            return self.weight * (value - self.ideal_value[0]) ** 2
-        if value > self.ideal_value[1]:
-            return self.weight * (value - self.ideal_value[1]) ** 2
+        if objective_value < self.ideal_value[0]:
+            return self.weight * (objective_value - self.ideal_value[0]) ** 2
+        if objective_value > self.ideal_value[1]:
+            return self.weight * (objective_value - self.ideal_value[1]) ** 2
         return 0.0
