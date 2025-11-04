@@ -121,7 +121,7 @@ class ListOfElements(list):
         )
         logging.info(
             "Successfully created a ListOfElements with "
-            f"{self.w_kin_in = } MeV and {self.phi_abs_in = } rad."
+            f"{self.w_kin_in = :.2f} MeV and {self.phi_abs_in = :.2f} rad."
         )
 
     @property
@@ -276,15 +276,14 @@ class ListOfElements(list):
         exported_phase: EXPORT_PHASES_T,
         save: bool = True,
     ) -> None:
-        r"""Update the DAT file, save it if asked.
+        r"""Update the ``DAT`` file, save it if asked.
 
-        This method is called by the :meth:`.FaultScenario.fix_all` method
-        several times:
+        This method is called several times:
 
         * Once per :class:`.Fault` (only the compensation zone is saved).
         * When all the :class:`.Fault` were dealt with.
 
-        It is also called by :meth:`.Accelerator.keep_settings` method.
+        It is also called by :meth:`.Accelerator.keep` method.
 
         Parameters
         ----------

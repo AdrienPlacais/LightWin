@@ -106,7 +106,6 @@ class OptimisationAlgorithm(ABC):
         self,
         *,
         compensating_elements: Collection[FieldMap],
-        elts: ListOfElements,
         objectives: Collection[Objective],
         design_space: DesignSpace,
         compute_beam_propagation: ComputeBeamPropagationT,
@@ -123,8 +122,6 @@ class OptimisationAlgorithm(ABC):
         ----------
         compensating_elements :
             Tunable elements performing compensation.
-        elts :
-            Represents accelerator with the failure.
         objectives :
             Objectives for current failure.
         design_space :
@@ -152,13 +149,12 @@ class OptimisationAlgorithm(ABC):
         """
         assert all([elt.can_be_retuned for elt in compensating_elements])
         self.compensating_elements = compensating_elements
-        self.elts = elts
 
         self._design_space: DesignSpace = design_space
         if self.supports_constraints:
             assert self._compute_constraints is not None
 
-        self.objectives = objectives
+        self.objectives = list(objectives)
         self.compute_beam_propagation = compute_beam_propagation
         self.compute_residuals = compute_residuals
 

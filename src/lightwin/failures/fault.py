@@ -24,10 +24,8 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
-from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.helper import equivalent_elt
 from lightwin.core.list_of_elements.list_of_elements import (
-    FilesInfo,
     ListOfElements,
     sumup_cavities,
 )
@@ -36,11 +34,8 @@ from lightwin.optimisation.algorithms.algorithm import (
     OptimisationAlgorithm,
     OptiSol,
 )
-from lightwin.optimisation.design_space.factory import DesignSpaceFactory
 from lightwin.optimisation.objective.factory import (
     OBJECTIVE_PRESETS,
-    ObjectiveFactory,
-    get_objectives_and_residuals_function,
 )
 from lightwin.optimisation.objective.objective import str_objectives_solved
 from lightwin.util.helper import pd_output
@@ -80,86 +75,43 @@ class Fault:
     def __init__(
         self,
         reference_elts: ListOfElements,
-        reference_simulation_output: SimulationOutput,
-        files_from_full_list_of_elements: FilesInfo,
         wtf: dict[str, Any],
-        design_space_factory: DesignSpaceFactory,
         broken_elts: ListOfElements,
         failed_elements: list[Element],
         compensating_elements: list[Element],
-        list_of_elements_factory: ListOfElementsFactory,
-        objective_factory_class: type[ObjectiveFactory] | None = None,
     ) -> None:
         """Create the Fault object.
 
         Parameters
         ----------
-        reference_elts :
-            List of elements of the reference linac. In particular, these
-            elements hold the original element settings.
-        reference_simulation_output :
-            Nominal simulation.
-        files_from_full_list_of_elements :
-            ``files`` attribute from the linac under fixing. Used to set
-            calculation paths.
         wtf :
             What To Fit dictionary. Holds information on the fixing method.
-        design_space_factory :
-            An object to easily create the proper :class:`.DesignSpace`.
+        broken_elts :
+            Contains all the elements of the broken linac.
+        failed_elements :
+            List of failed cavities.
         failed_elements :
             Holds the failed elements.
         compensating_elements :
             Holds the compensating elements.
-        elts :
-            Holds the portion of the linac that will be computed again and
-            again in the optimization process. It is as short as possible, but
-            must contain all altered elements as well as the elements where
-            objectives will be evaluated.
-        objective_factory_class :
-            If provided, will override the ``objective_preset``. Used to let
-            user define it's own :class:`.ObjectiveFactory` without altering
-            the source code.
 
         """
         assert all([element.can_be_retuned for element in failed_elements])
+        self.broken_elts = broken_elts
         self.failed_elements = failed_elements
         assert all(
             [element.can_be_retuned for element in compensating_elements]
         )
         self.compensating_elements = compensating_elements
 
-        reference_elements = [
+        self.reference_elements = [
             equivalent_elt(reference_elts, element)
             for element in self.compensating_elements
         ]
 
-        self.design_space = design_space_factory.run(
-            compensating_elements, reference_elements
-        )
-
-        self.reference_simulation_output = reference_simulation_output
-
         objective_preset = wtf["objective_preset"]
         assert objective_preset in OBJECTIVE_PRESETS
-        elts_of_compensation_zone, self.objectives, self.compute_residuals = (
-            get_objectives_and_residuals_function(
-                objective_preset=objective_preset,
-                reference_elts=reference_elts,
-                reference_simulation_output=reference_simulation_output,
-                broken_elts=broken_elts,
-                failed_elements=failed_elements,
-                compensating_elements=compensating_elements,
-                design_space_kw=design_space_factory.design_space_kw,
-                objective_factory_class=objective_factory_class,
-            )
-        )
-
-        self.elts: ListOfElements = list_of_elements_factory.subset_list_run(
-            elts_of_compensation_zone,
-            reference_simulation_output,
-            files_from_full_list_of_elements,
-        )
-        self.opti_sol: OptiSol
+        self._opti_sol: OptiSol
         return
 
     def fix(self, optimisation_algorithm: OptimisationAlgorithm) -> None:
@@ -172,6 +124,9 @@ class Fault:
         ----------
         optimisation_algorithm :
             The optimization algorithm to be used, already initialized.
+        simulation_output :
+            The most recent simulation, that includes the compensation settings
+            of all :class:`.Fault` upstream of ``self``.
 
         """
         logging.info(
@@ -180,14 +135,14 @@ class Fault:
         )
         start_time = time.monotonic()
 
-        self.opti_sol = optimisation_algorithm.optimize()
+        self._opti_sol = optimisation_algorithm.optimize()
 
         delta_t = datetime.timedelta(seconds=time.monotonic() - start_time)
         info = (
             f"Finished! Solving this problem took {delta_t}. Results are:",
-            str_objectives_solved(self.objectives),
+            str_objectives_solved(optimisation_algorithm.objectives),
             "Additional info:",
-            "\n".join(self.opti_sol["info"]),
+            "\n".join(self._opti_sol["info"]),
         )
         logging.info("\n".join(info))
 
@@ -197,7 +152,7 @@ class Fault:
         beam_calculator: BeamCalculator,
         ref_simulation_output: SimulationOutput,
         reference_phase_policy: REFERENCE_PHASE_POLICY_T,
-    ) -> None:
+    ) -> SimulationOutput:
         """Run post-optimization propagation and update elements status.
 
         Parameters
@@ -210,6 +165,11 @@ class Fault:
             Reference simulation, obtained with ``beam_calculator``.
         reference_phase_policy :
             Which phase should be kept when the beam phase changes.
+
+        Returns
+        -------
+            Most recent simulation, that includes the compensation settings of
+            upstream :class:`.Fault` as well as of this one.
 
         """
         fix_elts = fix_acc.elts
@@ -227,16 +187,7 @@ class Fault:
             beam_calculator_id=beam_calculator.id,
         )
         self._post_compensation_status(reference_phase_policy, fix_elts)
-        df_altered = sumup_cavities(
-            self.elts, filter=lambda cav: cav.is_altered
-        )
-        logging.info(f"Retuned cavities:\n{pd_output(df_altered)}")
-
-        self.elts.store_settings_in_dat(
-            self.elts.files_info["dat_file"],
-            exported_phase=reference_phase_policy,
-            save=True,
-        )
+        return simulation_output
 
     @property
     def info(self) -> dict:
@@ -246,19 +197,19 @@ class Fault:
             Prefer using the ``opti_sol`` attribute.
 
         """
-        info = dict(self.opti_sol)
-        info["objectives_values"] = self.opti_sol["objectives"]
+        info = dict(self._opti_sol)
+        info["objectives_values"] = self._opti_sol["objectives"]
         return info
 
     @property
     def optimized_cavity_settings(self) -> SetOfCavitySettings:
         """Get the best settings."""
-        return self.opti_sol["cavity_settings"]
+        return self._opti_sol["cavity_settings"]
 
     @property
     def success(self) -> bool:
         """Get the success status."""
-        return self.opti_sol["success"]
+        return self._opti_sol["success"]
 
     def pre_compensation_status(self) -> None:
         """Mark failed and compensating cavities."""

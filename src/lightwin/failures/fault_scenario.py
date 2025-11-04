@@ -20,25 +20,24 @@ from lightwin.beam_calculation.tracewin.tracewin import TraceWin
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
-from lightwin.core.list_of_elements.factory import ListOfElementsFactory
+from lightwin.core.list_of_elements.list_of_elements import sumup_cavities
 from lightwin.evaluator.list_of_simulation_output_evaluators import (
     FaultScenarioSimulationOutputEvaluators,
 )
 from lightwin.failures import strategy
 from lightwin.failures.fault import Fault
-from lightwin.optimisation.algorithms.algorithm import (
-    OptimisationAlgorithm,
-    OptiSol,
-)
 from lightwin.optimisation.algorithms.factory import (
-    ALGORITHM_SELECTOR,
-    optimisation_algorithm_factory,
+    OptimisationAlgorithmFactory,
 )
 from lightwin.optimisation.design_space.factory import (
     DesignSpaceFactory,
     get_design_space_factory,
 )
-from lightwin.optimisation.objective.factory import ObjectiveFactory
+from lightwin.optimisation.objective.factory import (
+    ObjectiveFactory,
+    ObjectiveMetaFactory,
+)
+from lightwin.util.helper import pd_output
 from lightwin.util.pickling import MyPickler
 from lightwin.util.typing import (
     REFERENCE_PHASE_POLICY_T,
@@ -104,63 +103,51 @@ class FaultScenario(list[Fault]):
         self.info = {}
         self.optimisation_time: datetime.timedelta
 
+        self._design_space_factory = design_space_factory
+        self._list_of_elements_factory = (
+            beam_calculator.list_of_elements_factory
+        )
+        self._objective_meta_factory = ObjectiveMetaFactory(
+            self._reference_simulation_output
+        )
+
         cavities = strategy.failed_and_compensating(
             fix_acc.elts, failed=fault_idx, compensating_manual=comp_idx, **wtf
         )
-        faults = self._create_faults(
-            self._reference_simulation_output,
-            beam_calculator.list_of_elements_factory,
-            design_space_factory,
-            *cavities,
-            objective_factory_class=objective_factory_class,
-        )
+        faults = self._create_faults(*cavities)
         super().__init__(faults)
 
         self._mark_cavities_to_rephase()
         for fault in self:
             fault.pre_compensation_status()
 
+        self._optimisation_algorithm_factory = OptimisationAlgorithmFactory(
+            opti_method=wtf["optimisation_algorithm"],
+            beam_calculator=beam_calculator,
+            reference_simulation_output=self._reference_simulation_output,
+            **wtf,
+        )
+        self._objective_factories: list[ObjectiveFactory] = []
+
     def _create_faults(
-        self,
-        reference_simulation_output: SimulationOutput,
-        list_of_elements_factory: ListOfElementsFactory,
-        design_space_factory: DesignSpaceFactory,
-        *cavities: Sequence[Sequence[FieldMap]],
-        objective_factory_class: type[ObjectiveFactory] | None = None,
+        self, *cavities: Sequence[Sequence[FieldMap]]
     ) -> list[Fault]:
         """Create the :class:`.Fault` objects.
 
         Parameters
         ----------
-        reference_simulation_output :
-            The simulation of the nominal linac we'll try to match.
-        list_of_elements_factory :
-            An object that can create :class:`.ListOfElements`.
-        design_space_factory :
-            An object that can create :class:`.DesignSpace`.
         *cavities :
             First if the list of gathered failed cavities. Second is the list
             of corresponding compensating cavities.
-        objective_factory_class :
-            If provided, will override the ``objective_preset``. Used to let
-            user define it's own :class:`.ObjectiveFactory` without altering
-            the source code.
 
         """
-        files_from_full_list_of_elements = self.fix_acc.elts.files_info
-
         faults = [
             Fault(
                 reference_elts=self.ref_acc.elts,
-                reference_simulation_output=reference_simulation_output,
-                files_from_full_list_of_elements=files_from_full_list_of_elements,
                 wtf=self.wtf,
-                design_space_factory=design_space_factory,
                 broken_elts=self.fix_acc.elts,
                 failed_elements=faulty_cavities,
                 compensating_elements=compensating_cavities,
-                list_of_elements_factory=list_of_elements_factory,
-                objective_factory_class=objective_factory_class,
             )
             for faulty_cavities, compensating_cavities in zip(
                 *cavities, strict=True
@@ -180,34 +167,13 @@ class FaultScenario(list[Fault]):
         reference_simulation_output = self.ref_acc.simulation_outputs[solv1]
         return reference_simulation_output
 
-    @property
-    def _optimisation_algorithms(self) -> list[OptimisationAlgorithm]:
-        """Set each fault's optimisation algorithm.
-
-        Returns
-        -------
-            The optimisation algorithm for each fault in ``self``.
-
-        """
-        opti_method = self.wtf["optimisation_algorithm"]
-        assert (
-            opti_method in ALGORITHM_SELECTOR
-        ), f"{opti_method = } should be in {ALGORITHM_SELECTOR.keys()}"
-
-        optimisation_algorithms = [
-            optimisation_algorithm_factory(
-                opti_method, fault, self.beam_calculator, **self.wtf
-            )
-            for fault in self
-        ]
-        return optimisation_algorithms
-
     def fix_all(self) -> None:
         """Fix all the :class:`.Fault` objects in self."""
         start_time = time.monotonic()
 
-        for fault, algo in zip(self, self._optimisation_algorithms):
-            self._wrap_fix(fault, algo)
+        simulation_output = self._reference_simulation_output
+        for fault in self:
+            simulation_output = self._wrap_fix(fault, simulation_output)
 
         delta_t = datetime.timedelta(seconds=time.monotonic() - start_time)
         logging.info(f"Solving all the optimization problems took {delta_t}")
@@ -228,19 +194,67 @@ class FaultScenario(list[Fault]):
         )
 
     def _wrap_fix(
-        self, fault: Fault, optimisation_algorithm: OptimisationAlgorithm
-    ) -> None:
-        """Fix the and recompute propagation with new settings."""
+        self, fault: Fault, simulation_output: SimulationOutput
+    ) -> SimulationOutput:
+        """Fix the and recompute propagation with new settings.
+
+        Parameters
+        ----------
+        fault :
+            The fault to fix.
+        simulation_output :
+            The most recent simulation, that includes the compensation settings
+            of all :class:`.Fault` upstream of ``fault``.
+
+        Returns
+        -------
+            Most recent simulation, that includes the compensation settings of
+            upstream :class:`.Fault` as well as of this one.
+
+        """
+        design_space = self._design_space_factory.run(
+            fault.compensating_elements, fault.reference_elements
+        )
+        objective_factory = self._objective_meta_factory.create(
+            fault,
+            self.wtf["objective_preset"],
+            self._design_space_factory.design_space_kw,
+            self.wtf.get("objective_factory_class", None),
+        )
+        self._objective_factories.append(objective_factory)
+
+        subset_elts = self._list_of_elements_factory.subset_list_run(
+            objective_factory.elts_of_compensation_zone,
+            simulation_output,
+            self.fix_acc.elts.files_info,
+        )
+        optimisation_algorithm = self._optimisation_algorithm_factory.create(
+            fault.compensating_elements,
+            objective_factory.objectives,
+            design_space,
+            objective_factory.compute_residuals,
+            subset_elts,
+        )
+
         fault.fix(optimisation_algorithm)
-        ref_simulation_output = self.ref_acc.simulation_outputs[
-            self.beam_calculator.id
-        ]
-        fault.postprocess_fix(
+        simulation_output = fault.postprocess_fix(
             self.fix_acc,
             self.beam_calculator,
-            ref_simulation_output,
+            self._reference_simulation_output,
             self._reference_phase_policy,
         )
+        df_altered = sumup_cavities(
+            subset_elts, filter=lambda cav: cav.is_altered
+        )
+        logging.info(f"Retuned cavities:\n{pd_output(df_altered)}")
+        subset_elts.store_settings_in_dat(
+            subset_elts.files_info["dat_file"],
+            exported_phase=self.beam_calculator.reference_phase_policy,
+            save=True,
+        )
+        fault.objectives = objective_factory.objectives
+
+        return simulation_output
 
     def _evaluate_fit_quality(
         self,
@@ -276,7 +290,7 @@ class FaultScenario(list[Fault]):
             "mismatch_factor_zdelta",
         )
         my_evaluator = FaultScenarioSimulationOutputEvaluators(
-            quantities_to_evaluate, [fault for fault in self], simulations
+            quantities_to_evaluate, self._objective_factories, simulations
         )
         my_evaluator.run(output=True)
 

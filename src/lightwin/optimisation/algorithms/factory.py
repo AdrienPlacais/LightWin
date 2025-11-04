@@ -11,9 +11,14 @@ from functools import partial
 from typing import Any, Callable, Literal
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
+from lightwin.beam_calculation.simulation_output.simulation_output import (
+    SimulationOutput,
+)
+from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings_factory import (
     CavitySettingsFactory,
 )
+from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.fault import Fault
 from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
 from lightwin.optimisation.algorithms.bayesian_optimization import (
@@ -35,6 +40,8 @@ from lightwin.optimisation.algorithms.nsga import NSGA
 from lightwin.optimisation.algorithms.simulated_annealing import (
     SimulatedAnnealing,
 )
+from lightwin.optimisation.design_space.design_space import DesignSpace
+from lightwin.optimisation.objective.objective import Objective
 
 #: Maps the ``optimisation_algorithm`` key in the ``TOML`` file to the actual
 #: :class:`.OptimisationAlgorithm` we use.
@@ -70,111 +77,122 @@ ALGORITHMS_T = Literal[
 ]
 
 
-def optimisation_algorithm_factory(
-    opti_method: ALGORITHMS_T,
-    fault: Fault,
-    beam_calculator: BeamCalculator,
-    **wtf: Any,
-) -> OptimisationAlgorithm:
-    """Create the proper :class:`.OptimisationAlgorithm` instance.
+class OptimisationAlgorithmFactory:
+    """Holds methods to easily create :class:`.OptimisationAlgorithm`."""
 
-    Parameters
-    ----------
-    opti_method :
-        Name of the desired optimisation algorithm.
-    fault :
-        Fault that will be compensated by the optimisation algorithm.
-    beam_calculator :
-        Object that will be used to computte propagation of the beam.
-    kwargs :
-        Other keyword arguments that will be passed to the
-        :class:`.OptimisationAlgorithm`.
+    def __init__(
+        self,
+        opti_method: ALGORITHMS_T,
+        beam_calculator: BeamCalculator,
+        reference_simulation_output: SimulationOutput,
+        **wtf: Any,
+    ) -> None:
+        """Save properties common to every optimization algorithhm.
 
-    Returns
-    -------
-        Instantiated optimisation algorithm.
+        Parameters
+        ----------
+        opti_method :
+            Name of the desired optimisation algorithm.
+        beam_calculator :
+            Object that will be used to compute propagation of the beam.
+        reference_simulation_output :
+            Simulation of the nominal accelerator.
+        kwargs :
+            Other keyword arguments that will be passed to the
+            :class:`.OptimisationAlgorithm`.
 
-    """
-    default_kwargs = _default_kwargs(
-        fault,
-        beam_calculator.run_with_this,
-        beam_calculator.cavity_settings_factory,
-    )
-    _check_common_keys(wtf, default_kwargs)
-    final_kwargs = default_kwargs | wtf
+        """
+        self._class = ALGORITHM_SELECTOR[opti_method]
+        self._beam_calculator = beam_calculator
+        self._wtf = wtf
+        self._reference_simulation_output = reference_simulation_output
 
-    algorithm_base_class = ALGORITHM_SELECTOR[opti_method]
-    algorithm = algorithm_base_class(**final_kwargs)
-    return algorithm
+    def create(
+        self,
+        compensating_elements: list[Element],
+        objectives: list[Objective],
+        design_space: DesignSpace,
+        compute_residuals: Callable,
+        elts: ListOfElements,
+    ) -> OptimisationAlgorithm:
+        """Instantiate an optimisation algorithm for a given fault."""
+        default_kwargs = self._make_default_kwargs(
+            compensating_elements,
+            objectives,
+            design_space,
+            compute_residuals,
+            elts,
+        )
+        self._log_common_keys(self._wtf, default_kwargs)
+        final_kwargs = {**default_kwargs, **self._wtf}
+        algorithm = self._class(**final_kwargs)
+        return algorithm
 
+    def _make_default_kwargs(
+        self,
+        compensating_elements: list[Element],
+        objectives: list[Objective],
+        design_space: DesignSpace,
+        compute_residuals: Callable,
+        elts: ListOfElements,
+    ) -> dict[str, Any]:
+        """Build default arguments for :class:`.OptimisationAlgorithm`.
 
-def _default_kwargs(
-    fault: Fault,
-    run_with_this: Callable,
-    cavity_settings_factory: CavitySettingsFactory,
-) -> dict[str, Any]:
-    """Set default arguments to instantiate the optimisation algorithm.
+        The kwargs for :class:`.OptimisationAlgorithm` that are defined in
+        :meth:`.FaultScenario._optimisation_algorithms` will override the ones
+        defined here.
 
-    The kwargs for :class:`.OptimisationAlgorithm` that are defined in
-    :meth:`.FaultScenario._optimisation_algorithms` will override the ones
-    defined here.
+        Parameters
+        ----------
+        fault :
+            Fault that will be compensated by the optimisation algorithm.
+        run_with_this :
+            A :meth:`.BeamCalculator.run_with_this` method.
+        cavity_settings_factory :
+            Factory creating :class:`.SetOfCavitySettings`.
 
-    Parameters
-    ----------
-    fault :
-        Fault that will be compensated by the optimisation algorithm.
-    compute_beam_propagation :
-        Function that takes in a set of cavity settings and a list of elements,
-        computes the beam propagation with these, and returns a simulation
-        output.
+        Returns
+        -------
+            A dictionary of keyword arguments for the initialisation of
+            :class:`.OptimisationAlgorithm`.
 
-    Returns
-    -------
-        A dictionary of keyword arguments for the initialisation of
-        :class:`.OptimisationAlgorithm`.
+        """
+        compute_beam_propagation = partial(
+            self._beam_calculator.run_with_this, elts=elts
+        )
+        default_kwargs: dict[str, Any] = {
+            "compensating_elements": compensating_elements,
+            "objectives": objectives,
+            "design_space": design_space,
+            "compute_beam_propagation": compute_beam_propagation,
+            "compute_residuals": compute_residuals,
+            "cavity_settings_factory": self._beam_calculator.cavity_settings_factory,
+            "reference_simulation_output": self._reference_simulation_output,
+        }
+        return default_kwargs
 
-    """
-    compute_beam_propagation = partial(run_with_this, elts=fault.elts)
-    default_kwargs: dict[str, Any] = {
-        "compensating_elements": fault.compensating_elements,
-        "elts": fault.elts,
-        "objectives": fault.objectives,
-        "design_space": fault.design_space,
-        "compute_beam_propagation": compute_beam_propagation,
-        "compute_residuals": fault.compute_residuals,
-        "cavity_settings_factory": cavity_settings_factory,
-        "reference_simulation_output": fault.reference_simulation_output,
-    }
-    return default_kwargs
+    def _log_common_keys(
+        self, user_kwargs: dict[str, Any], default_kwargs: dict[str, Any]
+    ) -> None:
+        """Log when user-provided and default kwargs overlap.
 
+        Parameters
+        ----------
+        user_kwargs :
+            kwargs as defined in the
+            :meth:`.FaultScenario._optimisation_algorithms` (they have
+            precedence).
+        default_kwargs :
+            kwargs as defined in the `_optimisation_algorithm_kwargs` (they
+            will be overriden as they are considered as "default" or "fallback"
+            values).
 
-def _check_common_keys(
-    user_kwargs: dict[str, Any], default_kwargs: dict[str, Any]
-) -> None:
-    """Check keys that are common between the two dictionaries.
-
-    .. todo::
-        Redocument ``default_kwargs``.
-
-    Parameters
-    ----------
-    user_kwargs :
-        kwargs as defined in the
-        :meth:`.FaultScenario._optimisation_algorithms` (they have
-        precedence).
-    default_kwargs :
-        kwargs as defined in the `_optimisation_algorithm_kwargs` (they
-        will be overriden as they are considered as "default" or "fallback"
-        values).
-
-    """
-    user_keys = set(user_kwargs.keys())
-    default_keys = set(default_kwargs.keys())
-    common_keys = user_keys.intersection(default_keys)
-    if len(common_keys) > 0:
+        """
+        overlap = user_kwargs.keys() & default_kwargs.keys()
+        if not overlap:
+            return
         logging.info(
-            "The following OptimisationAlgorithm arguments are set both in "
-            "FaultScenario (user_kwargs) and in "
-            "optimisation.algorithms.factory (default_kwargs). We use the ones"
-            f" from FaultScenario.\n{common_keys = })"
+            "Overlapping OptimisationAlgorithm kwargs detected:\n"
+            f"{', '.join(overlap)}. User-provided values (from FaultScenario) "
+            "will override defaults."
         )

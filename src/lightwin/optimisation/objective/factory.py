@@ -44,7 +44,7 @@ from lightwin.util.dicts_output import markdown
 
 
 class ObjectiveFactory(ABC):
-    """A base class to create :class:`.Objective`.
+    """A base class to create all the :class:`.Objective` of a :class:`.Fault`.
 
     It is intended to be sub-classed to make presets. Look at
     :class:`EnergyPhaseMismatch` or :class:`EnergySyncPhaseMismatch` for
@@ -72,7 +72,6 @@ class ObjectiveFactory(ABC):
 
     def __init__(
         self,
-        reference_elts: ListOfElements,
         reference_simulation_output: SimulationOutput,
         broken_elts: ListOfElements,
         failed_elements: list[Element],
@@ -83,8 +82,6 @@ class ObjectiveFactory(ABC):
 
         Parameters
         ----------
-        reference_elts :
-            All the reference elements.
         reference_simulation_output :
             The reference simulation of the reference linac.
         broken_elts :
@@ -99,23 +96,24 @@ class ObjectiveFactory(ABC):
             synchronous phase is defined as an objective.
 
         """
-        #: All the reference elements.
-        self.reference_elts = reference_elts
         #: The reference simulation of the reference linac.
-        self.reference_simulation_output = reference_simulation_output
+        self._reference_simulation_output = reference_simulation_output
+        #: All the reference elements.
+        self._reference_elts = reference_simulation_output.elts
 
-        self.broken_elts = broken_elts
-        self.failed_elements = failed_elements
-        self.compensating_elements = compensating_elements
+        self._broken_elts = broken_elts
+        self._failed_elements = failed_elements
+        self._compensating_elements = compensating_elements
 
-        self.design_space_kw = design_space_kw
+        self._design_space_kw = design_space_kw
 
-        assert all([elt.can_be_retuned for elt in self.compensating_elements])
+        assert all([elt.can_be_retuned for elt in self._compensating_elements])
         #: List of elements were an objective is evaluated
-        self.objective_elements: list[Element]
-        self.elts_of_compensation_zone, self.objective_elements = (
+        self._objective_elements: list[Element]
+        self.elts_of_compensation_zone, self._objective_elements = (
             self._set_zone_to_recompute()
         )
+        self.objectives = self.get_objectives()
 
     @abstractmethod
     def get_objectives(self) -> list[Objective]:
@@ -131,20 +129,30 @@ class ObjectiveFactory(ABC):
 
         """
         fault_idx = [
-            element.idx["elt_idx"] for element in self.failed_elements
+            element.idx["elt_idx"] for element in self._failed_elements
         ]
         comp_idx = [
-            element.idx["elt_idx"] for element in self.compensating_elements
+            element.idx["elt_idx"] for element in self._compensating_elements
         ]
 
         elts_of_compensation_zone, objective_elements = zone_to_recompute(
-            self.broken_elts,
+            self._broken_elts,
             self.objective_position_preset,
             fault_idx,
             comp_idx,
             **self.compensation_zone_override_settings,
         )
         return elts_of_compensation_zone, objective_elements
+
+    def compute_residuals(
+        self, simulation_output: SimulationOutput
+    ) -> NDArray[np.float64]:
+        """Compute residuals on objectives for a simulation."""
+        residuals = [
+            objective.evaluate(simulation_output)
+            for objective in self.objectives
+        ]
+        return np.array(residuals)
 
 
 class EnergyMismatch(ObjectiveFactory):
@@ -164,7 +172,7 @@ class EnergyMismatch(ObjectiveFactory):
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
-        last_element = self.objective_elements[0]
+        last_element = self._objective_elements[0]
         objectives = [
             self._get_w_kin(elt=last_element),
             self._get_mismatch(elt=last_element),
@@ -178,7 +186,7 @@ class EnergyMismatch(ObjectiveFactory):
             weight=1.0,
             get_key="w_kin",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize diff. of w_kin between ref and fix at the
             end of the compensation zone.
             """,
@@ -197,7 +205,7 @@ class EnergyMismatch(ObjectiveFactory):
                 "to_numpy": True,
                 "phase_space_name": "zdelta",
             },
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize mismatch factor in the [z-delta] plane.""",
         )
         return objective
@@ -220,7 +228,7 @@ class EnergyPhaseMismatch(ObjectiveFactory):
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
-        last_element = self.objective_elements[0]
+        last_element = self._objective_elements[0]
         objectives = [
             self._get_w_kin(elt=last_element),
             self._get_phi_abs(elt=last_element),
@@ -235,7 +243,7 @@ class EnergyPhaseMismatch(ObjectiveFactory):
             weight=1.0,
             get_key="w_kin",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize diff. of w_kin between ref and fix at the
             end of the compensation zone.
             """,
@@ -254,7 +262,7 @@ class EnergyPhaseMismatch(ObjectiveFactory):
                 "to_numpy": False,
                 "to_deg": False,
             },
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize diff. of phi_abs between ref and fix at the
             end of the compensation zone.
             """,
@@ -273,7 +281,7 @@ class EnergyPhaseMismatch(ObjectiveFactory):
                 "to_numpy": True,
                 "phase_space_name": "zdelta",
             },
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize mismatch factor in the [z-delta] plane.""",
         )
         return objective
@@ -298,7 +306,7 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
-        last_element = self.objective_elements[0]
+        last_element = self._objective_elements[0]
         objectives = [
             self._get_w_kin(elt=last_element),
             self._get_phi_abs(elt=last_element),
@@ -309,7 +317,7 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
             filter(
                 lambda element: (
                     element.can_be_retuned
-                    and element not in self.failed_elements
+                    and element not in self._failed_elements
                 ),
                 self.elts_of_compensation_zone,
             )
@@ -335,7 +343,7 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
             weight=1.0,
             get_key="w_kin",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize diff. of w_kin between ref and fix at the
             end of the compensation zone.
             """,
@@ -354,7 +362,7 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
                 "to_numpy": False,
                 "to_deg": False,
             },
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize diff. of phi_abs between ref and fix at the
             end of the compensation zone.
             """,
@@ -373,7 +381,7 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
                 "to_numpy": True,
                 "phase_space_name": "zdelta",
             },
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize mismatch factor in the [z-delta] plane.""",
         )
         return objective
@@ -386,14 +394,14 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
             Allow ``from_file``.
 
         """
-        reference_cavity = equivalent_elt(self.reference_elts, cavity)
+        reference_cavity = equivalent_elt(self._reference_elts, cavity)
 
-        if self.design_space_kw["from_file"]:
+        if self._design_space_kw["from_file"]:
             raise OSError(
                 "For now, synchronous phase cannot be taken from the variables"
                 " or constraints.csv files when used as objectives."
             )
-        limits = phi_s_limits(reference_cavity, **self.design_space_kw)
+        limits = phi_s_limits(reference_cavity, **self._design_space_kw)
 
         objective = QuantityIsBetween(
             name=markdown["phi_s"].replace("deg", "rad"),
@@ -425,8 +433,8 @@ class EnergySeveralMismatches(ObjectiveFactory):
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy and mismatch factor."""
-        last_element = self.objective_elements[-1]
-        one_lattice_before = self.objective_elements[-2]
+        last_element = self._objective_elements[-1]
+        one_lattice_before = self._objective_elements[-2]
         objectives = [
             self._get_w_kin(elt=one_lattice_before),
             self._get_mismatch(elt=one_lattice_before),
@@ -441,7 +449,7 @@ class EnergySeveralMismatches(ObjectiveFactory):
             weight=1.0,
             get_key="w_kin",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize diff. of w_kin between ref and fix at the
             end of the compensation zone.
             """,
@@ -460,7 +468,7 @@ class EnergySeveralMismatches(ObjectiveFactory):
                 "to_numpy": True,
                 "phase_space_name": "zdelta",
             },
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="Minimize mismatch factor in the [z-delta] plane.",
         )
         return objective
@@ -479,7 +487,7 @@ class Spiral2(ObjectiveFactory):
     def get_objectives(self) -> list[Objective]:
         """Return twiss and energy at end of lattices after failure."""
         objectives = []
-        for elt in self.objective_elements:
+        for elt in self._objective_elements:
             objectives += [
                 self._get_twiss_alpha(elt),
                 self._get_twiss_beta(elt),
@@ -494,7 +502,7 @@ class Spiral2(ObjectiveFactory):
             weight=1.0,
             get_key="alpha_zdelta",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize diff. of alpha between ref and fix at the
             end of the lattice.
             """,
@@ -508,7 +516,7 @@ class Spiral2(ObjectiveFactory):
             weight=1.0,
             get_key="beta_zdelta",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize diff. of envelope between ref and fix at the
             end of the lattice.
             """,
@@ -519,7 +527,7 @@ class Spiral2(ObjectiveFactory):
         """Return object to keep energy reasonable."""
         get_key = "w_kin"
         get_kwargs = {"elt": elt, "pos": "out", "to_numpy": False}
-        ref = self.reference_simulation_output.get(get_key, **get_kwargs)
+        ref = self._reference_simulation_output.get(get_key, **get_kwargs)
         objective = QuantityIsBetween(
             name=markdown["w_kin"],
             weight=1.0,
@@ -546,11 +554,11 @@ class CorrectorAtExit(ObjectiveFactory):
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
-        if len(self.failed_elements) == 0:
-            last_element = self.compensating_elements[-1]
+        if len(self._failed_elements) == 0:
+            last_element = self._compensating_elements[-1]
             objectives = [self._retrieve_energy(last_element)]
         else:
-            last_element = self.objective_elements[-1]
+            last_element = self._objective_elements[-1]
             objectives = [
                 self._preaccelerate(elt=last_element),
                 self._preshape(elt=last_element),
@@ -561,7 +569,7 @@ class CorrectorAtExit(ObjectiveFactory):
         """Get reasonable energy at exit of compensation zone."""
         get_key = "w_kin"
         get_kwargs = {"elt": elt, "pos": "out", "to_numpy": False}
-        ref = self.reference_simulation_output.get(get_key, **get_kwargs)
+        ref = self._reference_simulation_output.get(get_key, **get_kwargs)
         objective = QuantityIsBetween.relative_to_reference(
             name=markdown["w_kin"],
             weight=1.0,
@@ -585,7 +593,7 @@ class CorrectorAtExit(ObjectiveFactory):
                 "to_numpy": True,
                 "phase_space_name": "zdelta",
             },
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize mismatch factor in the [z-delta] plane at
             exit of compensation zone.""",
         )
@@ -630,82 +638,129 @@ OBJECTIVE_PRESETS_T = Literal[
 ]
 
 
-def get_objectives_and_residuals_function(
-    objective_preset: OBJECTIVE_PRESETS_T,
-    reference_elts: ListOfElements,
-    reference_simulation_output: SimulationOutput,
-    broken_elts: ListOfElements,
-    failed_elements: list[Element],
-    compensating_elements: list[Element],
-    design_space_kw: dict[str, float | bool | str | Path],
-    objective_factory_class: type[ObjectiveFactory] | None = None,
-) -> tuple[
-    list[Element], list[Objective], Callable[[SimulationOutput], NDArray]
-]:
-    """Instantiate objective factory and create objectives.
+class ObjectiveMetaFactory:
+    """An object creating :class:`.ObjectiveFactory` for every :class:`.Fault`."""
 
-    Parameters
-    ----------
-    reference_elts :
-        All the reference elements.
-    reference_simulation_output :
-        The reference simulation of the reference linac.
-    broken_elts :
-        The elements of the broken linac.
-    failed_elements :
-        Elements that failed.
-    compensating_elements :
-        Elements that will be used for the compensation.
-    design_space_kw :
-        Used when we need to determine the limits for ``phi_s``. Those limits
-        are defined in the ``TOML`` configuration file.
-    objective_factory_class :
-        If provided, will override the ``objective_preset``. Used to let user
-        define it's own :class:`.ObjectiveFactory` without altering the source
-        code.
+    def __init__(self, reference_simulation_output: SimulationOutput) -> None:
+        self._reference_simulation_output = reference_simulation_output
 
-    Returns
-    -------
-    elts_of_compensation_zone :
-        Portion of the linac that will be recomputed during the optimisation
-        process.
-    objectives :
-        Objectives that the optimisation algorithm will try to match.
-    compute_residuals :
-        Function that converts a :class:`.SimulationOutput` to a plain numpy
-        array of residuals.
-
-    """
-    if objective_factory_class is None:
-        objective_factory_class = OBJECTIVE_PRESETS[objective_preset]
-    else:
-        logging.info(
-            "A user-defined ObjectiveFactory was provided, so the key "
-            f"{objective_preset = } will be disregarded.\n"
-            f"{objective_factory_class = }"
+    def create(
+        self,
+        fault: Any,
+        objective_preset: OBJECTIVE_PRESETS_T,
+        design_space_kw: dict[str, Any],
+        objective_factory_class: type[ObjectiveFactory] | None = None,
+    ) -> ObjectiveFactory:
+        """Create object that will create all the :class:`.Objective`."""
+        objective_factory_class = self._factory_class(
+            objective_preset, objective_factory_class
         )
-    assert objective_factory_class is not None
 
-    objective_factory = objective_factory_class(
-        reference_elts=reference_elts,
-        reference_simulation_output=reference_simulation_output,
-        broken_elts=broken_elts,
-        failed_elements=failed_elements,
-        compensating_elements=compensating_elements,
-        design_space_kw=design_space_kw,
-    )
+        objective_factory = objective_factory_class(
+            reference_simulation_output=self._reference_simulation_output,
+            broken_elts=fault.broken_elts,
+            failed_elements=fault.failed_elements,
+            compensating_elements=fault.compensating_elements,
+            design_space_kw=design_space_kw,
+        )
+        return objective_factory
 
-    elts_of_compensation_zone = objective_factory.elts_of_compensation_zone
-    objectives = objective_factory.get_objectives()
-    compute_residuals = partial(_compute_residuals, objectives=objectives)
-    return elts_of_compensation_zone, objectives, compute_residuals
+    def _factory_class(
+        self,
+        objective_preset: OBJECTIVE_PRESETS_T,
+        objective_factory_class: type[ObjectiveFactory] | None = None,
+    ) -> type[ObjectiveFactory]:
+        """Determine type of :class:`.ObjectiveFactory` to use.
+
+        This method does not instantiate the :class:`.ObjectiveFactory`.
+
+        """
+        if objective_factory_class:
+            logging.info(
+                "A user-defined ObjectiveFactory was provided, so the key "
+                f"{objective_preset = } will be disregarded.\n"
+                f"{objective_factory_class = }"
+            )
+            return objective_factory_class
+        return OBJECTIVE_PRESETS[objective_preset]
 
 
-def _compute_residuals(
-    simulation_output: SimulationOutput, objectives: Collection[Objective]
-) -> NDArray:
-    """Compute residuals on given `Objectives` for given `SimulationOutput`."""
-    residuals = [
-        objective.evaluate(simulation_output) for objective in objectives
-    ]
-    return np.array(residuals)
+# def get_objectives_and_residuals_function(
+#     objective_preset: OBJECTIVE_PRESETS_T,
+#     reference_elts: ListOfElements,
+#     reference_simulation_output: SimulationOutput,
+#     broken_elts: ListOfElements,
+#     failed_elements: list[Element],
+#     compensating_elements: list[Element],
+#     design_space_kw: dict[str, float | bool | str | Path],
+#     objective_factory_class: type[ObjectiveFactory] | None = None,
+# ) -> tuple[
+#     list[Element], list[Objective], Callable[[SimulationOutput], NDArray]
+# ]:
+#     """Instantiate objective factory and create objectives.
+#
+#     Parameters
+#     ----------
+#     reference_elts :
+#         All the reference elements.
+#     reference_simulation_output :
+#         The reference simulation of the reference linac.
+#     broken_elts :
+#         The elements of the broken linac.
+#     failed_elements :
+#         Elements that failed.
+#     compensating_elements :
+#         Elements that will be used for the compensation.
+#     design_space_kw :
+#         Used when we need to determine the limits for ``phi_s``. Those limits
+#         are defined in the ``TOML`` configuration file.
+#     objective_factory_class :
+#         If provided, will override the ``objective_preset``. Used to let user
+#         define it's own :class:`.ObjectiveFactory` without altering the source
+#         code.
+#
+#     Returns
+#     -------
+#     elts_of_compensation_zone :
+#         Portion of the linac that will be recomputed during the optimisation
+#         process.
+#     objectives :
+#         Objectives that the optimisation algorithm will try to match.
+#     compute_residuals :
+#         Function that converts a :class:`.SimulationOutput` to a plain numpy
+#         array of residuals.
+#
+#     """
+#     if objective_factory_class is None:
+#         objective_factory_class = OBJECTIVE_PRESETS[objective_preset]
+#     else:
+#         logging.info(
+#             "A user-defined ObjectiveFactory was provided, so the key "
+#             f"{objective_preset = } will be disregarded.\n"
+#             f"{objective_factory_class = }"
+#         )
+#     assert objective_factory_class is not None
+#
+#     objective_factory = objective_factory_class(
+#         reference_elts=reference_elts,
+#         reference_simulation_output=reference_simulation_output,
+#         broken_elts=broken_elts,
+#         failed_elements=failed_elements,
+#         compensating_elements=compensating_elements,
+#         design_space_kw=design_space_kw,
+#     )
+#
+#     elts_of_compensation_zone = objective_factory.elts_of_compensation_zone
+#     objectives = objective_factory.get_objectives()
+#     compute_residuals = partial(_compute_residuals, objectives=objectives)
+#     return elts_of_compensation_zone, objectives, compute_residuals
+#
+#
+# def _compute_residuals(
+#     simulation_output: SimulationOutput, objectives: Collection[Objective]
+# ) -> NDArray:
+#     """Compute residuals on given `Objectives` for given `SimulationOutput`."""
+#     residuals = [
+#         objective.evaluate(simulation_output) for objective in objectives
+#     ]
+#     return np.array(residuals)

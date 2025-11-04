@@ -81,13 +81,6 @@ class ListOfElementsFactory:
             all the :class:`.BeamCalculator` objects -- some phase-spaces may
             be created but never used though.
 
-        Parameters
-        ----------
-        phi_s_definition :
-            Definition for the synchronous phases that will be used. Allowed
-            values are in :data:`.PHI_S_MODELS`. The default is
-            ``'historical'``.
-
         """
         freq_bunch_mhz = beam_kwargs["f_bunch_mhz"]
         assert isinstance(freq_bunch_mhz, float)
@@ -230,11 +223,7 @@ class ListOfElementsFactory:
         input_elt, input_pos = self._get_initial_element(
             elts, simulation_output
         )
-        get_kw = {
-            "elt": input_elt,
-            "pos": input_pos,
-            "to_numpy": False,
-        }
+        get_kw = {"elt": input_elt, "pos": input_pos, "to_numpy": False}
         input_particle = self._subset_input_particle(
             simulation_output, **get_kw
         )
