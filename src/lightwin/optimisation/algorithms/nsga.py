@@ -110,20 +110,20 @@ class NSGA(OptimisationAlgorithm):
 
     def _format_variables(self) -> tuple[np.ndarray, np.ndarray]:
         """Format :class:`.Variable` for this algorithm."""
-        _xl = [var.limits[0] for var in self.variables]
-        _xu = [var.limits[1] for var in self.variables]
+        _xl = [var.limits[0] for var in self._variables]
+        _xu = [var.limits[1] for var in self._variables]
         return _xl, _xu
 
     @property
     def x_0(self) -> np.ndarray:
         """Return initial value used in :class:`.LeastSquares`."""
-        return np.array([var.x_0 for var in self.variables])
+        return np.array([var.x_0 for var in self._variables])
 
     @property
     def x_max_k_e(self) -> np.ndarray:
         """Return a solution with maximum electric fields."""
         x_max = []
-        for var in self.variables:
+        for var in self._variables:
             if var.name == "k_e":
                 x_max.append(var.limits[1])
                 continue
@@ -138,7 +138,7 @@ class NSGA(OptimisationAlgorithm):
         simulation_output = self.compute_beam_propagation(cav_settings)
 
         objective = self.compute_residuals(simulation_output)
-        constraints = self.compute_constraints(simulation_output)
+        constraints = self._compute_constraints(simulation_output)
         return np.abs(objective), constraints
 
     def _set_algorithm(self, *args, **kwargs) -> Algorithm:

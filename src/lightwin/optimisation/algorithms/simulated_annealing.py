@@ -30,11 +30,7 @@ class SimulatedAnnealing(OptimisationAlgorithm):
             **self.optimisation_algorithm_kwargs,
         )
         self.opti_sol = self._generate_opti_sol(result)
-        message = result.message
-        if isinstance(message, list):
-            message = "\n".join(message)
-        complementary_info = ("Simulated Annealing", message)
-        self._finalize(self.opti_sol, *complementary_info)
+        self._finalize(self.opti_sol)
         return self.opti_sol
 
     @property
@@ -52,8 +48,7 @@ class SimulatedAnnealing(OptimisationAlgorithm):
 
     def _generate_opti_sol(self, result: OptimizeResult) -> OptiSol:
         """Package the results into an OptiSol dictionary."""
-        status = "compensate (ok)" if result.success else "compensate (not ok)"
-        cavity_settings = self._create_set_of_cavity_settings(result.x, status)
+        cavity_settings = self._create_set_of_cavity_settings(result.x)
 
         opti_sol: OptiSol = {
             "var": result.x,
@@ -61,9 +56,10 @@ class SimulatedAnnealing(OptimisationAlgorithm):
             "fun": result.fun,
             "objectives": self._get_objective_values(result.x),
             "success": result.success,
+            "info": ["SimulatedAnnealing", result.message],
         }
         return opti_sol
 
     def _format_bounds(self) -> list[tuple[float, float]]:
         """Convert Variable objects to a list of bounds."""
-        return [var.limits for var in self.variables]
+        return [var.limits for var in self._variables]

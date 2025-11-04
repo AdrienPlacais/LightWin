@@ -39,15 +39,12 @@ from lightwin.optimisation.design_space.factory import (
     get_design_space_factory,
 )
 from lightwin.optimisation.objective.factory import ObjectiveFactory
-from lightwin.util import debug
 from lightwin.util.pickling import MyPickler
 from lightwin.util.typing import (
     REFERENCE_PHASE_POLICY_T,
     REFERENCE_PHASES,
     REFERENCE_PHASES_T,
 )
-
-DISPLAY_CAVITIES_INFO = True
 
 
 class FaultScenario(list[Fault]):
@@ -79,9 +76,6 @@ class FaultScenario(list[Fault]):
             The broken linac to be fixed.
         beam_calculator :
             The solver that will be called during the optimisation process.
-        initial_beam_parameters_factory :
-            An object to create beam parameters at the entrance of the linac
-            portion.
         wtf :
             What To Fit dictionary. Holds information on the fixing method.
         design_space_factory :
@@ -122,8 +116,9 @@ class FaultScenario(list[Fault]):
         )
         super().__init__(faults)
 
-        self._update_status_of_cavities_to_rephase()
-        self._update_status_of_broken_cavities()
+        self._mark_cavities_to_rephase()
+        for fault in self:
+            fault.pre_compensation_status()
 
     def _create_faults(
         self,
@@ -208,30 +203,20 @@ class FaultScenario(list[Fault]):
         return optimisation_algorithms
 
     def fix_all(self) -> None:
-        """Fix all the :class:`.Fault` objects in self.
-
-        .. todo::
-            make this more readable
-
-        """
+        """Fix all the :class:`.Fault` objects in self."""
         start_time = time.monotonic()
 
-        ref_simulation_output = self.ref_acc.simulation_outputs[
-            self.beam_calculator.id
-        ]
-
         for fault, algo in zip(self, self._optimisation_algorithms):
-            self._wrap_single_fix(fault, algo, ref_simulation_output)
+            self._wrap_fix(fault, algo)
+
+        delta_t = datetime.timedelta(seconds=time.monotonic() - start_time)
+        logging.info(f"Solving all the optimization problems took {delta_t}")
+        self.optimisation_time = delta_t
+
         successes = [fault.success for fault in self]
-
         self.fix_acc.name = (
-            f"Fixed ({str(successes.count(True))} of {str(len(successes))})"
+            f"Fixed ({successes.count(True)} of {len(successes)})"
         )
-
-        for linac in (self.ref_acc, self.fix_acc):
-            self.info[linac.name + " cav"] = debug.output_cavities(
-                linac, DISPLAY_CAVITIES_INFO
-            )
 
         self._evaluate_fit_quality(save=True)
 
@@ -241,48 +226,21 @@ class FaultScenario(list[Fault]):
             exported_phase=exported_phase,
             save=True,
         )
-        end_time = time.monotonic()
-        delta_t = datetime.timedelta(seconds=end_time - start_time)
-        logging.info(f"Elapsed time for optimization: {delta_t}")
 
-        self.optimisation_time = delta_t
-
-    def _wrap_single_fix(
-        self,
-        fault: Fault,
-        optimisation_algorithm: OptimisationAlgorithm,
-        ref_simulation_output: SimulationOutput,
-    ) -> OptiSol:
-        """Fix a fault and recompute propagation with new settings."""
-        opti_sol = fault.fix(optimisation_algorithm)
-
-        simulation_output = (
-            self.beam_calculator.post_optimisation_run_with_this(
-                fault.optimized_cavity_settings, self.fix_acc.elts
-            )
+    def _wrap_fix(
+        self, fault: Fault, optimisation_algorithm: OptimisationAlgorithm
+    ) -> None:
+        """Fix the and recompute propagation with new settings."""
+        fault.fix(optimisation_algorithm)
+        ref_simulation_output = self.ref_acc.simulation_outputs[
+            self.beam_calculator.id
+        ]
+        fault.postprocess_fix(
+            self.fix_acc,
+            self.beam_calculator,
+            ref_simulation_output,
+            self._reference_phase_policy,
         )
-        simulation_output.compute_complementary_data(
-            self.fix_acc.elts, ref_simulation_output=ref_simulation_output
-        )
-
-        self.fix_acc.keep_settings(
-            simulation_output, exported_phase=self._reference_phase_policy
-        )
-        self.fix_acc.keep_simulation_output(
-            simulation_output, self.beam_calculator.id
-        )
-
-        fault.update_elements_status(optimisation="finished", success=True)
-        fault.elts.store_settings_in_dat(
-            fault.elts.files_info["dat_file"],
-            exported_phase=self._reference_phase_policy,
-            save=True,
-        )
-
-        if self._reference_phase_policy != "phi_0_abs":
-            self._update_status_of_rephased_cavities(fault)
-
-        return opti_sol
 
     def _evaluate_fit_quality(
         self,
@@ -383,10 +341,7 @@ class FaultScenario(list[Fault]):
         fault_scenario = pickler.unpickle(path)
         return fault_scenario  # type: ignore
 
-    # =========================================================================
-    # Status related
-    # =========================================================================
-    def _update_status_of_cavities_to_rephase(self) -> None:
+    def _mark_cavities_to_rephase(self) -> None:
         """Change the status of cavities after first failure.
 
         Only cavities with a reference phase different from ``"phi_0_abs"`` are
@@ -407,36 +362,12 @@ class FaultScenario(list[Fault]):
             if c.cavity_settings.reference != "phi_0_abs"
         ]
         logging.info(
-            f"Updating phases of {len(cavities_to_rephase)} cavities, because "
-            "they are after a failed cavity and their reference phase is phi_s"
-            " or phi_0_rel."
+            f"Marking {len(cavities_to_rephase)} cavities as 'to be rephased',"
+            " because they are after a failed cavity and their reference phase "
+            "is phi_s or phi_0_rel."
         )
         for cav in cavities_to_rephase:
             cav.update_status("rephased (in progress)")
-
-    def _update_status_of_rephased_cavities(self, fault: Fault) -> None:
-        """Modify the status of rephased cavities after compensation.
-
-        Change the cavities with status ``"rephased (in progress)"`` to
-        ``"rephased (ok)"`` between ``fault`` and the next :class:`.Fault`.
-
-        """
-        elts = self.fix_acc.elts
-        idx_after_compensation = elts.index(fault.elts[-1])
-
-        for elt in elts[idx_after_compensation:]:
-            if not isinstance(elt, FieldMap):
-                continue
-            if elt.status == "rephased (in progress)":
-                elt.update_status("rephased (ok)")
-                continue
-            if "compensate" in elt.status or "failed" in elt.status:
-                return
-
-    def _update_status_of_broken_cavities(self) -> None:
-        """Break the cavities."""
-        for fault in self:
-            fault.update_elements_status(optimisation="not started")
 
     # =========================================================================
     # Reference phase related

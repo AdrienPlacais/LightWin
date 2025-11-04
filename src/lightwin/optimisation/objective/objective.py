@@ -3,7 +3,7 @@
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Collection
-from typing import Any, Self
+from typing import Any, Self, Sequence
 
 from numpy.typing import NDArray
 
@@ -20,7 +20,12 @@ from lightwin.util.typing import (
 
 
 class Objective(ABC):
-    """Hold an objective and methods to evaluate it."""
+    """Hold an objective and methods to evaluate it.
+
+    .. todo::
+        Should this object also store its final value?
+
+    """
 
     #: List of authorized values for the ``get_key``. Checked by the
     #: :meth:`._check_get_arguments` method
@@ -76,10 +81,12 @@ class Objective(ABC):
         #:   an objective.
         self.ideal_value: Any = ideal_value
         self.descriptor = " ".join((descriptor or "").split())
+        #: Residual value at the end of the optimization process.
+        self.residual: float
 
     def __str__(self) -> str:
         """Give objective information value."""
-        message = self.base_str()
+        message = self.position_nature()
         if isinstance(self.ideal_value, float):
             message += f"{self.ideal_value:+.14e}"
             return message
@@ -94,7 +101,7 @@ class Objective(ABC):
 
         return message
 
-    def base_str(self) -> str:
+    def position_nature(self) -> str:
         """Tell nature and position of objective."""
         message = f"{self.get_key:>23}"
 
@@ -165,9 +172,14 @@ class Objective(ABC):
     @staticmethod
     def str_header() -> str:
         """Give a header to explain what :meth:`__str__` returns."""
-        header = f"{'What, where, etc': ^40} | {'wgt.':>5} | "
+        header = f"{'Objective': ^40} | {'wgt.':>5} | "
         header += f"{'ideal value': ^21}"
         return header
+
+    @staticmethod
+    def str_header_solved() -> str:
+        """Give a header to explain, after optimization, what is printed."""
+        return f"{Objective.str_header()} | {'final residuals': ^21}"
 
     @abstractmethod
     def _compute_residuals(self, objective_value: Any) -> float:
@@ -184,13 +196,12 @@ class Objective(ABC):
 
         Returns
         -------
-            Residue for current objective, scaled by :attr:`.Objective.weight`.
-
+            residual for current objective, scaled by :attr:`.Objective.weight`.
 
         """
 
     def evaluate(self, simulation_output: SimulationOutput) -> float:
-        """Get desired value from ``simulation_output`` and compute residues.
+        """Get desired value from ``simulation_output`` and compute residuals.
 
         Parameters
         ----------
@@ -199,7 +210,8 @@ class Objective(ABC):
 
         Returns
         -------
-            Residue for current objective, scaled by :attr:`.Objective.weight`.
+            Residual for current objective, scaled by
+            :attr:`.Objective.weight`.
 
         """
         objective_value = self._value_getter(simulation_output)
@@ -302,7 +314,9 @@ class MinimizeDifferenceWithRef(Objective):
             get_key=get_key,
             get_kwargs=get_kwargs,
             descriptor=descriptor,
-            ideal_value=self._value_getter(reference, handle_missing_elt=True),
+            ideal_value=reference.get(
+                get_key, **get_kwargs, handle_missing_elt=True
+            ),
         )
         self._check_ideal_value()
 
@@ -512,7 +526,7 @@ class QuantityIsBetween(Objective):
 
     def __str__(self) -> str:
         """Give objective information value."""
-        message = self.base_str()
+        message = self.position_nature()
         message += f"{self.ideal_value[0]:+.2e} ~ {self.ideal_value[1]:+.2e}"  # type: ignore
         return message
 
@@ -531,7 +545,7 @@ class QuantityIsBetween(Objective):
 
         Returns
         -------
-            Residue for current objective, scaled by :attr:`.Objective.weight`.
+            residual for current objective, scaled by :attr:`.Objective.weight`.
             The loss function is defined as:
             - :math:`0` if :math:`x_l \leq x \leq x_u`, *ie* if
               ``objective_value`` is within the bounds defined by
@@ -545,3 +559,34 @@ class QuantityIsBetween(Objective):
         if objective_value > self.ideal_value[1]:
             return self.weight * (objective_value - self.ideal_value[1]) ** 2
         return 0.0
+
+
+def str_objectives(objectives: Sequence[Objective]) -> str:
+    """Return a string describing several objectives."""
+    info = [str(objective) for objective in objectives]
+    info.insert(0, "=" * 100)
+    info.insert(1, Objective.str_header())
+    info.insert(2, "-" * 100)
+    info.append("=" * 100)
+    return "\n".join(info)
+
+
+def str_objectives_solved(objectives: Sequence[Objective]) -> str:
+    """Return a string describing objectives results."""
+    try:
+        info = [
+            f"{str(objective)} | {objective.residual:+.14e}"
+            for objective in objectives
+        ]
+    except AttributeError as e:
+        logging.error(
+            "Something went wrong when trying to access the residuals of "
+            f"objectives.\n{e}"
+        )
+        return "No info on objective values, cf above message."
+
+    info.insert(0, "=" * 100)
+    info.insert(1, Objective.str_header_solved())
+    info.insert(2, "-" * 100)
+    info.append("=" * 100)
+    return "\n".join(info)

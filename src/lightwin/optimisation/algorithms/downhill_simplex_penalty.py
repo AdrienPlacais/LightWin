@@ -49,7 +49,7 @@ class DownhillSimplexPenalty(DownhillSimplex):
             "options": {
                 "adaptive": True,
                 "disp": True,
-                "maxiter": 2000 * len(self.variables),
+                "maxiter": 2000 * len(self._variables),
             },
         }
         return kwargs

@@ -27,10 +27,6 @@ class DesignSpace:
     variables: list[Variable]
     constraints: list[Constraint]
 
-    def __post_init__(self) -> None:
-        """Print out some info."""
-        logging.info(str(self))
-
     @classmethod
     def from_files(
         cls,
@@ -99,27 +95,25 @@ class DesignSpace:
 
     def __str__(self) -> str:
         """Give nice output of the variables and constraints."""
-        return "\n".join(self._str_variables() + self._str_constraints())
+        return "\n\n".join((self._str_variables(), self._str_constraints()))
 
-    def _str_variables(self) -> list[str]:
+    def _str_variables(self) -> str:
         """Generate information on the variables that were created."""
         info = [str(variable) for variable in self.variables]
-        info.insert(0, "Created variables:")
-        info.insert(1, "=" * 100)
-        info.insert(2, Variable.header_of__str__())
-        info.insert(3, "-" * 100)
+        info.insert(0, "=" * 100)
+        info.insert(1, Variable.str_header())
+        info.insert(2, "-" * 100)
         info.append("=" * 100)
-        return info
+        return "\n".join(info)
 
-    def _str_constraints(self) -> list[str]:
+    def _str_constraints(self) -> str:
         """Generate information on the constraints that were created."""
         info = [str(constraint) for constraint in self.constraints]
-        info.insert(0, "Created constraints:\n")
-        info.insert(1, "=" * 100)
-        info.insert(2, Constraint.header_of__str__())
-        info.insert(3, "-" * 100)
+        info.insert(0, "=" * 100)
+        info.insert(1, Constraint.str_header())
+        info.insert(2, "-" * 100)
         info.append("=" * 100)
-        return info
+        return "\n".join(info)
 
     def to_pandas_dataframe(self) -> pd.DataFrame:
         """Convert list of variables to a pandas dataframe."""
@@ -168,8 +162,8 @@ class DesignSpace:
             parameter = getattr(self, parameter_name)
             if len(parameter) == 0:
                 logging.info(
-                    f"{parameter_name} not defined for this "
-                    "DesignSpace. Skipping... "
+                    f"{parameter_name} not defined for this DesignSpace. "
+                    "Skipping... "
                 )
                 continue
 

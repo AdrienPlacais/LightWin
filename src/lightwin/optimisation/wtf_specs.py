@@ -130,6 +130,23 @@ WTF_L_NEIGHBORING_LATTICES = _WTF_BASE_AUTOMATIC + (
 )
 L_NEIGHBORING_LATTICES_MONKEY_PATCHES: dict[str, Any] = {}
 
+WTF_CORRECTOR_AT_EXIT = _WTF_BASE_AUTOMATIC + (
+    KeyValConfSpec(
+        key="n_compensating",
+        types=(int,),
+        description=("Number of compensating cavities around every failure."),
+        default_value=0,
+    ),
+    KeyValConfSpec(
+        key="n_correctors",
+        types=(int,),
+        description=(
+            "Number of compensating cavities at the exit of the linac."
+        ),
+        default_value=2,
+    ),
+)
+CORRECTOR_AT_EXIT_MONKEY_PATCHES: dict[str, Any] = {}
 WTF_MANUAL = _WTF_BASE + (
     KeyValConfSpec(
         key="failed",
@@ -157,12 +174,15 @@ WTF_MANUAL = _WTF_BASE + (
 
 MANUAL_MONKEY_PATCHES: dict[str, Any] = {}
 
+
 WTF_CONFIGS = {
+    "corrector at exit": WTF_CORRECTOR_AT_EXIT,
     "k out of n": WTF_K_OUT_OF_N,
     "l neighboring lattices": WTF_L_NEIGHBORING_LATTICES,
     "manual": WTF_MANUAL,
 }
 WTF_MONKEY_PATCHES = {
+    "corrector at exit": CORRECTOR_AT_EXIT_MONKEY_PATCHES,
     "k out of n": K_OUT_OF_N_MONKEY_PATCHES,
     "l neighboring lattices": L_NEIGHBORING_LATTICES_MONKEY_PATCHES,
     "manual": MANUAL_MONKEY_PATCHES,

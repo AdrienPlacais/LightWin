@@ -33,6 +33,8 @@ from lightwin.optimisation.objective.objective import (
     MinimizeMismatch,
     Objective,
     QuantityIsBetween,
+    RetrieveArbitrary,
+    str_objectives,
 )
 from lightwin.optimisation.objective.position import (
     POSITION_TO_INDEX_T,
@@ -60,7 +62,8 @@ class ObjectiveFactory(ABC):
 
     """
 
-    objective_position_preset: list[POSITION_TO_INDEX_T]  #:
+    #: List of positions telling where objectives should be evaluated.
+    objective_position_preset: list[POSITION_TO_INDEX_T]
     compensation_zone_override_settings = {
         "full_lattices": False,
         "full_linac": False,
@@ -96,7 +99,9 @@ class ObjectiveFactory(ABC):
             synchronous phase is defined as an objective.
 
         """
+        #: All the reference elements.
         self.reference_elts = reference_elts
+        #: The reference simulation of the reference linac.
         self.reference_simulation_output = reference_simulation_output
 
         self.broken_elts = broken_elts
@@ -106,6 +111,8 @@ class ObjectiveFactory(ABC):
         self.design_space_kw = design_space_kw
 
         assert all([elt.can_be_retuned for elt in self.compensating_elements])
+        #: List of elements were an objective is evaluated
+        self.objective_elements: list[Element]
         self.elts_of_compensation_zone, self.objective_elements = (
             self._set_zone_to_recompute()
         )
@@ -139,17 +146,6 @@ class ObjectiveFactory(ABC):
         )
         return elts_of_compensation_zone, objective_elements
 
-    @staticmethod
-    def _output_objectives(objectives: list[Objective]) -> None:
-        """Print information on the objectives that were created."""
-        info = [str(objective) for objective in objectives]
-        info.insert(0, "Created objectives:")
-        info.insert(1, "=" * 100)
-        info.insert(2, Objective.str_header())
-        info.insert(3, "-" * 100)
-        info.append("=" * 100)
-        logging.info("\n".join(info))
-
 
 class EnergyMismatch(ObjectiveFactory):
     """A set of two objectives: energy and mismatch.
@@ -173,7 +169,6 @@ class EnergyMismatch(ObjectiveFactory):
             self._get_w_kin(elt=last_element),
             self._get_mismatch(elt=last_element),
         ]
-        self._output_objectives(objectives)
         return objectives
 
     def _get_w_kin(self, elt: Element) -> Objective:
@@ -231,7 +226,6 @@ class EnergyPhaseMismatch(ObjectiveFactory):
             self._get_phi_abs(elt=last_element),
             self._get_mismatch(elt=last_element),
         ]
-        self._output_objectives(objectives)
         return objectives
 
     def _get_w_kin(self, elt: Element) -> Objective:
@@ -332,7 +326,6 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
             if isinstance(element, FieldMap)
         ]
 
-        self._output_objectives(objectives)
         return objectives
 
     def _get_w_kin(self, elt: Element) -> Objective:
@@ -439,7 +432,6 @@ class EnergySeveralMismatches(ObjectiveFactory):
             self._get_mismatch(elt=one_lattice_before),
             self._get_mismatch(elt=last_element),
         ]
-        self._output_objectives(objectives)
         return objectives
 
     def _get_w_kin(self, elt: Element) -> Objective:
@@ -493,7 +485,6 @@ class Spiral2(ObjectiveFactory):
                 self._get_twiss_beta(elt),
                 self._get_w_kin(elt),
             ]
-        self._output_objectives(objectives)
         return objectives
 
     def _get_twiss_alpha(self, elt: Element) -> Objective:
@@ -540,6 +531,79 @@ class Spiral2(ObjectiveFactory):
         return objective
 
 
+class CorrectorAtExit(ObjectiveFactory):
+    """Get close to energy after failure, give final boost at linac exit.
+
+    Designed to work with:
+    - ``reference_phase_policy = "phi_s"`` to preserve acceptance after
+      failure(s)
+    - ``strategy = "corrector at exit"`` to have additional corrector cavities
+      at the exit of the linac
+
+    """
+
+    objective_position_preset = ["end of last altered lattice"]
+
+    def get_objectives(self) -> list[Objective]:
+        """Give objects to match kinetic energy, phase and mismatch factor."""
+        if len(self.failed_elements) == 0:
+            last_element = self.compensating_elements[-1]
+            objectives = [self._retrieve_energy(last_element)]
+        else:
+            last_element = self.objective_elements[-1]
+            objectives = [
+                self._preaccelerate(elt=last_element),
+                self._preshape(elt=last_element),
+            ]
+        return objectives
+
+    def _preaccelerate(self, elt: Element) -> Objective:
+        """Get reasonable energy at exit of compensation zone."""
+        get_key = "w_kin"
+        get_kwargs = {"elt": elt, "pos": "out", "to_numpy": False}
+        ref = self.reference_simulation_output.get(get_key, **get_kwargs)
+        objective = QuantityIsBetween.relative_to_reference(
+            name=markdown["w_kin"],
+            weight=1.0,
+            get_key=get_key,
+            get_kwargs=get_kwargs,
+            relative_limits=(90.0, 101.0),
+            reference_value=ref,
+            descriptor="Energy stays within (-10%, +1%) wrt nominal tuning.",
+        )
+        return objective
+
+    def _preshape(self, elt: Element) -> Objective:
+        """Match mismatch factor at exit of compensation zone."""
+        objective = MinimizeMismatch(
+            name=r"$M_{z\delta}$",
+            weight=1.0,
+            get_key="twiss",
+            get_kwargs={
+                "elt": elt,
+                "pos": "out",
+                "to_numpy": True,
+                "phase_space_name": "zdelta",
+            },
+            reference=self.reference_simulation_output,
+            descriptor="""Minimize mismatch factor in the [z-delta] plane at
+            exit of compensation zone.""",
+        )
+        return objective
+
+    def _retrieve_energy(self, elt: Element) -> Objective:
+        """Retrieve energy at the end of the linac."""
+        objective = RetrieveArbitrary(
+            name=markdown["w_kin"],
+            weight=1.0,
+            get_key="w_kin",
+            get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
+            ideal_value=502.24,
+            descriptor="""Maximize energy at exit of linac.""",
+        )
+        return objective
+
+
 # =============================================================================
 # Interface with LightWin
 # =============================================================================
@@ -550,7 +614,7 @@ OBJECTIVE_PRESETS = {
     "EnergyPhaseMismatch": EnergyPhaseMismatch,
     "EnergySeveralMismatches": EnergySeveralMismatches,
     "EnergySyncPhaseMismatch": EnergySyncPhaseMismatch,
-    "experimental": Spiral2,
+    "experimental": CorrectorAtExit,
     "rephased_ADS": EnergyMismatch,
     "simple_ADS": EnergyPhaseMismatch,
     "sync_phase_as_objective_ADS": EnergySyncPhaseMismatch,
@@ -594,7 +658,7 @@ def get_objectives_and_residuals_function(
         Elements that will be used for the compensation.
     design_space_kw :
         Used when we need to determine the limits for ``phi_s``. Those limits
-        are defined in the ``INI`` configuration file.
+        are defined in the ``TOML`` configuration file.
     objective_factory_class :
         If provided, will override the ``objective_preset``. Used to let user
         define it's own :class:`.ObjectiveFactory` without altering the source

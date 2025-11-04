@@ -8,7 +8,7 @@ flag_cython = true
 # flag_phi_abs = true  # Deprecated! Use ``reference_phase_policy``.
 method = "RK4"
 n_steps_per_cell = 40
-reference_phase_policy = "phi_0_abs"
+reference_phase_policy = "phi_s"
 tool = "Envelope1D"
 
 [generic_envelope3d]
@@ -41,13 +41,14 @@ sigma = [
 ]
 
 [generic_wtf]
-failed = [["FM11"]]
+failed = [["FM120"]]
 id_nature = "name"
-k = 5
-objective_preset = "EnergyPhaseMismatch"
+n_compensating = 2
+n_correctors = 2
+objective_preset = "experimental"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
-strategy = "k out of n"
+strategy = "corrector at exit"
 
 [save_wtf]
 failed = [["FM11"]]

@@ -11,19 +11,25 @@ Its purpose is to hold information on a failure and to fix it.
 
 """
 
+import datetime
 import logging
+import time
 from pathlib import Path
 from typing import Any, Self
 
+from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.helper import equivalent_elt
 from lightwin.core.list_of_elements.list_of_elements import (
     FilesInfo,
     ListOfElements,
+    sumup_cavities,
 )
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.algorithms.algorithm import (
@@ -36,7 +42,10 @@ from lightwin.optimisation.objective.factory import (
     ObjectiveFactory,
     get_objectives_and_residuals_function,
 )
+from lightwin.optimisation.objective.objective import str_objectives_solved
+from lightwin.util.helper import pd_output
 from lightwin.util.pickling import MyPickler
+from lightwin.util.typing import ALLOWED_STATUS, REFERENCE_PHASE_POLICY_T
 
 
 class Fault:
@@ -123,13 +132,11 @@ class Fault:
             equivalent_elt(reference_elts, element)
             for element in self.compensating_elements
         ]
-        design_space = design_space_factory.run(
+
+        self.design_space = design_space_factory.run(
             compensating_elements, reference_elements
         )
 
-        self.variables = design_space.variables
-        self.constraints = design_space.constraints
-        self.compute_constraints = design_space.compute_constraints
         self.reference_simulation_output = reference_simulation_output
 
         objective_preset = wtf["objective_preset"]
@@ -155,21 +162,81 @@ class Fault:
         self.opti_sol: OptiSol
         return
 
-    def fix(self, optimisation_algorithm: OptimisationAlgorithm) -> OptiSol:
+    def fix(self, optimisation_algorithm: OptimisationAlgorithm) -> None:
         """Fix the :class:`Fault`. Set ``self.optimized_cavity_settings``.
+
+        Also display information on the parametrization of the optimization
+        problem, the solution that was found.
 
         Parameters
         ----------
         optimisation_algorithm :
             The optimization algorithm to be used, already initialized.
 
-        Returns
-        -------
-            Useful information, such as the best solution.
+        """
+        logging.info(
+            "Starting resolution of optimization problem defined by:\n"
+            f"{optimisation_algorithm}"
+        )
+        start_time = time.monotonic()
+
+        self.opti_sol = optimisation_algorithm.optimize()
+
+        delta_t = datetime.timedelta(seconds=time.monotonic() - start_time)
+        info = (
+            f"Finished! Solving this problem took {delta_t}. Results are:",
+            str_objectives_solved(self.objectives),
+            "Additional info:",
+            "\n".join(self.opti_sol["info"]),
+        )
+        logging.info("\n".join(info))
+
+    def postprocess_fix(
+        self,
+        fix_acc: Accelerator,
+        beam_calculator: BeamCalculator,
+        ref_simulation_output: SimulationOutput,
+        reference_phase_policy: REFERENCE_PHASE_POLICY_T,
+    ) -> None:
+        """Run post-optimization propagation and update elements status.
+
+        Parameters
+        ----------
+        fix_acc :
+            Holds accelerator being fixed.
+        beam_calculator :
+            Object performing propagation.
+        ref_simulation_output :
+            Reference simulation, obtained with ``beam_calculator``.
+        reference_phase_policy :
+            Which phase should be kept when the beam phase changes.
 
         """
-        self.opti_sol = optimisation_algorithm.optimize()
-        return self.opti_sol
+        fix_elts = fix_acc.elts
+
+        simulation_output = beam_calculator.post_optimisation_run_with_this(
+            self.optimized_cavity_settings, fix_elts
+        )
+        simulation_output.compute_indirect_quantities(
+            fix_elts, ref_simulation_output=ref_simulation_output
+        )
+
+        fix_acc.keep(
+            simulation_output,
+            exported_phase=reference_phase_policy,
+            beam_calculator_id=beam_calculator.id,
+        )
+        self._post_compensation_status(reference_phase_policy, fix_elts)
+        df_altered = sumup_cavities(
+            self.elts, filter=lambda cav: cav.is_altered
+        )
+        logging.info(f"Retuned cavities:\n{pd_output(df_altered)}")
+
+        self.elts.store_settings_in_dat(
+            self.elts.files_info["dat_file"],
+            exported_phase=reference_phase_policy,
+            save=True,
+        )
 
     @property
     def info(self) -> dict:
@@ -193,44 +260,77 @@ class Fault:
         """Get the success status."""
         return self.opti_sol["success"]
 
-    def update_elements_status(
-        self, optimisation: str, success: bool | None = None
-    ) -> None:
-        """Update status of compensating and failed elements."""
-        if optimisation not in ("not started", "finished"):
-            logging.error(
-                f"{optimisation = } not understood. Not changing any status..."
-            )
+    def pre_compensation_status(self) -> None:
+        """Mark failed and compensating cavities."""
+        status_are_valid = True
+        allowed = ("nominal", "rephased (in progress)", "rephased (ok)")
+        for elt in self.failed_elements:
+            assert isinstance(elt, FieldMap)
+            if elt.status not in allowed:
+                status_are_valid = False
+            elt.update_status("failed")
+
+        for elt in self.compensating_elements:
+            assert isinstance(elt, FieldMap)
+            if elt.status not in allowed:
+                status_are_valid = False
+            elt.update_status("compensate (in progress)")
+
+        if status_are_valid:
             return
 
-        if optimisation == "not started":
-            elements = self.failed_elements + self.compensating_elements
-            status = ["failed" for _ in self.failed_elements]
-            status += [
-                "compensate (in progress)" for _ in self.compensating_elements
-            ]
+        logging.error(
+            "At least one compensating or failed element is already "
+            "compensating or faulty, probably in another Fault object. Updated"
+            "its status anyway..."
+        )
 
-            allowed = ("nominal", "rephased (in progress)", "rephased (ok)")
-            status_is_invalid = [
-                cav.get("status") not in allowed for cav in elements
-            ]
-            if any(status_is_invalid):
-                logging.error(
-                    "At least one compensating or failed element is already "
-                    "compensating or faulty, probably in another Fault object."
-                    " Updating its status anyway..."
-                )
+    def _post_compensation_status(
+        self,
+        reference_phase_policy: REFERENCE_PHASE_POLICY_T,
+        fix_elts: ListOfElements,
+    ) -> None:
+        """Update cavities status after compensation.
 
-        elif optimisation == "finished":
-            assert success is not None
+        Compensating cavities of the current fault are marked as retuned,
+        meaning they should not be modified further. Their status changes from
+        ``"compensate (in progress)"`` to either ``"compensate (ok)"`` or
+        ``"compensate (not ok)"`` depending on the compensation success.
 
-            elements = self.compensating_elements
-            status = ["compensate (ok)" for _ in elements]
-            if not success:
-                status = ["compensate (not ok)" for _ in elements]
+        If the reference phase policy does not preserve absolute phases, all
+        cavities following the last altered one are marked as rephased. Their
+        status changes from ``"rephased (in progress)"`` to ``"rephased (ok)"``
+        , stopping at the first element belonging to the next failure (*i.e.*,
+        a compensating or failed cavity).
 
-        for cav, stat in zip(elements, status):
-            cav.update_status(stat)
+        Parameters
+        ----------
+        success :
+            Wether the compensation was successful.
+        reference_phase_policy :
+            Phase reference policy applied during compensation.
+        fix_elts :
+            *All* accelerator elements.
+
+        """
+        new_status = f"compensate ({'ok' if self.success else 'not ok'})"
+        assert new_status in ALLOWED_STATUS
+        for cav in self.compensating_elements:
+            cav.update_status(new_status)
+
+        if reference_phase_policy == "phi_0_abs":
+            return
+
+        altered_elts = self.compensating_elements + self.failed_elements
+        idx_last_altered = max(fix_elts.index(elt) for elt in altered_elts)
+
+        for elt in fix_elts[idx_last_altered:]:
+            if not isinstance(elt, FieldMap):
+                continue
+            if elt.status == "rephased (in progress)":
+                elt.update_status("rephased (ok)")
+            if "compensate" in elt.status or "failed" in elt.status:
+                break
 
     def pickle(
         self, pickler: MyPickler, path: Path | str | None = None

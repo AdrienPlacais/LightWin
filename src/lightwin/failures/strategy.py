@@ -72,7 +72,7 @@ def failed_and_compensating(
     """
     failed_cavities = elts.take(failed, id_nature=id_nature)
     assert [cavity.can_be_retuned for cavity in flatten(failed_cavities)]
-    elements = elts.tunable_cavities
+    tunable_cavities = elts.tunable_cavities
 
     if strategy == "manual":
         assert (
@@ -85,14 +85,27 @@ def failed_and_compensating(
 
     fun_sort = partial(
         STRATEGIES_MAPPING[strategy],
-        elements=elements,
-        elements_gathered_by_lattice=group_elements_by_lattice(elements),
+        elements=tunable_cavities,
+        elements_gathered_by_lattice=group_elements_by_lattice(
+            tunable_cavities
+        ),
         remove_failed=False,
         **wtf,
     )
     failed_gathered, compensating_gathered = gather(
         failed_elements=failed_cavities, fun_sort=fun_sort
     )
+
+    # Manually add correctors
+    if strategy == "corrector at exit":
+        n_correctors = wtf.get("n_correctors", None)
+        assert n_correctors is not None
+        compensating_gathered.append(tunable_cavities[-n_correctors:])
+        # The last ``n_correctors`` are associated with an empty list of failed
+        # cavities, which will require special treatment from the objective
+        # factory
+        failed_gathered.append([])
+
     return failed_gathered, compensating_gathered
 
 
@@ -103,7 +116,7 @@ def k_out_of_n[T](
     k: int,
     tie_politics: TIE_POLITICS_T = "upstream first",
     shift: int = 0,
-    remove_failed: bool = True,
+    remove_failed: bool = False,
     **kwargs,
 ) -> list[T]:
     r"""Return ``k`` compensating cavities per failed in ``elts_of_interest``.
@@ -159,7 +172,7 @@ def l_neighboring_lattices[T](
     l: int,
     tie_politics: TIE_POLITICS_T = "upstream first",
     shift: int = 0,
-    remove_failed: bool = True,
+    remove_failed: bool = False,
     min_number_of_cavities_in_lattice: int = 1,
     **kwargs,
 ) -> list[T]:
@@ -261,7 +274,7 @@ def global_compensation[T](
     elements: Sequence[T],
     failed_elements: Sequence[T],
     *,
-    remove_failed: bool = True,
+    remove_failed: bool = False,
     **kwargs,
 ) -> list[T]:
     """Give all the cavities of the linac.
@@ -288,7 +301,7 @@ def global_downstream[T](
     elements: Sequence[T],
     failed_elements: Sequence[T],
     *,
-    remove_failed: bool = True,
+    remove_failed: bool = False,
     **kwargs,
 ) -> list[T]:
     """Give all the cavities of the linac after the first failed cavity.
@@ -314,19 +327,115 @@ def global_downstream[T](
     return altered
 
 
+def corrector_at_exit(
+    elements: Sequence[cavities_id],
+    failed_elements: Sequence[cavities_id],
+    *,
+    n_compensating: int,
+    n_correctors: int,
+    tie_politics: TIE_POLITICS_T = "downstream first",
+    shift: int = 0,
+    remove_failed: bool = False,
+    include_correctors: bool = False,
+    **kwargs,
+) -> list[cavities_id]:
+    r"""Return ``k out of n`` cavities, plus additional cavities at exit.
+
+    The idea between this strategy is the following:
+    - Use ``n_compensating`` cavities around the failure to shape the beam and
+      accelerate it as much as possible.
+    - Rephase downstream cavities to keep the beam as intact as possible.
+      - ``reference_phase_policy = "phi_s"`` is the best choice to preserve
+        longitudinal acceptance along the linac.
+    - Give an ultimate energy boost to the beam with the last ``n_correctors``
+      cavities.
+      - The :class:`.ObjectiveFactory` must set different objectives at the
+        linac exit than at the compensation zone(s) exit.
+
+    This method is inspired by Shishlo and Peters who tested it on SNS
+    superconducting linac :cite:`Shishlo2022`; they used
+    ``n_compensating = 0``. It also showed very promising results on the
+    SPIRAL2 superconducting linac :cite:`Placais2024b`.
+
+    Parameters
+    ----------
+    elements :
+        All the tunable elements/lattices/sections.
+    failed_elements :
+        Failed cavities/lattice.
+    n_compensating :
+        Number of compensating cavity per failure; this is the ``k`` of the
+        ``k out of n`` method.
+    n_correctors :
+        Number of corrector cavities at the exit of the linac.
+    tie_politics :
+        When two elements have the same position, will you want to have the
+        upstream or the downstream first?
+    shift :
+        Distance increase for downstream elements (``shift < 0``) or upstream
+        elements (``shift > 0``). Used to have a window of compensating
+        cavities which is not centered around the failed elements.
+    include_correctors :
+        If corrector cavities should be included in returned list. If this
+        function is called within :func:`.gather`, set it to ``False``. As all
+        failed cavities of the linac would require these compensating cavities,
+        it would mess up with the failures gathering. Current workaround is to
+        add correctors manually after the :func:`.gather` call, in
+        :func:`.failed_and_compensating`.
+
+    Returns
+    -------
+        Contains all the altered elements. The :math:`n` first are failed, the
+        :math:`n_\mathrm{compensating} \times n` following are compensating,
+        the last :math:`n_\mathrm{correctors}` are correctors.
+
+    """
+    altered = k_out_of_n(
+        elements=elements,
+        failed_elements=failed_elements,
+        k=n_compensating,
+        tie_politics=tie_politics,
+        shift=shift,
+        remove_failed=remove_failed,
+        **kwargs,
+    )
+    correctors = elements[-n_correctors:]
+
+    failed_and_corrector = list(set(failed_elements) & set(correctors))
+    if len(failed_and_corrector) > 0:
+        raise NotImplementedError(
+            "Some cavities are failed AND in the last `n_correctors` cavities "
+            "of the linac, which is presently not handled.\n"
+            f"{failed_and_corrector = }"
+        )
+    altered_and_corrector = list(set(altered) & set(correctors))
+    if len(altered_and_corrector) > 0:
+        raise NotImplementedError(
+            "Some cavities are compensating AND in the last `n_correctors` "
+            "cavities  of the linac, which is presently not handled.\n"
+            f"{altered_and_corrector = }"
+        )
+
+    if include_correctors:
+        altered += correctors
+    return altered
+
+
 #: Defines the compensation strategies, *i.e.* selection of compensating
-#: cavities for given failures
+#: cavities for given failures.
 STRATEGIES_MAPPING = {
-    "k out of n": k_out_of_n,
-    "l neighboring lattices": l_neighboring_lattices,
+    "corrector at exit": corrector_at_exit,
     "global": global_compensation,
     "global_downstream": global_downstream,
+    "k out of n": k_out_of_n,
+    "l neighboring lattices": l_neighboring_lattices,
     "manual": manual,
 }
 STRATEGIES_T = Literal[
+    "corrector at exit",
+    "global downstream",
+    "global",
     "k out of n",
     "l neighboring lattices",
-    "global",
-    "global downstream",
     "manual",
 ]

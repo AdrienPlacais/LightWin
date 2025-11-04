@@ -139,11 +139,9 @@ def _default_kwargs(
         "compensating_elements": fault.compensating_elements,
         "elts": fault.elts,
         "objectives": fault.objectives,
-        "variables": fault.variables,
+        "design_space": fault.design_space,
         "compute_beam_propagation": compute_beam_propagation,
         "compute_residuals": fault.compute_residuals,
-        "constraints": fault.constraints,
-        "compute_constraints": fault.compute_constraints,
         "cavity_settings_factory": cavity_settings_factory,
         "reference_simulation_output": fault.reference_simulation_output,
     }

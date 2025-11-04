@@ -14,11 +14,12 @@ Two objects can have a :class:`ListOfElements` as attribute:
 """
 
 import logging
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, Literal, Self, TypedDict, overload
 
 import numpy as np
+import pandas as pd
 
 from lightwin.core.beam_parameters.initial_beam_parameters import (
     InitialBeamParameters,
@@ -436,3 +437,27 @@ class ListOfElements(list):
 
         """
         return self.files
+
+
+def sumup_cavities(
+    elts: ListOfElements, filter: Callable[[FieldMap], bool] | None = None
+) -> pd.DataFrame:
+    """Extract main cavities information."""
+    columns = (
+        "name",
+        "status",
+        "k_e",
+        "phi_0_abs",
+        "phi_0_rel",
+        "v_cav_mv",
+        "phi_s",
+    )
+    df = pd.DataFrame(
+        [
+            cav.get(*columns, to_deg=True, to_numpy=False, none_to_nan=True)
+            for cav in elts.l_cav
+            if (not filter or filter(cav))
+        ],
+        columns=columns,
+    )
+    return df

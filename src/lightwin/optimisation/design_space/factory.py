@@ -143,7 +143,6 @@ class DesignSpaceFactory(ABC):
             compensating_elements, reference_elements
         )
         design_space = DesignSpace(variables, constraints)
-        logging.info(str(design_space))
         return design_space
 
     def _get_initial_value_from_kw(

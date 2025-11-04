@@ -9,6 +9,7 @@ from lightwin.core.elements.field_maps.cavity_settings import (
     REFERENCE_PHASES_T,
     STATUS_T,
     CavitySettings,
+    CavityVars,
 )
 from lightwin.tracewin_utils.line import DatLine
 
@@ -34,11 +35,7 @@ class CavitySettingsFactory:
         status = "nominal"
 
         cavity_settings = CavitySettings(
-            k_e,
-            phi_0,
-            reference,
-            status,
-            self.freq_bunch_mhz,
+            k_e, phi_0, reference, status, self.freq_bunch_mhz
         )
         return cavity_settings
 
@@ -49,23 +46,39 @@ class CavitySettingsFactory:
         reference: REFERENCE_PHASES_T,
         status: STATUS_T,
     ) -> list[CavitySettings]:
-        """Create the cavity settings to try during an optimisation."""
+        """
+        Create the cavity settings to try during/at the end of an optimization.
+
+        Parameters
+        ----------
+        base_settings :
+            Nominal cavity settings, serving as a "base" for creating the new
+            :class:`.CavitySettings`.
+        var :
+            Holds amplitudes in the first half, phases in the second half.
+        reference :
+            Nature of the phase to use as reference for the optimization.
+        status :
+            Status of the cavities.
+
+        """
         amplitudes = list(var[var.shape[0] // 2 :])
         phases = list(var[: var.shape[0] // 2])
-        variables = zip(base_settings, amplitudes, phases, strict=True)
+        new_cavity_vars = (
+            CavityVars(k_e, phi, status, reference)
+            for k_e, phi in zip(amplitudes, phases, strict=True)
+        )
 
         several_cavity_settings = [
-            CavitySettings.from_optimisation_algorithm(
-                base, k_e, phi, status, reference
+            CavitySettings.copy(base, new_vars)
+            for base, new_vars in zip(
+                base_settings, new_cavity_vars, strict=True
             )
-            for base, k_e, phi in variables
         ]
         return several_cavity_settings
 
     def _reference(
-        self,
-        absolute_phase_flag: bool,
-        set_sync_phase: bool,
+        self, absolute_phase_flag: bool, set_sync_phase: bool
     ) -> REFERENCE_PHASES_T:
         """Determine which phase will be the reference one."""
         if set_sync_phase:
