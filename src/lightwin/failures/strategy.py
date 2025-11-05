@@ -11,6 +11,7 @@ In particular, it answers the question:
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Sequence
 from functools import partial
 from typing import Any, Literal
@@ -152,6 +153,10 @@ def k_out_of_n[T](
         failed, the :math:`k \times n` following are compensating.
 
     """
+    if k <= 0:
+        logging.error(
+            "Compensation without compensating cavities will raise errors."
+        )
     sorted_by_position = sort_by_position(
         elements,
         failed_elements,
