@@ -44,14 +44,13 @@ class DesignSpace:
         elements_names :
             Name of the elements with variables and constraints.
         filepath_variables :
-            Path to the ``variables.csv`` file.
+            Path to the :file:`variables.csv` file.
         variables_names :
             Name of the variables to create.
         filepath_constraints :
-            Path to the ``constraints.csv`` file. The default is None, in which
+            Path to the :file:`constraints.csv` file.
         constraints_names :
-            Name of the constraints to create. The default is None, in which
-            case no constraint is created.
+            Name of the constraints to create.
         delimiter :
             Delimiter in the files.
 

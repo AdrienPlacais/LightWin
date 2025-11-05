@@ -5,7 +5,6 @@
     maybe show what the file should look like?
 
 """
-import os.path
 from pathlib import Path
 
 from lightwin.beam_calculation.factory import BeamCalculatorsFactory
@@ -68,7 +67,7 @@ def main() -> None:
     design_space_factory = get_design_space_factory(
         **configuration["design_space"]
     )
-    design_space = design_space_factory.run(
+    design_space = design_space_factory.create(
         elements_to_put_in_file, elements_to_put_in_file
     )
 

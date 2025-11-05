@@ -20,7 +20,10 @@ from lightwin.beam_calculation.tracewin.tracewin import TraceWin
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
-from lightwin.core.list_of_elements.list_of_elements import sumup_cavities
+from lightwin.core.list_of_elements.list_of_elements import (
+    ListOfElements,
+    sumup_cavities,
+)
 from lightwin.evaluator.list_of_simulation_output_evaluators import (
     FaultScenarioSimulationOutputEvaluators,
 )
@@ -29,6 +32,7 @@ from lightwin.failures.fault import Fault
 from lightwin.optimisation.algorithms.factory import (
     OptimisationAlgorithmFactory,
 )
+from lightwin.optimisation.design_space.design_space import DesignSpace
 from lightwin.optimisation.design_space.factory import (
     DesignSpaceFactory,
     get_design_space_factory,
@@ -197,7 +201,15 @@ class FaultScenario(list[Fault]):
     def _wrap_fix(
         self, fault: Fault, simulation_output: SimulationOutput
     ) -> SimulationOutput:
-        """Fix the and recompute propagation with new settings.
+        """Fix the fault and recompute propagation with new settings.
+
+        Orchestrates:
+         - build :class:`.DesignSpace`
+         - build :class:`.ObjectiveFactory` (objectives + residuals routine)
+         - create :class:`.OptimisationAlgorithm` (solver) using factories
+           above
+         - run :meth:`.Fault.fix`
+         - postprocess and logging
 
         Parameters
         ----------
@@ -213,22 +225,8 @@ class FaultScenario(list[Fault]):
             upstream :class:`.Fault` as well as of this one.
 
         """
-        # Per-fault objects
-        design_space = self._design_space_factory.run(
-            fault.compensating_elements, fault.reference_elements
-        )
-        objective_factory = self._objective_meta_factory.create(
-            fault,
-            self.wtf["objective_preset"],
-            self._design_space_factory.design_space_kw,
-            self._objective_factory_class,
-        )
-        self._objective_factories.append(objective_factory)
-
-        subset_elts = self._list_of_elements_factory.subset_list_run(
-            objective_factory.elts_of_compensation_zone,
-            simulation_output,
-            self.fix_acc.elts.files_info,
+        design_space, objective_factory, subset_elts = (
+            self._prepare_fix_objects(fault, simulation_output)
         )
 
         # Create optimisation algorithm, that uses above objects
@@ -259,6 +257,28 @@ class FaultScenario(list[Fault]):
             save=True,
         )
         return simulation_output
+
+    def _prepare_fix_objects(
+        self, fault: Fault, simulation_output: SimulationOutput
+    ) -> tuple[DesignSpace, ObjectiveFactory, ListOfElements]:
+        """Create objects to instantiate the :class:`.OptimisationAlgorithm`."""
+        design_space = self._design_space_factory.create(
+            fault.compensating_elements, fault.reference_elements
+        )
+        objective_factory = self._objective_meta_factory.create(
+            fault,
+            self.wtf["objective_preset"],
+            self._design_space_factory.design_space_kw,
+            self._objective_factory_class,
+        )
+        self._objective_factories.append(objective_factory)
+
+        subset_elts = self._list_of_elements_factory.subset_list_run(
+            objective_factory.elts_of_compensation_zone,
+            simulation_output,
+            self.fix_acc.elts.files_info,
+        )
+        return design_space, objective_factory, subset_elts
 
     def _evaluate_fit_quality(
         self,

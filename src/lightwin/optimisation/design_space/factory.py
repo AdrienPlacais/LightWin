@@ -11,8 +11,10 @@ from abc import ABC
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Self
 
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.helper import equivalent_elt
 from lightwin.optimisation.design_space.constraint import Constraint
 from lightwin.optimisation.design_space.design_space import DesignSpace
@@ -21,7 +23,7 @@ from lightwin.optimisation.design_space.helper import (
     same_value_as_nominal,
 )
 from lightwin.optimisation.design_space.variable import Variable
-from lightwin.util.typing import VARIABLES_T
+from lightwin.util.typing import GETTABLE_FIELD_MAP, VARIABLES_T
 
 
 @dataclass
@@ -37,7 +39,7 @@ class DesignSpaceFactory(ABC):
         The elements from the linac under fixing that will be used for
         compensation.
     design_space_kw :
-        The entries of ``[design_space]`` in ``INI`` file.
+        The entries of ``[design_space]`` in ``TOML`` configuration file.
 
     """
 
@@ -48,9 +50,9 @@ class DesignSpaceFactory(ABC):
         self.variables_names: Sequence[VARIABLES_T]
         self.variables_filepath: Path
         if not hasattr(self, "variables_names"):
-            raise OSError("You must define at least one variable name.")
+            raise ValueError("You must define at least one variable name.")
 
-        self.constraints_names: Sequence[str]
+        self.constraints_names: Sequence[VARIABLES_T]
         self.constraints_filepath: Path
         if not hasattr(self, "constraints_names"):
             self.constraints_names = ()
@@ -65,45 +67,23 @@ class DesignSpaceFactory(ABC):
         """Check that given elements can be retuned."""
         assert all([elt.can_be_retuned for elt in compensating_elements])
 
-    def use_files(
-        self,
-        variables_filepath: Path,
-        constraints_filepath: Path | None = None,
-        **design_space_kw: float | bool | str | Path,
-    ) -> None:
-        """Tell factory to generate design space from the provided files.
-
-        Parameters
-        ----------
-        variables_filepath :
-            Path to the ``variables.csv`` file.
-        constraints_filepath :
-            Path to the ``constraints.csv`` file. The default is None.
-
-        """
-        self.variables_filepath = variables_filepath
-        if constraints_filepath is not None:
-            self.constraints_filepath = constraints_filepath
-        self.run = self._run_from_file
-
     def _run_variables(
         self,
-        compensating_elements: list[Element],
+        compensating_elements: list[FieldMap],
         reference_elements: list[Element],
     ) -> list[Variable]:
         """Set up all the required variables."""
-        assert reference_elements is not None
         variables = []
         for var_name in self.variables_names:
-            for element in compensating_elements:
-                ref_elt = equivalent_elt(reference_elements, element)
+            for cav in compensating_elements:
+                ref_cav = equivalent_elt(reference_elements, cav)
                 variable = Variable(
                     name=var_name,
-                    element_name=str(element),
+                    element_name=str(cav),
                     limits=self._get_limits_from_kw(
-                        var_name, ref_elt, reference_elements
+                        var_name, ref_cav, reference_elements
                     ),
-                    x_0=self._get_initial_value_from_kw(var_name, ref_elt),
+                    x_0=self._get_initial_value_from_kw(var_name, ref_cav),
                 )
                 variables.append(variable)
         return variables
@@ -114,22 +94,21 @@ class DesignSpaceFactory(ABC):
         reference_elements: list[Element],
     ) -> list[Constraint]:
         """Set up all the required constraints."""
-        assert reference_elements is not None
         constraints = []
         for constraint_name in self.constraints_names:
-            for element in compensating_elements:
-                ref_elt = equivalent_elt(reference_elements, element)
+            for cav in compensating_elements:
+                ref_cav = equivalent_elt(reference_elements, cav)
                 constraint = Constraint(
                     name=constraint_name,
-                    element_name=str(element),
+                    element_name=str(cav),
                     limits=self._get_limits_from_kw(
-                        constraint_name, ref_elt, reference_elements
+                        constraint_name, ref_cav, reference_elements
                     ),
                 )
                 constraints.append(constraint)
         return constraints
 
-    def run(
+    def create(
         self,
         compensating_elements: list[Element],
         reference_elements: list[Element],
@@ -146,9 +125,7 @@ class DesignSpaceFactory(ABC):
         return design_space
 
     def _get_initial_value_from_kw(
-        self,
-        variable: VARIABLES_T,
-        reference_element: Element,
+        self, variable: VARIABLES_T, reference_element: FieldMap
     ) -> float:
         """Select initial value for given variable.
 
@@ -167,6 +144,10 @@ class DesignSpaceFactory(ABC):
             Initial value.
 
         """
+        assert variable in GETTABLE_FIELD_MAP, (
+            f"{variable = } does not belong to the FieldMap gettable "
+            f"attributes:\n{GETTABLE_FIELD_MAP}"
+        )
         return same_value_as_nominal(variable, reference_element)
 
     def _get_limits_from_kw(
@@ -193,7 +174,6 @@ class DesignSpaceFactory(ABC):
             Lower and upper limit for current variable.
 
         """
-        assert reference_elements is not None
         limits_calculator = LIMITS_CALCULATORS[variable]
         return limits_calculator(
             reference_element=reference_element,
@@ -201,7 +181,31 @@ class DesignSpaceFactory(ABC):
             **self.design_space_kw,
         )
 
-    def _run_from_file(
+    def use_files(
+        self,
+        variables_filepath: Path,
+        constraints_filepath: Path | None = None,
+        **design_space_kw: Path,
+    ) -> Self:
+        """Tell factory to generate design space from the provided files.
+
+        Parameters
+        ----------
+        variables_filepath :
+            Path to the ``variables.csv`` file.
+        constraints_filepath :
+            Path to the ``constraints.csv`` file.
+
+        """
+        self.variables_filepath = variables_filepath
+        if constraints_filepath is not None:
+            self.constraints_filepath = constraints_filepath
+        self.create = self._create_from_file
+        if design_space_kw:
+            self.design_space_kw.update(design_space_kw)
+        return self
+
+    def _create_from_file(
         self,
         compensating_elements: list[Element],
         reference_elements: list[Element] | None = None,
@@ -217,7 +221,10 @@ class DesignSpaceFactory(ABC):
 
         """
         self._check_can_be_retuned(compensating_elements)
-        assert "variables_filepath" in self.__dir__()
+        if not hasattr(self, "variables_filepath"):
+            raise AttributeError(
+                "variables_filepath must be defined before use."
+            )
         constraints_filepath = getattr(self, "constraints_filepath", None)
 
         elements_names = tuple([str(elt) for elt in compensating_elements])
@@ -330,7 +337,7 @@ class Everything(DesignSpaceFactory):
             f"constraints, i.e. {self.variables_names = } and "
             f"{self.constraints_names = }."
         )
-        return super().run(*args, **kwargs)
+        return super().create(*args, **kwargs)
 
 
 # =============================================================================
@@ -392,7 +399,7 @@ DESIGN_SPACE_FACTORY_PRESETS = {
 
 
 def get_design_space_factory(
-    design_space_preset: str, **design_space_kw: float | bool
+    design_space_preset: str, **design_space_kw: Path
 ) -> DesignSpaceFactory:
     """Select proper factory, instantiate it and return it.
 
