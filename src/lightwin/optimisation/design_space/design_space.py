@@ -185,8 +185,8 @@ class DesignSpace:
         filepath :
             Where file will be stored.
         delimiter :
-            Delimiter between two columns. The default is ','.
-        to_csv_kw: dict[str, Any]
+            Delimiter between two columns. The default is ``','``.
+        to_csv_kw :
             Keyword arguments given to the pandas ``to_csv`` method.
 
         """

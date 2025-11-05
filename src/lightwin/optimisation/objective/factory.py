@@ -12,9 +12,8 @@ implemented presets in :data:`.OBJECTIVE_PRESETS` and
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Collection
-from functools import partial
-from pathlib import Path
-from typing import Any, Callable, Literal
+from dataclasses import dataclass
+from typing import Any, Literal
 
 import numpy as np
 from numpy.typing import NDArray
@@ -34,7 +33,6 @@ from lightwin.optimisation.objective.objective import (
     Objective,
     QuantityIsBetween,
     RetrieveArbitrary,
-    str_objectives,
 )
 from lightwin.optimisation.objective.position import (
     POSITION_TO_INDEX_T,
@@ -74,8 +72,8 @@ class ObjectiveFactory(ABC):
         self,
         reference_simulation_output: SimulationOutput,
         broken_elts: ListOfElements,
-        failed_elements: list[Element],
-        compensating_elements: list[Element],
+        failed_elements: Collection[Element],
+        compensating_elements: Collection[Element],
         design_space_kw: dict[str, Any],
     ) -> None:
         """Create the object.
@@ -102,8 +100,8 @@ class ObjectiveFactory(ABC):
         self._reference_elts = reference_simulation_output.elts
 
         self._broken_elts = broken_elts
-        self._failed_elements = failed_elements
-        self._compensating_elements = compensating_elements
+        self._failed_elements = tuple(failed_elements)
+        self._compensating_elements = tuple(compensating_elements)
 
         self._design_space_kw = design_space_kw
 
@@ -612,9 +610,6 @@ class CorrectorAtExit(ObjectiveFactory):
         return objective
 
 
-# =============================================================================
-# Interface with LightWin
-# =============================================================================
 #: Maps the ``objective_preset`` key in ``TOML`` ``wtf`` subsection with actual
 #: objects in LightWin
 OBJECTIVE_PRESETS = {
@@ -638,6 +633,24 @@ OBJECTIVE_PRESETS_T = Literal[
 ]
 
 
+@dataclass(frozen=True)
+class PackedElements:
+    """Pack :class:`.Element` info to instantiate :class:`.ObjectiveFactory`.
+
+    See Also
+    --------
+    Fault.packed_elements
+
+    """
+
+    #: Contains the full linac being fixed.
+    broken_elts: ListOfElements
+    #: The elements of ``broken_elts`` that failed.
+    failed_elements: tuple[Element, ...]
+    #: Elements of ``broken_elts`` used for compensation.
+    compensating_elements: tuple[Element, ...]
+
+
 class ObjectiveMetaFactory:
     """An object creating :class:`.ObjectiveFactory` for every :class:`.Fault`."""
 
@@ -646,9 +659,9 @@ class ObjectiveMetaFactory:
 
     def create(
         self,
-        fault: Any,
         objective_preset: OBJECTIVE_PRESETS_T,
         design_space_kw: dict[str, Any],
+        packed_elements: PackedElements,
         objective_factory_class: type[ObjectiveFactory] | None = None,
     ) -> ObjectiveFactory:
         """Create object that will create all the :class:`.Objective`."""
@@ -657,10 +670,10 @@ class ObjectiveMetaFactory:
         )
 
         objective_factory = objective_factory_class(
-            reference_simulation_output=self._reference_simulation_output,
-            broken_elts=fault.broken_elts,
-            failed_elements=fault.failed_elements,
-            compensating_elements=fault.compensating_elements,
+            self._reference_simulation_output,
+            packed_elements.broken_elts,
+            packed_elements.failed_elements,
+            packed_elements.compensating_elements,
             design_space_kw=design_space_kw,
         )
         return objective_factory
@@ -683,84 +696,3 @@ class ObjectiveMetaFactory:
             )
             return objective_factory_class
         return OBJECTIVE_PRESETS[objective_preset]
-
-
-# def get_objectives_and_residuals_function(
-#     objective_preset: OBJECTIVE_PRESETS_T,
-#     reference_elts: ListOfElements,
-#     reference_simulation_output: SimulationOutput,
-#     broken_elts: ListOfElements,
-#     failed_elements: list[Element],
-#     compensating_elements: list[Element],
-#     design_space_kw: dict[str, float | bool | str | Path],
-#     objective_factory_class: type[ObjectiveFactory] | None = None,
-# ) -> tuple[
-#     list[Element], list[Objective], Callable[[SimulationOutput], NDArray]
-# ]:
-#     """Instantiate objective factory and create objectives.
-#
-#     Parameters
-#     ----------
-#     reference_elts :
-#         All the reference elements.
-#     reference_simulation_output :
-#         The reference simulation of the reference linac.
-#     broken_elts :
-#         The elements of the broken linac.
-#     failed_elements :
-#         Elements that failed.
-#     compensating_elements :
-#         Elements that will be used for the compensation.
-#     design_space_kw :
-#         Used when we need to determine the limits for ``phi_s``. Those limits
-#         are defined in the ``TOML`` configuration file.
-#     objective_factory_class :
-#         If provided, will override the ``objective_preset``. Used to let user
-#         define it's own :class:`.ObjectiveFactory` without altering the source
-#         code.
-#
-#     Returns
-#     -------
-#     elts_of_compensation_zone :
-#         Portion of the linac that will be recomputed during the optimisation
-#         process.
-#     objectives :
-#         Objectives that the optimisation algorithm will try to match.
-#     compute_residuals :
-#         Function that converts a :class:`.SimulationOutput` to a plain numpy
-#         array of residuals.
-#
-#     """
-#     if objective_factory_class is None:
-#         objective_factory_class = OBJECTIVE_PRESETS[objective_preset]
-#     else:
-#         logging.info(
-#             "A user-defined ObjectiveFactory was provided, so the key "
-#             f"{objective_preset = } will be disregarded.\n"
-#             f"{objective_factory_class = }"
-#         )
-#     assert objective_factory_class is not None
-#
-#     objective_factory = objective_factory_class(
-#         reference_elts=reference_elts,
-#         reference_simulation_output=reference_simulation_output,
-#         broken_elts=broken_elts,
-#         failed_elements=failed_elements,
-#         compensating_elements=compensating_elements,
-#         design_space_kw=design_space_kw,
-#     )
-#
-#     elts_of_compensation_zone = objective_factory.elts_of_compensation_zone
-#     objectives = objective_factory.get_objectives()
-#     compute_residuals = partial(_compute_residuals, objectives=objectives)
-#     return elts_of_compensation_zone, objectives, compute_residuals
-#
-#
-# def _compute_residuals(
-#     simulation_output: SimulationOutput, objectives: Collection[Objective]
-# ) -> NDArray:
-#     """Compute residuals on given `Objectives` for given `SimulationOutput`."""
-#     residuals = [
-#         objective.evaluate(simulation_output) for objective in objectives
-#     ]
-#     return np.array(residuals)
