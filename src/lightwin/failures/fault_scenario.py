@@ -107,6 +107,7 @@ class FaultScenario(list[Fault]):
         self._list_of_elements_factory = (
             beam_calculator.list_of_elements_factory
         )
+        self._objective_factory_class = objective_factory_class
         self._objective_meta_factory = ObjectiveMetaFactory(
             self._reference_simulation_output
         )
@@ -212,6 +213,7 @@ class FaultScenario(list[Fault]):
             upstream :class:`.Fault` as well as of this one.
 
         """
+        # Per-fault objects
         design_space = self._design_space_factory.run(
             fault.compensating_elements, fault.reference_elements
         )
@@ -219,7 +221,7 @@ class FaultScenario(list[Fault]):
             fault,
             self.wtf["objective_preset"],
             self._design_space_factory.design_space_kw,
-            self.wtf.get("objective_factory_class", None),
+            self._objective_factory_class,
         )
         self._objective_factories.append(objective_factory)
 
@@ -228,14 +230,16 @@ class FaultScenario(list[Fault]):
             simulation_output,
             self.fix_acc.elts.files_info,
         )
+
+        # Create optimisation algorithm, that uses above objects
         optimisation_algorithm = self._optimisation_algorithm_factory.create(
             fault.compensating_elements,
-            objective_factory.objectives,
+            objective_factory,
             design_space,
-            objective_factory.compute_residuals,
             subset_elts,
         )
 
+        # Execute optimisation and update accelerator
         fault.fix(optimisation_algorithm)
         simulation_output = fault.postprocess_fix(
             self.fix_acc,
@@ -243,6 +247,8 @@ class FaultScenario(list[Fault]):
             self._reference_simulation_output,
             self._reference_phase_policy,
         )
+
+        # TODO clean following
         df_altered = sumup_cavities(
             subset_elts, filter=lambda cav: cav.is_altered
         )
@@ -252,8 +258,6 @@ class FaultScenario(list[Fault]):
             exported_phase=self.beam_calculator.reference_phase_policy,
             save=True,
         )
-        fault.objectives = objective_factory.objectives
-
         return simulation_output
 
     def _evaluate_fit_quality(

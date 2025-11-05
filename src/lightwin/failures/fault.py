@@ -282,27 +282,3 @@ class Fault:
                 elt.update_status("rephased (ok)")
             if "compensate" in elt.status or "failed" in elt.status:
                 break
-
-    def pickle(
-        self, pickler: MyPickler, path: Path | str | None = None
-    ) -> Path:
-        """Pickle (save) the object.
-
-        This is useful for debug and temporary saves; do not use it for long
-        time saving.
-
-        """
-        if path is None:
-            path = self.elts.files_info["accelerator_path"] / "fault.pkl"
-        assert isinstance(path, Path)
-        pickler.pickle(self, path)
-
-        if isinstance(path, str):
-            path = Path(path)
-        return path
-
-    @classmethod
-    def from_pickle(cls, pickler: MyPickler, path: Path | str) -> Self:
-        """Instantiate object from previously pickled file."""
-        fault = pickler.unpickle(path)
-        return fault  # type: ignore

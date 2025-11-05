@@ -137,7 +137,7 @@ class NSGA(OptimisationAlgorithm):
         cav_settings = self._create_set_of_cavity_settings(var)
         simulation_output = self.compute_beam_propagation(cav_settings)
 
-        objective = self.compute_residuals(simulation_output)
+        objective = self._compute_residuals(simulation_output)
         constraints = self._compute_constraints(simulation_output)
         return np.abs(objective), constraints
 

@@ -151,12 +151,6 @@ class TestMyPickler:
         pickled = FaultScenario.from_pickle(pickler, path)
         assert True
 
-    def test_fault(self, pickler: MyPickler, fault: Fault) -> None:
-        """Check that :class:`.Fault` pickling works."""
-        path = fault.pickle(pickler)
-        pickled = Fault.from_pickle(pickler, path)
-        assert True
-
     def test_simulation_output(
         self, pickler: MyPickler, simulation_output: SimulationOutput
     ) -> None:

@@ -41,6 +41,7 @@ from lightwin.optimisation.algorithms.simulated_annealing import (
     SimulatedAnnealing,
 )
 from lightwin.optimisation.design_space.design_space import DesignSpace
+from lightwin.optimisation.objective.factory import ObjectiveFactory
 from lightwin.optimisation.objective.objective import Objective
 
 #: Maps the ``optimisation_algorithm`` key in the ``TOML`` file to the actual
@@ -110,18 +111,16 @@ class OptimisationAlgorithmFactory:
     def create(
         self,
         compensating_elements: list[Element],
-        objectives: list[Objective],
+        objective_factory: ObjectiveFactory,
         design_space: DesignSpace,
-        compute_residuals: Callable,
-        elts: ListOfElements,
+        subset_elts: ListOfElements,
     ) -> OptimisationAlgorithm:
         """Instantiate an optimisation algorithm for a given fault."""
         default_kwargs = self._make_default_kwargs(
             compensating_elements,
-            objectives,
+            objective_factory,
             design_space,
-            compute_residuals,
-            elts,
+            subset_elts,
         )
         self._log_common_keys(self._wtf, default_kwargs)
         final_kwargs = {**default_kwargs, **self._wtf}
@@ -131,10 +130,9 @@ class OptimisationAlgorithmFactory:
     def _make_default_kwargs(
         self,
         compensating_elements: list[Element],
-        objectives: list[Objective],
+        objective_factory: ObjectiveFactory,
         design_space: DesignSpace,
-        compute_residuals: Callable,
-        elts: ListOfElements,
+        subset_elts: ListOfElements,
     ) -> dict[str, Any]:
         """Build default arguments for :class:`.OptimisationAlgorithm`.
 
@@ -144,12 +142,6 @@ class OptimisationAlgorithmFactory:
 
         Parameters
         ----------
-        fault :
-            Fault that will be compensated by the optimisation algorithm.
-        run_with_this :
-            A :meth:`.BeamCalculator.run_with_this` method.
-        cavity_settings_factory :
-            Factory creating :class:`.SetOfCavitySettings`.
 
         Returns
         -------
@@ -158,14 +150,13 @@ class OptimisationAlgorithmFactory:
 
         """
         compute_beam_propagation = partial(
-            self._beam_calculator.run_with_this, elts=elts
+            self._beam_calculator.run_with_this, elts=subset_elts
         )
         default_kwargs: dict[str, Any] = {
             "compensating_elements": compensating_elements,
-            "objectives": objectives,
+            "objective_factory": objective_factory,
             "design_space": design_space,
             "compute_beam_propagation": compute_beam_propagation,
-            "compute_residuals": compute_residuals,
             "cavity_settings_factory": self._beam_calculator.cavity_settings_factory,
             "reference_simulation_output": self._reference_simulation_output,
         }
