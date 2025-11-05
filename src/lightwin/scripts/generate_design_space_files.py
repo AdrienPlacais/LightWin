@@ -46,7 +46,7 @@ def generate_design_space_files(
     design_space_factory = get_design_space_factory(
         **configuration["design_space"]
     )
-    design_space = design_space_factory.run(
+    design_space = design_space_factory.create(
         compensating_elements=cavities,
         reference_elements=cavities,
     )

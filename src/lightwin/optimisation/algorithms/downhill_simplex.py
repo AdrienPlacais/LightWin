@@ -42,8 +42,7 @@ class DownhillSimplex(OptimisationAlgorithm):
             **self.optimisation_algorithm_kwargs,
         )
         self.opti_sol = self._generate_opti_sol(result)
-        complementary_info = ("Nelder-Mead algorithm", result.message)
-        self._finalize(self.opti_sol, *complementary_info)
+        self._finalize(self.opti_sol)
         return self.opti_sol
 
     @property
@@ -60,10 +59,7 @@ class DownhillSimplex(OptimisationAlgorithm):
 
     def _generate_opti_sol(self, result: OptimizeResult) -> OptiSol:
         """Store the optimization results."""
-        status = "compensate (ok)"
-        if not result.success:
-            status = "compensate (not ok)"
-        cavity_settings = self._create_set_of_cavity_settings(result.x, status)
+        cavity_settings = self._create_set_of_cavity_settings(result.x)
 
         opti_sol: OptiSol = {
             "var": result.x,
@@ -71,12 +67,13 @@ class DownhillSimplex(OptimisationAlgorithm):
             "fun": result.fun,
             "objectives": self._get_objective_values(result.x),
             "success": result.success,
+            "info": [self.__class__.__name__, result.message],
         }
         return opti_sol
 
     def _format_variables(self) -> tuple[np.ndarray, Bounds]:
         """Convert the :class:`.Variable` to an array and ``Bounds``."""
-        x_0 = np.array([var.x_0 for var in self.variables])
-        _bounds = np.array([var.limits for var in self.variables])
+        x_0 = np.array([var.x_0 for var in self._variables])
+        _bounds = np.array([var.limits for var in self._variables])
         bounds = Bounds(_bounds[:, 0], _bounds[:, 1])
         return x_0, bounds

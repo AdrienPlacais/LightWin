@@ -87,6 +87,11 @@ class FieldMap(Element):
         return True
 
     @property
+    def is_altered(self) -> bool:
+        """Tell if cavity is altered, *i.e.* not in nominal settings."""
+        return self.status != "nominal"
+
+    @property
     def can_be_retuned(self) -> bool:
         """Tell if we can modify the element's tuning."""
         return self._can_be_retuned
@@ -107,7 +112,6 @@ class FieldMap(Element):
 
         """
         assert new_status in ALLOWED_STATUS
-
         self.cavity_settings.status = new_status
         if new_status != "failed":
             return

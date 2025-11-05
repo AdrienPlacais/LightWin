@@ -9,6 +9,14 @@ This section parametrizes the failed cavities, as well as how they are fixed.
 Selecting compensating cavities
 ===============================
 
+Compensating cavities are selected according to the `strategy` keyword; actual functions mapping failures with failed cavities are listed here:
+
+.. configmap:: lightwin.failures.strategy.STRATEGIES_MAPPING
+   :value-header: Strategy function
+   :keys-header: Corresponding keyword
+
+Every strategy requires user to set specific parameters, as listed below.
+
 *k out of n* method
 -------------------
 
@@ -21,12 +29,47 @@ Compensate the :math:`n` failed cavities with :math:`k\times n` closest cavities
 *l neighboring lattices* method
 -------------------------------
 
-  Every fault will be compensated by `l` full lattices, direct neighbors of the errors :cite:`Bouly2014,Placais2022a`.
-  You must provide `l`.
-  Non-failed cavities in the same lattice as the failure are also used.
+Every fault will be compensated by `l` full lattices, direct neighbors of the errors :cite:`Bouly2014,Placais2022a`.
+You must provide `l`.
+Non-failed cavities in the same lattice as the failure are also used.
 
 .. csv-table::
    :file: configuration_entries/wtf_l_neighboring_lattices.csv
+   :header-rows: 1
+
+*Corrector at exit* method
+--------------------------
+
+Use ``n_compensating`` cavities around the failure to shape the beam and propagate it without losses.
+Rephase downstream cavities to keep the beam as intact as possible.
+Give an ultimate energy boost to the beam with the last ``n_correctors`` cavities.
+
+This method is very similar to the one used at SNS :cite:`Shishlo2022`.
+In this paper however, there are no compensating cavities around the failure.
+
+.. important::
+   This method was designed to to work with:
+
+      1. `reference_phase_policy = "phi_s"`.
+         This way, cavities downstream of a failure are rephased to preserve synchronous phase and hence acceptance.
+      2. `strategy = "corrector at exit"`.
+         This tells the :func:`.failed_and_compensating` called at initialization of :class:`.FaultScenario` to add ``n_correctors`` cavities at the end of the linac to retrieve energy.
+
+   **LightWin will not verify that these keys are properly set.**
+
+   .. todo::
+      Automatically check validity of ``reference_phase_policy`` and consistency of ``strategy``/``objective_preset``.
+
+.. warning::
+   Setting `n_compensating = 0` in the `[wtf]` section of the `TOML` configuration file will raise an error, as LightWin currently does not handle optimization problem without compensating elements.
+
+   .. todo::
+      Handle optimization problems without compensating cavities.
+      - Skip creation of associated :class:`.Fault`?
+      - Other solution?
+
+.. csv-table::
+   :file: configuration_entries/wtf_corrector_at_exit.csv
    :header-rows: 1
 
 Manual association of failed / compensating cavities
@@ -50,6 +93,13 @@ If you want to manually associate each failed cavity with its compensating cavit
       [0],          # Second simulation only first cavity is down
       [1, 45]       # Third simulation second and 46th cavity are down
    ]
+
+Global, global downstream compensation
+--------------------------------------
+
+Use either all cavities of the linac, or all cavities downstream of the failure.
+These methods require a very large number of compensating cavities and therefore significant numerical resources.
+As a result, they are only lightly tested.
 
 Settings optimization problem
 =============================

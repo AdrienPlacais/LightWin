@@ -27,10 +27,6 @@ class DesignSpace:
     variables: list[Variable]
     constraints: list[Constraint]
 
-    def __post_init__(self) -> None:
-        """Print out some info."""
-        logging.info(str(self))
-
     @classmethod
     def from_files(
         cls,
@@ -48,14 +44,13 @@ class DesignSpace:
         elements_names :
             Name of the elements with variables and constraints.
         filepath_variables :
-            Path to the ``variables.csv`` file.
+            Path to the :file:`variables.csv` file.
         variables_names :
             Name of the variables to create.
         filepath_constraints :
-            Path to the ``constraints.csv`` file. The default is None, in which
+            Path to the :file:`constraints.csv` file.
         constraints_names :
-            Name of the constraints to create. The default is None, in which
-            case no constraint is created.
+            Name of the constraints to create.
         delimiter :
             Delimiter in the files.
 
@@ -99,27 +94,25 @@ class DesignSpace:
 
     def __str__(self) -> str:
         """Give nice output of the variables and constraints."""
-        return "\n".join(self._str_variables() + self._str_constraints())
+        return "\n\n".join((self._str_variables(), self._str_constraints()))
 
-    def _str_variables(self) -> list[str]:
+    def _str_variables(self) -> str:
         """Generate information on the variables that were created."""
         info = [str(variable) for variable in self.variables]
-        info.insert(0, "Created variables:")
-        info.insert(1, "=" * 100)
-        info.insert(2, Variable.header_of__str__())
-        info.insert(3, "-" * 100)
+        info.insert(0, "=" * 100)
+        info.insert(1, Variable.str_header())
+        info.insert(2, "-" * 100)
         info.append("=" * 100)
-        return info
+        return "\n".join(info)
 
-    def _str_constraints(self) -> list[str]:
+    def _str_constraints(self) -> str:
         """Generate information on the constraints that were created."""
         info = [str(constraint) for constraint in self.constraints]
-        info.insert(0, "Created constraints:\n")
-        info.insert(1, "=" * 100)
-        info.insert(2, Constraint.header_of__str__())
-        info.insert(3, "-" * 100)
+        info.insert(0, "=" * 100)
+        info.insert(1, Constraint.str_header())
+        info.insert(2, "-" * 100)
         info.append("=" * 100)
-        return info
+        return "\n".join(info)
 
     def to_pandas_dataframe(self) -> pd.DataFrame:
         """Convert list of variables to a pandas dataframe."""
@@ -168,8 +161,8 @@ class DesignSpace:
             parameter = getattr(self, parameter_name)
             if len(parameter) == 0:
                 logging.info(
-                    f"{parameter_name} not defined for this "
-                    "DesignSpace. Skipping... "
+                    f"{parameter_name} not defined for this DesignSpace. "
+                    "Skipping... "
                 )
                 continue
 
@@ -192,8 +185,8 @@ class DesignSpace:
         filepath :
             Where file will be stored.
         delimiter :
-            Delimiter between two columns. The default is ','.
-        to_csv_kw: dict[str, Any]
+            Delimiter between two columns. The default is ``','``.
+        to_csv_kw :
             Keyword arguments given to the pandas ``to_csv`` method.
 
         """

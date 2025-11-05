@@ -104,11 +104,11 @@ class MyObjectiveFactory(ObjectiveFactory):
 
         """
         objectives_beta = [
-            self._get_beta(elt) for elt in self.objective_elements
+            self._get_beta(elt) for elt in self._objective_elements
         ]
         objectives_energy = [
             self._keep_w_kin_reasonable(elt)
-            for elt in self.objective_elements
+            for elt in self._objective_elements
             if elt.name in ("FM14", "FM20")
         ]
 
@@ -131,14 +131,14 @@ class MyObjectiveFactory(ObjectiveFactory):
         """
         # We want the zone to recompute to span from the first compensating
         # element, to FM20, where we will match the last objective
-        idx_start = self.compensating_elements[0].idx["elt_idx"]
-        idx_end = self.broken_elts.take("FM20", id_nature="name").idx[
+        idx_start = self._compensating_elements[0].idx["elt_idx"]
+        idx_end = self._broken_elts.take("FM20", id_nature="name").idx[
             "elt_idx"
         ]
-        elts_of_compensation_zone = self.broken_elts[idx_start : idx_end + 1]
+        elts_of_compensation_zone = self._broken_elts[idx_start : idx_end + 1]
 
         # We just take the second cavtity of the cryos after failed cav
-        objective_elements = self.broken_elts.take(
+        objective_elements = self._broken_elts.take(
             ["FM14", "FM16", "FM18", "FM20"], id_nature="name"
         )
 
@@ -153,7 +153,7 @@ class MyObjectiveFactory(ObjectiveFactory):
             weight=1.0,
             get_key="beta_zdelta",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
-            reference=self.reference_simulation_output,
+            reference=self._reference_simulation_output,
             descriptor="""Minimize diff. of envelope between ref and fix at the
             exit of provided element.
             """,
@@ -168,7 +168,7 @@ class MyObjectiveFactory(ObjectiveFactory):
         get_kwargs = {"elt": elt, "pos": "out", "to_numpy": False}
 
         # First, we get the nominal energy at ``elt``
-        ref = self.reference_simulation_output.get(get_key, **get_kwargs)
+        ref = self._reference_simulation_output.get(get_key, **get_kwargs)
 
         # Now we create the objective
         objective = QuantityIsBetween(
@@ -191,7 +191,7 @@ class EnergyPhaseMismatchMoreElements(EnergyPhaseMismatch):
         super().__init__(*args, **kwargs)
         last_element_to_compute = "FM18"
         self.elts_of_compensation_zone = []
-        for elt in self.broken_elts:
+        for elt in self._broken_elts:
             self.elts_of_compensation_zone.append(elt)
             if elt.name == last_element_to_compute:
                 return

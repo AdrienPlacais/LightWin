@@ -134,7 +134,7 @@ class DesignSpaceParameter(ABC):
         return out
 
     @classmethod
-    def header_of__str__(cls) -> str:
+    def str_header(cls) -> str:
         """Give information on what :func:`__str__` is about."""
         header = f"{cls.__name__:<25} | {'Element':<15} | {'x_0':<8} | "
         header += f"{'Lower lim':<9} | {'Upper lim':<9}"

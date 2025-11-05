@@ -291,12 +291,10 @@ class SimulationOutput:
 
         return out[0] if len(out) == 1 else tuple(out)
 
-    def compute_complementary_data(
-        self,
-        elts: ListOfElements,
-        ref_simulation_output: Self | None = None,
+    def compute_indirect_quantities(
+        self, elts: ListOfElements, ref_simulation_output: Self | None = None
     ) -> None:
-        """Compute some other indirect quantities.
+        """Compute indirect quantities, such as mismatch factor.
 
         .. todo::
             Fix output_data_in_tw_fashion
@@ -304,16 +302,16 @@ class SimulationOutput:
         Parameters
         ----------
         elts :
-            Must be a full :class:`.ListOfElements`, containing all the
-            elements of the linac.
+            A full :class:`.ListOfElements`, containing all the elements of the
+            linac.
         ref_simulation_output :
-            For calculation of mismatch factors. The default is None, in which
-            case the calculation is simply skipped.
+            Reference simulation output; providing it allows calculation of
+            mismatch factor.
 
         """
         if self.z_abs is None:
             self.z_abs = elts.get("abs_mesh", remove_first=True)
-        self.synch_trajectory.compute_complementary_data()
+        self.synch_trajectory.compute_reduced_velocity()
 
         # self.in_tw_fashion = tracewin.interface.output_data_in_tw_fashion()
         if ref_simulation_output is None:
@@ -332,10 +330,10 @@ class SimulationOutput:
         #     phase_space_names = ('zdelta', 'x', 'y', 't',
         #                          'x99', 'y99', 'phiw99')
 
-        beam_parameters = self.beam_parameters
-        reference_beam_parameters = ref_simulation_output.beam_parameters
-        beam_parameters.set_mismatches(
-            reference_beam_parameters, *phase_space_names, **mismatch_kw
+        self.beam_parameters.set_mismatches(
+            ref_simulation_output.beam_parameters,
+            *phase_space_names,
+            **mismatch_kw,
         )
 
     def pickle(

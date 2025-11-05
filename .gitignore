@@ -193,3 +193,4 @@ tests/data/example_new.ini
 tests/data/optimization_history/
 tests/data/results/
 tests/data/results_tests/
+**/tmp/*

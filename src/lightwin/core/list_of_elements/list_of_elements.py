@@ -14,11 +14,12 @@ Two objects can have a :class:`ListOfElements` as attribute:
 """
 
 import logging
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, Literal, Self, TypedDict, overload
 
 import numpy as np
+import pandas as pd
 
 from lightwin.core.beam_parameters.initial_beam_parameters import (
     InitialBeamParameters,
@@ -117,10 +118,6 @@ class ListOfElements(list):
 
         self._l_cav: list[FieldMap] = list(
             filter(lambda cav: isinstance(cav, FieldMap), self)
-        )
-        logging.info(
-            "Successfully created a ListOfElements with "
-            f"{self.w_kin_in = } MeV and {self.phi_abs_in = } rad."
         )
 
     @property
@@ -275,15 +272,14 @@ class ListOfElements(list):
         exported_phase: EXPORT_PHASES_T,
         save: bool = True,
     ) -> None:
-        r"""Update the DAT file, save it if asked.
+        r"""Update the ``DAT`` file, save it if asked.
 
-        This method is called by the :meth:`.FaultScenario.fix_all` method
-        several times:
+        This method is called several times:
 
         * Once per :class:`.Fault` (only the compensation zone is saved).
         * When all the :class:`.Fault` were dealt with.
 
-        It is also called by :meth:`.Accelerator.keep_settings` method.
+        It is also called by :meth:`.Accelerator.keep` method.
 
         Parameters
         ----------
@@ -436,3 +432,27 @@ class ListOfElements(list):
 
         """
         return self.files
+
+
+def sumup_cavities(
+    elts: ListOfElements, filter: Callable[[FieldMap], bool] | None = None
+) -> pd.DataFrame:
+    """Extract main cavities information."""
+    columns = (
+        "name",
+        "status",
+        "k_e",
+        "phi_0_abs",
+        "phi_0_rel",
+        "v_cav_mv",
+        "phi_s",
+    )
+    df = pd.DataFrame(
+        [
+            cav.get(*columns, to_deg=True, to_numpy=False, none_to_nan=True)
+            for cav in elts.l_cav
+            if (not filter or filter(cav))
+        ],
+        columns=columns,
+    )
+    return df

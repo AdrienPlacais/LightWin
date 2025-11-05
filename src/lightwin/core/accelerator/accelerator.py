@@ -72,7 +72,7 @@ class Accelerator:
         self.name = name
         #: Every :class:`.SimulationOutput` instance, associated with the name
         #: of the :class:`.BeamCalculator` that created it. This dictionary is
-        #: filled by :meth:`keep_simulation_output`.
+        #: filled by :meth:`keep`.
         self.simulation_outputs: dict[str, SimulationOutput] = {}
         self.data_in_tw_fashion: pd.DataFrame
         self.accelerator_path = accelerator_path
@@ -87,6 +87,11 @@ class Accelerator:
         self.elts: ListOfElements
         self.elts = list_of_elements_factory.whole_list_run(
             dat_file, accelerator_path, **kwargs
+        )
+        logging.info(
+            "Created a ListOfElements ecompassing all linac. Created with:\n"
+            f"{dat_file = }\nw_kin_in = {self.elts.w_kin_in:.2f} MeV\n"
+            f"phi_abs_in = {self.elts.phi_abs_in:.2f} rad"
         )
 
         self._special_getters = self._create_special_getters()
@@ -223,12 +228,21 @@ class Accelerator:
         }
         return _special_getters
 
-    def keep_settings(
+    def keep(
         self,
         simulation_output: SimulationOutput,
         exported_phase: EXPORT_PHASES_T,
+        beam_calculator_id: str,
     ) -> None:
-        """Save cavity parameters in Elements and new .dat file."""
+        """Save simulation and settings.
+
+        In particular:
+           - Store the cavity settings in the appropriate :class:`.FieldMap`.
+           - Save the settings in a ``DAT`` file.
+           - Store the :class:`.SimulationOutput` in the
+             :attr:`.simulation_outputs` dictionary.
+
+        """
         set_of_cavity_settings = simulation_output.set_of_cavity_settings
         for cavity, settings in set_of_cavity_settings.items():
             cavity.cavity_settings = settings
@@ -244,17 +258,6 @@ class Accelerator:
             dat_file, exported_phase=exported_phase, save=True
         )
 
-    def keep_simulation_output(
-        self, simulation_output: SimulationOutput, beam_calculator_id: str
-    ) -> None:
-        """Save :class:`.SimulationOutput` in :attr:`simulation_outputs`.
-
-        Also store info on current :class:`.Accelerator` in this object. In
-        particular, we want to save a results path in the
-        :class:`.SimulationOutput` so we can study it and save Figures/study
-        results in the proper folder.
-
-        """
         simulation_output.out_path = (
             self.accelerator_path / simulation_output.out_folder
         )

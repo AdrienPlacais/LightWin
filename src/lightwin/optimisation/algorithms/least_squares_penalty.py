@@ -43,7 +43,7 @@ class LeastSquaresPenalty(LeastSquares):
         """Give residuals with a penalty."""
         cav_settings = self._create_set_of_cavity_settings(var)
         simulation_output = self.compute_beam_propagation(cav_settings)
-        residuals = self.compute_residuals(simulation_output)
+        residuals = self._compute_residuals(simulation_output)
         constraints_evaluations = self.compute_constraints(simulation_output)
         penalty = self._penalty(constraints_evaluations)
         return float(np.linalg.norm(residuals)) * penalty

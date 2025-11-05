@@ -21,7 +21,7 @@ import logging
 import math
 from collections.abc import Callable
 from functools import partial
-from typing import Any, Self
+from typing import Any, NamedTuple, Self
 
 import numpy as np
 from scipy.optimize import minimize_scalar
@@ -50,6 +50,15 @@ from lightwin.util.typing import (
 TRANSF_MAT_FUNC_WRAPPER_T = Callable[
     [float, float, "CavitySettings", dict[str, Any]], dict[str, Any]
 ]
+
+
+class CavityVars(NamedTuple):
+    """Regroup main cavity settings variables."""
+
+    k_e: float
+    phi: float
+    status: STATUS_T
+    reference: REFERENCE_PHASES_T
 
 
 class MissingAttributeError(RuntimeError):
@@ -124,6 +133,7 @@ class CavitySettings:
             interpolated field maps.
 
         """
+        self._w_kin: float
         self.k_e = k_e
         self._reference: REFERENCE_PHASES_T
         self.set_reference(
@@ -172,8 +182,15 @@ class CavitySettings:
         #: The function to use with current solver to compute synchronous phase
         #: and accelerating field
         self._phi_s_func: PHI_S_FUNC_T
-        self.w_kin: float
         self._transf_mat_kwargs: dict[str, Any]
+
+    @property
+    def w_kin(self) -> float:
+        return self._w_kin
+
+    @w_kin.setter
+    def w_kin(self, value: float) -> None:
+        self._w_kin = value
 
     def __str__(self) -> str:
         """Print out the different phases/k_e, and which one is the reference.
@@ -205,53 +222,17 @@ class CavitySettings:
         return check
 
     @classmethod
-    def from_other_cavity_settings(
-        cls,
-        other: Self,
-        reference: REFERENCE_PHASES_T | None = None,
-    ) -> Self:
-        """Create settings with same settings as provided."""
-        if reference is None:
-            reference = other.reference
-        assert reference is not None
-        settings = cls(
-            k_e=other.k_e,
-            phi=getattr(other, reference),
-            reference=reference,
-            status=other.status,
-            freq_bunch_mhz=other._freq_bunch_mhz,
-            freq_cavity_mhz=other.freq_cavity_mhz,
-            transf_mat_func_wrappers=other._transf_mat_func_wrappers,
-            phi_s_funcs=other._phi_s_funcs,
-            rf_field=other.rf_field,
-            field=other.field,
-        )
-        return settings
-
-    @classmethod
-    def from_optimisation_algorithm(
-        cls,
-        base: Self,
-        k_e: float,
-        phi: float,
-        status: STATUS_T,
-        reference: REFERENCE_PHASES_T | None = None,
-    ) -> Self:
-        """Create settings based on ``base`` with different ``k_e``, ``phi_0``.
+    def copy(cls, base: Self, cavity_vars: CavityVars | None = None) -> Self:
+        """Create cavity settings, based on ``base``.
 
         Parameters
         ----------
         base :
-            The reference :class:`CavitySettings`. A priori, this is the
+            The reference :class:`CavitySettings`. *A priori*, this is the
             nominal settings.
-        k_e :
-            New field amplitude.
-        phi :
-            New reference phase. Its nature is defined by ``reference``.
-        status :
-            Status of the created settings.
-        reference :
-            The phase used as a reference.
+        cavity_vars :
+            Amplitude, phase, status and reference to override the ones in
+            ``base``. Provided during optimization process.
 
         Returns
         -------
@@ -259,9 +240,14 @@ class CavitySettings:
             A new :class:`CavitySettings` with modified amplitude and phase.
 
         """
-        if reference is None:
+        if cavity_vars is not None:
+            k_e, phi, status, reference = cavity_vars
+        else:
             reference = base.reference
-        assert reference is not None
+            k_e = base.k_e
+            phi = getattr(base, reference)
+            status = base.status
+
         settings = cls(
             k_e=k_e,
             phi=phi,
@@ -274,6 +260,7 @@ class CavitySettings:
             rf_field=base.rf_field,
             field=base.field,
         )
+
         return settings
 
     def _attr_to_str(self, attr_name: str, to_deg: bool = True) -> str:
