@@ -72,7 +72,7 @@ class Accelerator:
         self.name = name
         #: Every :class:`.SimulationOutput` instance, associated with the name
         #: of the :class:`.BeamCalculator` that created it. This dictionary is
-        #: filled by :meth:`keep_simulation_output`.
+        #: filled by :meth:`keep`.
         self.simulation_outputs: dict[str, SimulationOutput] = {}
         self.data_in_tw_fashion: pd.DataFrame
         self.accelerator_path = accelerator_path

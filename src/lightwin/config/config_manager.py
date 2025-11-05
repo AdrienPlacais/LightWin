@@ -1,10 +1,4 @@
-"""Load, validate and post-process the configuration.
-
-.. todo::
-    Method to generate the .csv files of documentation from the tables, i.e.
-    docs/manual/configuration_entries
-
-"""
+"""Load, validate and post-process the configuration."""
 
 import logging
 import shutil
@@ -49,10 +43,9 @@ def process_config(
     warn_mismatch :
         Raise a warning if a key in a ``override`` sub-dict is not found.
     override :
-        To override entries in the ``TOML``. If not provided, we keep defaults.
+        To override entries in the ``TOML``.
     conf_specs_t :
-        The specifications that the ``TOML`` must match to be accepted. If not
-        provided, we take a default.
+        The specifications that the ``TOML`` must match to be accepted.
 
     Returns
     -------

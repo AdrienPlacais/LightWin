@@ -134,14 +134,22 @@ WTF_CORRECTOR_AT_EXIT = _WTF_BASE_AUTOMATIC + (
     KeyValConfSpec(
         key="n_compensating",
         types=(int,),
-        description=("Number of compensating cavities around every failure."),
-        default_value=0,
+        description=(
+            "Number of compensating cavities around every failure. They are "
+            "used to shape the beam without retrieving nominal energy, so that"
+            " it can propagate up to the ``correctors`` without losses. "
+            "Currently, you must set at least 1 compensating cavity to avoid "
+            "errors."
+        ),
+        default_value=1,
     ),
     KeyValConfSpec(
         key="n_correctors",
         types=(int,),
         description=(
-            "Number of compensating cavities at the exit of the linac."
+            "Number of compensating cavities at the exit of the linac. They "
+            "are used to retrieve nominal energy. Not affected by the "
+            "``shift`` keyword."
         ),
         default_value=2,
     ),

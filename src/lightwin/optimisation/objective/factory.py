@@ -538,30 +538,79 @@ class Spiral2(ObjectiveFactory):
 
 
 class CorrectorAtExit(ObjectiveFactory):
-    """Get close to energy after failure, give final boost at linac exit.
+    """Propagate beam up to final cavities, where an energy boost is given.
+    The idea behind this strategy is the following:
 
-    Designed to work with:
-    - ``reference_phase_policy = "phi_s"`` to preserve acceptance after
-      failure(s)
-    - ``strategy = "corrector at exit"`` to have additional corrector cavities
-      at the exit of the linac
+    - Use ``n_compensating`` cavities around the failure to shape the beam and
+      propagate it without losses.
+    - Rephase downstream cavities to keep the beam as intact as possible.
+    - Give an ultimate energy boost to the beam with the last ``n_correctors``
+      cavities.
+
+    This method is very similar to the one used at SNS :cite:`Shishlo2022`.
+    In this paper however, there are no compensating cavities around the
+    failure.
+
+    .. important::
+        This method was designed to to work with:
+
+        1. ``reference_phase_policy = "phi_s"``. This way, cavities downstream
+           of a failure are rephased to preserve synchronous phase and hence
+           acceptance.
+        2. ``strategy = "corrector at exit"``. This tells the
+           :func:`.failed_and_compensating` called at initialization of
+           :class:`.FaultScenario` to add ``n_correctors`` cavities at the end
+           of the linac to retrieve energy.
+
+        **LightWin will not verify that these keys are properly set.**
+
+        .. todo::
+           Automatically check validity of ``reference_phase_policy`` and
+           consistency of ``strategy``/``objective_preset``.
+
+    .. warning::
+        Setting ``n_compensating = 0`` in the ``[wtf]`` section of the ``TOML``
+        configuration file will raise an error, as LightWin currently does not
+        handle optimization problem without compensating elements.
+
+        .. todo::
+           Handle optimization problems without compensating cavities.
+
+           - Skip creation of associated :class:`.Fault`?
+           - Other solution?
+
+    See Also
+    --------
+    :func:`.strategy.corrector_at_exit`
 
     """
 
     objective_position_preset = ["end of last altered lattice"]
 
     def get_objectives(self) -> list[Objective]:
-        """Give objects to match kinetic energy, phase and mismatch factor."""
-        if len(self._failed_elements) == 0:
-            last_element = self._compensating_elements[-1]
-            objectives = [self._retrieve_energy(last_element)]
-        else:
-            last_element = self._objective_elements[-1]
-            objectives = [
-                self._preaccelerate(elt=last_element),
-                self._preshape(elt=last_element),
+        """Give adapted objectives.
+
+        We start by looking at the :attr:`.CorrectorAtExit._failed_elements`
+        list:
+
+        - If it has elements, we are around a failure and we will try to keep
+          a kinetic energy not too far from the nominal energy. More
+          importantly, we try to minimize the mismatch factor at the exit of
+          the compensation zone.
+        - If it is empty, it means that there is no nearby failed cavity. We
+          are at the exit of the linac and will try to retrieve nominal energy
+          at the end of the linac.
+
+        """
+        if len(self._failed_elements) > 0:
+            last_element_of_zone = self._objective_elements[-1]
+            return [
+                self._preaccelerate(elt=last_element_of_zone),
+                self._preshape(elt=last_element_of_zone),
             ]
-        return objectives
+
+        last_element_of_linac = self._compensating_elements[-1]
+        return [self._retrieve_energy(last_element_of_linac)]
 
     def _preaccelerate(self, elt: Element) -> Objective:
         """Get reasonable energy at exit of compensation zone."""
@@ -580,7 +629,7 @@ class CorrectorAtExit(ObjectiveFactory):
         return objective
 
     def _preshape(self, elt: Element) -> Objective:
-        """Match mismatch factor at exit of compensation zone."""
+        """Minimize mismatch factor at exit of compensation zone."""
         objective = MinimizeMismatch(
             name=r"$M_{z\delta}$",
             weight=1.0,
@@ -599,13 +648,13 @@ class CorrectorAtExit(ObjectiveFactory):
 
     def _retrieve_energy(self, elt: Element) -> Objective:
         """Retrieve energy at the end of the linac."""
-        objective = RetrieveArbitrary(
+        objective = MinimizeDifferenceWithRef(
             name=markdown["w_kin"],
             weight=1.0,
             get_key="w_kin",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
-            ideal_value=502.24,
-            descriptor="""Maximize energy at exit of linac.""",
+            reference=self._reference_simulation_output,
+            descriptor="Retrieve nominal energy at the exit of the linac.",
         )
         return objective
 
@@ -613,6 +662,7 @@ class CorrectorAtExit(ObjectiveFactory):
 #: Maps the ``objective_preset`` key in ``TOML`` ``wtf`` subsection with actual
 #: objects in LightWin
 OBJECTIVE_PRESETS = {
+    "CorrectorAtExit": CorrectorAtExit,
     "EnergyMismatch": EnergyMismatch,
     "EnergyPhaseMismatch": EnergyPhaseMismatch,
     "EnergySeveralMismatches": EnergySeveralMismatches,
@@ -630,6 +680,7 @@ OBJECTIVE_PRESETS_T = Literal[
     "experimental",
     "rephased_ADS",
     "simple_ADS",
+    "CorrectorAtExit",
 ]
 
 

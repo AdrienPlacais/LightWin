@@ -341,21 +341,25 @@ def corrector_at_exit(
 ) -> list[cavities_id]:
     r"""Return ``k out of n`` cavities, plus additional cavities at exit.
 
-    The idea between this strategy is the following:
+    The idea behind this strategy is the following:
+
     - Use ``n_compensating`` cavities around the failure to shape the beam and
-      accelerate it as much as possible.
+      propagate it without losses.
     - Rephase downstream cavities to keep the beam as intact as possible.
+
       - ``reference_phase_policy = "phi_s"`` is the best choice to preserve
         longitudinal acceptance along the linac.
     - Give an ultimate energy boost to the beam with the last ``n_correctors``
       cavities.
+
       - The :class:`.ObjectiveFactory` must set different objectives at the
         linac exit than at the compensation zone(s) exit.
 
     This method is inspired by Shishlo and Peters who tested it on SNS
     superconducting linac :cite:`Shishlo2022`; they used
-    ``n_compensating = 0``. It also showed very promising results on the
-    SPIRAL2 superconducting linac :cite:`Placais2024b`.
+    ``n_compensating = 0``, which is currently not supported by LightWin. It
+    also showed very promising results on the SPIRAL2 superconducting linac
+    :cite:`Placais2024b`.
 
     Parameters
     ----------
@@ -388,6 +392,10 @@ def corrector_at_exit(
         Contains all the altered elements. The :math:`n` first are failed, the
         :math:`n_\mathrm{compensating} \times n` following are compensating,
         the last :math:`n_\mathrm{correctors}` are correctors.
+
+    See Also
+    --------
+    :class:`.CorrectorAtExit`
 
     """
     altered = k_out_of_n(

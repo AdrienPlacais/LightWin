@@ -393,7 +393,7 @@ class SimulationOutputEvaluator(ABC):
                 "The attribute `out_path` from `SimulationOutput` is"
                 " not defined, hence I cannot save the Figure. Did "
                 "you call the method "
-                "`Accelerator.keep_simulation_output`?"
+                "`Accelerator.keep`?"
             )
             return
 

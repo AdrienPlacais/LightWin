@@ -14,7 +14,7 @@ index/cavity index/name,
 `element` or `cavity` or `name`.",✅,"('element', 'cavity', 'name')"
 `objective_preset`,`str`,"Objectives for the
 
-optimisation algorithm.",✅,"('EnergyMismatch', 'EnergyPhaseMismatch', 'EnergySeveralMismatches', 'EnergySyncPhaseMismatch', 'experimental', 'rephased_ADS', 'simple_ADS', 'sync_phase_as_objective_ADS')"
+optimisation algorithm.",✅,"('CorrectorAtExit', 'EnergyMismatch', 'EnergyPhaseMismatch', 'EnergySeveralMismatches', 'EnergySyncPhaseMismatch', 'experimental', 'rephased_ADS', 'simple_ADS', 'sync_phase_as_objective_ADS')"
 "`optimisation_`
 
 `algorithm`",`str`,"Name of optimisation
@@ -27,7 +27,7 @@ algorithm.",✅,"('bayesian_optimization', 'differential_evolution', 'downhill_s
 the optimisation algorithm.",❌,
 `strategy`,`str`,"How compensating cavities are
 
-selected.",✅,"('k out of n', 'l neighboring lattices', 'global', 'global_downstream', 'manual')"
+selected.",✅,"('corrector at exit', 'global', 'global_downstream', 'k out of n', 'l neighboring lattices', 'manual')"
 `tie_politics`,`str`,"How to select the compensating
 
 elements when several are
