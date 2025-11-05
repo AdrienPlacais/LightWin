@@ -20,10 +20,7 @@ from lightwin.beam_calculation.tracewin.tracewin import TraceWin
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
-from lightwin.core.list_of_elements.list_of_elements import (
-    ListOfElements,
-    sumup_cavities,
-)
+from lightwin.core.list_of_elements.list_of_elements import sumup_cavities
 from lightwin.evaluator.list_of_simulation_output_evaluators import (
     FaultScenarioSimulationOutputEvaluators,
 )
