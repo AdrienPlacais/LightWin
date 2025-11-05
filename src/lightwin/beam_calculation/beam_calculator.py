@@ -217,7 +217,7 @@ class BeamCalculator(ABC):
         full_elts: ListOfElements,
         **kwargs,
     ) -> SimulationOutput:
-        """Run a simulation a simulation after optimisation is over.
+        """Run a simulation a simulation after optimization is over.
 
         With :class:`.Envelope1D`, it just calls the classic
         :meth:`run_with_this`. But with :class:`.TraceWin`, we need to update
@@ -294,13 +294,14 @@ class BeamCalculator(ABC):
         self.init_solver_parameters(accelerator)
 
         simulation_output = self.run(accelerator.elts)
-        simulation_output.compute_complementary_data(
+        simulation_output.compute_indirect_quantities(
             accelerator.elts, ref_simulation_output
         )
         if keep_settings:
-            accelerator.keep_simulation_output(simulation_output, self.id)
-            accelerator.keep_settings(
-                simulation_output, exported_phase=self._export_phase
+            accelerator.keep(
+                simulation_output,
+                exported_phase=self._export_phase,
+                beam_calculator_id=self.id,
             )
 
         end_time = time.monotonic()

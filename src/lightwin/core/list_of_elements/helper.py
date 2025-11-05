@@ -8,7 +8,7 @@
 import logging
 from collections.abc import Callable, Iterable
 from functools import partial
-from typing import Any, Literal, Sequence, Type, TypeGuard, TypeVar
+from typing import Any, Literal, Sequence, Type, TypeGuard, TypeVar, overload
 
 import numpy as np
 
@@ -169,9 +169,20 @@ def equivalent_elt_idx(
     raise OSError(f"Element {elt} not found in this list of elements.")
 
 
+@overload
 def equivalent_elt(
-    elts: ListOfElements | list[Element], elt: Element | str
-) -> Element:
+    elts: ListOfElements | list[Element] | list[FieldMap], elt: FieldMap
+) -> FieldMap: ...
+@overload
+def equivalent_elt(
+    elts: ListOfElements | list[Element] | list[FieldMap], elt: Element | str
+) -> Element: ...
+
+
+def equivalent_elt(
+    elts: ListOfElements | list[Element] | list[FieldMap],
+    elt: Element | str | FieldMap,
+) -> Element | FieldMap:
     """Return the element from ``elts`` corresponding to ``elt``.
 
     .. important::

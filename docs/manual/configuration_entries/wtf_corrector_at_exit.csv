@@ -46,6 +46,33 @@ window of compensating
 cavities which is not centered
 
 around the failed elements.",❌,
-`k`,`int`,"Number of compensating
+`n_compensating`,`int`,"Number of compensating
 
-cavities per failed cavity.",✅,
+cavities around every failure.
+
+They are used to shape the
+
+beam without retrieving
+
+nominal energy, so that it can
+
+propagate up to the ``
+
+correctors `` without losses.
+
+Currently, you must set at
+
+least 1 compensating cavity to
+
+avoid errors.",✅,
+`n_correctors`,`int`,"Number of compensating
+
+cavities at the exit of the
+
+linac. They are used to
+
+retrieve nominal energy. Not
+
+affected by the `` shift ``
+
+keyword.",✅,

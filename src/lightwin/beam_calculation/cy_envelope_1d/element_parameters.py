@@ -123,7 +123,6 @@ class FieldMapCyEnvelope1DParameters(
 
         Returns
         -------
-        dict[str, Any]
             Keyword arguments that will be passed to the 1D transfer matrix
             function defined in :mod:`.cy_envelope_1d.transfer_matrices`.
 

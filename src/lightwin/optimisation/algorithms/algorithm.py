@@ -31,16 +31,18 @@ import numpy as np
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
-from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.cavity_settings import STATUS_T
+from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.cavity_settings_factory import (
     CavitySettingsFactory,
 )
-from lightwin.core.list_of_elements.list_of_elements import ListOfElements
-from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.optimisation.design_space.constraint import Constraint
-from lightwin.optimisation.design_space.variable import Variable
-from lightwin.optimisation.objective.objective import Objective
+from lightwin.failures.set_of_cavity_settings import (
+    FieldMap,
+    SetOfCavitySettings,
+)
+from lightwin.optimisation.design_space.design_space import DesignSpace
+from lightwin.optimisation.objective.factory import ObjectiveFactory
+from lightwin.optimisation.objective.objective import str_objectives
+from lightwin.util.typing import REFERENCE_PHASES
 
 
 class OptiSol(TypedDict):
@@ -51,6 +53,7 @@ class OptiSol(TypedDict):
     fun: np.ndarray | list[float]  # Value of objectives
     objectives: dict[str, float]  # Value of objectives, but more logical
     success: bool  # If optimization was successful
+    info: list[str]  # Complementary information
 
 
 ComputeBeamPropagationT = Callable[[SetOfCavitySettings], SimulationOutput]
@@ -59,75 +62,63 @@ ComputeConstraintsT = Callable[[SimulationOutput], np.ndarray]
 
 
 class OptimisationAlgorithm(ABC):
-    """Holds the optimization parameters, the methods to optimize.
-
-    Parameters
-    ----------
-    compensating_elements :
-        Cavity objects used to compensate for the faults.
-    elts :
-        Holds the whole compensation zone under study.
-    objectives :
-        Holds objectives, initial values, bounds.
-    variables :
-        Holds variables, their initial values, their limits.
-    constraints :
-        Holds constraints and their limits.
-    opti_sol :
-        Holds information on the solution that was found.
-    supports_constraints :
-        If the method handles constraints or not.
-    compute_beam_propagation: ComputeBeamPropagationT
-        Method to compute propagation of the beam with the given settings.
-        Defined by a :meth:`.BeamCalculator.run_with_this` method, the
-        positional argument ``elts`` being set by a ``functools.partial``.
-    compute_residuals :
-        Method to compute residuals from a :class:`.SimulationOutput`.
-    compute_constraints :
-        Method to compute constraint violation.
-    cavity_settings_factory :
-        A factory to easily create the cavity settings to try at each iteration
-        of the optimisation algorithm.
-    history_kwargs :
-        kwargs for the :class:`.OptimizationHistory` creation.
-    reference_simulation_output :
-        Used for the :class:`.OptimizationHistory`.
-
-    """
+    """Holds the optimization parameters, the methods to optimize."""
 
     supports_constraints: bool
 
     def __init__(
         self,
         *,
-        compensating_elements: Collection[Element],
-        elts: ListOfElements,
-        objectives: Collection[Objective],
-        variables: Collection[Variable],
+        compensating_elements: Collection[FieldMap],
+        objective_factory: ObjectiveFactory,
+        design_space: DesignSpace,
         compute_beam_propagation: ComputeBeamPropagationT,
-        compute_residuals: ComputeResidualsT,
         cavity_settings_factory: CavitySettingsFactory,
         reference_simulation_output: SimulationOutput,
-        constraints: Collection[Constraint] | None = None,
-        compute_constraints: ComputeConstraintsT | None = None,
         optimisation_algorithm_kwargs: dict[str, Any] | None = None,
         history_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ) -> None:
-        """Instantiate the object."""
-        assert all([elt.can_be_retuned for elt in compensating_elements])
+        """Instantiate the object.
+
+        Parameters
+        ----------
+        compensating_elements :
+            Tunable elements performing compensation.
+        objective_factory :
+            Objects holding :class:`.Objective` creation logic.
+        design_space :
+            Holds :class:`.Variable`, :class:`.Constraint`.
+        compute_beam_propagation :
+            Takes in a :class:`.SetOfCavitySettings`, propages the beam in a
+            version of ``elts`` that uses them, and produce a
+            :class:`.SimulationOutput`.
+        cavity_settings_factory :
+            An object that can create :class:`.SetOfCavitySettings` easily.
+        reference_simulation_output :
+            The reference simulation output on the reference accelerator.
+        optimisation_algorithm_kwargs :
+            Additional kwargs for algorithm, set by user in the configuration
+            ``TOML``.
+        history_kwargs :
+            If given, records in a file the different evaluations of residuals
+            during optimization.
+
+        """
         self.compensating_elements = compensating_elements
-        self.elts = elts
 
-        self.objectives = objectives
-        self.variables = variables
-        self.compute_beam_propagation = compute_beam_propagation
-        self.compute_residuals = compute_residuals
-        self.constraints = constraints
+        self._objective_factory = objective_factory
+        self.objectives = self._objective_factory.objectives
+        self._compute_residuals = self._objective_factory.compute_residuals
 
+        self._design_space: DesignSpace = design_space
         if self.supports_constraints:
-            assert compute_constraints is not None
-        self.compute_constraints = compute_constraints
+            assert self._design_space.compute_constraints is not None
+        self._variables = self._design_space.variables
+        self._constraints = self._design_space.constraints
+
+        self.compute_beam_propagation = compute_beam_propagation
+
         self.cavity_settings_factory = cavity_settings_factory
 
         self.opti_sol: OptiSol
@@ -139,19 +130,28 @@ class OptimisationAlgorithm(ABC):
 
         self.history = OptimizationHistory(
             reference_simulation_output,
-            [obj.base_str().strip() for obj in objectives],
+            [obj.position_nature().strip() for obj in self.objectives],
             **(history_kwargs or {}),
+        )
+
+    def __str__(self) -> str:
+        """Concatenate ``_str__`` of variables, constraints, objectives."""
+        return "\n\n".join(
+            (
+                str(self._design_space),
+                str_objectives(list(self.objectives)),
+            )
         )
 
     @property
     def variable_names(self) -> list[str]:
         """Give name of all variables."""
-        return [variable.name for variable in self.variables]
+        return [variable.name for variable in self._variables]
 
     @property
     def n_var(self) -> int:
         """Give number of variables."""
-        return len(self.variables)
+        return len(self._variables)
 
     @property
     def n_obj(self) -> int:
@@ -161,10 +161,10 @@ class OptimisationAlgorithm(ABC):
     @property
     def n_constr(self) -> int:
         """Return number of (inequality) constraints."""
-        if self.constraints is None:
+        if self._constraints is None:
             return 0
         return sum(
-            [constraint.n_constraints for constraint in self.constraints]
+            [constraint.n_constraints for constraint in self._constraints]
         )
 
     @property
@@ -202,33 +202,40 @@ class OptimisationAlgorithm(ABC):
         self.history.add_settings(var)
         cav_settings = self._create_set_of_cavity_settings(var)
         simulation_output = self.compute_beam_propagation(cav_settings)
-        residuals = self.compute_residuals(simulation_output)
+        residuals = self._compute_residuals(simulation_output)
         self.history.add_objective_values(list(residuals), simulation_output)
         self.history.checkpoint()
         return residuals
 
     def _norm_wrapper_residuals(self, var: np.ndarray) -> float:
         """Compute norm of residuals vector from array of variable values."""
-        return float(np.linalg.norm(self._wrapper_residuals(var)))
+        res = float(np.linalg.norm(self._wrapper_residuals(var)))
+        return res
 
-    def _finalize(self, opti_sol: OptiSol, *complementary_info: str) -> None:
-        """End the optimization process."""
+    def _finalize(self, opti_sol: OptiSol) -> None:
+        """End the optimization process.
+
+        In particular:
+           - Save the optimization history if applicable.
+           - Store final residual values in the appropriate :class:`.Objective`
+             instances.
+
+        """
+        for objective, residual in zip(
+            self.objectives, opti_sol["objectives"].values(), strict=True
+        ):
+            objective.residual = residual
         self.history.save()
-        self._output_some_info(opti_sol, *complementary_info)
 
     def _create_set_of_cavity_settings(
-        self,
-        var: np.ndarray,
-        status: STATUS_T = "compensate (in progress)",
+        self, var: np.ndarray
     ) -> SetOfCavitySettings:
         """Transform ``var`` into generic :class:`.SetOfCavitySettings`.
 
         Parameters
         ----------
-        var
+        var :
             An array holding the variables to try.
-        status :
-            mmmh
 
         Returns
         -------
@@ -237,6 +244,11 @@ class OptimisationAlgorithm(ABC):
 
         """
         reference = [x for x in self.variable_names if "phi" in x][0]
+        assert reference in REFERENCE_PHASES, (
+            f"{reference = } is not allowed as a reference phase. Allowed "
+            f"values are: {REFERENCE_PHASES = }."
+        )
+        original_settings: list[CavitySettings]
         original_settings = [
             cavity.cavity_settings for cavity in self.compensating_elements
         ]
@@ -246,7 +258,7 @@ class OptimisationAlgorithm(ABC):
                 base_settings=original_settings,
                 var=var,
                 reference=reference,
-                status=status,
+                status="compensate (in progress)",
             )
         )
         return SetOfCavitySettings.from_cavity_settings(
@@ -261,30 +273,6 @@ class OptimisationAlgorithm(ABC):
             for objective, value in zip(self.objectives, values, strict=True)
         }
         return objectives_values
-
-    def _output_some_info(
-        self, opti_sol: OptiSol, *complementary_info: str
-    ) -> None:
-        """Show the most useful data from optimization."""
-        objectives_values = opti_sol["objectives"]
-
-        width_objective = len(Objective.str_header())
-        header = (
-            f"{'#':>3} | "
-            + Objective.str_header()
-            + f" | {'final val.': ^21}\n"
-        )
-        info_string = "Objective functions results:\n" + header
-        for i, (str_objective, value) in enumerate(objectives_values.items()):
-            info_string += f"{i:>3} | {str_objective} | {value:+.14e}\n"
-
-        info_string += f"Norm: {opti_sol["fun"]}"
-
-        logging.info(info_string)
-
-        for m in complementary_info:
-            info_string += m + "\n"
-        logging.debug(info_string)
 
 
 class OptimizationHistory:

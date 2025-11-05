@@ -38,7 +38,7 @@ class KeyValConfSpec:
         A set of allowed values, or range of allowed values. The default is
         None, in which case no checking is performed.
     is_mandatory :
-        If the property must be given. The default is True.
+        If the property must be given.
     is_a_path_that_must_exists :
         If the property is a string/path and its existence must be checked
         before running the code.
@@ -47,10 +47,9 @@ class KeyValConfSpec:
         testing over type and allowed values.
     warning_message :
         If provided, using current key will print a warning with this message.
-        The default is None.
     error_message :
         If provided, using current key will raise an IOError with this error
-        message. The default is None.
+        message.
     overrides_previously_defined :
         If the current object should remove a previously defined
         :class:`KeyValConfSpec` with the same name.

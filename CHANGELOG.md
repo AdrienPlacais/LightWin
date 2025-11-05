@@ -5,7 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-# [0.12.x]
+## [0.13.0]
+
+### Added
+
+- SNS-like compensation method:
+  - Activate it with `reference_phase_policy = "phi_s"`, `strategy = "corrector
+at exit"` and `"objective_preset = "CorrectorAtExit"`.
+  - `n_compensating` cavities around each failure are used to keep energy
+    longitudinal shape "reasonable".
+    - `n_compensating = 0` is currently not supported.
+  - All downstream cavities are rephased to preserve longitudinal acceptance.
+  - Final `n_correctors` cavities accelerate the beam to retrieve nominal energy.
+
+### Deprecated
+
+- All the `Objective` subclasses are now in the `lightwin.optimisation.objective
+.objective` module. Old import paths still work but raise a warning when used.
+  The `Objective` subclasses are:
+  - `MinimizeDifferenceWithRef`
+  - `MinimizeMismatch`
+  - `QuantityIsBetween`
 
 ## [0.12.1] -- 2025-08-26
 
@@ -35,8 +55,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Do not use the `TOML` `flag_phi_abs` configuration entry anymore, prefer `reference_phase_policy`.
   - If `flag_phi_abs` is found, a deprecation warning is raised.
   - For now, `flag_phi_abs` as precedence over `reference_phase_policy` to keep backward compatibility.
-
-# [0.11.x]
 
 ## [0.11.4] -- 2025-08-21
 
@@ -86,8 +104,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Objective position was plotted at the wrong place when the x-axis of plot was index of elements.
 - `r_zdelta` components can be `get` and plotted using `transfer_matrix` plot preset.
 - Symmetric plot (`envelope`, `acceptance`) work as expected.
-
-# [0.10.x]
 
 ## [0.10.6] -- 2025-07-04
 
@@ -152,10 +168,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Some `get` methods such as `SimulationOutput.get` did not consider the `phase_space_name` keyword argument.
   - `get` methods behavior are more consistent.
 
-# [0.9.x]
-
-Adhere to development best practices.
-In particular, follow advices listed in the great [Scientific Python library development guide](https://learn.scientific-python.org/development/).
+<!-- Adhere to development best practices. -->
+<!-- In particular, follow advices listed in the great [Scientific Python library development guide](https://learn.scientific-python.org/development/). -->
 
 ## [0.9.4] -- 2025-05-06
 
@@ -213,8 +227,6 @@ In particular, follow advices listed in the great [Scientific Python library dev
 - Introduced optional dependencies.
   - Install them with `pip install -e .[docs]` or `pip install -e .[test]`.
   - It is recommended to install LightWin with the test optional dependencies.
-
-# [0.8.x]
 
 ## [0.8.4] 2025-01-15
 
@@ -313,8 +325,6 @@ In particular, follow advices listed in the great [Scientific Python library dev
 - `Accelerator` will also use data from `beam`. Instantiate `AcceleratorFactory` with `**config`.
 - `SimulationOutputFactory` instantiated with `_beam_kwargs`.
 
-# [0.7.x]
-
 ## [0.7.0] 2024-10-22
 
 ### Added
@@ -371,8 +381,6 @@ In particular, follow advices listed in the great [Scientific Python library dev
 - It is not necessary to add LightWin to your `PATH`.
 - Imports of LightWin modules and functions must be imported from `lightwin`: `from lightwin.<foo> import <fee>`.
 - Cython compilation is automatic.
-
-# [0.6.x]
 
 ## [0.6.21] 2024-06-07
 
@@ -490,8 +498,6 @@ In particular, follow advices listed in the great [Scientific Python library dev
 
 - `evaluator` objects are more robust and can be configured from the `.toml`.
 - Plotting is now performed thanks to the `plotter` library.
-
-## [0.10.x] -- unreleased
 
 ### Added
 

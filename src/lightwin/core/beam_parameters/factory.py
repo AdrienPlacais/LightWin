@@ -57,8 +57,7 @@ class BeamParametersFactory(ABC):
     @abstractmethod
     def factory_method(self, *args, **kwargs) -> BeamParameters:
         """Create the :class:`.BeamParameters` object."""
-        beam_parameters = BeamParameters(*args, **kwargs)
-        return beam_parameters
+        return BeamParameters(*args, **kwargs)
 
     def _check_and_set_arrays(
         self, z_abs: NDArray | float, gamma_kin: NDArray | float

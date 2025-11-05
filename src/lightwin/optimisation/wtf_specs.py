@@ -9,7 +9,8 @@
 from typing import Any
 
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
-from lightwin.failures.strategy import COMPENSATING_SELECTOR
+from lightwin.failures.helper import TIE_POLITICS
+from lightwin.failures.strategy import STRATEGIES_MAPPING
 from lightwin.optimisation.algorithms.factory import ALGORITHM_SELECTOR
 from lightwin.optimisation.objective.factory import OBJECTIVE_PRESETS
 
@@ -65,7 +66,7 @@ _WTF_BASE = (
         key="strategy",
         types=(str,),
         description="How compensating cavities are selected.",
-        allowed_values=tuple(COMPENSATING_SELECTOR.keys()),
+        allowed_values=tuple(STRATEGIES_MAPPING.keys()),
         default_value="k out of n",
     ),
 )
@@ -78,7 +79,7 @@ _WTF_BASE_AUTOMATIC = _WTF_BASE + (
             "How to select the compensating elements when several are "
             "equidistant to the failure."
         ),
-        allowed_values=("upstream first", "downstream first"),
+        allowed_values=TIE_POLITICS,
         default_value="downstream first",
         is_mandatory=False,
     ),
@@ -129,6 +130,31 @@ WTF_L_NEIGHBORING_LATTICES = _WTF_BASE_AUTOMATIC + (
 )
 L_NEIGHBORING_LATTICES_MONKEY_PATCHES: dict[str, Any] = {}
 
+WTF_CORRECTOR_AT_EXIT = _WTF_BASE_AUTOMATIC + (
+    KeyValConfSpec(
+        key="n_compensating",
+        types=(int,),
+        description=(
+            "Number of compensating cavities around every failure. They are "
+            "used to shape the beam without retrieving nominal energy, so that"
+            " it can propagate up to the ``correctors`` without losses. "
+            "Currently, you must set at least 1 compensating cavity to avoid "
+            "errors."
+        ),
+        default_value=1,
+    ),
+    KeyValConfSpec(
+        key="n_correctors",
+        types=(int,),
+        description=(
+            "Number of compensating cavities at the exit of the linac. They "
+            "are used to retrieve nominal energy. Not affected by the "
+            "``shift`` keyword."
+        ),
+        default_value=2,
+    ),
+)
+CORRECTOR_AT_EXIT_MONKEY_PATCHES: dict[str, Any] = {}
 WTF_MANUAL = _WTF_BASE + (
     KeyValConfSpec(
         key="failed",
@@ -156,12 +182,15 @@ WTF_MANUAL = _WTF_BASE + (
 
 MANUAL_MONKEY_PATCHES: dict[str, Any] = {}
 
+
 WTF_CONFIGS = {
+    "corrector at exit": WTF_CORRECTOR_AT_EXIT,
     "k out of n": WTF_K_OUT_OF_N,
     "l neighboring lattices": WTF_L_NEIGHBORING_LATTICES,
     "manual": WTF_MANUAL,
 }
 WTF_MONKEY_PATCHES = {
+    "corrector at exit": CORRECTOR_AT_EXIT_MONKEY_PATCHES,
     "k out of n": K_OUT_OF_N_MONKEY_PATCHES,
     "l neighboring lattices": L_NEIGHBORING_LATTICES_MONKEY_PATCHES,
     "manual": MANUAL_MONKEY_PATCHES,

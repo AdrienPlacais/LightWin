@@ -82,7 +82,6 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
 
     def _generate_opti_sol(self, result: dict[str, Any] | None) -> OptiSol:
         """Store the optimization results."""
-        status = "compensate (ok)"
         if result is None:
             raise ValueError("Optimization failed.")
 
@@ -92,7 +91,7 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
             raise ValueError(f"Output of BO should have a {key = }.\n{result}")
 
         sol = self._to_numpy(**result["params"])
-        cavity_settings = self._create_set_of_cavity_settings(sol, status)
+        cavity_settings = self._create_set_of_cavity_settings(sol)
 
         opti_sol: OptiSol = {
             "var": sol,
@@ -100,6 +99,7 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
             "fun": result["target"],
             "objectives": self._get_objective_values(sol),
             "success": True,
+            "info": ["Bayesian Optimization"],
         }
         return opti_sol
 
@@ -107,13 +107,13 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
         self,
     ) -> tuple[dict[str, float], dict[str, tuple[float, float]]]:
         """Map every variable name with its limits."""
-        x_0 = {str(var): var.x_0 for var in self.variables}
-        pbounds = {str(var): var.limits for var in self.variables}
+        x_0 = {str(var): var.x_0 for var in self._variables}
+        pbounds = {str(var): var.limits for var in self._variables}
         return x_0, pbounds
 
     def _to_numpy(self, **kwargs) -> NDArray:
         """Convert dict of variables to numpy array."""
-        return np.array([kwargs[str(var)] for var in self.variables])
+        return np.array([kwargs[str(var)] for var in self._variables])
 
     def acquisition_function(self) -> acquisition.AcquisitionFunction | None:
         """Get acquisition function.

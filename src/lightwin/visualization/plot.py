@@ -104,7 +104,7 @@ PLOT_PRESETS = {
     },
 }
 ERROR_PRESETS = {
-    "w_kin_err": {"scale": 1.0, "diff": "rel"},
+    "w_kin_err": {"scale": 1.0, "diff": "simple"},
     "phi_abs_err": {"scale": 1.0, "diff": "simple"},
 }
 #: List of implemented presets for the plots
