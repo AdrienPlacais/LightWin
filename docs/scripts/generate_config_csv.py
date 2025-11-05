@@ -16,6 +16,7 @@ from lightwin.optimisation.design_space_specs import (
     DESIGN_SPACE_FROM_FILE,
 )
 from lightwin.optimisation.wtf_specs import (
+    WTF_CORRECTOR_AT_EXIT,
     WTF_K_OUT_OF_N,
     WTF_L_NEIGHBORING_LATTICES,
     WTF_MANUAL,
@@ -64,9 +65,10 @@ def main() -> None:
         "evaluator": EVALUATORS_CONFIG,
         "files": FILES_CONFIG,
         "plots": PLOTS_CONFIG,
+        "wtf_corrector_at_exit": WTF_CORRECTOR_AT_EXIT,
         "wtf_k_out_of_n": WTF_K_OUT_OF_N,
-        "wtf_manual": WTF_MANUAL,
         "wtf_l_neighboring_lattices": WTF_L_NEIGHBORING_LATTICES,
+        "wtf_manual": WTF_MANUAL,
     }
 
     for name, specs_list in files.items():
