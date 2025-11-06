@@ -65,7 +65,15 @@ class FieldMap(Element):
         self.z_0 = 0.0
 
         self._can_be_retuned: bool = True
+        #: Stores the settings of the cavity, such as amplitude or phase.
         self.cavity_settings = cavity_settings
+        # Deleted in SPIRAL2 branch?
+        # self.rf_field = RfField(section_idx=self.idx["section"])
+        # self.cavity_settings.rf_field = self.rf_field
+        #: Stores the field properties, such as interpolated field or
+        #: frequency. This object is shared by all the caviities with the same
+        #: geometry.
+        # self.field: Field
 
     @property
     def status(self) -> str:
@@ -78,6 +86,11 @@ class FieldMap(Element):
         if self.status == "failed":
             return False
         return True
+
+    @property
+    def is_altered(self) -> bool:
+        """Tell if cavity is altered, *i.e.* not in nominal settings."""
+        return self.status != "nominal"
 
     @property
     def can_be_retuned(self) -> bool:
@@ -100,7 +113,6 @@ class FieldMap(Element):
 
         """
         assert new_status in ALLOWED_STATUS
-
         self.cavity_settings.status = new_status
         if new_status != "failed":
             return

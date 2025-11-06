@@ -69,10 +69,10 @@ if __name__ == "__main__":
         "beam_calculator": "generic_envelope1d",
         # "beam_calculator_post": "generic_tracewin",
         "beam": "beam",
-        # "wtf": "generic_wtf",
-        # "design_space": "fit_phi_s_design_space",
-        "wtf": "tiny_wtf",
-        "design_space": "tiny_design_space",
+        "wtf": "generic_wtf",
+        "design_space": "fit_phi_s_design_space",
+        # "wtf": "tiny_wtf",
+        # "design_space": "tiny_design_space",
     }
     NEW_EVALUATIONS = False
     BEAUTY_PASS = False
@@ -86,5 +86,4 @@ if __name__ == "__main__":
     fs = fault_scenarios[0]
     acc = fs.ref_acc
     so = list(acc.simulation_outputs.values())[0]
-    __import__("pdb").set_trace()
     plt.show()

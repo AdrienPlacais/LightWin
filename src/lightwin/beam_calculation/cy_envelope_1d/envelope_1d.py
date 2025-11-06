@@ -21,6 +21,7 @@ from lightwin.beam_calculation.cy_envelope_1d.util import (
 from lightwin.beam_calculation.envelope_1d.envelope_1d import Envelope1D
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.physics.synchronous_phases import PHI_S_MODELS
+from lightwin.util.typing import REFERENCE_PHASE_POLICY_T
 
 
 class CyEnvelope1D(Envelope1D):
@@ -31,7 +32,7 @@ class CyEnvelope1D(Envelope1D):
     def __init__(
         self,
         *,
-        flag_phi_abs: bool,
+        reference_phase_policy: REFERENCE_PHASE_POLICY_T,
         n_steps_per_cell: int,
         method: CY_ENVELOPE1D_METHODS_T,
         out_folder: Path | str,
@@ -41,7 +42,7 @@ class CyEnvelope1D(Envelope1D):
     ) -> None:
         """Set the proper motion integration function, according to inputs."""
         return super().__init__(
-            flag_phi_abs=flag_phi_abs,
+            reference_phase_policy=reference_phase_policy,
             n_steps_per_cell=n_steps_per_cell,
             method=method,
             out_folder=out_folder,

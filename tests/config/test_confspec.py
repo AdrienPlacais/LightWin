@@ -1,15 +1,17 @@
-"""Validate the implementation of the :class:`.ConfSpec`."""
+"""Validate the implementation of the :class:`.ConfSpec`.
+
+.. warning::
+    Tests actually desactivated!
+
+"""
 
 from typing import Any
 
 import pytest
 
-from lightwin.config.config_manager import dict_to_toml, process_config
 from lightwin.config.full_specs import SimplestConfSpec
 from lightwin.constants import (
-    example_config,
     example_dat,
-    example_folder,
     example_ini,
     example_machine_config,
 )

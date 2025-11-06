@@ -9,7 +9,7 @@ a full :class:`.ListOfElements` from scratch.
 :class:`.ListOfElements` that contains only a fraction of the linac.
 
 .. todo::
-    Also handle ``.dst`` file in :meth:`.subset_list_run`.
+    Also handle ``DST`` file in :meth:`.subset_list_run`.
 
 .. todo::
     Maybe it will be necessary to handle cases where the synch particle is not
@@ -33,13 +33,13 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.beam_parameters.factory import InitialBeamParametersFactory
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.instruction import Instruction
 from lightwin.core.instructions_factory import InstructionsFactory
 from lightwin.core.list_of_elements.list_of_elements import (
@@ -83,9 +83,25 @@ class ListOfElementsFactory:
 
         Parameters
         ----------
-            Definition for the synchronous phases that will be used. Allowed
-            values are in :data:`.PHI_S_MODELS`. The default is
-            ``'historical'``.
+        is_3d :
+            Whether simulation is in 3D. This is currently not used, as we
+            always generate 3D :class:`.InitialBeamParameters`.
+        is_multipart :
+            Whether simulation is multiparticle. This is currently not used, as
+            we always generate multiparticle :class:`.InitialBeamParameters`.
+        default_field_map_folder :
+            Where to look for field map files.
+        beam_kwargs :
+            Arguments to instantiate :class:`.InitialBeamParameters`.
+        load_field_maps :
+            If field maps should be loaded; this is not necessary with
+            :class:`.TraceWin`.
+        field_maps_in_3d :
+            If the given field map files are 3D.
+        load_cython_field_maps :
+            If the solver is implemented in cython.
+        elements_to_dump :
+            Explicit list of :class:`.Element` that can be safely ignored.
 
         """
         freq_bunch_mhz = beam_kwargs["f_bunch_mhz"]
@@ -112,22 +128,33 @@ class ListOfElementsFactory:
         self,
         dat_file: Path,
         accelerator_path: Path,
+        sigma_in: NDArray[np.float64],
+        w_kin: float,
+        phi_abs: float,
+        z_in: float,
         instructions_to_insert: Collection[Instruction | DatLine] = (),
-        **kwargs: Any,
     ) -> ListOfElements:
-        """Create a new :class:`.ListOfElements`, encompassing a full linac.
+        r"""Create a new :class:`.ListOfElements`, encompassing a full linac.
 
         Factory function called from within the :class:`.Accelerator` object.
 
         Parameters
         ----------
         dat_file :
-            Absolute path to the ``.dat`` file.
-        accelerator_path : pathlib.Path
+            Absolute path to the ``DAT`` file.
+        accelerator_path :
             Absolute path where results for each :class:`.BeamCalculator` will
             be stored.
+        sigma_in :
+            :math:`\sigma` beam matrix at the entrance of the linac.
+        w_kin :
+            Kinetic energy of the beam in :unit:`MeV`.
+        phi_abs :
+            Absolute beam phase in :unit:`rad`.
+        z_in :
+            Absolute entry position of the linac in :unit:`m`.
         instructions_to_insert :
-            Some elements or commands that are not present in the ``.dat`` file
+            Some elements or commands that are not present in the ``DAT`` file
             but that you want to add. The default is an empty tuple.
         kwargs :
             Arguments to instantiate the input particle and beam properties.
@@ -138,11 +165,6 @@ class ListOfElementsFactory:
             proper particle and beam properties at its entry.
 
         """
-        logging.info(
-            "First initialisation of ListOfElements, ecompassing all linac. "
-            f"Created with {dat_file = }"
-        )
-
         dat_filecontent = dat_filecontent_from_file(
             dat_file, keep="all", instructions_to_insert=instructions_to_insert
         )
@@ -156,33 +178,22 @@ class ListOfElementsFactory:
             "elts_n_cmds": instructions,
         }
 
-        input_particle = self._whole_list_input_particle(**kwargs)
+        input_particle = ParticleInitialState(
+            w_kin=w_kin, phi_abs=phi_abs, z_in=z_in, synchronous=True
+        )
         input_beam = self.initial_beam_factory.factory_new(
-            sigma_in=kwargs["sigma_in"], w_kin=kwargs["w_kin"]
+            sigma_in=sigma_in, w_kin=w_kin
         )
 
-        tm_cumul_in = np.eye(6)
         list_of_elements = ListOfElements(
             elts=elts,
             input_particle=input_particle,
             input_beam=input_beam,
-            tm_cumul_in=tm_cumul_in,
+            tm_cumul_in=np.eye(6),
             files=files,
             first_init=True,
         )
         return list_of_elements
-
-    def _whole_list_input_particle(
-        self, w_kin: float, phi_abs: float, z_in: float, **kwargs: np.ndarray
-    ) -> ParticleInitialState:
-        """Create a :class:`.ParticleInitialState` for full list of elts."""
-        input_particle = ParticleInitialState(
-            w_kin=w_kin,
-            phi_abs=phi_abs,
-            z_in=z_in,
-            synchronous=True,
-        )
-        return input_particle
 
     def subset_list_run(
         self,
@@ -221,36 +232,25 @@ class ListOfElementsFactory:
             its entry.
 
         """
-        logging.info(
-            "Initalisation of ListOfElements from already initialized"
-            f" elements: {elts[0]} to {elts[-1]}."
-        )
-
         input_elt, input_pos = self._get_initial_element(
             elts, simulation_output
         )
-        get_kw = {
-            "elt": input_elt,
-            "pos": input_pos,
-            "to_numpy": False,
-        }
+        get_kw = {"elt": input_elt, "pos": input_pos, "to_numpy": False}
         input_particle = self._subset_input_particle(
             simulation_output, **get_kw
         )
         input_beam = self.initial_beam_factory.factory_subset(
             simulation_output, get_kw
         )
-
         files = self._subset_files_dictionary(
-            elts,
-            files_from_full_list_of_elements,
+            elts, files_from_full_list_of_elements
         )
 
         transfer_matrix = simulation_output.transfer_matrix
         assert transfer_matrix is not None
         tm_cumul_in = transfer_matrix.cumulated[0]
 
-        list_of_elements = ListOfElements(
+        return ListOfElements(
             elts=elts,
             input_particle=input_particle,
             input_beam=input_beam,
@@ -258,19 +258,6 @@ class ListOfElementsFactory:
             files=files,
             first_init=False,
         )
-
-        return list_of_elements
-
-    def _shift_entry_phase(
-        self, cavities: list[FieldMap], delta_phi: float
-    ) -> None:
-        """Shift the entry phase in the given cavities.
-
-        This is mandatory for TraceWin solver, as the absolute phase at the
-        entrance of the first element is always 0.0.
-
-        """
-        pass
 
     def _subset_files_dictionary(
         self,
@@ -280,10 +267,9 @@ class ListOfElementsFactory:
         dat_name: Path | str = Path("tmp.dat"),
     ) -> FilesInfo:
         """Set the new ``DAT`` file containing only elements of ``elts``."""
-        accelerator_path = files_from_full_list_of_elements["accelerator_path"]
-        out = accelerator_path / folder
-        out.mkdir(exist_ok=True)
-        dat_file = out / dat_name
+        folder = Path(folder)
+        dat_file = folder / Path(dat_name).name
+        folder.mkdir(exist_ok=True)
 
         dat_filecontent, instructions = (
             dat_filecontent_from_smaller_list_of_elements(
@@ -291,16 +277,14 @@ class ListOfElementsFactory:
                 elts,
             )
         )
+        export_dat_filecontent(dat_filecontent, dat_file)
 
-        files: FilesInfo = {
+        return {
             "dat_file": dat_file,
             "dat_filecontent": dat_filecontent,
-            "accelerator_path": accelerator_path / folder,
+            "accelerator_path": folder,
             "elts_n_cmds": instructions,
         }
-
-        export_dat_filecontent(dat_filecontent, dat_file)
-        return files
 
     def _delta_phi_for_tracewin(
         self, phi_at_entry_of_compensation_zone: float
@@ -327,9 +311,10 @@ class ListOfElementsFactory:
             _ = simulation_output.get("w_kin", elt=input_elt)
         except AttributeError:
             logging.warning(
-                "First element of new ListOfElements is not in the given "
-                "SimulationOutput. I will consider that the last element of "
-                "the SimulationOutput is the first of the new ListOfElements."
+                f"First element of new ListOfElements ({input_elt}) is not in "
+                "the given SimulationOutput. I will consider that the last "
+                "element of the SimulationOutput is the first of the new "
+                "ListOfElements."
             )
             input_elt, input_pos = "last", "out"
         return input_elt, input_pos
@@ -341,10 +326,7 @@ class ListOfElementsFactory:
         w_kin, phi_abs, z_abs = simulation_output.get(
             "w_kin", "phi_abs", "z_abs", **kwargs
         )
-        input_particle = ParticleInitialState(
-            w_kin, phi_abs, z_abs, synchronous=True
-        )
-        return input_particle
+        return ParticleInitialState(w_kin, phi_abs, z_abs, synchronous=True)
 
     def from_existing_list(
         self,
@@ -364,8 +346,6 @@ class ListOfElementsFactory:
             Maybe gather some things with the subset?
 
         """
-        logging.info("Creating ListOfElements from pre-existing.")
-
         original_dat = elts.files["dat_file"]
         assert isinstance(original_dat, Path)
         new_dat = original_dat

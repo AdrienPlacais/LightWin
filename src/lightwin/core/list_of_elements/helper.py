@@ -8,7 +8,7 @@
 import logging
 from collections.abc import Callable, Iterable
 from functools import partial
-from typing import Any, Literal, Sequence, Type, TypeGuard, TypeVar
+from typing import Any, Literal, Sequence, Type, TypeGuard, TypeVar, overload
 
 import numpy as np
 
@@ -95,16 +95,15 @@ def elt_at_this_s_idx(
 
     Parameters
     ----------
-    elts : ListOfElements | list[Element]
+    elts :
         List of elements in which to look for.
-    s_idx : int
+    s_idx :
         Index to look for.
-    show_info : bool
+    show_info :
         If the element that we found should be outputed.
 
     Returns
     -------
-    elt : Element | None
         Element where the mesh index ``s_idx`` is in ``elts``.
 
     """
@@ -140,9 +139,9 @@ def equivalent_elt_idx(
 
     Parameters
     ----------
-    elts : ListOfElements | list[Element]
+    elts :
         List of elements where you want the position.
-    elt : Element | str
+    elt :
         Element of which you want the position. If you give a str, it should be
         the name of an element. If it is an :class:`.Element`, we take its name
         in the routine. Magic keywords ``'first'``, ``'last'`` are also
@@ -150,7 +149,6 @@ def equivalent_elt_idx(
 
     Returns
     -------
-    int
         Index of equivalent element.
 
     """
@@ -171,9 +169,20 @@ def equivalent_elt_idx(
     raise OSError(f"Element {elt} not found in this list of elements.")
 
 
+@overload
 def equivalent_elt(
-    elts: ListOfElements | list[Element], elt: Element | str
-) -> Element:
+    elts: ListOfElements | list[Element] | list[FieldMap], elt: FieldMap
+) -> FieldMap: ...
+@overload
+def equivalent_elt(
+    elts: ListOfElements | list[Element] | list[FieldMap], elt: Element | str
+) -> Element: ...
+
+
+def equivalent_elt(
+    elts: ListOfElements | list[Element] | list[FieldMap],
+    elt: Element | str | FieldMap,
+) -> Element | FieldMap:
     """Return the element from ``elts`` corresponding to ``elt``.
 
     .. important::
@@ -190,9 +199,9 @@ def equivalent_elt(
 
     Parameters
     ----------
-    elts : ListOfElements | list[Element]
+    elts :
         List of elements where you want the position.
-    elt : Element | str
+    elt :
         Element of which you want the position. If you give a str, it should be
         the name of an element. If it is an :class:`.Element`, we take its name
         in the routine. Magic keywords ``'first'``, ``'last'`` are also
@@ -200,7 +209,6 @@ def equivalent_elt(
 
     Returns
     -------
-    out_elt : Element
         Equivalent element.
 
     """
@@ -216,17 +224,16 @@ def indiv_to_cumul_transf_mat(
 
     Parameters
     ----------
-    tm_cumul_in : numpy.ndarray
+    tm_cumul_in :
         Cumulated transfer matrix @ first element. Should be eye matrix if we
         are at the first element.
-    r_zz_elt : list[numpy.ndarray]
+    r_zz_elt :
         List of individual transfer matrix of the elements.
-    n_steps : int
+    n_steps :
         Number of elements or elements slices.
 
     Returns
     -------
-    cumulated_transfer_matrices : numpy.ndarray
         Cumulated transfer matrices.
 
     """
@@ -312,22 +319,21 @@ def _get_first_key_of_idx_dict_higher_than(
 
     Parameters
     ----------
-    elts : Sequence[Element]
+    elts :
         List of elements to check.
-    index_name : str
+    index_name :
         Name of the index to get. Must be a key of in the ``idx`` attribute of
         :class:`.Element`.
-    first_or_last : Literal["first", "last"]
+    first_or_last :
         If we want to check the ``n_to_check`` first or last elements.
-    higher_than : int, optional
+    higher_than :
         The index under which the value is invalid. The default is -1, which is
         the initialisation index for all the values of the ``idx`` dictionary.
-    n_to_check : int, optional
+    n_to_check :
         Number of elements in which we will look for the index.
 
     Returns
     -------
-    int
         The first valid index that is found.
 
     """

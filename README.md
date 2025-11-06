@@ -28,13 +28,9 @@ The steps are straightforward and can be summarized as follows:
 
 If you want to edit the source code:
 
-1. Clone the repository: `git clone git@github.com:AdrienPlacais/LightWin.git`
-   > [!WARNING]
-   > If you `Download ZIP` this repository (which can happen if you don't have access to `git`), installation will fail at step #3.
-   > [A workaround](https://lightwin.readthedocs.io/en/latest/manual/troubles/setuptools_error.html) is proposed in the documentation.
-2. Create a dedicated Python environment.
-3. From LightWin folder: `pip install -e .[test]`
-4. Test that everything is working with `pytest -m "not tracewin and not implementation"`.
+> [!WARNING]
+> If you `Download ZIP` this repository (which can happen if you don't have access to `git`), installation will fail at step #3.
+> [A workaround](https://lightwin.readthedocs.io/en/latest/manual/troubles/setuptools_error.html) is proposed in the documentation. 2. Create a dedicated Python environment. 3. From LightWin folder: `pip install -e .[test]` 4. Test that everything is working with `pytest -m "not tracewin and not implementation"`.
 
 > [!NOTE]
 > If you are completely new to Python and these instructions are unclear, check [this tutorial](https://python-guide.readthedocs.io/en/latest/).
@@ -60,24 +56,3 @@ See [here](https://lightwin.readthedocs.io/en/latest/manual/usage.html).
 ## Example
 
 See the `data/example` folder.
-
-## Future updates
-
-###
-
-### BeamCalculator
-
-- [ ] Beam calculator developed by JM Lagniel for SPIRAL2.
-- [ ] Envelope solvers with space-charge.
-
-### Quality of life
-
-- [ ] `Plotter` object.
-- [ ] Friendlier `Evaluator`.
-- [x] Support for `SET_SYNC_PHASE` (see [note](https://lightwin.readthedocs.io/en/latest/manual/usage.html#compatibility-with-tracewin-dat-files)).
-- [ ] Better handling of TraceWin errors (currently: a single error and whole run is lost).
-
-### Optimization
-
-- [ ] Correlation matrices.
-- [ ] Add [SNS compensation method](doi.org://10.18429/JACoW-LINAC2022-FR1AA06)

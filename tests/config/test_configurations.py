@@ -4,7 +4,10 @@ We sequentially load each relatable table of :file:`example.toml`, and match it
 with the corresponding :class:`.TableSpec`.
 
 .. todo::
-    Writting to ``.toml`` will fail with lists of dictionaries
+    Writting to ``TOML`` will fail with lists of dictionaries
+
+.. warning::
+    Tests actually desactivated!
 
 """
 
@@ -14,11 +17,9 @@ import pytest
 
 from lightwin.config.config_manager import (
     _load_toml,
-    dict_to_toml,
-    process_config,
 )
 from lightwin.config.full_specs import ConfSpec
-from lightwin.constants import example_config, example_folder
+from lightwin.constants import example_config
 
 CONFIG_KEYS = (
     pytest.param(({"beam": "beam"},), id="Beam configuration"),
@@ -70,10 +71,10 @@ def config_key(request: pytest.FixtureRequest) -> dict[str, str]:
 
     Returns
     -------
-    config_key : dict[str, str]
         A dictionary with a unique key-value pair. The key is the name of a
         LightWin configuration entry (eg ``beam`` or ``wtf``), the value is a
         table in :file:`example.toml` (eg ``generic_envelope1d``).
+
     """
     (config_key,) = request.param
     return config_key

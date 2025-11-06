@@ -27,15 +27,15 @@ class Variable(DesignSpaceParameter):
 
     Parameters
     ----------
-    name : str
+    name :
         Name of the parameter. Must be compatible with the
         :meth:`.SimulationOutput.get` method, and be in
         :data:`.IMPLEMENTED_VARIABLES`.
-    element_name : str
+    element_name :
         Name of the element concerned by the parameter.
-    limits : tuple[float, float]
+    limits :
         Lower and upper bound for the variable. ``np.nan`` deactivates a bound.
-    x_0 : float
+    x_0 :
         Initial value.
 
     """
@@ -55,22 +55,21 @@ class Variable(DesignSpaceParameter):
 
         Parameters
         ----------
-        name : str
+        name :
             Name of the parameter. Must be compatible with the
             :meth:`.SimulationOutput.get` method, and be in
             :data:`.IMPLEMENTED_VARIABLES`.
-        element_name : str
+        element_name :
             Name of the element concerned by the parameter.
-        x_min : float
+        x_min :
             Lower limit. ``np.nan`` to deactivate lower bound.
-        x_max : float
+        x_max :
             Upper limit. ``np.nan`` to deactivate lower bound.
         x_0: float
             Initial value.
 
         Returns
         -------
-        Self
             A Variable with limits = (x_min, x_max).
 
         """

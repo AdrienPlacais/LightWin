@@ -10,7 +10,6 @@ The units must be consistent with LightWin's system of units, see also :ref:`uni
 
 .. csv-table::
    :file: configuration_entries/beam.csv
-   :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
 

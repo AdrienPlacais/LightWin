@@ -60,7 +60,7 @@ class Element(Instruction):
         line :
             A line of the ``DAT`` file. If the element was given a name, it
             must not appear in ``line`` but rather in ``name``. First
-            element of the list must be in :data:`.implemented_elements`.
+            element of the list must be in :data:`.PARAMETERS_1D`.
         dat_idx :
             Position in the ``DAT`` file.
         name :

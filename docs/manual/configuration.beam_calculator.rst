@@ -5,25 +5,59 @@
 .. toctree::
    :maxdepth: 5
 
-If the desired :class:`.BeamCalculator` is :class:`.Envelope1D`:
+
+Note that the role of the `reference_phase_policy` is extremely important, as it controls how cavities are rephased after failure.
+More details and an example in the :ref:`dedicated notebook<notebooks-cavities-reference-phase>`.
+
+:class:`.Envelope1D` solver
+===========================
+
+This solver computes the propagation of the beam in the longitudinal phase space and in envelope.
+Space charge effects are not considered.
+It is adapted to high energy problems, such as ADS linacs.
 
 .. csv-table::
    :file: configuration_entries/beam_calculator_envelope_1d.csv
-   :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
-If the desired :class:`.BeamCalculator` is :class:`.Envelope3D`:
+The following elements are explicitly supported.
+Note that, by default, an element that is implemented but not explicitly supported is replaced by a `DRIFT`.
+In 1D, this is perfectly acceptable for most non-implemented elements that act on the transverse dynamics, such as `THIN_LENS`.
+
+.. configkeys:: lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory.PARAMETERS_1D
+   :n_cols: 3
+
+:class:`.Envelope3D` solver
+===========================
+
+Envelope solver in 3D, without space charge.
 
 .. csv-table::
    :file: configuration_entries/beam_calculator_envelope_3d.csv
-   :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
-If the desired :class:`.BeamCalculator` is :class:`.TraceWin`:
+.. note::
+
+   As transverse effects are generally not predominant, I do not use this solver very often and a lot of elements are not implemented.
+   The current list of explicitly supported elements is:
+
+   .. configkeys:: lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.PARAMETERS_3D
+     :n_cols: 2
+
+  The default behavior when an element in the input `DAT` file is not recognized, is to issue a warning and replace this element by a `DRIFT`.
+
+  Do not hesitate to file an |issue|_ if you need me to implement some elements.
+
+:class:`.TraceWin` solver
+===========================
+
+3D solver, can be used in multiparticle or envelope.
+You will need a valid TraceWin license.
+It can be used during the optimization process, though this approach relies on a lot of file writing/reading and is very slow.
+Generally, I use it to re-compute the propagation of the beam in the linac when compensation settings were found (`beam_calculator_post`).
 
 .. csv-table::
    :file: configuration_entries/beam_calculator_tracewin.csv
-   :widths: 30, 5, 50, 10, 5
    :header-rows: 1
 
 Check TraceWin's documentation for the list of command line arguments.

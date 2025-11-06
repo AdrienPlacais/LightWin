@@ -27,10 +27,6 @@ class DesignSpace:
     variables: list[Variable]
     constraints: list[Constraint]
 
-    def __post_init__(self) -> None:
-        """Print out some info."""
-        logging.info(str(self))
-
     @classmethod
     def from_files(
         cls,
@@ -45,24 +41,18 @@ class DesignSpace:
 
         Parameters
         ----------
-        elements_names : Sequence[str]
+        elements_names :
             Name of the elements with variables and constraints.
-        filepath_variables : pathlib.Path
-            Path to the ``variables.csv`` file.
-        variables_names : Sequence[str]
+        filepath_variables :
+            Path to the :file:`variables.csv` file.
+        variables_names :
             Name of the variables to create.
-        filepath_constraints : pathlib.Path | None, optional
-            Path to the ``constraints.csv`` file. The default is None, in which
-            case no constraint is created.
-        constraints_names : Sequence[str] | None, optional
-            Name of the constraints to create. The default is None, in which
-            case no constraint is created.
-        delimiter : str, optional
-            Delimiter in the files. The default is a commma.
-
-        Returns
-        -------
-        Self
+        filepath_constraints :
+            Path to the :file:`constraints.csv` file.
+        constraints_names :
+            Name of the constraints to create.
+        delimiter :
+            Delimiter in the files.
 
         """
         variables = _from_file(
@@ -104,27 +94,25 @@ class DesignSpace:
 
     def __str__(self) -> str:
         """Give nice output of the variables and constraints."""
-        return "\n".join(self._str_variables() + self._str_constraints())
+        return "\n\n".join((self._str_variables(), self._str_constraints()))
 
-    def _str_variables(self) -> list[str]:
+    def _str_variables(self) -> str:
         """Generate information on the variables that were created."""
         info = [str(variable) for variable in self.variables]
-        info.insert(0, "Created variables:")
-        info.insert(1, "=" * 100)
-        info.insert(2, Variable.header_of__str__())
-        info.insert(3, "-" * 100)
+        info.insert(0, "=" * 100)
+        info.insert(1, Variable.str_header())
+        info.insert(2, "-" * 100)
         info.append("=" * 100)
-        return info
+        return "\n".join(info)
 
-    def _str_constraints(self) -> list[str]:
+    def _str_constraints(self) -> str:
         """Generate information on the constraints that were created."""
         info = [str(constraint) for constraint in self.constraints]
-        info.insert(0, "Created constraints:\n")
-        info.insert(1, "=" * 100)
-        info.insert(2, Constraint.header_of__str__())
-        info.insert(3, "-" * 100)
+        info.insert(0, "=" * 100)
+        info.insert(1, Constraint.str_header())
+        info.insert(2, "-" * 100)
         info.append("=" * 100)
-        return info
+        return "\n".join(info)
 
     def to_pandas_dataframe(self) -> pd.DataFrame:
         """Convert list of variables to a pandas dataframe."""
@@ -144,14 +132,14 @@ class DesignSpace:
 
         Parameters
         ----------
-        basepath : pathlib.Path
+        basepath :
             Folder where the files will be stored.
         variables_filename, constraints_filename : pathlib.Path | str, optional
             Name of the output files without extension.
-        overwrite : bool, optional
+        overwrite :
             To overwrite an existing file with the same name or not. The
             default is False.
-        to_csv_kw : dict[str, Any]
+        to_csv_kw :
             Keyword arguments given to the pandas ``to_csv`` method.
 
         """
@@ -173,8 +161,8 @@ class DesignSpace:
             parameter = getattr(self, parameter_name)
             if len(parameter) == 0:
                 logging.info(
-                    f"{parameter_name} not defined for this "
-                    "DesignSpace. Skipping... "
+                    f"{parameter_name} not defined for this DesignSpace. "
+                    "Skipping... "
                 )
                 continue
 
@@ -192,13 +180,13 @@ class DesignSpace:
 
         Parameters
         ----------
-        parameters : list[DesignSpaceParameter]
+        parameters :
             All the defined parameters.
-        filepath : pathlib.Path
+        filepath :
             Where file will be stored.
-        delimiter : str
-            Delimiter between two columns. The default is ','.
-        to_csv_kw: dict[str, Any]
+        delimiter :
+            Delimiter between two columns. The default is ``','``.
+        to_csv_kw :
             Keyword arguments given to the pandas ``to_csv`` method.
 
         """
@@ -219,15 +207,14 @@ class DesignSpace:
 
         Parameters
         ----------
-        element_name : str
+        element_name :
             Name of the element, which will be inserted in the output dict.
-        parameters : list[DesignSpaceParameter]
+        parameters :
             Parameters concerning the element, which ``limits`` (``x_0`` if
             appliable) will be inserted in the dict.
 
         Returns
         -------
-        dict[str, float | None | tuple[float, float]]
             Contains all :class:`.Variable` or :class:`.Constraint` information
             of the element.
 
@@ -265,14 +252,13 @@ def _gather_dicts_by_key(
 
     Parameters
     ----------
-    parameters : list[DesignSpaceParameter]
+    parameters :
         Objects to study.
-    key : str
+    key :
         Name of the attribute against which ``parameters`` should be gathered.
 
     Returns
     -------
-    dict[Any, list[DesignSpaceParameter]]
         Keys are all existing values of attribute ``key`` from ``parameters``.
         Values are lists of :class:`.DesignSpaceParameter` with ``key``
         attribute equaling the dict key.
@@ -295,14 +281,13 @@ def _parameters_to_dict(
 
     Parameters
     ----------
-    parameters : list[DesignSpaceParameter]
+    parameters :
         Where ``to_get`` will be looked for.
-    to_get : Sequence[str]
+    to_get :
         Values to get.
 
     Returns
     -------
-    list[dict]
         Contains ``to_get`` values in dictionaries for every parameter.
 
     """
@@ -344,7 +329,7 @@ def _from_file(
     parameters_names: Sequence[str],
     delimiter: str = ",",
 ) -> list[Variable] | list[Constraint]:
-    """Generate list of variables or constraints from a given ``.csv``.
+    """Generate list of variables or constraints from a given ``CSV``.
 
     .. todo::
         Add support for when all element do not have the same
@@ -352,20 +337,19 @@ def _from_file(
 
     Parameters
     ----------
-    parameter_class : type[Variable] | type[Constraint]
+    parameter_class :
         Object which ``from_pd_series`` method will be called.
-    filepath : pathlib.Path
-        Path to the ``.csv``.
-    elements_names : Sequence[str]
+    filepath :
+        Path to the ``CSV``.
+    elements_names :
         Name of the elements.
-    parameters_names : Sequence[str]
+    parameters_names :
         Name of the parameters.
-    delimiter : str
-        Delimiter in the ``.csv``.
+    delimiter :
+        Delimiter in the ``CSV``.
 
     Returns
     -------
-    list[DesignSpaceParameter]
         List of variables or constraints.
 
     """

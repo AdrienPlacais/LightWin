@@ -92,29 +92,13 @@ def remove_duplicates[T](iterable: Iterable[T]) -> Iterator[T]:
 # =============================================================================
 # Messages functions
 # =============================================================================
-# TODO: transform inputs into strings if they are not already strings
-def printc(*args: str, color: str = "cyan") -> None:
-    """Print colored messages."""
-    dict_c = {
-        "red": "\x1b[31m",
-        "blue": "\x1b[34m",
-        "green": "\x1b[32m",
-        "magenta": "\x1b[35m",
-        "cyan": "\x1b[36m",
-        "normal": "\x1b[0m",
-    }
-    print(dict_c[color] + args[0] + dict_c["normal"], end=" ")
-    for arg in args[1:]:
-        print(arg, end=" ")
-    print("")
-
-
-def pd_output(message: pd.DataFrame, header: str = "") -> str:
-    """Give a string describing a pandas dataframe."""
-    tot = 100
-    my_output = header + "\n" + "-" * tot + "\n" + message.to_string()
-    my_output += "\n" + "-" * tot
-    return my_output
+def pd_output(df: pd.DataFrame, header: str = "") -> str:
+    """Return a formatted string representation of a pandas DataFrame."""
+    width = 100
+    sep = "=" * width
+    sub_sep = "-" * width
+    header_line = f"{header}\n{sub_sep}\n" if header else ""
+    return f"\n{sep}\n{header_line}{df.to_string()}\n{sep}"
 
 
 def pascal_case(message: str) -> str:
@@ -222,8 +206,9 @@ def save_energy_phase_tm(lin: object) -> None:
 
     Parameters
     ----------
-    lin : Accelerator
+    lin :
         Object of corresponding to desired output.
+
     """
     n_z = lin.get("z_abs").shape[0]
     data = np.column_stack(
@@ -242,30 +227,3 @@ def save_energy_phase_tm(lin: object) -> None:
     )
     np.savetxt(filepath, data, header=header)
     logging.info(f"Energy, phase and TM saved in {filepath}")
-
-
-def save_vcav_and_phis(lin: object) -> None:
-    """
-    Output the Vcav and phi_s as a function of z.
-
-    s [m]   V_cav [MV]  phi_s [deg]
-
-    Parameters
-    ----------
-    accelerator: Accelerator
-        Object of corresponding to desired output.
-    """
-    printc("helper.save_vcav_and_phis warning:", "s [m] not saved.")
-    # data = lin.get('abs', 'v_cav_mv', 'phi_s', to_deg=True)
-    data = lin.get("v_cav_mv", "phi_s", to_deg=True)
-    data = np.column_stack((data[0], data[1]))
-
-    filepath = lin.files["results_folder"] + lin.name + "_Vcav_and_phis.txt"
-    filepath = filepath.replace(" ", "_")
-
-    header = "s [m] \t V_cav [MV] \t phi_s [deg]"
-    np.savetxt(filepath, data, header=header)
-    logging.info(
-        "Cavities accelerating field and synch. phase saved in "
-        + f"{filepath}"
-    )

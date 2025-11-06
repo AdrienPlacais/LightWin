@@ -98,21 +98,21 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
 
         Parameters
         ----------
-        phase_space_name : Literal["x", "y", "zdelta"]
+        phase_space_name :
             Name of a single phase space.
-        results : dict[str, numpy.ndarray]
+        results :
             Results dictionary, which keys are ``tracewin.out`` or
             ``partran1.out`` headers and which values are corresponding data.
 
         Returns
         -------
-        sigma_00 : numpy.ndarray
+        sigma_00 :
             ``(n, )`` array containing top-left component of the :math:`\sigma`
             beam matrix.
-        sigma_01 : numpy.ndarray
+        sigma_01 :
             ``(n, )`` array containing top-right component of the
             :math:`\sigma` beam matrix.
-        eps_normalized : numpy.ndarray
+        eps_normalized :
             ``(n, )`` array of normalized emittance.
 
         """
@@ -141,15 +141,14 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
 
         Parameters
         ----------
-        phase_space_name : Literal["x99", "y99", "phiw99"]
+        phase_space_name :
             Name of a single phase space.
-        results : dict[str, numpy.ndarray]
+        results :
             Results dictionary, which keys are ``tracewin.out`` or
             ``partran1.out`` headers and which values are corresponding data.
 
         Returns
         -------
-        eps : numpy.ndarray
             99% emittance in the desired phase space.
 
         """

@@ -134,38 +134,6 @@ def load_phase_space(accelerator: Accelerator) -> list[np.ndarray]:
     return partran_data
 
 
-def output_cavities(linac: Accelerator, out: bool = False) -> pd.DataFrame:
-    """Output relatable parameters of cavities in list_of_cav."""
-    columns = (
-        "name",
-        "status",
-        "k_e",
-        "phi_0_abs",
-        "phi_0_rel",
-        "v_cav_mv",
-        "phi_s",
-    )
-    df_cav = pd.DataFrame(columns=columns)
-
-    # full_list_of_cav = linac.get_elts('nature', 'FIELD_MAP')
-
-    for i, cav in enumerate(linac.l_cav):
-        line = cav.get(*columns, to_deg=True, to_numpy=False, none_to_nan=True)
-        df_cav.loc[i] = line
-
-    # Output only the cavities that have changed
-    if "Fixed" in linac.name:
-        df_out = pd.DataFrame(columns=columns)
-        i = 0
-        for cav in linac.l_cav:
-            if "compensate" in cav.status:
-                i += 1
-                df_out.loc[i] = df_cav.loc[linac.l_cav.index(cav)]
-        if out:
-            logging.info(helper.pd_output(df_out, header=linac.name))
-    return df_cav
-
-
 def _create_output_fit_dicts() -> dict[str, dict]:
     col = ("Name", "Status", "Min.", "Max.", "Fixed", "Orig.", "(var %)")
     d_pd = {

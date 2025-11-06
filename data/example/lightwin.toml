@@ -5,14 +5,16 @@ project_folder = "results_tests/"
 [generic_envelope1d]
 export_phase = "phi_0_abs"
 flag_cython = true
-flag_phi_abs = true
+# flag_phi_abs = true  # Deprecated! Use ``reference_phase_policy``.
 method = "RK4"
 n_steps_per_cell = 40
+reference_phase_policy = "phi_0_abs"
 tool = "Envelope1D"
 
 [generic_envelope3d]
-flag_phi_abs = true
+# flag_phi_abs = true  # Deprecated! Use ``reference_phase_policy``.
 n_steps_per_cell = 40
+reference_phase_policy = "phi_0_abs"
 tool = "Envelope3D"
 
 [generic_tracewin]
@@ -39,12 +41,13 @@ sigma = [
 ]
 
 [generic_wtf]
-failed = [["FM11"]]
+failed = [["FM120"]]
 id_nature = "name"
 k = 5
 objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
+shift = 0
 strategy = "k out of n"
 
 [save_wtf]
@@ -90,6 +93,19 @@ max_increase_sync_phase_in_percent = 40.0
 maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = true
 min_absolute_sync_phase_in_deg = -90.0
 
+[wtf_corrector_at_exit]
+# Remember to set ``reference_phase_policy`` to ``"phi_s"``!
+failed = [["FM120"]]
+id_nature = "name"
+n_compensating = 2
+n_correctors = 2
+objective_preset = "CorrectorAtExit"
+optimisation_algorithm = "downhill_simplex"
+optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
+shift = 0
+strategy = "corrector at exit"
+
+
 [design_space_from_file]
 constraints_filepath = "constraints.csv"
 design_space_preset = "abs_phase_amplitude"
@@ -113,7 +129,7 @@ variables_filepath = "variables_centered_around_solution.csv"
 design_space_preset = "sync_phase_amplitude"
 from_file = false
 max_absolute_sync_phase_in_deg = 0.0
-max_decrease_k_e_in_percent = 20.0
+max_decrease_k_e_in_percent = 80.0
 max_increase_k_e_in_percent = 180.0
 max_increase_sync_phase_in_percent = 40.0
 maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = true

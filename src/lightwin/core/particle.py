@@ -95,8 +95,8 @@ class ParticleFullTrajectory:
         """Raise an error, this method should be called from InitialPart."""
         raise OSError("This method should not be used from here.")
 
-    def compute_complementary_data(self):
-        """Compute some data necessary to do the post-treatment."""
+    def compute_reduced_velocity(self) -> None:
+        r"""Compute and store :math:`\beta`."""
         self.beta = convert.energy(self.gamma, "gamma to beta", **self.beam)
 
     def has(self, key: str) -> bool:

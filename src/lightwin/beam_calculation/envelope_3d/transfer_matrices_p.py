@@ -39,13 +39,13 @@ def drift(
 
     Parameters
     ----------
-    gamma_in : float
+    gamma_in :
         Lorentz gamma at entry of drift.
-    delta_s : float
-        Size of the drift in mm.
-    omega_0_bunch : float
+    delta_s :
+        Size of the drift in :unit:`mm`.
+    omega_0_bunch :
         Pulsation of the beam.
-    n_steps : int, optional
+    n_steps :
         Number of integration steps. The number of integration steps has no
         influence on the results. The default is one. It is different from
         unity when crossing a failed field map, as it allows to keep the same
@@ -54,12 +54,12 @@ def drift(
 
     Returns
     -------
-    transfer_matrix: np.ndarray
+    transfer_matrix :
         (n_steps, 6, 6) array containing the transfer matrices.
-    gamma_phi : numpy.ndarray
+    gamma_phi :
         (n_steps, 2) with Lorentz gamma in first column and relative phase in
         second column.
-    itg_field : None
+    itg_field :
         Dummy variable for consistency with the field map function.
 
     """
@@ -99,33 +99,33 @@ def quad(
 
     Parameters
     ----------
-    delta_s : float
-        Size of the drift in m.
-    gamma_in : float
+    delta_s :
+        Size of the drift in :unit:`m`.
+    gamma_in :
         Lorentz gamma at entry of drift.
-    n_steps : int, optional
+    n_steps :
         Number of integration steps. The number of integration steps has no
         influence on the results. The default is one. It is different from
         unity when crossing a failed field map, as it allows to keep the same
         size of ``transfer_matrix`` and ``gamma_phi`` between nominal and fixed
         linacs.
-    gradient : float
-        Quadrupole gradient in T/m.
-    omega_0_bunch : float
+    gradient :
+        Quadrupole gradient in :unit:`T/m`.
+    omega_0_bunch :
         Pulsation of the beam.
-    q_adim : float
+    q_adim :
         Adimensioned charge of accelerated particle.
-    e_rest_mev : float
+    e_rest_mev :
         Rest energy of the accelerated particle.
 
     Returns
     -------
-    transfer_matrix: np.ndarray
+    transfer_matrix :
         (1, 6, 6) array containing the transfer matrices.
-    gamma_phi : numpy.ndarray
+    gamma_phi :
         (1, 2) with Lorentz gamma in first column and relative phase in
         second column.
-    itg_field : None
+    itg_field :
         Dummy variable for consistency with the field map function.
 
     """
@@ -229,21 +229,19 @@ def field_map_rk4(
 
     # Define the motion function to integrate
     def du(z: float, u: np.ndarray) -> np.ndarray:
-        """
-        Compute variation of energy and phase.
+        r"""Compute variation of energy and phase.
 
         Parameters
         ----------
-        z : float
+        z :
             Position where variation is calculated.
-        u : numpy.ndarray
-            First component is gamma. Second is phase in rad.
+        u :
+            First component is gamma. Second is phase in :unit:`rad`.
 
         Return
         ------
-        v : numpy.ndarray
-            First component is delta gamma / delta z in MeV / m.
-            Second is delta phase / delta_z in rad / m.
+            First component is :math:`\delta gamma / \delta z` in :unit:`MeV/m`.
+            Second is :math:`\delta \phi / \delta z` in :unit:`rad/m`.
 
         """
         v0 = delta_gamma_norm * real_e_func(z, u[1])
@@ -305,26 +303,25 @@ def thin_lense(
 
     Parameters
     ----------
-    scaled_e_middle : complex
+    scaled_e_middle :
         Complex electric field in the accelerating gap.
-    gamma_in : float
+    gamma_in :
         gamma at entrance of first drift.
-    gamma_out : float
+    gamma_out :
         gamma at exit of first drift.
-    gamma_phi_middle : list[float]
+    gamma_phi_middle :
         gamma and phi at the thin acceleration drift.
-    half_dz : float
+    half_dz :
         Half a spatial step in :unit:`m`.
-    omega0_rf : float
+    omega0_rf :
         Pulsation of the cavity.
-    delta_e_max : float
-        [TODO:description]
-    omega_0_bunch : float
+    delta_e_max :
+        Derivative of the electric field.
+    omega_0_bunch :
         Pulsation of the beam.
 
     Return
     ------
-    transfer_matrix : numpy.ndarray
         Transfer matrix of the thin lense.
 
     """

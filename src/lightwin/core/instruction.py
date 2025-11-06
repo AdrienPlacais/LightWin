@@ -16,7 +16,7 @@ from lightwin.tracewin_utils.line import DatLine
 
 
 class Instruction(ABC):
-    """An object corresponding to a line in a ``.dat`` file."""
+    """An object corresponding to a line in a ``DAT`` file."""
 
     line: DatLine
     idx: dict[str, int]
@@ -29,14 +29,14 @@ class Instruction(ABC):
         dat_idx: int | None = None,
         **kwargs,
     ) -> None:
-        """Instantiate corresponding line and line number in ``.dat`` file.
+        """Instantiate corresponding line and line number in ``DAT`` file.
 
         Parameters
         ----------
-        line : list[str]
+        line :
             Line containing the instructions.
-        dat_idx : int
-            Position in the ``.dat``. Note that this index will vary if some
+        dat_idx :
+            Position in the ``DAT``. Note that this index will vary if some
             instructions (empty lines, comments in particular) are removed from
             the dat content.
 
@@ -88,7 +88,7 @@ class Instruction(ABC):
         return str(self.line)
 
     def to_line(self, *args, **kwargs) -> list[str]:
-        """Convert the object back into a ``.dat`` line."""
+        """Convert the object back into a ``DAT`` line."""
         return self.line.splitted_full
 
     def increment_dat_position(self, increment: int = 1) -> None:
@@ -107,9 +107,9 @@ class Instruction(ABC):
 
         Parameters
         ----------
-        dat_filecontent : list[Collection[str]]
+        dat_filecontent :
             The list of instructions, in the form of a list of lines.
-        previously_inserted : int, optional
+        previously_inserted :
             Number of :class:`.Instruction` that were already inserted in the
             given ``dat_filecontent``.
 
@@ -128,9 +128,9 @@ class Instruction(ABC):
 
         Parameters
         ----------
-        dat_filecontent : list[Collection[str]]
+        dat_filecontent :
             The list of instructions, in the form of a list of lines.
-        previously_inserted : int, optional
+        previously_inserted :
             Number of :class:`.Instruction` that were already inserted in the
             given ``dat_filecontent``.
 
@@ -174,11 +174,11 @@ class Dummy(Instruction):
 
         Parameters
         ----------
-        line : DatLine
-            Arguments of the line in the ``.dat`` file.
-        dat_idx : int
-            Line number in the ``.dat`` file.
-        warning : bool, optional
+        line :
+            Arguments of the line in the ``DAT`` file.
+        dat_idx :
+            Line number in the ``DAT`` file.
+        warning :
             To raise a warning when the element is not implemented. The default
             is False.
 
@@ -206,10 +206,10 @@ class Comment(Dummy):
 
         Parameters
         ----------
-        line : list[str]
-            Arguments of the line in the ``.dat`` file.
-        dat_idx : int
-            Line number in the ``.dat`` file.
+        line :
+            Arguments of the line in the ``DAT`` file.
+        dat_idx :
+            Line number in the ``DAT`` file.
 
         """
         super().__init__(line, warning=False, **kwargs)

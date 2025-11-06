@@ -22,7 +22,7 @@ from lightwin.core.commands.factory import IMPLEMENTED_COMMANDS, CommandFactory
 from lightwin.core.commands.helper import apply_commands
 from lightwin.core.elements.dummy import DummyElement
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.factory import ElementFactory, implemented_elements
+from lightwin.core.elements.factory import IMPLEMENTED_ELEMENTS, ElementFactory
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.helper import (
     force_a_lattice_for_every_element,
@@ -61,11 +61,11 @@ class InstructionsFactory:
             Where to look for field maps when no ``FIELD_MAP_PATH`` is
             precised. This is also the folder where the ``DAT`` is.
         load_field :
-            To create or not the :class:`.Field`. This is not yer supported for
-            :class:`.CyEnvelope1D` and :class:`.Envelope3D`, but it is
+            Whether :class:`.Field` should be created. This is not supported
+            yet for :class:`.CyEnvelope1D` and :class:`.Envelope3D`, but it is
             mandatory for :class:`.Envelope1D`.
         field_maps_in_3d :
-            To load or not the field maps in 3D (useful only with
+            Whether 3D field maps should be loaded. This is useful only with
             :class:`.Envelope3D`... Except that this is not supported yet, so
             it is never useful.
         load_cython_field_maps :
@@ -74,7 +74,7 @@ class InstructionsFactory:
         elements_to_dump :
             Class of Elements that you want to remove. If you want to skip an
             Element because it is not implemented, prefer assigning it to a
-            :class:`.DummyElement`. The default is an empty tuple.
+            :class:`.DummyElement`.
         factory_kw :
             Other parameters passed to the :class:`.CommandFactory` and
             :class:`.ElementFactory`.
@@ -157,7 +157,7 @@ class InstructionsFactory:
         Parameters
         ----------
         line :
-            A single line of the ``.dat`` file.
+            A single line of the ``DAT`` file.
         dat_idx :
             Line number of the line (starts at 0). If not provided, taken from
             ``line``.
@@ -182,7 +182,7 @@ class InstructionsFactory:
             return self._command_factory.run(
                 dat_line, dat_idx, **instruction_kw
             )
-        if dat_line.instruction in implemented_elements:
+        if dat_line.instruction in IMPLEMENTED_ELEMENTS:
             return self.element_factory.run(
                 dat_line, dat_idx, **instruction_kw
             )

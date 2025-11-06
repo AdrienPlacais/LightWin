@@ -46,16 +46,20 @@ class SetSyncPhase(Command):
     def apply(
         self, instructions: Sequence[Instruction], **kwargs: float
     ) -> list[Instruction]:
-        """Modify reference of cavity."""
+        """Set ``phi_s``, remove previous reference phase.
+
+        When we apply this method, LightWin believes that the phase given in
+        the ``DAT`` file is an absolute or relative phase. We update the
+        ``reference`` of the :class:`.CavitySettings`, as well as the actual
+        value of ``phi_ref == phi_s``.
+
+        """
         for cavity in instructions[self.influenced]:
             assert isinstance(cavity, FieldMap)
             settings = cavity.cavity_settings
             # note that, at this point, LightWin believes that the phase given
             # in the .dat is an absolute or relative phase
-            phi_s = settings.phi_ref
-            assert phi_s is not None
-            settings.reference = "phi_s"
-            settings.phi_ref = phi_s
+            settings.set_reference("phi_s", phi_ref=settings.phi_ref)
         return list(instructions)
 
     def to_line(
@@ -67,9 +71,9 @@ class SetSyncPhase(Command):
         """Return the command, commented if output phase should not be phi_s.
 
         .. note::
-            We keep old implementation for now. But this method returns nothing
-            because the ``to_line`` method of :class:`.FieldMap` already
-            handles adding a ``SET_SYNC_PHASE`` when necessary.
+           We keep old implementation for now. But this method returns nothing
+           because the ``to_line`` method of :class:`.FieldMap` already
+           handles adding a ``SET_SYNC_PHASE`` when necessary.
 
         """
         return []

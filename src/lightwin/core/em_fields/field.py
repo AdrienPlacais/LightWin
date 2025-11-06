@@ -141,18 +141,18 @@ class Field(ABC):
 
         Parameters
         ----------
-        path : pathlib.Path
+        path :
             Path to a field map file.
 
         Returns
         -------
-        func : Callable[..., float]
+        func :
             Give field at a given position, position being a tuple of 1, 2 or 3
             floats.
-        n_interp : Any
+        n_interp :
             Number of interpolation points in the various directions (tuple of
             1, 2 or 3 integers).
-        n_cell : int
+        n_cell :
             Number of cells (makes sense only for .edz as for now).
 
         """
@@ -172,24 +172,24 @@ class Field(ABC):
 
         Parameters
         ----------
-        component_func : Callable[..., float]
+        component_func :
             The spatial field component function (e.g., self._e_x_spat_rf).
             Must accept a tuple of 1 to 3 floats (position) and return a float.
-        pos : Any
+        pos :
             The position at which to evaluate the field.
-        phi : float
+        phi :
             The phase angle.
-        amplitude : float
+        amplitude :
             The amplitude of the field.
-        phi_0_rel : float
+        phi_0_rel :
             The relative phase offset.
-        complex_output : bool, optional
+        complex_output :
             Whether to return a complex value. Defaults to True.
 
         Returns
         -------
-        complex | float
             The calculated field value.
+
         """
         phase = phi + phi_0_rel
         field_value = amplitude * component_func(pos) * math.cos(phase)

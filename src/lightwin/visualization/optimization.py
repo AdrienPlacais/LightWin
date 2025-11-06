@@ -28,13 +28,9 @@ def _get_objectives(fault_scenario: list[Fault] | None) -> list[Objective]:
     """Get the objectives stored in ``fault_scenario``."""
     if fault_scenario is None or len(fault_scenario) == 0:
         return []
-    if len(fault_scenario) > 1:
-        logging.info(
-            "There are several failures, so I'll plot only the objectives "
-            "corresponding to the first one."
-        )
-    fault = fault_scenario[0]
-    return fault.objectives
+    return [
+        objective for fault in fault_scenario for objective in fault.objectives
+    ]
 
 
 def mark_objectives_position(

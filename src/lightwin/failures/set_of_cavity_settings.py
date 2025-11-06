@@ -94,24 +94,23 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
 
         Parameters
         ----------
-        set_of_cavity_settings : SetOfCavitySettings | dict[FieldMap, CavitySettings] | None
+        set_of_cavity_settings :
             Object holding the settings of some cavities (typically, the
             settings of compensating cavities as given by an
             :class:`.OptimisationAlgorithm`). When it is None, every
             :class:`.CavitySettings` is taken from the :class:`.FieldMap`
             object (corresponds to run without optimisation).
-        cavities : Sequence[FieldMap]
+        cavities :
             All the cavities that should have :class:`.CavitySettings`
             (typically, all the cavities in a sub-:class:`.ListOfElements`
             studied during an optimisation process).
-        use_a_copy_for_nominal_settings : bool, optional
+        use_a_copy_for_nominal_settings :
             To create new :class:`.CavitySettings` for the cavities not already
             in ``set_of_cavity_settings``. Allows to compute quantities such as
             synchronous phase without altering the original one.
 
         Returns
         -------
-        Self
             A :class:`.SetOfCavitySettings` with settings from
             ``set_of_cavity_settings`` or from ``cavities`` if not in
             ``set_of_cavity_settings``.
@@ -162,18 +161,17 @@ def _settings_getter(
 
     Parameters
     ----------
-    cavity : FieldMap
+    cavity :
         Cavity for which you want settings.
-    set_of_cavity_settings : SetOfCavitySettings
+    set_of_cavity_settings :
         Different cavity settings (a priori given by an
         :class:`.OptimisationAlgorithm`), or an empty dict.
-    instantiate_new : bool, optional
+    instantiate_new :
         To force the creation of a new object; will allow to keep the original
         :class:`.CavitySettings` unaltered.
 
     Returns
     -------
-    CavitySettings
         Cavity settings for ``cavity``.
 
     """
@@ -182,5 +180,5 @@ def _settings_getter(
 
     return set_of_cavity_settings.get(
         cavity,
-        CavitySettings.from_other_cavity_settings(cavity.cavity_settings),
+        CavitySettings.copy(cavity.cavity_settings),
     )

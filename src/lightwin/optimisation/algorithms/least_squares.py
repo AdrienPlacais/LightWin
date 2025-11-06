@@ -22,7 +22,6 @@ class LeastSquares(DownhillSimplex):
 
         Returns
         -------
-        info : OptiSol
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 
@@ -35,8 +34,7 @@ class LeastSquares(DownhillSimplex):
             **self.optimisation_algorithm_kwargs,
         )
         self.opti_sol = self._generate_opti_sol(result)
-        complementary_info = ("Least-Squares algorithm", result.message)
-        self._finalize(self.opti_sol, *complementary_info)
+        self._finalize(self.opti_sol)
         return self.opti_sol
 
     @property

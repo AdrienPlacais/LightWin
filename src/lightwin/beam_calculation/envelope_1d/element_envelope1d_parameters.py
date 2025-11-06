@@ -12,7 +12,6 @@ The :class:`.Element` objects with a transfer matrix are ``DRIFT``,
 """
 
 import math
-from collections.abc import Collection
 from typing import Any, Callable, Literal
 
 import numpy as np
@@ -606,7 +605,7 @@ class DummyEnvelope1DParameters(ElementEnvelope1DParameters):
     def __init__(
         self,
         elt: Element,
-        beam_kwargs: dict[str, Any],
+        beam_kwargs: BeamKwargs,
         n_steps: int = 1,
         **kwargs: str | int,
     ) -> None:

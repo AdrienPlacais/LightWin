@@ -12,30 +12,33 @@ from collections.abc import Callable, Collection, Sequence
 from functools import partial
 from typing import Literal
 
+TIE_POLITICS = ("upstream first", "downstream first")
+TIE_POLITICS_T = Literal["upstream first", "downstream first"]
+
 
 def _distance_to_ref[T](
     element: T,
     failed: Sequence[T],
     all_elements: Sequence[T],
-    tie_politics: Literal["upstream first", "downstream first"],
+    tie_politics: TIE_POLITICS_T,
     shift: int = 0,
 ) -> tuple[int, int]:
     """Give distance between ``element`` and closest of ``failed``.
 
     Parameters
     ----------
-    element : T
+    element :
         First object from which you want distance. Often, an :class:`.Element`
         of a lattice that will potentially be used for compensation.
-    failed : Sequence[T]
+    failed :
         Second object or list of object from which you want distance. Often, a
         list of failed :class:`.Element` or a list of lattices with a fault.
-    all_elements : Sequence[T]
+    all_elements :
         All the elements/lattices/sections.
-    tie_politics : Literal["upstream first", "downstream first"]
+    tie_politics :
         When two elements have the same position, will you want to have the
         upstream or the downstream first?
-    shift : int, optional
+    shift :
         Distance increase for downstream elements (``shift < 0``) or upstream
         elements (``shift > 0``). Used to have a window of compensating
         cavities which is not centered around the failed elements. The default
@@ -43,10 +46,10 @@ def _distance_to_ref[T](
 
     Returns
     -------
-    lowest_distance : int
+    lowest_distance :
         Index-distance between ``element`` and closest element of ``failed``.
         Will be used as a primary sorting key.
-    index : int
+    index :
         Index of ``element``. Will be used as a secondary index key, to sort
         ties in distance.
 
@@ -84,11 +87,9 @@ def _penalty(index: int, failure_index: int, shift: int) -> int:
 def sort_by_position[T](
     all_elements: Sequence[T],
     failed: Sequence[T],
-    tie_politics: Literal[
-        "upstream first", "downstream first"
-    ] = "upstream first",
+    tie_politics: TIE_POLITICS_T = "upstream first",
     shift: int = 0,
-) -> Sequence[T]:
+) -> list[T]:
     """Sort given list by how far its elements are from ``elements[idx]``.
 
     We go across every element in ``all_elements`` and get their index-distance
@@ -98,21 +99,20 @@ def sort_by_position[T](
 
     Parameters
     ----------
-    failed : Sequence[T]
+    failed :
         Second object or list of object from which you want distance. Often, a
         list of failed :class:`.Element` or a list of lattices with a fault.
-    all_elements : Sequence[T]
+    all_elements :
         All the elements/lattices/sections.
-    tie_politics : Literal["upstream first", "downstream first"]
+    tie_politics :
         When two elements have the same position, will you want to have the
         upstream or the downstream first?
-    shift : int, optional
+    shift :
         Distance increase for downstream elements (``shift < 0``) or upstream
         elements (``shift > 0``). Used to have a window of compensating
         cavities which is not centered around the failed elements. Useful when
         upstream cavities have more important power margins, or when you want
-        more downstream cavities because a full cryomodule is down. The default
-        is 0.
+        more downstream cavities because a full cryomodule is down.
 
     """
     sorter = partial(
@@ -126,10 +126,10 @@ def sort_by_position[T](
 
 
 def remove_lists_with_less_than_n_elements[T](
-    elements: list[Sequence[T]], minimum_size: int = 1
-) -> list[Sequence[T]]:
+    elements: Sequence[Sequence[T]], minimum_size: int = 1
+) -> list[list[T]]:
     """Return a list where objects have a minimum length of ``minimum_size``."""
-    out = [x for x in elements if len(x) >= minimum_size]
+    out = [list(x) for x in elements if len(x) >= minimum_size]
     return out
 
 
@@ -141,18 +141,18 @@ def gather[T](
 
     Parameters
     ----------
-    failed_elements : list[T]
+    failed_elements :
         Holds ungathered failed cavities.
-    fun_sort : Callable[[Sequence[T] | Sequence[Sequence[T]]], list[T]]
+    fun_sort :
         Takes in a list or a list of list of failed cavities, returns the list
         or list of list of altered cavities (failed + compensating).
 
     Returns
     -------
-    failed_gathered : list[list[T]]
+    failed_gathered :
         Failures, gathered by faults that require the same compensating
         cavities.
-    compensating_gathered : list[list[T]]
+    compensating_gathered :
         Corresponding compensating cavities.
 
     """
@@ -210,7 +210,7 @@ def gather[T](
 def nested_containing_desired[T](
     nested: Collection[Sequence[T]],
     desired_elements: Collection[T],
-) -> list[Sequence[T]]:
+) -> list[list[T]]:
     """Return collections of ``nested`` containing some ``desired_elements``.
 
     Example
@@ -220,6 +220,6 @@ def nested_containing_desired[T](
 
     """
     nested_with_desired_elements = [
-        x for x in nested if not set(desired_elements).isdisjoint(x)
+        list(x) for x in nested if not set(desired_elements).isdisjoint(x)
     ]
     return nested_with_desired_elements

@@ -104,7 +104,7 @@ PLOT_PRESETS = {
     },
 }
 ERROR_PRESETS = {
-    "w_kin_err": {"scale": 1.0, "diff": "rel"},
+    "w_kin_err": {"scale": 1.0, "diff": "simple"},
     "phi_abs_err": {"scale": 1.0, "diff": "simple"},
 }
 #: List of implemented presets for the plots
@@ -142,6 +142,7 @@ def factory(
         - Reference linac, second solver
         - Fixed linac, first solver
         - Fixed linac, second solver
+
         If you provide only the two first linacs, the function will still work
         but they will be plotted twice.
     plots :
@@ -205,11 +206,11 @@ def _separate_plot_presets_from_plot_modificators(
 
     Returns
     -------
-    plot_presets : dict[str, bool]
+    plot_presets :
         Subset of ``plots``, with only the keys that can be found in
         :data:`ALLOWED_PLOT_PRESETS`. Indicates which plots presets will be plotted:
         ``"cav"``, ``"emittance"``...
-    plot_kwargs : dict[str, Any]
+    plot_kwargs :
         Subset of ``plots``, with only the keys corresponding to a plot
         modificator, eg ``"add_objectives"``.
 

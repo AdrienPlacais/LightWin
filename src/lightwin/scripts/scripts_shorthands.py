@@ -24,14 +24,13 @@ def compute_beam(
 
     Parameters
     ----------
-    beam_calculator : BeamCalculator
+    beam_calculator :
         Solver to use.
-    config : dict[str, dict[str, Any]]
+    config :
         Full configuration dictionary.
 
     Returns
     -------
-    Accelerator
         An accelerator with its :class:`.SimulationOutput`.
 
     """

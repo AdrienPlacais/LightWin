@@ -21,7 +21,6 @@ class DifferentialEvolution(DownhillSimplex):
 
         Returns
         -------
-        info : OptiSol
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 
@@ -33,8 +32,7 @@ class DifferentialEvolution(DownhillSimplex):
             func=self._norm_wrapper_residuals, x0=x_0, bounds=bounds, **kwargs
         )
         self.opti_sol = self._generate_opti_sol(result)
-        complementary_info = ("Differential Evolution", result.message)
-        self._finalize(self.opti_sol, *complementary_info)
+        self._finalize(self.opti_sol)
         return self.opti_sol
 
     def _algorithm_parameters(self) -> dict:

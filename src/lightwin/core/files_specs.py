@@ -20,7 +20,7 @@ FILES_CONFIG = (
     KeyValConfSpec(
         key="dat_file",
         types=(str, Path),
-        description="Path to the ``.dat`` file",
+        description="Path to the `DAT` file",
         default_value=example_dat,
         is_a_path_that_must_exists=True,
     ),

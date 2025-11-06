@@ -27,22 +27,22 @@ def load_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
 
     Parameters
     ----------
-    path : pathlib.Path
+    path :
         The path to the file to load.
 
     Returns
     -------
-    n_z : int
+    n_z :
         Number of steps in the array.
-    zmax : float
+    zmax :
         z position of the filemap end.
-    norm : float
+    norm :
         Electric field normalisation factor. It is different from ``k_e`` (6th
         argument of the FIELD_MAP command). Electric fields are normalised by
         ``k_e/norm``, hence norm should be unity by default.
-    f_z : numpy.ndarray
+    f_z :
         Array holding field. If electric, will be in :unit:`MV/m`.
-    n_cell : int
+    n_cell :
         Number of cells in the cavity.
 
     """
@@ -126,30 +126,30 @@ def load_field_3d(
 
     Parameters
     ----------
-    path : pathlib.Path
+    path :
         The path to the file to load.
 
     Returns
     -------
-    n_z : int
+    n_z :
         Number of steps along the z-axis.
-    zmax : float
+    zmax :
         Maximum z position.
-    n_x : int
+    n_x :
         Number of steps along the x-axis.
-    xmin : float
+    xmin :
         Minimum x position.
-    xmax : float
+    xmax :
         Maximum x position.
-    n_y : int
+    n_y :
         Number of steps along the y-axis.
-    ymin : float
+    ymin :
         Minimum y position.
-    ymax : float
+    ymax :
         Maximum y position.
-    norm : float
+    norm :
         Field normalization factor.
-    field_values : numpy.ndarray
+    field_values :
         3D array holding field values. If electric, will be in :unit:`MV/m`.
 
     """
@@ -209,29 +209,20 @@ def is_a_valid_3d_field(
 
     Parameters
     ----------
-    n_x, n_y, n_z : int
+    n_x, n_y, n_z :
         Number of steps along the three axis.
-    xmacx, ymax, zmax : float
+    zmax :
         Maximum z position.
-    ymin : float
-        Minimum y position.
-    ymax : float
-        Maximum y position.
-    xmin : float
-        Minimum x position.
-    xmax : float
-        Maximum x position.
-    field : np.ndarray
+    field :
         3D array holding field values.
-    cavity_length_z : float
+    cavity_length :
         Expected length along the z-axis.
-    tol : float, optional
+    tol :
         Tolerance for length comparisons, by default 1e-6.
 
     Returns
     -------
-    bool
-        True if the field is valid, False otherwise.
+        Whether the field is valid.
     """
     if field.shape != (n_z + 1, n_y + 1, n_x + 1):
         logging.error(

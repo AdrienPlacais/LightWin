@@ -14,11 +14,12 @@ Two objects can have a :class:`ListOfElements` as attribute:
 """
 
 import logging
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, Literal, Self, TypedDict, overload
 
 import numpy as np
+import pandas as pd
 
 from lightwin.core.beam_parameters.initial_beam_parameters import (
     InitialBeamParameters,
@@ -46,6 +47,7 @@ from lightwin.util.typing import (
     CONCATENABLE_ELTS,
     EXPORT_PHASES_T,
     GETTABLE_ELTS_T,
+    REFERENCE_PHASES_T,
 )
 
 element_id = int | str
@@ -97,7 +99,7 @@ class ListOfElements(list):
             A dictionary to hold information on the source and output
             files/folders of the object.
 
-            * ``dat_file``: absolute path to the ``.dat`` file
+            * ``dat_file``: absolute path to the ``DAT`` file
             * ``elts_n_cmds``: list of objects representing dat content
             * ``accelerator_path``: where calculation results for each
               :class:`.BeamCalculator` will be stored.
@@ -120,10 +122,6 @@ class ListOfElements(list):
 
         self._l_cav: list[FieldMap] = list(
             filter(lambda cav: isinstance(cav, FieldMap), self)
-        )
-        logging.info(
-            "Successfully created a ListOfElements with "
-            f"{self.w_kin_in = } MeV and {self.phi_abs_in = } rad."
         )
 
     @property
@@ -211,8 +209,8 @@ class ListOfElements(list):
     ) -> Any:
         """Get attributes from this class or its contained elements.
 
-        If the desired attribute belongs to :data:`GETTABLE_ELT` or
-        :data:`GETTABLE_FIELD_MAPS`, we concatenate the value of every element
+        If the desired attribute belongs to :data:`.GETTABLE_ELT` or
+        :data:`.GETTABLE_FIELD_MAP`, we concatenate the value of every element
         in a single list.
 
         Parameters
@@ -285,20 +283,20 @@ class ListOfElements(list):
         for i, elt in enumerate(elts_with_a_number):
             elt.idx["elt_idx"] = i
 
-    def force_reference_phases_to(self, new_reference_phase: str) -> None:
+    def force_reference_phases_to(self, reference: REFERENCE_PHASES_T) -> None:
         """Change the reference phase of the cavities in ``self``.
 
         This method is called by the :class:`.BeamCalculator`. It is used after
         the first propagation of the beam in the full :class:`ListOfElements`,
         to force every :class:`.CavitySettings` to use the reference phase
-        specified by the ``beam_calculator`` entry of the ``.toml``.
+        specified by the ``beam_calculator`` entry of the ``TOML``.
 
         """
         for cavity in self.l_cav:
             settings = cavity.cavity_settings
-            if settings.reference == new_reference_phase:
+            if settings.reference == reference:
                 continue
-            settings.reference = new_reference_phase
+            settings.set_reference(reference)
 
     def store_settings_in_dat(
         self,
@@ -306,15 +304,14 @@ class ListOfElements(list):
         exported_phase: EXPORT_PHASES_T,
         save: bool = True,
     ) -> None:
-        r"""Update the DAT file, save it if asked.
+        r"""Update the ``DAT`` file, save it if asked.
 
-        This method is called by the :meth:`.FaultScenario.fix_all` method
-        several times:
+        This method is called several times:
 
         * Once per :class:`.Fault` (only the compensation zone is saved).
         * When all the :class:`.Fault` were dealt with.
 
-        It is also called by :meth:`.Accelerator.keep_settings` method.
+        It is also called by :meth:`.Accelerator.keep` method.
 
         Parameters
         ----------
@@ -467,3 +464,27 @@ class ListOfElements(list):
 
         """
         return self.files
+
+
+def sumup_cavities(
+    elts: ListOfElements, filter: Callable[[FieldMap], bool] | None = None
+) -> pd.DataFrame:
+    """Extract main cavities information."""
+    columns = (
+        "name",
+        "status",
+        "k_e",
+        "phi_0_abs",
+        "phi_0_rel",
+        "v_cav_mv",
+        "phi_s",
+    )
+    df = pd.DataFrame(
+        [
+            cav.get(*columns, to_deg=True, to_numpy=False, none_to_nan=True)
+            for cav in elts.l_cav
+            if (not filter or filter(cav))
+        ],
+        columns=columns,
+    )
+    return df

@@ -26,6 +26,8 @@ from lightwin.core.elements.solenoid import Solenoid
 from lightwin.physics.synchronous_phases import PHI_S_MODELS
 from lightwin.util.typing import BeamKwargs
 
+#: Implemented elements; a non-implemented element will be replaced by a Drift.
+#: A warning will be raised.
 PARAMETERS_3D = {
     Bend: BendEnvelope3DParameters,
     Diagnostic: DriftEnvelope3DParameters,
@@ -33,7 +35,7 @@ PARAMETERS_3D = {
     FieldMap: FieldMapEnvelope3DParameters,
     Quad: QuadEnvelope3DParameters,
     Solenoid: SolenoidEnvelope3DParameters,
-}  #:
+}
 
 
 class ElementEnvelope3DParametersFactory(

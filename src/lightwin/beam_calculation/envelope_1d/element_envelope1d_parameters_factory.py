@@ -34,25 +34,29 @@ from lightwin.core.elements.thin_steering import ThinSteering
 from lightwin.physics.synchronous_phases import PHI_S_MODELS
 from lightwin.util.typing import BeamKwargs
 
+#: Implemented elements; a non-implemented element will be replaced by a Drift.
+#: A warning will be raised.
+PARAMETERS_1D = {
+    Aperture: DriftEnvelope1DParameters,
+    Bend: BendEnvelope1DParameters,
+    Diagnostic: DriftEnvelope1DParameters,
+    Drift: DriftEnvelope1DParameters,
+    Edge: DriftEnvelope1DParameters,
+    FieldMap: FieldMapEnvelope1DParameters,
+    Quad: DriftEnvelope1DParameters,
+    Solenoid: DriftEnvelope1DParameters,
+    SuperposedFieldMap: SuperposedFieldMapEnvelope1DParameters,
+    SuperposedPlaceHolderElt: DummyEnvelope1DParameters,
+    ThinSteering: DriftEnvelope1DParameters,
+}
+
 
 class ElementEnvelope1DParametersFactory(
     ElementBeamCalculatorParametersFactory
 ):
     """Define a method to easily create the solver parameters."""
 
-    parameters = {
-        Aperture: DriftEnvelope1DParameters,
-        Bend: BendEnvelope1DParameters,
-        Diagnostic: DriftEnvelope1DParameters,
-        Drift: DriftEnvelope1DParameters,
-        Edge: DriftEnvelope1DParameters,
-        FieldMap: FieldMapEnvelope1DParameters,
-        Quad: DriftEnvelope1DParameters,
-        Solenoid: DriftEnvelope1DParameters,
-        SuperposedFieldMap: SuperposedFieldMapEnvelope1DParameters,
-        SuperposedPlaceHolderElt: DummyEnvelope1DParameters,
-        ThinSteering: DriftEnvelope1DParameters,
-    }  #:
+    _parameters = PARAMETERS_1D
 
     def __init__(
         self,
@@ -135,15 +139,15 @@ class ElementEnvelope1DParametersFactory(
 
         """
         if isinstance(elt, FieldMap) and not elt.is_accelerating:
-            return self.parameters[Drift]
+            return self._parameters[Drift]
 
         element_class = type(elt)
-        constructor = self.parameters.get(element_class, None)
+        constructor = self._parameters.get(element_class, None)
         if constructor is not None:
             return constructor
 
         super_class = element_class.__base__
-        constructor = self.parameters.get(super_class, None)
+        constructor = self._parameters.get(super_class, None)
         if constructor is not None:
             return constructor
 
@@ -155,4 +159,4 @@ class ElementEnvelope1DParametersFactory(
             "Note that you can use the elements_to_dump key in the "
             "Envelope1D.ListOfElementFactory class."
         )
-        return self.parameters[Drift]
+        return self._parameters[Drift]

@@ -34,18 +34,16 @@ def load_dat_file(
 
     Parameters
     ----------
-    dat_path : pathlib.Path
-        Filepath to the ``.dat`` file, as understood by TraceWin.
-    keep : Literal["none", "comments", "empty lines", "all"], optional
+    dat_path :
+        Filepath to the ``DAT`` file, as understood by TraceWin.
+    keep :
         To determine which un-necessary lines in the dat file should be kept.
-        The default is `'none'`.
-    instructions_to_insert : Collection[Instruction], optional
-        Some elements or commands that are not present in the ``.dat`` file but
-        that you want to add. The default is an empty tuple.
+    instructions_to_insert :
+        Some elements or commands that are not present in the ``DAT`` file but
+        that you want to add.
 
     Returns
     -------
-    dat_filecontent : list[list[str]]
         List containing all the lines of dat_path.
 
     """
@@ -148,15 +146,14 @@ def results(path: Path, prop: str) -> np.ndarray:
 
     Parameters
     ----------
-    path : pathlib.Path
+    path :
         Path to results file. It must be saved from TraceWin:
         ``Data`` > ``Save table to file``.
-    prop : str
+    prop :
         Name of the desired property. Must be in d_property.
 
     Returns
     -------
-    data_ref : numpy.ndarray
         Array containing the desired property.
 
     """

@@ -19,34 +19,35 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.beam_calculation.tracewin.tracewin import TraceWin
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.cavity_settings import REFERENCE_PHASES
 from lightwin.core.elements.field_maps.field_map import FieldMap
-from lightwin.core.list_of_elements.factory import ListOfElementsFactory
+from lightwin.core.list_of_elements.list_of_elements import sumup_cavities
 from lightwin.evaluator.list_of_simulation_output_evaluators import (
     FaultScenarioSimulationOutputEvaluators,
 )
 from lightwin.failures import strategy
 from lightwin.failures.fault import Fault
-from lightwin.optimisation.algorithms.algorithm import (
-    OptimisationAlgorithm,
-    OptiSol,
-)
+from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
 from lightwin.optimisation.algorithms.factory import (
-    ALGORITHMS_T,
-    optimisation_algorithm_factory,
+    OptimisationAlgorithmFactory,
 )
 from lightwin.optimisation.design_space.factory import (
     DesignSpaceFactory,
     get_design_space_factory,
 )
-from lightwin.optimisation.objective.factory import ObjectiveFactory
-from lightwin.util import debug
+from lightwin.optimisation.objective.factory import (
+    ObjectiveFactory,
+    ObjectiveMetaFactory,
+)
+from lightwin.util.helper import pd_output
 from lightwin.util.pickling import MyPickler
+from lightwin.util.typing import (
+    REFERENCE_PHASE_POLICY_T,
+    REFERENCE_PHASES,
+    REFERENCE_PHASES_T,
+)
 
-DISPLAY_CAVITIES_INFO = True
 
-
-class FaultScenario(list):
+class FaultScenario(list[Fault]):
     """A class to hold all fault related data."""
 
     def __init__(
@@ -64,34 +65,27 @@ class FaultScenario(list):
     ) -> None:
         """Create the :class:`FaultScenario` and the :class:`.Fault` objects.
 
-        .. todo::
-            Could be cleaner.
-
         Parameters
         ----------
-        ref_acc : Accelerator
+        ref_acc :
             The reference linac (nominal or baseline).
-        fix_acc : Accelerator
+        fix_acc :
             The broken linac to be fixed.
-        beam_calculator : BeamCalculator
+        beam_calculator :
             The solver that will be called during the optimisation process.
-        initial_beam_parameters_factory : InitialBeamParametersFactory
-            An object to create beam parameters at the entrance of the linac
-            portion.
-        wtf : dict[str, str | int | bool | list[str] | list[float]]
+        wtf :
             What To Fit dictionary. Holds information on the fixing method.
-        design_space_factory : DesignSpaceFactory
+        design_space_factory :
             An object to easily create the proper :class:`.DesignSpace`.
-        fault_idx : list[int | list[int]]
+        fault_idx :
             List containing the position of the errors. If ``strategy`` is
             manual, it is a list of lists (faults already gathered).
-        comp_idx : list[list[int]], optional
+        comp_idx :
             List containing the position of the compensating cavities. If
-            ``strategy`` is manual, it must be provided. The default is None.
-        info_other_sol : list[dict], optional
-            Contains information on another fit, for comparison purposes. The
-            default is None.
-        objective_factory_class : type[ObjectiveFactory] | None, optional
+            ``strategy`` is manual, it must be provided.
+        info_other_sol :
+            Contains information on another fit, for comparison purposes.
+        objective_factory_class :
             If provided, will override the ``objective_preset``. Used to let
             user define it's own :class:`.ObjectiveFactory` without altering
             the source code.
@@ -107,79 +101,60 @@ class FaultScenario(list):
         self.info = {}
         self.optimisation_time: datetime.timedelta
 
+        self._design_space_factory = design_space_factory
+        self._list_of_elements_factory = (
+            beam_calculator.list_of_elements_factory
+        )
+        self._objective_factory_class = objective_factory_class
+        self._objective_meta_factory = ObjectiveMetaFactory(
+            self._reference_simulation_output
+        )
+
         cavities = strategy.failed_and_compensating(
             fix_acc.elts, failed=fault_idx, compensating_manual=comp_idx, **wtf
         )
-        faults = self._set_faults(
-            self._get_reference(),
-            beam_calculator.list_of_elements_factory,
-            design_space_factory,
-            *cavities,
-            objective_factory_class=objective_factory_class,
-        )
+        faults = self._create_faults(*cavities)
         super().__init__(faults)
 
-        # Change status of cavities after the first one that is down. Idea
-        # is to keep relative phi_0 between ref and fix linacs (linac
-        # rephasing)
-        if not beam_calculator.flag_phi_abs:
-            self._set_cavities_to_rephase()
+        self._mark_cavities_to_rephase()
+        for fault in self:
+            fault.pre_compensation_status()
 
-        self._break_cavities()
+        self._optimisation_algorithm_factory = OptimisationAlgorithmFactory(
+            opti_method=wtf["optimisation_algorithm"],
+            beam_calculator=beam_calculator,
+            reference_simulation_output=self._reference_simulation_output,
+            **wtf,
+        )
+        self._objective_factories: list[ObjectiveFactory] = []
 
-    def _set_faults(
-        self,
-        reference_simulation_output: SimulationOutput,
-        list_of_elements_factory: ListOfElementsFactory,
-        design_space_factory: DesignSpaceFactory,
-        *cavities: Sequence[Sequence[FieldMap]],
-        objective_factory_class: type[ObjectiveFactory] | None = None,
+    def _create_faults(
+        self, *cavities: Sequence[Sequence[FieldMap]]
     ) -> list[Fault]:
         """Create the :class:`.Fault` objects.
 
         Parameters
         ----------
-        reference_simulation_output : SimulationOutput
-            The simulation of the nominal linac we'll try to match.
-        list_of_elements_factory : ListOfElementsFactory
-            An object that can create :class:`.ListOfElements`.
-        design_space_factory : DesignSpaceFactory
-            An object that can create :class:`.DesignSpace`.
-        *cavities : Sequence[Sequence[FieldMap]]
+        *cavities :
             First if the list of gathered failed cavities. Second is the list
             of corresponding compensating cavities.
-        objective_factory_class : type[ObjectiveFactory] | None, optional
-            If provided, will override the ``objective_preset``. Used to let
-            user define it's own :class:`.ObjectiveFactory` without altering
-            the source code.
-
-        Returns
-        -------
-        list[Fault]
 
         """
-        faults = []
-        files_from_full_list_of_elements = self.fix_acc.elts.files_info
-
-        for faulty_cavities, compensating_cavities in zip(
-            *cavities, strict=True
-        ):
-            fault = Fault(
+        faults = [
+            Fault(
                 reference_elts=self.ref_acc.elts,
-                reference_simulation_output=reference_simulation_output,
-                files_from_full_list_of_elements=files_from_full_list_of_elements,
-                wtf=self.wtf,
-                design_space_factory=design_space_factory,
                 broken_elts=self.fix_acc.elts,
                 failed_elements=faulty_cavities,
                 compensating_elements=compensating_cavities,
-                list_of_elements_factory=list_of_elements_factory,
-                objective_factory_class=objective_factory_class,
             )
-            faults.append(fault)
+            for faulty_cavities, compensating_cavities in zip(
+                *cavities, strict=True
+            )
+        ]
         return faults
 
-    def _get_reference(self) -> SimulationOutput:
+    @property
+    def _reference_simulation_output(self) -> SimulationOutput:
         """Determine wich :class:`.SimulationOutput` is the reference."""
         solvers_already_used = list(self.ref_acc.simulation_outputs.keys())
         assert len(solvers_already_used) > 0, (
@@ -190,77 +165,22 @@ class FaultScenario(list):
         reference_simulation_output = self.ref_acc.simulation_outputs[solv1]
         return reference_simulation_output
 
-    def _set_cavities_to_rephase(self) -> None:
-        """Change the status of cavities after first failure."""
-        logging.warning(
-            "The phases in the broken linac are relative. It may be more "
-            "relatable to use absolute phases, as it would avoid the rephasing"
-            " of the linac at each cavity."
-        )
-        cavities = self.fix_acc.l_cav
-        first_failed_cavity = self[0].failed_elements[0]
-        first_failed_index = cavities.index(first_failed_cavity)
-
-        cavities_to_rephase = cavities[first_failed_index:]
-        for cav in cavities_to_rephase:
-            cav.update_status("rephased (in progress)")
-
-    def _set_optimisation_algorithms(self) -> list[OptimisationAlgorithm]:
-        """Set each fault's optimisation algorithm.
-
-        Returns
-        -------
-        optimisation_algorithms : list[OptimisationAlgorithm]
-            The optimisation algorithm for each fault in ``self``.
-
-        """
-        opti_method: ALGORITHMS_T
-        opti_method = self.wtf["optimisation_algorithm"]
-
-        optimisation_algorithms = [
-            optimisation_algorithm_factory(
-                opti_method, fault, self.beam_calculator, **self.wtf
-            )
-            for fault in self
-        ]
-        return optimisation_algorithms
-
-    def _break_cavities(self) -> None:
-        """Break the cavities."""
-        for fault in self:
-            fault.update_elements_status(optimisation="not started")
-
     def fix_all(self) -> None:
-        """Fix all the :class:`.Fault` objects in self.
-
-        .. todo::
-            make this more readable
-
-        """
+        """Fix all the :class:`.Fault` objects in self."""
         start_time = time.monotonic()
 
-        ref_simulation_output = self.ref_acc.simulation_outputs[
-            self.beam_calculator.id
-        ]
-        optimisation_algorithms = self._set_optimisation_algorithms()
+        simulation_output = self._reference_simulation_output
+        for fault in self:
+            simulation_output = self._wrap_fix(fault, simulation_output)
 
-        for fault, optimisation_algorithm in zip(
-            self, optimisation_algorithms
-        ):
-            self._wrap_single_fix(
-                fault, optimisation_algorithm, ref_simulation_output
-            )
+        delta_t = datetime.timedelta(seconds=time.monotonic() - start_time)
+        logging.info(f"Solving all the optimization problems took {delta_t}")
+        self.optimisation_time = delta_t
+
         successes = [fault.success for fault in self]
-
         self.fix_acc.name = (
-            f"Fixed ({str(successes.count(True))}"
-            + f" of {str(len(successes))})"
+            f"Fixed ({successes.count(True)} of {len(successes)})"
         )
-
-        for linac in (self.ref_acc, self.fix_acc):
-            self.info[linac.name + " cav"] = debug.output_cavities(
-                linac, DISPLAY_CAVITIES_INFO
-            )
 
         self._evaluate_fit_quality(save=True)
 
@@ -270,104 +190,94 @@ class FaultScenario(list):
             exported_phase=exported_phase,
             save=True,
         )
-        end_time = time.monotonic()
-        delta_t = datetime.timedelta(seconds=end_time - start_time)
-        logging.info(f"Elapsed time for optimization: {delta_t}")
 
-        self.optimisation_time = delta_t
+    def _wrap_fix(
+        self, fault: Fault, simulation_output: SimulationOutput
+    ) -> SimulationOutput:
+        """Fix the fault and recompute propagation with new settings.
 
-    def _wrap_single_fix(
-        self,
-        fault: Fault,
-        optimisation_algorithm: OptimisationAlgorithm,
-        ref_simulation_output: SimulationOutput,
-    ) -> OptiSol:
-        """Fix a fault and recompute propagation with new settings."""
-        opti_sol = fault.fix(optimisation_algorithm)
+        Orchestrates:
+         - build :class:`.DesignSpace`
+         - build :class:`.ObjectiveFactory` (objectives + residuals routine)
+         - create :class:`.OptimisationAlgorithm` (solver) using factories
+           above
+         - run :meth:`.Fault.fix`
+         - postprocess and logging
 
-        simulation_output = (
-            self.beam_calculator.post_optimisation_run_with_this(
-                fault.optimized_cavity_settings, self.fix_acc.elts
-            )
+        Parameters
+        ----------
+        fault :
+            The fault to fix.
+        simulation_output :
+            The most recent simulation, that includes the compensation settings
+            of all :class:`.Fault` upstream of ``fault``.
+
+        Returns
+        -------
+            Most recent simulation, that includes the compensation settings of
+            upstream :class:`.Fault` as well as of this one.
+
+        """
+        optimisation_algorithm = self._prepare_fix_objects(
+            fault, simulation_output
         )
-        simulation_output.compute_complementary_data(
-            self.fix_acc.elts, ref_simulation_output=ref_simulation_output
+
+        fault.fix(optimisation_algorithm)
+
+        simulation_output = fault.postprocess_fix(
+            self.fix_acc,
+            self.beam_calculator,
+            self._reference_simulation_output,
+            self._reference_phase_policy,
         )
 
-        self.fix_acc.keep_settings(
-            simulation_output, exported_phase=self._reference_phase
+        # TODO clean following
+        df_altered = sumup_cavities(
+            fault.subset_elts, filter=lambda cav: cav.is_altered
         )
-        self.fix_acc.keep_simulation_output(
-            simulation_output, self.beam_calculator.id
-        )
-
-        fault.update_elements_status(optimisation="finished", success=True)
-        fault.elts.store_settings_in_dat(
-            fault.elts.files_info["dat_file"],
-            exported_phase=self._reference_phase,
+        logging.info(f"Retuned cavities:\n{pd_output(df_altered)}")
+        fault.subset_elts.store_settings_in_dat(
+            fault.subset_elts.files_info["dat_file"],
+            exported_phase=self.beam_calculator.reference_phase_policy,
             save=True,
         )
+        return simulation_output
 
-        if self._reference_phase == "phi_0_rel":
-            self._update_rephased_cavities_status(fault)
+    def _prepare_fix_objects(
+        self, fault: Fault, simulation_output: SimulationOutput
+    ) -> OptimisationAlgorithm:
+        """Create objects to instantiate the :class:`.OptimisationAlgorithm`."""
+        design_space = self._design_space_factory.create(
+            fault.compensating_elements, fault.reference_elements
+        )
+        objective_factory = self._objective_meta_factory.create(
+            self.wtf["objective_preset"],
+            self._design_space_factory.design_space_kw,
+            fault.packed_elements,
+            self._objective_factory_class,
+        )
+        self._objective_factories.append(objective_factory)
 
-        return opti_sol
+        subset_elts = self._list_of_elements_factory.subset_list_run(
+            objective_factory.elts_of_compensation_zone,
+            simulation_output,
+            self.fix_acc.elts.files_info,
+        )
+        fault.subset_elts = subset_elts
+        logging.info(
+            "Created a ListOfElements ecompassing a linac subset.\n"
+            f"Encompasses: {subset_elts[0]} to {subset_elts[1]}\nw_kin_in = "
+            f"{subset_elts.w_kin_in:.2f} MeV\nphi_abs_in = "
+            f"{subset_elts.phi_abs_in:.2f} rad"
+        )
 
-    def _update_rephased_cavities_status(self, fault: Fault) -> None:
-        """Modify the status of the cavities that were already rephased.
-
-        Change the cavities with status "rephased (in progress)" to
-        "rephased (ok)" between ``fault`` and the next one.
-
-        """
-        elts = self.fix_acc.elts
-        idx_start = elts.index(fault.elts[-1])
-        for elt in elts[idx_start:]:
-            if not isinstance(elt, FieldMap):
-                continue
-            if elt.status == "rephased (in progress)":
-                elt.update_status("rephased (ok)")
-                continue
-            if "compensate" in elt.status or "failed" in elt.status:
-                return
-        # Old implementation, kept au cas où
-        # idx1 = fault.elts[-1].idx["elt_idx"]
-        # idx2 = len(elts)
-        # if fault is not self[-1]:
-        #     next_fault = self[self.index(fault) + 1]
-        #     idx2 = next_fault.elts[0].idx["elt_idx"] + 1
-        #
-        # rephased_cavities_between_two_faults = [
-        #     elt
-        #     for elt in elts[idx1:idx2]
-        #     if elt.get("nature") == "FIELD_MAP"
-        #     and elt.get("status") == "rephased (in progress)"
-        # ]
-        #
-        # for cav in rephased_cavities_between_two_faults:
-        #     cav.update_status("rephased (ok)")
-        # return
-
-    def _transfer_phi0_from_ref_to_broken(self) -> None:
-        """Transfer the entry phases from reference linac to broken.
-
-        If the absolute initial phases are not kept between reference and
-        broken linac, it comes down to rephasing the linac. This is what we
-        want to avoid when ``beam_calculator.flag_phi_abs == True``.
-
-        """
-        ref_settings = [x.cavity_settings for x in self.ref_acc.l_cav]
-        fix_settings = [x.cavity_settings for x in self.fix_acc.l_cav]
-
-        for ref, fix in zip(ref_settings, fix_settings):
-            phi_0_ref = getattr(ref, self._reference_phase)
-            fix.reference = self._reference_phase
-            fix.phi_ref = phi_0_ref
-
-    @property
-    def _reference_phase(self) -> REFERENCE_PHASES:
-        """Give the reference phase ``"phi_0_rel"`` or ``"phi_0_abs"``."""
-        return self.beam_calculator.reference_phase
+        optimisation_algorithm = self._optimisation_algorithm_factory.create(
+            fault.compensating_elements,
+            objective_factory,
+            design_space,
+            subset_elts,
+        )
+        return optimisation_algorithm
 
     def _evaluate_fit_quality(
         self,
@@ -379,13 +289,13 @@ class FaultScenario(list):
 
         Parameters
         ----------
-        save : bool, optional
-            To tell if you want to save the evaluation. The default is True.
-        id_solver_ref : str | None, optional
+        save :
+            To tell if you want to save the evaluation.
+        id_solver_ref :
             Id of the solver from which you want reference results. The default
             is None. In this case, the first solver is taken
             (``beam_calc_param``).
-        id_solver_fix : str | None, optional
+        id_solver_fix :
             Id of the solver from which you want fixed results. The default is
             None. In this case, the solver is the same as for reference.
 
@@ -403,7 +313,7 @@ class FaultScenario(list):
             "mismatch_factor_zdelta",
         )
         my_evaluator = FaultScenarioSimulationOutputEvaluators(
-            quantities_to_evaluate, [fault for fault in self], simulations
+            quantities_to_evaluate, self._objective_factories, simulations
         )
         my_evaluator.run(output=True)
 
@@ -413,11 +323,10 @@ class FaultScenario(list):
         #     df_eval.to_csv(out)
 
     def _set_evaluation_elements(
-        self,
-        additional_elt: list[Element] | None = None,
-    ) -> dict[str, Element]:
+        self, additional_elt: list[Element] | None = None
+    ) -> list[Element]:
         """Set a the proper list of where to check the fit quality."""
-        evaluation_elements = [fault.elts[-1] for fault in self]
+        evaluation_elements = [fault.subset_elts[-1] for fault in self]
         if additional_elt is not None:
             evaluation_elements += additional_elt
         evaluation_elements.append(self.fix_acc.elts[-1])
@@ -468,6 +377,78 @@ class FaultScenario(list):
         fault_scenario = pickler.unpickle(path)
         return fault_scenario  # type: ignore
 
+    def _mark_cavities_to_rephase(self) -> None:
+        """Change the status of cavities after first failure.
+
+        Only cavities with a reference phase different from ``"phi_0_abs"`` are
+        altered.
+
+        .. todo::
+           Could probably be simpler.
+
+        """
+        if self._reference_phase_policy == "phi_0_abs":
+            return
+        cavities = self.fix_acc.l_cav
+        first_failed_index = cavities.index(self[0].failed_elements[0])
+        cavities_after_first_failure = cavities[first_failed_index:]
+        cavities_to_rephase = [
+            c
+            for c in cavities_after_first_failure
+            if c.cavity_settings.reference != "phi_0_abs"
+        ]
+        logging.info(
+            f"Marking {len(cavities_to_rephase)} cavities as 'to be rephased',"
+            " because they are after a failed cavity and their reference phase "
+            "is phi_s or phi_0_rel."
+        )
+        for cav in cavities_to_rephase:
+            cav.update_status("rephased (in progress)")
+
+    # =========================================================================
+    # Reference phase related
+    # =========================================================================
+    def _transfer_phi0_from_ref_to_broken(self) -> None:
+        """Transfer the reference phases from reference linac to broken.
+
+        If the absolute initial phases are not kept between reference and
+        broken linac, it comes down to rephasing the linac. This is what we
+        want to avoid when :attr:`.BeamCalculator.reference_phase_policy` is
+        set to ``"phi_0_abs"``.
+
+        """
+        ref_cavs = (x for x in self.ref_acc.l_cav)
+        fix_settings = (x.cavity_settings for x in self.fix_acc.l_cav)
+
+        for ref_cav, fix_set in zip(ref_cavs, fix_settings):
+            reference_phase = self._resolve_reference_phase(ref_cav)
+            fix_set.set_reference(
+                reference=reference_phase,
+                phi_ref=getattr(ref_cav.cavity_settings, reference_phase),
+                ensure_can_be_calculated=False,
+            )
+
+    @property
+    def _reference_phase_policy(self) -> REFERENCE_PHASE_POLICY_T:
+        """Give reference phase policy of :class:`.BeamCalculator`."""
+        return self.beam_calculator.reference_phase_policy
+
+    def _resolve_reference_phase(
+        self, reference_cavity: FieldMap
+    ) -> REFERENCE_PHASES_T:
+        """Get the reference phase matching the reference phase policy.
+
+        According to the value of
+        :attr:`.BeamCalculator.reference_phase_policy`:
+
+        - ``"phi_0_abs"``, ``"phi_0_rel"``, ``"phi_s"``: take this reference.
+        - ```"as_in_original_dat"``: take reference from ``reference_cavity``.
+
+        """
+        if self._reference_phase_policy in REFERENCE_PHASES:
+            return self._reference_phase_policy
+        return reference_cavity.cavity_settings.reference
+
 
 def fault_scenario_factory(
     accelerators: list[Accelerator],
@@ -481,23 +462,22 @@ def fault_scenario_factory(
 
     Parameters
     ----------
-    accelerators : list[Accelerator]
+    accelerators :
         Holds all the linacs. The first one must be the reference linac,
         while all the others will be to be fixed.
-    beam_calc : BeamCalculator
+    beam_calc :
         The solver that will be called during the optimisation process.
-    wtf : dict[str, Any]
+    wtf :
         The WhatToFit table of the TOML configuration file.
-    design_space_kw : dict[str, Any]
+    design_space_kw :
         The design space table from the TOML configuration file.
-    objective_factory_class : type[ObjectiveFactory] | None, optional
+    objective_factory_class :
         If provided, will override the ``objective_preset``. Used to let user
         define it's own :class:`.ObjectiveFactory` without altering the source
         code.
 
     Returns
     -------
-    fault_scenarios : list[FaultScenario]
         Holds all the initialized :class:`FaultScenario` objects, holding their
         already initialied :class:`.Fault` objects.
 

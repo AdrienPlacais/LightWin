@@ -30,17 +30,34 @@ from lightwin.physics.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
+from lightwin.util.typing import REFERENCE_PHASE_POLICY_T
 
 
 class Envelope3D(BeamCalculator):
-    """A 3D envelope solver."""
+    """A 3D envelope solver.
+
+    As transverse effects are generally not predominant, I do not use this
+    solver very often and a lot of elements are not implemented.
+    The current list of explicitly supported elements is:
+
+    .. configkeys:: lightwin.beam_calculation.envelope_3d.element_envelope3d_\
+parameters_factory.PARAMETERS_3D
+       :n_cols: 2
+
+    The default behavior when an element in the input ``DAT`` file is not
+    recognized, is to issue a warning and replace this element by a ``DRIFT``.
+
+    Do not hesitate to file an |issue|_ if you need me to implement some
+    elements.
+
+    """
 
     flag_cython = False
 
     def __init__(
         self,
         *,
-        flag_phi_abs: bool,
+        reference_phase_policy: REFERENCE_PHASE_POLICY_T,
         n_steps_per_cell: int,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
@@ -54,7 +71,7 @@ class Envelope3D(BeamCalculator):
         self._phi_s_definition: PHI_S_MODELS = phi_s_definition
         self._phi_s_func = SYNCHRONOUS_PHASE_FUNCTIONS[self._phi_s_definition]
         super().__init__(
-            flag_phi_abs=flag_phi_abs,
+            reference_phase_policy=reference_phase_policy,
             out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
             **kwargs,
@@ -145,8 +162,7 @@ class Envelope3D(BeamCalculator):
         use_a_copy_for_nominal_settings :
             To copy the nominal :class:`.CavitySettings` and avoid altering
             their nominal counterpart. Set it to True during optimisation, to
-            False when you want to keep the current settings. The default is
-            True.
+            False when you want to keep the current settings.
 
         Returns
         -------
@@ -214,7 +230,6 @@ class Envelope3D(BeamCalculator):
 
         Parameters
         ----------
-        accelerator :
             Object which :class:`.ListOfElements` must be initialized.
 
         """
@@ -249,7 +264,7 @@ class Envelope3D(BeamCalculator):
 
         Parameters
         ----------
-        results
+        results :
             The dictionary of results as returned by the transfer matrix
             function wrapper.
 

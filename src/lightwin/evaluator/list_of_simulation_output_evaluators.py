@@ -6,6 +6,7 @@ We also define some factory functions to facilitate their creation.
 
 import datetime
 import logging
+from collections.abc import Collection
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +24,8 @@ from lightwin.evaluator.simulation_output.simulation_output_evaluator import (
     SimulationOutputEvaluator,
 )
 from lightwin.failures.fault import Fault
+from lightwin.optimisation.objective.factory import ObjectiveFactory
+from lightwin.optimisation.objective.objective import Objective
 from lightwin.util.dicts_output import markdown
 from lightwin.util.helper import chunks, pd_output
 
@@ -45,18 +48,17 @@ class ListOfSimulationOutputEvaluators(list):
 
         Parameters
         ----------
-        simulation_outputs : SimulationOutput
+        simulation_outputs :
             All the simulation output instances.
-        other_evals : dict[str, list[Any]] | None
+        other_evals :
             Dictionary with over evaluations to put in the output file. Keys
             are the column headers, values are corresponding values stored as
             lists. The default is None, in which case nothing is added.
-        project_folder : pathlib.Path | None
+        project_folder :
             Where to save the output file.
 
         Returns
         -------
-        pandas.DataFrame
             A dataframe holding the evaluations.
 
         """
@@ -152,14 +154,14 @@ class FaultScenarioSimulationOutputEvaluators:
     def __init__(
         self,
         quantities: tuple[str],
-        faults: list[Fault],
+        objective_factories: list[ObjectiveFactory],
         simulation_outputs: tuple[SimulationOutputEvaluator],
         additional_elts: tuple[Element | str] | None = None,
     ) -> None:
         self.quantities = quantities
 
         self.elts, self.columns = self._set_evaluation_elements(
-            faults, additional_elts
+            objective_factories, additional_elts
         )
 
         ref_simulation_output = simulation_outputs[0]
@@ -171,7 +173,7 @@ class FaultScenarioSimulationOutputEvaluators:
 
     def _set_evaluation_elements(
         self,
-        faults: list[Fault],
+        objective_factories: Collection[ObjectiveFactory],
         additional_elts: tuple[Element | str] | None = None,
     ) -> tuple[list[Element | str], list[str]]:
         """
@@ -182,7 +184,10 @@ class FaultScenarioSimulationOutputEvaluators:
         Also set `columns` to  ease `pandas` `DataFrame` creation.
 
         """
-        elts = [fault.elts[-1] for fault in faults]
+        elts = [
+            factory.elts_of_compensation_zone[-1]
+            for factory in objective_factories
+        ]
         columns = [f"end comp zone ({elt})" for elt in elts]
         if additional_elts is not None:
             elts += list(additional_elts)

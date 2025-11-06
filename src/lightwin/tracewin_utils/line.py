@@ -1,4 +1,4 @@
-"""Define an object corresponding to a single line of the ``.dat``."""
+"""Define an object corresponding to a single line of the ``DAT``."""
 
 import re
 from collections.abc import Collection
@@ -6,19 +6,19 @@ from typing import Any
 
 
 class DatLine:
-    """Hold a single line of the ``.dat`` file.
+    """Hold a single line of the ``DAT`` file.
 
     Parameters
     ----------
-    _original_line : str
-        Line in the ``.dat`` given as a user-input.
-    idx : int
-        Position in the ``.dat`` file.
-    personalized_name : str | None, optional
-        The name given by the user in the ``.dat``. The default is None.
-    weight : float | None, optional
-        The weight of the diagnostic. The default is None.
-    splitted : list[str]
+    _original_line :
+        Line in the ``DAT`` given as a user-input.
+    idx :
+        Position in the ``DAT`` file.
+    personalized_name :
+        The name given by the user in the ``DAT``.
+    weight :
+        The weight of the diagnostic.
+    splitted :
         The line divided into a list of arguments. It is used by LightWin to
         instantiate the :class:`.Instruction`. Note that the name and the
         weight of the object are not present to keep the position of other

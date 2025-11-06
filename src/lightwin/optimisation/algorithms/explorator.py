@@ -48,7 +48,6 @@ class Explorator(OptimisationAlgorithm):
 
         Returns
         -------
-        opti_sol : OptiSol
             Gives list of solutions, corresponding objective, convergence
             violation if applicable, etc.
 
@@ -87,7 +86,7 @@ class Explorator(OptimisationAlgorithm):
     ) -> tuple[np.ndarray, np.ndarray]:
         """Generate all the possible combinations of the variables."""
         limits = []
-        for var in self.variables:
+        for var in self._variables:
             lim = (var.limits[0], var.limits[1])
 
             if "phi" in var.name and lim[1] - lim[0] >= 2.0 * np.pi:
@@ -122,15 +121,14 @@ class Explorator(OptimisationAlgorithm):
         assert var is not None
         assert fun is not None
 
-        cavity_settings = self._create_set_of_cavity_settings(
-            var, "compensate (ok)"
-        )
+        cavity_settings = self._create_set_of_cavity_settings(var)
         opti_sol: OptiSol = {
             "var": var,
             "cavity_settings": cavity_settings,
             "fun": fun,
             "objectives": self._get_objective_values(var),
             "success": True,
+            "info": ["Explorator"],
         }
         return opti_sol
 
@@ -144,20 +142,20 @@ class Explorator(OptimisationAlgorithm):
 
         Parameters
         ----------
-        variable_comb : numpy.ndarray
+        variable_comb :
             All the set of variables (cavity parameters) that were tried.
-        objectives_values : numpy.ndarray
+        objectives_values :
             The values of the objective corresponding to ``variable_comb``.
-        criterion : Literal['minimize norm of objective']
+        criterion :
             Name of the criterion that will determine which solution is the
             "best". Only one is implemented for now, may add others in the
             future.
 
         Returns
         -------
-        best_solution : numpy.ndarray | None
+        best_solution :
             "Best" solution.
-        best_objective : numpy.ndarray | None
+        best_objective :
             Objective values corresponding to ``best_solution``.
 
         """

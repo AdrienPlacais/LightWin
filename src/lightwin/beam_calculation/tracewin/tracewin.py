@@ -5,17 +5,6 @@ the particles in envelope or multipart, in 3D. In contrary to
 :class:`.Envelope1D` solver, it is not a real solver but an interface with
 ``TraceWin`` which must be installed on your machine.
 
-.. warning::
-    For now, :class:`TraceWin` behavior with relative phases is undetermined.
-    You should ensure that you are working with *absolute* phases, i.e. that
-    last argument of ``FIELD_MAP`` commands is ``1``.
-    You can run a simulation with :class:`.Envelope1D` solver and
-    ``flag_phi_abs=True``. The ``.dat`` file created in the ``000001_ref``
-    folder should be the original ``.dat`` but converted to absolute phases.
-
-.. todo::
-    This absolute phase thing should be fixed now. Check this.
-
 """
 
 import logging
@@ -45,7 +34,7 @@ from lightwin.tracewin_utils.interface import (
     failed_cavities_to_command,
     set_of_cavity_settings_to_command,
 )
-from lightwin.util.typing import BeamKwargs
+from lightwin.util.typing import REFERENCE_PHASE_POLICY_T, BeamKwargs
 
 
 class TraceWin(BeamCalculator):
@@ -56,9 +45,9 @@ class TraceWin(BeamCalculator):
     executable :
         Path to the TraceWin executable.
     ini_path :
-        Path to the ``.ini`` TraceWin file.
+        Path to the ``INI`` TraceWin file.
     base_kwargs :
-        TraceWin optional arguments. Override what is defined in ``.ini``, but
+        TraceWin optional arguments. Override what is defined in ``INI``, but
         overriden by arguments from :class:`.ListOfElements` and
         :class:`.SimulationOutput`.
     _tracewin_command :
@@ -70,7 +59,7 @@ class TraceWin(BeamCalculator):
         :func:`init_solver_parameters` method, using
         ``Accelerator.accelerator_path`` and ``self.out_folder`` attributes.
     dat_file :
-        Base name for the ``.dat`` file. ??
+        Base name for the ``DAT`` file. ??
 
     """
 
@@ -82,7 +71,7 @@ class TraceWin(BeamCalculator):
         out_folder: Path | str,
         default_field_map_folder: Path | str,
         beam_kwargs: BeamKwargs,
-        flag_phi_abs: bool = False,
+        reference_phase_policy: REFERENCE_PHASE_POLICY_T = "phi_0_rel",
         cal_file: Path | None = None,
         **kwargs: Any,
     ) -> None:
@@ -98,7 +87,7 @@ class TraceWin(BeamCalculator):
             filename = Path("partran1.out")
         self._filename = filename
         super().__init__(
-            flag_phi_abs=flag_phi_abs,
+            reference_phase_policy=reference_phase_policy,
             out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
             beam_kwargs=beam_kwargs,
@@ -145,7 +134,7 @@ class TraceWin(BeamCalculator):
 
         This part of the command is the same for every :class:`.ListOfElements`
         and every :class:`.Fault`. It sets the TraceWin executable, the
-        ``.ini`` file.  It also defines ``base_kwargs``, which should be the
+        ``INI`` file.  It also defines ``base_kwargs``, which should be the
         same for every calculation. Finally, it sets ``path_cal``.
         But this path is more :class:`.ListOfElements` dependent...
         ``Accelerator.accelerator_path`` + ``out_folder``
@@ -179,9 +168,9 @@ class TraceWin(BeamCalculator):
 
         It contains the 'base' command, which includes every argument that is
         common to every calculation with this :class:`.BeamCalculator`: path to
-        ``.ini`` file, to executable...
+        ``INI`` file, to executable...
 
-        It contains the :class:`.ListOfElements` command: path to the ``.dat``
+        It contains the :class:`.ListOfElements` command: path to the ``DAT``
         file, initial energy and beam properties.
 
         It can contain some :class:`.SetOfCavitySettings` commands: ``ele``
@@ -227,16 +216,15 @@ class TraceWin(BeamCalculator):
             List of elements in which the beam must be propagated.
         update_reference_phase :
             To change the reference phase of cavities when it is different from
-            the one asked in the ``.toml``. To use after the first calculation,
-            if ``BeamCalculator.flag_phi_abs`` does not correspond to
-            ``CavitySettings.reference``. The default is False.
+            the one asked in the ``TOML``. To use after the first calculation,
+            if :attr:`.BeamCalculator.reference_phase_policy` does not align
+            with :attr:`.CavitySettings.reference`.
         specific_kwargs :
             ``TraceWin`` optional arguments. Overrides what is defined in
-            ``base_kwargs`` and ``.ini``.
+            ``base_kwargs`` and ``INI``.
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -270,7 +258,6 @@ class TraceWin(BeamCalculator):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Holds energy, phase, transfer matrices (among others) packed into a
             single object.
 
@@ -300,7 +287,7 @@ class TraceWin(BeamCalculator):
             exception,
             set_of_cavity_settings=set_of_cavity_settings,
         )
-        self._save_cavities_entry_phases(
+        self._post_treat_cavity_setttings(
             set_of_cavity_settings,
             elts.cavities(superposed="remove"),
             simulation_output,
@@ -323,7 +310,7 @@ class TraceWin(BeamCalculator):
         * Updating the ``index`` ``n`` of the cavities in the ``ele[n][v]``
           command.
 
-        Note that at this point, the ``.dat`` has not been updated yet.
+        Note that at this point, the ``DAT`` has not been updated yet.
 
         Parameters
         ----------
@@ -334,7 +321,6 @@ class TraceWin(BeamCalculator):
 
         Returns
         -------
-        simulation_output : SimulationOutput
             Necessary information on the run.
 
         """
@@ -398,37 +384,44 @@ class TraceWin(BeamCalculator):
         """Tell if the simulation is in 3D."""
         return True
 
-    def _save_cavities_entry_phases(
+    def _post_treat_cavity_setttings(
         self,
         set_of_cavity_settings: SetOfCavitySettings | None,
         cavities: Sequence[FieldMap],
         simulation_output: SimulationOutput,
     ) -> None:
-        """Store the synchronous particle entry phase.
+        """Store cavity settings in the appropriate :class:`.CavitySettings`.
 
-        This quantity is required to switch between the different definitions
-        of the phase. Note that, with :class:`.Envelope1D` and
-        :class:`.Envelope3D`, it is done during the propagation of the beam, in
-        the ``for elt in elts`` loop.
-
-        .. todo::
-            Maybe I should also store the synchronous phase?
+        .. note::
+           When we are under a fitting process, *i.e.* when
+           ``set_of_cavity_settings`` is not ``None``, we update the
+           :class:`.CavitySettings` in the ``set_of_cavity_settings``, not the
+           ones in :attr:`.FieldMap.cavity_settings`.
 
         """
         for cavity in cavities:
-            phi_bunch = simulation_output.get(
-                "phi_abs", to_deg=False, elt=cavity, pos="in", to_numpy=False
+            phi_abs, v_cav_mv, phi_s = simulation_output.get(
+                "phi_abs",
+                "v_cav_mv",
+                "phi_s",
+                elt=cavity,
+                pos="in",
+                to_deg=False,
+                to_numpy=False,
             )
             if set_of_cavity_settings is None:
-                cavity.cavity_settings.phi_bunch = phi_bunch
+                # Any cavity during a "normal" run
+                settings = cavity.cavity_settings
+            elif cavity in set_of_cavity_settings:
+                # Compensating cavity during a fit
+                settings = set_of_cavity_settings[cavity]
+            else:
+                # Non-compensating cavity during a fit
                 continue
-            if cavity in set_of_cavity_settings:
-                # when a cavity is concerned by a fit, we do not modify its
-                # cavity settings but rather the one in the SetOfCavitySettings
-                cavity_settings = set_of_cavity_settings[cavity]
-                cavity_settings.phi_bunch = phi_bunch
-                continue
-            cavity.cavity_settings.phi_bunch = phi_bunch
+
+            settings.phi_bunch = phi_abs
+            settings.phi_s = phi_s
+            settings.v_cav_mv = v_cav_mv
         return
 
 

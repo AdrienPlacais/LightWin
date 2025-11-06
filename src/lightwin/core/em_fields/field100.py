@@ -32,21 +32,21 @@ class Field100(Field):
     def _load_fieldmap(
         self, path: Path, **validity_check_kwargs
     ) -> tuple[Callable[[Pos1D], float], tuple[int], int]:
-        r"""Load a 1D field (``.edz`` extension).
+        r"""Load a 1D field (``EDZ`` extension).
 
         Parameters
         ----------
-        path : pathlib.Path
-            The path to the ``.edz`` file to load.
+        path :
+            The path to the ``EDZ`` file to load.
 
         Returns
         -------
-        e_z : Callable[[Pos1D], float]
+        e_z :
             Function that takes in ``z`` position and returns corresponding
             field, at null phase, for amplitude of :math:`1\,\mathrm{MV/m}`.
-        n_z : tuple[int]
+        n_z :
             Number of interpolation points.
-        n_cell : int
+        n_cell :
             Number of cell for cavities.
 
         """

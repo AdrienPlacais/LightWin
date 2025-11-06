@@ -111,14 +111,13 @@ def z_field_map_rk4(
 
         Parameters
         ----------
-        z : float
+        z :
             Position where variation is calculated.
-        u : numpy.ndarray
+        u :
             First component is gamma. Second is phase in rad.
 
         Return
         ------
-        v : numpy.ndarray
             First component is :math:`\Delta \gamma / \Delta z` in
             :unit:`MeV / m`.
             Second is :math:`\Delta \phi / \Delta z` in
@@ -353,26 +352,25 @@ def z_thin_lense(
 
     Parameters
     ----------
-    scaled_e_middle : complex
+    scaled_e_middle :
         Complex electric field in the accelerating gap multiplied by
         :math:`\Delta\gamma_\mathrm{norm}`. It is divided by
         :math:`\gamma_m\beta_m^2` in the routine.
-    gamma_in : float
+    gamma_in :
         gamma at entrance of first drift.
-    gamma_out : float
+    gamma_out :
         gamma at exit of first drift.
-    gamma_middle : float
+    gamma_middle :
         gamma at the thin acceleration drift.
-    half_dz : float
+    half_dz :
         Half a spatial step in :unit:`m`.
-    omega0_rf : float
+    omega0_rf :
         Pulsation of the cavity.
-    omega_0_bunch : float
+    omega_0_bunch :
         Pulsation of the beam.
 
-    Return
-    ------
-    r_zz_array : numpy.ndarray
+    Returns
+    -------
         Transfer matrix of the thin lense.
 
     """
@@ -408,26 +406,25 @@ def z_thin_lense_old(
 
     Parameters
     ----------
-    gamma_in : float
+    gamma_in :
         gamma at entrance of first drift.
-    gamma_out : float
+    gamma_out :
         gamma at exit of first drift.
-    gamma_phi_m : numpy.ndarray
+    gamma_phi_m :
         gamma and phase at the thin acceleration drift.
-    half_dz : float
+    half_dz :
         Half a spatial step in m.
-    delta_gamma_m_max : float
+    delta_gamma_m_max :
         Max gamma increase if the cos(phi + phi_0) of the acc. field is 1.
-    phi_0 : float
+    phi_0 :
         Input phase of the cavity.
-    omega0_rf : float
+    omega0_rf :
         Pulsation of the cavity.
-    omega_0_bunch : float
+    omega_0_bunch :
         Pulsation of the beam.
 
     Return
     ------
-    r_zz_array : numpy.ndarray
         Transfer matrix of the thin lense.
 
     """
@@ -451,6 +448,86 @@ def z_thin_lense_old(
         @ z_drift(gamma_in, half_dz, omega_0_bunch=omega_0_bunch)[0][0]
     )
     return r_zz_array
+
+
+# def z_thin_lense_superposed(
+#     gamma_in: float,
+#     gamma_out: float,
+#     gamma_phi_m: np.ndarray,
+#     half_dz: float,
+#     delta_gamma_m_maxs: Collection[float],
+#     phi_0s: Collection[float],
+#     omega0_rf: float,
+#     omega_0_bunch: float,
+#     **kwargs,
+# ) -> np.ndarray:
+#     """
+#     Compute trajectory with thin lense approximation: drift-acceleration-drift.
+#
+#     Parameters
+#     ----------
+#     gamma_in :
+#         gamma at entrance of first drift.
+#     gamma_out :
+#         gamma at exit of first drift.
+#     gamma_phi_m :
+#         gamma and phase at the thin acceleration drift.
+#     half_dz :
+#         Half a spatial step in m.
+#     delta_gamma_m_maxs :
+#         Max gamma increase if the cos(phi + phi_0) of the acc. field is 1.
+#     phi_0s :
+#         Input phases of the elements.
+#     omega0_rf :
+#         Pulsation of the elements.
+#     omega_0_bunch :
+#         Bunch pulsation.
+#
+#     Return
+#     ------
+#         Transfer matrix of the thin lense.
+#
+#     """
+#     # Used for tm components
+#     beta_m = math.sqrt(1.0 - gamma_phi_m[0] ** -2)
+#     # k_speed1 = delta_gamma_m_max / (gamma_phi_m[0] * beta_m**2)
+#     # k_speed2 = k_speed1 * math.cos(gamma_phi_m[1] + phi_0)
+#     k_speed1s = [
+#         delta_gamma_m_max / (gamma_phi_m[0] * beta_m**2)
+#         for delta_gamma_m_max in delta_gamma_m_maxs
+#     ]
+#     k_speed2s = [
+#         k_speed1 * math.cos(gamma_phi_m[1] + phi_0)
+#         for k_speed1, phi_0 in zip(k_speed1s, phi_0s)
+#     ]
+#
+#     # Thin lense transfer matrices components
+#     # k_1 = (
+#     #     k_speed1 * omega0_rf / (beta_m * c) * math.sin(gamma_phi_m[1] + phi_0)
+#     # )
+#     # k_2 = 1.0 - (2.0 - beta_m**2) * k_speed2
+#     # k_3 = (1.0 - k_speed2) / k_2
+#     k_1 = sum(
+#         [
+#             k_speed1
+#             * omega0_rf
+#             / (beta_m * c)
+#             * math.sin(gamma_phi_m[1] + phi_0)
+#             for k_speed1, phi_0 in zip(k_speed1s, phi_0s)
+#         ]
+#     )
+#     k_2 = sum([1.0 - (2.0 - beta_m**2) * k_speed2 for k_speed2 in k_speed2s])
+#     k_3 = sum([(1.0 - k_speed2) / k_2 for k_speed2 in k_speed2s])
+#
+#     # Faster than matmul or matprod_22
+#     r_zz_array = z_drift(gamma_out, half_dz, omega_0_bunch=omega_0_bunch)[0][
+#         0
+#     ] @ (
+#         np.array(([k_3, 0.0], [k_1, k_2]))
+#         @ z_drift(gamma_in, half_dz, omega_0_bunch=omega_0_bunch)[0][0]
+#     )
+#     return r_zz_array
+#
 
 
 def z_bend(
