@@ -28,6 +28,7 @@ from lightwin.util.typing import (
     ALLOWED_STATUS,
     EXPORT_PHASES_T,
     GETTABLE_FIELD_MAP_T,
+    REFERENCE_PHASES_T,
     STATUS_T,
 )
 
@@ -318,6 +319,7 @@ class FieldMap(Element):
         self,
         which_phase: EXPORT_PHASES_T,
         *args,
+        round: int | None = None,
         **kwargs,
     ) -> list[str]:
         r"""Convert the object back into a line in the ``DAT`` file.
@@ -326,9 +328,8 @@ class FieldMap(Element):
         ----------
         which_phase :
             Which phase should be put in the output ``DAT``.
-        inplace :
-            To modify the :class:`.Element` inplace. The default is False, in
-            which case, we return a modified copy.
+        round :
+            Rounding numbers in exported line.
 
         Returns
         -------
@@ -336,17 +337,16 @@ class FieldMap(Element):
             current object.
 
         """
-        line = super().to_line(*args, **kwargs)
+        phase, abs_phase_flag, reference = self._phase_for_line(which_phase)
+        for value, position in zip(
+            (phase, self.cavity_settings.k_e, abs_phase_flag), (3, 6, 10)
+        ):
+            if round:
+                value = value.__round__(round)
+            self.line.change_argument(value, position)
 
-        _phases = self._phase_for_line(which_phase)
-        new_values = {
-            3: _phases[0],
-            6: self.cavity_settings.k_e,
-            10: _phases[1],
-        }
-        for key, val in new_values.items():
-            self.line.change_argument(val, key)
-        if _phases[2] == "phi_s":
+        line = super().to_line(*args, **kwargs)
+        if reference == "phi_s":
             line.insert(0, "SET_SYNC_PHASE\n")
         return line
 
@@ -364,7 +364,7 @@ class FieldMap(Element):
 
     def _phase_for_line(
         self, which_phase: EXPORT_PHASES_T
-    ) -> tuple[float, int, str]:
+    ) -> tuple[float, int, REFERENCE_PHASES_T]:
         """Give the phase to put in ``DAT`` line, with abs phase flag."""
         settings = self.cavity_settings
         match which_phase:
