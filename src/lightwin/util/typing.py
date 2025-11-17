@@ -406,6 +406,8 @@ GETTABLE_TRANSFER_MATRIX_T = Literal[
 ]
 
 #: Attributes that can be extracted with :meth:`.SimulationOutput.get` method.
+#: .. todo::
+#:    Should mismatch_factor_zdelta be there?
 GETTABLE_SIMULATION_OUTPUT = (
     (
         "beam_parameters",
@@ -451,6 +453,10 @@ GETTABLE_ACCELERATOR_T = (
 
 #: Allowed values for the ``pos`` keyword argument in ``get`` methods.
 POS_T = Literal["in", "out"]
+
+#: Magic values for the ``elt`` keyword argument in ``get`` methods.
+GET_ELT_ARG = ("first", "last")
+GET_ELT_ARG_T = Literal["first", "last"]
 
 #: Implemented optimization variables
 VARIABLES = ("k_e",) + REFERENCE_PHASES

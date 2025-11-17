@@ -1,34 +1,36 @@
 """Define the base object for every evaluator."""
 
 from abc import ABC, abstractmethod
-from collections.abc import Collection, Iterable, Sequence
+from collections.abc import Iterable, Sequence
 from pathlib import Path
 from typing import Any
 
 import numpy as np
-import numpy.typing as npt
 import pandas as pd
+from numpy.typing import NDArray
 
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.experimental.plotter.i_plotter import IPlotter
+from lightwin.experimental.plotter.pd_plotter import PandasPlotter
 from lightwin.util.dicts_output import markdown
+from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
 
 
 class IEvaluator(ABC):
     """Base class for all evaluators."""
 
-    _x_quantity: str
-    _y_quantity: str
+    _x_quantity: GETTABLE_SIMULATION_OUTPUT_T
+    _y_quantity: GETTABLE_SIMULATION_OUTPUT_T
     _fignum: int
     _plot_kwargs: dict[str, str | bool | float]
     _axes_index: int = 0
 
-    def __init__(self, plotter: IPlotter) -> None:
+    def __init__(self, plotter: IPlotter | None = None, **kwargs) -> None:
         """Instantiate the ``plotter`` object."""
-        self._plotter = plotter
+        self._plotter = plotter if plotter else PandasPlotter()
         if not hasattr(self, "_plot_kwargs"):
             self._plot_kwargs = {}
-        self._ref_xdata: Iterable[float]
+        self._ref_xdata: NDArray[np.float64]
 
     def __str__(self) -> str:
         """Give a detailed description of what this class does."""
@@ -44,11 +46,11 @@ class IEvaluator(ABC):
         return markdown[self._y_quantity]
 
     @abstractmethod
-    def get(self, *args: Any, **kwargs: Any) -> Iterable[float]:
+    def get(self, *args: Any, **kwargs: Any) -> NDArray[np.float64]:
         """Get the base data."""
         pass
 
-    def post_treat(self, ydata: Iterable[float]) -> Iterable[float]:
+    def post_treat(self, ydata: NDArray[np.float64]) -> NDArray[np.float64]:
         """Perform operations on data. By default, return data as is."""
         return ydata
 
@@ -64,7 +66,7 @@ class IEvaluator(ABC):
     @abstractmethod
     def plot(
         self,
-        post_treated: Collection[Iterable[float]],
+        post_treated: Any,
         elts: Sequence[ListOfElements] | None = None,
         png_folders: Sequence[Path] | None = None,
         **kwargs: Any,
@@ -77,7 +79,7 @@ class IEvaluator(ABC):
         data: Any,
         elts: ListOfElements | None,
         png_path: Path | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> Any:
         """Plot evaluated data from a single object."""
         return self._plotter.plot(
@@ -104,6 +106,6 @@ class IEvaluator(ABC):
         *args: Any,
         plot_kwargs: dict[str, Any] | None = None,
         **kwargs: Any,
-    ) -> tuple[list[bool], npt.NDArray[np.float64]]:
+    ) -> tuple[list[bool], NDArray[np.float64]]:
         """Test if the object(s) under evaluation pass(es) the test."""
         pass

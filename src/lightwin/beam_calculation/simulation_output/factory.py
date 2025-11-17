@@ -16,7 +16,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, Element
 from lightwin.core.list_of_elements.helper import equivalent_elt
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
-from lightwin.util.typing import POS_T, BeamKwargs
+from lightwin.util.typing import GET_ELT_ARG_T, POS_T, BeamKwargs
 
 
 @dataclass
@@ -79,7 +79,7 @@ def _element_to_index(
     _elts: ListOfElements,
     _shift: int,
     _solver_id: str,
-    elt: Element | str,
+    elt: Element | str | GET_ELT_ARG_T,
     pos: POS_T | None = None,
     return_elt_idx: bool = False,
     handle_missing_elt: bool = False,

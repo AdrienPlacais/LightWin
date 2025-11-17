@@ -42,6 +42,7 @@ from lightwin.util.helper import (
 from lightwin.util.pickling import MyPickler
 from lightwin.util.typing import (
     CONCATENABLE_ELTS,
+    GET_ELT_ARG_T,
     GETTABLE_SIMULATION_OUTPUT_T,
     GETTABLE_STRUCTURE_DEPENDENT,
     POS_T,
@@ -162,7 +163,13 @@ class SimulationOutput:
         *keys: GETTABLE_SIMULATION_OUTPUT_T,
         to_numpy: bool = True,
         to_deg: bool = False,
-        elt: str | Element | Collection[str | Element] | None = None,
+        elt: (
+            str
+            | Element
+            | GET_ELT_ARG_T
+            | Collection[str | Element | GET_ELT_ARG_T]
+            | None
+        ) = None,
         pos: POS_T | None = None,
         none_to_nan: bool = False,
         handle_missing_elt: bool = False,
