@@ -23,6 +23,11 @@ class ISimulationOutputEvaluator(IEvaluator):
     """Base class for :class:`.SimulationOutput` evaluations."""
 
     _x_quantity: GETTABLE_SIMULATION_OUTPUT_T = "z_abs"
+    _plot_kwargs = {"style": ["-", "r--", "r:"]}
+    #: If NaN values should be kept in the plot. Set it to True for quantities
+    #: that are undefined for some elements, *eg* synchronous phase.
+    _keep_nan: bool = False
+
     #: If value should be converted from :unit:`rad` to :unit:`def`. Should not
     #: be updated after object creation.
     _to_deg: bool = False
@@ -139,8 +144,6 @@ class ISimulationOutputEvaluator(IEvaluator):
         upper_limits: (
             Sequence[NDArray[np.float64] | float | None] | None
         ) = None,
-        keep_nan: bool = False,
-        style: Sequence[str] | None = None,
         **kwargs: Any,
     ) -> Any:
         """Plot all the post treated data using ``plotter``.
@@ -155,33 +158,37 @@ class ISimulationOutputEvaluator(IEvaluator):
             Individual upper limits can be ``float`` (constant) or arrays.
 
         """
-        if style is None:
-            style = ["-", "r--", "r:"]
-
         to_plot = post_treated.T
 
-        if not lower_limits:
-            lower_limits = [None for _ in to_plot]
-        if not upper_limits:
-            upper_limits = [None for _ in to_plot]
+        lower_limits = (
+            lower_limits if lower_limits else [None for _ in to_plot]
+        )
+        upper_limits = (
+            upper_limits if upper_limits else [None for _ in to_plot]
+        )
 
         for i, data in enumerate(to_plot):
             elements = elts[i] if elts is not None else None
-            lower_val = lower_limits[i] if lower_limits[i] else np.nan
-            upper_val = upper_limits[i] if upper_limits[i] else np.nan
+            lower_val = (
+                lower_limits[i] if lower_limits[i] is not None else np.nan
+            )
+            upper_val = (
+                upper_limits[i] if upper_limits[i] is not None else np.nan
+            )
 
-            data_as_dict = {
-                "Data": data,
-                "Lower limit": lower_val,
-                "Upper limit": upper_val,
-            }
-            data_as_pd = pd.DataFrame(data_as_dict, index=self._ref_xdata)
-            if not keep_nan:
+            data_as_pd = pd.DataFrame(
+                {
+                    "Data": data,
+                    "Lower limit": lower_val,
+                    "Upper limit": upper_val,
+                },
+                index=self._ref_xdata,
+            )
+            if not self._keep_nan:
                 data_as_pd = data_as_pd.dropna(axis=1)
             axes = self._plot_single(
                 data_as_pd,
                 elements,
-                style=style,
                 dump_no_numerical_data_to_plot=self._dump_no_numerical_data_to_plot,
                 **kwargs,
             )
@@ -262,7 +269,6 @@ class ISimulationOutputEvaluator(IEvaluator):
         self,
         *simulation_outputs,
         elts: Sequence[ListOfElements] | None = None,
-        plot_kwargs: dict[str, Any] | None = None,
         nan_in_data_is_allowed: bool = False,
         **kwargs,
     ) -> tuple[list[bool], NDArray[np.float64]]:
@@ -277,6 +283,7 @@ class ISimulationOutputEvaluator(IEvaluator):
                 post_treated,
                 lower_limit=self.lower_limit,
                 upper_limit=self.upper_limit,
+                nan_in_data_is_allowed=nan_in_data_is_allowed,
                 **kwargs,
             )
             tests.append(test)
@@ -286,7 +293,6 @@ class ISimulationOutputEvaluator(IEvaluator):
             elts,
             lower_limits=[self.lower_limit for _ in simulation_outputs],
             upper_limits=[self.upper_limit for _ in simulation_outputs],
-            **(plot_kwargs or {}),
             **kwargs,
         )
         return tests, all_post_treated[-1, :]

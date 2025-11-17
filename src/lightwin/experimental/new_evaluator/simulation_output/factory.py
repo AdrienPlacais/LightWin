@@ -91,7 +91,6 @@ class SimulationOutputEvaluatorsFactory:
         evaluators: Collection[ISimulationOutputEvaluator],
         accelerators: Sequence[Accelerator],
         beam_solver_id: str,
-        plot_kwargs: dict[str, Any] | None = None,
         csv_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ) -> pd.DataFrame:
@@ -108,7 +107,6 @@ class SimulationOutputEvaluatorsFactory:
             test, data = evaluator.evaluate(
                 *simulation_outputs,
                 elts=elts,
-                plot_kwargs=plot_kwargs,
                 **kwargs,
             )
             tests[str(evaluator)] = test
@@ -163,9 +161,8 @@ def _constructors_n_kwargs(
         assert isinstance(name, str)
         evaluator_ids.append(name)
 
-    if user_evaluators is None:
-        user_evaluators = {}
-    evaluator_constructors = user_evaluators | SIMULATION_OUTPUT_EVALUATORS
+    evaluator_constructors = SIMULATION_OUTPUT_EVALUATORS
+    evaluator_constructors.update(user_evaluators or {})
 
     constructors = get_constructors(evaluator_ids, evaluator_constructors)
 
