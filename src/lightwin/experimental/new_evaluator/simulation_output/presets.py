@@ -113,7 +113,6 @@ class LongitudinalMismatchFactor(ISimulationOutputEvaluator):
         self,
         *simulation_outputs,
         elts: Sequence[ListOfElements] | None = None,
-        plot_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ) -> tuple[list[bool], NDArray[np.float64]]:
         """Assert that longitudinal emittance does not grow too much."""
@@ -137,7 +136,6 @@ class LongitudinalMismatchFactor(ISimulationOutputEvaluator):
             elts,
             lower_limits=[self.lower_limit for _ in simulation_outputs],
             upper_limits=[self.upper_limit for _ in simulation_outputs],
-            **(plot_kwargs or {}),
             **kwargs,
         )
         return tests, used_for_eval
@@ -220,14 +218,12 @@ class Energy(ISimulationOutputEvaluator):
         self,
         *simulation_outputs,
         elts: Sequence[ListOfElements] | None = None,
-        plot_kwargs: dict[str, Any] | None = None,
         nan_in_data_is_allowed: bool = False,
         **kwargs,
     ) -> tuple[list[bool], NDArray[np.float64]]:
         return super().evaluate(
             *simulation_outputs,
             elts=elts,
-            plot_kwargs=plot_kwargs,
             nan_in_data_is_allowed=nan_in_data_is_allowed,
             elt="last",
             **kwargs,
@@ -280,7 +276,6 @@ class PowerLoss(ISimulationOutputEvaluator):
         self,
         *simulation_outputs,
         elts: Sequence[ListOfElements] | None = None,
-        plot_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ) -> tuple[list[bool], NDArray[np.float64]]:
         """Assert that lost power is lower than maximum."""
@@ -304,7 +299,6 @@ class PowerLoss(ISimulationOutputEvaluator):
             elts,
             lower_limits=[self.lower_limit for _ in simulation_outputs],
             upper_limits=[self.upper_limit for _ in simulation_outputs],
-            **(plot_kwargs or {}),
             **kwargs,
         )
         return tests, used_for_eval
@@ -318,6 +312,8 @@ class SynchronousPhases(ISimulationOutputEvaluator):
     _to_deg = True
     _fignum = 120
     _constant_limits = True
+    _plot_kwargs = {"style": ["o", "r--", "r:"], "x_axis": _x_quantity}
+    _keep_nan = True
 
     def __init__(
         self,
@@ -328,7 +324,6 @@ class SynchronousPhases(ISimulationOutputEvaluator):
     ) -> None:
         """Instantiate with a reference simulation output."""
         super().__init__(reference, plotter)
-
         self._min = min_phi_s_deg
         self._max = max_phi_s_deg
 
@@ -343,20 +338,12 @@ class SynchronousPhases(ISimulationOutputEvaluator):
         self,
         *simulation_outputs,
         elts: Sequence[ListOfElements] | None = None,
-        plot_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ) -> tuple[list[bool], NDArray[np.float64]]:
         """Assert that longitudinal emittance does not grow too much."""
-        plot_kwargs = {
-            "keep_nan": True,
-            "style": ["o", "r--", "r:"],
-            "x_axis": self._x_quantity,
-        }.update(plot_kwargs or {})
-
         tests, _ = super().evaluate(
             *simulation_outputs,
             elts=elts,
-            plot_kwargs=plot_kwargs,
             nan_in_data_is_allowed=True,
             **kwargs,
         )
@@ -414,7 +401,6 @@ class TransverseMismatchFactor(ISimulationOutputEvaluator):
         self,
         *simulation_outputs,
         elts: Sequence[ListOfElements] | None = None,
-        plot_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ) -> tuple[list[bool], NDArray[np.float64]]:
         """Assert that longitudinal emittance does not grow too much."""
@@ -438,7 +424,6 @@ class TransverseMismatchFactor(ISimulationOutputEvaluator):
             elts,
             lower_limits=[self.lower_limit for _ in simulation_outputs],
             upper_limits=[self.upper_limit for _ in simulation_outputs],
-            **(plot_kwargs or {}),
             **kwargs,
         )
         return tests, used_for_eval

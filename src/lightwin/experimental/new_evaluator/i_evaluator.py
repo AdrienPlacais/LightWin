@@ -22,7 +22,7 @@ class IEvaluator(ABC):
     _x_quantity: GETTABLE_SIMULATION_OUTPUT_T
     _y_quantity: GETTABLE_SIMULATION_OUTPUT_T
     _fignum: int
-    _plot_kwargs: dict[str, str | bool | float]
+    _plot_kwargs: dict[str, Any]
     _axes_index: int = 0
 
     def __init__(self, plotter: IPlotter | None = None, **kwargs) -> None:
@@ -102,10 +102,7 @@ class IEvaluator(ABC):
 
     @abstractmethod
     def evaluate(
-        self,
-        *args: Any,
-        plot_kwargs: dict[str, Any] | None = None,
-        **kwargs: Any,
+        self, *args: Any, **kwargs: Any
     ) -> tuple[list[bool], NDArray[np.float64]]:
         """Test if the object(s) under evaluation pass(es) the test."""
         pass
