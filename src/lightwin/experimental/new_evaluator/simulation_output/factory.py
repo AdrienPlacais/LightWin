@@ -35,7 +35,7 @@ class SimulationOutputEvaluatorsFactory:
         self,
         evaluator_kwargs: Collection[dict[str, str | float | bool]],
         user_evaluators: dict[str, type] | None = None,
-        plotter: IPlotter = PandasPlotter(),
+        plotter: IPlotter | None = None,
     ) -> None:
         """Instantiate object with basic attributes.
 
@@ -43,25 +43,22 @@ class SimulationOutputEvaluatorsFactory:
         ----------
         evaluator_kwargs :
             Dictionaries holding necessary information to instantiate the
-            evaluators. The only mandatory key-value pair is "name" of type
-            str.
+            evaluators. The only mandatory key-value pair is ``"name"`` of type
+            ``str``.
         user_evaluators :
             Additional user-defined evaluators; keys should be in PascalCase,
             values :class:`.ISimulationOutputEvaluator` constructors.
         plotter :
-            An object used to produce plots. The default is
-            :class:`.PandasPlotter`.
+            An object used to produce plots.
 
         """
-        self._plotter = plotter
+        self._plotter = plotter if plotter else PandasPlotter()
         self._constructors_n_kwargs = _constructors_n_kwargs(
             evaluator_kwargs, user_evaluators
         )
 
     def run(
-        self,
-        accelerators: Sequence[Accelerator],
-        beam_solver_id: str,
+        self, accelerators: Sequence[Accelerator], beam_solver_id: str
     ) -> list[ISimulationOutputEvaluator]:
         """Instantiate all the evaluators."""
         reference = accelerators[0].simulation_outputs[beam_solver_id]
@@ -142,13 +139,14 @@ def _constructors_n_kwargs(
 ) -> dict[type, dict[str, bool | float | str]]:
     """Take and associate every evaluator class with its kwargs.
 
-    We also remove the "name" key from the kwargs.
+    We also remove the ``"name"`` key from the kwargs.
 
     Parameters
     ----------
     evaluator_kwargs :
         Dictionaries holding necessary information to instantiate the
-        evaluators. The only mandatory key-value pair is "name" of type str.
+        evaluators. The only mandatory key-value pair is ``"name"`` of type
+        ``str``.
     user_evaluators :
         Additional user-defined evaluators; keys should be in PascalCase,
         values :class:`.ISimulationOutputEvaluator` constructors.

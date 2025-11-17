@@ -18,7 +18,7 @@ from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter, recursive_items
-from lightwin.util.typing import GETTABLE_ELT_T, POS_T, STATUS_T
+from lightwin.util.typing import GET_ELT_ARG_T, GETTABLE_ELT_T, POS_T, STATUS_T
 
 
 class Element(Instruction):
@@ -202,7 +202,7 @@ class ELEMENT_TO_INDEX_T(Protocol):
     def __call__(
         self,
         *,
-        elt: str | Element,
+        elt: str | Element | GET_ELT_ARG_T,
         pos: POS_T | None = None,
         return_elt_idx: bool = False,
         handle_missing_elt: bool = False,
@@ -235,7 +235,7 @@ class ELEMENT_TO_INDEX_T(Protocol):
 
 def default_element_to_index(
     *,
-    elt: str | Element,
+    elt: str | Element | GET_ELT_ARG_T,
     pos: POS_T | None = None,
     return_elt_idx: bool = False,
     handle_missing_elt: bool = False,

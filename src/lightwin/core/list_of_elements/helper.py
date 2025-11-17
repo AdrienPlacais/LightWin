@@ -14,6 +14,7 @@ import numpy as np
 
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.util.typing import GET_ELT_ARG_T
 
 ListOfElements = TypeVar("ListOfElements")
 
@@ -121,7 +122,7 @@ def elt_at_this_s_idx(
 
 
 def equivalent_elt_idx(
-    elts: ListOfElements | list[Element], elt: Element | str
+    elts: ListOfElements | list[Element], elt: Element | str | GET_ELT_ARG_T
 ) -> int:
     """Return the index of element from ``elts`` corresponding to ``elt``.
 
@@ -155,7 +156,7 @@ def equivalent_elt_idx(
     if not isinstance(elt, str):
         elt = elt.name
 
-    magic_keywords = {"first": 0, "last": -1}
+    magic_keywords: dict[GET_ELT_ARG_T, int] = {"first": 0, "last": -1}
     names = [x.name for x in elts]
 
     if elt in names:
@@ -175,13 +176,14 @@ def equivalent_elt(
 ) -> FieldMap: ...
 @overload
 def equivalent_elt(
-    elts: ListOfElements | list[Element] | list[FieldMap], elt: Element | str
+    elts: ListOfElements | list[Element] | list[FieldMap],
+    elt: Element | str | GET_ELT_ARG_T,
 ) -> Element: ...
 
 
 def equivalent_elt(
     elts: ListOfElements | list[Element] | list[FieldMap],
-    elt: Element | str | FieldMap,
+    elt: Element | str | FieldMap | GET_ELT_ARG_T,
 ) -> Element | FieldMap:
     """Return the element from ``elts`` corresponding to ``elt``.
 
