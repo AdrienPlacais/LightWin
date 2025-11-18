@@ -81,8 +81,15 @@ class SimulationOutputEvaluatorsFactory:
 
         """
         evaluators = [
-            constructor(reference=reference, plotter=self._plotter, **kwargs)
-            for constructor, kwargs in self._constructors_n_kwargs.items()
+            constructor(
+                reference=reference,
+                fignum=100 + i,
+                plotter=self._plotter,
+                **kwargs,
+            )
+            for i, (constructor, kwargs) in enumerate(
+                self._constructors_n_kwargs.items()
+            )
         ]
         return evaluators
 
@@ -104,29 +111,27 @@ class SimulationOutputEvaluatorsFactory:
         tests = {}
         data_used_for_tests = {}
         for evaluator in evaluators:
-            test, data = evaluator.evaluate(
-                *simulation_outputs,
-                elts=elts,
-                **kwargs,
-            )
+            test, data = evaluator.evaluate(*simulation_outputs, **kwargs)
+            evaluator.plot(data, elts=elts, **kwargs)
+
             tests[str(evaluator)] = test
             data_used_for_tests[str(evaluator)] = data
-        index = [folder.parent.stem for folder in folders]
-        tests_as_pd = pd.DataFrame(tests, index=index)
-        data_as_pd = pd.DataFrame(data_used_for_tests, index=index)
 
-        if csv_kwargs is None:
-            csv_kwargs = {}
-        pandas_helper.to_csv(
-            tests_as_pd,
-            path=folders[0].parents[1] / "tests.csv",
-            **csv_kwargs,
-        )
-        pandas_helper.to_csv(
-            data_as_pd,
-            path=folders[0].parents[1] / "data_used_for_tests.csv",
-            **csv_kwargs,
-        )
+        index = [folder.parent.stem for folder in folders]
+
+        tests_as_pd = pd.DataFrame(tests, index=index)
+        # data_as_pd = pd.DataFrame(data_used_for_tests, index=index)
+        #
+        # pandas_helper.to_csv(
+        #     tests_as_pd,
+        #     path=folders[0].parents[1] / "tests.csv",
+        #     **(csv_kwargs or {}),
+        # )
+        # pandas_helper.to_csv(
+        #     data_as_pd,
+        #     path=folders[0].parents[1] / "data_used_for_tests.csv",
+        #     **(csv_kwargs or {}),
+        # )
 
         return tests_as_pd
 

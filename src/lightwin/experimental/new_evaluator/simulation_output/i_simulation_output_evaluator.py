@@ -2,6 +2,7 @@
 
 import logging
 from collections.abc import Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, final
 
@@ -16,55 +17,76 @@ from lightwin.core.elements.element import Element
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.experimental.new_evaluator.i_evaluator import IEvaluator
 from lightwin.experimental.plotter.pd_plotter import PandasPlotter
-from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T, POS_T
+from lightwin.util.typing import (
+    GET_ELT_ARG_T,
+    GETTABLE_SIMULATION_OUTPUT_T,
+    POS_T,
+)
+
+
+@dataclass
+class GetKwargs(dict):
+    """kwargs to forward to :meth:`.SimulationOutput.get`."""
+
+    #: Element(s) at which quantities should be evaluated. Use it if evaluation
+    #: takes too long. In general, we ``get`` data along the whole linac even
+    #: if the test is evaluated at individual points for better plotting.
+    elt: str | Element | GET_ELT_ARG_T | None = None
+    #: If NaN values should be kept in the plot. Set it to True for quantities
+    #: that are undefined for some elements, *eg* synchronous phase.
+    keep_nan: bool = False
+    #: Position in elements where quantities should be evaluated. Use it if
+    #: evaluation takes too long. In general, we ``get`` data along the whole
+    #: linac even if the test is evaluated at individual points for better
+    #: plotting.
+    pos: POS_T | None = None
+    #: If value should be converted from :unit:`rad` to :unit:`def`. Should not
+    #: be updated after object creation.
+    to_deg: bool = False
+
+    def __post_init__(self):
+        super().update(
+            elt=self.elt,
+            keep_nan=self.keep_nan,
+            none_to_nan=True,
+            pos=self.pos,
+            to_deg=self.to_deg,
+            to_numpy=True,
+        )
 
 
 class ISimulationOutputEvaluator(IEvaluator):
     """Base class for :class:`.SimulationOutput` evaluations."""
 
     _x_quantity: GETTABLE_SIMULATION_OUTPUT_T = "z_abs"
+    #: kwargs used for plotting. Note that the first line will be the data, the
+    #: second will be the lower limit, and the last line to be plotted will be
+    #: the upper limit.
     _plot_kwargs = {"style": ["-", "r--", "r:"]}
-    #: If NaN values should be kept in the plot. Set it to True for quantities
-    #: that are undefined for some elements, *eg* synchronous phase.
-    _keep_nan: bool = False
-
-    #: If value should be converted from :unit:`rad` to :unit:`def`. Should not
-    #: be updated after object creation.
-    _to_deg: bool = False
-    #: Element(s) at which quantities should be evaluated. Should not be
-    #: updated after object creation.
-    _elt: str | Element | None = None
-    #: Position in elements where quantities should be evaluated. Should not be
-    #: updated after object creation.
-    _pos: POS_T | None = None
-    _get_kwargs: dict[str, Any]
-    _constant_limits: bool
+    _constant_limits: bool = True
     _dump_no_numerical_data_to_plot: bool = False
-
-    _min: float | NDArray[np.float64] | None = None
-    _max: float | NDArray[np.float64] | None = None
 
     def __init__(
         self,
         reference: SimulationOutput,
+        fignum: int,
         plotter: PandasPlotter | None = None,
-        get_kwargs: dict[str, Any] | None = None,
+        get_kwargs: GetKwargs | None = None,
+        **kwargs,
     ) -> None:
-        """Instantiate with a reference simulation output."""
-        super().__init__(plotter)
+        """``get`` reference data and compute limits."""
+        super().__init__(fignum, plotter)
 
-        self._get_kwargs = {
-            "to_deg": self._to_deg,
-            "to_numpy": True,
-            "none_to_nan": True,
-            "pos": self._pos,
-            "elt": self._elt,
-        }
-        if get_kwargs:
-            self._get_kwargs.update(get_kwargs)
+        self._get_kwargs = get_kwargs if get_kwargs else GetKwargs()
+
+        self._plot_kwargs["x_axis"] = self._x_quantity
+
         self._ref_xdata = self._get_single(reference, self._x_quantity)
         self._n_points = len(self._ref_xdata)
         self._ref_ydata = self._get_single(reference, self._y_quantity)
+
+        self._min: float | NDArray[np.float64] | None = None
+        self._max: float | NDArray[np.float64] | None = None
 
     @final
     def _default_dummy(
@@ -104,38 +126,53 @@ class ISimulationOutputEvaluator(IEvaluator):
         quantity: GETTABLE_SIMULATION_OUTPUT_T,
         fallback_dummy: bool = True,
     ) -> NDArray[np.float64]:
-        """Call the ``get`` and handle default return value."""
+        """Call the ``get``  on a single object, handle default return value.
+
+        You may want to override this method, for example with the
+        ``mismatch_factor`` which is only defined for a non-reference linac.
+
+        """
         data = simulation_output.get(quantity, **self._get_kwargs)
         if fallback_dummy and (data.ndim == 0 or data is None):
             return self._default_dummy(quantity)
         return data
 
+    @final
     def _get_interpolated(
         self,
         simulation_output: SimulationOutput,
-        interp: bool = True,
-        **kwargs,
+        fallback_dummy: bool = True,
     ) -> NDArray[np.float64]:
         """Give ydata from one simulation, with proper number of points."""
-        ydata = self._get_single(simulation_output, self._y_quantity)
-        if not interp or len(ydata) == self._n_points:
+        ydata = self._get_single(
+            simulation_output, self._y_quantity, fallback_dummy=fallback_dummy
+        )
+        if len(ydata) == self._n_points:
             return ydata
-
-        xdata = self._get_single(simulation_output, self._x_quantity)
+        xdata = self._get_single(
+            simulation_output, self._x_quantity, fallback_dummy=fallback_dummy
+        )
         return np.interp(self._ref_xdata, xdata, ydata)
 
-    def get(
-        self, *simulation_outputs: SimulationOutput, **kwargs
-    ) -> NDArray[np.float64]:
+    @final
+    def _get(
+        self,
+        *simulation_outputs: SimulationOutput,
+        fallback_dummy: bool = True,
+    ) -> pd.DataFrame:
         """Get the data from the simulation outputs."""
-        y_data = [
-            self._get_interpolated(x, **kwargs) for x in simulation_outputs
-        ]
-        return np.column_stack(y_data)
+        data = {
+            f"sim_{i}": self._get_interpolated(
+                sim_out, fallback_dummy=fallback_dummy
+            )
+            for i, sim_out in enumerate(simulation_outputs)
+        }
+        return pd.DataFrame(data, index=self._ref_xdata)
 
+    @final
     def plot(
         self,
-        post_treated: NDArray[np.float64],
+        post_treated: pd.DataFrame,
         elts: Sequence[ListOfElements] | None = None,
         png_folders: Sequence[Path] | None = None,
         lower_limits: (
@@ -158,49 +195,60 @@ class ISimulationOutputEvaluator(IEvaluator):
             Individual upper limits can be ``float`` (constant) or arrays.
 
         """
-        to_plot = post_treated.T
+        n_cols = len(post_treated.columns)
+        lower_limits = lower_limits or [self.lower_limit] * n_cols
+        upper_limits = upper_limits or [self.upper_limit] * n_cols
 
-        lower_limits = (
-            lower_limits if lower_limits else [None for _ in to_plot]
-        )
-        upper_limits = (
-            upper_limits if upper_limits else [None for _ in to_plot]
-        )
+        # lower_limits = (
+        #     lower_limits if lower_limits else [None for _ in to_plot]
+        # )
+        # upper_limits = (
+        #     upper_limits if upper_limits else [None for _ in to_plot]
+        # )
 
-        for i, data in enumerate(to_plot):
-            elements = elts[i] if elts is not None else None
-            lower_val = (
-                lower_limits[i] if lower_limits[i] is not None else np.nan
-            )
-            upper_val = (
-                upper_limits[i] if upper_limits[i] is not None else np.nan
-            )
+        for i, col in enumerate(post_treated.columns):
+            # elements = elts[i] if elts is not None else None
+            # lower_val = (
+            #     lower_limits[i] if lower_limits[i] is not None else np.nan
+            # )
+            # upper_val = (
+            #     upper_limits[i] if upper_limits[i] is not None else np.nan
+            # )
 
             data_as_pd = pd.DataFrame(
                 {
-                    "Data": data,
-                    "Lower limit": lower_val,
-                    "Upper limit": upper_val,
+                    "Data": post_treated[col],
+                    "Lower limit": (
+                        lower_limits[i]
+                        if lower_limits[i] is not None
+                        else np.nan
+                    ),
+                    "Upper limit": (
+                        upper_limits[i]
+                        if upper_limits[i] is not None
+                        else np.nan
+                    ),
                 },
-                index=self._ref_xdata,
+                index=post_treated.index,
             )
-            if not self._keep_nan:
+            if not self._get_kwargs["keep_nan"]:
                 data_as_pd = data_as_pd.dropna(axis=1)
+
             axes = self._plot_single(
                 data_as_pd,
-                elements,
+                elts=elts[i] if elts else None,
                 dump_no_numerical_data_to_plot=self._dump_no_numerical_data_to_plot,
                 **kwargs,
             )
             if png_folders is not None:
                 self._plotter.save_figure(
-                    axes, png_folders[i] / self.png_filename
+                    axes, png_folders[i] / f"{self._y_quantity}.png"
                 )
 
     @final
     def _evaluate_single(
         self,
-        post_treated: NDArray[np.float64],
+        post_treated: pd.Series,
         lower_limit: NDArray[np.float64] | float | None = None,
         upper_limit: NDArray[np.float64] | float | None = None,
         nan_in_data_is_allowed: bool = False,
@@ -226,73 +274,85 @@ class ISimulationOutputEvaluator(IEvaluator):
         """
         lower_limit = np.nan if lower_limit is None else lower_limit
         upper_limit = np.nan if upper_limit is None else upper_limit
-        is_under_upper = np.full_like(post_treated, True, dtype=bool)
-        where = ~np.isnan(upper_limit)
-        if nan_in_data_is_allowed:
-            where = where & ~np.isnan(post_treated)
-        np.less_equal(
-            post_treated,
-            upper_limit,
-            where=where,
-            out=is_under_upper,
-        )
+        data = post_treated.to_numpy()
 
-        is_above_lower = np.full_like(post_treated, True, dtype=bool)
-        where = ~np.isnan(lower_limit)
+        is_under_upper = np.full_like(data, True, dtype=bool)
+        mask = ~np.isnan(upper_limit)
         if nan_in_data_is_allowed:
-            where = where & ~np.isnan(post_treated)
-        np.greater_equal(
-            post_treated,
-            lower_limit,
-            where=where,
-            out=is_above_lower,
-        )
+            mask &= ~np.isnan(data)
+        np.less_equal(data, upper_limit, where=mask, out=is_under_upper)
+
+        is_above_lower = np.full_like(data, True, dtype=bool)
+        mask = ~np.isnan(lower_limit)
+        if nan_in_data_is_allowed:
+            mask &= ~np.isnan(data)
+        np.greater_equal(data, lower_limit, where=mask, out=is_above_lower)
+
         test = np.all(is_above_lower & is_under_upper, axis=0)
         return bool(test)
 
     @property
-    def png_filename(self) -> str:
-        """Give a filename for consistent saving of figures."""
-        return f"{self._y_quantity}.png"
-
-    @property
     def lower_limit(self) -> float | NDArray[np.float64] | None:
-        """Give lower limit to be plotted."""
+        """Give lower limit to be plotted.
+
+        Override this method if you need more complex/specific limits.
+
+        """
         return self._min
 
     @property
     def upper_limit(self) -> float | NDArray[np.float64] | None:
-        """Give lower limit to be plotted."""
+        """Give lower limit to be plotted.
+
+        Override this method if you need more complex/specific limits.
+
+        """
         return self._max
 
     def evaluate(
         self,
         *simulation_outputs,
-        elts: Sequence[ListOfElements] | None = None,
         nan_in_data_is_allowed: bool = False,
         **kwargs,
-    ) -> tuple[list[bool], NDArray[np.float64]]:
-        """Check and plot."""
-        all_post_treated = self.post_treat(
-            self.get(*simulation_outputs, **kwargs)
-        )
-        tests: list[bool] = []
+    ) -> tuple[list[bool], pd.DataFrame]:
+        """Check, for every ``simulation_output``, if test was passed.
 
-        for post_treated in all_post_treated.T:
-            test = self._evaluate_single(
-                post_treated,
+        Parameters
+        ----------
+        simulation_outputs :
+            All the objects to test.
+        nan_in_data_is_allowed :
+            If the test is valid where post-treated data is ``NaN``. Use for
+            example with synchronous phases, which is ``NaN`` when not in a
+            cavity.
+
+        Returns
+        -------
+        list[bool]
+            Wether the tests was passed, for every given :class:
+            `.SimulationOutput`.
+        pd.DataFrame
+            Holds data used for the testing.
+
+        """
+        df = self.post_treat(self._get(*simulation_outputs, **kwargs))
+        tests = [
+            self._evaluate_single(
+                df[col],
                 lower_limit=self.lower_limit,
                 upper_limit=self.upper_limit,
                 nan_in_data_is_allowed=nan_in_data_is_allowed,
                 **kwargs,
             )
-            tests.append(test)
+            for col in df.columns
+        ]
+        return tests, df
 
-        self.plot(
-            all_post_treated,
-            elts,
-            lower_limits=[self.lower_limit for _ in simulation_outputs],
-            upper_limits=[self.upper_limit for _ in simulation_outputs],
-            **kwargs,
-        )
-        return tests, all_post_treated[-1, :]
+        # self.plot(
+        #     df,
+        #     elts,
+        #     lower_limits=[self.lower_limit for _ in simulation_outputs],
+        #     upper_limits=[self.upper_limit for _ in simulation_outputs],
+        #     **kwargs,
+        # )
+        # return tests, df[-1, :]
