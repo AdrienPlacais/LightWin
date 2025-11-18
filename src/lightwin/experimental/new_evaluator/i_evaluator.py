@@ -19,14 +19,21 @@ from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
 class IEvaluator(ABC):
     """Base class for all evaluators."""
 
+    #: ``x`` data, used for interpolation and plotting. Generally, ``"z_abs"``
+    #: or ``"elt_idx"``.
     _x_quantity: GETTABLE_SIMULATION_OUTPUT_T
+    #: Raw ``y`` data; can be modified afterwards by :meth:
+    #: `.IEvaluator.post_treat`, *eg* if you want to study relative evolution
+    #: of emittance rather than its absolute value.
     _y_quantity: GETTABLE_SIMULATION_OUTPUT_T
-    _fignum: int
+    #: kwargs used for plotting.
     _plot_kwargs: dict[str, Any]
-    _axes_index: int = 0
 
-    def __init__(self, plotter: IPlotter | None = None, **kwargs) -> None:
+    def __init__(
+        self, fignum: int, plotter: IPlotter | None = None, **kwargs
+    ) -> None:
         """Instantiate the ``plotter`` object."""
+        self._fignum = fignum
         self._plotter = plotter if plotter else PandasPlotter()
         if not hasattr(self, "_plot_kwargs"):
             self._plot_kwargs = {}
@@ -46,17 +53,18 @@ class IEvaluator(ABC):
         return markdown[self._y_quantity]
 
     @abstractmethod
-    def get(self, *args: Any, **kwargs: Any) -> NDArray[np.float64]:
+    def _get(self, *args: Any, **kwargs: Any) -> pd.DataFrame:
         """Get the base data."""
         pass
 
-    def post_treat(self, ydata: NDArray[np.float64]) -> NDArray[np.float64]:
+    def post_treat(self, raw_df: pd.DataFrame) -> pd.DataFrame:
         """Perform operations on data. By default, return data as is."""
-        return ydata
+        return raw_df
 
     def to_pandas(self, *args: Any, **kwargs: Any) -> pd.DataFrame:
         """Give the post-treated data as a pandas dataframe."""
-        data = self.get(*args, **kwargs)
+        raise NotImplementedError
+        data = self._get(*args, **kwargs)
         post_treated = self.post_treat(data)
         assert isinstance(post_treated, np.ndarray)
         assert hasattr(self, "_ref_xdata")
@@ -86,7 +94,6 @@ class IEvaluator(ABC):
             data,
             ylabel=self._markdown,
             fignum=self._fignum,
-            axes_index=self._axes_index,
             elts=elts,
             png_path=png_path,
             title=str(self),
@@ -103,6 +110,15 @@ class IEvaluator(ABC):
     @abstractmethod
     def evaluate(
         self, *args: Any, **kwargs: Any
-    ) -> tuple[list[bool], NDArray[np.float64]]:
-        """Test if the object(s) under evaluation pass(es) the test."""
+    ) -> tuple[list[bool], pd.DataFrame]:
+        """Test if the object(s) under evaluation pass(es) the test.
+
+        Returns
+        -------
+        list[bool]
+            Wether the tests was passed, for every given object.
+        pd.DataFrame
+            Holds data used for the testing.
+
+        """
         pass
