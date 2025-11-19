@@ -45,6 +45,8 @@ from lightwin.util.typing import (
     GET_ELT_ARG_T,
     GETTABLE_SIMULATION_OUTPUT_T,
     GETTABLE_STRUCTURE_DEPENDENT,
+    NEEDS_3D,
+    NEEDS_MULTIPART,
     POS_T,
 )
 
@@ -136,11 +138,11 @@ class SimulationOutput:
         return self.__str__()
 
     @property
-    def beam_calculator_information(self) -> Path:
-        """Use ``out_path`` to retrieve info on :class:`.BeamCalculator`."""
+    def beam_calculator(self) -> str:
+        """Use ``out_path`` to retrieve name of :class:`.BeamCalculator`."""
         if not hasattr(self, "out_path"):
-            return self.out_folder
-        return self.out_path.absolute().parents[1]
+            return str(self.out_folder)
+        return self.out_path.name
 
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class.
@@ -174,7 +176,7 @@ class SimulationOutput:
         none_to_nan: bool = False,
         handle_missing_elt: bool = False,
         warn_structure_dependent: bool = True,
-        **kwargs: str | bool | None,
+        **kwargs: Any,
     ) -> Any:
         """Get attributes from this class or its subcomponents.
 
@@ -248,6 +250,10 @@ class SimulationOutput:
                 val = self.transfer_matrix.get(
                     key, to_numpy=False  # type: ignore[arg-type]
                 )
+            elif key in NEEDS_3D and not self.is_3d:
+                val = None
+            elif key in NEEDS_MULTIPART and not self.is_multiparticle:
+                val = None
             else:
                 val = recursive_getter(
                     key, vars(self), to_numpy=False, **kwargs

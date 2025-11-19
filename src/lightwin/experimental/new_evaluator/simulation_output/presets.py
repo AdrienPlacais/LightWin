@@ -20,7 +20,8 @@ class AcceptanceEnergy(ISimulationOutputEvaluator):
 
     _x_quantity = "elt_idx"
     _y_quantity = "acceptance_energy"
-    _plot_kwargs = {"style": ["o", "r--", "r:"]}
+    _plot_kwargs = {"marker": "o"}
+    _nan_in_data_is_allowed = True
 
     def __init__(
         self,
@@ -76,7 +77,6 @@ class Energy(ISimulationOutputEvaluator):
     def evaluate(
         self,
         *simulation_outputs,
-        nan_in_data_is_allowed: bool = False,
         **kwargs,
     ) -> tuple[list[bool], pd.DataFrame]:
         """Check that final energy difference is within limit."""
@@ -87,7 +87,6 @@ class Energy(ISimulationOutputEvaluator):
                 last_values.iloc[:, i],
                 lower_limit=self.lower_limit,
                 upper_limit=self.upper_limit,
-                nan_in_data_is_allowed=nan_in_data_is_allowed,
                 **kwargs,
             )
             for i in range(last_values.shape[1])
@@ -154,6 +153,7 @@ class LongitudinalMismatchFactor(ISimulationOutputEvaluator):
     """Check that mismatch factor at end is not too high."""
 
     _y_quantity = "mismatch_factor_zdelta"
+    _missing_reference_data_is_worrying = False
 
     def __init__(
         self,
@@ -202,73 +202,32 @@ class PowerLoss(ISimulationOutputEvaluator):
 
     def __init__(
         self,
-        max_percentage_increase: float,
+        max_losses: float,
         reference: SimulationOutput,
         fignum: int,
         plotter: PandasPlotter | None = None,
     ) -> None:
         """Instantiate with a reference simulation output."""
         super().__init__(reference, fignum, plotter)
+        self._max = max_losses
 
-        # First point is sometimes very high
-        self._ref_ydata = self.post_treat(
-            pd.DataFrame(self._ref_ydata)
-        ).to_numpy()
-        self._max_percentage_increase = max_percentage_increase
-        self._max = 1e-2 * max_percentage_increase * np.sum(self._ref_ydata)
+    @property
+    def _markdown(self) -> str:
+        return f"Accumulated {super()._markdown}"
 
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
-        return (
-            self._markdown
-            + f"< {self._max:.2f}W "
-            + f"(+{self._max_percentage_increase:.2f}%)"
-        )
+        return f"{self._markdown} < {self._max:.2f}W"
 
     def post_treat(self, raw_df: pd.DataFrame) -> pd.DataFrame:
-        """Set the first point to 0 (sometimes it is inf in TW)."""
+        """Compute cumulative sum of power losses.
+
+        Also set first point to 0W, as it is sometimes inf. in TW.
+
+        """
         df = raw_df.copy()
         df.iloc[0] = 0.0  # first point sometimes very high
-        return df
-        if raw_df.ndim == 1:
-            raw_df[0] = 0.0
-            return raw_df
-        if raw_df.ndim == 2:
-            raw_df[:, 0] = 0.0
-            return raw_df
-        raise ValueError(f"{raw_df = } not understood.")
-
-    # def evaluate(
-    #     self,
-    #     *simulation_outputs,
-    #     elts: Sequence[ListOfElements] | None = None,
-    #     **kwargs,
-    # ) -> tuple[list[bool], NDArray[np.float64]]:
-    #     """Assert that lost power is lower than maximum."""
-    #     all_post_treated = self.post_treat(
-    #         self._get(*simulation_outputs, **kwargs)
-    #     )
-    #     tests: list[bool] = []
-    #
-    #     used_for_eval = np.sum(all_post_treated, axis=0)
-    #     for data in used_for_eval:
-    #         test = self._evaluate_single(
-    #             data,
-    #             lower_limit=self.lower_limit,
-    #             upper_limit=self.upper_limit,
-    #             **kwargs,
-    #         )
-    #         tests.append(test)
-    #
-    #     self.plot(
-    #         all_post_treated,
-    #         elts,
-    #         lower_limits=[self.lower_limit for _ in simulation_outputs],
-    #         upper_limits=[self.upper_limit for _ in simulation_outputs],
-    #         **kwargs,
-    #     )
-    #     return tests, used_for_eval
-    #
+        return df.cumsum()
 
 
 class SynchronousPhases(ISimulationOutputEvaluator):
@@ -276,7 +235,8 @@ class SynchronousPhases(ISimulationOutputEvaluator):
 
     _x_quantity = "elt_idx"
     _y_quantity = "phi_s"
-    _plot_kwargs = {"style": ["o", "r--", "r:"]}
+    _plot_kwargs = {"marker": "o"}
+    _nan_in_data_is_allowed = True
 
     def __init__(
         self,

@@ -405,14 +405,35 @@ GETTABLE_TRANSFER_MATRIX_T = Literal[
     "r_zdelta_22",
 ]
 
+#: Attributes that you can get from 3D :class:`.SimulationOutput`.
+NEEDS_3D = (
+    "eps_t",
+    "eps_x",
+    "eps_y",
+    "mismatch_factor_t",
+    "mismatch_factor_x",
+    "mismatch_factor_y",
+)
+NEEDS_3D_T = Literal[
+    "eps_t",
+    "eps_x",
+    "eps_y",
+    "mismatch_factor_t",
+    "mismatch_factor_x",
+    "mismatch_factor_y",
+]
+#: Attributes that you can get from multipart :class:`.SimulationOutput`.
+NEEDS_MULTIPART = ("eps_phiw99", "eps_x99", "eps_y99", "pow_lost")
+NEEDS_MULTIPART_T = Literal["eps_phiw99", "eps_x99", "eps_y99", "pow_lost"]
 #: Attributes that can be extracted with :meth:`.SimulationOutput.get` method.
-#: .. todo::
-#:    Should mismatch_factor_zdelta be there?
 GETTABLE_SIMULATION_OUTPUT = (
     (
+        "acceptance_energy",
+        "acceptance_phi",
         "beam_parameters",
         "element_to_index",
         "elt_idx",
+        "mismatch_factor_zdelta",
         "phi_s",
         "set_of_cavity_settings",
         "synch_trajectory",
@@ -422,12 +443,17 @@ GETTABLE_SIMULATION_OUTPUT = (
     + GETTABLE_BEAM_PARAMETERS
     + GETTABLE_PARTICLE
     + GETTABLE_TRANSFER_MATRIX
+    + NEEDS_3D
+    + NEEDS_MULTIPART
 )
 GETTABLE_SIMULATION_OUTPUT_T = (
     Literal[
+        "acceptance_energy",
+        "acceptance_phi",
         "beam_parameters",
         "element_to_index",
         "elt_idx",
+        "mismatch_factor_zdelta",
         "phi_s",
         "set_of_cavity_settings",
         "synch_trajectory",
@@ -437,6 +463,8 @@ GETTABLE_SIMULATION_OUTPUT_T = (
     | GETTABLE_BEAM_PARAMETERS_T
     | GETTABLE_PARTICLE_T
     | GETTABLE_TRANSFER_MATRIX_T
+    | NEEDS_3D_T
+    | NEEDS_MULTIPART_T
 )
 
 #: Attributes that can be extracted with :meth:`.Accelerator.get` method.

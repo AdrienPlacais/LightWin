@@ -61,22 +61,12 @@ class IEvaluator(ABC):
         """Perform operations on data. By default, return data as is."""
         return raw_df
 
-    def to_pandas(self, *args: Any, **kwargs: Any) -> pd.DataFrame:
-        """Give the post-treated data as a pandas dataframe."""
-        raise NotImplementedError
-        data = self._get(*args, **kwargs)
-        post_treated = self.post_treat(data)
-        assert isinstance(post_treated, np.ndarray)
-        assert hasattr(self, "_ref_xdata")
-        as_df = pd.DataFrame(data=post_treated, index=self._ref_xdata)
-        return as_df
-
     @abstractmethod
     def plot(
         self,
         post_treated: Any,
         elts: Sequence[ListOfElements] | None = None,
-        png_folders: Sequence[Path] | None = None,
+        png_folder: Path | None = None,
         **kwargs: Any,
     ) -> Any:
         """Plot evaluated data from all the given objects."""
@@ -84,14 +74,16 @@ class IEvaluator(ABC):
 
     def _plot_single(
         self,
-        data: Any,
-        elts: ListOfElements | None,
+        data: pd.DataFrame,
+        elts: ListOfElements | None = None,
+        axes: Any | None = None,
         png_path: Path | None = None,
         **kwargs: Any,
     ) -> Any:
         """Plot evaluated data from a single object."""
         return self._plotter.plot(
             data,
+            axes=axes,
             ylabel=self._markdown,
             fignum=self._fignum,
             elts=elts,
@@ -99,6 +91,36 @@ class IEvaluator(ABC):
             title=str(self),
             **kwargs,
             **self._plot_kwargs,
+        )
+
+    def _plot_limits(
+        self,
+        limits: pd.DataFrame,
+        axes: Any | None = None,
+        style: tuple[str, str] = ("--", ":"),
+        color: str = "red",
+        **kwargs: Any,
+    ) -> Any:
+        """Plot limits.
+
+        Parameters
+        ----------
+        limits :
+            Must have a ``"Lower limit"`` and a ``"Upper limit"`` column.
+        style :
+            Linestyles for lower and upper limits.
+        colors :
+            Color for the limits.
+
+        """
+        return self._plotter.plot(
+            limits,
+            axes=axes,
+            ylabel=self._markdown,
+            fignum=self._fignum,
+            style=style,
+            color=color,
+            **kwargs,
         )
 
     def _plot_complementary(
