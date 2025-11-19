@@ -61,12 +61,13 @@ class ISimulationOutputEvaluator(IEvaluator):
     """Base class for :class:`.SimulationOutput` evaluations."""
 
     _x_quantity: GETTABLE_SIMULATION_OUTPUT_T = "z_abs"
-    _dump_no_numerical_data_to_plot: bool = False
     #: Whether a NaN in the data array systematically makes the test fail.
     _nan_in_data_is_allowed: bool = False
     #: Whether we should worry if the reference data is not found. Set it to
     #: False for mismatch factor, which is defined for altered linacs only.
-    _missing_reference_data_is_worrying = True
+    _missing_reference_data_is_worrying: bool = True
+    #: Whether reference data should be tested and plotted.
+    _add_reference: bool = True
 
     def __init__(
         self,
@@ -78,11 +79,17 @@ class ISimulationOutputEvaluator(IEvaluator):
     ) -> None:
         """``get`` reference data and compute limits."""
         super().__init__(fignum, plotter)
+        self._dump_no_numerical_data_to_plot: bool = False
 
+        self._ref = reference
         self._get_kwargs = get_kwargs if get_kwargs else GetKwargs()
 
+        #: Reference ``x`` data. If necessary, ``y`` data will interpolated on
+        #: this array.
         self._ref_xdata = self._get_single(reference, self._x_quantity)
         self._n_points = len(self._ref_xdata)
+
+        #: Reference ``y`` data. Not post-treated.
         self._ref_ydata = self._get_single(
             reference,
             self._y_quantity,
@@ -321,6 +328,12 @@ class ISimulationOutputEvaluator(IEvaluator):
 
         """
         df = self.post_treat(self._get(*simulation_outputs, **kwargs))
+
+        if self._add_reference:
+            ref_post_treated = self.post_treat(self._get(self._ref))
+            col = ref_post_treated.columns[0]
+            df.insert(0, col + ", ref", ref_post_treated[col])
+
         tests = [
             self._evaluate_single(
                 df[col],
@@ -335,4 +348,6 @@ class ISimulationOutputEvaluator(IEvaluator):
             for col, test in zip(df.columns, tests)
         }
         df.rename(columns=new_names, inplace=True)
+        if not self._add_reference:
+            tests.insert(0, True)
         return tests, df
