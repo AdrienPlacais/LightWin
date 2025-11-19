@@ -12,6 +12,7 @@ from typing import Any
 
 import pandas as pd
 
+import lightwin.util.pandas_helper as pandas_helper
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
@@ -57,9 +58,7 @@ class SimulationOutputEvaluatorsFactory:
         )
 
     def run(
-        self,
-        accelerators: Sequence[Accelerator],
-        reference_solver_id: str,
+        self, accelerators: Sequence[Accelerator], reference_solver_id: str
     ) -> list[ISimulationOutputEvaluator]:
         """Instantiate all the evaluators."""
         reference = accelerators[0].simulation_outputs[reference_solver_id]
@@ -117,24 +116,21 @@ class SimulationOutputEvaluatorsFactory:
             test, data = evaluator.evaluate(*simulation_outputs, **kwargs)
             evaluator.plot(data, elts=elts, png_folder=folder, **kwargs)
 
-            tests[str(evaluator)] = test
+            tests[repr(evaluator)] = test
             data_used_for_tests[str(evaluator)] = data
 
-        # index = [folder.parent.stem for folder in folders]
-
         tests_as_pd = pd.DataFrame(tests)
-        # data_as_pd = pd.DataFrame(data_used_for_tests, index=index)
-        #
-        # pandas_helper.to_csv(
-        #     tests_as_pd,
-        #     path=folders[0].parents[1] / "tests.csv",
-        #     **(csv_kwargs or {}),
-        # )
-        # pandas_helper.to_csv(
-        #     data_as_pd,
-        #     path=folders[0].parents[1] / "data_used_for_tests.csv",
-        #     **(csv_kwargs or {}),
-        # )
+        pandas_helper.to_csv(
+            tests_as_pd,
+            path=folder.parents[1] / "tests.csv",
+            **(csv_kwargs or {}),
+        )
+        for key, val in data_used_for_tests.items():
+            pandas_helper.to_csv(
+                val,
+                folder.parent / f"{key}.csv",
+                **(csv_kwargs or {}),
+            )
 
         return tests_as_pd
 

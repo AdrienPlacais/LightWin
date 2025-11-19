@@ -37,7 +37,7 @@ class AcceptanceEnergy(ISimulationOutputEvaluator):
 
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
-        return f"Along linac, {self._markdown} $< {self._max:0.2f}$"
+        return f"Along linac, {self.markdown} $< {self._max:0.2f}$"
 
 
 class AcceptancePhase(AcceptanceEnergy):
@@ -68,7 +68,7 @@ class Energy(ISimulationOutputEvaluator):
 
     @property
     def _markdown(self) -> str:
-        return r"$\Delta$" + super()._markdown + " (absolute)"
+        return r"$\Delta$" + super().markdown + " (absolute)"
 
     def post_treat(self, raw_df: pd.DataFrame) -> pd.DataFrame:
         """Compute abs diff between energy in fix and ref linacs."""
@@ -81,6 +81,12 @@ class Energy(ISimulationOutputEvaluator):
     ) -> tuple[list[bool], pd.DataFrame]:
         """Check that final energy difference is within limit."""
         df = self.post_treat(self._get(*simulation_outputs, **kwargs))
+
+        if self._add_reference:
+            ref_post_treated = self.post_treat(self._get(self._ref))
+            col = ref_post_treated.columns[0]
+            df.insert(0, col + ", ref", ref_post_treated[col])
+
         last_values = df.iloc[[-1]]  # shape: (1, n_simulations)
         tests = [
             self._evaluate_single(
@@ -91,6 +97,13 @@ class Energy(ISimulationOutputEvaluator):
             )
             for i in range(last_values.shape[1])
         ]
+        new_names = {
+            col: f"{col} (ok)" if test else f"{col} (fail)"
+            for col, test in zip(df.columns, tests)
+        }
+        df.rename(columns=new_names, inplace=True)
+        if not self._add_reference:
+            tests.insert(0, True)
         return tests, df
 
 
@@ -111,7 +124,7 @@ class EnvelopePhiW(ISimulationOutputEvaluator):
 
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
-        return f"Envelope {self._markdown} stays reasonable"
+        return f"Envelope {self.markdown} stays reasonable"
 
 
 class LongitudinalEmittance(ISimulationOutputEvaluator):
@@ -154,6 +167,7 @@ class LongitudinalMismatchFactor(ISimulationOutputEvaluator):
 
     _y_quantity = "mismatch_factor_zdelta"
     _missing_reference_data_is_worrying = False
+    _plot_reference_data = False
 
     def __init__(
         self,
@@ -170,7 +184,7 @@ class LongitudinalMismatchFactor(ISimulationOutputEvaluator):
 
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
-        return f"At end of linac, {self._markdown} $< {self._max:0.2f}$"
+        return f"At end of linac, {self.markdown} $< {self._max:0.2f}$"
 
     def _get_single(
         self,
@@ -213,7 +227,7 @@ class PowerLoss(ISimulationOutputEvaluator):
 
     @property
     def _markdown(self) -> str:
-        return f"Accumulated {super()._markdown}"
+        return f"Accumulated {super().markdown}"
 
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
@@ -255,7 +269,7 @@ class SynchronousPhases(ISimulationOutputEvaluator):
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
         return (
-            f"All {self._markdown} are within [{self._min:0.2f}, "
+            f"All {self.markdown} are within [{self._min:0.2f}, "
             f"{self._max:-.2f}] (deg)"
         )
 
@@ -267,7 +281,7 @@ class TransverseMismatchFactor(LongitudinalMismatchFactor):
 
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
-        return f"At end of linac, {self._markdown} $< " f"{self._max:0.2f}$"
+        return f"At end of linac, {self.markdown} $< " f"{self._max:0.2f}$"
 
 
 SIMULATION_OUTPUT_EVALUATORS = {

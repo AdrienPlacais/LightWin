@@ -1,5 +1,6 @@
 """Define the base object for every evaluator."""
 
+import re
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence
 from pathlib import Path
@@ -40,15 +41,26 @@ class IEvaluator(ABC):
         self._ref_xdata: NDArray[np.float64]
 
     def __str__(self) -> str:
-        """Give a detailed description of what this class does."""
-        return self.__repr__()
+        """Describe holded data.
+
+        This is the ``self.markdown``, but without special characters.
+
+        """
+        md = self.markdown
+        # Remove everything inside [...] including brackets
+        md = re.sub(r"\[.*?\]", "", md)
+        # Remove special chars
+        for s in ("$", "\\", "{", "}"):
+            md = md.replace(s, "")
+        md = md.strip()
+        return md.replace(" ", "_")
 
     @abstractmethod
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
 
     @property
-    def _markdown(self) -> str:
+    def markdown(self) -> str:
         """Give a markdown representation of object, with units."""
         return markdown[self._y_quantity]
 
@@ -84,11 +96,11 @@ class IEvaluator(ABC):
         return self._plotter.plot(
             data,
             axes=axes,
-            ylabel=self._markdown,
+            ylabel=self.markdown,
             fignum=self._fignum,
             elts=elts,
             png_path=png_path,
-            title=str(self),
+            title=repr(self),
             **kwargs,
             **self._plot_kwargs,
         )
@@ -116,7 +128,7 @@ class IEvaluator(ABC):
         return self._plotter.plot(
             limits,
             axes=axes,
-            ylabel=self._markdown,
+            ylabel=self.markdown,
             fignum=self._fignum,
             style=style,
             color=color,
