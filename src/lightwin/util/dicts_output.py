@@ -15,8 +15,10 @@ full_name = {
     "acceptance_energy": "Energy acceptance [MeV]",
     "acceptance_phi": "Phase acceptance [deg]",
     "phi_s": "Synch. phase [deg]",
+    "pow_lost": "Lost power [W]",
     "v_cav_mv": "Acc. field [MV]",
     "w_kin": "Beam energy [MeV]",
+    "z_abs": "Synch. position [m]",
 }
 
 markdown = {
@@ -69,7 +71,7 @@ markdown = {
     "phi_0_rel": r"$\phi_{0, rel}$ [deg]",
     "phi_abs": "Beam phase [deg]",
     "phi_s": r"$\phi_s$ [deg]",
-    "pow_lost": "Lost power [W]",
+    "pow_lost": "$P_{lost}$ [W]",
     "r_zdelta_11": r"$(M_{z\delta})_{1,\,1}$",
     "r_zdelta_12": r"$(M_{z\delta})_{1,\,2}$",
     "r_zdelta_21": r"$(M_{z\delta})_{2,\,1}$",
@@ -77,7 +79,7 @@ markdown = {
     "struct": "Structure",
     "v_cav_mv": r"$V_{cav}$ [MV]",
     "w_kin": "$W_{kin}$ [MeV]",
-    "z_abs": "Synch. position [m]",
+    "z_abs": r"$z$ [m]",
 }
 
 plot_kwargs = {

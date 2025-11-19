@@ -16,10 +16,12 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.core.elements.element import Element
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.experimental.new_evaluator.i_evaluator import IEvaluator
-from lightwin.experimental.plotter.pd_plotter import PandasPlotter
+from lightwin.experimental.plotter.matplotlib_plotter import MatplotlibPlotter
 from lightwin.util.typing import (
     GET_ELT_ARG_T,
     GETTABLE_SIMULATION_OUTPUT_T,
+    NEEDS_3D,
+    NEEDS_MULTIPART,
     POS_T,
 )
 
@@ -59,18 +61,18 @@ class ISimulationOutputEvaluator(IEvaluator):
     """Base class for :class:`.SimulationOutput` evaluations."""
 
     _x_quantity: GETTABLE_SIMULATION_OUTPUT_T = "z_abs"
-    #: kwargs used for plotting. Note that the first line will be the data, the
-    #: second will be the lower limit, and the last line to be plotted will be
-    #: the upper limit.
-    _plot_kwargs = {"style": ["-", "r--", "r:"]}
-    _constant_limits: bool = True
     _dump_no_numerical_data_to_plot: bool = False
+    #: Whether a NaN in the data array systematically makes the test fail.
+    _nan_in_data_is_allowed: bool = False
+    #: Whether we should worry if the reference data is not found. Set it to
+    #: False for mismatch factor, which is defined for altered linacs only.
+    _missing_reference_data_is_worrying = True
 
     def __init__(
         self,
         reference: SimulationOutput,
         fignum: int,
-        plotter: PandasPlotter | None = None,
+        plotter: MatplotlibPlotter | None = None,
         get_kwargs: GetKwargs | None = None,
         **kwargs,
     ) -> None:
@@ -79,18 +81,25 @@ class ISimulationOutputEvaluator(IEvaluator):
 
         self._get_kwargs = get_kwargs if get_kwargs else GetKwargs()
 
-        self._plot_kwargs["x_axis"] = self._x_quantity
-
         self._ref_xdata = self._get_single(reference, self._x_quantity)
         self._n_points = len(self._ref_xdata)
-        self._ref_ydata = self._get_single(reference, self._y_quantity)
-
+        self._ref_ydata = self._get_single(
+            reference,
+            self._y_quantity,
+            fallback_dummy=not self._missing_reference_data_is_worrying,
+        )
+        if np.isnan(self._ref_ydata).any():
+            logging.error(
+                f"No valid {self._y_quantity} was found in reference "
+                f"simulation output, obtained with {reference.beam_calculator}"
+                " solver. This will cause interpolation errors."
+            )
         self._min: float | NDArray[np.float64] | None = None
         self._max: float | NDArray[np.float64] | None = None
 
     @final
     def _default_dummy(
-        self, quantity: GETTABLE_SIMULATION_OUTPUT_T
+        self, quantity: GETTABLE_SIMULATION_OUTPUT_T, warn: bool = True
     ) -> NDArray[np.float64]:
         """Give dummy ydata, with expected shape if possible.
 
@@ -100,24 +109,27 @@ class ISimulationOutputEvaluator(IEvaluator):
         """
         self._dump_no_numerical_data_to_plot = True
         if hasattr(self, "_ref_ydata"):
-            logging.error(
-                f"{quantity = } was not found in the simulation output. "
-                "Maybe the simulation was interrupted? Returning dummy data."
-            )
+            if warn:
+                logging.error(
+                    f"{quantity = } was not found in the simulation output. "
+                    "Maybe the simulation was interrupted? Returning dummy data."
+                )
             return np.full_like(self._ref_ydata, np.nan)
         if hasattr(self, "_ref_xdata"):
-            logging.error(
-                f"Reference {quantity = } was not found in the simulation"
-                " output. Maybe the simulation parameters are invalid, or "
-                "the BeamCalculator does not produce this data? Returning "
-                "dummy data."
-            )
+            if warn:
+                logging.error(
+                    f"Reference {quantity = } was not found in the simulation"
+                    " output. Maybe the simulation parameters are invalid, or "
+                    "the BeamCalculator does not produce this data? Returning "
+                    "dummy data."
+                )
             return np.full_like(self._ref_xdata, np.nan)
-        logging.critical(
-            f"Reference {quantity = } data was not found and I could not "
-            "find fallback array ({self._x_quantity}). Returning a very dummy "
-            "array."
-        )
+        if warn:
+            logging.critical(
+                f"Reference {quantity = } data was not found and I could not "
+                f"find fallback array ({self._x_quantity}). Returning a dummy "
+                "array."
+            )
         return np.full((10,), np.nan)
 
     def _get_single(
@@ -133,8 +145,15 @@ class ISimulationOutputEvaluator(IEvaluator):
 
         """
         data = simulation_output.get(quantity, **self._get_kwargs)
-        if fallback_dummy and (data.ndim == 0 or data is None):
-            return self._default_dummy(quantity)
+
+        if fallback_dummy and (data is None or data.ndim == 0):
+            warn = True
+            if (quantity in NEEDS_3D and not simulation_output.is_3d) or (
+                quantity in NEEDS_MULTIPART
+                and not simulation_output.is_multiparticle
+            ):
+                warn = False
+            return self._default_dummy(quantity, warn=warn)
         return data
 
     @final
@@ -162,10 +181,10 @@ class ISimulationOutputEvaluator(IEvaluator):
     ) -> pd.DataFrame:
         """Get the data from the simulation outputs."""
         data = {
-            f"sim_{i}": self._get_interpolated(
+            sim_out.beam_calculator: self._get_interpolated(
                 sim_out, fallback_dummy=fallback_dummy
             )
-            for i, sim_out in enumerate(simulation_outputs)
+            for sim_out in simulation_outputs
         }
         return pd.DataFrame(data, index=self._ref_xdata)
 
@@ -174,7 +193,7 @@ class ISimulationOutputEvaluator(IEvaluator):
         self,
         post_treated: pd.DataFrame,
         elts: Sequence[ListOfElements] | None = None,
-        png_folders: Sequence[Path] | None = None,
+        png_folder: Path | None = None,
         lower_limits: (
             Sequence[NDArray[np.float64] | float | None] | None
         ) = None,
@@ -195,63 +214,39 @@ class ISimulationOutputEvaluator(IEvaluator):
             Individual upper limits can be ``float`` (constant) or arrays.
 
         """
-        n_cols = len(post_treated.columns)
-        lower_limits = lower_limits or [self.lower_limit] * n_cols
-        upper_limits = upper_limits or [self.upper_limit] * n_cols
+        if not self._get_kwargs["keep_nan"]:
+            post_treated = post_treated.dropna(axis=1)
 
-        # lower_limits = (
-        #     lower_limits if lower_limits else [None for _ in to_plot]
-        # )
-        # upper_limits = (
-        #     upper_limits if upper_limits else [None for _ in to_plot]
-        # )
+        axes = self._plot_single(
+            post_treated,
+            elts=elts[-1] if elts else None,
+            dump_no_numerical_data_to_plot=self._dump_no_numerical_data_to_plot,
+            x_axis=self._x_quantity,
+            **kwargs,
+        )
 
-        for i, col in enumerate(post_treated.columns):
-            # elements = elts[i] if elts is not None else None
-            # lower_val = (
-            #     lower_limits[i] if lower_limits[i] is not None else np.nan
-            # )
-            # upper_val = (
-            #     upper_limits[i] if upper_limits[i] is not None else np.nan
-            # )
+        n_rows = len(post_treated)
+        lower_limits = lower_limits or [self.lower_limit] * n_rows
+        upper_limits = upper_limits or [self.upper_limit] * n_rows
+        limits = pd.DataFrame(
+            {"Lower limit": lower_limits, "Upper limits": upper_limits},
+            index=post_treated.index,
+        )
 
-            data_as_pd = pd.DataFrame(
-                {
-                    "Data": post_treated[col],
-                    "Lower limit": (
-                        lower_limits[i]
-                        if lower_limits[i] is not None
-                        else np.nan
-                    ),
-                    "Upper limit": (
-                        upper_limits[i]
-                        if upper_limits[i] is not None
-                        else np.nan
-                    ),
-                },
-                index=post_treated.index,
+        limits = limits.mask(limits.isna(), np.nan)
+        limits = limits.astype(float)
+        axes = self._plot_limits(limits, x_axis=self._x_quantity, axes=axes)
+        if png_folder is not None:
+            self._plotter.save_figure(
+                axes, png_folder / f"{self._y_quantity}.png"
             )
-            if not self._get_kwargs["keep_nan"]:
-                data_as_pd = data_as_pd.dropna(axis=1)
+        return axes
 
-            axes = self._plot_single(
-                data_as_pd,
-                elts=elts[i] if elts else None,
-                dump_no_numerical_data_to_plot=self._dump_no_numerical_data_to_plot,
-                **kwargs,
-            )
-            if png_folders is not None:
-                self._plotter.save_figure(
-                    axes, png_folders[i] / f"{self._y_quantity}.png"
-                )
-
-    @final
     def _evaluate_single(
         self,
         post_treated: pd.Series,
         lower_limit: NDArray[np.float64] | float | None = None,
         upper_limit: NDArray[np.float64] | float | None = None,
-        nan_in_data_is_allowed: bool = False,
         **kwargs,
     ) -> bool:
         """Check that ``post_treated`` is within limits.
@@ -263,9 +258,6 @@ class ISimulationOutputEvaluator(IEvaluator):
             we consider that the test if failed.
         lower_limit, upper_limit :
             Min/max value for data. Where it is ``np.nan``, the test is passed.
-        nan_in_data_is_allowed :
-            If the test is valid where ``post_treated`` is NaN. Use for example
-            with synchronous phases, which is Nan when not in a cavity.
 
         Returns
         -------
@@ -278,13 +270,13 @@ class ISimulationOutputEvaluator(IEvaluator):
 
         is_under_upper = np.full_like(data, True, dtype=bool)
         mask = ~np.isnan(upper_limit)
-        if nan_in_data_is_allowed:
+        if self._nan_in_data_is_allowed:
             mask &= ~np.isnan(data)
         np.less_equal(data, upper_limit, where=mask, out=is_under_upper)
 
         is_above_lower = np.full_like(data, True, dtype=bool)
         mask = ~np.isnan(lower_limit)
-        if nan_in_data_is_allowed:
+        if self._nan_in_data_is_allowed:
             mask &= ~np.isnan(data)
         np.greater_equal(data, lower_limit, where=mask, out=is_above_lower)
 
@@ -310,10 +302,7 @@ class ISimulationOutputEvaluator(IEvaluator):
         return self._max
 
     def evaluate(
-        self,
-        *simulation_outputs,
-        nan_in_data_is_allowed: bool = False,
-        **kwargs,
+        self, *simulation_outputs, **kwargs
     ) -> tuple[list[bool], pd.DataFrame]:
         """Check, for every ``simulation_output``, if test was passed.
 
@@ -321,10 +310,6 @@ class ISimulationOutputEvaluator(IEvaluator):
         ----------
         simulation_outputs :
             All the objects to test.
-        nan_in_data_is_allowed :
-            If the test is valid where post-treated data is ``NaN``. Use for
-            example with synchronous phases, which is ``NaN`` when not in a
-            cavity.
 
         Returns
         -------
@@ -341,18 +326,13 @@ class ISimulationOutputEvaluator(IEvaluator):
                 df[col],
                 lower_limit=self.lower_limit,
                 upper_limit=self.upper_limit,
-                nan_in_data_is_allowed=nan_in_data_is_allowed,
                 **kwargs,
             )
             for col in df.columns
         ]
+        new_names = {
+            col: f"{col} (ok)" if test else f"{col} (fail)"
+            for col, test in zip(df.columns, tests)
+        }
+        df.rename(columns=new_names, inplace=True)
         return tests, df
-
-        # self.plot(
-        #     df,
-        #     elts,
-        #     lower_limits=[self.lower_limit for _ in simulation_outputs],
-        #     upper_limits=[self.upper_limit for _ in simulation_outputs],
-        #     **kwargs,
-        # )
-        # return tests, df[-1, :]

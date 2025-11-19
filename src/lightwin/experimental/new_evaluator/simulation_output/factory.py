@@ -23,8 +23,7 @@ from lightwin.experimental.new_evaluator.simulation_output.presets import (
     SIMULATION_OUTPUT_EVALUATORS,
 )
 from lightwin.experimental.plotter.i_plotter import IPlotter
-from lightwin.experimental.plotter.pd_plotter import PandasPlotter
-from lightwin.util import pandas_helper
+from lightwin.experimental.plotter.matplotlib_plotter import MatplotlibPlotter
 from lightwin.util.helper import get_constructors
 
 
@@ -52,16 +51,18 @@ class SimulationOutputEvaluatorsFactory:
             An object used to produce plots.
 
         """
-        self._plotter = plotter if plotter else PandasPlotter()
+        self._plotter = plotter if plotter else MatplotlibPlotter()
         self._constructors_n_kwargs = _constructors_n_kwargs(
             evaluator_kwargs, user_evaluators
         )
 
     def run(
-        self, accelerators: Sequence[Accelerator], beam_solver_id: str
+        self,
+        accelerators: Sequence[Accelerator],
+        reference_solver_id: str,
     ) -> list[ISimulationOutputEvaluator]:
         """Instantiate all the evaluators."""
-        reference = accelerators[0].simulation_outputs[beam_solver_id]
+        reference = accelerators[0].simulation_outputs[reference_solver_id]
         evaluators = self._instantiate_evaluators(reference)
         return evaluators
 
@@ -97,29 +98,31 @@ class SimulationOutputEvaluatorsFactory:
         self,
         evaluators: Collection[ISimulationOutputEvaluator],
         accelerators: Sequence[Accelerator],
-        beam_solver_id: str,
+        beam_solver_ids: Sequence[str],
         csv_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ) -> pd.DataFrame:
         """Evaluate several evaluators."""
         simulation_outputs = [
-            x.simulation_outputs[beam_solver_id] for x in accelerators
+            x.simulation_outputs[beam_solver_id]
+            for beam_solver_id in beam_solver_ids
+            for x in accelerators
         ]
         elts = [x.elts for x in accelerators]
-        folders = _out_folders(simulation_outputs)
+        folder = _out_folders(simulation_outputs)[-1]
 
         tests = {}
         data_used_for_tests = {}
         for evaluator in evaluators:
             test, data = evaluator.evaluate(*simulation_outputs, **kwargs)
-            evaluator.plot(data, elts=elts, **kwargs)
+            evaluator.plot(data, elts=elts, png_folder=folder, **kwargs)
 
             tests[str(evaluator)] = test
             data_used_for_tests[str(evaluator)] = data
 
-        index = [folder.parent.stem for folder in folders]
+        # index = [folder.parent.stem for folder in folders]
 
-        tests_as_pd = pd.DataFrame(tests, index=index)
+        tests_as_pd = pd.DataFrame(tests)
         # data_as_pd = pd.DataFrame(data_used_for_tests, index=index)
         #
         # pandas_helper.to_csv(

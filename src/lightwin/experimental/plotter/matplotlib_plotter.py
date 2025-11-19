@@ -1,5 +1,6 @@
 """Define a plotter that rely on the matplotlib library."""
 
+import logging
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
@@ -45,19 +46,41 @@ class MatplotlibPlotter(IPlotter):
         axes: Sequence[Axes],
         axes_index: int,
         xlabel: str = markdown["z_abs"],
+        style: Sequence[str] | None = None,
+        dump_no_numerical_data_to_plot: bool = False,
         **plot_kwargs: Any,
     ) -> Sequence[Axes]:
         """Create the plot itself."""
-        data.plot(
-            ax=axes[axes_index],
-            sharex=self._sharex,
-            grid=self._grid,
-            xlabel=xlabel,
-            ylabel=ylabel,
-            legend=self._legend,
-            **plot_kwargs,
-        )
-        return axes
+        try:
+            if style:
+                for col, ls in zip(data.columns, style, strict=True):
+                    data[col].plot(
+                        ax=axes[axes_index],
+                        sharex=self._sharex,
+                        grid=self._grid,
+                        xlabel=xlabel,
+                        ylabel=ylabel,
+                        legend=self._legend,
+                        ls=ls,
+                        **plot_kwargs,
+                    )
+                return axes
+
+            data.plot(
+                ax=axes[axes_index],
+                sharex=self._sharex,
+                grid=self._grid,
+                xlabel=xlabel,
+                ylabel=ylabel,
+                legend=self._legend,
+                **plot_kwargs,
+            )
+            return axes
+        except TypeError as err:
+            if dump_no_numerical_data_to_plot:
+                logging.info(f"Dumped a Matplotlib.plot error: {err}.")
+                return axes
+            raise err
 
     def save_figure(
         self, axes: Axes | Sequence[Axes], save_path: Path
@@ -102,6 +125,7 @@ class MatplotlibPlotter(IPlotter):
         **kwargs,
     ) -> None:
         """Add one constant plot."""
+        logging.critical(f"{color = }, {ls = }")
         if not isinstance(axes, Sequence):
             axes = (axes,)
         for axe in axes:
