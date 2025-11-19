@@ -11,7 +11,7 @@ from numpy.typing import NDArray
 
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.experimental.plotter.i_plotter import IPlotter
-from lightwin.experimental.plotter.pd_plotter import PandasPlotter
+from lightwin.experimental.plotter.matplotlib_plotter import MatplotlibPlotter
 from lightwin.util.dicts_output import markdown
 from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
 
@@ -34,7 +34,7 @@ class IEvaluator(ABC):
     ) -> None:
         """Instantiate the ``plotter`` object."""
         self._fignum = fignum
-        self._plotter = plotter if plotter else PandasPlotter()
+        self._plotter = plotter if plotter else MatplotlibPlotter()
         if not hasattr(self, "_plot_kwargs"):
             self._plot_kwargs = {}
         self._ref_xdata: NDArray[np.float64]

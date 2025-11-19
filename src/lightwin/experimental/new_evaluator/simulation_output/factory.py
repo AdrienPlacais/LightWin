@@ -23,8 +23,7 @@ from lightwin.experimental.new_evaluator.simulation_output.presets import (
     SIMULATION_OUTPUT_EVALUATORS,
 )
 from lightwin.experimental.plotter.i_plotter import IPlotter
-from lightwin.experimental.plotter.pd_plotter import PandasPlotter
-from lightwin.util import pandas_helper
+from lightwin.experimental.plotter.matplotlib_plotter import MatplotlibPlotter
 from lightwin.util.helper import get_constructors
 
 
@@ -52,7 +51,7 @@ class SimulationOutputEvaluatorsFactory:
             An object used to produce plots.
 
         """
-        self._plotter = plotter if plotter else PandasPlotter()
+        self._plotter = plotter if plotter else MatplotlibPlotter()
         self._constructors_n_kwargs = _constructors_n_kwargs(
             evaluator_kwargs, user_evaluators
         )

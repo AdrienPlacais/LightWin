@@ -4,7 +4,6 @@ import logging
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from sys import platlibdir
 from typing import Any, final
 
 import numpy as np
@@ -17,7 +16,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.core.elements.element import Element
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.experimental.new_evaluator.i_evaluator import IEvaluator
-from lightwin.experimental.plotter.pd_plotter import PandasPlotter
+from lightwin.experimental.plotter.matplotlib_plotter import MatplotlibPlotter
 from lightwin.util.typing import (
     GET_ELT_ARG_T,
     GETTABLE_SIMULATION_OUTPUT_T,
@@ -73,7 +72,7 @@ class ISimulationOutputEvaluator(IEvaluator):
         self,
         reference: SimulationOutput,
         fignum: int,
-        plotter: PandasPlotter | None = None,
+        plotter: MatplotlibPlotter | None = None,
         get_kwargs: GetKwargs | None = None,
         **kwargs,
     ) -> None:

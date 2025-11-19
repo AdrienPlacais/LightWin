@@ -11,7 +11,7 @@ from lightwin.experimental.new_evaluator.simulation_output.i_simulation_output_e
     GetKwargs,
     ISimulationOutputEvaluator,
 )
-from lightwin.experimental.plotter.pd_plotter import PandasPlotter
+from lightwin.experimental.plotter.matplotlib_plotter import MatplotlibPlotter
 from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
 
 
@@ -28,7 +28,7 @@ class AcceptanceEnergy(ISimulationOutputEvaluator):
         max_acceptance: float,
         reference: SimulationOutput,
         fignum: int,
-        plotter: PandasPlotter | None = None,
+        plotter: MatplotlibPlotter | None = None,
     ) -> None:
         """Instantiate with a reference simulation output."""
         get_kwargs = GetKwargs(keep_nan=True, to_deg=True)
@@ -56,7 +56,7 @@ class Energy(ISimulationOutputEvaluator):
         max_percentage_rel_diff: float,
         reference: SimulationOutput,
         fignum: int,
-        plotter: PandasPlotter | None = None,
+        plotter: MatplotlibPlotter | None = None,
     ) -> None:
         """Instantiate with a reference simulation output."""
         super().__init__(reference, fignum, plotter)
@@ -104,7 +104,7 @@ class EnvelopePhiW(ISimulationOutputEvaluator):
         max_envelope: NDArray[np.float64] | float,
         reference: SimulationOutput,
         fignum: int,
-        plotter: PandasPlotter | None = None,
+        plotter: MatplotlibPlotter | None = None,
     ) -> None:
         super().__init__(reference, fignum, plotter)
         self._max = max_envelope
@@ -124,7 +124,7 @@ class LongitudinalEmittance(ISimulationOutputEvaluator):
         max_percentage_rel_increase: float,
         reference: SimulationOutput,
         fignum: int,
-        plotter: PandasPlotter | None = None,
+        plotter: MatplotlibPlotter | None = None,
     ) -> None:
         """Instantiate with a reference simulation output."""
         super().__init__(reference, fignum, plotter)
@@ -160,7 +160,7 @@ class LongitudinalMismatchFactor(ISimulationOutputEvaluator):
         max_mismatch: float,
         reference: SimulationOutput,
         fignum: int,
-        plotter: PandasPlotter | None = None,
+        plotter: MatplotlibPlotter | None = None,
     ) -> None:
         """Instantiate with a reference simulation output."""
         super().__init__(reference, fignum, plotter)
@@ -205,7 +205,7 @@ class PowerLoss(ISimulationOutputEvaluator):
         max_losses: float,
         reference: SimulationOutput,
         fignum: int,
-        plotter: PandasPlotter | None = None,
+        plotter: MatplotlibPlotter | None = None,
     ) -> None:
         """Instantiate with a reference simulation output."""
         super().__init__(reference, fignum, plotter)
@@ -244,7 +244,7 @@ class SynchronousPhases(ISimulationOutputEvaluator):
         max_phi_s_deg: float,
         reference: SimulationOutput,
         fignum: int,
-        plotter: PandasPlotter | None = None,
+        plotter: MatplotlibPlotter | None = None,
     ) -> None:
         """Instantiate with a reference simulation output."""
         get_kwargs = GetKwargs(keep_nan=True, to_deg=True)
