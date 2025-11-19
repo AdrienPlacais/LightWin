@@ -25,7 +25,7 @@ class AcceptanceEnergy(ISimulationOutputEvaluator):
 
     def __init__(
         self,
-        max_acceptance: float,
+        min_acceptance: float,
         reference: SimulationOutput,
         fignum: int,
         plotter: MatplotlibPlotter | None = None,
@@ -33,11 +33,11 @@ class AcceptanceEnergy(ISimulationOutputEvaluator):
         """Instantiate with a reference simulation output."""
         get_kwargs = GetKwargs(keep_nan=True, to_deg=True)
         super().__init__(reference, fignum, plotter, get_kwargs=get_kwargs)
-        self._max = max_acceptance
+        self._min = min_acceptance
 
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
-        return f"Along linac, {self.markdown} $< {self._max:0.2f}$"
+        return f"Along linac, {self.markdown} $> {self._min:0.2f}$"
 
 
 class AcceptancePhase(AcceptanceEnergy):

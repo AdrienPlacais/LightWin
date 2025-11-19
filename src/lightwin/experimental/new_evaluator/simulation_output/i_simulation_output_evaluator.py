@@ -160,6 +160,8 @@ class ISimulationOutputEvaluator(IEvaluator):
                 and not simulation_output.is_multiparticle
             ):
                 warn = False
+            if warn:
+                logging.error(f"{simulation_output.beam_calculator} error:")
             return self._default_dummy(quantity, warn=warn)
         return data
 
