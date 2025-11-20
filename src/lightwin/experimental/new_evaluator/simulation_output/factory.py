@@ -58,53 +58,84 @@ class SimulationOutputEvaluatorsFactory:
         )
 
     def run(
-        self, accelerators: Sequence[Accelerator], reference_solver_id: str
+        self,
+        accelerators: Sequence[Accelerator],
+        solvers_ids: str | Sequence[str],
     ) -> list[ISimulationOutputEvaluator]:
-        """Instantiate all the evaluators."""
-        reference = accelerators[0].simulation_outputs[reference_solver_id]
-        evaluators = self._instantiate_evaluators(reference)
-        return evaluators
-
-    def _instantiate_evaluators(
-        self, reference: SimulationOutput
-    ) -> list[ISimulationOutputEvaluator]:
-        """Create all the evaluators.
+        """Instantiate all the evaluators.
 
         Parameters
         ----------
-        reference :
-            The reference simulation output.
+        accelerators :
+            Objects holding all the different :class:`.SimulationOutput`.
+        reference_solver_ids :
+            Name of the reference solver(s). If several are provided, we use
+            the first one by default; we use the following if necessary data
+            was not available.
 
-        Returns
-        -------
-            All the created evaluators.
+        .. todo::
+           More robust creation of evaluators. Use `needs_3d`
+           `needs_multipart`.
 
         """
-        evaluators = [
-            constructor(
-                reference=reference,
-                fignum=100 + i,
-                plotter=self._plotter,
-                **kwargs,
-            )
-            for i, (constructor, kwargs) in enumerate(
-                self._constructors_n_kwargs.items()
-            )
-        ]
+        if isinstance(solvers_ids, str):
+            solvers_ids = (solvers_ids,)
+
+        evaluators: list[ISimulationOutputEvaluator] = []
+
+        for i, (constructor, kwargs) in enumerate(
+            self._constructors_n_kwargs.items()
+        ):
+            for id in solvers_ids:
+                evaluator = constructor(
+                    reference=accelerators[0].simulation_outputs[id],
+                    fignum=100 + i,
+                    plotter=self._plotter,
+                    **kwargs,
+                )
+                if evaluator.data_is_gettable():
+                    evaluators.append(evaluator)
+                    break
+            else:
+                logging.warning(
+                    f"None of the provided beam calculators ({solvers_ids}) "
+                    f"calculates the data necesary for {constructor.__name__},"
+                    " so it was skipped."
+                )
         return evaluators
 
     def batch_evaluate(
         self,
         evaluators: Collection[ISimulationOutputEvaluator],
         accelerators: Sequence[Accelerator],
-        beam_solver_ids: Sequence[str],
+        solvers_ids: Sequence[str],
         csv_kwargs: dict[str, Any] | None = None,
+        get_overrides: dict[str, Any] | None = None,
         **kwargs,
     ) -> pd.DataFrame:
-        """Evaluate several evaluators."""
+        """Evaluate several evaluators.
+
+        Parameters
+        ----------
+        evaluators :
+            Evaluations to realize.
+        accelerators :
+            Objects holding all the :class:`.SimulationOutput` to be evaluated.
+        beam_solver_ids :
+            Name of the solvers that created the :class:`.SimulationOutput`.
+            They must be keys of the :attr:`.Accelerator.simulation_outputs`
+            dictionary.
+        csv_kwargs :
+            Keyword arguments passed to :func:`.pandas_helper.to_csv`.
+        get_overrides :
+            Keyword arguments passed to :meth:`.SimulationOutput.get`,
+            overriding defaults. For example, if you want your evaluators to
+            run on a smaller portion of the linac.
+
+        """
         simulation_outputs = [
             x.simulation_outputs[beam_solver_id]
-            for beam_solver_id in beam_solver_ids
+            for beam_solver_id in solvers_ids
             for x in accelerators
         ]
         elts = [x.elts for x in accelerators]
@@ -113,7 +144,9 @@ class SimulationOutputEvaluatorsFactory:
         tests = {}
         data_used_for_tests = {}
         for evaluator in evaluators:
-            test, data = evaluator.evaluate(*simulation_outputs, **kwargs)
+            test, data = evaluator.evaluate(
+                *simulation_outputs, **(get_overrides or {})
+            )
             evaluator.plot(data, elts=elts, png_folder=folder, **kwargs)
 
             tests[repr(evaluator)] = test

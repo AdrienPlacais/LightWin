@@ -54,7 +54,15 @@ class GetKwargs(dict):
             pos=self.pos,
             to_deg=self.to_deg,
             to_numpy=True,
+            warn_structure_dependent=False,
         )
+
+    def update(self, *args, **kwargs) -> None:
+        """Make ``update`` method update internal attributes as well."""
+        super().update(*args, **kwargs)
+        for k, v in dict(*args, **kwargs).items():
+            if hasattr(self, k):
+                setattr(self, k, v)
 
 
 class ISimulationOutputEvaluator(IEvaluator):
@@ -82,27 +90,62 @@ class ISimulationOutputEvaluator(IEvaluator):
         self._dump_no_numerical_data_to_plot: bool = False
 
         self._ref = reference
+        #: Keyword arguments passed to the :meth:`.SimulationOutput.get`
         self._get_kwargs = get_kwargs if get_kwargs else GetKwargs()
 
         #: Reference ``x`` data. If necessary, ``y`` data will interpolated on
         #: this array.
-        self._ref_xdata = self._get_single(reference, self._x_quantity)
-        self._n_points = len(self._ref_xdata)
-
+        self._ref_xdata: NDArray[np.float64] | None = None
         #: Reference ``y`` data. Not post-treated.
-        self._ref_ydata = self._get_single(
-            reference,
-            self._y_quantity,
-            fallback_dummy=not self._missing_reference_data_is_worrying,
-        )
-        if np.isnan(self._ref_ydata).any():
-            logging.error(
-                f"No valid {self._y_quantity} was found in reference "
-                f"simulation output, obtained with {reference.beam_calculator}"
-                " solver. This will cause interpolation errors."
-            )
+        self._ref_ydata: NDArray[np.float64] | None = None
+
         self._min: float | NDArray[np.float64] | None = None
         self._max: float | NDArray[np.float64] | None = None
+
+    @property
+    def ref_xdata(self) -> NDArray[np.float64]:
+        """Get reference ``x`` data."""
+        if self._ref_xdata is None:
+            self._ref_xdata = self._get_single(self._ref, self._x_quantity)
+        return self._ref_xdata
+
+    @property
+    def ref_ydata(self) -> NDArray[np.float64]:
+        """Get reference ``y`` data."""
+        if self._ref_ydata is None:
+            self._ref_ydata = self._get_single(
+                self._ref,
+                self._y_quantity,
+                fallback_dummy=not self._missing_reference_data_is_worrying,
+            )
+            if np.isnan(self._ref_ydata).any():
+                logging.error(
+                    f"Invalid {self._y_quantity} was found in reference "
+                    "simulation output, obtained with "
+                    f"{self._ref.beam_calculator} solver. This will cause "
+                    "interpolation errors."
+                )
+        return self._ref_ydata
+
+    @property
+    def _n_points(self) -> int:
+        """Get len of arrays."""
+        return len(self.ref_xdata)
+
+    def data_is_gettable(
+        self,
+        simulation_output: SimulationOutput | None = None,
+        quantity: str | None = None,
+    ) -> bool:
+        """Tell whether we can get y data from the simulation output."""
+        if simulation_output is None:
+            simulation_output = self._ref
+        if quantity is None:
+            quantity = self._y_quantity
+        return (simulation_output.is_3d or quantity not in NEEDS_3D) and (
+            simulation_output.is_multiparticle
+            or quantity not in NEEDS_MULTIPART
+        )
 
     @final
     def _default_dummy(
@@ -115,29 +158,22 @@ class ISimulationOutputEvaluator(IEvaluator):
 
         """
         self._dump_no_numerical_data_to_plot = True
-        if hasattr(self, "_ref_ydata"):
-            if warn:
-                logging.error(
-                    f"{quantity = } was not found in the simulation output. "
-                    "Maybe the simulation was interrupted? Returning dummy data."
-                )
-            return np.full_like(self._ref_ydata, np.nan)
-        if hasattr(self, "_ref_xdata"):
-            if warn:
-                logging.error(
-                    f"Reference {quantity = } was not found in the simulation"
-                    " output. Maybe the simulation parameters are invalid, or "
-                    "the BeamCalculator does not produce this data? Returning "
-                    "dummy data."
-                )
-            return np.full_like(self._ref_xdata, np.nan)
         if warn:
-            logging.critical(
-                f"Reference {quantity = } data was not found and I could not "
-                f"find fallback array ({self._x_quantity}). Returning a dummy "
-                "array."
+            logging.error(
+                f"{quantity = } was not found in the simulation output. "
+                "Maybe the simulation was interrupted? Returning dummy data."
             )
-        return np.full((10,), np.nan)
+        return (
+            np.full((10,), np.nan)
+            if quantity == self._x_quantity
+            else np.full_like(self.ref_xdata, np.nan)
+        )
+
+    def override_get_kwargs(self, **kwargs) -> None:
+        """Set new :attr:`._get_kwargs` values, reset ref data."""
+        self._get_kwargs.update(kwargs)
+        self._ref_xdata = None
+        self._ref_ydata = None
 
     def _get_single(
         self,
@@ -151,25 +187,19 @@ class ISimulationOutputEvaluator(IEvaluator):
         ``mismatch_factor`` which is only defined for a non-reference linac.
 
         """
+        if not self.data_is_gettable(simulation_output, quantity):
+            return self._default_dummy(quantity, warn=False)
+
         data = simulation_output.get(quantity, **self._get_kwargs)
 
         if fallback_dummy and (data is None or data.ndim == 0):
-            warn = True
-            if (quantity in NEEDS_3D and not simulation_output.is_3d) or (
-                quantity in NEEDS_MULTIPART
-                and not simulation_output.is_multiparticle
-            ):
-                warn = False
-            if warn:
-                logging.error(f"{simulation_output.beam_calculator} error:")
-            return self._default_dummy(quantity, warn=warn)
+            logging.error(f"{simulation_output.beam_calculator} error:")
+            return self._default_dummy(quantity, warn=True)
         return data
 
     @final
     def _get_interpolated(
-        self,
-        simulation_output: SimulationOutput,
-        fallback_dummy: bool = True,
+        self, simulation_output: SimulationOutput, fallback_dummy: bool = True
     ) -> NDArray[np.float64]:
         """Give ydata from one simulation, with proper number of points."""
         ydata = self._get_single(
@@ -180,7 +210,9 @@ class ISimulationOutputEvaluator(IEvaluator):
         xdata = self._get_single(
             simulation_output, self._x_quantity, fallback_dummy=fallback_dummy
         )
-        return np.interp(self._ref_xdata, xdata, ydata)
+        if len(xdata) != len(ydata):
+            __import__("pdb").set_trace()
+        return np.interp(self.ref_xdata, xdata, ydata)
 
     @final
     def _get(
@@ -190,12 +222,12 @@ class ISimulationOutputEvaluator(IEvaluator):
     ) -> pd.DataFrame:
         """Get the data from the simulation outputs."""
         data = {
-            sim_out.beam_calculator: self._get_interpolated(
+            f"{sim_out.linac_id} ({sim_out.beam_calculator})": self._get_interpolated(
                 sim_out, fallback_dummy=fallback_dummy
             )
             for sim_out in simulation_outputs
         }
-        return pd.DataFrame(data, index=self._ref_xdata)
+        return pd.DataFrame(data, index=self.ref_xdata)
 
     @final
     def plot(
@@ -253,10 +285,9 @@ class ISimulationOutputEvaluator(IEvaluator):
 
     def _evaluate_single(
         self,
-        post_treated: pd.Series,
+        post_treated: pd.Series | float,
         lower_limit: NDArray[np.float64] | float | None = None,
         upper_limit: NDArray[np.float64] | float | None = None,
-        **kwargs,
     ) -> bool:
         """Check that ``post_treated`` is within limits.
 
@@ -275,7 +306,16 @@ class ISimulationOutputEvaluator(IEvaluator):
         """
         lower_limit = np.nan if lower_limit is None else lower_limit
         upper_limit = np.nan if upper_limit is None else upper_limit
-        data = post_treated.to_numpy()
+
+        if isinstance(post_treated, float):
+            data = np.array([post_treated])
+        elif isinstance(post_treated, pd.Series):
+            data = post_treated.to_numpy()
+        else:
+            raise TypeError(
+                "Can only evaluate pd.Series, float or numpy array. You gave "
+                f"a {type(post_treated)}."
+            )
 
         is_under_upper = np.full_like(data, True, dtype=bool)
         mask = ~np.isnan(upper_limit)
@@ -311,7 +351,11 @@ class ISimulationOutputEvaluator(IEvaluator):
         return self._max
 
     def evaluate(
-        self, *simulation_outputs, **kwargs
+        self,
+        *simulation_outputs,
+        fallback_dummy: bool = True,
+        use_last_row_only: bool = False,
+        **get_overrides: Any,
     ) -> tuple[list[bool], pd.DataFrame]:
         """Check, for every ``simulation_output``, if test was passed.
 
@@ -319,37 +363,59 @@ class ISimulationOutputEvaluator(IEvaluator):
         ----------
         simulation_outputs :
             All the objects to test.
+        fallback_dummy :
+            If missing data is not worrying and should be replaced by a dummy
+            array.
+        use_last_row_only :
+            If the test should be ran at exit of linac only.
+        get_overrides :
+            Keyword arguments passed to :meth:`.SimulationOutput.get`,
+            overriding defaults. For example, if you want your evaluators to
+            run on a smaller portion of the linac.
 
         Returns
         -------
         list[bool]
             Wether the tests was passed, for every given :class:
-            `.SimulationOutput`.
+            `.SimulationOutput`. If reference simulation outputs were not
+            studied, we consider they pass the test.
         pd.DataFrame
             Holds data used for the testing.
 
         """
-        df = self.post_treat(self._get(*simulation_outputs, **kwargs))
+        if get_overrides:
+            self.override_get_kwargs(**get_overrides)
 
-        if self._add_reference:
-            ref_post_treated = self.post_treat(self._get(self._ref))
-            col = ref_post_treated.columns[0]
-            df.insert(0, col + ", ref", ref_post_treated[col])
+        to_study = simulation_outputs
+        if not self._add_reference:
+            to_study = [x for x in simulation_outputs if not x.is_reference]
+        rm_index = (
+            i for i, x in enumerate(simulation_outputs) if x not in to_study
+        )
 
+        df = self.post_treat(
+            self._get(*to_study, fallback_dummy=fallback_dummy)
+        )
+
+        eval_data = df.iloc[-1] if use_last_row_only else df
         tests = [
             self._evaluate_single(
-                df[col],
+                eval_data[col],
                 lower_limit=self.lower_limit,
                 upper_limit=self.upper_limit,
-                **kwargs,
             )
             for col in df.columns
         ]
-        new_names = {
-            col: f"{col} (ok)" if test else f"{col} (fail)"
-            for col, test in zip(df.columns, tests)
-        }
-        df.rename(columns=new_names, inplace=True)
-        if not self._add_reference:
-            tests.insert(0, True)
+
+        df.rename(
+            columns={
+                col: f"{col} (ok)" if test else f"{col} (fail)"
+                for col, test in zip(df.columns, tests)
+            },
+            inplace=True,
+        )
+
+        # Add placeholders to keep the size of output test array consistent
+        for i in rm_index:
+            tests.insert(i, True)
         return tests, df
