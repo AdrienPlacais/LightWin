@@ -1,5 +1,7 @@
 """Create some generic evaluators for :class:`.SimulationOutput.`"""
 
+from typing import Any
+
 import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
@@ -72,39 +74,22 @@ class Energy(ISimulationOutputEvaluator):
 
     def post_treat(self, raw_df: pd.DataFrame) -> pd.DataFrame:
         """Compute abs diff between energy in fix and ref linacs."""
-        return (raw_df - self._ref_ydata[:, None]).abs()
+        return (raw_df - self.ref_ydata[:, None]).abs()
 
     def evaluate(
         self,
         *simulation_outputs,
-        **kwargs,
+        fallback_dummy: bool = True,
+        use_last_row_only=True,
+        **user_overrides: Any,
     ) -> tuple[list[bool], pd.DataFrame]:
         """Check that final energy difference is within limit."""
-        df = self.post_treat(self._get(*simulation_outputs, **kwargs))
-
-        if self._add_reference:
-            ref_post_treated = self.post_treat(self._get(self._ref))
-            col = ref_post_treated.columns[0]
-            df.insert(0, col + ", ref", ref_post_treated[col])
-
-        last_values = df.iloc[[-1]]  # shape: (1, n_simulations)
-        tests = [
-            self._evaluate_single(
-                last_values.iloc[:, i],
-                lower_limit=self.lower_limit,
-                upper_limit=self.upper_limit,
-                **kwargs,
-            )
-            for i in range(last_values.shape[1])
-        ]
-        new_names = {
-            col: f"{col} (ok)" if test else f"{col} (fail)"
-            for col, test in zip(df.columns, tests)
-        }
-        df.rename(columns=new_names, inplace=True)
-        if not self._add_reference:
-            tests.insert(0, True)
-        return tests, df
+        return super().evaluate(
+            *simulation_outputs,
+            fallback_dummy=fallback_dummy,
+            use_last_row_only=use_last_row_only,
+            **user_overrides,
+        )
 
 
 class EnvelopePhiW(ISimulationOutputEvaluator):
@@ -141,9 +126,12 @@ class LongitudinalEmittance(ISimulationOutputEvaluator):
     ) -> None:
         """Instantiate with a reference simulation output."""
         super().__init__(reference, fignum, plotter)
-
-        self._ref_ydata = self._ref_ydata[0]  # single reference value
         self._max = max_percentage_rel_increase
+
+    @property
+    def ref_ydata(self) -> float:
+        """Give only value at linac entrance."""
+        return super().ref_ydata[0]
 
     @property
     def _markdown(self) -> str:
@@ -159,7 +147,7 @@ class LongitudinalEmittance(ISimulationOutputEvaluator):
 
     def post_treat(self, raw_df: pd.DataFrame) -> pd.DataFrame:
         """Compute relative diff w.r.t. reference value @ z = 0."""
-        return 1e2 * (raw_df - self._ref_ydata) / self._ref_ydata
+        return 1e2 * (raw_df - self.ref_ydata) / self.ref_ydata
 
 
 class LongitudinalMismatchFactor(ISimulationOutputEvaluator):
@@ -167,7 +155,7 @@ class LongitudinalMismatchFactor(ISimulationOutputEvaluator):
 
     _y_quantity = "mismatch_factor_zdelta"
     _missing_reference_data_is_worrying = False
-    _plot_reference_data = False
+    _add_reference = False
 
     def __init__(
         self,
@@ -178,9 +166,12 @@ class LongitudinalMismatchFactor(ISimulationOutputEvaluator):
     ) -> None:
         """Instantiate with a reference simulation output."""
         super().__init__(reference, fignum, plotter)
-
-        self._ref_ydata = np.array([0.0, 0.0])
         self._max = max_mismatch
+
+    @property
+    def ref_ydata(self) -> NDArray[np.float64]:
+        """Return null array, because there is no reference mismatch."""
+        return np.zeros_like(self.ref_xdata)
 
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
@@ -202,9 +193,9 @@ class LongitudinalMismatchFactor(ISimulationOutputEvaluator):
             simulation_output, quantity, fallback_dummy=False
         )
         if fallback_dummy and (data.ndim == 0 or data is None):
-            if simulation_output.out_path.parent.stem == "000000_ref":
+            if simulation_output.is_reference:
                 self._dump_no_numerical_data_to_plot = True
-                return np.full_like(self._ref_xdata, np.nan)
+                return np.full_like(self.ref_xdata, np.nan)
             return self._default_dummy(quantity)
         return data
 
@@ -228,6 +219,10 @@ class PowerLoss(ISimulationOutputEvaluator):
     @property
     def _markdown(self) -> str:
         return f"Accumulated {super().markdown}"
+
+    @property
+    def ref_xdata(self) -> NDArray[np.float64]:
+        return super().ref_xdata
 
     def __repr__(self) -> str:
         """Give a short description of what this class does."""

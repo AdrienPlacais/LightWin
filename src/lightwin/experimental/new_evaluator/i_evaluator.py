@@ -38,7 +38,7 @@ class IEvaluator(ABC):
         self._plotter = plotter if plotter else MatplotlibPlotter()
         if not hasattr(self, "_plot_kwargs"):
             self._plot_kwargs = {}
-        self._ref_xdata: NDArray[np.float64]
+        self._ref_xdata: NDArray[np.float64] | None
 
     def __str__(self) -> str:
         """Describe holded data.
