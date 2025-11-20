@@ -67,7 +67,8 @@ def flatten[T](nest: Iterable[T]) -> Iterator[T]:
 def chunks[T](lst: list[T], n_size: int) -> Generator[list[T], int, None]:
     """Yield successive ``n_size``-ed chunks from ``lst``.
 
-    https://stackoverflow.com/questions/312443/how-do-i-split-a-list-into-equally-sized-chunks
+    https://stackoverflow.com/questions/312443/how-do-i-split-a-list-into-equal
+    ly-sized-chunks
 
     """
     for i in range(0, len(lst), n_size):

@@ -25,6 +25,7 @@ from typing import Any, Self
 import numpy as np
 import pandas as pd
 from matplotlib.axes import Axes
+from numpy.typing import NDArray
 
 from lightwin.core.beam_parameters.beam_parameters import BeamParameters
 from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, Element
@@ -51,7 +52,7 @@ from lightwin.util.typing import (
 )
 
 
-@dataclass
+@dataclass(eq=False)
 class SimulationOutput:
     """Store the information produced by a :class:`.BeamCalculator`.
 
@@ -144,6 +145,26 @@ class SimulationOutput:
             return str(self.out_folder)
         return self.out_path.name
 
+    @property
+    def is_reference(self) -> bool:
+        """Tell whether this objects concerns a nominal linac.
+
+        .. todo::
+           MMMh
+
+        """
+        return self.linac_id == "000000_ref"
+
+    @property
+    def linac_id(self) -> str:
+        """Tell which linac is studied.
+
+        .. todo::
+           Fix this monstruosity.
+
+        """
+        return self.out_path.parent.stem
+
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class.
 
@@ -176,6 +197,7 @@ class SimulationOutput:
         none_to_nan: bool = False,
         handle_missing_elt: bool = False,
         warn_structure_dependent: bool = True,
+        _remove_first: bool = False,
         **kwargs: Any,
     ) -> Any:
         """Get attributes from this class or its subcomponents.
@@ -191,7 +213,8 @@ class SimulationOutput:
         to_deg :
             Multiply keys with ``"phi"`` by ``180 / pi``.
         elt :
-            Target element name or instance, passed to recursive_getter.
+            Target element name or instance, passed to recursive_getter. If
+            several elements are provided, they must be contiguous.
         pos :
             Position key for slicing data arrays.
         none_to_nan :
@@ -202,6 +225,10 @@ class SimulationOutput:
         warn_structure_dependent :
             Raise a warning when trying to access data which is
             structure-related rather than simulation-related.
+        _remove_first :
+            Remove the first item of each element's attribute except for the
+            first element itself. Used when ``elt`` consists of several
+            elements, in order to avoid some data to be represented twice.
         **kwargs :
             Additional arguments for recursive_getter.
 
@@ -212,22 +239,50 @@ class SimulationOutput:
 
         """
         if not isinstance(elt, str) and isinstance(elt, Collection):
-            return list(
+            concat = [
                 flatten(
                     [
                         self.get(
-                            *keys,
-                            to_numpy=to_numpy,
+                            key,
+                            to_numpy=False,
                             to_deg=to_deg,
                             elt=e,
                             pos=pos,
-                            none_to_nan=none_to_nan,
+                            none_to_nan=False,
+                            warn_structure_dependent=warn_structure_dependent,
+                            _remove_first=i > 0,
                             **kwargs,
                         )
-                        for e in elt
+                        for i, e in enumerate(elt)
                     ]
                 )
-            )
+                for key in keys
+            ]
+            out = [list(x) for x in concat]
+            if to_numpy:
+                out = [np.array(x) for x in out]
+            if none_to_nan:
+                if not to_numpy:
+                    logging.error(
+                        f"{none_to_nan = } while {to_numpy = }, which is not "
+                        "supported. Forcing to_numpy = True and hoping for the "
+                        "best."
+                    )
+                    to_numpy = True
+                out = [
+                    (
+                        np.array(np.nan)
+                        if val is None
+                        else np.asarray(val, dtype=float)
+                    )
+                    for val in out
+                ]
+            elif to_numpy:
+                out = [
+                    np.array(val) if not isinstance(val, str) else val
+                    for val in out
+                ]
+            return out[0] if len(out) == 1 else tuple(out)
 
         out: list[Any] = []
         for key in keys:
@@ -275,6 +330,13 @@ class SimulationOutput:
                         handle_missing_elt=handle_missing_elt,
                     )
                     val = val[idx]
+                if (
+                    _remove_first
+                    and isinstance(val, (list, np.ndarray))
+                    and len(val) > 1
+                ):
+                    val = val[1:]
+
                 if not to_numpy and isinstance(val, np.ndarray):
                     val = val.tolist()
 
@@ -401,11 +463,9 @@ class SimulationOutput:
 
 
 def _to_deg(
-    val: np.ndarray | list | float | None,
-) -> np.ndarray | list | float | None:
+    val: NDArray[np.float64] | list[float | None] | float,
+) -> NDArray[np.float64] | list[float | None]:
     """Convert the ``val[key]`` into deg if it is not None."""
-    if val is None:
-        return None
     if isinstance(val, list):
         return [
             math.degrees(angle) if angle is not None else None for angle in val
