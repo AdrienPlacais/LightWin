@@ -125,6 +125,7 @@ class SimulationOutput:
                 i for i, _ in enumerate(self.cav_params["v_cav_mv"], start=1)
             ]
         self.out_path: Path
+        self._linac_id: str | None = None
 
     def __str__(self) -> str:
         """Give a resume of the data that is stored."""
@@ -163,7 +164,13 @@ class SimulationOutput:
            Fix this monstruosity.
 
         """
-        return self.out_path.parent.stem
+        if self._linac_id is None:
+            self._linac_id = self.out_path.parent.stem
+        return self._linac_id
+
+    @linac_id.setter
+    def linac_id(self, value: str) -> None:
+        self._linac_id = value
 
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class.
