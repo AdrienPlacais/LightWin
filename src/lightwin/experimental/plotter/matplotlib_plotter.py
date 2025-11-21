@@ -5,8 +5,10 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
+import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.experimental.plotter.i_plotter import IPlotter
@@ -24,6 +26,8 @@ class MatplotlibPlotter(IPlotter):
     def __init__(self, elts: ListOfElements | None = None) -> None:
         """Instantiate some common attributes."""
         super().__init__(elts)
+        plt.rcParams["figure.dpi"] = 150
+        plt.rcParams["figure.figsize"] = (16, 9)
 
     def _setup_fig(self, fignum: int, title: str, **kwargs) -> list[Axes]:
         """Setup the figure and axes."""
@@ -88,7 +92,7 @@ class MatplotlibPlotter(IPlotter):
         if isinstance(axes, Sequence):
             axes = axes[0]
         figure = axes.get_figure()
-        assert figure is not None
+        assert isinstance(figure, Figure)
         return figure.savefig(save_path)
 
     def _plot_structure(
