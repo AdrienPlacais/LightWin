@@ -8,6 +8,7 @@ from pytest import approx
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
 
 _REFERENCE_RESULTS = {
     "w_kin": 502.24092,
@@ -33,7 +34,7 @@ _REFERENCE_RESULTS = {
 
 
 def wrap_approx(
-    key: str,
+    key: GETTABLE_SIMULATION_OUTPUT_T,
     fix_so: SimulationOutput,
     ref_so: SimulationOutput | None = None,
     rel: float | None = None,
@@ -52,28 +53,28 @@ def wrap_approx(
 
     Parameters
     ----------
-    key : str
+    key :
         The name of the quantity to compare between the simulation results.
-    fix_so : SimulationOutput
+    fix_so :
         The simulation results produced by the test.
-    ref_so : SimulationOutput | None, optional
+    ref_so :
         The reference simulation output. If not provided, we will take ``key``
         from the reference dictionary.
-    rel : float | None, optional
+    rel :
         Relative tolerance. The default is ``pytest.approx`` default.
-    abs : float | None, optional
+    abs :
         Absolute tolerance. The default is ``pytest.approx`` default.
-    to_numpy : bool, optional
+    to_numpy :
         If the value should be converted to a numpy array. The default is
         False.
-    to_deg : bool, optional
+    to_deg :
         If the value should be converted to degrees (note that this will be
         applied if ``"phi"`` is in ``key``). The default is True.
-    elt : str | None, optional
+    elt :
         Where the comparison should be performed. If None, it will be checked
         on the whole array of values. The default is "last" (comparison on
         last element).
-    pos : Literal["in", "out"] | None, optional
+    pos :
         Where to compare the values in the element. The default is exit of
         element.
     get_kwargs :
