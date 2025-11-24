@@ -108,7 +108,6 @@ class SimulationOutputEvaluatorsFactory:
         self,
         evaluators: Collection[ISimulationOutputEvaluator],
         accelerators: Sequence[Accelerator],
-        solvers_ids: Sequence[str],
         csv_kwargs: dict[str, Any] | None = None,
         get_overrides: dict[str, Any] | None = None,
         **kwargs,
@@ -134,9 +133,9 @@ class SimulationOutputEvaluatorsFactory:
 
         """
         simulation_outputs = [
-            x.simulation_outputs[beam_solver_id]
-            for beam_solver_id in solvers_ids
-            for x in accelerators
+            simulation
+            for acc in accelerators
+            for simulation in acc.simulation_outputs.values()
         ]
         elts = [x.elts for x in accelerators]
         folder = _out_folders(simulation_outputs)[-1]
