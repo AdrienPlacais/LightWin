@@ -9,18 +9,14 @@ import logging
 from abc import ABCMeta
 from collections.abc import Collection
 from functools import partial
-from typing import Any, Callable, Literal
+from typing import Any, Literal
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.cavity_settings_factory import (
-    CavitySettingsFactory,
-)
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
-from lightwin.failures.fault import Fault
 from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
 from lightwin.optimisation.algorithms.bayesian_optimization import (
     BayesianOptimizationLW,
@@ -43,7 +39,6 @@ from lightwin.optimisation.algorithms.simulated_annealing import (
 )
 from lightwin.optimisation.design_space.design_space import DesignSpace
 from lightwin.optimisation.objective.factory import ObjectiveFactory
-from lightwin.optimisation.objective.objective import Objective
 
 #: Maps the ``optimisation_algorithm`` key in the ``TOML`` file to the actual
 #: :class:`.OptimisationAlgorithm` we use.

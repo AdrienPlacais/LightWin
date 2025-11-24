@@ -32,7 +32,6 @@ from lightwin.optimisation.objective.objective import (
     MinimizeMismatch,
     Objective,
     QuantityIsBetween,
-    RetrieveArbitrary,
 )
 from lightwin.optimisation.objective.position import (
     POSITION_TO_INDEX_T,
@@ -151,6 +150,101 @@ class ObjectiveFactory(ABC):
             for objective in self.objectives
         ]
         return np.array(residuals)
+
+
+class CorrectorAtExit(ObjectiveFactory):
+    """Propagate beam up to final cavities, where an energy boost is given.
+
+    The idea behind this strategy is the following:
+
+    - Use ``n_compensating`` cavities around the failure to shape the beam and
+      propagate it without losses.
+    - Rephase downstream cavities to keep the beam as intact as possible.
+    - Give an ultimate energy boost to the beam with the last ``n_correctors``
+      cavities.
+
+    This method is very similar to the one used at SNS :cite:`Shishlo2022`.
+    In this paper however, there are no compensating cavities around the
+    failure.
+
+    See Also
+    --------
+    :func:`.strategy.corrector_at_exit`
+
+    """
+
+    objective_position_preset = ["end of last altered lattice"]
+
+    def get_objectives(self) -> list[Objective]:
+        """Give adapted objectives.
+
+        We start by looking at the :attr:`.CorrectorAtExit._failed_elements`
+        list:
+
+        - If it has elements, we are around a failure and we will try to keep
+          a kinetic energy not too far from the nominal energy. More
+          importantly, we try to minimize the mismatch factor at the exit of
+          the compensation zone.
+        - If it is empty, it means that there is no nearby failed cavity. We
+          are at the exit of the linac and will try to retrieve nominal energy
+          at the end of the linac.
+
+        """
+        if len(self._failed_elements) > 0:
+            last_element_of_zone = self._objective_elements[-1]
+            return [
+                self._preaccelerate(elt=last_element_of_zone),
+                self._preshape(elt=last_element_of_zone),
+            ]
+
+        last_element_of_linac = self._compensating_elements[-1]
+        return [self._retrieve_energy(last_element_of_linac)]
+
+    def _preaccelerate(self, elt: Element) -> Objective:
+        """Get reasonable energy at exit of compensation zone."""
+        get_key = "w_kin"
+        get_kwargs = {"elt": elt, "pos": "out", "to_numpy": False}
+        ref = self._reference_simulation_output.get(get_key, **get_kwargs)
+        objective = QuantityIsBetween.relative_to_reference(
+            name=markdown["w_kin"],
+            weight=1.0,
+            get_key=get_key,
+            get_kwargs=get_kwargs,
+            relative_limits=(90.0, 101.0),
+            reference_value=ref,
+            descriptor="Energy stays within (-10%, +1%) wrt nominal tuning.",
+        )
+        return objective
+
+    def _preshape(self, elt: Element) -> Objective:
+        """Minimize mismatch factor at exit of compensation zone."""
+        objective = MinimizeMismatch(
+            name=r"$M_{z\delta}$",
+            weight=1.0,
+            get_key="twiss",
+            get_kwargs={
+                "elt": elt,
+                "pos": "out",
+                "to_numpy": True,
+                "phase_space_name": "zdelta",
+            },
+            reference=self._reference_simulation_output,
+            descriptor="""Minimize mismatch factor in the [z-delta] plane at
+            exit of compensation zone.""",
+        )
+        return objective
+
+    def _retrieve_energy(self, elt: Element) -> Objective:
+        """Retrieve energy at the end of the linac."""
+        objective = MinimizeDifferenceWithRef(
+            name=markdown["w_kin"],
+            weight=1.0,
+            get_key="w_kin",
+            get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
+            reference=self._reference_simulation_output,
+            descriptor="Retrieve nominal energy at the exit of the linac.",
+        )
+        return objective
 
 
 class EnergyMismatch(ObjectiveFactory):
@@ -472,164 +566,13 @@ class EnergySeveralMismatches(ObjectiveFactory):
         return objective
 
 
-class Spiral2(ObjectiveFactory):
-    """Try something."""
+class Spiral2(CorrectorAtExit):
+    """Testing best SPIRAL2 compensation method.
 
-    objective_position_preset = ["end of every altered lattice"]
-    compensation_zone_override_settings = {
-        "full_lattices": True,
-        "full_linac": False,
-        "start_at_beginning_of_linac": False,
-    }
-
-    def get_objectives(self) -> list[Objective]:
-        """Return twiss and energy at end of lattices after failure."""
-        objectives = []
-        for elt in self._objective_elements:
-            objectives += [
-                self._get_twiss_alpha(elt),
-                self._get_twiss_beta(elt),
-                self._get_w_kin(elt),
-            ]
-        return objectives
-
-    def _get_twiss_alpha(self, elt: Element) -> Objective:
-        """Return object to match spread."""
-        objective = MinimizeDifferenceWithRef(
-            name=markdown["alpha_zdelta"],
-            weight=1.0,
-            get_key="alpha_zdelta",
-            get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
-            reference=self._reference_simulation_output,
-            descriptor="""Minimize diff. of alpha between ref and fix at the
-            end of the lattice.
-            """,
-        )
-        return objective
-
-    def _get_twiss_beta(self, elt: Element) -> Objective:
-        """Return object to match envelope."""
-        objective = MinimizeDifferenceWithRef(
-            name=markdown["beta_zdelta"],
-            weight=1.0,
-            get_key="beta_zdelta",
-            get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
-            reference=self._reference_simulation_output,
-            descriptor="""Minimize diff. of envelope between ref and fix at the
-            end of the lattice.
-            """,
-        )
-        return objective
-
-    def _get_w_kin(self, elt: Element) -> Objective:
-        """Return object to keep energy reasonable."""
-        get_key = "w_kin"
-        get_kwargs = {"elt": elt, "pos": "out", "to_numpy": False}
-        ref = self._reference_simulation_output.get(get_key, **get_kwargs)
-        objective = QuantityIsBetween(
-            name=markdown["w_kin"],
-            weight=1.0,
-            get_key=get_key,
-            get_kwargs=get_kwargs,
-            limits=(ref - 5.0, ref + 5.0),
-            descriptor="Energy stays within +/- 5MeV wrt nominal tuning.",
-        )
-        return objective
-
-
-class CorrectorAtExit(ObjectiveFactory):
-    """Propagate beam up to final cavities, where an energy boost is given.
-
-    The idea behind this strategy is the following:
-
-    - Use ``n_compensating`` cavities around the failure to shape the beam and
-      propagate it without losses.
-    - Rephase downstream cavities to keep the beam as intact as possible.
-    - Give an ultimate energy boost to the beam with the last ``n_correctors``
-      cavities.
-
-    This method is very similar to the one used at SNS :cite:`Shishlo2022`.
-    In this paper however, there are no compensating cavities around the
-    failure.
-
-    See Also
-    --------
-    :func:`.strategy.corrector_at_exit`
+    Tests on CMA06 compensation. Currently, CorrectorAtExit leads to the best
+    results. First attempts to set CMA07 as buncher were not convincing.
 
     """
-
-    objective_position_preset = ["end of last altered lattice"]
-
-    def get_objectives(self) -> list[Objective]:
-        """Give adapted objectives.
-
-        We start by looking at the :attr:`.CorrectorAtExit._failed_elements`
-        list:
-
-        - If it has elements, we are around a failure and we will try to keep
-          a kinetic energy not too far from the nominal energy. More
-          importantly, we try to minimize the mismatch factor at the exit of
-          the compensation zone.
-        - If it is empty, it means that there is no nearby failed cavity. We
-          are at the exit of the linac and will try to retrieve nominal energy
-          at the end of the linac.
-
-        """
-        if len(self._failed_elements) > 0:
-            last_element_of_zone = self._objective_elements[-1]
-            return [
-                self._preaccelerate(elt=last_element_of_zone),
-                self._preshape(elt=last_element_of_zone),
-            ]
-
-        last_element_of_linac = self._compensating_elements[-1]
-        return [self._retrieve_energy(last_element_of_linac)]
-
-    def _preaccelerate(self, elt: Element) -> Objective:
-        """Get reasonable energy at exit of compensation zone."""
-        get_key = "w_kin"
-        get_kwargs = {"elt": elt, "pos": "out", "to_numpy": False}
-        ref = self._reference_simulation_output.get(get_key, **get_kwargs)
-        objective = QuantityIsBetween.relative_to_reference(
-            name=markdown["w_kin"],
-            weight=1.0,
-            get_key=get_key,
-            get_kwargs=get_kwargs,
-            relative_limits=(90.0, 101.0),
-            reference_value=ref,
-            descriptor="Energy stays within (-10%, +1%) wrt nominal tuning.",
-        )
-        return objective
-
-    def _preshape(self, elt: Element) -> Objective:
-        """Minimize mismatch factor at exit of compensation zone."""
-        objective = MinimizeMismatch(
-            name=r"$M_{z\delta}$",
-            weight=1.0,
-            get_key="twiss",
-            get_kwargs={
-                "elt": elt,
-                "pos": "out",
-                "to_numpy": True,
-                "phase_space_name": "zdelta",
-            },
-            reference=self._reference_simulation_output,
-            descriptor="""Minimize mismatch factor in the [z-delta] plane at
-            exit of compensation zone.""",
-        )
-        return objective
-
-    def _retrieve_energy(self, elt: Element) -> Objective:
-        """Retrieve energy at the end of the linac."""
-        objective = MinimizeDifferenceWithRef(
-            name=markdown["w_kin"],
-            weight=1.0,
-            get_key="w_kin",
-            get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
-            reference=self._reference_simulation_output,
-            descriptor="Retrieve nominal energy at the exit of the linac.",
-        )
-        return objective
 
 
 #: Maps the ``objective_preset`` key in ``TOML`` ``wtf`` subsection with actual
@@ -646,6 +589,7 @@ OBJECTIVE_PRESETS = {
     "sync_phase_as_objective_ADS": EnergySyncPhaseMismatch,
 }
 OBJECTIVE_PRESETS_T = Literal[
+    "CorrectorAtExit",
     "EnergyMismatch",
     "EnergyPhaseMismatch",
     "EnergySeveralMismatches",
@@ -653,7 +597,6 @@ OBJECTIVE_PRESETS_T = Literal[
     "experimental",
     "rephased_ADS",
     "simple_ADS",
-    "CorrectorAtExit",
 ]
 
 
