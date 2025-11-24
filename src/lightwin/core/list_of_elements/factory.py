@@ -263,13 +263,13 @@ class ListOfElementsFactory:
         self,
         elts: list[Element],
         files_from_full_list_of_elements: FilesInfo,
-        folder: Path | str = Path("tmp"),
+        folder: Path | str = Path(".tmp"),
         dat_name: Path | str = Path("tmp.dat"),
     ) -> FilesInfo:
         """Set the new ``DAT`` file containing only elements of ``elts``."""
-        folder = Path(folder)
-        dat_file = folder / Path(dat_name).name
+        folder = files_from_full_list_of_elements["accelerator_path"] / folder
         folder.mkdir(exist_ok=True)
+        dat_file = folder / Path(dat_name).name
 
         dat_filecontent, instructions = (
             dat_filecontent_from_smaller_list_of_elements(
