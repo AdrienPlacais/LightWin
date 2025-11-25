@@ -25,25 +25,25 @@ from lightwin.failures.fault_scenario import (
 )
 
 # Arguments are:
-# ``beam_calculator``, ``reference_phase_policy``, ``flag_cython``
+# ``beam_calculator``, ``reference_phase_policy``, ``flag_cython``, ``export_phase``
 params = [
     pytest.param(
-        ("generic_envelope1d", "phi_0_abs", False),
+        ("generic_envelope1d", "phi_0_abs", False, "as_in_settings"),
         marks=(pytest.mark.smoke, pytest.mark.envelope1d),
         id="Compensation with Envelope1D",
     ),
     pytest.param(
-        ("generic_envelope1d", "phi_0_abs", True),
+        ("generic_envelope1d", "phi_0_abs", True, "as_in_settings"),
         marks=(pytest.mark.envelope1d, pytest.mark.cython),
         id="Compensation with Envelope1D (Cython)",
     ),
     pytest.param(
-        ("generic_envelope3d", "phi_0_abs", False),
+        ("generic_envelope3d", "phi_0_abs", False, "as_in_settings"),
         marks=(pytest.mark.smoke, pytest.mark.envelope3d),
         id="Compensation with Envelope3D",
     ),
     pytest.param(
-        ("generic_tracewin", None, None),
+        ("generic_tracewin", "phi_0_rel", None, "as_in_settings"),
         marks=(pytest.mark.smoke, pytest.mark.slow, pytest.mark.tracewin),
         id="Compensation with TraceWin",
     ),
@@ -52,12 +52,13 @@ params = [
 
 @pytest.fixture(scope="class", params=params)
 def config(
-    request: pytest.FixtureRequest,
-    tmp_path_factory: pytest.TempPathFactory,
+    request: pytest.FixtureRequest, tmp_path_factory: pytest.TempPathFactory
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration."""
     out_folder = tmp_path_factory.mktemp("tmp")
-    (solver_key, reference_phase_policy, flag_cython) = request.param
+    (solver_key, reference_phase_policy, flag_cython, export_phase) = (
+        request.param
+    )
 
     config_keys = {
         "files": "files",
@@ -76,6 +77,7 @@ def config(
             for k, v in {
                 "reference_phase_policy": reference_phase_policy,
                 "flag_cython": flag_cython,
+                "export_phase": export_phase,
             }.items()
             if v is not None
         },
@@ -99,8 +101,7 @@ def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
 
 @pytest.fixture(scope="class")
 def accelerators(
-    solver: BeamCalculator,
-    config: dict[str, dict[str, Any]],
+    solver: BeamCalculator, config: dict[str, dict[str, Any]]
 ) -> list[Accelerator]:
     """Create ref linac, linac we will break, compute ref simulation_output."""
     solvers = (solver,)

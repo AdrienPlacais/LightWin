@@ -319,7 +319,7 @@ class FieldMap(Element):
         round: int | None = None,
         **kwargs,
     ) -> list[str]:
-        r"""Convert the object back into a line in the ``DAT`` file.
+        """Convert the object back into a line in the ``DAT`` file.
 
         Parameters
         ----------
@@ -339,7 +339,7 @@ class FieldMap(Element):
         for value, position in zip(
             (phase, self.cavity_settings.k_e, abs_phase_flag), (3, 6, 10)
         ):
-            if round:
+            if round is not None:
                 value = value.__round__(round)
             self.line.change_argument(value, position)
 
@@ -363,7 +363,25 @@ class FieldMap(Element):
     def _phase_for_line(
         self, which_phase: EXPORT_PHASES_T
     ) -> tuple[float, int, REFERENCE_PHASES_T]:
-        """Give the phase to put in ``DAT`` line, with abs phase flag."""
+        """Give the phase to put in ``DAT`` line, with abs phase flag.
+
+        Parameters
+        ----------
+        which_phase :
+            Name of the phase we are trying to export.
+
+        Returns
+        -------
+        float
+            Phase to write in the ``DAT`` file.
+        int
+            ``0`` for ``phi_0_rel``, ``1`` for ``phi_0_abs``. Unused for
+            ``phi_s``, a ``SET_SYNCH_PHASE`` command is added by :meth:`
+            .FieldMap.to_line`.
+        REFERENCE_PHASES_T
+            Actual name of the phase that is exported.
+
+        """
         settings = self.cavity_settings
         match which_phase:
             case "phi_0_abs" | "phi_0_rel" | "phi_s":

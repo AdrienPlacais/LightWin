@@ -161,12 +161,12 @@ def _process_toml(
         toml_fulldict[key] = raw_toml[value]
 
     if override:
-        _override_some_toml_entries(toml_fulldict, warn_mismatch, **override)
+        _user_override_toml_entries(toml_fulldict, warn_mismatch, **override)
 
     return toml_fulldict
 
 
-def _override_some_toml_entries(
+def _user_override_toml_entries(
     toml_fulldict: dict[str, dict[str, Any]],
     warn_mismatch: bool,
     **override: dict[str, Any],

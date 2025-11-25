@@ -285,6 +285,9 @@ class ListOfElementsFactory:
             "accelerator_path": accelerator_path / folder,
             "elts_n_cmds": instructions,
         }
+        export_dat_filecontent(dat_filecontent, dat_file)
+
+        return files
 
         export_dat_filecontent(dat_filecontent, dat_file)
         return files

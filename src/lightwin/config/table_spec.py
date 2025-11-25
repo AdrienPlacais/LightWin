@@ -5,6 +5,8 @@ from collections.abc import Callable, Collection
 from pathlib import Path
 from typing import Any, Literal
 
+from numpy import log
+
 from lightwin.config.helper import find_path
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
 
@@ -70,19 +72,17 @@ class TableConfSpec:
             dictionary linking every possible table with the corresponding
             value.
         is_mandatory :
-            If the current table must be provided. The default is True.
+            If the current table must be provided.
         can_have_untested_keys :
             If LightWin should remain calm when some keys are provided in the
             ``TOML`` but do not correspond to any :class:`.KeyValConfSpec`.
-            The default is False.
         selectkey_n_default :
             Must be given if ``specs`` is a dict. First value is name of the
             spec, second value is default value. We will look for this spec in
             the configuration file and select the proper ``Collection`` of
             ``KeyValConfSpec`` accordingly.
         monkey_patches :
-            Same keys as ``specs``, to override some default methods. The
-            default is None.
+            Same keys as ``specs``, to override some default methods.
 
         """
         self.configured_object = configured_object
@@ -90,9 +90,37 @@ class TableConfSpec:
 
         self._specs = specs
         self._monkey_patches = monkey_patches
+        #: Selector used when ``specs`` is a dictionary.
+        #: When ``specs`` is given as a dictionary (e.g. `{ "modeA": [...],
+        #: "modeB": [...] }`), the configuration format depends on the value of
+        #: a specific key inside the ``TOML`` table. This argument tells
+        #: `TableConfSpec` which ``TOML`` key to read and which default value
+        #: to use if that key is absent.
+        #: The tuple must contain:
+        #: - the name of the selector key (a key expected in the ``TOML``
+        #:   table),
+        #: - the default value to fall back on if the selector key is not
+        #: present.
+        #:
+        #: Example
+        #: -------
+        #: If ``specs`` is:
+        #: ```
+        #:     specs = {
+        #:         "Envelope1D": envelope_1d_specs,
+        #:         "TraceWin": tracewin_specs,
+        #:     }
+        #: ```
+        #: and ``selectkey_n_default = ("beam_calculator", "Envelope1D")``
+        #: then:
+        #: * the value of ``toml_table["beam_calculator"]`` determines whether
+        #:   `envelope_1d_specs` or `tracewin_specs` is used;
+        #: * if `"beam_calculator"` is not provided in the ``TOML``,
+        #: `"Envelope1D"` is used.
+        #: This parameter **must** be provided whenever ``specs`` is a
+        #: dictionary. It must be ``None`` when ``specs`` is a flat collection.
         self._selectkey_n_default = selectkey_n_default
-        self.specs_as_dict: dict[str, KeyValConfSpec]
-        self._set_specs_as_dict()
+        self.specs_as_dict = self._set_specs_as_dict()
 
         self.is_mandatory = is_mandatory
         self.can_have_untested_keys = can_have_untested_keys
@@ -107,7 +135,7 @@ class TableConfSpec:
         return " ".join(info)
 
     def _get_specs(
-        self, toml_subdict: dict[str, Any] | None = None
+        self, toml_table: dict[str, Any] | None = None
     ) -> list[KeyValConfSpec]:
         """Get the proper list of :class:`.KeyValConfSpec`.
 
@@ -117,11 +145,11 @@ class TableConfSpec:
 
         Parameters
         ----------
-        toml_subdict :
-            The content of the toml file. We use it only if ``self._specs`` is
-            not already a Collection. We look for the value of
-            ``self._selectkey_n_default[0]`` and use it to select the
-            proper table. If not provided, we fall back on a default value.
+        toml_table :
+            A ``TOML`` table. We use it only if ``self._specs`` is not already
+            a ``Collection``. We look for the value of
+            ``self._selectkey_n_default[0]`` and use it to select the proper
+            table. If not provided, we fall back on a default value.
 
         """
         if not isinstance(self._specs, dict):
@@ -137,8 +165,8 @@ class TableConfSpec:
             f"proper table among {self._specs.keys()}"
         )
         value = self._selectkey_n_default[1]
-        if toml_subdict is not None:
-            value = toml_subdict.get(self._selectkey_n_default[0])
+        if toml_table is not None:
+            value = toml_table.get(self._selectkey_n_default[0])
         assert isinstance(value, (str, bool))
 
         specs = self._specs[value]
@@ -150,19 +178,55 @@ class TableConfSpec:
         return list(specs)
 
     def _set_specs_as_dict(
-        self, toml_subdict: dict[str, Any] | None = None
-    ) -> None:
-        """Set the dict of specifications.
+        self, toml_table: dict[str, Any] | None = None
+    ) -> dict[str, KeyValConfSpec]:
+        """
+        Select and prepare :class:`KeyValConfSpec` used to validate this table.
 
-        Used when we need to read the value of ``_selectkey_n_default``
-        in the ``TOML`` to choose precisely which configuration we should
-        match.
-        If ``toml_subdict`` is not provided, we use a default value.
+        This method is responsible for determining which specification set
+        applies to the current table, especially when the available specs
+        depend on the value of a key inside the ``TOML`` table (via
+        :attr:`.selectkey_n_default`).
+
+        The returned value is a dictionary mapping spec names to
+        :class:`KeyValConfSpec` instances. It performs the following steps:
+
+        1. Determine the correct list of :class:`KeyValConfSpec` objects by
+           calling ``_get_specs`(toml_table)`.
+           If ``specs`` was provided as a dictionary, this uses the selector
+           key defined in :attr:`._selectkey_n_default` to choose the
+           appropriate spec set. If ``specs`` is a flat collection, that
+           collection is returned unchanged.
+        2. Apply override rules and remove any earlier specs that should be
+          replaced (``overrides_previously_defined=True``) using
+          :meth:`._remove_overriden_keys`.
+        3. Return the cleaned specifications as a ``{spec.key: spec}``
+          dictionary.
+
+        This method is called multiple times during :meth:`.TableConfSpec.
+        prepare`:
+        - once before validation, to build the spec set according to the raw
+          ``TOML`` input;
+        - once after post-treatment, to ensure the final ``specs_as_dict``
+          reflects any modifications (e.g. inserted defaults, resolved paths,
+          or monkey patches applied during spec selection).
+
+        Parameters
+        ----------
+        toml_table :
+            A table from the ``TOML`` configuration file. Required only when
+            spec selection depends on user-provided values. When omitted,
+            default values from ``selectkey_n_default`` are used.
+
+        Returns
+        -------
+        dict[str, KeyValConfSpec]
+            The active specification dictionary for this table.
 
         """
-        specs = self._get_specs(toml_subdict)
+        specs = self._get_specs(toml_table)
         specs = _remove_overriden_keys(specs)
-        self.specs_as_dict = {spec.key: spec for spec in specs}
+        return {spec.key: spec for spec in specs}
 
     def _get_proper_spec(self, spec_name: str) -> KeyValConfSpec | None:
         """Get the specification for the property named ``spec_name``."""
@@ -180,7 +244,7 @@ class TableConfSpec:
 
     def to_toml_strings(
         self,
-        toml_subdict: dict[str, Any],
+        toml_table: dict[str, Any],
         original_toml_folder: Path | None = None,
         **kwargs,
     ) -> list[str]:
@@ -188,7 +252,7 @@ class TableConfSpec:
 
         Parameters
         ----------
-        toml_subdict :
+        toml_table :
             A dictionary corresponding to a ``TOML`` table.
         original_toml_folder :
             Where the original ``TOML`` was; this is used to resolve paths
@@ -201,7 +265,7 @@ class TableConfSpec:
 
         """
         strings = [f"[{self.table_entry}]"]
-        for key, val in toml_subdict.items():
+        for key, val in toml_table.items():
             spec = self._get_proper_spec(key)
             if spec is None:
                 continue
@@ -213,33 +277,46 @@ class TableConfSpec:
 
         return strings
 
-    def _pre_treat(self, toml_subdict: dict[str, Any], **kwargs) -> None:
-        """Edit some values, create new ones. To call before validation.
+    def _pre_treat(self, toml_table: dict[str, Any], **kwargs) -> None:
+        """Insert default values for missing keys.
 
-        .. note::
-            In general, the edited values will undergo the validation process.
+        You can inherit this method to perform additional pre-treating logic.
 
         """
-        pass
+        self._insert_defaults(toml_table, **kwargs)
 
-    def prepare(self, toml_subdict: dict[str, Any], **kwargs) -> bool:
+    def _insert_defaults(self, toml_table: dict[str, Any], **kwargs) -> None:
+        """Insert default values for missing keys."""
+        for key, spec in self.specs_as_dict.items():
+            if key in toml_table:
+                continue
+            if not spec.is_mandatory:
+                continue
+            if spec.default_value is not None:
+                logging.warning(
+                    f"The key {key} is missing in [{self.table_entry}]. "
+                    f"Using default value: {spec.default_value}."
+                )
+                toml_table[key] = spec.default_value
+
+    def prepare(self, toml_table: dict[str, Any], **kwargs) -> bool:
         """Validate the config dict and edit some values."""
-        self._set_specs_as_dict(toml_subdict)
-        self._pre_treat(toml_subdict, **kwargs)
-        validations = self._validate(toml_subdict, **kwargs)
-        self._post_treat(toml_subdict, **kwargs)
-        self._set_specs_as_dict(toml_subdict)
+        self.specs_as_dict = self._set_specs_as_dict(toml_table)
+        self._pre_treat(toml_table, **kwargs)
+        validations = self._validate(toml_table, **kwargs)
+        self._post_treat(toml_table, **kwargs)
+        self.specs_as_dict = self._set_specs_as_dict(toml_table)
         return validations
 
-    def _validate(self, toml_subdict: dict[str, Any], **kwargs) -> bool:
-        """Check that key-values in ``toml_subdict`` are valid.
+    def _validate(self, toml_table: dict[str, Any], **kwargs) -> bool:
+        """Check that key-values in ``toml_table`` are valid.
 
         This method is defined to keep an implementation of the original method
         even when ``validate`` is overriden by a monkey patch.
 
         """
-        validations = [self._mandatory_keys_are_present(toml_subdict.keys())]
-        for key, val in toml_subdict.items():
+        validations = [self._mandatory_keys_are_present(toml_table.keys())]
+        for key, val in toml_table.items():
             spec = self._get_proper_spec(key)
             if spec is None:
                 continue
@@ -253,7 +330,7 @@ class TableConfSpec:
 
         return all_is_validated
 
-    def _post_treat(self, toml_subdict: dict[str, Any], **kwargs) -> None:
+    def _post_treat(self, toml_table: dict[str, Any], **kwargs) -> None:
         """Edit some values, create new ones. To call after validation.
 
         .. note::
@@ -261,16 +338,16 @@ class TableConfSpec:
             care.
 
         """
-        self._make_paths_absolute(toml_subdict, **kwargs)
+        self._make_paths_absolute(toml_table, **kwargs)
 
     def _make_paths_absolute(
         self,
-        toml_subdict: dict[str, Any],
+        toml_table: dict[str, Any],
         toml_folder: Path | None = None,
         **kwargs,
     ) -> None:
         """Transform the paths to their absolute resolved version."""
-        for key, val in toml_subdict.items():
+        for key, val in toml_table.items():
             spec = self._get_proper_spec(key)
             if spec is None:
                 continue
@@ -279,7 +356,7 @@ class TableConfSpec:
 
             try:
                 new_val = find_path(toml_folder, val)
-                toml_subdict[key] = new_val
+                toml_table[key] = new_val
             except FileNotFoundError:
                 continue
 
@@ -292,6 +369,14 @@ class TableConfSpec:
                 continue
             if key in toml_keys:
                 continue
+            if (default := spec.default_value) is not None:
+                logging.warning(
+                    f"The key {key} should be given but was not found. Will "
+                    f"use default value: {default}. You may want to set this "
+                    f"key explicitly; allowed values:\n{spec.allowed_values}"
+                )
+                continue
+
             they_are_all_present = False
             logging.error(f"The key {key} should be given but was not found.")
 
