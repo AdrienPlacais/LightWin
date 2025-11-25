@@ -267,10 +267,9 @@ class ListOfElementsFactory:
         dat_name: Path | str = Path("tmp.dat"),
     ) -> FilesInfo:
         """Set the new ``DAT`` file containing only elements of ``elts``."""
-        accelerator_path = files_from_full_list_of_elements["accelerator_path"]
-        out = accelerator_path / folder
-        out.mkdir(exist_ok=True)
-        dat_file = out / dat_name
+        folder = Path(folder)
+        dat_file = folder / Path(dat_name).name
+        folder.mkdir(exist_ok=True)
 
         dat_filecontent, instructions = (
             dat_filecontent_from_smaller_list_of_elements(
@@ -278,18 +277,16 @@ class ListOfElementsFactory:
                 elts,
             )
         )
+        export_dat_filecontent(dat_filecontent, dat_file)
 
-        files: FilesInfo = {
+        return {
             "dat_file": dat_file,
             "dat_filecontent": dat_filecontent,
-            "accelerator_path": accelerator_path / folder,
+            "accelerator_path": folder,
             "elts_n_cmds": instructions,
         }
         export_dat_filecontent(dat_filecontent, dat_file)
 
-        return files
-
-        export_dat_filecontent(dat_filecontent, dat_file)
         return files
 
     def _delta_phi_for_tracewin(
