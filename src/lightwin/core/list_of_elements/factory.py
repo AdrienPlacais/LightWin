@@ -196,18 +196,6 @@ class ListOfElementsFactory:
         )
         return list_of_elements
 
-    def _whole_list_input_particle(
-        self, w_kin: float, phi_abs: float, z_in: float, **kwargs: np.ndarray
-    ) -> ParticleInitialState:
-        """Create a :class:`.ParticleInitialState` for full list of elts."""
-        input_particle = ParticleInitialState(
-            w_kin=w_kin,
-            phi_abs=phi_abs,
-            z_in=z_in,
-            synchronous=True,
-        )
-        return input_particle
-
     def subset_list_run(
         self,
         elts: list[Element],
@@ -245,11 +233,6 @@ class ListOfElementsFactory:
             its entry.
 
         """
-        logging.info(
-            "Initalisation of ListOfElements from already initialized"
-            f" elements: {elts[0]} to {elts[-1]}."
-        )
-
         input_elt, input_pos = self._get_initial_element(
             elts, simulation_output
         )
@@ -260,17 +243,15 @@ class ListOfElementsFactory:
         input_beam = self.initial_beam_factory.factory_subset(
             simulation_output, get_kw
         )
-
         files = self._subset_files_dictionary(
-            elts,
-            files_from_full_list_of_elements,
+            elts, files_from_full_list_of_elements
         )
 
         transfer_matrix = simulation_output.transfer_matrix
         assert transfer_matrix is not None
         tm_cumul_in = transfer_matrix.cumulated[0]
 
-        list_of_elements = ListOfElements(
+        return ListOfElements(
             elts=elts,
             input_particle=input_particle,
             input_beam=input_beam,
@@ -278,19 +259,6 @@ class ListOfElementsFactory:
             files=files,
             first_init=False,
         )
-
-        return list_of_elements
-
-    def _shift_entry_phase(
-        self, cavities: list[FieldMap], delta_phi: float
-    ) -> None:
-        """Shift the entry phase in the given cavities.
-
-        This is mandatory for TraceWin solver, as the absolute phase at the
-        entrance of the first element is always 0.0.
-
-        """
-        pass
 
     def _subset_files_dictionary(
         self,
@@ -347,9 +315,10 @@ class ListOfElementsFactory:
             _ = simulation_output.get("w_kin", elt=input_elt)
         except AttributeError:
             logging.warning(
-                "First element of new ListOfElements is not in the given "
-                "SimulationOutput. I will consider that the last element of "
-                "the SimulationOutput is the first of the new ListOfElements."
+                f"First element of new ListOfElements ({input_elt}) is not in "
+                "the given SimulationOutput. I will consider that the last "
+                "element of the SimulationOutput is the first of the new "
+                "ListOfElements."
             )
             input_elt, input_pos = "last", "out"
         return input_elt, input_pos
@@ -361,10 +330,7 @@ class ListOfElementsFactory:
         w_kin, phi_abs, z_abs = simulation_output.get(
             "w_kin", "phi_abs", "z_abs", **kwargs
         )
-        input_particle = ParticleInitialState(
-            w_kin, phi_abs, z_abs, synchronous=True
-        )
-        return input_particle
+        return ParticleInitialState(w_kin, phi_abs, z_abs, synchronous=True)
 
     def from_existing_list(
         self,
@@ -384,8 +350,6 @@ class ListOfElementsFactory:
             Maybe gather some things with the subset?
 
         """
-        logging.info("Creating ListOfElements from pre-existing.")
-
         original_dat = elts.files["dat_file"]
         assert isinstance(original_dat, Path)
         new_dat = original_dat
