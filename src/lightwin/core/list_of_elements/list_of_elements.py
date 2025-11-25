@@ -119,10 +119,6 @@ class ListOfElements(list):
         self._l_cav: list[FieldMap] = list(
             filter(lambda cav: isinstance(cav, FieldMap), self)
         )
-        logging.info(
-            "Successfully created a ListOfElements with "
-            f"{self.w_kin_in = :.2f} MeV and {self.phi_abs_in = :.2f} rad."
-        )
 
     @property
     def w_kin_in(self):
