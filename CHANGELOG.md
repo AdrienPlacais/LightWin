@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Field map phase is correctly exported in the `DAT` files.
 - Ensured that the `default_value` of configuration entries are used.
+- TraceWin compensation works again.
 
 ## [0.13.0] -- 2025-11-05
 
