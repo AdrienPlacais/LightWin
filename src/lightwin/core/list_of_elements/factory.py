@@ -285,6 +285,9 @@ class ListOfElementsFactory:
             "accelerator_path": folder,
             "elts_n_cmds": instructions,
         }
+        export_dat_filecontent(dat_filecontent, dat_file)
+
+        return files
 
     def _delta_phi_for_tracewin(
         self, phi_at_entry_of_compensation_zone: float

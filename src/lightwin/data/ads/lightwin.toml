@@ -22,6 +22,7 @@ hide = true
 ini_path = "ads.ini"
 machine_config_file = "machine_config.toml"
 partran = 0
+reference_phase_policy = "phi_0_abs"
 simulation_type = "noX11_full"
 tool = "TraceWin"
 

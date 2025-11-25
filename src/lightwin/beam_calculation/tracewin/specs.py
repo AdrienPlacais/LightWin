@@ -13,9 +13,11 @@
 import socket
 import tomllib
 from pathlib import Path
-from types import NoneType
 from typing import Any
 
+from lightwin.beam_calculation.beam_calculator_base_specs import (
+    BEAM_CALCULATOR_BASE_CONFIG,
+)
 from lightwin.beam_calculation.deprecated_specs import (
     apply_deprecated_flag_phi_abs,
 )
@@ -23,7 +25,7 @@ from lightwin.config.helper import find_file
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
 from lightwin.config.table_spec import TableConfSpec
 from lightwin.constants import example_ini, example_machine_config
-from lightwin.util.typing import EXPORT_PHASES, REFERENCE_PHASE_POLICY
+from lightwin.util.typing import EXPORT_PHASES
 
 _PURE_TRACEWIN_CONFIG = (
     KeyValConfSpec(
@@ -274,20 +276,6 @@ _PURE_TRACEWIN_CONFIG = (
         types=(float,),
         description="Input YY’ emittance (mm.mrad) of second beam",
         default_value=-1.0,
-        is_mandatory=False,
-    ),
-    KeyValConfSpec(
-        key="export_phase",
-        types=(str,),
-        description=(
-            "The type of phases that should be exported in the final DAT "
-            "file. Note that ``'as_in_original_dat'`` is not implemented "
-            "yet, but ``'as_in_settings'`` should behave the same way, "
-            "provided that you alter no FieldMap.CavitySettings.reference "
-            "attribute."
-        ),
-        default_value="as_in_settings",
-        allowed_values=EXPORT_PHASES,
         is_mandatory=False,
     ),
     KeyValConfSpec(
@@ -603,117 +591,86 @@ _PURE_TRACEWIN_CONFIG = (
     ),
 )
 
-TRACEWIN_CONFIG = _PURE_TRACEWIN_CONFIG + (
-    KeyValConfSpec(
-        key="base_kwargs",
-        types=(dict,),
-        description=(
-            "Keyword arguments passed to TraceWin CLI. Internal use of "
-            "LightWin onnly."
+TRACEWIN_CONFIG = (
+    BEAM_CALCULATOR_BASE_CONFIG
+    + _PURE_TRACEWIN_CONFIG
+    + (
+        KeyValConfSpec(
+            key="base_kwargs",
+            types=(dict,),
+            description=(
+                "Keyword arguments passed to TraceWin CLI. Internal use of "
+                "LightWin onnly."
+            ),
+            default_value={},
+            is_mandatory=False,
+            warning_message=("Providing `base_kwargs` is not recommended."),
+            derived=True,
         ),
-        default_value={},
-        is_mandatory=False,
-        warning_message=("Providing `base_kwargs` is not recommended."),
-        derived=True,
-    ),
-    KeyValConfSpec(
-        key="executable",
-        types=(str, Path),
-        description=(
-            "Direct path to the TraceWin executable. If given, will override "
-            "the definition in the machine_config_file."
+        KeyValConfSpec(
+            key="executable",
+            types=(str, Path),
+            description=(
+                "Direct path to the TraceWin executable. If given, will override "
+                "the definition in the machine_config_file."
+            ),
+            default_value="",
+            is_a_path_that_must_exists=True,
+            is_mandatory=False,
+            warning_message=(
+                "Providing `executable` will override `machine_config_file` "
+                "settings."
+            ),
         ),
-        default_value="",
-        is_a_path_that_must_exists=True,
-        is_mandatory=False,
-        warning_message=(
-            "Providing `executable` will override `machine_config_file` "
-            "settings."
+        KeyValConfSpec(
+            key="ini_path",
+            types=(str, Path),
+            description="Path to the `INI` TraceWin file.",
+            default_value=example_ini,
+            is_a_path_that_must_exists=True,
         ),
-    ),
-    KeyValConfSpec(
-        key="reference_phase_policy",
-        types=(str,),
-        description=(
-            "Controls how cavities reference phase will be initialized."
+        KeyValConfSpec(
+            key="machine_config_file",
+            types=(str, Path),
+            description="Path to a file holding the paths to TW executables",
+            default_value=example_machine_config,
+            is_a_path_that_must_exists=True,
         ),
-        default_value="phi_0_abs",
-        allowed_values=REFERENCE_PHASE_POLICY,
-        is_mandatory=False,
-    ),
-    KeyValConfSpec(
-        key="flag_phi_abs",
-        types=(bool, NoneType),
-        description=(
-            "DEPRECATED, prefer use of `reference_phase_policy`. "
-            "If the field maps phases should be absolute (no implicit "
-            "rephasing after a failure)."
+        KeyValConfSpec(
+            key="machine_name",
+            types=(str,),
+            description=(
+                "Name of current machine. Must be a table name in "
+                "`machine_config_file`. By default, do not provide it and let "
+                "LightWin handle this part."
+            ),
+            default_value=None,
+            is_mandatory=False,
         ),
-        default_value=None,
-        is_mandatory=False,
-        warning_message=(
-            "The ``flag_phi_abs`` option is deprecated, prefer using the "
-            "``reference_phase_policy``.\nflag_phi_abs=False -> "
-            "reference_phase_policy='phi_0_rel'\nflag_phi_abs=True -> "
-            "reference_phase_policy='phi_0_abs'"
+        KeyValConfSpec(
+            key="simulation_type",
+            types=(str,),
+            description="A key in the machine_config.toml file",
+            default_value="noX11_full",
         ),
-    ),
-    KeyValConfSpec(
-        key="ini_path",
-        types=(str, Path),
-        description="Path to the `INI` TraceWin file.",
-        default_value=example_ini,
-        is_a_path_that_must_exists=True,
-    ),
-    KeyValConfSpec(
-        key="machine_config_file",
-        types=(str, Path),
-        description="Path to a file holding the paths to TW executables",
-        default_value=example_machine_config,
-        is_a_path_that_must_exists=True,
-    ),
-    KeyValConfSpec(
-        key="machine_name",
-        types=(str,),
-        description=(
-            "Name of current machine. Must be a table name in "
-            "`machine_config_file`. By default, do not provide it and let "
-            "LightWin handle this part."
-        ),
-        default_value=None,
-        is_mandatory=False,
-    ),
-    KeyValConfSpec(
-        key="simulation_type",
-        types=(str,),
-        description="A key in the machine_config.toml file",
-        default_value="noX11_full",
-    ),
-    KeyValConfSpec(
-        key="tool",
-        types=(str,),
-        description="Name of the tool.",
-        default_value="TraceWin",
-        allowed_values=("TraceWin", "tracewin"),
-    ),
+    )
 )  #: Arguments for :class:`.TraceWin` object configuration
 
 
 def tracewin_pre_treat(
-    self: TableConfSpec, toml_subdict: dict[str, Any], **kwargs
+    self: TableConfSpec, toml_table: dict[str, Any], **kwargs
 ) -> None:
     """Set the TW executable."""
-    apply_deprecated_flag_phi_abs(self, toml_subdict, **kwargs)
-    if "executable" in toml_subdict:
+    self._insert_defaults(toml_table, **kwargs)
+    apply_deprecated_flag_phi_abs(self, toml_table, **kwargs)
+    if "executable" in toml_table:
         declare = getattr(
             self, "_declare_that_machine_config_is_not_mandatory_anymore"
         )
         declare()
         return
 
-    toml_subdict["executable"] = _get_tracewin_executable(
-        **toml_subdict, **kwargs
-    )
+    toml_table["executable"] = _get_tracewin_executable(**toml_table, **kwargs)
 
 
 def tracewin_declare_that_machine_config_is_not_mandatory_anymore(

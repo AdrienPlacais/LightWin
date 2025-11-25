@@ -184,10 +184,9 @@ class FaultScenario(list[Fault]):
 
         self._evaluate_fit_quality(save=True)
 
-        exported_phase = self.wtf.get("exported_phase", "phi_0_abs")
         self.fix_acc.elts.store_settings_in_dat(
             self.fix_acc.elts.files_info["dat_file"],
-            exported_phase=exported_phase,
+            exported_phase=self.beam_calculator.reference_phase_policy,
             save=True,
         )
 

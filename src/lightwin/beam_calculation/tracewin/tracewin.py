@@ -33,48 +33,63 @@ from lightwin.tracewin_utils.interface import (
     failed_cavities_to_command,
     set_of_cavity_settings_to_command,
 )
-from lightwin.util.typing import REFERENCE_PHASE_POLICY_T, BeamKwargs
+from lightwin.util.typing import (
+    EXPORT_PHASES_T,
+    REFERENCE_PHASE_POLICY_T,
+    BeamKwargs,
+)
 
 
 class TraceWin(BeamCalculator):
-    """Hold a TraceWin beam calculator.
-
-    Parameters
-    ----------
-    executable :
-        Path to the TraceWin executable.
-    ini_path :
-        Path to the ``INI`` TraceWin file.
-    base_kwargs :
-        TraceWin optional arguments. Override what is defined in ``INI``, but
-        overriden by arguments from :class:`.ListOfElements` and
-        :class:`.SimulationOutput`.
-    _tracewin_command :
-        Attribute to hold the value of the base command to call TraceWin.
-    out_folder :
-        Name of the results folder (not a complete path, just a folder name).
-    path_cal :
-        Name of the results folder. Updated at every call of the
-        :func:`init_solver_parameters` method, using
-        ``Accelerator.accelerator_path`` and ``self.out_folder`` attributes.
-    dat_file :
-        Base name for the ``DAT`` file. ??
-
-    """
+    """Hold a TraceWin beam calculator."""
 
     def __init__(
         self,
-        executable: Path,
-        ini_path: Path,
-        base_kwargs: dict[str, str | int | float | bool | None],
+        reference_phase_policy: REFERENCE_PHASE_POLICY_T,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
         beam_kwargs: BeamKwargs,
-        reference_phase_policy: REFERENCE_PHASE_POLICY_T = "phi_0_rel",
+        export_phase: EXPORT_PHASES_T,
+        executable: Path,
+        ini_path: Path,
+        base_kwargs: dict[str, str | int | float | bool | None],
         cal_file: Path | None = None,
         **kwargs: Any,
     ) -> None:
-        """Define some other useful methods, init variables."""
+        """Define some other useful methods, init variables.
+
+        .. todo::
+           Check ``reference_phase_policy``.
+
+        Parameters
+        ----------
+        reference_phase_policy :
+            How reference phase of :class:`.CavitySettings` will be
+            initialized.
+        out_folder :
+            Name of the folder where results should be stored, for each
+            :class:`.Accelerator` under study. This is the name of a folder,
+            not a full path.
+        default_field_map_folder :
+            Where to look for field map files by default.
+        beam_kwargs :
+            The config dictionary holding all the initial beam properties.
+        export_phase :
+            The type of phase you want to export for your ``FIELD_MAP``.
+        executable :
+            Path to the TraceWin executable.
+        ini_path :
+            Path to the ``INI`` TraceWin file.
+        base_kwargs :
+            TraceWin optional arguments. Override what is defined in ``INI``,
+            but overriden by arguments from :class:`.ListOfElements` and
+            :class:`.SimulationOutput`.
+        cal_file :
+            Name of the results folder. Updated at every call of the
+            :func:`init_solver_parameters` method, using
+            ``Accelerator.accelerator_path`` and ``self.out_folder`` attributes.
+
+        """
         self.executable = executable
         self.ini_path = ini_path.resolve().absolute()
         self.base_kwargs = base_kwargs
@@ -90,12 +105,19 @@ class TraceWin(BeamCalculator):
             out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
             beam_kwargs=beam_kwargs,
+            export_phase=export_phase,
             **kwargs,
         )
 
         self.path_cal: Path
         self.dat_file: Path
         self._tracewin_command: list[str] | None = None
+
+        if reference_phase_policy != "phi_0_rel":
+            logging.warning(
+                f"{reference_phase_policy = } on TraceWin may be bugged. "
+                "Prefer 'phi_0_rel'."
+            )
 
     def _set_up_specific_factories(self) -> None:
         """Set up the factories specific to the :class:`.BeamCalculator`.
