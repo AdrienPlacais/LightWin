@@ -43,7 +43,7 @@ params = [
         id="Compensation with Envelope3D",
     ),
     pytest.param(
-        ("generic_tracewin", None, None),
+        ("generic_tracewin", "phi_0_abs", None),
         marks=(pytest.mark.smoke, pytest.mark.slow, pytest.mark.tracewin),
         id="Compensation with TraceWin",
     ),
@@ -52,8 +52,7 @@ params = [
 
 @pytest.fixture(scope="class", params=params)
 def config(
-    request: pytest.FixtureRequest,
-    tmp_path_factory: pytest.TempPathFactory,
+    request: pytest.FixtureRequest, tmp_path_factory: pytest.TempPathFactory
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration."""
     out_folder = tmp_path_factory.mktemp("tmp")
@@ -99,8 +98,7 @@ def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
 
 @pytest.fixture(scope="class")
 def accelerators(
-    solver: BeamCalculator,
-    config: dict[str, dict[str, Any]],
+    solver: BeamCalculator, config: dict[str, dict[str, Any]]
 ) -> list[Accelerator]:
     """Create ref linac, linac we will break, compute ref simulation_output."""
     solvers = (solver,)

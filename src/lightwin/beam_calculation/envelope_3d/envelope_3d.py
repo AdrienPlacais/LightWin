@@ -29,7 +29,11 @@ from lightwin.physics.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
 )
-from lightwin.util.typing import REFERENCE_PHASE_POLICY_T
+from lightwin.util.typing import (
+    EXPORT_PHASES_T,
+    REFERENCE_PHASE_POLICY_T,
+    BeamKwargs,
+)
 
 
 class Envelope3D(BeamCalculator):
@@ -57,11 +61,13 @@ parameters_factory.PARAMETERS_3D
         self,
         *,
         reference_phase_policy: REFERENCE_PHASE_POLICY_T,
-        n_steps_per_cell: int,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
-        method: ENVELOPE3D_METHODS_T = "RK4",
+        beam_kwargs: BeamKwargs,
+        export_phase: EXPORT_PHASES_T,
         phi_s_definition: PHI_S_MODELS = "historical",
+        n_steps_per_cell: int,
+        method: ENVELOPE3D_METHODS_T = "RK4",
         **kwargs,
     ) -> None:
         """Set the proper motion integration function, according to inputs."""
@@ -73,6 +79,8 @@ parameters_factory.PARAMETERS_3D
             reference_phase_policy=reference_phase_policy,
             out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
+            beam_kwargs=beam_kwargs,
+            export_phase=export_phase,
             **kwargs,
         )
 
