@@ -27,6 +27,7 @@ Submodules
    :maxdepth: 5
 
    lightwin.beam_calculation.beam_calculator
+   lightwin.beam_calculation.beam_calculator_base_specs
    lightwin.beam_calculation.deprecated_specs
    lightwin.beam_calculation.factory
    lightwin.beam_calculation.specs

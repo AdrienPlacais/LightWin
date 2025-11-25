@@ -9,18 +9,14 @@ import logging
 from abc import ABCMeta
 from collections.abc import Collection
 from functools import partial
-from typing import Any, Callable, Literal
+from typing import Any, Literal
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.elements.element import Element
-from lightwin.core.elements.field_maps.cavity_settings_factory import (
-    CavitySettingsFactory,
-)
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
-from lightwin.failures.fault import Fault
 from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
 from lightwin.optimisation.algorithms.bayesian_optimization import (
     BayesianOptimizationLW,
@@ -37,13 +33,11 @@ from lightwin.optimisation.algorithms.least_squares import LeastSquares
 from lightwin.optimisation.algorithms.least_squares_penalty import (
     LeastSquaresPenalty,
 )
-from lightwin.optimisation.algorithms.nsga import NSGA
 from lightwin.optimisation.algorithms.simulated_annealing import (
     SimulatedAnnealing,
 )
 from lightwin.optimisation.design_space.design_space import DesignSpace
 from lightwin.optimisation.objective.factory import ObjectiveFactory
-from lightwin.optimisation.objective.objective import Objective
 
 #: Maps the ``optimisation_algorithm`` key in the ``TOML`` file to the actual
 #: :class:`.OptimisationAlgorithm` we use.
@@ -58,7 +52,7 @@ ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
     "least_squares_penalty": LeastSquaresPenalty,
     "nelder_mead": DownhillSimplex,
     "nelder_mead_penalty": DownhillSimplexPenalty,
-    "nsga": NSGA,
+    # "nsga": NSGA,
     "simulated_annealing": SimulatedAnnealing,
 }
 
@@ -74,7 +68,7 @@ ALGORITHMS_T = Literal[
     "least_squares_penalty",
     "nelder_mead",
     "nelder_mead_penalty",
-    "nsga",
+    # "nsga",
     "simulated_annealing",
 ]
 
