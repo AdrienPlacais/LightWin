@@ -1,4 +1,46 @@
 Entry,Type,Description,Mandatory?,Allowed values
+`export_phase`,`str`,"The type of phases that should
+
+be exported in the final `DAT`
+
+file. Note that `'as_in_`
+
+`original_dat'` is not
+
+implemented yet, but `'as_in_`
+
+`settings'` should behave the
+
+same way, provided that you
+
+alter no
+
+FieldMap.CavitySettings.refer-
+
+ence attribute.",✅,"('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_original_dat', 'as_in_settings')"
+"`reference_phase_`
+
+`policy`",`str`,"Controls cavities reference
+
+phase. More details in
+
+:ref:`dedicated notebook<notebooks-cavities-reference-phase>`.
+
+With TraceWin solver, prefer
+
+sticking with `'phi_0_rel'`.",✅,"('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_original_dat')"
+`flag_phi_abs`,"`bool` or
+
+`NoneType`","DEPRECATED, prefer use of
+
+`reference_phase_policy`. If the
+
+field maps phases should be
+
+absolute (no implicit
+
+rephasing after a failure).",❌,
+`tool`,`str`,Name of the tool.,✅,"('Envelope1D', 'Envelope3D', 'Envelope_1D', 'Envelope_3D', 'TraceWin', 'envelope1d', 'envelope3d', 'envelope_1d', 'envelope_3d', 'tracewin')"
 `algo`,`int`,"Optimization using algorithm (
 
 0: Owner, 1: Simplex, 2: Diff.
@@ -106,25 +148,6 @@ of main beam",❌,
 `etny2`,`float`,"Input YY’ emittance (mm.mrad)
 
 of second beam",❌,
-`export_phase`,`str`,"The type of phases that should
-
-be exported in the final DAT
-
-file. Note that ``
-
-'as_in_original_dat' `` is not
-
-implemented yet, but ``
-
-'as_in_settings' `` should
-
-behave the same way, provided
-
-that you alter no
-
-FieldMap.CavitySettings.refer-
-
-ence attribute.",❌,"('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_original_dat', 'as_in_settings')"
 `freq1`,`float`,"Input beam frequency (MHz) of
 
 main beam",❌,
@@ -250,24 +273,6 @@ executable. If given, will
 override the definition in the
 
 machine_config_file.",❌,
-"`reference_phase_`
-
-`policy`",`str`,"Controls how cavities
-
-reference phase will be
-
-initialized.",❌,"('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_original_dat')"
-`flag_phi_abs`,"`bool` or
-
-`NoneType`","DEPRECATED, prefer use of
-
-`reference_phase_policy`. If the
-
-field maps phases should be
-
-absolute (no implicit
-
-rephasing after a failure).",❌,
 `ini_path`,"`str` or
 
 `Path`",Path to the `INI` TraceWin file.,✅,
@@ -288,4 +293,3 @@ let LightWin handle this part.",❌,
 `simulation_type`,`str`,"A key in the
 
 machine_config.toml file",✅,
-`tool`,`str`,Name of the tool.,✅,"('TraceWin', 'tracewin')"
