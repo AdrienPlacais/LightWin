@@ -8,7 +8,7 @@
 
 import logging
 from abc import ABC
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Self
@@ -62,15 +62,15 @@ class DesignSpaceFactory(ABC):
             self.use_files(**self.design_space_kw)
 
     def _check_can_be_retuned(
-        self, compensating_elements: list[Element]
+        self, compensating_elements: Collection[Element]
     ) -> None:
         """Check that given elements can be retuned."""
         assert all([elt.can_be_retuned for elt in compensating_elements])
 
     def _run_variables(
         self,
-        compensating_elements: list[FieldMap],
-        reference_elements: list[Element],
+        compensating_elements: Collection[FieldMap],
+        reference_elements: Collection[Element],
     ) -> list[Variable]:
         """Set up all the required variables."""
         variables = []
@@ -90,8 +90,8 @@ class DesignSpaceFactory(ABC):
 
     def _run_constraints(
         self,
-        compensating_elements: list[Element],
-        reference_elements: list[Element],
+        compensating_elements: Collection[Element],
+        reference_elements: Collection[Element],
     ) -> list[Constraint]:
         """Set up all the required constraints."""
         constraints = []
@@ -110,8 +110,8 @@ class DesignSpaceFactory(ABC):
 
     def create(
         self,
-        compensating_elements: list[Element],
-        reference_elements: list[Element],
+        compensating_elements: Sequence[Element],
+        reference_elements: Sequence[Element],
     ) -> DesignSpace:
         """Set up variables and constraints."""
         self._check_can_be_retuned(compensating_elements)
@@ -154,7 +154,7 @@ class DesignSpaceFactory(ABC):
         self,
         variable: VARIABLES_T,
         reference_element: Element,
-        reference_elements: list[Element],
+        reference_elements: Collection[Element],
     ) -> tuple[float, float]:
         """Select limits for given variable.
 
