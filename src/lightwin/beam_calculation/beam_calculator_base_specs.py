@@ -26,9 +26,10 @@ BEAM_CALCULATOR_BASE_CONFIG = (
         types=(str,),
         description=(
             "Controls cavities reference phase. More details in :ref:"
-            "`dedicated notebook<notebooks-cavities-reference-phase>`."
+            "`dedicated notebook<notebooks-cavities-reference-phase>`. With "
+            "TraceWin solver, prefer sticking with `'phi_0_rel'`."
         ),
-        default_value="phi_0_abs",
+        default_value="phi_0_rel",
         allowed_values=REFERENCE_PHASE_POLICY,
         is_mandatory=True,
     ),

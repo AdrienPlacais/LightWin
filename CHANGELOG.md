@@ -7,9 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.13.1]
 
+### Changed
+
+- `export_phase` is now a mandatory configuration entry for beam calculators.
+  Former default behavior is preserved: if this entry is not given, we set it to
+  `"as_in_cavity_settings"`.
+- Modernized the `experimental` module: `Plotter`, `SimulationOutputEvaluator`.
+  _Write some tutorial for official functionality release._
+
 ### Fixed
 
 - Field map phase is correctly exported in the `DAT` files.
+- Ensured that the `default_value` of configuration entries are used.
 
 ## [0.13.0] -- 2025-11-05
 

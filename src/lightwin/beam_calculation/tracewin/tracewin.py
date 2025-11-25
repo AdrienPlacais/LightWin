@@ -58,6 +58,9 @@ class TraceWin(BeamCalculator):
     ) -> None:
         """Define some other useful methods, init variables.
 
+        .. todo::
+           Check ``reference_phase_policy``.
+
         Parameters
         ----------
         reference_phase_policy :
@@ -109,6 +112,12 @@ class TraceWin(BeamCalculator):
         self.path_cal: Path
         self.dat_file: Path
         self._tracewin_command: list[str] | None = None
+
+        if reference_phase_policy != "phi_0_rel":
+            logging.warning(
+                f"{reference_phase_policy = } on TraceWin may be bugged. "
+                "Prefer 'phi_0_rel'."
+            )
 
     def _set_up_specific_factories(self) -> None:
         """Set up the factories specific to the :class:`.BeamCalculator`.
