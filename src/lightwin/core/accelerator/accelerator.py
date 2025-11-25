@@ -88,6 +88,11 @@ class Accelerator:
         self.elts = list_of_elements_factory.whole_list_run(
             dat_file, accelerator_path, **kwargs
         )
+        logging.info(
+            "Created a ListOfElements ecompassing all linac. Created with:\n"
+            f"{dat_file = }\nw_kin_in = {self.elts.w_kin_in:.2f} MeV\n"
+            f"phi_abs_in = {self.elts.phi_abs_in:.2f} rad"
+        )
 
         self._special_getters = self._create_special_getters()
 
