@@ -7,6 +7,7 @@
 
 import logging
 from abc import ABCMeta
+from collections.abc import Collection
 from functools import partial
 from typing import Any, Callable, Literal
 
@@ -110,7 +111,7 @@ class OptimisationAlgorithmFactory:
 
     def create(
         self,
-        compensating_elements: list[Element],
+        compensating_elements: Collection[Element],
         objective_factory: ObjectiveFactory,
         design_space: DesignSpace,
         subset_elts: ListOfElements,
@@ -129,7 +130,7 @@ class OptimisationAlgorithmFactory:
 
     def _make_default_kwargs(
         self,
-        compensating_elements: list[Element],
+        compensating_elements: Collection[Element],
         objective_factory: ObjectiveFactory,
         design_space: DesignSpace,
         subset_elts: ListOfElements,
