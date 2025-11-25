@@ -33,6 +33,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -81,6 +82,28 @@ class ListOfElementsFactory:
             all the :class:`.BeamCalculator` objects -- some phase-spaces may
             be created but never used though.
 
+        Parameters
+        ----------
+        is_3d :
+            Whether simulation is in 3D. This is currently not used, as we
+            always generate 3D :class:`.InitialBeamParameters`.
+        is_multipart :
+            Whether simulation is multiparticle. This is currently not used, as
+            we always generate multiparticle :class:`.InitialBeamParameters`.
+        default_field_map_folder :
+            Where to look for field map files.
+        beam_kwargs :
+            Arguments to instantiate :class:`.InitialBeamParameters`.
+        load_field_maps :
+            If field maps should be loaded; this is not necessary with
+            :class:`.TraceWin`.
+        field_maps_in_3d :
+            If the given field map files are 3D.
+        load_cython_field_maps :
+            If the solver is implemented in cython.
+        elements_to_dump :
+            Explicit list of :class:`.Element` that can be safely ignored.
+
         """
         freq_bunch_mhz = beam_kwargs["f_bunch_mhz"]
         assert isinstance(freq_bunch_mhz, float)
@@ -106,10 +129,13 @@ class ListOfElementsFactory:
         self,
         dat_file: Path,
         accelerator_path: Path,
+        sigma_in: NDArray[np.float64],
+        w_kin: float,
+        phi_abs: float,
+        z_in: float,
         instructions_to_insert: Collection[Instruction | DatLine] = (),
-        **kwargs: Any,
     ) -> ListOfElements:
-        """Create a new :class:`.ListOfElements`, encompassing a full linac.
+        r"""Create a new :class:`.ListOfElements`, encompassing a full linac.
 
         Factory function called from within the :class:`.Accelerator` object.
 
@@ -120,6 +146,14 @@ class ListOfElementsFactory:
         accelerator_path :
             Absolute path where results for each :class:`.BeamCalculator` will
             be stored.
+        sigma_in :
+            :math:`\sigma` beam matrix at the entrance of the linac.
+        w_kin :
+            Kinetic energy of the beam in :unit:`MeV`.
+        phi_abs :
+            Absolute beam phase in :unit:`rad`.
+        z_in :
+            Absolute entry position of the linac in :unit:`m`.
         instructions_to_insert :
             Some elements or commands that are not present in the ``DAT`` file
             but that you want to add. The default is an empty tuple.
@@ -132,11 +166,6 @@ class ListOfElementsFactory:
             proper particle and beam properties at its entry.
 
         """
-        logging.info(
-            "First initialisation of ListOfElements, ecompassing all linac. "
-            f"Created with {dat_file = }"
-        )
-
         dat_filecontent = dat_filecontent_from_file(
             dat_file, keep="all", instructions_to_insert=instructions_to_insert
         )
@@ -150,17 +179,18 @@ class ListOfElementsFactory:
             "elts_n_cmds": instructions,
         }
 
-        input_particle = self._whole_list_input_particle(**kwargs)
+        input_particle = ParticleInitialState(
+            w_kin=w_kin, phi_abs=phi_abs, z_in=z_in, synchronous=True
+        )
         input_beam = self.initial_beam_factory.factory_new(
-            sigma_in=kwargs["sigma_in"], w_kin=kwargs["w_kin"]
+            sigma_in=sigma_in, w_kin=w_kin
         )
 
-        tm_cumul_in = np.eye(6)
         list_of_elements = ListOfElements(
             elts=elts,
             input_particle=input_particle,
             input_beam=input_beam,
-            tm_cumul_in=tm_cumul_in,
+            tm_cumul_in=np.eye(6),
             files=files,
             first_init=True,
         )
