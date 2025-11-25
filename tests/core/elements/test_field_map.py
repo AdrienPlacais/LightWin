@@ -91,3 +91,65 @@ def test_get_missing_key(field_map: FieldMap) -> None:
 def test_get_none_to_nan(field_map: FieldMap) -> None:
     val = field_map.get("nonexistent", none_to_nan=True)  # pyright: ignore
     assert np.isnan(val)
+
+
+@pytest.mark.implementation
+def test_to_line_phi_0_abs(field_map: FieldMap) -> None:
+    """Check that proper phase is written in the ``DAT`` line."""
+    expected = [
+        "FIELD_MAP",
+        "100",
+        "415.16",
+        "153.171",
+        "30",
+        "0",
+        "1.55425",
+        "0",
+        "0",
+        "Simple_Spoke_1D",
+        "1",
+    ]
+    returned = field_map.to_line(which_phase="phi_0_abs")
+    assert expected == returned
+
+
+@pytest.mark.implementation
+def test_to_line_phi_0_rel(field_map: FieldMap) -> None:
+    """Check that proper phase is written in the ``DAT`` line."""
+    expected = [
+        "FIELD_MAP",
+        "100",
+        "415.16",
+        "170.35973",
+        "30",
+        "0",
+        "1.55425",
+        "0",
+        "0",
+        "Simple_Spoke_1D",
+        "0",
+    ]
+    returned = field_map.to_line(which_phase="phi_0_rel", round=5)
+    assert expected == returned
+
+
+@pytest.mark.implementation
+def test_to_line_phi_s(field_map: FieldMap) -> None:
+    """Check that proper phase is written in the ``DAT`` line."""
+    expected = [
+        "SET_SYNC_PHASE\n",
+        "FIELD_MAP",
+        "100",
+        "415.16",
+        "180.0",
+        "30",
+        "0",
+        "1.55425",
+        "0",
+        "0",
+        "Simple_Spoke_1D",
+        "0",
+    ]
+    field_map.cavity_settings._phi_s = math.pi
+    returned = field_map.to_line(which_phase="phi_s", round=5)
+    assert expected == returned

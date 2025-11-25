@@ -10,7 +10,11 @@ from lightwin.beam_calculation.cy_envelope_1d.envelope_1d import CyEnvelope1D
 from lightwin.beam_calculation.envelope_1d.envelope_1d import Envelope1D
 from lightwin.beam_calculation.envelope_3d.envelope_3d import Envelope3D
 from lightwin.beam_calculation.tracewin.tracewin import TraceWin
-from lightwin.util.typing import BeamKwargs
+from lightwin.util.typing import (
+    EXPORT_PHASES_T,
+    REFERENCE_PHASE_POLICY_T,
+    BeamKwargs,
+)
 
 BEAM_CALCULATORS = (
     "Envelope1D",
@@ -91,8 +95,7 @@ class BeamCalculatorsFactory:
         self._original_dat_dir: Path = files["dat_file"].parent
 
     def _set_out_folders(
-        self,
-        all_beam_calculator_kw: Sequence[dict[str, Any]],
+        self, all_beam_calculator_kw: Sequence[dict[str, Any]]
     ) -> list[Path]:
         """Set in which subfolder the results will be saved."""
         out_folders = [
@@ -113,14 +116,26 @@ class BeamCalculatorsFactory:
                 del beam_calculator_kw["simulation type"]
 
     def run(
-        self, tool: BEAM_CALCULATORS_T, **beam_calculator_kw
+        self,
+        reference_phase_policy: REFERENCE_PHASE_POLICY_T,
+        tool: BEAM_CALCULATORS_T,
+        export_phase: EXPORT_PHASES_T,
+        flag_cython: bool = False,
+        **beam_calculator_kw,
     ) -> BeamCalculator:
         """Create a single :class:`.BeamCalculator`.
 
         Parameters
         ----------
+        reference_phase_policy :
+            How reference phase of :class:`.CavitySettings` will be
+            initialized.
         tool :
             The name of the beam calculator to construct.
+        export_phase :
+            The type of phase you want to export for your ``FIELD_MAP``.
+        flag_cython :
+            If the beam calculator involves loading cython field maps.
 
         Returns
         -------
@@ -131,9 +146,12 @@ class BeamCalculatorsFactory:
             tool, **beam_calculator_kw
         )
         beam_calculator = beam_calculator_class(
+            reference_phase_policy=reference_phase_policy,
             out_folder=self.out_folders.pop(0),
             default_field_map_folder=self._original_dat_dir,
             beam_kwargs=self._beam_kwargs,
+            flag_cython=flag_cython,
+            export_phase=export_phase,
             **beam_calculator_kw,
         )
         self.beam_calculators_id.append(beam_calculator.id)

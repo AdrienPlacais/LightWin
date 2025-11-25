@@ -1,4 +1,4 @@
-"""Test that the lines of the ``.dat`` are properly understood."""
+"""Test that the lines of the ``DAT`` are properly understood."""
 
 from lightwin.tracewin_utils.line import DatLine
 
@@ -20,7 +20,7 @@ def check(line: str, expected: dict[str, str | float | list[str]]) -> None:
 
 
 class TestDatLine:
-    """Test functions to convert a ``.dat`` line to list of arguments."""
+    """Test functions to convert a ``DAT`` line to list of arguments."""
 
     def test_basic_line(self) -> None:
         """Test that a basic line is properly sliced."""
