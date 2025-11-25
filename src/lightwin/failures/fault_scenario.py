@@ -29,10 +29,10 @@ from lightwin.evaluator.list_of_simulation_output_evaluators import (
 )
 from lightwin.failures import strategy
 from lightwin.failures.fault import Fault
+from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
 from lightwin.optimisation.algorithms.factory import (
     OptimisationAlgorithmFactory,
 )
-from lightwin.optimisation.design_space.design_space import DesignSpace
 from lightwin.optimisation.design_space.factory import (
     DesignSpaceFactory,
     get_design_space_factory,
@@ -67,9 +67,6 @@ class FaultScenario(list[Fault]):
         **kwargs,
     ) -> None:
         """Create the :class:`FaultScenario` and the :class:`.Fault` objects.
-
-        .. todo::
-            Could be cleaner.
 
         Parameters
         ----------
@@ -149,7 +146,6 @@ class FaultScenario(list[Fault]):
         faults = [
             Fault(
                 reference_elts=self.ref_acc.elts,
-                wtf=self.wtf,
                 broken_elts=self.fix_acc.elts,
                 failed_elements=faulty_cavities,
                 compensating_elements=compensating_cavities,
@@ -225,20 +221,12 @@ class FaultScenario(list[Fault]):
             upstream :class:`.Fault` as well as of this one.
 
         """
-        design_space, objective_factory, subset_elts = (
-            self._prepare_fix_objects(fault, simulation_output)
+        optimisation_algorithm = self._prepare_fix_objects(
+            fault, simulation_output
         )
 
-        # Create optimisation algorithm, that uses above objects
-        optimisation_algorithm = self._optimisation_algorithm_factory.create(
-            fault.compensating_elements,
-            objective_factory,
-            design_space,
-            subset_elts,
-        )
-
-        # Execute optimisation and update accelerator
         fault.fix(optimisation_algorithm)
+
         simulation_output = fault.postprocess_fix(
             self.fix_acc,
             self.beam_calculator,
@@ -248,11 +236,11 @@ class FaultScenario(list[Fault]):
 
         # TODO clean following
         df_altered = sumup_cavities(
-            subset_elts, filter=lambda cav: cav.is_altered
+            fault.subset_elts, filter=lambda cav: cav.is_altered
         )
         logging.info(f"Retuned cavities:\n{pd_output(df_altered)}")
-        subset_elts.store_settings_in_dat(
-            subset_elts.files_info["dat_file"],
+        fault.subset_elts.store_settings_in_dat(
+            fault.subset_elts.files_info["dat_file"],
             exported_phase=self.beam_calculator.reference_phase_policy,
             save=True,
         )
@@ -260,15 +248,15 @@ class FaultScenario(list[Fault]):
 
     def _prepare_fix_objects(
         self, fault: Fault, simulation_output: SimulationOutput
-    ) -> tuple[DesignSpace, ObjectiveFactory, ListOfElements]:
+    ) -> OptimisationAlgorithm:
         """Create objects to instantiate the :class:`.OptimisationAlgorithm`."""
         design_space = self._design_space_factory.create(
             fault.compensating_elements, fault.reference_elements
         )
         objective_factory = self._objective_meta_factory.create(
-            fault,
             self.wtf["objective_preset"],
             self._design_space_factory.design_space_kw,
+            fault.packed_elements,
             self._objective_factory_class,
         )
         self._objective_factories.append(objective_factory)
@@ -278,7 +266,21 @@ class FaultScenario(list[Fault]):
             simulation_output,
             self.fix_acc.elts.files_info,
         )
-        return design_space, objective_factory, subset_elts
+        fault.subset_elts = subset_elts
+        logging.info(
+            "Created a ListOfElements ecompassing a linac subset.\n"
+            f"Encompasses: {subset_elts[0]} to {subset_elts[1]}\nw_kin_in = "
+            f"{subset_elts.w_kin_in:.2f} MeV\nphi_abs_in = "
+            f"{subset_elts.phi_abs_in:.2f} rad"
+        )
+
+        optimisation_algorithm = self._optimisation_algorithm_factory.create(
+            fault.compensating_elements,
+            objective_factory,
+            design_space,
+            subset_elts,
+        )
+        return optimisation_algorithm
 
     def _evaluate_fit_quality(
         self,
@@ -324,11 +326,10 @@ class FaultScenario(list[Fault]):
         #     df_eval.to_csv(out)
 
     def _set_evaluation_elements(
-        self,
-        additional_elt: list[Element] | None = None,
-    ) -> dict[str, Element]:
+        self, additional_elt: list[Element] | None = None
+    ) -> list[Element]:
         """Set a the proper list of where to check the fit quality."""
-        evaluation_elements = [fault.elts[-1] for fault in self]
+        evaluation_elements = [fault.subset_elts[-1] for fault in self]
         if additional_elt is not None:
             evaluation_elements += additional_elt
         evaluation_elements.append(self.fix_acc.elts[-1])

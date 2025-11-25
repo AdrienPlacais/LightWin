@@ -12,9 +12,8 @@ implemented presets in :data:`.OBJECTIVE_PRESETS` and
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Collection
-from functools import partial
-from pathlib import Path
-from typing import Any, Callable, Literal
+from dataclasses import dataclass
+from typing import Any, Literal
 
 import numpy as np
 from numpy.typing import NDArray
@@ -34,7 +33,6 @@ from lightwin.optimisation.objective.objective import (
     Objective,
     QuantityIsBetween,
     RetrieveArbitrary,
-    str_objectives,
 )
 from lightwin.optimisation.objective.position import (
     POSITION_TO_INDEX_T,
@@ -661,9 +659,9 @@ class ObjectiveMetaFactory:
 
     def create(
         self,
-        fault: Any,
         objective_preset: OBJECTIVE_PRESETS_T,
         design_space_kw: dict[str, Any],
+        packed_elements: PackedElements,
         objective_factory_class: type[ObjectiveFactory] | None = None,
     ) -> ObjectiveFactory:
         """Create object that will create all the :class:`.Objective`."""
@@ -672,10 +670,10 @@ class ObjectiveMetaFactory:
         )
 
         objective_factory = objective_factory_class(
-            reference_simulation_output=self._reference_simulation_output,
-            broken_elts=fault.broken_elts,
-            failed_elements=fault.failed_elements,
-            compensating_elements=fault.compensating_elements,
+            self._reference_simulation_output,
+            packed_elements.broken_elts,
+            packed_elements.failed_elements,
+            packed_elements.compensating_elements,
             design_space_kw=design_space_kw,
         )
         return objective_factory
