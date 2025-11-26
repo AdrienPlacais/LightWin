@@ -23,6 +23,7 @@ import math
 from typing import Callable
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.beam_calculation.integrators.rk4 import rk4
 from lightwin.constants import c
@@ -34,7 +35,7 @@ from lightwin.core.em_fields.types import (
 
 def z_dummy(
     gamma_in: float, *args, **kwargs
-) -> tuple[np.ndarray, np.ndarray, None]:
+) -> tuple[NDArray[np.float64], NDArray[np.float64], None]:
     """Return an eye transfer matrix."""
     r_zz = [[[1, 0], [0, 1]]]
     gamma_phi = [[gamma_in, 0.0]]
@@ -47,7 +48,7 @@ def z_drift(
     omega_0_bunch: float,
     n_steps: int = 1,
     **kwargs,
-) -> tuple[np.ndarray, np.ndarray, None]:
+) -> tuple[NDArray[np.float64], NDArray[np.float64], None]:
     """Calculate the transfer matrix of a drift."""
     gamma_in_min2 = gamma_in**-2
     r_zz = np.full(
@@ -79,8 +80,8 @@ def z_field_map_rk4(
     inv_e_rest_mev: float,
     omega_0_bunch: float,
     **kwargs,
-) -> tuple[np.ndarray, np.ndarray, complex]:
-    r"""Calculate the transfer matrix of a :class:`.FieldMap` using Runge-Kutta.
+) -> tuple[NDArray[np.float64], NDArray[np.float64], complex]:
+    r"""Calculate the transfer matrix of :class:`.FieldMap` using Runge-Kutta.
 
     We slice the field map in a serie of drift-thin acceleration gap-drift. We
     pre-compute some constants to speed up the calculation:
@@ -91,6 +92,42 @@ def z_field_map_rk4(
 
     .. math::
         \Delta\phi_\mathrm{norm} = \frac{\omega_0 \Delta z}{c}
+
+    Parameters
+    ----------
+    gamma_in :
+        Lorentz factor at entry of field map.
+    d_z :
+        Size of the integration step in :unit:`m`.
+    n_steps :
+        Number of integration steps.
+    omega0_rf :
+        RF pulsation in :unit:`rad/s`.
+    complex_e_func :
+        Takes in the z-position of the particle and the phase, return the
+        complex field component at this phase and position.
+    real_e_func :
+        Takes in the z-position of the particle and the phase, return the
+        real field component at this phase and position.
+    q_adim :
+        Adimensioned particle charge.
+    inv_e_rest_mev :
+        Inverse of the particle rest energy, in :unit:`MeV^{-1}`.
+    omega_0_bunch :
+        Bunch pulsation in :unit:`rad/s`.
+
+    Returns
+    -------
+    NDArray[np.float64]
+        :math:`2\times 2 \times n` matrix, holding the :math:`2\times2`
+        longitudinal transfer matrix of every field map slice along the field
+        map.
+    NDArray[np.float64]
+        :math:`2\times n` array, holding Lorentz factor and phas of the
+        synchronous particle along the linac.
+    complex
+        Complex integral of the field experienced by the synchronous particle
+        when crossing the cavity.
 
     """
     z_rel = 0.0
@@ -106,7 +143,7 @@ def z_field_map_rk4(
     gamma_phi[0, 0] = gamma_in
     gamma_phi[0, 1] = 0.0
 
-    def du(z: float, u: np.ndarray) -> np.ndarray:
+    def du(z: float, u: NDArray[np.float64]) -> NDArray[np.float64]:
         r"""Compute variation of energy and phase.
 
         Parameters
@@ -165,7 +202,7 @@ def z_superposed_field_maps_rk4(
     inv_e_rest_mev: float,
     omega_0_bunch: float,
     **kwargs,
-) -> tuple[np.ndarray, np.ndarray, complex]:
+) -> tuple[NDArray[np.float64], NDArray[np.float64], complex]:
     """Calculate the transfer matrix of superposed FIELD_MAP using RK."""
     return z_field_map_rk4(
         gamma_in=gamma_in,
@@ -194,7 +231,7 @@ def z_field_map_leapfrog(
     gamma_init: float,
     omega_0_bunch: float,
     **kwargs,
-) -> tuple[np.ndarray, np.ndarray, float]:
+) -> tuple[NDArray[np.float64], NDArray[np.float64], float]:
     """
     Calculate the transfer matrix of a ``FIELD_MAP`` using leapfrog.
 
@@ -216,73 +253,6 @@ def z_field_map_leapfrog(
 
     """
     raise NotImplementedError
-    z_rel = 0.0
-    itg_field = 0.0
-    half_dz = 0.5 * d_z
-
-    # Constants to speed up calculation
-    delta_phi_norm = omega0_rf * d_z / c
-    delta_gamma_norm = q_adim * d_z * inv_e_rest_mev
-    k_k = delta_gamma_norm * k_e
-
-    r_zz = np.empty((n_steps, 2, 2))
-    gamma_phi = np.empty((n_steps + 1, 2))
-    gamma_phi[0, 1] = 0.0
-    # Rewind energy from i=0 to i=-0.5 if we are at the first cavity:
-    # FIXME must be cleaner
-    if gamma_in == gamma_init:
-        gamma_phi[0, 0] = gamma_in - 0.5 * k_k * e_func(
-            z_rel, e_spat, gamma_phi[0, 1], phi_0_rel
-        )
-    else:
-        gamma_phi[0, 0] = gamma_in
-
-    for i in range(n_steps):
-        # Compute gamma change
-        delta_gamma = k_k * e_func(z_rel, e_spat, gamma_phi[i, 1], phi_0_rel)
-
-        # New gamma at i+0.5
-        gamma_phi[i + 1, 0] = gamma_phi[i, 0] + delta_gamma
-        beta = np.sqrt(1.0 - gamma_phi[i + 1, 0] ** -2)
-
-        # Compute phase at step i + 1
-        delta_phi = delta_phi_norm / beta
-        gamma_phi[i + 1, 1] = gamma_phi[i, 1] + delta_phi
-
-        # Update itg_field. Used to compute V_cav and phi_s.
-        itg_field += (
-            k_e
-            * e_func(z_rel, e_spat, gamma_phi[i, 1], phi_0_rel)
-            * (1.0 + 1j * np.tan(gamma_phi[i, 1] + phi_0_rel))
-            * d_z
-        )
-
-        # Compute gamma and phi at the middle of the thin lense
-        gamma_phi_middle = np.array(
-            [gamma_phi[i, 0], gamma_phi[i, 1] + 0.5 * delta_phi]
-        )
-        # We already are at the step i + 0.5, so gamma_middle and beta_middle
-        # are the same as gamma and beta
-
-        # To speed up (corresponds to the gamma_variation at the middle of the
-        # thin lense at cos(phi + phi_0) = 1
-        delta_gamma_middle_max = k_k * e_spat(z_rel + half_dz)
-
-        # Compute thin lense transfer matrix
-        r_zz[i, :, :] = z_thin_lense_old(
-            gamma_phi[i, 0],
-            gamma_phi[i + 1, 0],
-            gamma_phi_middle,
-            half_dz,
-            delta_gamma_middle_max,
-            phi_0_rel,
-            omega0_rf,
-            omega_0_bunch=omega_0_bunch,
-        )
-
-        z_rel += d_z
-
-    return r_zz, gamma_phi[1:, :], itg_field
 
 
 def z_thin_lense(
@@ -294,7 +264,7 @@ def z_thin_lense(
     omega0_rf: float,
     omega_0_bunch: float,
     **kwargs,
-) -> np.ndarray:
+) -> NDArray[np.float64]:
     r"""
     Compute propagation in a slice of field map using thin lense approximation.
 
@@ -390,146 +360,6 @@ def z_thin_lense(
     return r_zz_array
 
 
-def z_thin_lense_old(
-    gamma_in: float,
-    gamma_out: float,
-    gamma_phi_m: np.ndarray,
-    half_dz: float,
-    delta_gamma_m_max: float,
-    phi_0: float,
-    omega0_rf: float,
-    omega_0_bunch: float,
-    **kwargs,
-) -> np.ndarray:
-    """
-    Thin lense approximation: drift-acceleration-drift.
-
-    Parameters
-    ----------
-    gamma_in :
-        gamma at entrance of first drift.
-    gamma_out :
-        gamma at exit of first drift.
-    gamma_phi_m :
-        gamma and phase at the thin acceleration drift.
-    half_dz :
-        Half a spatial step in m.
-    delta_gamma_m_max :
-        Max gamma increase if the cos(phi + phi_0) of the acc. field is 1.
-    phi_0 :
-        Input phase of the cavity.
-    omega0_rf :
-        Pulsation of the cavity.
-    omega_0_bunch :
-        Pulsation of the beam.
-
-    Return
-    ------
-        Transfer matrix of the thin lense.
-
-    """
-    # Used for tm components
-    beta_m = math.sqrt(1.0 - gamma_phi_m[0] ** -2)
-    k_speed1 = delta_gamma_m_max / (gamma_phi_m[0] * beta_m**2)
-    k_speed2 = k_speed1 * math.cos(gamma_phi_m[1] + phi_0)
-
-    # Thin lense transfer matrices components
-    k_1 = (
-        k_speed1 * omega0_rf / (beta_m * c) * math.sin(gamma_phi_m[1] + phi_0)
-    )
-    k_2 = 1.0 - (2.0 - beta_m**2) * k_speed2
-    k_3 = (1.0 - k_speed2) / k_2
-
-    # Faster than matmul or matprod_22
-    r_zz_array = z_drift(gamma_out, half_dz, omega_0_bunch=omega_0_bunch)[0][
-        0
-    ] @ (
-        np.array(([k_3, 0.0], [k_1, k_2]))
-        @ z_drift(gamma_in, half_dz, omega_0_bunch=omega_0_bunch)[0][0]
-    )
-    return r_zz_array
-
-
-# def z_thin_lense_superposed(
-#     gamma_in: float,
-#     gamma_out: float,
-#     gamma_phi_m: np.ndarray,
-#     half_dz: float,
-#     delta_gamma_m_maxs: Collection[float],
-#     phi_0s: Collection[float],
-#     omega0_rf: float,
-#     omega_0_bunch: float,
-#     **kwargs,
-# ) -> np.ndarray:
-#     """
-#     Compute trajectory with thin lense approximation: drift-acceleration-drift.
-#
-#     Parameters
-#     ----------
-#     gamma_in :
-#         gamma at entrance of first drift.
-#     gamma_out :
-#         gamma at exit of first drift.
-#     gamma_phi_m :
-#         gamma and phase at the thin acceleration drift.
-#     half_dz :
-#         Half a spatial step in m.
-#     delta_gamma_m_maxs :
-#         Max gamma increase if the cos(phi + phi_0) of the acc. field is 1.
-#     phi_0s :
-#         Input phases of the elements.
-#     omega0_rf :
-#         Pulsation of the elements.
-#     omega_0_bunch :
-#         Bunch pulsation.
-#
-#     Return
-#     ------
-#         Transfer matrix of the thin lense.
-#
-#     """
-#     # Used for tm components
-#     beta_m = math.sqrt(1.0 - gamma_phi_m[0] ** -2)
-#     # k_speed1 = delta_gamma_m_max / (gamma_phi_m[0] * beta_m**2)
-#     # k_speed2 = k_speed1 * math.cos(gamma_phi_m[1] + phi_0)
-#     k_speed1s = [
-#         delta_gamma_m_max / (gamma_phi_m[0] * beta_m**2)
-#         for delta_gamma_m_max in delta_gamma_m_maxs
-#     ]
-#     k_speed2s = [
-#         k_speed1 * math.cos(gamma_phi_m[1] + phi_0)
-#         for k_speed1, phi_0 in zip(k_speed1s, phi_0s)
-#     ]
-#
-#     # Thin lense transfer matrices components
-#     # k_1 = (
-#     #     k_speed1 * omega0_rf / (beta_m * c) * math.sin(gamma_phi_m[1] + phi_0)
-#     # )
-#     # k_2 = 1.0 - (2.0 - beta_m**2) * k_speed2
-#     # k_3 = (1.0 - k_speed2) / k_2
-#     k_1 = sum(
-#         [
-#             k_speed1
-#             * omega0_rf
-#             / (beta_m * c)
-#             * math.sin(gamma_phi_m[1] + phi_0)
-#             for k_speed1, phi_0 in zip(k_speed1s, phi_0s)
-#         ]
-#     )
-#     k_2 = sum([1.0 - (2.0 - beta_m**2) * k_speed2 for k_speed2 in k_speed2s])
-#     k_3 = sum([(1.0 - k_speed2) / k_2 for k_speed2 in k_speed2s])
-#
-#     # Faster than matmul or matprod_22
-#     r_zz_array = z_drift(gamma_out, half_dz, omega_0_bunch=omega_0_bunch)[0][
-#         0
-#     ] @ (
-#         np.array(([k_3, 0.0], [k_1, k_2]))
-#         @ z_drift(gamma_in, half_dz, omega_0_bunch=omega_0_bunch)[0][0]
-#     )
-#     return r_zz_array
-#
-
-
 def z_bend(
     gamma_in: float,
     delta_s: float,
@@ -538,7 +368,7 @@ def z_bend(
     factor_3: float,
     omega_0_bunch: float,
     **kwargs,
-) -> tuple[np.ndarray, np.ndarray, None]:
+) -> tuple[NDArray[np.float64], NDArray[np.float64], None]:
     r"""Compute the longitudinal transfer matrix of a bend.
 
     ``factor_1`` is:
