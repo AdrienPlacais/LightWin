@@ -1,7 +1,7 @@
 Entry,Type,Description,Mandatory?,Allowed values
 `export_phase`,`str`,"The type of phases that should
 
-be exported in the final DAT
+be exported in the final `DAT`
 
 file. Note that `'as_in_`
 
@@ -17,19 +17,18 @@ alter no
 
 FieldMap.CavitySettings.refer-
 
-ence attribute.",❌,"('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_original_dat', 'as_in_settings')"
-`flag_cython`,`bool`,"Not implemented yet. If we
-
-should use the Cython
-
-implementation (faster).",❌,"(False,)"
+ence attribute.",✅,"('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_original_dat', 'as_in_settings')"
 "`reference_phase_`
 
-`policy`",`str`,"Controls how cavities
+`policy`",`str`,"Controls cavities reference
 
-reference phase will be
+phase. More details in
 
-initialized.",❌,"('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_original_dat')"
+:ref:`dedicated notebook<notebooks-cavities-reference-phase>`.
+
+With TraceWin solver, prefer
+
+sticking with `'phi_0_rel'`.",✅,"('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_original_dat')"
 `flag_phi_abs`,"`bool` or
 
 `NoneType`","DEPRECATED, prefer use of
@@ -41,10 +40,15 @@ field maps phases should be
 absolute (no implicit
 
 rephasing after a failure).",❌,
+`tool`,`str`,Name of the tool.,✅,"('Envelope1D', 'Envelope3D', 'Envelope_1D', 'Envelope_3D', 'TraceWin', 'envelope1d', 'envelope3d', 'envelope_1d', 'envelope_3d', 'tracewin')"
+`flag_cython`,`bool`,"Not implemented yet. If we
+
+should use the Cython
+
+implementation (faster).",❌,"(False,)"
 `method`,`str`,Integration method.,❌,"('RK4',)"
 `n_steps_per_cell`,`int`,"Number of integrating steps
 
 per cavity cell. Recommended
 
 value is 40.",❌,
-`tool`,`str`,Name of the tool.,✅,"('Envelope3D', 'envelope3d', 'Envelope_3D', 'envelope_3d')"

@@ -10,8 +10,8 @@ from lightwin.config.config_manager import (
     ConfigFileNotFoundError,
     InvalidTomlSyntaxError,
     _load_toml,
-    _override_some_toml_entries,
     _process_toml,
+    _user_override_toml_entries,
     dict_to_toml,
 )
 
@@ -232,7 +232,7 @@ class TestOverrideSomeTomlEntries:
         }
         override = {"beam": {"key1": "new_value1", "key2": "new_value2"}}
 
-        _override_some_toml_entries(
+        _user_override_toml_entries(
             toml_fulldict, warn_mismatch=False, **override
         )
 
@@ -249,7 +249,7 @@ class TestOverrideSomeTomlEntries:
         with pytest.raises(
             AssertionError, match="You want to override entries in .*"
         ):
-            _override_some_toml_entries(
+            _user_override_toml_entries(
                 toml_fulldict, warn_mismatch=False, **override
             )
 
@@ -259,7 +259,7 @@ class TestOverrideSomeTomlEntries:
         override = {"beam": {"nonexistent_key": "new_value"}}
 
         with patch("logging.warning") as mock_warning:
-            _override_some_toml_entries(
+            _user_override_toml_entries(
                 toml_fulldict, warn_mismatch=True, **override
             )
 

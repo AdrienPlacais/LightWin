@@ -21,7 +21,11 @@ from lightwin.beam_calculation.cy_envelope_1d.util import (
 from lightwin.beam_calculation.envelope_1d.envelope_1d import Envelope1D
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.physics.synchronous_phases import PHI_S_MODELS
-from lightwin.util.typing import REFERENCE_PHASE_POLICY_T
+from lightwin.util.typing import (
+    EXPORT_PHASES_T,
+    REFERENCE_PHASE_POLICY_T,
+    BeamKwargs,
+)
 
 
 class CyEnvelope1D(Envelope1D):
@@ -33,21 +37,25 @@ class CyEnvelope1D(Envelope1D):
         self,
         *,
         reference_phase_policy: REFERENCE_PHASE_POLICY_T,
-        n_steps_per_cell: int,
-        method: CY_ENVELOPE1D_METHODS_T,
         out_folder: Path | str,
         default_field_map_folder: Path | str,
+        beam_kwargs: BeamKwargs,
+        export_phase: EXPORT_PHASES_T,
         phi_s_definition: PHI_S_MODELS = "historical",
+        n_steps_per_cell: int,
+        method: CY_ENVELOPE1D_METHODS_T,
         **kwargs,
     ) -> None:
         """Set the proper motion integration function, according to inputs."""
         return super().__init__(
             reference_phase_policy=reference_phase_policy,
-            n_steps_per_cell=n_steps_per_cell,
-            method=method,
             out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
+            beam_kwargs=beam_kwargs,
+            export_phase=export_phase,
             phi_s_definition=phi_s_definition,
+            n_steps_per_cell=n_steps_per_cell,
+            method=method,
             **kwargs,
         )
 

@@ -68,14 +68,10 @@ class SimulationOutputEvaluatorsFactory:
         ----------
         accelerators :
             Objects holding all the different :class:`.SimulationOutput`.
-        reference_solver_ids :
+        solver_ids :
             Name of the reference solver(s). If several are provided, we use
             the first one by default; we use the following if necessary data
             was not available.
-
-        .. todo::
-           More robust creation of evaluators. Use `needs_3d`
-           `needs_multipart`.
 
         """
         if isinstance(solvers_ids, str):

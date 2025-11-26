@@ -53,8 +53,8 @@ class BeamCalculator(ABC):
         out_folder: Path | str,
         default_field_map_folder: Path | str,
         beam_kwargs: BeamKwargs,
+        export_phase: EXPORT_PHASES_T,
         flag_cython: bool = False,
-        export_phase: EXPORT_PHASES_T = "as_in_settings",
         **kwargs,
     ) -> None:
         r"""Set ``id``, some generic parameters such as results folders.
@@ -71,14 +71,11 @@ class BeamCalculator(ABC):
         default_field_map_folder :
             Where to look for field map files by default.
         flag_cython :
-            If the beam calculator involves loading cython field maps. The
-            default is False.
+            If the beam calculator involves loading cython field maps.
         beam_kwargs :
             The config dictionary holding all the initial beam properties.
         export_phase :
-            The type of phase you want to export for your ``FIELD_MAP``. The
-            default is ``"as_in_settings"``, which should be the same phases
-            as in the original ``DAT`` file.
+            The type of phase you want to export for your ``FIELD_MAP``.
 
         """
         #: How reference phase of :class:`.CavitySettings` will be initialized.
@@ -87,7 +84,7 @@ class BeamCalculator(ABC):
         )
         self.flag_cython = flag_cython
         self.id: str = f"{self.__class__.__name__}_{next(self._ids)}"
-        self._export_phase: EXPORT_PHASES_T = export_phase
+        self._export_phase = export_phase
 
         if isinstance(out_folder, str):
             out_folder = Path(out_folder)
