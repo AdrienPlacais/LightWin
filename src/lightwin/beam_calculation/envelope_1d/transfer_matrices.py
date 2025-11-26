@@ -57,12 +57,6 @@ def z_drift(
     beta_in = math.sqrt(1.0 - gamma_in_min2)
     delta_phi = omega_0_bunch * delta_s / (beta_in * c)
 
-    # Two possibilites: second one is faster
-    # l_gamman = [gamma for i in range(n_steps)]
-    # l_phi_rel = [(i+1)*delta_phi for i in range(n_steps)]
-    # gamma_phi = np.empty((n_steps, 2))
-    # gamma_phi[:, 0] = l_W_kin
-    # gamma_phi[:, 1] = l_phi_rel
     gamma_phi = np.empty((n_steps, 2))
     gamma_phi[:, 0] = gamma_in
     gamma_phi[:, 1] = np.arange(0.0, n_steps) * delta_phi + delta_phi
@@ -255,6 +249,11 @@ def z_field_map_leapfrog(
     raise NotImplementedError
 
 
+def _drift_matrix(gamma: float, half_dz: float) -> NDArray[np.float64]:
+    inv2 = 1.0 / (gamma * gamma)
+    return np.array([[1.0, half_dz * inv2], [0.0, 1.0]], dtype=np.float64)
+
+
 def z_thin_lense(
     scaled_e_middle: complex,
     gamma_in: float,
@@ -349,15 +348,10 @@ def z_thin_lense(
     k_1 = scaled_e_middle.imag * omega0_rf / (beta_m * c)
     k_2 = 1.0 - (2.0 - beta_m**2) * scaled_e_middle.real
     k_3 = (1.0 - scaled_e_middle.real) / k_2
-
-    # Faster than matmul or matprod_22
-    r_zz_array = z_drift(gamma_out, half_dz, omega_0_bunch=omega_0_bunch)[0][
-        0
-    ] @ (
-        np.array(([k_3, 0.0], [k_1, k_2]))
-        @ z_drift(gamma_in, half_dz, omega_0_bunch=omega_0_bunch)[0][0]
-    )
-    return r_zz_array
+    r = _drift_matrix(gamma_out, half_dz)
+    g = _drift_matrix(gamma_in, half_dz)
+    thin = np.array([[k_3, 0.0], [k_1, k_2]])
+    return r @ thin @ g
 
 
 def z_bend(
