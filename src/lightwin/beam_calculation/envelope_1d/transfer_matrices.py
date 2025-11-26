@@ -137,6 +137,8 @@ def z_field_map_rk4(
     gamma_phi[0, 0] = gamma_in
     gamma_phi[0, 1] = 0.0
 
+    # du_out = np.empty(2, dtype=float)
+
     def du(z: float, u: NDArray[np.float64]) -> NDArray[np.float64]:
         r"""Compute variation of energy and phase.
 
@@ -155,8 +157,8 @@ def z_field_map_rk4(
             :unit:`rad / m`.
 
         """
+        beta = math.sqrt(1.0 - u[0] ** -2)
         v0 = delta_gamma_norm * real_e_func(z, u[1])
-        beta = np.sqrt(1.0 - u[0] ** -2)
         v1 = delta_phi_norm / beta
         return np.array([v0, v1])
 
