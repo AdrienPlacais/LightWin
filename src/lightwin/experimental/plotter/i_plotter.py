@@ -6,12 +6,13 @@
 """
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterable, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, final
 
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.util.dicts_output import markdown
+from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
 
 
 class IPlotter(ABC):
@@ -33,13 +34,13 @@ class IPlotter(ABC):
         self,
         data: Any,
         axes: Any | None = None,
-        ref_data: Any | None = None,
         png_path: Path | None = None,
         elts: ListOfElements | None = None,
         fignum: int = 1,
         axes_index: int = 0,
         title: str = "",
-        x_axis: str = "z_abs",
+        x_axis: GETTABLE_SIMULATION_OUTPUT_T = "z_abs",
+        style: Sequence[str] | None = None,
         **plot_kwargs: Any,
     ) -> Any:
         """Plot the provided data.
@@ -49,8 +50,6 @@ class IPlotter(ABC):
         data :
             Data to be plotted. According to the subclass, it can be a numpy
             array, a pandas dataframe...
-        ref_data :
-            Reference data, to plot if provided.
         png_path :
             Where the figure will be saved. The default is None, in which case
             figure is not plotted.
@@ -74,18 +73,15 @@ class IPlotter(ABC):
             The created axes object(s).
 
         """
-        axes = self._setup_fig(fignum, title)
+        new_figure = axes is None
 
-        if ref_data is not None:
-            self._actual_plot(
-                ref_data, axes=axes, axes_index=axes_index, **plot_kwargs
-            )
+        axes = self._setup_fig(fignum, title) if new_figure else axes
 
         self._actual_plot(
-            data, axes=axes, axes_index=axes_index, **plot_kwargs
+            data, axes=axes, axes_index=axes_index, style=style, **plot_kwargs
         )
 
-        if self._structure:
+        if self._structure and new_figure:
             if elts is None:
                 elts = self._elts
             self._plot_structure(axes, elts, x_axis=x_axis)
@@ -112,6 +108,7 @@ class IPlotter(ABC):
         axes: Any,
         axes_index: int,
         xlabel: str = markdown["z_abs"],
+        style: Sequence[str] | None = None,
         **plot_kwargs: Any,
     ) -> Any:
         """Create the plot itself."""
@@ -121,7 +118,7 @@ class IPlotter(ABC):
         self,
         axes: Any,
         elts: ListOfElements | None = None,
-        x_axis: str = "z_abs",
+        x_axis: GETTABLE_SIMULATION_OUTPUT_T = "z_abs",
     ) -> None:
         """Add a plot to show the structure of the linac."""
         if elts is None:
@@ -142,45 +139,3 @@ class IPlotter(ABC):
     @abstractmethod
     def save_figure(self, axes: Any, save_path: Path) -> None:
         """Save the created figure."""
-
-    @final
-    def plot_limits(
-        self,
-        data: Any,
-        axes: Any,
-        constant_limits: bool,
-        color: str = "red",
-        ls: str = "dashed",
-        **kwargs: Any,
-    ) -> Any:
-        """Represent acceptable lower and upper limits."""
-        if constant_limits:
-            return self.plot_constants(
-                axes, data, color=color, ls=ls, **kwargs
-            )
-        return self.plot(data, axes, color=color, ls=ls, **kwargs)
-
-    @final
-    def plot_constants(
-        self,
-        axes: Any,
-        constants: Iterable[float] | float,
-        color: str = "red",
-        ls: str = "dashed",
-        **kwargs,
-    ) -> Any:
-        """Add one or several constants to a plot."""
-        if isinstance(constants, float | int):
-            constants = (constants,)
-
-        for constant in constants:
-            axes = self._actual_constant_plot(
-                axes, constant, color, ls, **kwargs
-            )
-        return axes
-
-    @abstractmethod
-    def _actual_constant_plot(
-        self, axes: Any, constant: float, color: str, ls: str, **kwargs
-    ) -> Any:
-        """Add one constant to a plot."""

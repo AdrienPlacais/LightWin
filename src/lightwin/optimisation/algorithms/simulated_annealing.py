@@ -56,7 +56,7 @@ class SimulatedAnnealing(OptimisationAlgorithm):
             "fun": result.fun,
             "objectives": self._get_objective_values(result.x),
             "success": result.success,
-            "info": ["SimulatedAnnealing", result.message],
+            "info": result.message.insert(0, "SimulatedAnnealing:"),
         }
         return opti_sol
 
