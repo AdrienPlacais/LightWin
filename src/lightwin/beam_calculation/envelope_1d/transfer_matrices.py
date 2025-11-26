@@ -169,7 +169,9 @@ def z_field_map_rk4(
 
         z_rel += d_z
 
-    gamma_phi = np.array(np.column_stack((gamma[1:], phi[1:])))
+    gamma_phi = np.empty((n_steps, 2))
+    gamma_phi[:, 0] = gamma[1:]
+    gamma_phi[:, 1] = phi[1:]
     return r_zz, gamma_phi, itg_field
 
 
