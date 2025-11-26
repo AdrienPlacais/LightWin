@@ -25,7 +25,7 @@ from typing import Callable
 import numpy as np
 from numpy.typing import NDArray
 
-from lightwin.beam_calculation.integrators.rk4 import rk4
+from lightwin.beam_calculation.integrators.rk4 import rk4_2d
 from lightwin.constants import c
 from lightwin.core.em_fields.types import (
     FieldFuncComplexTimedComponent,
@@ -133,50 +133,35 @@ def z_field_map_rk4(
     delta_gamma_norm = q_adim * d_z * inv_e_rest_mev
 
     r_zz = np.empty((n_steps, 2, 2))
-    gamma_phi = np.empty((n_steps + 1, 2))
-    gamma_phi[0, 0] = gamma_in
-    gamma_phi[0, 1] = 0.0
+    gamma = np.empty(n_steps + 1)
+    gamma[0] = gamma_in
+    phi = np.empty(n_steps + 1)
+    phi[0] = 0.0
 
-    # du_out = np.empty(2, dtype=float)
-
-    def du(z: float, u: NDArray[np.float64]) -> NDArray[np.float64]:
-        r"""Compute variation of energy and phase.
-
-        Parameters
-        ----------
-        z :
-            Position where variation is calculated.
-        u :
-            First component is gamma. Second is phase in rad.
-
-        Return
-        ------
-            First component is :math:`\Delta \gamma / \Delta z` in
-            :unit:`MeV / m`.
-            Second is :math:`\Delta \phi / \Delta z` in
-            :unit:`rad / m`.
-
-        """
-        beta = math.sqrt(1.0 - u[0] ** -2)
-        v0 = delta_gamma_norm * real_e_func(z, u[1])
+    def du_scalar(z: float, gamma: float, phi: float) -> tuple[float, float]:
+        beta = math.sqrt(1.0 - gamma**-2)
+        v0 = delta_gamma_norm * real_e_func(z, phi)
         v1 = delta_phi_norm / beta
-        return np.array([v0, v1])
+        return v0, v1
 
     for i in range(n_steps):
-        delta_gamma_phi = rk4(u=gamma_phi[i], du=du, x=z_rel, dx=d_z)
-        gamma_phi[i + 1] = gamma_phi[i] + delta_gamma_phi
+        delta_gamma, delta_phi = rk4_2d(
+            gamma[i], phi[i], delta=du_scalar, x=z_rel, dx=d_z
+        )
+        gamma[i + 1] = gamma[i] + delta_gamma
+        phi[i + 1] = phi[i] + delta_phi
+        itg_field += complex_e_func(z_rel, phi[i]) * d_z
 
-        itg_field += complex_e_func(z_rel, gamma_phi[i, 1]) * d_z
-
-        gamma_phi_middle = gamma_phi[i] + 0.5 * delta_gamma_phi
+        gamma_middle = gamma[i] + 0.5 * delta_gamma
+        phi_middle = phi[i] + 0.5 * delta_phi
         scaled_e_middle = delta_gamma_norm * complex_e_func(
-            z_rel + half_dz, gamma_phi_middle[1]
+            z_rel + half_dz, phi_middle
         )
         r_zz[i, :, :] = z_thin_lense(
             scaled_e_middle,
-            gamma_phi[i, 0],
-            gamma_phi[i + 1, 0],
-            gamma_phi_middle[0],
+            gamma[i],
+            gamma[i + 1],
+            gamma_middle,
             half_dz,
             omega0_rf,
             omega_0_bunch=omega_0_bunch,
@@ -184,7 +169,8 @@ def z_field_map_rk4(
 
         z_rel += d_z
 
-    return r_zz, gamma_phi[1:, :], itg_field
+    gamma_phi = np.array(np.column_stack((gamma[1:], phi[1:])))
+    return r_zz, gamma_phi, itg_field
 
 
 def z_superposed_field_maps_rk4(
@@ -252,8 +238,7 @@ def z_field_map_leapfrog(
 
 
 def _drift_matrix(gamma: float, half_dz: float) -> NDArray[np.float64]:
-    inv2 = 1.0 / (gamma * gamma)
-    return np.array([[1.0, half_dz * inv2], [0.0, 1.0]], dtype=np.float64)
+    return np.array([[1.0, half_dz * gamma**-2], [0.0, 1.0]], dtype=np.float64)
 
 
 def z_thin_lense(

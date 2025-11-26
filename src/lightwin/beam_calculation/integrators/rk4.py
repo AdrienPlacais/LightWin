@@ -3,14 +3,15 @@
 from collections.abc import Callable
 
 import numpy as np
+from numpy.typing import NDArray
 
 
 def rk4(
-    u: np.ndarray,
-    du: Callable[[float, np.ndarray], np.ndarray],
+    u: NDArray[np.float64],
+    du: Callable[[float, NDArray[np.float64]], NDArray[np.float64]],
     x: float,
     dx: float,
-) -> np.ndarray:
+) -> NDArray[np.float64]:
     """Compute variation of ``u`` between ``x`` and ``x+dx``.
 
     Use 4-th order Runge-Kutta method.
@@ -41,5 +42,23 @@ def rk4(
     k_2 = du(x + half_dx, u + 0.5 * k_1)
     k_3 = du(x + half_dx, u + 0.5 * k_2)
     k_4 = du(x + dx, u + k_3)
-    delta_u = (k_1 + 2.0 * k_2 + 2.0 * k_3 + k_4) / 6.0
-    return delta_u
+    return (k_1 + 2.0 * k_2 + 2.0 * k_3 + k_4) / 6.0
+
+
+def rk4_2d(
+    u: float,
+    v: float,
+    delta: Callable[[float, float, float], tuple[float, float]],
+    x: float,
+    dx: float,
+) -> tuple[float, float]:
+
+    half_dx = 0.5 * dx
+    k_1u, k_1v = delta(x, u, v)
+    k_2u, k_2v = delta(x + half_dx, u + 0.5 * k_1u, v + 0.5 * k_1v)
+    k_3u, k_3v = delta(x + half_dx, u + 0.5 * k_2u, v + 0.5 * k_2v)
+    k_4u, k_4v = delta(x + dx, u + k_3u, v + k_3v)
+    return (
+        (k_1u + 2 * k_2u + 2 * k_3u + k_4u) / 6.0,
+        (k_1v + 2 * k_2v + 2 * k_3v + k_4v) / 6.0,
+    )
