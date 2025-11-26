@@ -2,9 +2,13 @@ name: 🚀🏷️ Release tagged versions
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Fake release for testing"
+        required: false
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   build_wheels:
@@ -13,12 +17,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["cp312", "cp313"]
+        python: ["cp312", "cp313", "cp14"]
         # This is taken from numpy's wheel.yml
         # See also: https://github.com/github/feedback/discussions/7835#discussioncomment-1769026
         buildplat:
           # MacOS
-          - [macos-13, macosx_x86_64]
           - [macos-latest, macosx_arm64]
           # Ubuntu
           ### 32 bits
@@ -51,7 +54,7 @@ jobs:
       - name: 🐍 Setup Python ${{ matrix.python }} on ${{ matrix.buildplat[0] }}
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
       - name: 🛠️ Install system dependencies for Pillow (Linux only)
         if: runner.os == 'Linux'
@@ -78,19 +81,19 @@ jobs:
     name: 📁 Make SDist
     runs-on: ubuntu-latest
     steps:
-    - name: 🔍 Checkout current repo
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: 🔍 Checkout current repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: 🔧 Build SDist
-      run: pipx run build --sdist
+      - name: 🔧 Build SDist
+        run: pipx run build --sdist
 
-    - name: 📤 Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: cibw-sdist
-        path: dist/*.tar.gz
+      - name: 📤 Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cibw-sdist
+          path: dist/*.tar.gz
 
   release_wheels_and_sdist:
     name: 🚀 Release wheel and SDist
@@ -101,14 +104,14 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     steps:
-    - name: 📥 Download artifacts
-      uses: actions/download-artifact@v4
-      with:
-        pattern: cibw-*
-        path: dist
-        merge-multiple: true
+      - name: 📥 Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: cibw-*
+          path: dist
+          merge-multiple: true
 
-    - name: 🚀 Release on PyPi
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        verbose: true
+      - name: 🚀 Release on PyPi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
