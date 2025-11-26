@@ -1,6 +1,7 @@
 name: 🚀🏷️ Release tagged versions
 
 on:
+  # Can be used to manually run gh action from github interface
   workflow_dispatch:
     inputs:
       version:
@@ -17,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["cp312", "cp313", "cp14"]
+        python: ["cp312", "cp313", "cp314"]
         # This is taken from numpy's wheel.yml
         # See also: https://github.com/github/feedback/discussions/7835#discussioncomment-1769026
         buildplat:
