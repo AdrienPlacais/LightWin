@@ -7,12 +7,12 @@ on.
 
 import math
 from collections.abc import Callable
-from functools import partial
 from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 
-from lightwin.core.em_fields.types import FieldFuncComponent1D
+from lightwin.core.em_fields.types import FieldFuncComponent1D, Pos1D
 
 
 def null_field_1d(pos: Any) -> float:
@@ -21,30 +21,17 @@ def null_field_1d(pos: Any) -> float:
 
 
 def create_1d_field_func(
-    field_values: np.ndarray, corresponding_positions: np.ndarray
+    field_values: NDArray[np.float64],
+    corresponding_positions: NDArray[np.float64],
 ) -> Callable[[float], float]:
     """Create the function to get spatial component of electric field."""
-    func = partial(
-        _evaluate_1d_field,
-        field_values=field_values,
-        corresponding_positions=corresponding_positions,
-    )
-    return func
+    xp = np.asarray(corresponding_positions, dtype=float)
+    fp = np.asarray(field_values, dtype=float)
 
+    def field_func(pos: Pos1D) -> float:
+        return float(np.interp(x=pos, xp=xp, fp=fp, left=0.0, right=0.0))
 
-def _evaluate_1d_field(
-    pos: float, field_values: np.ndarray, corresponding_positions: np.ndarray
-) -> float:
-    """Interpolate an electric/magnetic 1D field file."""
-    return float(
-        np.interp(
-            x=pos,
-            xp=corresponding_positions,
-            fp=field_values,
-            left=0.0,
-            right=0.0,
-        )
-    )
+    return field_func
 
 
 def normalized_e_1d(

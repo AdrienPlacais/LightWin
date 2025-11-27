@@ -195,8 +195,11 @@ class Field(ABC):
         self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
         phase = phi + phi_0_rel
-        field_value = amplitude * self._e_z_spat_rf(pos) * math.cos(phase)
-        return field_value * (1.0 + 1j * math.tan(phase))
+        return (
+            amplitude
+            * self._e_z_spat_rf(pos)
+            * (math.cos(phase) + 1j * math.sin(phase))
+        )
 
     def _e_z_real(
         self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
