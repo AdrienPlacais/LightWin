@@ -7,8 +7,6 @@ implemented for now.
 
 from pathlib import Path
 
-import numpy as np
-
 from lightwin.core.em_fields.field import Field
 from lightwin.core.em_fields.field_helpers import (
     create_1d_field_func,
@@ -63,8 +61,7 @@ class Field100(Field):
         ), f"Error loading {path}'s field map."
 
         f_z = rescale_array(f_z, norm)
-        z_positions = np.linspace(0.0, zmax, n_z + 1, dtype=np.float64)
-        e_z = create_1d_field_func(f_z, z_positions)
+        e_z = create_1d_field_func(f_z, zmax, n_z)
         return e_z, (n_z,), n_cell
 
     def shift(self) -> None:

@@ -7,8 +7,6 @@ implemented for now.
 
 from pathlib import Path
 
-import numpy as np
-
 from lightwin.core.em_fields.field100 import Field100
 from lightwin.core.em_fields.field_helpers import (
     create_1d_field_func,
@@ -65,6 +63,5 @@ class Field7700(Field100):
         field_values = rescale_array(field_values, norm)
         on_axis = field_values_on_axis(field_values, n_x, n_y)
         n_cell = get_number_of_cells(on_axis)
-        z_positions = np.linspace(0.0, zmax, n_z + 1, dtype=np.float64)
-        e_z = create_1d_field_func(on_axis, z_positions)
+        e_z = create_1d_field_func(on_axis, zmax, n_z)
         return e_z, (n_z,), n_cell

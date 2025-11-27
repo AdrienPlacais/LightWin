@@ -1,7 +1,7 @@
 """Define functions to compute 1D longitudinal electric fields."""
 
 import math
-from typing import Any
+from typing import Any, Callable
 
 import numpy as np
 from numpy.typing import NDArray
@@ -16,18 +16,22 @@ def null_field_1d(pos: Any) -> float:
 
 def create_1d_field_func(
     field_values: NDArray[np.float64],
-    corresponding_positions: NDArray[np.float64],
+    pos_max: float,
+    n_intervals: int,
+    pos_min: float = 0.0,
 ) -> FieldFuncComponent1D:
-    """Create the function to get spatial component of electric field."""
     field_values = np.asarray(field_values, dtype=float)
-    corresponding_positions = np.asarray(corresponding_positions, dtype=float)
 
-    def interp_func(pos: Pos1D) -> float:
-        return float(
-            np.interp(
-                pos, corresponding_positions, field_values, left=0.0, right=0.0
-            )
-        )
+    total_length = pos_max - pos_min
+    inv_dx = n_intervals / total_length
+
+    def interp_func(pos: float) -> float:
+        idx_float = (pos - pos_min) * inv_dx
+        idx = int(idx_float)
+        if idx < 0 or idx >= n_intervals:
+            return 0.0
+        t = idx_float - idx
+        return field_values[idx] * (1.0 - t) + field_values[idx + 1] * t
 
     return interp_func
 
