@@ -154,7 +154,7 @@ class Field(ABC):
             Number of interpolation points in the various directions (tuple of
             1, 2 or 3 integers).
         n_cell :
-            Number of cells (makes sense only for .edz as for now).
+            Number of cells (makes sense only for ``EDZ`` as for now).
 
         """
         ...

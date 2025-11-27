@@ -6,7 +6,7 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
-from lightwin.core.em_fields.types import FieldFuncComponent1D
+from lightwin.core.em_fields.types import FieldFuncComponent1D, Pos1D
 
 
 def null_field_1d(pos: Any) -> float:
@@ -22,7 +22,7 @@ def create_1d_field_func(
     field_values = np.asarray(field_values, dtype=float)
     corresponding_positions = np.asarray(corresponding_positions, dtype=float)
 
-    def interp_func(pos: float) -> float:
+    def interp_func(pos: Pos1D) -> float:
         return float(
             np.interp(
                 pos, corresponding_positions, field_values, left=0.0, right=0.0
@@ -32,41 +32,27 @@ def create_1d_field_func(
     return interp_func
 
 
-def normalized_e_1d(
-    pos: float, e_func: FieldFuncComponent1D, phi: float, phi_0: float
-) -> float:
-    """Compute electric field, normalized."""
-    return e_func(pos) * math.cos(phi + phi_0)
-
-
-def normalized_e_1d_complex(
-    pos: float, e_func: FieldFuncComponent1D, phi: float, phi_0: float
-) -> complex:
-    """Compute electric field, normalized."""
-    phase = phi + phi_0
-    return e_func(pos) * (math.cos(phase) + 1j * math.sin(phase))
-
-
 def e_1d(
-    pos: float,
+    pos: Pos1D,
     e_func: FieldFuncComponent1D,
     phi: float,
     amplitude: float,
     phi_0: float,
 ) -> float:
     """Compute normed 1D electric field."""
-    return amplitude * normalized_e_1d(pos, e_func, phi, phi_0)
+    return amplitude * e_func(pos) * math.cos(phi + phi_0)
 
 
 def e_1d_complex(
-    pos: float,
+    pos: Pos1D,
     e_func: FieldFuncComponent1D,
     phi: float,
     amplitude: float,
     phi_0: float,
 ) -> complex:
     """Compute normed 1D electric field."""
-    return amplitude * normalized_e_1d_complex(pos, e_func, phi, phi_0)
+    phase = phi + phi_0
+    return amplitude * e_func(pos) * (math.cos(phase) + 1j * math.sin(phase))
 
 
 def shifted_e_spat(
