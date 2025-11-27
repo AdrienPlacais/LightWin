@@ -47,7 +47,8 @@ def normalized_e_1d_complex(
     pos: float, e_func: FieldFuncComponent1D, phi: float, phi_0: float
 ) -> complex:
     """Compute electric field, normalized."""
-    return e_func(pos) * (math.cos(phi + phi_0) + 1j * math.sin(phi + phi_0))
+    phase = phi + phi_0
+    return e_func(pos) * (math.cos(phase) + 1j * math.sin(phase))
 
 
 def e_1d(
