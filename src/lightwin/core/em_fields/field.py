@@ -17,7 +17,6 @@ See Also
 """
 
 import logging
-import math
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Collection
 from pathlib import Path
@@ -25,14 +24,8 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-from numpy.typing import NDArray
 
 from lightwin.core.em_fields.field_helpers import null_field_1d
-from lightwin.core.em_fields.types import (
-    FieldFuncComplexTimedComponent,
-    FieldFuncTimedComponent,
-    PosAnyDim,
-)
 
 EXTENSION_TO_COMPONENT = {
     ".edx": "_e_x_spat_rf",
@@ -167,97 +160,26 @@ class Field(ABC):
             "the ``pos`` vector."
         )
 
-    def _e_x_complex(
-        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        phase = phi + phi_0_rel
-        field_value = amplitude * self._e_x_spat_rf(pos) * math.cos(phase)
-        return field_value * (1.0 + 1j * math.tan(phase))
-
-    def _e_x_real(
-        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
-        return amplitude * self._e_x_spat_rf(pos) * math.cos(phi + phi_0_rel)
-
-    def _e_y_complex(
-        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        phase = phi + phi_0_rel
-        field_value = amplitude * self._e_y_spat_rf(pos) * math.cos(phase)
-        return field_value * (1.0 + 1j * math.tan(phase))
-
-    def _e_y_real(
-        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
-        return amplitude * self._e_y_spat_rf(pos) * math.cos(phi + phi_0_rel)
-
-    def _e_z_complex(
-        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        phase = phi + phi_0_rel
-        return (
-            amplitude
-            * self._e_z_spat_rf(pos)
-            * (math.cos(phase) + 1j * math.sin(phase))
-        )
-
-    def _e_z_real(
-        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
-        return amplitude * self._e_z_spat_rf(pos) * math.cos(phi + phi_0_rel)
-
-    def _b_x_complex(
-        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        phase = phi + phi_0_rel
-        field_value = amplitude * self._b_x_spat_rf(pos) * math.cos(phase)
-        return field_value * (1.0 + 1j * math.tan(phase))
-
-    def _b_x_real(
-        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
-        return amplitude * self._b_x_spat_rf(pos) * math.cos(phi + phi_0_rel)
-
-    def _b_y_complex(
-        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        phase = phi + phi_0_rel
-        field_value = amplitude * self._b_y_spat_rf(pos) * math.cos(phase)
-        return field_value * (1.0 + 1j * math.tan(phase))
-
-    def _b_y_real(
-        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
-        return amplitude * self._b_y_spat_rf(pos) * math.cos(phi + phi_0_rel)
-
-    def _b_z_complex(
-        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        phase = phi + phi_0_rel
-        field_value = amplitude * self._b_z_spat_rf(pos) * math.cos(phase)
-        return field_value * (1.0 + 1j * math.tan(phase))
-
-    def _b_z_real(
-        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
-    ) -> float:
-        return amplitude * self._b_z_spat_rf(pos) * math.cos(phi + phi_0_rel)
-
     def e_z_functions(
         self, amplitude: float, phi_0_rel: float
-    ) -> tuple[FieldFuncComplexTimedComponent, FieldFuncTimedComponent]:
-        """Generate a function for longitudinal transfer matrix calculation."""
+    ) -> tuple[Callable, Callable]:
+        """Generate functions for longitudinal transfer matrix calculation.
 
-        def compl(pos: PosAnyDim, phi: float) -> complex:
-            return self._e_z_complex(
-                pos, phi=phi, amplitude=amplitude, phi_0_rel=phi_0_rel
-            )
+        Returns
+        -------
+        Callable
+            Function taking in 1D/2D/3D position and phase and returning
+            corresponding z electric field (complex). Typically, a :class:
+            `.FieldFuncComplexTimedComponent`.
+        Callable
+            Function taking in 1D/2D/3D position and phase and returning
+            corresponding z electric field (real). Typically, a :class:
+            `.FieldFuncTimedComponent`.
 
-        def rea(pos: PosAnyDim, phi: float) -> float:
-            return self._e_z_real(
-                pos, phi=phi, amplitude=amplitude, phi_0_rel=phi_0_rel
-            )
-
-        return compl, rea
+        """
+        raise NotImplementedError(
+            "This method needs to be subclassed if used."
+        )
 
     def _patch_to_keep_consistency(self, n_interp: Any, n_cell: int) -> None:
         """Save ``n_cell`` and ``n_z``. Temporary solution."""
@@ -275,12 +197,3 @@ class Field(ABC):
         field_values = [field_func(pos, 0.0) for pos in positions]
         df = pd.DataFrame({"pos": positions, "field": field_values})
         df.plot(x="pos", grid=True)
-
-
-def rescale_array(
-    array: NDArray[np.float64], norm: float, tol: float = 1e-6
-) -> NDArray[np.float64]:
-    """Rescale given array if ``norm`` is different from unity."""
-    if abs(norm - 1.0) > tol:
-        array /= norm
-    return array

@@ -26,33 +26,3 @@ class Field70(Field):
     ) -> tuple[Callable[..., float], Any, int]:
         """Return dummy fields."""
         return null_field_1d, 60, 1
-
-    def b_x(
-        self,
-        pos: tuple[float, float, float],
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-    ) -> float:
-        """Give magnetic field value."""
-        return amplitude * self._b_x_dc(pos)
-
-    def b_y(
-        self,
-        pos: tuple[float, float, float],
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-    ) -> float:
-        """Give magnetic field value."""
-        return amplitude * self._b_y_dc(pos)
-
-    def b_z(
-        self,
-        pos: tuple[float, float, float],
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-    ) -> float:
-        """Give magnetic field value."""
-        return amplitude * self._b_z_dc(pos)

@@ -20,7 +20,14 @@ FieldFuncComponent1D = Callable[[Pos1D], float]
 #: Takes in a position and a phase, returns the field component at this phase
 #: and position.
 FieldFuncTimedComponent = Callable[[PosAnyDim, float], float]
+#: Takes in a 1D position and a phase, returns the field component at this
+#: phase and position.
+FieldFuncTimedComponent1D = Callable[[Pos1D, float], float]
 #: Takes in a position and a phase, returns the complex field component at this
 #: phase and position.
 FieldFuncComplexTimedComponent = Callable[[PosAnyDim, float], complex]
+#: Takes in a 1D position and a phase, returns the complex field component at
+#: this phase and position.
+FieldFuncComplexTimedComponent1D = Callable[[Pos1D, float], complex]
+
 FieldFuncPhisFit = Callable[[PosAnyDim, float, float], complex]

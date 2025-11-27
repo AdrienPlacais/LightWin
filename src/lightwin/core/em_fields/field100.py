@@ -9,12 +9,20 @@ from pathlib import Path
 
 import numpy as np
 
-from lightwin.core.em_fields.field import Field, rescale_array
+from lightwin.core.em_fields.field import Field
 from lightwin.core.em_fields.field_helpers import (
     create_1d_field_func,
+    e_1d,
+    e_1d_complex,
+    rescale_array,
     shifted_e_spat,
 )
-from lightwin.core.em_fields.types import FieldFuncComponent1D
+from lightwin.core.em_fields.types import (
+    FieldFuncComplexTimedComponent1D,
+    FieldFuncComponent1D,
+    FieldFuncTimedComponent1D,
+    Pos1D,
+)
 from lightwin.tracewin_utils.field_map_loaders import (
     is_a_valid_1d_electric_field,
     load_field_1d,
@@ -72,3 +80,28 @@ class Field100(Field):
         ), "You need to set the starting_position attribute of the Field."
         shifted = shifted_e_spat(self._e_z_spat_rf, z_shift=self.z_0)
         self._e_z_spat_rf = shifted
+
+    def e_z_functions(
+        self, amplitude: float, phi_0_rel: float
+    ) -> tuple[FieldFuncComplexTimedComponent1D, FieldFuncTimedComponent1D]:
+        """Generate a function for longitudinal transfer matrix calculation."""
+
+        def compl(pos: Pos1D, phi: float) -> complex:
+            return e_1d_complex(
+                pos=pos,
+                e_func=self._e_z_spat_rf,
+                phi=phi,
+                amplitude=amplitude,
+                phi_0=phi_0_rel,
+            )
+
+        def rea(pos: Pos1D, phi: float) -> float:
+            return e_1d(
+                pos=pos,
+                e_func=self._e_z_spat_rf,
+                phi=phi,
+                amplitude=amplitude,
+                phi_0=phi_0_rel,
+            )
+
+        return compl, rea

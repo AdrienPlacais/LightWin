@@ -64,3 +64,12 @@ def shifted_e_spat(
         return e_spat(z_pos - z_shift)
 
     return shifted
+
+
+def rescale_array(
+    array: NDArray[np.float64], norm: float, tol: float = 1e-6
+) -> NDArray[np.float64]:
+    """Rescale given array if ``norm`` is different from unity."""
+    if abs(norm - 1.0) > tol:
+        array /= norm
+    return array
