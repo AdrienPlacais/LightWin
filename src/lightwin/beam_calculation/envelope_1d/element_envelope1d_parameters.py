@@ -11,7 +11,6 @@ The :class:`.Element` objects with a transfer matrix are ``DRIFT``,
 
 """
 
-import logging
 import math
 from typing import Any, Callable, Literal
 

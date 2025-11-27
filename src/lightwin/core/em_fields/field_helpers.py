@@ -5,10 +5,10 @@ This will eventually replace :file:`core/em_fields/helper.py`
 """
 
 import math
-from functools import partial
 from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.core.em_fields.types import FieldFuncComponent1D
 
@@ -19,30 +19,21 @@ def null_field_1d(pos: Any) -> float:
 
 
 def create_1d_field_func(
-    field_values: np.ndarray, corresponding_positions: np.ndarray
+    field_values: NDArray[np.float64],
+    corresponding_positions: NDArray[np.float64],
 ) -> FieldFuncComponent1D:
     """Create the function to get spatial component of electric field."""
-    func = partial(
-        _evaluate_1d_field,
-        field_values=field_values,
-        corresponding_positions=corresponding_positions,
-    )
-    return func
+    field_values = np.asarray(field_values, dtype=float)
+    corresponding_positions = np.asarray(corresponding_positions, dtype=float)
 
-
-def _evaluate_1d_field(
-    pos: float, field_values: np.ndarray, corresponding_positions: np.ndarray
-) -> float:
-    """Interpolate an electric/magnetic 1D field file."""
-    return float(
-        np.interp(
-            x=pos,
-            xp=corresponding_positions,
-            fp=field_values,
-            left=0.0,
-            right=0.0,
+    def interp_func(pos: float) -> float:
+        return float(
+            np.interp(
+                pos, corresponding_positions, field_values, left=0.0, right=0.0
+            )
         )
-    )
+
+    return interp_func
 
 
 def normalized_e_1d(
@@ -85,4 +76,8 @@ def shifted_e_spat(
     e_spat: FieldFuncComponent1D, z_shift: float
 ) -> FieldFuncComponent1D:
     """Shift electric field by ``z_shift``."""
-    return lambda z_pos: e_spat(z_pos - z_shift)
+
+    def shifted(z_pos: float) -> float:
+        return e_spat(z_pos - z_shift)
+
+    return shifted
