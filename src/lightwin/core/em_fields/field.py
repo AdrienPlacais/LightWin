@@ -25,11 +25,11 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+from numpy.typing import NDArray
 
 from lightwin.core.em_fields.field_helpers import null_field_1d
 from lightwin.core.em_fields.types import (
     FieldFuncComplexTimedComponent,
-    FieldFuncComponent,
     FieldFuncTimedComponent,
     PosAnyDim,
 )
@@ -275,3 +275,12 @@ class Field(ABC):
         field_values = [field_func(pos, 0.0) for pos in positions]
         df = pd.DataFrame({"pos": positions, "field": field_values})
         df.plot(x="pos", grid=True)
+
+
+def rescale_array(
+    array: NDArray[np.float64], norm: float, tol: float = 1e-6
+) -> NDArray[np.float64]:
+    """Rescale given array if ``norm`` is different from unity."""
+    if abs(norm - 1.0) > tol:
+        array /= norm
+    return array

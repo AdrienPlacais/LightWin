@@ -1,8 +1,4 @@
-"""Define functions to compute 1D longitudinal electric fields.
-
-This will eventually replace :file:`core/em_fields/helper.py`
-
-"""
+"""Define functions to compute 1D longitudinal electric fields."""
 
 import math
 from typing import Any

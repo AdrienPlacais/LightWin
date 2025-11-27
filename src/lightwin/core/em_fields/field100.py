@@ -9,13 +9,12 @@ from pathlib import Path
 
 import numpy as np
 
-from lightwin.core.em_fields.field import Field
+from lightwin.core.em_fields.field import Field, rescale_array
 from lightwin.core.em_fields.field_helpers import (
     create_1d_field_func,
     shifted_e_spat,
 )
 from lightwin.core.em_fields.types import FieldFuncComponent1D
-from lightwin.tracewin_utils.electromagnetic_fields import rescale
 from lightwin.tracewin_utils.field_map_loaders import (
     is_a_valid_1d_electric_field,
     load_field_1d,
@@ -55,7 +54,7 @@ class Field100(Field):
             n_z, zmax, f_z, self._length_m
         ), f"Error loading {path}'s field map."
 
-        f_z = rescale(f_z, norm)
+        f_z = rescale_array(f_z, norm)
         z_positions = np.linspace(0.0, zmax, n_z + 1, dtype=np.float64)
         e_z = create_1d_field_func(f_z, z_positions)
         return e_z, (n_z,), n_cell
