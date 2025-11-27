@@ -5,7 +5,6 @@ implemented for now.
 
 """
 
-from collections.abc import Callable
 from pathlib import Path
 
 import numpy as np
@@ -15,7 +14,7 @@ from lightwin.core.em_fields.field_helpers import (
     create_1d_field_func,
     shifted_e_spat,
 )
-from lightwin.core.em_fields.types import Pos1D
+from lightwin.core.em_fields.types import FieldFuncComponent1D
 from lightwin.tracewin_utils.electromagnetic_fields import rescale
 from lightwin.tracewin_utils.field_map_loaders import (
     is_a_valid_1d_electric_field,
@@ -31,7 +30,7 @@ class Field100(Field):
 
     def _load_fieldmap(
         self, path: Path, **validity_check_kwargs
-    ) -> tuple[Callable[[Pos1D], float], tuple[int], int]:
+    ) -> tuple[FieldFuncComponent1D, tuple[int], int]:
         r"""Load a 1D field (``EDZ`` extension).
 
         Parameters
@@ -57,7 +56,7 @@ class Field100(Field):
         ), f"Error loading {path}'s field map."
 
         f_z = rescale(f_z, norm)
-        z_positions = np.linspace(0.0, zmax, n_z + 1)
+        z_positions = np.linspace(0.0, zmax, n_z + 1, dtype=np.float64)
         e_z = create_1d_field_func(f_z, z_positions)
         return e_z, (n_z,), n_cell
 

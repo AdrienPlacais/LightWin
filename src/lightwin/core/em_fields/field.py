@@ -16,7 +16,6 @@ See Also
 
 """
 
-import functools
 import logging
 import math
 from abc import ABC, abstractmethod
@@ -31,6 +30,7 @@ from lightwin.core.em_fields.field_helpers import null_field_1d
 from lightwin.core.em_fields.types import (
     FieldFuncComplexTimedComponent,
     FieldFuncTimedComponent,
+    PosAnyDim,
 )
 
 EXTENSION_TO_COMPONENT = {
@@ -292,18 +292,25 @@ class Field(ABC):
         self, amplitude: float, phi_0_rel: float
     ) -> tuple[FieldFuncComplexTimedComponent, FieldFuncTimedComponent]:
         """Generate a function for longitudinal transfer matrix calculation."""
-        compl = functools.partial(
-            self.e_z,
-            amplitude=amplitude,
-            phi_0_rel=phi_0_rel,
-            complex_output=True,
-        )
-        rea = functools.partial(
-            self.e_z,
-            amplitude=amplitude,
-            phi_0_rel=phi_0_rel,
-            complex_output=False,
-        )
+
+        def compl(pos: PosAnyDim, phi: float) -> complex:
+            return self.e_z(
+                pos,
+                phi=phi,
+                amplitude=amplitude,
+                phi_0_rel=phi_0_rel,
+                complex_output=True,
+            )
+
+        def rea(pos: PosAnyDim, phi: float) -> float:
+            return self.e_z(
+                pos,
+                phi=phi,
+                amplitude=amplitude,
+                phi_0_rel=phi_0_rel,
+                complex_output=False,
+            )
+
         return compl, rea
 
     def _patch_to_keep_consistency(self, n_interp: Any, n_cell: int) -> None:
