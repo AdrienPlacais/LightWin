@@ -103,7 +103,7 @@ class ListOfSimulationOutputEvaluators(list):
     ) -> list[str]:
         """Set the indexes of the pandas dataframe."""
         index = [
-            str(simulation_output.beam_calculator_information)
+            simulation_output.beam_calculator
             for simulation_output in simulation_outputs
         ]
         return index

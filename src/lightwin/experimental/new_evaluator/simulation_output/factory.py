@@ -12,6 +12,7 @@ from typing import Any
 
 import pandas as pd
 
+import lightwin.util.pandas_helper as pandas_helper
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
@@ -23,8 +24,7 @@ from lightwin.experimental.new_evaluator.simulation_output.presets import (
     SIMULATION_OUTPUT_EVALUATORS,
 )
 from lightwin.experimental.plotter.i_plotter import IPlotter
-from lightwin.experimental.plotter.pd_plotter import PandasPlotter
-from lightwin.util import pandas_helper
+from lightwin.experimental.plotter.matplotlib_plotter import MatplotlibPlotter
 from lightwin.util.helper import get_constructors
 
 
@@ -35,7 +35,7 @@ class SimulationOutputEvaluatorsFactory:
         self,
         evaluator_kwargs: Collection[dict[str, str | float | bool]],
         user_evaluators: dict[str, type] | None = None,
-        plotter: IPlotter = PandasPlotter(),
+        plotter: IPlotter | None = None,
     ) -> None:
         """Instantiate object with basic attributes.
 
@@ -43,17 +43,16 @@ class SimulationOutputEvaluatorsFactory:
         ----------
         evaluator_kwargs :
             Dictionaries holding necessary information to instantiate the
-            evaluators. The only mandatory key-value pair is "name" of type
-            str.
+            evaluators. The only mandatory key-value pair is ``"name"`` of type
+            ``str``.
         user_evaluators :
             Additional user-defined evaluators; keys should be in PascalCase,
             values :class:`.ISimulationOutputEvaluator` constructors.
         plotter :
-            An object used to produce plots. The default is
-            :class:`.PandasPlotter`.
+            An object used to produce plots.
 
         """
-        self._plotter = plotter
+        self._plotter = plotter if plotter else MatplotlibPlotter()
         self._constructors_n_kwargs = _constructors_n_kwargs(
             evaluator_kwargs, user_evaluators
         )
@@ -61,77 +60,105 @@ class SimulationOutputEvaluatorsFactory:
     def run(
         self,
         accelerators: Sequence[Accelerator],
-        beam_solver_id: str,
+        solvers_ids: str | Sequence[str],
     ) -> list[ISimulationOutputEvaluator]:
-        """Instantiate all the evaluators."""
-        reference = accelerators[0].simulation_outputs[beam_solver_id]
-        evaluators = self._instantiate_evaluators(reference)
-        return evaluators
-
-    def _instantiate_evaluators(
-        self, reference: SimulationOutput
-    ) -> list[ISimulationOutputEvaluator]:
-        """Create all the evaluators.
+        """Instantiate all the evaluators.
 
         Parameters
         ----------
-        reference :
-            The reference simulation output.
-
-        Returns
-        -------
-            All the created evaluators.
+        accelerators :
+            Objects holding all the different :class:`.SimulationOutput`.
+        solver_ids :
+            Name of the reference solver(s). If several are provided, we use
+            the first one by default; we use the following if necessary data
+            was not available.
 
         """
-        evaluators = [
-            constructor(reference=reference, plotter=self._plotter, **kwargs)
-            for constructor, kwargs in self._constructors_n_kwargs.items()
-        ]
+        if isinstance(solvers_ids, str):
+            solvers_ids = (solvers_ids,)
+
+        evaluators: list[ISimulationOutputEvaluator] = []
+
+        for i, (constructor, kwargs) in enumerate(
+            self._constructors_n_kwargs.items()
+        ):
+            for id in solvers_ids:
+                evaluator = constructor(
+                    reference=accelerators[0].simulation_outputs[id],
+                    fignum=100 + i,
+                    plotter=self._plotter,
+                    **kwargs,
+                )
+                if evaluator.data_is_gettable():
+                    evaluators.append(evaluator)
+                    break
+            else:
+                logging.warning(
+                    f"None of the provided beam calculators ({solvers_ids}) "
+                    f"calculates the data necesary for {constructor.__name__},"
+                    " so it was skipped."
+                )
         return evaluators
 
     def batch_evaluate(
         self,
         evaluators: Collection[ISimulationOutputEvaluator],
         accelerators: Sequence[Accelerator],
-        beam_solver_id: str,
-        plot_kwargs: dict[str, Any] | None = None,
         csv_kwargs: dict[str, Any] | None = None,
+        get_overrides: dict[str, Any] | None = None,
         **kwargs,
     ) -> pd.DataFrame:
-        """Evaluate several evaluators."""
+        """Evaluate several evaluators.
+
+        Parameters
+        ----------
+        evaluators :
+            Evaluations to realize.
+        accelerators :
+            Objects holding all the :class:`.SimulationOutput` to be evaluated.
+        beam_solver_ids :
+            Name of the solvers that created the :class:`.SimulationOutput`.
+            They must be keys of the :attr:`.Accelerator.simulation_outputs`
+            dictionary.
+        csv_kwargs :
+            Keyword arguments passed to :func:`.pandas_helper.to_csv`.
+        get_overrides :
+            Keyword arguments passed to :meth:`.SimulationOutput.get`,
+            overriding defaults. For example, if you want your evaluators to
+            run on a smaller portion of the linac.
+
+        """
         simulation_outputs = [
-            x.simulation_outputs[beam_solver_id] for x in accelerators
+            simulation
+            for acc in accelerators
+            for simulation in acc.simulation_outputs.values()
         ]
         elts = [x.elts for x in accelerators]
-        folders = _out_folders(simulation_outputs)
+        folder = _out_folders(simulation_outputs)[-1]
 
         tests = {}
         data_used_for_tests = {}
         for evaluator in evaluators:
             test, data = evaluator.evaluate(
-                *simulation_outputs,
-                elts=elts,
-                plot_kwargs=plot_kwargs,
-                **kwargs,
+                *simulation_outputs, **(get_overrides or {})
             )
-            tests[str(evaluator)] = test
-            data_used_for_tests[str(evaluator)] = data
-        index = [folder.parent.stem for folder in folders]
-        tests_as_pd = pd.DataFrame(tests, index=index)
-        data_as_pd = pd.DataFrame(data_used_for_tests, index=index)
+            evaluator.plot(data, elts=elts, png_folder=folder, **kwargs)
 
-        if csv_kwargs is None:
-            csv_kwargs = {}
+            tests[repr(evaluator)] = test
+            data_used_for_tests[str(evaluator)] = data
+
+        tests_as_pd = pd.DataFrame(tests)
         pandas_helper.to_csv(
             tests_as_pd,
-            path=folders[0].parents[1] / "tests.csv",
-            **csv_kwargs,
+            path=folder.parents[1] / "tests.csv",
+            **(csv_kwargs or {}),
         )
-        pandas_helper.to_csv(
-            data_as_pd,
-            path=folders[0].parents[1] / "data_used_for_tests.csv",
-            **csv_kwargs,
-        )
+        for key, val in data_used_for_tests.items():
+            pandas_helper.to_csv(
+                val,
+                folder.parent / f"{key}.csv",
+                **(csv_kwargs or {}),
+            )
 
         return tests_as_pd
 
@@ -142,13 +169,14 @@ def _constructors_n_kwargs(
 ) -> dict[type, dict[str, bool | float | str]]:
     """Take and associate every evaluator class with its kwargs.
 
-    We also remove the "name" key from the kwargs.
+    We also remove the ``"name"`` key from the kwargs.
 
     Parameters
     ----------
     evaluator_kwargs :
         Dictionaries holding necessary information to instantiate the
-        evaluators. The only mandatory key-value pair is "name" of type str.
+        evaluators. The only mandatory key-value pair is ``"name"`` of type
+        ``str``.
     user_evaluators :
         Additional user-defined evaluators; keys should be in PascalCase,
         values :class:`.ISimulationOutputEvaluator` constructors.
@@ -165,9 +193,8 @@ def _constructors_n_kwargs(
         assert isinstance(name, str)
         evaluator_ids.append(name)
 
-    if user_evaluators is None:
-        user_evaluators = {}
-    evaluator_constructors = user_evaluators | SIMULATION_OUTPUT_EVALUATORS
+    evaluator_constructors = SIMULATION_OUTPUT_EVALUATORS
+    evaluator_constructors.update(user_evaluators or {})
 
     constructors = get_constructors(evaluator_ids, evaluator_constructors)
 

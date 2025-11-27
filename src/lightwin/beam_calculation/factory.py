@@ -25,7 +25,7 @@ BEAM_CALCULATORS_T = Literal["Envelope1D", "TraceWin", "Envelope3D"]
 
 
 def _get_beam_calculator(
-    tool: BEAM_CALCULATORS_T, flag_cython: bool = False, **kwargs
+    tool: BEAM_CALCULATORS_T, flag_cython: bool, **kwargs
 ) -> type:
     """Get the proper :class:`.BeamCalculator` constructor."""
     match tool, flag_cython:
@@ -143,7 +143,7 @@ class BeamCalculatorsFactory:
 
         """
         beam_calculator_class = _get_beam_calculator(
-            tool, **beam_calculator_kw
+            tool, flag_cython=flag_cython, **beam_calculator_kw
         )
         beam_calculator = beam_calculator_class(
             reference_phase_policy=reference_phase_policy,

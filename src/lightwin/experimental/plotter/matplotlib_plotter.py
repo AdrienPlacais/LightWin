@@ -1,11 +1,14 @@
 """Define a plotter that rely on the matplotlib library."""
 
+import logging
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
+import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.experimental.plotter.i_plotter import IPlotter
@@ -23,6 +26,8 @@ class MatplotlibPlotter(IPlotter):
     def __init__(self, elts: ListOfElements | None = None) -> None:
         """Instantiate some common attributes."""
         super().__init__(elts)
+        plt.rcParams["figure.dpi"] = 150
+        plt.rcParams["figure.figsize"] = (16, 9)
 
     def _setup_fig(self, fignum: int, title: str, **kwargs) -> list[Axes]:
         """Setup the figure and axes."""
@@ -45,19 +50,41 @@ class MatplotlibPlotter(IPlotter):
         axes: Sequence[Axes],
         axes_index: int,
         xlabel: str = markdown["z_abs"],
+        style: Sequence[str] | None = None,
+        dump_no_numerical_data_to_plot: bool = False,
         **plot_kwargs: Any,
     ) -> Sequence[Axes]:
         """Create the plot itself."""
-        data.plot(
-            ax=axes[axes_index],
-            sharex=self._sharex,
-            grid=self._grid,
-            xlabel=xlabel,
-            ylabel=ylabel,
-            legend=self._legend,
-            **plot_kwargs,
-        )
-        return axes
+        try:
+            if style:
+                for col, ls in zip(data.columns, style, strict=True):
+                    data[col].plot(
+                        ax=axes[axes_index],
+                        sharex=self._sharex,
+                        grid=self._grid,
+                        xlabel=xlabel,
+                        ylabel=ylabel,
+                        legend=self._legend,
+                        ls=ls,
+                        **plot_kwargs,
+                    )
+                return axes
+
+            data.plot(
+                ax=axes[axes_index],
+                sharex=self._sharex,
+                grid=self._grid,
+                xlabel=xlabel,
+                ylabel=ylabel,
+                legend=self._legend,
+                **plot_kwargs,
+            )
+            return axes
+        except TypeError as err:
+            if dump_no_numerical_data_to_plot:
+                logging.info(f"Dumped a Matplotlib.plot error: {err}.")
+                return axes
+            raise err
 
     def save_figure(
         self, axes: Axes | Sequence[Axes], save_path: Path
@@ -65,7 +92,7 @@ class MatplotlibPlotter(IPlotter):
         if isinstance(axes, Sequence):
             axes = axes[0]
         figure = axes.get_figure()
-        assert figure is not None
+        assert isinstance(figure, Figure)
         return figure.savefig(save_path)
 
     def _plot_structure(
@@ -76,11 +103,11 @@ class MatplotlibPlotter(IPlotter):
     ) -> None:
         """Add a plot to show the structure of the linac."""
         if elts is None:
-            elts = self._elts
             assert hasattr(self, "_elts"), (
                 "Please provide at least a defaut ListOfElements for structure"
                 " plots."
             )
+            elts = self._elts
         plot_structure(axes[-1], elts, x_axis)
 
         if not self._sections:
@@ -102,6 +129,7 @@ class MatplotlibPlotter(IPlotter):
         **kwargs,
     ) -> None:
         """Add one constant plot."""
+        logging.critical(f"{color = }, {ls = }")
         if not isinstance(axes, Sequence):
             axes = (axes,)
         for axe in axes:
