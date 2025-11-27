@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modernized the `experimental` module: `Plotter`, `SimulationOutputEvaluator`.
   _Write some tutorial before official functionality release._
 
+- Fixed
+
+- Cython solver was not used even if configuration asked for it.
+
 ## [0.13.4] -- 2025-11-26
 
 ### Fixed
