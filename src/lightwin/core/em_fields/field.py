@@ -29,6 +29,7 @@ import pandas as pd
 from lightwin.core.em_fields.field_helpers import null_field_1d
 from lightwin.core.em_fields.types import (
     FieldFuncComplexTimedComponent,
+    FieldFuncComponent,
     FieldFuncTimedComponent,
     PosAnyDim,
 )
@@ -158,45 +159,6 @@ class Field(ABC):
         """
         ...
 
-    def _calculate_field(
-        self,
-        component_func: Callable[..., float],
-        pos: Any,
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-        *,
-        complex_output: bool = True,
-    ) -> complex | float:
-        """Calculate the field component value.
-
-        Parameters
-        ----------
-        component_func :
-            The spatial field component function (e.g., self._e_x_spat_rf).
-            Must accept a tuple of 1 to 3 floats (position) and return a float.
-        pos :
-            The position at which to evaluate the field.
-        phi :
-            The phase angle.
-        amplitude :
-            The amplitude of the field.
-        phi_0_rel :
-            The relative phase offset.
-        complex_output :
-            Whether to return a complex value. Defaults to True.
-
-        Returns
-        -------
-            The calculated field value.
-
-        """
-        phase = phi + phi_0_rel
-        field_value = amplitude * component_func(pos) * math.cos(phase)
-        if complex_output:
-            return field_value * (1.0 + 1j * math.tan(phase))
-        return field_value
-
     def shift(self) -> None:
         """Shift the field maps. Used in SUPERPOSE_MAP."""
         raise NotImplementedError(
@@ -205,110 +167,91 @@ class Field(ABC):
             "the ``pos`` vector."
         )
 
-    def e_x(
-        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
+    def _e_x_complex(
+        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
-        """Give transverse x electric field value."""
-        return self._calculate_field(
-            self._e_x_spat_rf,
-            pos,
-            phi,
-            amplitude,
-            phi_0_rel,
-            complex_output=True,
-        )
+        phase = phi + phi_0_rel
+        field_value = amplitude * self._e_x_spat_rf(pos) * math.cos(phase)
+        return field_value * (1.0 + 1j * math.tan(phase))
 
-    def e_y(
-        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
+    def _e_x_real(
+        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
+    ) -> float:
+        return amplitude * self._e_x_spat_rf(pos) * math.cos(phi + phi_0_rel)
+
+    def _e_y_complex(
+        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
-        """Give transverse y electric field value."""
-        return self._calculate_field(
-            self._e_y_spat_rf,
-            pos,
-            phi,
-            amplitude,
-            phi_0_rel,
-            complex_output=True,
-        )
+        phase = phi + phi_0_rel
+        field_value = amplitude * self._e_y_spat_rf(pos) * math.cos(phase)
+        return field_value * (1.0 + 1j * math.tan(phase))
 
-    def e_z(
-        self,
-        pos: Any,
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-        complex_output: bool = True,
-    ) -> complex | float:
-        """Give longitudinal electric field value."""
-        return self._calculate_field(
-            self._e_z_spat_rf,
-            pos,
-            phi,
-            amplitude,
-            phi_0_rel,
-            complex_output=complex_output,
-        )
+    def _e_y_real(
+        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
+    ) -> float:
+        return amplitude * self._e_y_spat_rf(pos) * math.cos(phi + phi_0_rel)
 
-    def b_x(
-        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
+    def _e_z_complex(
+        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
-        """Give transverse x magnetic field value."""
-        return self._calculate_field(
-            self._b_x_spat_rf,
-            pos,
-            phi,
-            amplitude,
-            phi_0_rel,
-            complex_output=True,
-        )
+        phase = phi + phi_0_rel
+        field_value = amplitude * self._e_z_spat_rf(pos) * math.cos(phase)
+        return field_value * (1.0 + 1j * math.tan(phase))
 
-    def b_y(
-        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
+    def _e_z_real(
+        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
+    ) -> float:
+        return amplitude * self._e_z_spat_rf(pos) * math.cos(phi + phi_0_rel)
+
+    def _b_x_complex(
+        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
-        """Give transverse y magnetic field value."""
-        return self._calculate_field(
-            self._b_y_spat_rf,
-            pos,
-            phi,
-            amplitude,
-            phi_0_rel,
-            complex_output=True,
-        )
+        phase = phi + phi_0_rel
+        field_value = amplitude * self._b_x_spat_rf(pos) * math.cos(phase)
+        return field_value * (1.0 + 1j * math.tan(phase))
 
-    def b_z(
-        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
+    def _b_x_real(
+        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
+    ) -> float:
+        return amplitude * self._b_x_spat_rf(pos) * math.cos(phi + phi_0_rel)
+
+    def _b_y_complex(
+        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
     ) -> complex:
-        """Give longitudinal magnetic field value."""
-        return self._calculate_field(
-            self._b_z_spat_rf,
-            pos,
-            phi,
-            amplitude,
-            phi_0_rel,
-            complex_output=True,
-        )
+        phase = phi + phi_0_rel
+        field_value = amplitude * self._b_y_spat_rf(pos) * math.cos(phase)
+        return field_value * (1.0 + 1j * math.tan(phase))
 
-    def partial_e_z(
+    def _b_y_real(
+        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
+    ) -> float:
+        return amplitude * self._b_y_spat_rf(pos) * math.cos(phi + phi_0_rel)
+
+    def _b_z_complex(
+        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
+    ) -> complex:
+        phase = phi + phi_0_rel
+        field_value = amplitude * self._b_z_spat_rf(pos) * math.cos(phase)
+        return field_value * (1.0 + 1j * math.tan(phase))
+
+    def _b_z_real(
+        self, pos: PosAnyDim, phi: float, amplitude: float, phi_0_rel: float
+    ) -> float:
+        return amplitude * self._b_z_spat_rf(pos) * math.cos(phi + phi_0_rel)
+
+    def e_z_functions(
         self, amplitude: float, phi_0_rel: float
     ) -> tuple[FieldFuncComplexTimedComponent, FieldFuncTimedComponent]:
         """Generate a function for longitudinal transfer matrix calculation."""
 
         def compl(pos: PosAnyDim, phi: float) -> complex:
-            return self.e_z(
-                pos,
-                phi=phi,
-                amplitude=amplitude,
-                phi_0_rel=phi_0_rel,
-                complex_output=True,
+            return self._e_z_complex(
+                pos, phi=phi, amplitude=amplitude, phi_0_rel=phi_0_rel
             )
 
         def rea(pos: PosAnyDim, phi: float) -> float:
-            return self.e_z(
-                pos,
-                phi=phi,
-                amplitude=amplitude,
-                phi_0_rel=phi_0_rel,
-                complex_output=False,
+            return self._e_z_real(
+                pos, phi=phi, amplitude=amplitude, phi_0_rel=phi_0_rel
             )
 
         return compl, rea
@@ -323,7 +266,7 @@ class Field(ABC):
     def plot(self, amplitude: float = 1.0, phi_0_rel: float = 0.0) -> None:
         """Plot the profile of the electric field."""
         positions = np.linspace(0, self._length_m, self.n_z + 1)
-        field_func = self.partial_e_z(
+        field_func = self.e_z_functions(
             amplitude=amplitude, phi_0_rel=phi_0_rel
         )[1]
         field_values = [field_func(pos, 0.0) for pos in positions]
