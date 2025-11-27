@@ -171,6 +171,7 @@ data/example/results/
 data/example/results_tests/
 data/test_instructions/results/*
 data/test_instructions/results_tests/*
+data/speed-test/*
 
 # Do not track additional files
 src/lightwin/data/ads/*
