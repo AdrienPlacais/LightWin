@@ -55,7 +55,12 @@ class Field(ABC):
     is_implemented: bool
 
     def __init__(
-        self, folder: Path, filename: str, length_m: float, z_0: float = 0.0
+        self,
+        folder: Path,
+        filename: str,
+        length_m: float,
+        z_0: float = 0.0,
+        flag_cython: bool = False,
     ) -> None:
         """Instantiate object.
 
@@ -70,6 +75,8 @@ class Field(ABC):
             Length of the field map.
         z_0 : float
             Position of the field map. Used with superpose.
+        flag_cython :
+            If Cython field maps should be loaded.
 
         """
         self.folder = folder
@@ -108,6 +115,7 @@ class Field(ABC):
         self.load_fieldmaps()
         if self.z_0:
             self.shift()
+        self.flag_cython = flag_cython
 
     def __repr__(self) -> str:
         """Print out class name and associated field map path."""

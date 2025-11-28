@@ -81,7 +81,33 @@ class Field100(Field):
     def e_z_functions(
         self, amplitude: float, phi_0_rel: float
     ) -> tuple[FieldFuncComplexTimedComponent1D, FieldFuncTimedComponent1D]:
-        """Generate a function for longitudinal transfer matrix calculation."""
+        """Generate a function for longitudinal transfer matrix calculation.
+
+        .. warnign::
+            Currently, if ``flag_cython`` is set to True, the returned
+            functions
+
+        """
+        if self.flag_cython:
+            from lightwin.core.em_fields.cy_field_helpers import (
+                ComplexEzFuncCython,
+                RealEzFuncCython,
+            )
+
+            return (
+                ComplexEzFuncCython(
+                    self._e_z_spat_rf.xp,
+                    self._e_z_spat_rf.fp,
+                    amplitude,
+                    phi_0_rel,
+                ),
+                RealEzFuncCython(
+                    self._e_z_spat_rf.xp,
+                    self._e_z_spat_rf.fp,
+                    amplitude,
+                    phi_0_rel,
+                ),
+            )
 
         def compl(pos: Pos1D, phi: float) -> complex:
             return e_1d_complex(

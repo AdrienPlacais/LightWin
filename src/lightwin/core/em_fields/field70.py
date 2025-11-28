@@ -5,6 +5,7 @@ implemented, but can serve as a place holder for non-accelerating fields.
 
 """
 
+import logging
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -18,6 +19,18 @@ class Field70(Field):
 
     extensions = (".bsx", ".bsy", ".bsz")
     is_implemented = False
+
+    def __init__(
+        self,
+        folder: Path,
+        filename: str,
+        length_m: float,
+        z_0: float = 0,
+        flag_cython: bool = False,
+    ) -> None:
+        super().__init__(folder, filename, length_m, z_0, flag_cython)
+        if self.flag_cython:
+            logging.error("Cython not implemented for Field70.")
 
     def _load_fieldmap(
         self,

@@ -5,6 +5,7 @@
 
 """
 
+import logging
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
@@ -42,9 +43,9 @@ class FieldFactory:
     def __post_init__(self) -> None:
         """Raise an error if Cython is asked."""
         if self.load_cython_field_maps:
-            raise NotImplementedError(
-                "Field objects do not handle Cython yet. Switch back to the "
-                "main branch, or deactivate Cython."
+            logging.warning(
+                "Field objects do not handle Cython yet. Will disregard cython"
+                "loading."
             )
 
     def _gather_primary_files_to_load(
@@ -104,7 +105,11 @@ class FieldFactory:
             field_map = corresp_maps[0]
             constructor = FIELDS[field_map.__class__]
             field = constructor(
-                folder=folder, filename=filename, length_m=length_m, z_0=z_0
+                folder=folder,
+                filename=filename,
+                length_m=length_m,
+                z_0=z_0,
+                flag_cython=self.load_cython_field_maps,
             )
 
             for field_map in corresp_maps:

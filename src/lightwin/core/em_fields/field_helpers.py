@@ -1,7 +1,7 @@
 """Define functions to compute 1D longitudinal electric fields."""
 
 import math
-from typing import Any, Callable
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -20,6 +20,30 @@ def create_1d_field_func(
     n_intervals: int,
     pos_min: float = 0.0,
 ) -> FieldFuncComponent1D:
+    """Create functions computing field for a given position.
+
+    Parameters
+    ----------
+    field_values :
+        Field values on en evenly spaced grid.
+    pos_max :
+        Ending position of the field.
+    n_intervals :
+        Number of intervals in the field map; it is ``n_points - 1``.
+    pos_min :
+        Starting position of the field.
+
+    Returns
+    -------
+    FieldFuncComponent1D
+        Function giving a field component at a given 1D position. It also have
+        a ``xp`` and a ``fp`` attributes holding positions and field values.
+        This is used for Cython implementations.
+
+    .. todo::
+        Clean this ``xp`` ``fp`` thingy, not clean at all.
+
+    """
     field_values = np.asarray(field_values, dtype=float)
 
     total_length = pos_max - pos_min
@@ -32,6 +56,10 @@ def create_1d_field_func(
             return 0.0
         t = idx_float - idx
         return field_values[idx] * (1.0 - t) + field_values[idx + 1] * t
+
+    # Attach xp and fp as it is used by Cython
+    interp_func.xp = np.linspace(pos_min, pos_max, n_intervals + 1)
+    interp_func.fp = field_values
 
     return interp_func
 
