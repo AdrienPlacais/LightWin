@@ -7,7 +7,7 @@ function the name of the field map.
 """
 
 import logging
-from typing import Any, Callable
+from typing import Callable
 
 from lightwin.beam_calculation.cy_envelope_1d.util import (
     CY_ENVELOPE1D_METHODS_T,
@@ -19,7 +19,6 @@ from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import 
     FieldMapEnvelope1DParameters,
     SuperposedFieldMapEnvelope1DParameters,
 )
-from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.physics.synchronous_phases import PHI_S_MODELS
 from lightwin.util.typing import BeamKwargs
@@ -113,7 +112,6 @@ class FieldMapCyEnvelope1DParameters(
         **kwargs: str | int,
     ) -> None:
         """Set the name of the field map and init base class."""
-        self.first_filepath_as_str = str(elt.filepaths[0])
         return super().__init__(
             elt=elt,
             method=method,
@@ -123,83 +121,6 @@ class FieldMapCyEnvelope1DParameters(
             phi_s_model=phi_s_model,
             **kwargs,
         )
-
-    def transfer_matrix_kw(
-        self,
-        w_kin: float,
-        cavity_settings: CavitySettings,
-        *args,
-        phi_0_rel: float | None = None,
-        **kwargs,
-    ) -> dict[str, Any]:
-        r"""Give the element parameters necessary to compute transfer matrix.
-
-        Parameters
-        ----------
-        w_kin :
-            Kinetic energy at the entrance of cavity in :unit:`MeV`.
-        cavity_settings :
-            Object holding the cavity parameters that can be changed.
-        phi_0_rel :
-            Relative entry phase of the cavity. When provided, it means that we
-            are trying to find the :math:`\phi_{0,\,\mathrm{rel}}` matching a
-            given :math:`\phi_s`. The default is None.
-
-        Returns
-        -------
-            Keyword arguments that will be passed to the 1D transfer matrix
-            function defined in :mod:`.cy_envelope_1d.transfer_matrices`.
-
-        """
-        geometry_kwargs = {
-            "d_z": self.d_z,
-            "n_steps": self.n_steps,
-            "filename": self.first_filepath_as_str,
-        }
-        raise NotImplementedError(
-            "Store section_idx in Field instead of RfField"
-        )
-        rf_field = cavity_settings.rf_field
-        rf_kwargs = {
-            "bunch_to_rf": cavity_settings.bunch_phase_to_rf_phase,
-            "k_e": cavity_settings.k_e,
-            "n_cell": cavity_settings.field.n_cell,
-            "omega0_rf": cavity_settings.omega0_rf,
-            "section_idx": rf_field.section_idx,
-        }
-        match cavity_settings.reference, phi_0_rel:
-
-            case "phi_s", None:  # Prepare fit
-                cavity_settings.set_cavity_parameters_arguments(
-                    self.solver_id,
-                    w_kin,
-                    **rf_kwargs,  # no phi_0_rel in kwargs
-                )
-                # calls phi_0_rel and triggers phi_0_rel calculation (case just below)
-                phi_0_rel = _get_phi_0_rel(cavity_settings)
-                rf_kwargs["phi_0_rel"] = phi_0_rel
-
-            case "phi_s", _:  # Fitting phi_s
-                rf_kwargs["phi_0_rel"] = phi_0_rel
-
-            case _, None:  # Normal run
-                phi_0_rel = _get_phi_0_rel(cavity_settings)
-                rf_kwargs["phi_0_rel"] = phi_0_rel
-                cavity_settings.set_cavity_parameters_arguments(
-                    self.solver_id, w_kin, **rf_kwargs
-                )
-
-            case _, _:
-                raise ValueError
-
-        return self._beam_kwargs | rf_kwargs | geometry_kwargs
-
-
-def _get_phi_0_rel(cavity_settings: CavitySettings) -> float:
-    """Get the phase from the object."""
-    phi_0_rel = cavity_settings.phi_0_rel
-    assert phi_0_rel is not None
-    return phi_0_rel
 
 
 class SuperposedFieldMapCyEnvelope1DParameters(

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Experimental SPIRAL2 branch
 
+### Added
+
+- Explicit Cython optional dependency in `pyproject.toml`.
+  - [ ] Complete cython installation instructions.
+
 ### Changed
 
 - Refactored the `RfField` class, which is now called `Field`. Opens up the way

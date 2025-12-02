@@ -16,8 +16,9 @@ from typing import Literal
 from setuptools import Extension, setup
 
 CY_MODULES = (
-    "lightwin.beam_calculation.cy_envelope_1d.transfer_matrices",
     "lightwin.core.em_fields.cy_field_helpers",
+    "lightwin.beam_calculation.cy_envelope_1d.transfer_matrices",
+    "lightwin.beam_calculation.integrators.cy_rk4",
 )
 
 

@@ -19,13 +19,13 @@ def rk4(
     Note
     ----
     This is a slightly modified version of the RK. The ``k_i`` are proportional
-    to ``delta_u`` instead of ``du_dz``.
+    to ``du`` instead of ``du/dx``.
 
     Parameters
     ----------
     u :
-        Holds the value of the function to integrate in ``x``.
-    du_dx :
+        Vector to integrate.
+    du :
         Gives the variation of ``u`` components with ``x``.
     x :
         Where ``u`` is known.
@@ -52,6 +52,34 @@ def rk4_2d(
     x: float,
     dx: float,
 ) -> tuple[float, float]:
+    """Compute variation of ``u`` and ``v`` between ``x`` and ``x+dx``.
+
+    Use 4-th order Runge-Kutta method. ``u`` and ``v`` are scalar. This version
+    is :func:`.rk4` but with two dimensions only.
+
+    Note
+    ----
+    This is a slightly modified version of the RK. The ``k_i`` are proportional
+    to ``delta_u`` instead of ``du_dz``.
+
+    Parameters
+    ----------
+    u :
+        First variable to be integrated.
+    v :
+        Second variable to be integrated.
+    delta :
+        Takes in ``x``, ``u``, ``v`` and return variation of ``u`` and ``v``.
+    x :
+        Where ``u`` and ``v`` are known.
+    dx :
+        Integration step.
+
+    Return
+    ------
+        Variation of ``u`` and ``v`` between ``x`` and ``x+dx``.
+
+    """
 
     half_dx = 0.5 * dx
     k_1u, k_1v = delta(x, u, v)

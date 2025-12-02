@@ -47,7 +47,6 @@ def z_drift(
     delta_s: float,
     omega_0_bunch: float,
     n_steps: int = 1,
-    **kwargs,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], None]:
     """Calculate the transfer matrix of a drift."""
     gamma_in_min2 = gamma_in**-2
@@ -68,12 +67,10 @@ def z_field_map_rk4(
     d_z: float,
     n_steps: int,
     omega0_rf: float,
+    delta_phi_norm: float,
+    delta_gamma_norm: float,
     complex_e_func: FieldFuncComplexTimedComponent,
     real_e_func: FieldFuncTimedComponent,
-    q_adim: float,
-    inv_e_rest_mev: float,
-    omega_0_bunch: float,
-    **kwargs,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], complex]:
     r"""Calculate the transfer matrix of :class:`.FieldMap` using Runge-Kutta.
 
@@ -97,18 +94,16 @@ def z_field_map_rk4(
         Number of integration steps.
     omega0_rf :
         RF pulsation in :unit:`rad/s`.
+    delta_phi_norm :
+        Constant to speed up calculation.
+    delta_gamma_norm :
+        Constant to speed up calculation.
     complex_e_func :
         Takes in the z-position of the particle and the phase, return the
         complex field component at this phase and position.
     real_e_func :
         Takes in the z-position of the particle and the phase, return the
         real field component at this phase and position.
-    q_adim :
-        Adimensioned particle charge.
-    inv_e_rest_mev :
-        Inverse of the particle rest energy, in :unit:`MeV^{-1}`.
-    omega_0_bunch :
-        Bunch pulsation in :unit:`rad/s`.
 
     Returns
     -------
@@ -127,10 +122,6 @@ def z_field_map_rk4(
     z_rel = 0.0
     itg_field = 0.0
     half_dz = 0.5 * d_z
-
-    # Constants to speed up calculation
-    delta_phi_norm = omega0_rf * d_z / c
-    delta_gamma_norm = q_adim * d_z * inv_e_rest_mev
 
     r_zz = np.empty((n_steps, 2, 2))
     gamma = np.empty(n_steps + 1)
@@ -152,19 +143,16 @@ def z_field_map_rk4(
         phi[i + 1] = phi[i] + delta_phi
         itg_field += complex_e_func(z_rel, phi[i]) * d_z
 
-        gamma_middle = gamma[i] + 0.5 * delta_gamma
-        phi_middle = phi[i] + 0.5 * delta_phi
         scaled_e_middle = delta_gamma_norm * complex_e_func(
-            z_rel + half_dz, phi_middle
+            z_rel + half_dz, phi[i] + 0.5 * delta_phi
         )
         r_zz[i, :, :] = z_thin_lense(
             scaled_e_middle,
             gamma[i],
             gamma[i + 1],
-            gamma_middle,
+            gamma[i] + 0.5 * delta_gamma,
             half_dz,
             omega0_rf,
-            omega_0_bunch=omega_0_bunch,
         )
 
         z_rel += d_z
@@ -180,12 +168,10 @@ def z_superposed_field_maps_rk4(
     d_z: float,
     n_steps: int,
     omega0_rf: float,
+    delta_phi_norm: float,
+    delta_gamma_norm: float,
     complex_e_func: FieldFuncComplexTimedComponent,
     real_e_func: FieldFuncTimedComponent,
-    q_adim: float,
-    inv_e_rest_mev: float,
-    omega_0_bunch: float,
-    **kwargs,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], complex]:
     """Calculate the transfer matrix of superposed FIELD_MAP using RK."""
     return z_field_map_rk4(
@@ -193,12 +179,10 @@ def z_superposed_field_maps_rk4(
         d_z=d_z,
         n_steps=n_steps,
         omega0_rf=omega0_rf,
+        delta_phi_norm=delta_phi_norm,
+        delta_gamma_norm=delta_gamma_norm,
         complex_e_func=complex_e_func,
         real_e_func=real_e_func,
-        q_adim=q_adim,
-        inv_e_rest_mev=inv_e_rest_mev,
-        omega_0_bunch=omega_0_bunch,
-        **kwargs,
     )
 
 
@@ -250,8 +234,6 @@ def z_thin_lense(
     gamma_middle: float,
     half_dz: float,
     omega0_rf: float,
-    omega_0_bunch: float,
-    **kwargs,
 ) -> NDArray[np.float64]:
     r"""
     Compute propagation in a slice of field map using thin lense approximation.
@@ -350,7 +332,6 @@ def z_bend(
     factor_2: float,
     factor_3: float,
     omega_0_bunch: float,
-    **kwargs,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], None]:
     r"""Compute the longitudinal transfer matrix of a bend.
 
