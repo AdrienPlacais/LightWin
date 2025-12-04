@@ -13,7 +13,6 @@ Submodules
    :maxdepth: 5
 
    lightwin.beam_calculation.cy_envelope_1d.beam_parameters_factory
-   lightwin.beam_calculation.cy_envelope_1d.electromagnetic_fields
    lightwin.beam_calculation.cy_envelope_1d.element_parameters
    lightwin.beam_calculation.cy_envelope_1d.element_parameters_factory
    lightwin.beam_calculation.cy_envelope_1d.envelope_1d

@@ -179,7 +179,7 @@ STATUS_T = Literal[
     "rephased (ok)",
 ]
 
-#: Attributes that can be extracted with :meth:`.RfField.get` method.
+#: Attributes that can be extracted with :meth:`.Field.get` method.
 GETTABLE_FIELD = (
     "extensions",
     "filename",

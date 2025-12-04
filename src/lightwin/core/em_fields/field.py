@@ -66,14 +66,14 @@ class Field(ABC):
 
         Parameters
         ----------
-        folder : Path
+        folder :
             Where the field map files are.
-        filename : str
+        filename :
             The base name of the field map file(s), without extension (as
             in the ``FIELD_MAP`` command).
-        length_m : float
+        length_m :
             Length of the field map.
-        z_0 : float
+        z_0 :
             Position of the field map. Used with superpose.
         flag_cython :
             If Cython field maps should be loaded.
@@ -89,20 +89,42 @@ class Field(ABC):
         # Used in SUPERPOSED_MAP to shift a field
         self.z_0: float = z_0
 
-        # Where we store interpolated field maps (to multiply by cos phi)
+        #: Spatial component of ``x`` RF electric field. To multiply by norm
+        #: and ``cos(phi)``.
         self._e_x_spat_rf: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``y`` RF electric field. To multiply by norm
+        #: and ``cos(phi)``.
         self._e_y_spat_rf: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``z`` RF electric field. To multiply by norm
+        #: and ``cos(phi)``.
         self._e_z_spat_rf: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``x`` RF magnetic field. To multiply by norm
+        #: and ``cos(phi)``.
         self._b_x_spat_rf: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``y`` RF magnetic field. To multiply by norm
+        #: and ``cos(phi)``.
         self._b_y_spat_rf: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``z`` RF magnetic field. To multiply by norm
+        #: and ``cos(phi)``.
         self._b_z_spat_rf: Callable[[Any], float] = null_field_1d
 
-        # Where we store static field maps (no phase anyway)
+        #: Spatial component of ``x`` DC electric field. To multiply by norm
+        #: and ``cos(phi)``.
         self._e_x_dc: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``y`` DC electric field. To multiply by norm
+        #: and ``cos(phi)``.
         self._e_y_dc: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``z`` DC electric field. To multiply by norm
+        #: and ``cos(phi)``.
         self._e_z_dc: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``x`` DC magnetic field. To multiply by norm
+        #: and ``cos(phi)``.
         self._b_x_dc: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``y`` DC magnetic field. To multiply by norm
+        #: and ``cos(phi)``.
         self._b_y_dc: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``z`` DC magnetic field. To multiply by norm
+        #: and ``cos(phi)``.
         self._b_z_dc: Callable[[Any], float] = null_field_1d
 
         if not self.is_implemented:

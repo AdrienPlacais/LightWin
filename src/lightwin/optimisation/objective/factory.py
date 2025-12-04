@@ -99,6 +99,7 @@ class ObjectiveFactory(ABC):
         self._reference_elts = reference_simulation_output.elts
 
         self._broken_elts = broken_elts
+        #: Broken elements.
         self._failed_elements = tuple(failed_elements)
         self._compensating_elements = tuple(compensating_elements)
 
@@ -606,7 +607,7 @@ class PackedElements:
 
     See Also
     --------
-    Fault.packed_elements
+    .Fault.packed_elements
 
     """
 

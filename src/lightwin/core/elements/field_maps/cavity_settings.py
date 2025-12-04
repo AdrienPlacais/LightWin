@@ -10,7 +10,6 @@
 
 See Also
 --------
-:class:`.RfField`
 :class:`.Field`
 
 """
@@ -24,6 +23,7 @@ from functools import partial
 from typing import Any, NamedTuple, Self
 
 import numpy as np
+from numpy.typing import NDArray
 from scipy.optimize import minimize_scalar
 
 from lightwin.core.em_fields.field import Field
@@ -95,8 +95,6 @@ class CavitySettings:
             dict[str, TRANSF_MAT_FUNC_WRAPPER_T] | None
         ) = None,
         phi_s_funcs: dict[str, PHI_S_FUNC_T] | None = None,
-        # Deleted in SPIRAL2
-        # rf_field: RfField | None = None,
         field: Field | None = None,
     ) -> None:
         """Instantiate the object.
@@ -163,7 +161,9 @@ class CavitySettings:
 
         self._freq_bunch_mhz = freq_bunch_mhz
         self.bunch_phase_to_rf_phase: Callable[[float], float]
-        self.rf_phase_to_bunch_phase: Callable[[float], float]
+        self.rf_phase_to_bunch_phase: Callable[
+            [float | NDArray[np.float64]], float | NDArray[np.float64]
+        ]
         self.freq_cavity_mhz: float
         self.omega0_rf: float
         self.set_bunch_to_rf_freq_func(freq_cavity_mhz)

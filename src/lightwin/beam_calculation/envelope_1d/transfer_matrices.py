@@ -4,11 +4,7 @@ Units are taken exactly as in TraceWin, i.e. first line is ``z (m)`` and second
 line is ``dp/p``.
 
 .. todo::
-    Possible to use only lists here. May speed up the code, especially in _c.
-    But numpy is fast, no?
-
-.. todo::
-    send beta as argument to avoid recomputing it each time
+   Send beta as argument to avoid recomputing it each time
 
 .. todo::
     electric field interpolated twice: a first time for acceleration, and a
@@ -40,6 +36,10 @@ def z_dummy(
     r_zz = [[[1, 0], [0, 1]]]
     gamma_phi = [[gamma_in, 0.0]]
     return np.array(r_zz), np.array(gamma_phi), None
+
+
+def _drift_matrix(gamma: float, half_dz: float) -> NDArray[np.float64]:
+    return np.array([[1.0, half_dz * gamma**-2], [0.0, 1.0]], dtype=np.float64)
 
 
 def z_drift(
@@ -77,13 +77,6 @@ def z_field_map_rk4(
     We slice the field map in a serie of drift-thin acceleration gap-drift. We
     pre-compute some constants to speed up the calculation:
 
-    .. math::
-        \Delta\gamma_\mathrm{norm} = \frac{q_\mathrm{adim} \Delta z}
-        {E_\mathrm{rest}}
-
-    .. math::
-        \Delta\phi_\mathrm{norm} = \frac{\omega_0 \Delta z}{c}
-
     Parameters
     ----------
     gamma_in :
@@ -96,8 +89,17 @@ def z_field_map_rk4(
         RF pulsation in :unit:`rad/s`.
     delta_phi_norm :
         Constant to speed up calculation.
+
+        .. math::
+            \Delta\phi_\mathrm{norm} = \frac{\omega_0 \Delta z}{c}
+
     delta_gamma_norm :
         Constant to speed up calculation.
+
+        .. math::
+            \Delta\gamma_\mathrm{norm} = \frac{q_\mathrm{adim} \Delta z}
+            {E_\mathrm{rest}}
+
     complex_e_func :
         Takes in the z-position of the particle and the phase, return the
         complex field component at this phase and position.
@@ -163,70 +165,6 @@ def z_field_map_rk4(
     return r_zz, gamma_phi, itg_field
 
 
-def z_superposed_field_maps_rk4(
-    gamma_in: float,
-    d_z: float,
-    n_steps: int,
-    omega0_rf: float,
-    delta_phi_norm: float,
-    delta_gamma_norm: float,
-    complex_e_func: FieldFuncComplexTimedComponent,
-    real_e_func: FieldFuncTimedComponent,
-) -> tuple[NDArray[np.float64], NDArray[np.float64], complex]:
-    """Calculate the transfer matrix of superposed FIELD_MAP using RK."""
-    return z_field_map_rk4(
-        gamma_in=gamma_in,
-        d_z=d_z,
-        n_steps=n_steps,
-        omega0_rf=omega0_rf,
-        delta_phi_norm=delta_phi_norm,
-        delta_gamma_norm=delta_gamma_norm,
-        complex_e_func=complex_e_func,
-        real_e_func=real_e_func,
-    )
-
-
-def z_field_map_leapfrog(
-    d_z: float,
-    gamma_in: float,
-    n_steps: int,
-    omega0_rf: float,
-    k_e: float,
-    phi_0_rel: float,
-    e_spat: Callable[[float], float],
-    q_adim: float,
-    inv_e_rest_mev: float,
-    gamma_init: float,
-    omega_0_bunch: float,
-    **kwargs,
-) -> tuple[NDArray[np.float64], NDArray[np.float64], float]:
-    """
-    Calculate the transfer matrix of a ``FIELD_MAP`` using leapfrog.
-
-    .. todo::
-        clean, fix, separate leapfrog integration in dedicated module
-
-    This method is less precise than RK4. However, it is much faster.
-
-    Classic leapfrog method:
-    speed(i+0.5) = speed(i-0.5) + accel(i) * dt
-    pos(i+1)     = pos(i)       + speed(i+0.5) * dt
-
-    Here, dt is not fixed but dz.
-    z(i+1) += dz
-    t(i+1) = t(i) + dz / (c beta(i+1/2))
-    (time and space variables are on whole steps)
-    beta calculated from W(i+1/2) = W(i-1/2) + qE(i)dz
-    (speed/energy is on half steps)
-
-    """
-    raise NotImplementedError
-
-
-def _drift_matrix(gamma: float, half_dz: float) -> NDArray[np.float64]:
-    return np.array([[1.0, half_dz * gamma**-2], [0.0, 1.0]], dtype=np.float64)
-
-
 def z_thin_lense(
     scaled_e_middle: complex,
     gamma_in: float,
@@ -248,54 +186,74 @@ def z_thin_lense(
             k_1 & k_2 \\
         \end{bmatrix}
 
-    :math:`E_{\mathrm{scaled}}` is the complex electric field at the middle of
-    the accelerating gap multiplied by the factor:
-
-    .. math::
-
-        k = \frac{\Delta\gamma_\mathrm{norm}}{\gamma_m\beta_m^2}
-
     Where:
 
     .. math::
 
-        k_1 = \Im(E_\mathrm{scaled}) \frac{\omega_0}{\beta_m c}
+        \left\{
+        \begin{aligned}
+            k_1 &= \Im(\widetilde{E}_\mathrm{scaled}^\mathrm{norm}) \frac{\omega_0}{\beta_m c} \\
+            k_2 &= 1 - (2 - \beta_m^2)\Re(\widetilde{E}_\mathrm{scaled}^\mathrm{norm}) \\
+            k_3 &= \frac{1 - \Re(\widetilde{E}_\mathrm{scaled}^\mathrm{norm})}{k_2}
+        \end{aligned}
+        \right.
+
+    :math:`\widetilde{E}_\mathrm{scaled}^\mathrm{norm}` is proportional to the
+    complex electric field at the middle of the accelerating gap:
 
     .. math::
 
-        k_2 = 1 - (2 - \beta_m^2)\Re(E_\mathrm{scaled})
+        \widetilde{E}_\mathrm{scaled}^\mathrm{norm} =
+            \frac{\Delta\gamma_\mathrm{norm}}{\gamma_m\beta_m^2}
+            \widetilde{E}(z + \frac{\Delta z}{2}, \phi_m)
 
-    .. math::
+    Quantities with a :math:`m` subscript are taken at the middle of the
+    accelerating gap. :math:`i` are in the first drift, :math:`i+1` in the
+    second.
 
-        k_3 = \frac{1 - \Re(E_\mathrm{scaled})}{k_2}
+    .. note::
+       **In TraceWin documentation:**
 
-    Note that quantities with a :math:`m` subscript are taken in the middle of
-    the the accelerating gap. :math:`i` are in the first drift, :math:`i+1` in
-    the second.
+          - :math:`k_1` and :math:`k_2` are called :math:`K_1` and :math:`K_2`.
+            They miss a :math:`\Delta z` term.
+          - Our complex electric field :math:`\widetilde{E}` would be written:
 
-    In TraceWin documentation, our complex electric field :math:`E_\mathrm{LW}`
-    would be written:
+            .. math::
 
-    .. math::
-
-        E_\mathrm{LW} = E_0
-            \sin{
-                \left( \frac{Kz}{\beta_c} \right)
-            }
-            \left[
-                \cos{(\omega t_s + \varphi_0)}
-                + j\sin{(\omega t_s + \varphi_0)}
-            \right]
-
-    A :math:`\Delta z` term is missing in the :math:`K_1` and :math:`K_2`
-    expressions in TraceWin documentation.
+                \widetilde{E} = E_0
+                    \sin{
+                        \left( \frac{Kz}{\beta_c} \right)
+                    }
+                    \left[
+                        \cos{(\omega t_s + \varphi_0)}
+                        + j\sin{(\omega t_s + \varphi_0)}
+                    \right]
 
     Parameters
     ----------
     scaled_e_middle :
         Complex electric field in the accelerating gap multiplied by
-        :math:`\Delta\gamma_\mathrm{norm}`. It is divided by
-        :math:`\gamma_m\beta_m^2` in the routine.
+        :math:`\Delta\gamma_\mathrm{norm}`:
+
+        .. math::
+           \widetilde{E}_\mathrm{scaled} = \Delta\gamma_\mathrm{norm}
+           \widetilde{E}_z\left( z + \Delta z, \phi_m \right)
+
+        where
+
+        .. math::
+            \Delta\gamma_\mathrm{norm} = \frac{q_\mathrm{adim} \Delta z}
+            {E_\mathrm{rest}}
+
+        In the routine, we define:
+
+        .. math::
+           \widetilde{E}_\mathrm{scaled}^\mathrm{norm} = \frac{
+              \widetilde{E}_\mathrm{scaled}
+           }{
+              \gamma_m \beta_m^2
+           }
+
     gamma_in :
         gamma at entrance of first drift.
     gamma_out :
@@ -361,3 +319,63 @@ def z_bend(
     delta_phi = omega_0_bunch * delta_s / (math.sqrt(beta_in_squared) * c)
     gamma_phi = np.array([gamma_in, delta_phi])
     return r_zz[np.newaxis, :], gamma_phi[np.newaxis, :], None
+
+
+def z_superposed_field_maps_rk4(
+    gamma_in: float,
+    d_z: float,
+    n_steps: int,
+    omega0_rf: float,
+    delta_phi_norm: float,
+    delta_gamma_norm: float,
+    complex_e_func: FieldFuncComplexTimedComponent,
+    real_e_func: FieldFuncTimedComponent,
+) -> tuple[NDArray[np.float64], NDArray[np.float64], complex]:
+    """Calculate the transfer matrix of superposed FIELD_MAP using RK."""
+    return z_field_map_rk4(
+        gamma_in=gamma_in,
+        d_z=d_z,
+        n_steps=n_steps,
+        omega0_rf=omega0_rf,
+        delta_phi_norm=delta_phi_norm,
+        delta_gamma_norm=delta_gamma_norm,
+        complex_e_func=complex_e_func,
+        real_e_func=real_e_func,
+    )
+
+
+def z_field_map_leapfrog(
+    d_z: float,
+    gamma_in: float,
+    n_steps: int,
+    omega0_rf: float,
+    k_e: float,
+    phi_0_rel: float,
+    e_spat: Callable[[float], float],
+    q_adim: float,
+    inv_e_rest_mev: float,
+    gamma_init: float,
+    omega_0_bunch: float,
+    **kwargs,
+) -> tuple[NDArray[np.float64], NDArray[np.float64], float]:
+    """
+    Calculate the transfer matrix of a ``FIELD_MAP`` using leapfrog.
+
+    .. todo::
+        clean, fix, separate leapfrog integration in dedicated module
+
+    This method is less precise than RK4. However, it is much faster.
+
+    Classic leapfrog method:
+    speed(i+0.5) = speed(i-0.5) + accel(i) * dt
+    pos(i+1)     = pos(i)       + speed(i+0.5) * dt
+
+    Here, dt is not fixed but dz.
+    z(i+1) += dz
+    t(i+1) = t(i) + dz / (c beta(i+1/2))
+    (time and space variables are on whole steps)
+    beta calculated from W(i+1/2) = W(i-1/2) + qE(i)dz
+    (speed/energy is on half steps)
+
+    """
+    raise NotImplementedError
