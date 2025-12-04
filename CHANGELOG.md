@@ -16,10 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactored the `RfField` class, which is now called `Field`.
   - Opens up the way for DC and 3D fields support.
+    - `FIELD_MAP 7700` is partially supported: motion is integrated on axis.
   - Massive speed-up w.r.t 0.13.5:
     - `Envelope1D` is ~40% faster.
     - `CyEnvelope1D` is ~50% faster.
-  - [ ] Adapt `Envelope3D`. Currently _broken_.
+    - `Envelope3D` is ~25% faster. Note that it is not fully optimized.
 
 ## [0.13.5] -- 2025-11-27
 

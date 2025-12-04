@@ -9,28 +9,32 @@
 
 # LightWin
 
-LightWin is a tool to automatically find compensation settings for cavity failures in linacs.
-
-## Important notice
-
-You are on a development branch, which is highly experimental.
-In particular, `CyEnvelope1D` and `Envelope3D` solvers will not work.
-However, `FIELD_MAP 7700` are supported (motion integrated on the axis).
+LightWin is a tool to automatically find compensation settings for cavity
+failures in linacs.
 
 ## Installation
 
-The full installation instructions are detailed [here](https://lightwin.readthedocs.io/en/latest/manual/installation.html).
+The full installation instructions are detailed [in the documentation](https://lightwin.readthedocs.io/en/latest/manual/installation.html).
 
 The steps are straightforward and can be summarized as follows:
+
+### Users
 
 1. Create a dedicated Python environment.
 2. Run `pip install lightwin`
 
-If you want to edit the source code:
+### Developers
+
+1. Clone the repository: `git clone git@github.com:AdrienPlacais/LightWin.git`
 
 > [!WARNING]
-> If you `Download ZIP` this repository (which can happen if you don't have access to `git`), installation will fail at step #3.
-> [A workaround](https://lightwin.readthedocs.io/en/latest/manual/troubles/setuptools_error.html) is proposed in the documentation. 2. Create a dedicated Python environment. 3. From LightWin folder: `pip install -e .[test]` 4. Test that everything is working with `pytest -m "not tracewin and not implementation"`.
+> If you `Download ZIP` this repository (which can happen if you don't have
+> access to `git`), installation will fail at step #3.
+> [A workaround](https://lightwin.readthedocs.io/en/latest/manual/troubles/setuptools_error.html) is proposed in the documentation.
+
+2. Create a dedicated Python environment.
+3. From LightWin folder: `pip install -e .[test]`
+4. Test that everything is working with `pytest -m "not tracewin and not implementation"`.
 
 > [!NOTE]
 > If you are completely new to Python and these instructions are unclear, check [this tutorial](https://python-guide.readthedocs.io/en/latest/).
@@ -51,7 +55,7 @@ Documentation is now automatically built and hosted on [Read the docs](https://l
 
 ## How to run
 
-See [here](https://lightwin.readthedocs.io/en/latest/manual/usage.html).
+See [documentation](https://lightwin.readthedocs.io/en/latest/manual/usage.html).
 
 ## Example
 
