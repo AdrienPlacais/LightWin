@@ -5,12 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Experimental SPIRAL2 branch
+## [0.14.0] -- unreleased
 
 ### Added
 
 - Explicit Cython optional dependency in `pyproject.toml`.
-  - [ ] Complete cython installation instructions.
 
 ### Changed
 
@@ -21,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `Envelope1D` is ~40% faster.
     - `CyEnvelope1D` is ~50% faster.
     - `Envelope3D` is ~25% faster. Note that it is not fully optimized.
+
+> [!IMPORTANT]
+> If you encounter a "wrong number of attributes" error using `CyEnvelope1D`, it
+> means that Cython modules were not recompiled. Recompile the Cython modules
+> following [the classic instructions](https://lightwin.readthedocs.io/en/latest/manual/installation.cython.html).
 
 ## [0.13.5] -- 2025-11-27
 
