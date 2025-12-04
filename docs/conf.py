@@ -87,13 +87,7 @@ bibtex_bibfiles = ["references.bib"]
 nitpicky = True
 nitpick_ignore = [
     # Not recognized by Sphinx, don't know if this is normal
-    ("py:class", "optional"),
-    ("py:class", "T"),
     ("py:class", "numpy.float64"),
-    ("py:class", "numpy.typing.NDArray"),
-    ("py:class", "NDArray[np.float64]"),
-    ("py:class", "NDArray"),
-    ("py:class", "np.float64"),
     # pymoo fixes should be temporary
     ("py:class", "ElementwiseProblem"),
     ("py:class", "pymoo.core.algorithm.Algorithm"),
@@ -106,15 +100,6 @@ nitpick_ignore = [
     ("py:class", "lightwin.failures.set_of_cavity_settings.FieldMap"),
     ("py:obj", "lightwin.failures.set_of_cavity_settings.FieldMap"),
     ("py:class", "lightwin.core.list_of_elements.helper.ListOfElements"),
-    # Due to Sphinx error, https://github.com/sphinx-doc/sphinx/issues/10785
-    ("py:class", "definitions_t"),
-    ("py:class", "ComputeBeamPropagationT"),
-    ("py:class", "ComputeConstraintsT"),
-    ("py:class", "ComputeResidualsT"),
-    ("py:class", "post_treater_t"),
-    ("py:class", "ref_value_t"),
-    ("py:class", "tester_t"),
-    ("py:class", "value_t"),
 ]
 
 # Link to other libraries
@@ -131,7 +116,7 @@ intersphinx_mapping = {
 }
 
 autodoc_type_aliases = {
-    "np.float64": "numpy.float64",
+    # "np.float64": "numpy.float64",
     "NDArray": "numpy.typing.NDArray",
 }
 autodoc_typehints = "description"
