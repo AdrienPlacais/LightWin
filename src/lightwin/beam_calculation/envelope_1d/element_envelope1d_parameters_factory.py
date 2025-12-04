@@ -5,6 +5,7 @@ import logging
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
     BendEnvelope1DParameters,
     DriftEnvelope1DParameters,
+    DummyEnvelope1DParameters,
     ElementEnvelope1DParameters,
     FieldMapEnvelope1DParameters,
     SuperposedFieldMapEnvelope1DParameters,
@@ -25,9 +26,11 @@ from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
+    SuperposedPlaceHolderElt,
 )
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
+from lightwin.core.elements.thin_steering import ThinSteering
 from lightwin.physics.synchronous_phases import PHI_S_MODELS
 from lightwin.util.typing import BeamKwargs
 
@@ -43,6 +46,8 @@ PARAMETERS_1D = {
     Quad: DriftEnvelope1DParameters,
     Solenoid: DriftEnvelope1DParameters,
     SuperposedFieldMap: SuperposedFieldMapEnvelope1DParameters,
+    SuperposedPlaceHolderElt: DummyEnvelope1DParameters,
+    ThinSteering: DriftEnvelope1DParameters,
 }
 
 
@@ -148,7 +153,7 @@ class ElementEnvelope1DParametersFactory(
 
         logging.error(
             f"Element {elt} of {element_class = } not added to the Envelope1D "
-            "dict linking every Element class to its specific parameters"
+            "dict linking every Element class to its specific parameters "
             "(transfer matrix in particular). Neither was found its "
             f"{super_class = }. "
             "Note that you can use the elements_to_dump key in the "

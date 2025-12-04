@@ -104,6 +104,5 @@ class FieldMapFactory:
 
         if geometry == 7700:
             warn_once(geometry)
-            return FieldMap100
 
         return IMPLEMENTED_FIELD_MAPS[geometry]

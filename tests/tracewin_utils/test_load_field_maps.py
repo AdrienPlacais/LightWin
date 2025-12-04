@@ -5,15 +5,18 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from lightwin.tracewin_utils.field_map_loaders import field_1d, field_3d
+from lightwin.tracewin_utils.field_map_loaders import (
+    load_field_1d,
+    load_field_3d,
+)
 
 
 @pytest.fixture
 def sample_field_3d(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """Create a temporary sample field file for testing."""
-    sample_data = """3 10.0
-2 0.0 5.0
-2 0.0 5.0
+    sample_data = """2 10.0
+1 0.0 5.0
+1 0.0 5.0
 1.0
 1.1
 1.2
@@ -53,12 +56,12 @@ def sample_field_1d_file(tmp_path_factory: pytest.TempPathFactory) -> Path:
 @pytest.mark.smoke
 def test_field_3d(sample_field_3d: Path) -> None:
     """Test ``field_3d`` with a sample 3D field file."""
-    expected_nz = 3
+    expected_nz = 2
     expected_zmax = 10.0
-    expected_nx = 2
+    expected_nx = 1
     expected_xmin = 0.0
     expected_xmax = 5.0
-    expected_ny = 2
+    expected_ny = 1
     expected_ymin = 0.0
     expected_ymax = 5.0
     expected_norm = 1.0
@@ -70,7 +73,7 @@ def test_field_3d(sample_field_3d: Path) -> None:
         ]
     )
 
-    n_z, zmax, n_x, xmin, xmax, n_y, ymin, ymax, norm, field = field_3d(
+    n_z, zmax, n_x, xmin, xmax, n_y, ymin, ymax, norm, field = load_field_3d(
         sample_field_3d
     )
 
@@ -97,7 +100,7 @@ def test_field_1d(sample_field_1d_file: Path) -> None:
     expected_field = np.array([1.1, 1.2, 1.3])
     expected_n_cell = 1
 
-    n_z, zmax, norm, f_z, n_cell = field_1d(sample_field_1d_file)
+    n_z, zmax, norm, f_z, n_cell = load_field_1d(sample_field_1d_file)
     assert n_z == expected_nz
     assert zmax == expected_zmax
     assert norm == expected_norm

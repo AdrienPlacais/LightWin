@@ -4,6 +4,9 @@ import logging
 
 from lightwin.core.commands.command import Command
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.core.elements.field_maps.superposed_field_map import (
+    SuperposedFieldMap,
+)
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
 
@@ -45,6 +48,12 @@ class Freq(Command):
         If another :class:`Freq` is found, we stop and the new :class:`Freq`
         will be dealt with later.
 
+        .. note::
+            We should not encounter any :class:`.SuperposedFieldMap`, as the
+            :class:`.SuperposeMap` commands should be *after* this
+            :class:`.Freq`. In other words, the :class:`.FieldMap` instances
+            are not superposed yet.
+
         """
         if freq_bunch is None:
             logging.warning(
@@ -54,8 +63,14 @@ class Freq(Command):
             freq_bunch = self.f_rf_mhz
 
         for instruction in instructions[self.influenced]:
-            if isinstance(instruction, FieldMap):
-                instruction.cavity_settings.set_bunch_to_rf_freq_func(
+            if isinstance(superposed := instruction, SuperposedFieldMap):
+                for field_map in superposed.field_maps:
+                    field_map.cavity_settings.set_bunch_to_rf_freq_func(
+                        self.f_rf_mhz
+                    )
+                continue
+            if isinstance(field_map := instruction, FieldMap):
+                field_map.cavity_settings.set_bunch_to_rf_freq_func(
                     self.f_rf_mhz
                 )
         return instructions

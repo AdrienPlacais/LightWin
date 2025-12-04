@@ -12,10 +12,10 @@ def apply_commands(
     while index < len(instructions):
         instruction = instructions[index]
 
-        if isinstance(instruction, Command):
-            instruction.set_influenced_elements(instructions)
-            if instruction.is_implemented:
-                instructions = instruction.apply(
+        if isinstance(command := instruction, Command):
+            command.set_influenced_elements(instructions)
+            if command.is_implemented:
+                instructions = command.apply(
                     instructions, freq_bunch=freq_bunch
                 )
         index += 1

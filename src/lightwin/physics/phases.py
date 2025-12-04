@@ -8,6 +8,7 @@ import math
 from typing import overload
 
 import numpy as np
+from numpy.typing import NDArray
 
 
 def diff_angle(phi_1: float, phi_2: float) -> float:
@@ -33,8 +34,8 @@ def phi_0_rel_to_abs(phi_0_rel: float, phi_rf: float) -> float:
 
 @overload
 def phi_bunch_to_phi_rf(
-    phi_bunch: np.ndarray, rf_over_bunch_frequencies: float
-) -> np.ndarray: ...
+    phi_bunch: NDArray[np.float64], rf_over_bunch_frequencies: float
+) -> NDArray[np.float64]: ...
 
 
 @overload
@@ -45,17 +46,17 @@ def phi_bunch_to_phi_rf(
 
 
 def phi_bunch_to_phi_rf(
-    phi_bunch: float | np.ndarray,
+    phi_bunch: float | NDArray[np.float64],
     rf_over_bunch_frequencies: float,
-) -> float | np.ndarray:
+) -> float | NDArray[np.float64]:
     """Convert the bunch phase to a rf phase."""
     return phi_bunch * rf_over_bunch_frequencies
 
 
 @overload
 def phi_rf_to_phi_bunch(
-    phi_rf: np.ndarray, bunch_over_rf_frequencies: float
-) -> np.ndarray: ...
+    phi_rf: NDArray[np.float64], bunch_over_rf_frequencies: float
+) -> NDArray[np.float64]: ...
 
 
 @overload
@@ -66,8 +67,8 @@ def phi_rf_to_phi_bunch(
 
 
 def phi_rf_to_phi_bunch(
-    phi_rf: float | np.ndarray,
+    phi_rf: float | NDArray[np.float64],
     bunch_over_rf_frequencies: float,
-) -> float | np.ndarray:
+) -> float | NDArray[np.float64]:
     """Convert the bunch phase to rf phase."""
     return phi_rf * bunch_over_rf_frequencies

@@ -151,16 +151,6 @@ class Element(Instruction):
 
         return values[0] if len(values) == 1 else tuple(values)
 
-    def keep_rf_field(self, *args, **kwargs) -> None:
-        """Save data calculated by :meth:`.BeamCalculator.run_with_this`.
-
-        .. deprecated:: 0.6.16
-            Prefer :meth:`keep_cavity_settings`
-
-        """
-        logging.warning("prefer keep_cavity_settings")
-        return self.keep_cavity_settings(*args, **kwargs)
-
     def keep_cavity_settings(
         self,
         cavity_settings: CavitySettings,

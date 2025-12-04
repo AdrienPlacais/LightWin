@@ -44,7 +44,7 @@ class SetSyncPhase(Command):
         )
 
     def apply(
-        self, instructions: list[Instruction], **kwargs: float
+        self, instructions: Sequence[Instruction], **kwargs: float
     ) -> list[Instruction]:
         """Set ``phi_s``, remove previous reference phase.
 
@@ -57,8 +57,10 @@ class SetSyncPhase(Command):
         for cavity in instructions[self.influenced]:
             assert isinstance(cavity, FieldMap)
             settings = cavity.cavity_settings
+            # note that, at this point, LightWin believes that the phase given
+            # in the .dat is an absolute or relative phase
             settings.set_reference("phi_s", phi_ref=settings.phi_ref)
-        return instructions
+        return list(instructions)
 
     def to_line(
         self,

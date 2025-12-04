@@ -9,7 +9,6 @@ from lightwin.core.elements.field_maps.cavity_settings import (
     MissingAttributeError,
 )
 from lightwin.core.em_fields.field import Field
-from lightwin.core.em_fields.rf_field import RfField
 from lightwin.util.typing import REFERENCE_PHASES_T, STATUS_T
 
 
@@ -25,21 +24,19 @@ class MockCavitySettings(CavitySettings):
         freq_cavity_mhz: float | None = 1,
         transf_mat_func_wrappers: dict[str, Callable] | None = None,
         phi_s_funcs: dict[str, Callable] | None = None,
-        rf_field: RfField | None = None,
         field: Field | None = None,
     ) -> None:
         """Init object only with interesting args."""
         super().__init__(
-            k_e,
-            phi,
-            reference,
-            status,
-            freq_bunch_mhz,
-            freq_cavity_mhz,
-            transf_mat_func_wrappers,
-            phi_s_funcs,
-            rf_field,
-            field,
+            k_e=k_e,
+            phi=phi,
+            reference=reference,
+            status=status,
+            freq_bunch_mhz=freq_bunch_mhz,
+            freq_cavity_mhz=freq_cavity_mhz,
+            transf_mat_func_wrappers=transf_mat_func_wrappers,
+            phi_s_funcs=phi_s_funcs,
+            field=field,
         )
 
     def _phi_0_rel_to_cavity_parameters(

@@ -5,24 +5,26 @@ implemented for now.
 
 """
 
-import functools
-import math
-from collections.abc import Callable
 from pathlib import Path
-
-import numpy as np
 
 from lightwin.core.em_fields.field import Field
 from lightwin.core.em_fields.field_helpers import (
     create_1d_field_func,
+    e_1d,
+    e_1d_complex,
+    rescale_array,
     shifted_e_spat,
 )
-from lightwin.core.em_fields.types import Pos1D
-from lightwin.tracewin_utils.electromagnetic_fields import (
-    is_a_valid_1d_electric_field,
-    rescale,
+from lightwin.core.em_fields.types import (
+    FieldFuncComplexTimedComponent1D,
+    FieldFuncComponent1D,
+    FieldFuncTimedComponent1D,
+    Pos1D,
 )
-from lightwin.tracewin_utils.field_map_loaders import field_1d
+from lightwin.tracewin_utils.field_map_loaders import (
+    is_a_valid_1d_electric_field,
+    load_field_1d,
+)
 
 
 class Field100(Field):
@@ -33,7 +35,7 @@ class Field100(Field):
 
     def _load_fieldmap(
         self, path: Path, **validity_check_kwargs
-    ) -> tuple[Callable[[Pos1D], float], tuple[int], int]:
+    ) -> tuple[FieldFuncComponent1D, tuple[int], int]:
         r"""Load a 1D field (``EDZ`` extension).
 
         Parameters
@@ -52,15 +54,14 @@ class Field100(Field):
             Number of cell for cavities.
 
         """
-        n_z, zmax, norm, f_z, n_cell = field_1d(path)
+        n_z, zmax, norm, f_z, n_cell = load_field_1d(path)
 
         assert is_a_valid_1d_electric_field(
             n_z, zmax, f_z, self._length_m
         ), f"Error loading {path}'s field map."
 
-        f_z = rescale(f_z, norm)
-        z_positions = np.linspace(0.0, zmax, n_z + 1)
-        e_z = create_1d_field_func(f_z, z_positions)
+        f_z = rescale_array(f_z, norm)
+        e_z = create_1d_field_func(f_z, zmax, n_z)
         return e_z, (n_z,), n_cell
 
     def shift(self) -> None:
@@ -74,17 +75,50 @@ class Field100(Field):
         assert hasattr(
             self, "z_0"
         ), "You need to set the starting_position attribute of the Field."
-        shifted = functools.partial(
-            shifted_e_spat, e_spat=self._e_z_spat_rf, z_shift=self.z_0
-        )
+        shifted = shifted_e_spat(self._e_z_spat_rf, z_shift=self.z_0)
         self._e_z_spat_rf = shifted
 
-    def e_z(
-        self, pos: Pos1D, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        """Give longitudinal electric field value."""
-        return (
-            amplitude
-            * self._e_z_spat_rf(pos)
-            * (math.cos(phi + phi_0_rel) + 1j * math.sin(phi + phi_0_rel))
-        )
+    def e_z_functions(
+        self, amplitude: float, phi_0_rel: float
+    ) -> tuple[FieldFuncComplexTimedComponent1D, FieldFuncTimedComponent1D]:
+        """Generate a function for longitudinal transfer matrix calculation."""
+        if self.flag_cython:
+            from lightwin.core.em_fields.cy_field_helpers import (
+                ComplexEzFuncCython,
+                RealEzFuncCython,
+            )
+
+            return (
+                ComplexEzFuncCython(
+                    self._e_z_spat_rf.xp,
+                    self._e_z_spat_rf.fp,
+                    amplitude,
+                    phi_0_rel,
+                ),
+                RealEzFuncCython(
+                    self._e_z_spat_rf.xp,
+                    self._e_z_spat_rf.fp,
+                    amplitude,
+                    phi_0_rel,
+                ),
+            )
+
+        def compl(pos: Pos1D, phi: float) -> complex:
+            return e_1d_complex(
+                pos=pos,
+                e_func=self._e_z_spat_rf,
+                phi=phi,
+                amplitude=amplitude,
+                phi_0=phi_0_rel,
+            )
+
+        def rea(pos: Pos1D, phi: float) -> float:
+            return e_1d(
+                pos=pos,
+                e_func=self._e_z_spat_rf,
+                phi=phi,
+                amplitude=amplitude,
+                phi_0=phi_0_rel,
+            )
+
+        return compl, rea

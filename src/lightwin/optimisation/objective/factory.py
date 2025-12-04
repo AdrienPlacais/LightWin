@@ -99,6 +99,7 @@ class ObjectiveFactory(ABC):
         self._reference_elts = reference_simulation_output.elts
 
         self._broken_elts = broken_elts
+        #: Broken elements.
         self._failed_elements = tuple(failed_elements)
         self._compensating_elements = tuple(compensating_elements)
 
@@ -178,7 +179,7 @@ class CorrectorAtExit(ObjectiveFactory):
     def get_objectives(self) -> list[Objective]:
         """Give adapted objectives.
 
-        We start by looking at the :attr:`.CorrectorAtExit._failed_elements`
+        We start by looking at the :attr:`._failed_elements`
         list:
 
         - If it has elements, we are around a failure and we will try to keep
@@ -606,7 +607,7 @@ class PackedElements:
 
     See Also
     --------
-    Fault.packed_elements
+    .Fault.packed_elements
 
     """
 

@@ -143,7 +143,7 @@ class KeyValConfSpec:
         Parameters
         ----------
         toml_value :
-            The value to put in the file. If not provided, we issue a warnign
+            The value to put in the file. If not provided, we issue a warning
             and set at default value.
         original_toml_folder :
             Where the original ``TOML`` was; this is used to resolve paths

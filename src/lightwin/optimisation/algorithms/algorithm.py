@@ -207,6 +207,10 @@ class OptimisationAlgorithm(ABC):
         self.history.checkpoint()
         return residuals
 
+    def _finalize(self) -> None:
+        """End the optimization process."""
+        self.history.save()
+
     def _norm_wrapper_residuals(self, var: np.ndarray) -> float:
         """Compute norm of residuals vector from array of variable values."""
         res = float(np.linalg.norm(self._wrapper_residuals(var)))

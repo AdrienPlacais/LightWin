@@ -33,6 +33,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 
 [project.optional-dependencies]
+cython = ["cython>=3.2,<4"]
 docs = [
   "myst-parser>=4, <5",
   "nbsphinx>=0.9.6, <1",

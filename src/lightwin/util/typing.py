@@ -169,6 +169,7 @@ ALLOWED_STATUS = (
     "compensate (ok)",
     "compensate (not ok)",
 )
+#: Different status for cavities
 STATUS_T = Literal[
     "compensate (in progress)",  # Trying to fit
     "compensate (not ok)",  # Compensating, proper setting found
@@ -179,42 +180,21 @@ STATUS_T = Literal[
     "rephased (ok)",
 ]
 
-#: Attributes that can be extracted with :meth:`.RfField.get` method.
-GETTABLE_RF_FIELD = (
-    "e_spat",
-    "n_cell",
-    "n_z",
-    "starting_position",
-    "section_idx",
-)
-GETTABLE_RF_FIELD_T = Literal[
-    "e_spat",
-    "n_cell",
-    "n_z",
-    "starting_position",
-    "section_idx",
-]
-
 #: Attributes that can be extracted with :meth:`.CavitySettings.get` method.
 GETTABLE_CAVITY_SETTINGS = (
-    (
-        "acceptance_energy",
-        "acceptance_phi",
-        "field",
-        "freq_cavity_mhz",
-        "k_e",
-        "omega_0_rf",
-        "phi_ref",
-        "phi_rf",
-        "phi_s",
-        "reference",
-        "rf_field",
-        "status",
-        "v_cav_mv",
-    )
-    + REFERENCE_PHASES
-    + GETTABLE_RF_FIELD
-)
+    "acceptance_energy",
+    "acceptance_phi",
+    "field",
+    "freq_cavity_mhz",
+    "k_e",
+    "omega_0_rf",
+    "phi_ref",
+    "phi_rf",
+    "phi_s",
+    "reference",
+    "status",
+    "v_cav_mv",
+) + REFERENCE_PHASES
 GETTABLE_CAVITY_SETTINGS_T = (
     Literal[
         "acceptance_energy",
@@ -232,7 +212,6 @@ GETTABLE_CAVITY_SETTINGS_T = (
         "v_cav_mv",
     ]
     | REFERENCE_PHASES_T
-    | GETTABLE_RF_FIELD_T
 )
 
 #: Attributes from :class:`.CavitySettings` to concatenate into
@@ -280,7 +259,6 @@ GETTABLE_ELT_T = (
 #: Attributes that can be extracted with :meth:`.FieldMap.get` method.
 GETTABLE_FIELD_MAP = (
     ("aperture_flag", "field_map_filename", "field_map_folder", "geometry")
-    + GETTABLE_RF_FIELD
     + GETTABLE_ELT
     + GETTABLE_CAVITY_SETTINGS
 )
@@ -288,7 +266,6 @@ GETTABLE_FIELD_MAP_T = (
     Literal[
         "aperture_flag", "field_map_filename", "field_map_folder", "geometry"
     ]
-    | GETTABLE_RF_FIELD_T
     | GETTABLE_ELT_T
     | GETTABLE_CAVITY_SETTINGS_T
 )
@@ -308,7 +285,6 @@ CONCATENABLE_ELTS_T = (
     Literal[
         "aperture_flag", "field_map_filename", "field_map_folder", "geometry"
     ]
-    | GETTABLE_RF_FIELD_T
     | GETTABLE_ELT_T
     # GETTABLE_CAVITY_SETTINGS_T without w_kin
     | Literal[
@@ -363,18 +339,14 @@ GETTABLE_ELTS_T = (
 
 #: Attributes that are structure-dependent and should not vary from simulation
 #: to simulation
-GETTABLE_STRUCTURE_DEPENDENT = (
-    GETTABLE_ELT
-    + GETTABLE_RF_FIELD
-    + (
-        "aperture_flag",
-        "field_map_filename",
-        "field_map_folder",
-        "geometry",
-        "field",
-        "freq_cavity_mhz",
-        "omega_0_rf",
-    )
+GETTABLE_STRUCTURE_DEPENDENT = GETTABLE_ELT + (
+    "aperture_flag",
+    "field_map_filename",
+    "field_map_folder",
+    "geometry",
+    "field",
+    "freq_cavity_mhz",
+    "omega_0_rf",
 )
 
 #: Attributes that can be extracted with :meth:`.TransferMatrix.get` method.

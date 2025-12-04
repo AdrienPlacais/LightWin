@@ -5,7 +5,13 @@ implemented, but can serve as a place holder for non-accelerating fields.
 
 """
 
+import logging
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any
+
 from lightwin.core.em_fields.field import Field
+from lightwin.core.em_fields.field_helpers import null_field_1d
 
 
 class Field70(Field):
@@ -14,32 +20,22 @@ class Field70(Field):
     extensions = (".bsx", ".bsy", ".bsz")
     is_implemented = False
 
-    def b_x(
+    def __init__(
         self,
-        pos: tuple[float, float, float],
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-    ) -> float:
-        """Give magnetic field value."""
-        return amplitude * self._b_x_dc(pos)
+        folder: Path,
+        filename: str,
+        length_m: float,
+        z_0: float = 0,
+        flag_cython: bool = False,
+    ) -> None:
+        super().__init__(folder, filename, length_m, z_0, flag_cython)
+        if self.flag_cython:
+            logging.error("Cython not implemented for Field70.")
 
-    def b_y(
+    def _load_fieldmap(
         self,
-        pos: tuple[float, float, float],
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-    ) -> float:
-        """Give magnetic field value."""
-        return amplitude * self._b_y_dc(pos)
-
-    def b_z(
-        self,
-        pos: tuple[float, float, float],
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-    ) -> float:
-        """Give magnetic field value."""
-        return amplitude * self._b_z_dc(pos)
+        path: Path,
+        **validity_check_kwargs,
+    ) -> tuple[Callable[..., float], Any, int]:
+        """Return dummy fields."""
+        return null_field_1d, 60, 1

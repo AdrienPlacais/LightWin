@@ -134,7 +134,7 @@ class DesignSpace:
         ----------
         basepath :
             Folder where the files will be stored.
-        variables_filename, constraints_filename : pathlib.Path | str, optional
+        variables_filename, constraints_filename :
             Name of the output files without extension.
         overwrite :
             To overwrite an existing file with the same name or not. The

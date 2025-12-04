@@ -16,19 +16,16 @@ See Also
 
 """
 
-import functools
 import logging
-import math
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Collection
 from pathlib import Path
-from typing import Any, Literal, overload
+from typing import Any
+
+import numpy as np
+import pandas as pd
 
 from lightwin.core.em_fields.field_helpers import null_field_1d
-from lightwin.core.em_fields.types import (
-    FieldFuncComplexTimedComponent,
-    FieldFuncPhisFit,
-)
 
 EXTENSION_TO_COMPONENT = {
     ".edx": "_e_x_spat_rf",
@@ -58,55 +55,99 @@ class Field(ABC):
     is_implemented: bool
 
     def __init__(
-        self, field_map_path: Path, length_m: float, z_0: float = 0.0
+        self,
+        folder: Path,
+        filename: str,
+        length_m: float,
+        z_0: float = 0.0,
+        flag_cython: bool = False,
     ) -> None:
-        """Instantiate object."""
-        self.field_map_path = field_map_path
+        """Instantiate object.
+
+        Parameters
+        ----------
+        folder :
+            Where the field map files are.
+        filename :
+            The base name of the field map file(s), without extension (as
+            in the ``FIELD_MAP`` command).
+        length_m :
+            Length of the field map.
+        z_0 :
+            Position of the field map. Used with superpose.
+        flag_cython :
+            If Cython field maps should be loaded.
+
+        """
+        self.folder = folder
+        self.filename = filename
         self._length_m = length_m
-        self.n_cell: int
+        self.n_cell: int = 1
         self.n_z: int
         self.is_loaded = False
 
         # Used in SUPERPOSED_MAP to shift a field
         self.z_0: float = z_0
 
-        # Where we store interpolated field maps (to multiply by cos phi)
+        #: Spatial component of ``x`` RF electric field. To multiply by norm
+        #: and ``cos(phi)``.
         self._e_x_spat_rf: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``y`` RF electric field. To multiply by norm
+        #: and ``cos(phi)``.
         self._e_y_spat_rf: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``z`` RF electric field. To multiply by norm
+        #: and ``cos(phi)``.
         self._e_z_spat_rf: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``x`` RF magnetic field. To multiply by norm
+        #: and ``cos(phi)``.
         self._b_x_spat_rf: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``y`` RF magnetic field. To multiply by norm
+        #: and ``cos(phi)``.
         self._b_y_spat_rf: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``z`` RF magnetic field. To multiply by norm
+        #: and ``cos(phi)``.
         self._b_z_spat_rf: Callable[[Any], float] = null_field_1d
 
-        # Where we store static field maps (no phase anyway)
+        #: Spatial component of ``x`` DC electric field. To multiply by norm
+        #: and ``cos(phi)``.
         self._e_x_dc: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``y`` DC electric field. To multiply by norm
+        #: and ``cos(phi)``.
         self._e_y_dc: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``z`` DC electric field. To multiply by norm
+        #: and ``cos(phi)``.
         self._e_z_dc: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``x`` DC magnetic field. To multiply by norm
+        #: and ``cos(phi)``.
         self._b_x_dc: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``y`` DC magnetic field. To multiply by norm
+        #: and ``cos(phi)``.
         self._b_y_dc: Callable[[Any], float] = null_field_1d
+        #: Spatial component of ``z`` DC magnetic field. To multiply by norm
+        #: and ``cos(phi)``.
         self._b_z_dc: Callable[[Any], float] = null_field_1d
 
         if not self.is_implemented:
-            logging.warning(
-                "Initializing a non-implemented Field. Not loading anything."
+            logging.info(
+                "Initializing a non-implemented Field. Not loading anything.\n"
+                f"{repr(self)}"
             )
             return
 
         self.load_fieldmaps()
         if self.z_0:
             self.shift()
+        self.flag_cython = flag_cython
 
     def __repr__(self) -> str:
         """Print out class name and associated field map path."""
-        return f"{self.__class__.__name__:>10} | {self.field_map_path.name}"
+        return f"{self.__class__.__name__:>10} | {self.folder.name}"
 
     def load_fieldmaps(self) -> None:
         """Load all field components for class :attr:`extensions`."""
         for ext in self.extensions:
-            path = self.field_map_path.parent / (
-                self.field_map_path.name + ext
-            )
-            func, n_interp, n_cell = self._load_fieldmap(path)
+            filepath = self.folder / (self.filename + ext)
+            func, n_interp, n_cell = self._load_fieldmap(filepath)
             attribute_name = EXTENSION_TO_COMPONENT[ext]
             setattr(self, attribute_name, func)
 
@@ -136,168 +177,39 @@ class Field(ABC):
             Number of interpolation points in the various directions (tuple of
             1, 2 or 3 integers).
         n_cell :
-            Number of cells (makes sense only for .edz as for now).
+            Number of cells (makes sense only for ``EDZ`` as for now).
 
         """
         ...
 
-    @overload
-    def _calculate_field(
-        self,
-        component_func: Callable[..., float],
-        pos: Any,
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-        *,
-        complex_output: Literal[True],
-    ) -> complex: ...
+    def shift(self) -> None:
+        """Shift the field maps. Used in SUPERPOSE_MAP."""
+        raise NotImplementedError(
+            "This should be implemented for every Field object. The idea is "
+            "simply to offset the z variable, which depends on the length of "
+            "the ``pos`` vector."
+        )
 
-    @overload
-    def _calculate_field(
-        self,
-        component_func: Callable[..., float],
-        pos: Any,
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-        *,
-        complex_output: Literal[False],
-    ) -> float: ...
-
-    def _calculate_field(
-        self,
-        component_func: Callable[..., float],
-        pos: Any,
-        phi: float,
-        amplitude: float,
-        phi_0_rel: float,
-        *,
-        complex_output: bool = True,
-    ) -> complex | float:
-        """Calculate the field component value.
-
-        Parameters
-        ----------
-        component_func :
-            The spatial field component function (e.g., self._e_x_spat_rf).
-            Must accept a tuple of 1 to 3 floats (position) and return a float.
-        pos :
-            The position at which to evaluate the field.
-        phi :
-            The phase angle.
-        amplitude :
-            The amplitude of the field.
-        phi_0_rel :
-            The relative phase offset.
-        complex_output :
-            Whether to return a complex value. Defaults to True.
+    def e_z_functions(
+        self, amplitude: float, phi_0_rel: float
+    ) -> tuple[Callable, Callable]:
+        """Generate functions for longitudinal transfer matrix calculation.
 
         Returns
         -------
-            The calculated field value.
+        Callable
+            Function taking in 1D/2D/3D position and phase and returning
+            corresponding z electric field (complex). Typically, a :class:
+            `.FieldFuncComplexTimedComponent`.
+        Callable
+            Function taking in 1D/2D/3D position and phase and returning
+            corresponding z electric field (real). Typically, a :class:
+            `.FieldFuncTimedComponent`.
 
         """
-        field_value = amplitude * component_func(pos)
-        phase = phi + phi_0_rel
-        if complex_output:
-            return field_value * (math.cos(phase) + 1j * math.sin(phase))
-
-        return field_value * math.cos(phase)
-
-    def shift(self) -> None:
-        """Shift the field maps. Used in SUPERPOSE_MAP."""
-        raise NotImplementedError("Not yet implemented!")
-
-    def e_x(
-        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        """Give transverse x electric field value."""
-        return self._calculate_field(
-            self._e_x_spat_rf,
-            pos,
-            phi,
-            amplitude,
-            phi_0_rel,
-            complex_output=True,
+        raise NotImplementedError(
+            "This method needs to be subclassed if used."
         )
-
-    def e_y(
-        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        """Give transverse y electric field value."""
-        return self._calculate_field(
-            self._e_y_spat_rf,
-            pos,
-            phi,
-            amplitude,
-            phi_0_rel,
-            complex_output=True,
-        )
-
-    def e_z(
-        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        """Give longitudinal electric field value."""
-        return self._calculate_field(
-            self._e_z_spat_rf,
-            pos,
-            phi,
-            amplitude,
-            phi_0_rel,
-            complex_output=True,
-        )
-
-    def b_x(
-        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        """Give transverse x magnetic field value."""
-        return self._calculate_field(
-            self._b_x_spat_rf,
-            pos,
-            phi,
-            amplitude,
-            phi_0_rel,
-            complex_output=True,
-        )
-
-    def b_y(
-        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        """Give transverse y magnetic field value."""
-        return self._calculate_field(
-            self._b_y_spat_rf,
-            pos,
-            phi,
-            amplitude,
-            phi_0_rel,
-            complex_output=True,
-        )
-
-    def b_z(
-        self, pos: Any, phi: float, amplitude: float, phi_0_rel: float
-    ) -> complex:
-        """Give longitudinal magnetic field value."""
-        return self._calculate_field(
-            self._b_z_spat_rf,
-            pos,
-            phi,
-            amplitude,
-            phi_0_rel,
-            complex_output=True,
-        )
-
-    def partial_e_z(
-        self, amplitude: float, phi_0_rel: float
-    ) -> FieldFuncComplexTimedComponent:
-        """Generate a function for longitudinal transfer matrix calculation."""
-        return functools.partial(
-            self.e_z, amplitude=amplitude, phi_0_rel=phi_0_rel
-        )
-
-    def partial_e_z_phis_fit(self, amplitude: float) -> FieldFuncPhisFit:
-        """Generate a function for longitudinal transfer matrix calculation."""
-        return functools.partial(self.e_z, amplitude=amplitude)
 
     def _patch_to_keep_consistency(self, n_interp: Any, n_cell: int) -> None:
         """Save ``n_cell`` and ``n_z``. Temporary solution."""
@@ -305,3 +217,13 @@ class Field(ABC):
             raise ValueError(f"{n_interp = } but should be a 1D tuple.")
         self.n_z = n_interp[0]
         self.n_cell = n_cell
+
+    def plot(self, amplitude: float = 1.0, phi_0_rel: float = 0.0) -> None:
+        """Plot the profile of the electric field."""
+        positions = np.linspace(0, self._length_m, self.n_z + 1)
+        field_func = self.e_z_functions(
+            amplitude=amplitude, phi_0_rel=phi_0_rel
+        )[1]
+        field_values = [field_func(pos, 0.0) for pos in positions]
+        df = pd.DataFrame({"pos": positions, "field": field_values})
+        df.plot(x="pos", grid=True)

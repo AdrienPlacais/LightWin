@@ -1,5 +1,6 @@
 """Set a function to check validity of :class:`.SimulationOutput`."""
 
+import logging
 from typing import Literal
 
 import numpy as np
@@ -37,8 +38,8 @@ def wrap_approx(
     key: GETTABLE_SIMULATION_OUTPUT_T,
     fix_so: SimulationOutput,
     ref_so: SimulationOutput | None = None,
-    rel: float | None = None,
-    abs: float | None = None,
+    rel: float = 1e-6,
+    abs: float = 0,
     to_numpy: bool = False,
     to_deg: bool = True,
     elt: str | None = "last",
@@ -97,9 +98,27 @@ def wrap_approx(
     )
     if ref_so is None:
         reference_value = _REFERENCE_RESULTS.get(key)
-        return value == approx(reference_value, abs=abs, rel=rel)
+        try:
+            np.testing.assert_allclose(
+                value,
+                reference_value,
+                rtol=rel,
+                atol=abs,
+                err_msg=key,
+            )
+        except AssertionError as e:
+            logging.critical(e)
+            return False
+        return True
 
     reference_value = ref_so.get(
         key, to_numpy=to_numpy, to_deg=to_deg, elt=elt, pos=pos, **get_kwargs
     )
-    return value == approx(reference_value, abs=abs, rel=rel)
+    try:
+        np.testing.assert_allclose(
+            value, reference_value, rtol=rel, atol=abs, err_msg=key
+        )
+    except AssertionError as e:
+        logging.critical(e)
+        return False
+    return True

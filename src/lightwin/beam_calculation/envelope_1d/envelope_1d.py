@@ -24,6 +24,10 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.elements.field_maps.superposed_field_map import (
+    SuperposedFieldMap,
+)
+from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.physics.acceptance import compute_acceptances
@@ -88,6 +92,12 @@ arameters_factory.PARAMETERS_1D
         This method is called in the :meth:`.BeamCalculator.__init__`, hence it
         appears only in the base :class:`.BeamCalculator`.
 
+        .. todo::
+            ``default_field_map_folder`` has a wrong default value. Should take
+            path to the ``.dat`` file, that is not known at this point. Maybe
+            handle this directly in the :class:`.InstructionsFactory` or
+            whatever.
+
         """
         self.simulation_output_factory = SimulationOutputFactoryEnvelope1D(
             _is_3d=self.is_a_3d_simulation,
@@ -101,6 +111,16 @@ arameters_factory.PARAMETERS_1D
             n_steps_per_cell=self.n_steps_per_cell,
             solver_id=self.id,
             beam_kwargs=self._beam_kwargs,
+        )
+        self.list_of_elements_factory = ListOfElementsFactory(
+            self.is_a_3d_simulation,
+            self.is_a_multiparticle_simulation,
+            default_field_map_folder=self.default_field_map_folder,
+            load_fields=True,
+            beam_kwargs=self._beam_kwargs,
+            field_maps_in_3d=False,  # not implemented anyway
+            load_cython_field_maps=False,
+            elements_to_dump=(),
         )
 
     def alternative_run(
@@ -192,13 +212,16 @@ arameters_factory.PARAMETERS_1D
 
         set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(
             set_of_cavity_settings,
-            elts.l_cav,
+            elts.cavities(superposed="remove"),
             use_a_copy_for_nominal_settings=use_a_copy_for_nominal_settings,
         )
 
         for elt in elts:
             cavity_settings = set_of_cavity_settings.get(elt, None)
             _store_entry_phase_in_settings(phi_abs, cavity_settings)
+            # Patch
+            if isinstance(elt, SuperposedFieldMap):
+                _store_entry_phase_in_settings(phi_abs, elt.cavities_settings)
 
             func = elt.beam_calc_param[self.id].transf_mat_function_wrapper
             elt_results = func(w_kin=w_kin, cavity_settings=cavity_settings)

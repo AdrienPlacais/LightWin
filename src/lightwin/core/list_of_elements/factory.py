@@ -64,8 +64,8 @@ class ListOfElementsFactory:
         is_3d: bool,
         is_multipart: bool,
         default_field_map_folder: Path,
+        load_fields: bool,
         beam_kwargs: BeamKwargs,
-        load_field_maps: bool = True,
         field_maps_in_3d: bool = False,
         load_cython_field_maps: bool = False,
         elements_to_dump: ABCMeta | tuple[ABCMeta, ...] = (),
@@ -116,11 +116,11 @@ class ListOfElementsFactory:
         )
 
         self.instructions_factory = InstructionsFactory(
-            freq_bunch_mhz,
-            default_field_map_folder,
-            load_field_maps,
-            field_maps_in_3d,
-            load_cython_field_maps,
+            freq_bunch_mhz=freq_bunch_mhz,
+            default_field_map_folder=default_field_map_folder,
+            load_field=load_fields,
+            field_maps_in_3d=field_maps_in_3d,
+            load_cython_field_maps=load_cython_field_maps,
             elements_to_dump=elements_to_dump,
         )
 

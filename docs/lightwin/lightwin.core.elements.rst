@@ -31,5 +31,4 @@ Submodules
    lightwin.core.elements.helper
    lightwin.core.elements.quad
    lightwin.core.elements.solenoid
-   lightwin.core.elements.superposed_field_map
    lightwin.core.elements.thin_steering

@@ -23,6 +23,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.physics.synchronous_phases import (
@@ -114,6 +115,16 @@ parameters_factory.PARAMETERS_3D
             beam_kwargs=self._beam_kwargs,
             phi_s_definition=self._phi_s_definition,
         )
+        self.list_of_elements_factory = ListOfElementsFactory(
+            self.is_a_3d_simulation,
+            self.is_a_multiparticle_simulation,
+            default_field_map_folder=self.default_field_map_folder,
+            load_fields=True,
+            beam_kwargs=self._beam_kwargs,
+            load_cython_field_maps=False,
+            field_maps_in_3d=False,  # not implemented anyway
+            elements_to_dump=(),
+        )
 
     def run(
         self,
@@ -129,9 +140,9 @@ parameters_factory.PARAMETERS_3D
             List of elements in which the beam must be propagated.
         update_reference_phase :
             To change the reference phase of cavities when it is different from
-            the one asked in the ``TOML``. To use after the first calculation,
-            if :attr:`.BeamCalculator.reference_phase_policy` does not align
-            with :attr:`.CavitySettings.reference`.
+            the one asked in the ``.toml``. To use after the first calculation,
+            if ``BeamCalculator.flag_phi_abs`` does not correspond to
+            ``CavitySettings.reference``.
 
         Returns
         -------
@@ -267,8 +278,8 @@ parameters_factory.PARAMETERS_3D
 
         Returns
         -------
-            Accelerating voltage in :unit:`MV` and synchronous phase in
-            :unit:`rad`. If the cavity is failed, two ``np.nan`` are returned.
+            Accelerating voltage in MV and synchronous phase in radians. If the
+            cavity is failed, two ``np.nan`` are returned.
 
         """
         v_cav_mv, phi_s = self._phi_s_func(**results)

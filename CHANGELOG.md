@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Experimental SPIRAL2 branch
+
+### Added
+
+- Explicit Cython optional dependency in `pyproject.toml`.
+  - [ ] Complete cython installation instructions.
+
+### Changed
+
+- Refactored the `RfField` class, which is now called `Field`.
+  - Opens up the way for DC and 3D fields support.
+    - `FIELD_MAP 7700` is partially supported: motion is integrated on axis.
+  - Massive speed-up w.r.t 0.13.5:
+    - `Envelope1D` is ~40% faster.
+    - `CyEnvelope1D` is ~50% faster.
+    - `Envelope3D` is ~25% faster. Note that it is not fully optimized.
+
 ## [0.13.5] -- 2025-11-27
 
 ### Changed
@@ -12,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modernized the `experimental` module: `Plotter`, `SimulationOutputEvaluator`.
   _Write some tutorial before official functionality release._
 
-- Fixed
+### Fixed
 
 - Cython solver was not used even if configuration asked for it.
 

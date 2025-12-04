@@ -21,5 +21,4 @@ Submodules
    lightwin.optimisation.algorithms.factory
    lightwin.optimisation.algorithms.least_squares
    lightwin.optimisation.algorithms.least_squares_penalty
-   lightwin.optimisation.algorithms.nsga
    lightwin.optimisation.algorithms.simulated_annealing
