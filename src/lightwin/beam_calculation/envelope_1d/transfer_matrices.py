@@ -114,7 +114,7 @@ def z_field_map_rk4(
         longitudinal transfer matrix of every field map slice along the field
         map.
     NDArray[np.float64]
-        :math:`2\times n` array, holding Lorentz factor and phas of the
+        :math:`2\times n` array, holding Lorentz factor and phase of the
         synchronous particle along the linac.
     complex
         Complex integral of the field experienced by the synchronous particle

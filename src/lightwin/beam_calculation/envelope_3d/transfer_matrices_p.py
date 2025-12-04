@@ -221,7 +221,55 @@ def field_map_rk4(
     complex_e_func: FieldFuncComplexTimedComponent,
     real_e_func: FieldFuncTimedComponent,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], complex]:
-    """Calculate the transfer matrix of a ``FIELD_MAP`` using Runge-Kutta."""
+    r"""Calculate the transfer matrix of :class:`.FieldMap` using Runge-Kutta.
+
+    We slice the field map in a serie of drift-thin acceleration gap-drift. We
+    pre-compute some constants to speed up the calculation:
+
+    Parameters
+    ----------
+    gamma_in :
+        Lorentz factor at entry of field map.
+    d_z :
+        Size of the integration step in :unit:`m`.
+    n_steps :
+        Number of integration steps.
+    omega0_rf :
+        RF pulsation in :unit:`rad/s`.
+    delta_phi_norm :
+        Constant to speed up calculation.
+
+        .. math::
+            \Delta\phi_\mathrm{norm} = \frac{\omega_0 \Delta z}{c}
+
+    delta_gamma_norm :
+        Constant to speed up calculation.
+
+        .. math::
+            \Delta\gamma_\mathrm{norm} = \frac{q_\mathrm{adim} \Delta z}
+            {E_\mathrm{rest}}
+
+    complex_e_func :
+        Takes in the z-position of the particle and the phase, return the
+        complex field component at this phase and position.
+    real_e_func :
+        Takes in the z-position of the particle and the phase, return the
+        real field component at this phase and position.
+
+    Returns
+    -------
+    NDArray[np.float64]
+        :math:`6\times 6 \times n` matrix, holding the :math:`2\times2`
+        longitudinal transfer matrix of every field map slice along the field
+        map.
+    NDArray[np.float64]
+        :math:`2\times n` array, holding Lorentz factor and phase of the
+        synchronous particle along the linac.
+    complex
+        Complex integral of the field experienced by the synchronous particle
+        when crossing the cavity.
+
+    """
     z_rel = 0.0
     itg_field = 0.0
     half_dz = 0.5 * d_z
