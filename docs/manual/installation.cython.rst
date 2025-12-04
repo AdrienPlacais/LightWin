@@ -5,7 +5,7 @@ Cython setup (should be automatic)
 ----------------------------------
 
 .. note::
-   If you installed LightWin with `pip` and there was no error, you do not need to read this section.
+   If you installed LightWin with `pip install lightwin[cython]` and there was no error, you do not need to read this section.
    If you built the code from source, you can check that everything works as expected with `pytest -m cython`.
 
 Cython is an optional but highly recommended tool to speed up beam dynamics calculations.
@@ -56,6 +56,8 @@ If not, manually move the created files:
 To:
 
    * `/path/to/LightWin/src/lightwin/beam_calculation/cy_envelope_1d/`.
+
+Perform the same operation for `/path/to/LightWin/serc/lightwin/core/em_fields/`.
 
 `Microsoft Visual C++ 14.0 or greater is required` error is covered :ref:`here<windows_c_compiler>`.
 

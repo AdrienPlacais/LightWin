@@ -21,7 +21,7 @@ The steps are straightforward and can be summarized as follows:
 ### Users
 
 1. Create a dedicated Python environment.
-2. Run `pip install lightwin`
+2. Run `pip install lightwin[cython]`
 
 ### Developers
 
@@ -33,7 +33,7 @@ The steps are straightforward and can be summarized as follows:
 > [A workaround](https://lightwin.readthedocs.io/en/latest/manual/troubles/setuptools_error.html) is proposed in the documentation.
 
 2. Create a dedicated Python environment.
-3. From LightWin folder: `pip install -e .[test]`
+3. From LightWin folder: `pip install -e .[test, cython]`
 4. Test that everything is working with `pytest -m "not tracewin and not implementation"`.
 
 > [!NOTE]
