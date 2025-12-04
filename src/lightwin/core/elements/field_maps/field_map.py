@@ -1,10 +1,5 @@
 """Hold a ``FIELD_MAP``.
 
-.. todo::
-    Handle the different kind of field_maps...
-
-.. todo::
-    Completely handle the SET_SYNCH_PHASE command
 
 .. todo::
     Hande phi_s fitting with :class:`.TraceWin`.
@@ -27,9 +22,6 @@ import numpy as np
 
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
-from lightwin.core.elements.field_maps.util import set_full_field_map_path
-from lightwin.core.em_fields.field import Field
-from lightwin.core.em_fields.rf_field import RfField
 from lightwin.tracewin_utils.line import DatLine
 from lightwin.util.helper import recursive_getter
 from lightwin.util.typing import (
@@ -62,18 +54,20 @@ class FieldMap(Element):
         self.length_m = 1e-3 * float(line.splitted[2])
         self.aperture_flag = int(line.splitted[8])  # K_a
 
+        #: Where all the field map files are to be found.
         self.field_map_folder = default_field_map_folder
-        self.field_map_file_name: str | list[Path] = line.splitted[9]
+        #: Base name of all field map files, without extension.
+        self.filename = line.splitted[9]
+        #: All the field map files to load, with an extension. This variable
+        #: is set after instantiation, by calling :meth:`.set_full_path` from
+        #: :func:`.electromagnetic_fields.load_electromagnetic_fields`.
+        # self.filepaths: list[Path]
+
+        self.z_0 = 0.0
 
         self._can_be_retuned: bool = True
-        self.rf_field = RfField(section_idx=self.idx["section"])
         #: Stores the settings of the cavity, such as amplitude or phase.
         self.cavity_settings = cavity_settings
-        self.cavity_settings.rf_field = self.rf_field
-        #: Stores the field properties, such as interpolated field or
-        #: frequency. This object is shared by all the caviities with the same
-        #: geometry.
-        self.field: Field
 
     @property
     def status(self) -> str:
@@ -134,14 +128,13 @@ class FieldMap(Element):
             Keys are nature of the field, values are a list of extensions
             corresponding to it without a period.
 
-        See Also
-        --------
-        :func:`.electromagnetic_fields._get_filemaps_extensions`
-
         """
-        self.field_map_file_name = set_full_field_map_path(
-            self.field_map_folder, self.field_map_file_name, extensions
-        )
+        raise NotImplementedError("deprecated")
+        self.filepaths = [
+            Path(self.field_map_folder, self.filename + f".{ext}").resolve()
+            for extension in extensions.values()
+            for ext in extension
+        ]
 
     def keep_cavity_settings(self, cavity_settings: CavitySettings) -> None:
         """Keep the cavity settings that were found."""
@@ -159,7 +152,6 @@ class FieldMap(Element):
 
         Returns
         -------
-        bool
             True if the key is found in ``self`` or ``self.cavity_settings``.
 
         """
@@ -330,7 +322,6 @@ class FieldMap(Element):
 
         Returns
         -------
-        list[str]
             The line in the ``DAT``, with updated amplitude and phase from
             current object.
 
@@ -412,3 +403,23 @@ class FieldMap(Element):
             " Maybe the particle entry phase is not defined?"
         )
         return math.degrees(phase), abs_phase_flag, reference
+
+    @property
+    def z_0(self) -> float:
+        """Shifting constant of the field map. Used in superposed maps."""
+        return self._z_0
+
+    @z_0.setter
+    def z_0(self, value: float) -> None:
+        """Change the value of z_0.
+
+        This method should be called once at the instantiation of the object,
+        and only be called from the ``apply`` method of :class:`.SuperposeMap`
+        after.
+
+        """
+        self._z_0 = value
+
+    def plot(self) -> None:
+        """Plot the profile of the electric field."""
+        return self.cavity_settings.plot()

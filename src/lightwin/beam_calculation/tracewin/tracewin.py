@@ -26,6 +26,7 @@ from lightwin.beam_calculation.tracewin.simulation_output_factory import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.tracewin_utils.interface import (
@@ -127,6 +128,16 @@ class TraceWin(BeamCalculator):
 
         """
         self.beam_calc_parameters_factory = ElementTraceWinParametersFactory()
+        self.list_of_elements_factory = ListOfElementsFactory(
+            self.is_a_3d_simulation,
+            self.is_a_multiparticle_simulation,
+            default_field_map_folder=self.default_field_map_folder,
+            load_fields=True,
+            beam_kwargs=self._beam_kwargs,
+            field_maps_in_3d=False,  # not implemented anyway
+            load_cython_field_maps=False,
+            elements_to_dump=(),
+        )
 
         self.simulation_output_factory = SimulationOutputFactoryTraceWin(
             _is_3d=self.is_a_3d_simulation,
@@ -281,7 +292,7 @@ class TraceWin(BeamCalculator):
 
         set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(
             set_of_cavity_settings,
-            elts.l_cav,
+            elts.cavities(superposed="remove"),
             use_a_copy_for_nominal_settings=use_a_copy_for_nominal_settings,
         )
 
@@ -299,7 +310,9 @@ class TraceWin(BeamCalculator):
             set_of_cavity_settings=set_of_cavity_settings,
         )
         self._post_treat_cavity_setttings(
-            set_of_cavity_settings, elts.l_cav, simulation_output
+            set_of_cavity_settings,
+            elts.cavities(superposed="remove"),
+            simulation_output,
         )
         return simulation_output
 
@@ -369,6 +382,7 @@ class TraceWin(BeamCalculator):
         self.path_cal = Path(
             accelerator.get("accelerator_path"), self.out_folder
         )
+
         if not self.path_cal.is_dir():
             self.path_cal.mkdir()
 

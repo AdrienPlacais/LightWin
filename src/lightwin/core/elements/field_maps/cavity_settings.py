@@ -10,7 +10,6 @@
 
 See Also
 --------
-:class:`.RfField`
 :class:`.Field`
 
 """
@@ -24,10 +23,10 @@ from functools import partial
 from typing import Any, NamedTuple, Self
 
 import numpy as np
+from numpy.typing import NDArray
 from scipy.optimize import minimize_scalar
 
 from lightwin.core.em_fields.field import Field
-from lightwin.core.em_fields.rf_field import RfField
 from lightwin.physics.phases import (
     diff_angle,
     phi_0_abs_to_rel,
@@ -96,7 +95,6 @@ class CavitySettings:
             dict[str, TRANSF_MAT_FUNC_WRAPPER_T] | None
         ) = None,
         phi_s_funcs: dict[str, PHI_S_FUNC_T] | None = None,
-        rf_field: RfField | None = None,
         field: Field | None = None,
     ) -> None:
         """Instantiate the object.
@@ -163,15 +161,12 @@ class CavitySettings:
 
         self._freq_bunch_mhz = freq_bunch_mhz
         self.bunch_phase_to_rf_phase: Callable[[float], float]
-        self.rf_phase_to_bunch_phase: Callable[[float], float]
+        self.rf_phase_to_bunch_phase: Callable[
+            [float | NDArray[np.float64]], float | NDArray[np.float64]
+        ]
         self.freq_cavity_mhz: float
         self.omega0_rf: float
-        if freq_cavity_mhz is not None:
-            self.set_bunch_to_rf_freq_func(freq_cavity_mhz)
-
-        self.rf_field: RfField
-        if rf_field is not None:
-            self.rf_field = rf_field
+        self.set_bunch_to_rf_freq_func(freq_cavity_mhz)
 
         self.field: Field
         if field is not None:
@@ -257,7 +252,7 @@ class CavitySettings:
             freq_cavity_mhz=base.freq_cavity_mhz,
             transf_mat_func_wrappers=base._transf_mat_func_wrappers,
             phi_s_funcs=base._phi_s_funcs,
-            rf_field=base.rf_field,
+            # rf_field=base.rf_field,
             field=base.field,
         )
 
@@ -331,17 +326,25 @@ class CavitySettings:
                 self.reference != "phi_s"
             ), "Failed cavities with synchronous phase ref leads to bugs."
 
-    def set_bunch_to_rf_freq_func(self, freq_cavity_mhz: float) -> None:
-        """Use cavity frequency to set a bunch -> rf freq function.
+    def set_bunch_to_rf_freq_func(
+        self, freq_cavity_mhz: float | None = None
+    ) -> None:
+        """
+        Set the rf frequency, and methods to switch between freq definitions.
 
-        This method is called by the :class:`.Freq`.
+        This method is called a first time at the instantiation of ``self``;
+        it will be called once again if a :class:`.Freq` command is found.
 
         Parameters
         ----------
         freq_cavity_mhz :
-            Frequency in the cavity in :unit:`MHz`.
+            Frequency in the cavity in :unit:`MHz`. If it is not provided, we
+            set it to the bunch frequency.
 
         """
+        if freq_cavity_mhz is None:
+            freq_cavity_mhz = self._freq_bunch_mhz
+
         self.freq_cavity_mhz = freq_cavity_mhz
         bunch_phase_to_rf_phase = partial(
             phi_bunch_to_phi_rf, freq_cavity_mhz / self._freq_bunch_mhz
@@ -471,7 +474,12 @@ class CavitySettings:
     # =============================================================================
     @property
     def status(self) -> STATUS_T:
-        """Give the status of the cavity under study."""
+        """Give the status of the cavity under study.
+
+        - :data:`.STATUS_T`
+        - :obj:`.STATUS_T`
+
+        """
         return self._status
 
     @status.setter
@@ -920,3 +928,25 @@ class CavitySettings:
         """Delete the energy acceptance."""
         if hasattr(self, "_acceptance_energy"):
             del self._acceptance_energy
+
+    def plot(self) -> None:
+        """Plot the profile of the electric field."""
+        return self.field.plot(self.k_e, self.phi_0_rel)
+
+
+def _get_valid_func(obj: object, func_name: str, solver_id: str) -> Callable:
+    """Get the function in ``func_name`` for ``solver_id``."""
+    all_funcs = getattr(obj, func_name, None)
+    assert isinstance(all_funcs, dict), (
+        f"Attribute {func_name} of {object} should be a dict[str, Callable] "
+        f"but is {all_funcs}. "
+        "Check CavitySettings.set_cavity_parameters_methods and"
+        "CavitySettings.set_cavity_parameters_arguments"
+    )
+    func = all_funcs.get(solver_id, None)
+    assert isinstance(func, Callable), (
+        f"No Callable {func_name} was found in {object} for {solver_id = }"
+        "Check CavitySettings.set_cavity_parameters_methods and"
+        "CavitySettings.set_cavity_parameters_arguments"
+    )
+    return func

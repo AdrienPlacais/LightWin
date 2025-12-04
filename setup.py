@@ -15,7 +15,11 @@ from typing import Literal
 
 from setuptools import Extension, setup
 
-CY_MODULES = ("lightwin.beam_calculation.cy_envelope_1d.transfer_matrices",)
+CY_MODULES = (
+    "lightwin.core.em_fields.cy_field_helpers",
+    "lightwin.beam_calculation.cy_envelope_1d.transfer_matrices",
+    "lightwin.beam_calculation.integrators.cy_rk4",
+)
 
 
 def _cython_is_installed() -> bool:

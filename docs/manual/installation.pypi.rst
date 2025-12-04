@@ -67,4 +67,12 @@ Once it is activated, run the following command:
 
 .. code-block:: bash
 
+   pip install lightwin[cython]
+
+Note that Cython is not mandatory, but speeds up calculations.
+If you run into a Cython related issue, you can always:
+
+.. code-block:: bash
+
    pip install lightwin
+

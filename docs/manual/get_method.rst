@@ -35,7 +35,6 @@ You can also refer to the documentation of each specific `get` method:
 * :meth:`.InitialBeamParameters.get`
 * :meth:`.ListOfElements.get`
 * :meth:`.ParticleFullTrajectory.get`
-* :meth:`.RfField.get`
 * :meth:`.SimulationOutput.get`
 * :meth:`.TransferMatrix.get`
 

@@ -23,7 +23,7 @@ class Objective(ABC):
     """Hold an objective and methods to evaluate it.
 
     .. todo::
-        Should this object also store its final value?
+       Should this object also store its final value?
 
     """
 
@@ -58,15 +58,18 @@ class Objective(ABC):
             the ``to_numpy`` key.
         ideal_value :
             Ideal value to match.
+
             - It is a float when we want to be as close as possible of a value.
             - It is a tuple of floats when we want to be within two bounds.
             - It is not defined (``None``) when we want to minimize or maximize
               an objective.
+
         descriptor :
             A longer string to explain the objective.
 
         """
         get_key, get_kwargs = self._check_get_arguments(get_key, get_kwargs)
+        #: Short string describing the objective.
         self.name: str = name
         #: Weight :math:`w` of current objective.
         self.weight: float = weight
@@ -75,6 +78,7 @@ class Objective(ABC):
         #: Keyword arguments for the :meth:`.SimulationOutput.get` method.
         self.get_kwargs: dict[str, Any] = get_kwargs
         #: Ideal value to match.
+        #:
         #: - It is a float when we want to be as close as possible of a value.
         #: - It is a tuple of floats when we want to be within two bounds.
         #: - It is not defined (``None``) when we want to minimize or maximize
@@ -547,11 +551,13 @@ class QuantityIsBetween(Objective):
         -------
             residual for current objective, scaled by :attr:`.Objective.weight`.
             The loss function is defined as:
+
             - :math:`0` if :math:`x_l \leq x \leq x_u`, *ie* if
               ``objective_value`` is within the bounds defined by
               :attr:`.Objective.ideal_value`
-            - :math:`w * (x - x_{l\,u})^2` otherwise, where :math:`x_{l,u}` is
-              the violated boundary and :math:`w` is :attr:`.Objective.weight`.
+            - :math:`w \times (x - x_{l\,u})^2` otherwise, where
+              :math:`x_{l,u}` is the violated boundary and :math:`w` is
+              :attr:`.Objective.weight`.
 
         """
         if objective_value < self.ideal_value[0]:

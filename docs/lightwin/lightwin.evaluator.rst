@@ -20,6 +20,7 @@ Submodules
 .. toctree::
    :maxdepth: 5
 
+   lightwin.evaluator.helper
    lightwin.evaluator.list_of_simulation_output_evaluators
    lightwin.evaluator.post_treaters
    lightwin.evaluator.specs

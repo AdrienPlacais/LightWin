@@ -10,6 +10,7 @@ import logging
 from collections.abc import Collection, Sequence
 
 from lightwin.core.commands.command import Command
+from lightwin.core.commands.set_sync_phase import SetSyncPhase
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
@@ -88,7 +89,8 @@ class SuperposeMap(Command):
 
         """
         instructions_to_merge = instructions[self.influenced]
-        total_length = self._total_length(instructions_to_merge)
+        self._apply_set_sync_phase(instructions, instructions_to_merge)
+        total_length = self._total_length_m(instructions_to_merge)
 
         new_instructions = self._generate_new_instructions(
             total_length, instructions_to_merge
@@ -97,19 +99,18 @@ class SuperposeMap(Command):
         instructions[self.influenced] = new_instructions
         number_of_superposed = int(len(new_instructions) / 2)
 
-        elts_after_self = list(
+        elts_after_self: list[Element] = list(  # type: ignore
             filter(
                 lambda elt: isinstance(elt, Element),
-                # instructions[self.idx["dat_idx"] + 1 :],
                 instructions[new_instructions[-1].idx["dat_idx"] + 1 :],
             )
         )
         self._re_set_indexes(elts_after_self, number_of_superposed)
-
-        # instructions[self.influenced] = instructions_to_merge
         return instructions
 
-    def _total_length(self, instructions_to_merge: list[Instruction]) -> float:
+    def _total_length_m(
+        self, instructions_to_merge: list[Instruction]
+    ) -> float:
         """Compute length of the superposed field maps."""
         z_max = 0.0
         z_0 = None
@@ -118,22 +119,23 @@ class SuperposeMap(Command):
                 z_0 = instruction.z_0
                 continue
 
-            if isinstance(instruction, FieldMap):
+            if isinstance(field_map := instruction, FieldMap):
                 if z_0 is None:
                     logging.error(
                         "There is no SUPERPOSE_MAP for current FIELD_MAP.\n"
                         f"{instruction.line}"
                     )
                     z_0 = 0.0
+                field_map.z_0 = z_0
 
-                z_1 = z_0 + instruction.length_m
+                z_1 = z_0 + field_map.length_m
                 if z_1 > z_max:
                     z_max = z_1
                 z_0 = None
         return z_max
 
     def _generate_new_instructions(
-        self, total_length: float, instructions_to_merge: list[Instruction]
+        self, total_length_m: float, instructions_to_merge: list[Instruction]
     ) -> list[Instruction]:
         """Create the instructions replacing superpose and field maps."""
         indexes = [x.idx["dat_idx"] for x in instructions_to_merge]
@@ -141,8 +143,8 @@ class SuperposeMap(Command):
         superposed = SuperposedFieldMap.from_field_maps(
             instructions_to_merge,
             dat_idx=indexes.pop(0),
-            total_length=total_length,
-            starting_positions=_starting_positions(instructions_to_merge),
+            total_length_m=total_length_m,
+            z_0s=_starting_positions(instructions_to_merge),
         )
         idx_in_lattice = superposed.idx["idx_in_lattice"]
         lattice = superposed.idx["lattice"]
@@ -154,7 +156,11 @@ class SuperposeMap(Command):
                 new_instructions.append(instruction)
                 continue
 
-            dat_line = DatLine("SUPERPOSED_MAP_PLACE_HOLDER 0", dat_idx)
+            dat_line = DatLine(
+                "SUPERPOSED_MAP_PLACE_HOLDER 0",
+                dat_idx,
+                original_line=instruction.line.original_line,
+            )
             if isinstance(instruction, Element):
                 new_instructions.append(
                     SuperposedPlaceHolderElt(
@@ -215,6 +221,22 @@ class SuperposeMap(Command):
 
                 elt.idx["idx_in_lattice"] += number_of_elements_in_lattice
                 elt.idx["lattice"] -= 1
+
+    def _apply_set_sync_phase(
+        self,
+        instructions: list[Instruction],
+        instructions_to_merge: list[Instruction],
+    ) -> list[Instruction]:
+        """Apply the SET_SYNC_PHASE before the SUPERPOSE_MAP."""
+        for instruction in instructions_to_merge:
+            if not isinstance(set_sync_phase := instruction, SetSyncPhase):
+                continue
+            set_sync_phase.set_influenced_elements(instructions)
+            instructions = set_sync_phase.apply(instructions)
+            raise NotImplementedError(
+                "SET_SYNC_PHASE in SUPERPOSE_MAP not yet supported."
+            )
+        return instructions
 
 
 def _starting_positions(

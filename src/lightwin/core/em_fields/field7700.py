@@ -1,0 +1,67 @@
+"""Define the rf field corresponding to ``FIELD_MAP 7700``.
+
+This is 1D longitudinal field along ``z``. The only one that is completely
+implemented for now.
+
+"""
+
+from pathlib import Path
+
+from lightwin.core.em_fields.field100 import Field100
+from lightwin.core.em_fields.field_helpers import (
+    create_1d_field_func,
+    rescale_array,
+)
+from lightwin.core.em_fields.types import FieldFuncComponent1D
+from lightwin.tracewin_utils.field_map_loaders import (
+    field_values_on_axis,
+    get_number_of_cells,
+    is_a_valid_3d_field,
+    load_field_3d,
+)
+
+
+class Field7700(Field100):
+    """Define a RF field, 1D longitudinal."""
+
+    extensions = (".edx", ".edy", ".edz", ".bdx", ".bdy", ".bdz")
+    is_implemented = True
+
+    def _load_fieldmap(
+        self, path: Path, **validity_check_kwargs
+    ) -> tuple[FieldFuncComponent1D, tuple[int], int]:
+        r"""Load a 3D field.
+
+        .. warning::
+            The field will be calculated on the axis only. We remove any
+            transverse component for now.
+
+        Parameters
+        ----------
+        path : pathlib.Path
+            The path to the file to load.
+
+        Returns
+        -------
+        field : Callable[[Pos3D], float]
+            Function that takes in position and returns corresponding field, at
+            null phase, for amplitude of :math:`1\,\mathrm{MV/m}`.
+        n_xyz : tuple[int, int, int]
+            Number of interpolation points in the three directions.
+        n_cell : int
+            Number of cell for cavities.
+
+        """
+        n_z, zmax, n_x, xmin, xmax, n_y, ymin, ymax, norm, field_values = (
+            load_field_3d(path)
+        )
+
+        assert is_a_valid_3d_field(
+            zmax, n_x, n_y, n_z, field_values, self._length_m
+        ), f"Error loading {path}'s field map."
+
+        field_values = rescale_array(field_values, norm)
+        on_axis = field_values_on_axis(field_values, n_x, n_y)
+        n_cell = get_number_of_cells(on_axis)
+        e_z = create_1d_field_func(on_axis, zmax, n_z)
+        return e_z, (n_z,), n_cell

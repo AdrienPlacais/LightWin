@@ -17,6 +17,7 @@ from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
+from scipy.constants import c
 
 import lightwin.physics.converters as convert
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
@@ -31,7 +32,6 @@ from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
-from lightwin.core.em_fields.rf_field import compute_param_cav
 from lightwin.physics.synchronous_phases import (
     PHI_S_MODELS,
     SYNCHRONOUS_PHASE_FUNCTIONS,
@@ -60,9 +60,9 @@ class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
         Parameters
         ----------
         length_m :
-            length_m
+            Length of elemet in :unit:`m`.
         n_steps :
-            n_steps
+            Number of solver steps.
         beam_kwargs :
             Configuration dict holding initial beam parameters.
         transf_mat_function :
@@ -78,6 +78,9 @@ class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
             beam_kwargs=beam_kwargs,
             transf_mat_function=transf_mat_function,
         )
+
+    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
+        return super().transfer_matrix_kw(*args, **kwargs)
 
     def _transfer_matrix_results_to_dict(
         self,
@@ -150,6 +153,13 @@ class DriftEnvelope3DParameters(ElementEnvelope3DParameters):
             **kwargs,
         )
 
+    def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
+        return {
+            "delta_s": self.d_z,
+            "omega_0_bunch": self._beam_kwargs["omega_0_bunch"],
+            "n_steps": self.n_steps,
+        }
+
 
 class QuadEnvelope3DParameters(ElementEnvelope3DParameters):
     """Hold the properties to compute transfer matrix of a :class:`.Quad`."""
@@ -172,10 +182,12 @@ class QuadEnvelope3DParameters(ElementEnvelope3DParameters):
         self.gradient = elt.grad
 
     def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
-        """Give the element parameters necessary to compute transfer matrix."""
-        return self._beam_kwargs | {
+        return {
             "delta_s": self.d_z,
             "gradient": self.gradient,
+            "omega_0_bunch": self._beam_kwargs["omega_0_bunch"],
+            "q_adim": self._beam_kwargs["q_adim"],
+            "e_rest_mev": self._beam_kwargs["e_rest_mev"],
         }
 
 
@@ -220,9 +232,9 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
         ]
 
         self.solver_id = solver_id
-        self.n_cell = elt.rf_field.n_cell
+        n_cell = elt.cavity_settings.field.n_cell
         self._rf_to_bunch = elt.cavity_settings.rf_phase_to_bunch_phase
-        n_steps = self.n_cell * n_steps_per_cell
+        n_steps = n_cell * n_steps_per_cell
         super().__init__(
             elt.length_m,
             n_steps,
@@ -234,6 +246,11 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
             self.solver_id,
             self.transf_mat_function_wrapper,
             self.compute_cavity_parameters,
+        )
+        self._delta_gamma_norm = (
+            self._beam_kwargs["q_adim"]
+            * self.d_z
+            * self._beam_kwargs["inv_e_rest_mev"]
         )
 
     def transfer_matrix_kw(
@@ -259,33 +276,52 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
 
         Returns
         -------
-        dict[str, Any]
             Keyword arguments that will be passed to the 3D transfer matrix
             function defined in :mod:`.envelope_3d.transfer_matrices_p`.
 
         """
         assert cavity_settings.status != "failed"
-
-        geometry_kwargs = {
+        field = cavity_settings.field
+        tm_kwargs = {
+            "complex_e_func": None,
             "d_z": self.d_z,
+            "delta_gamma_norm": self._delta_gamma_norm,
+            "delta_phi_norm": cavity_settings.omega0_rf * self.d_z / c,
             "n_steps": self.n_steps,
-        }
-        rf_field = cavity_settings.rf_field
-        rf_kwargs = {
-            "bunch_to_rf": cavity_settings.bunch_phase_to_rf_phase,
-            "e_spat": rf_field.e_spat,
-            "k_e": cavity_settings.k_e,
-            "n_cell": rf_field.n_cell,
             "omega0_rf": cavity_settings.omega0_rf,
-            "section_idx": rf_field.section_idx,
+            "real_e_func": None,
         }
-        if phi_0_rel is not None:
-            rf_kwargs["phi_0_rel"] = phi_0_rel
-        else:
-            _add_cavity_phase(
-                self.solver_id, w_kin, cavity_settings, rf_kwargs
-            )
-        return self._beam_kwargs | rf_kwargs | geometry_kwargs
+
+        match cavity_settings.reference, phi_0_rel:
+            # Prepare the phi_s fit
+            case "phi_s", None:
+                cavity_settings.set_cavity_parameters_arguments(
+                    self.solver_id,
+                    w_kin,
+                    **tm_kwargs,  # Note that phi_0_rel is not set
+                )
+                # phi_0_rel will be set when trying to access
+                # CavitySettings.phi_0_rel (this is the case #2)
+                phi_0_rel = _get_phi_0_rel(cavity_settings)
+                funcs = field.e_z_functions(cavity_settings.k_e, phi_0_rel)
+                tm_kwargs["complex_e_func"], tm_kwargs["real_e_func"] = funcs
+
+            # Currently looking for the phi_0_rel matching phi_s
+            case "phi_s", _:
+                funcs = field.e_z_functions(cavity_settings.k_e, phi_0_rel)
+                tm_kwargs["complex_e_func"], tm_kwargs["real_e_func"] = funcs
+
+            # Normal run
+            case _, None:
+                phi_0_rel = _get_phi_0_rel(cavity_settings)
+                funcs = field.e_z_functions(cavity_settings.k_e, phi_0_rel)
+                tm_kwargs["complex_e_func"], tm_kwargs["real_e_func"] = funcs
+                cavity_settings.set_cavity_parameters_arguments(
+                    self.solver_id, w_kin, **tm_kwargs
+                )
+            case _, _:
+                raise ValueError
+        return tm_kwargs
 
     def _transfer_matrix_results_to_dict(
         self,
@@ -298,12 +334,13 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
         Overrides the default method defined in the ABC.
 
         """
-        assert integrated_field is not None
+        if integrated_field is None:
+            raise ValueError("Expected non-None integrated field.")
         w_kin = convert.energy(
             gamma_phi[:, 0], "gamma to kin", **self._beam_kwargs
         )
         gamma_phi[:, 1] = self._rf_to_bunch(gamma_phi[:, 1])
-        cav_params = compute_param_cav(integrated_field)
+        cav_params = self.compute_cavity_parameters(integrated_field)
         results = {
             "transfer_matrix": transfer_matrix,
             "r_zz": transfer_matrix[:, 4:, 4:],
@@ -347,10 +384,18 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
 
     def _broken_transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
         """Give the element parameters necessary to compute transfer matrix."""
-        return self._beam_kwargs | {
+        return {
             "delta_s": self.d_z,
+            "omega_0_bunch": self._beam_kwargs["omega_0_bunch"],
             "n_steps": self.n_steps,
         }
+
+
+def _get_phi_0_rel(cavity_settings: CavitySettings) -> float:
+    """Get the phase from the object."""
+    phi_0_rel = cavity_settings.phi_0_rel
+    assert phi_0_rel is not None
+    return phi_0_rel
 
 
 class BendEnvelope3DParameters(ElementEnvelope3DParameters):

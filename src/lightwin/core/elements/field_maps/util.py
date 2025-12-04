@@ -1,17 +1,6 @@
-"""Define functions used by the field maps."""
+"""Define functions used by the field maps.
 
-from pathlib import Path
+.. todo::
+    Mmmh... Looks like this module is pretty useless.
 
-
-def set_full_field_map_path(
-    field_map_folder: Path,
-    field_map_filename: str,
-    extensions: dict[str, list[str]],
-) -> list[Path]:
-    """Set all the full field map file names with extension."""
-    field_map_file_names = [
-        field_map_folder / (field_map_filename + "." + ext)
-        for extension in extensions.values()
-        for ext in extension
-    ]
-    return field_map_file_names
+"""

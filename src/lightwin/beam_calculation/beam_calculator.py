@@ -108,6 +108,11 @@ class BeamCalculator(ABC):
     def _set_up_common_factories(self) -> None:
         """Create the factories declared in :meth:`__init__`.
 
+        .. note::
+            Was used to set the :class:`.ListOfElementsFactory`. But now, every
+            :class:`.BeamCalculator` instantiates it differently, so it is
+            created in ``_set_up_specific_factories``.
+
         .. todo::
             ``default_field_map_folder`` has a wrong default value. Should take
             path to the ``DAT`` file, that is not known at this point. Maybe
@@ -115,17 +120,7 @@ class BeamCalculator(ABC):
             whatever.
 
         """
-        self.list_of_elements_factory = ListOfElementsFactory(
-            self.is_a_3d_simulation,
-            self.is_a_multiparticle_simulation,
-            beam_kwargs=self._beam_kwargs,
-            default_field_map_folder=self.default_field_map_folder,
-            load_field_maps=True,  # useless with TraceWin
-            field_maps_in_3d=False,  # not implemented anyway
-            # Different loading of field maps if Cython
-            load_cython_field_maps=self.flag_cython,
-            elements_to_dump=(),
-        )
+        pass
 
     @abstractmethod
     def _set_up_specific_factories(self) -> None:
