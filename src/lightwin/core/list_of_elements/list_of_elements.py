@@ -146,14 +146,15 @@ class ListOfElements(list):
 
         Parameters
         ----------
-        superposed : Literal["unpack", "remove", "keep"], optional
-            - If ``"unpack"``, we insert the :class:`.FieldMap` contained in
-              the :class:`.SuperposedFieldMap`.
-            - If ``"remove"``, we remove the :class:`.SuperposedFieldMap` from
-              the output.
-            - If ``"keep"``, we return the :class:`.SuperposedFieldMap` along
-              with the :class:`.FieldMap`.
-            The default is ``"unpack"``.
+        superposed :
+           How superposed field maps should be treated.
+
+           - If ``"unpack"``, we insert the :class:`.FieldMap` contained in
+             the :class:`.SuperposedFieldMap`.
+           - If ``"remove"``, we remove the :class:`.SuperposedFieldMap` from
+             the output.
+           - If ``"keep"``, we return the :class:`.SuperposedFieldMap` along
+             with the :class:`.FieldMap`.
 
         """
         cavities = self._l_cav

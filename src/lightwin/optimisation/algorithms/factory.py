@@ -132,7 +132,7 @@ class OptimisationAlgorithmFactory:
         """Build default arguments for :class:`.OptimisationAlgorithm`.
 
         The kwargs for :class:`.OptimisationAlgorithm` that are defined in
-        :meth:`.Fault._optimisation_algorithms` will override the ones defined
+        :attr:`.Fault.optimisation_algorithm` will override the ones defined
         here.
 
         Returns
@@ -162,8 +162,8 @@ class OptimisationAlgorithmFactory:
         Parameters
         ----------
         user_kwargs :
-            kwargs as defined in the
-            :meth:`.Fault._optimisation_algorithms` (they have precedence).
+            kwargs as defined in the :attr:`.Fault.optimisation_algorithm`
+            (they have precedence).
         default_kwargs :
             kwargs as defined in the `_optimisation_algorithm_kwargs` (they
             will be overriden as they are considered as "default" or "fallback"

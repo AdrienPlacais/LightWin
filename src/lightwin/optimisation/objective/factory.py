@@ -179,7 +179,7 @@ class CorrectorAtExit(ObjectiveFactory):
     def get_objectives(self) -> list[Objective]:
         """Give adapted objectives.
 
-        We start by looking at the :attr:`.CorrectorAtExit._failed_elements`
+        We start by looking at the :attr:`._failed_elements`
         list:
 
         - If it has elements, we are around a failure and we will try to keep

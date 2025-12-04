@@ -474,7 +474,12 @@ class CavitySettings:
     # =============================================================================
     @property
     def status(self) -> STATUS_T:
-        """Give the status of the cavity under study."""
+        """Give the status of the cavity under study.
+
+        - :data:`.STATUS_T`
+        - :obj:`.STATUS_T`
+
+        """
         return self._status
 
     @status.setter

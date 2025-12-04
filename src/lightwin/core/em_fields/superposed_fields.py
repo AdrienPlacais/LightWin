@@ -23,17 +23,16 @@ class SuperposedFields(Field):
         length_m: float = 0.0,
         z_0: float = 0.0,
     ) -> None:
-        """
-        Initialize the :class:`SuperposedField`.
+        """Initialize the :class:`SuperposedFields`.
 
         Parameters
         ----------
-        fields : Collection[Field]
+        fields :
             A collection of :class:`.Field` instances.
-        length_m : float, optional
-            The total length of the field in meters. Defaults to 0.0.
-        z_0 : float, optional
-            The initial z-position. Defaults to 0.0.
+        length_m :
+            The total length of the field in meters.
+        z_0 :
+            The initial z-position.
 
         """
         folder, filename = Path("dummy"), "dummy"
@@ -175,5 +174,5 @@ class SuperposedFields(Field):
         return compl_combined, rea_combined
 
     def shift(self) -> None:
-        """Shift the field maps. Not applicable for :class:`SuperposedField`."""
+        """Shift the field maps. Not applicable for :class:`SuperposedFields`."""
         pass

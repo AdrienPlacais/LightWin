@@ -118,7 +118,7 @@ class FieldFactory:
         return
 
     def _create_superposed(self, field_maps: Collection[FieldMap]) -> None:
-        """Create :class:`.SuperposedFieldMap` from :class:`FieldMap`.
+        """Create :class:`.SuperposedFieldMap` from :class:`.FieldMap`.
 
         Classic :class:`.FieldMap` remain untouched.
 

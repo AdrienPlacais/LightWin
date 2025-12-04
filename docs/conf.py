@@ -134,6 +134,7 @@ autodoc_type_aliases = {
     "np.float64": "numpy.float64",
     "NDArray": "numpy.typing.NDArray",
 }
+autodoc_typehints = "description"
 # Parameters for sphinx-autodoc-typehints
 always_document_param_types = True
 always_use_bars_union = True

@@ -5,8 +5,6 @@ from collections.abc import Callable, Collection
 from pathlib import Path
 from typing import Any, Literal
 
-from numpy import log
-
 from lightwin.config.helper import find_path
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
 
@@ -97,26 +95,30 @@ class TableConfSpec:
         #: `TableConfSpec` which ``TOML`` key to read and which default value
         #: to use if that key is absent.
         #: The tuple must contain:
+        #:
         #: - the name of the selector key (a key expected in the ``TOML``
         #:   table),
         #: - the default value to fall back on if the selector key is not
-        #: present.
+        #:   present.
         #:
         #: Example
         #: -------
-        #: If ``specs`` is:
-        #: ```
-        #:     specs = {
-        #:         "Envelope1D": envelope_1d_specs,
-        #:         "TraceWin": tracewin_specs,
-        #:     }
-        #: ```
-        #: and ``selectkey_n_default = ("beam_calculator", "Envelope1D")``
+        #:
+        #: .. code-block:: python
+        #:
+        #:    specs = {
+        #:      "Envelope1D": envelope_1d_specs,
+        #:      "TraceWin": tracewin_specs,
+        #:    }
+        #:    selectkey_n_default = ("beam_calculator", "Envelope1D")
+        #:
         #: then:
-        #: * the value of ``toml_table["beam_calculator"]`` determines whether
+        #:
+        #: - the value of ``toml_table["beam_calculator"]`` determines whether
         #:   `envelope_1d_specs` or `tracewin_specs` is used;
-        #: * if `"beam_calculator"` is not provided in the ``TOML``,
-        #: `"Envelope1D"` is used.
+        #: - if `"beam_calculator"` is not provided in the ``TOML``,
+        #:   `"Envelope1D"` is used.
+        #:
         #: This parameter **must** be provided whenever ``specs`` is a
         #: dictionary. It must be ``None`` when ``specs`` is a flat collection.
         self._selectkey_n_default = selectkey_n_default
@@ -181,30 +183,31 @@ class TableConfSpec:
         self, toml_table: dict[str, Any] | None = None
     ) -> dict[str, KeyValConfSpec]:
         """
-        Select and prepare :class:`KeyValConfSpec` used to validate this table.
+        Select and prepare :class:`.KeyValConfSpec` used to validate this table.
 
         This method is responsible for determining which specification set
         applies to the current table, especially when the available specs
         depend on the value of a key inside the ``TOML`` table (via
-        :attr:`.selectkey_n_default`).
+        :attr:`._selectkey_n_default`).
 
         The returned value is a dictionary mapping spec names to
-        :class:`KeyValConfSpec` instances. It performs the following steps:
+        :class:`.KeyValConfSpec` instances. It performs the following steps:
 
-        1. Determine the correct list of :class:`KeyValConfSpec` objects by
-           calling ``_get_specs`(toml_table)`.
-           If ``specs`` was provided as a dictionary, this uses the selector
-           key defined in :attr:`._selectkey_n_default` to choose the
-           appropriate spec set. If ``specs`` is a flat collection, that
-           collection is returned unchanged.
+        1. Determine the correct list of :class:`.KeyValConfSpec` objects by
+           calling ``_get_specs(toml_table)``. If ``specs`` was provided as a
+           dictionary, this uses the selector key defined in
+           :attr:`._selectkey_n_default` to choose the appropriate spec set. If
+           ``specs`` is a flat collection, that collection is returned
+           unchanged.
         2. Apply override rules and remove any earlier specs that should be
-          replaced (``overrides_previously_defined=True``) using
-          :meth:`._remove_overriden_keys`.
+           replaced (``overrides_previously_defined=True``) using
+           :func:`._remove_overriden_keys`.
         3. Return the cleaned specifications as a ``{spec.key: spec}``
-          dictionary.
+           dictionary.
 
-        This method is called multiple times during :meth:`.TableConfSpec.
-        prepare`:
+        This method is called multiple times during
+        :meth:`.TableConfSpec.prepare`:
+
         - once before validation, to build the spec set according to the raw
           ``TOML`` input;
         - once after post-treatment, to ensure the final ``specs_as_dict``
@@ -216,7 +219,7 @@ class TableConfSpec:
         toml_table :
             A table from the ``TOML`` configuration file. Required only when
             spec selection depends on user-provided values. When omitted,
-            default values from ``selectkey_n_default`` are used.
+            default values from :attr:`._selectkey_n_default` are used.
 
         Returns
         -------
@@ -407,7 +410,7 @@ def _remove_overriden_keys(
     """Remove the :class:`.KeyValConfSpec` objects to override.
 
     .. todo::
-        Not Pythonic at all.
+       Not Pythonic at all.
 
     """
     cleaned_specs = []

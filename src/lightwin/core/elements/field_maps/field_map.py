@@ -128,10 +128,6 @@ class FieldMap(Element):
             Keys are nature of the field, values are a list of extensions
             corresponding to it without a period.
 
-        See Also
-        --------
-        :func:`.electromagnetic_fields._get_filemaps_extensions`
-
         """
         raise NotImplementedError("deprecated")
         self.filepaths = [
