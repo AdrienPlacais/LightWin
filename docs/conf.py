@@ -88,14 +88,6 @@ nitpicky = True
 nitpick_ignore = [
     # Not recognized by Sphinx, don't know if this is normal
     ("py:class", "numpy.float64"),
-    # pymoo fixes should be temporary
-    ("py:class", "ElementwiseProblem"),
-    ("py:class", "pymoo.core.algorithm.Algorithm"),
-    ("py:class", "pymoo.core.result.Result"),
-    ("py:class", "pymoo.core.population.Population"),
-    ("py:class", "pymoo.core.problem.ElementwiseProblem"),
-    ("py:class", "pymoo.core.problem.Problem"),
-    ("py:class", "pymoo.termination.default.DefaultMultiObjectiveTermination"),
     # Due to bad design
     ("py:class", "lightwin.failures.set_of_cavity_settings.FieldMap"),
     ("py:obj", "lightwin.failures.set_of_cavity_settings.FieldMap"),
