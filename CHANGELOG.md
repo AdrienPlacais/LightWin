@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Deprecated numpy API in Cython is no longer used.
 
+### Fixed
+
+- The `k_b` parameter of `FIELD_MAP` was not updated.
+  - We always keep it equal to `k_e` for now.
+
 ## [0.14.0] -- 2025-12-04
 
 ### Added

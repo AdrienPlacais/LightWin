@@ -327,9 +327,13 @@ class FieldMap(Element):
 
         """
         phase, abs_phase_flag, reference = self._phase_for_line(which_phase)
+        k_e = self.cavity_settings.k_e
+        k_b = k_e
         for value, position in zip(
-            (phase, self.cavity_settings.k_e, abs_phase_flag), (3, 6, 10)
+            (phase, k_b, k_e, abs_phase_flag), (3, 5, 6, 10)
         ):
+            if value is None:
+                continue
             if round is not None:
                 value = value.__round__(round)
             self.line.change_argument(value, position)

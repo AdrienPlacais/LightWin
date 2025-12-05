@@ -15,9 +15,7 @@ class DummyLine(DatLine):
     """Mocked DatLine with basic FIELD_MAP structure."""
 
     def __init__(self):
-        line = (
-            "FIELD_MAP 100 415.16 153.171 30 0 1.55425 0 0 Simple_Spoke_1D 1"
-        )
+        line = "FIELD_MAP 100 415.16 153.171 30 1.55425 1.55425 0 0 Simple_Spoke_1D 1"
         super().__init__(line, idx=0)
 
 
@@ -102,7 +100,7 @@ def test_to_line_phi_0_abs(field_map: FieldMap) -> None:
         "415.16",
         "153.171",
         "30",
-        "0",
+        "1.55425",
         "1.55425",
         "0",
         "0",
@@ -122,7 +120,7 @@ def test_to_line_phi_0_rel(field_map: FieldMap) -> None:
         "415.16",
         "170.35973",
         "30",
-        "0",
+        "1.55425",
         "1.55425",
         "0",
         "0",
@@ -143,7 +141,7 @@ def test_to_line_phi_s(field_map: FieldMap) -> None:
         "415.16",
         "180.0",
         "30",
-        "0",
+        "1.55425",
         "1.55425",
         "0",
         "0",
