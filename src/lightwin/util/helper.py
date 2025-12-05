@@ -6,6 +6,7 @@
 """
 
 import logging
+import re
 from collections.abc import Generator, Iterable
 from typing import Any, Iterator
 
@@ -105,9 +106,6 @@ def pd_output(df: pd.DataFrame, header: str = "") -> str:
 def pascal_case(message: str) -> str:
     """Convert a string to Pascal case (as class names).
 
-    .. todo::
-        Second example does not work
-
     Examples
     --------
     >>> pascal_case("bonjoure sa_vA")
@@ -116,7 +114,8 @@ def pascal_case(message: str) -> str:
     "BonjoureSaVa"
 
     """
-    return "".join(x for x in message.title() if x not in (" ", "_"))
+    parts = re.split(r"[ _]+", message)
+    return "".join(p[:1].upper() + p[1:] for p in parts if p)
 
 
 def get_constructor(name: str, constructors: dict[str, type]) -> type:
