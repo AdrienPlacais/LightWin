@@ -9,11 +9,11 @@ authors = [
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3.12",
   "Topic :: Scientific/Engineering :: Physics",
 ]
+
 dependencies = [
   "bayesian-optimization>=3.1, <4",
   "cloudpickle>=3, <4",
@@ -28,6 +28,8 @@ dependencies = [
 description = "Automatically compensate cavity failures in linacs"
 dynamic = ["version"]
 keywords = ["failure compensation", "linac", "linear accelerator", "reliability"]
+license = "MIT"
+license-files = ["LICENSE", "CITATION.cff"]
 name = "LightWin"
 readme = "README.md"
 requires-python = ">=3.12"
