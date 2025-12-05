@@ -70,7 +70,7 @@ class FieldMap(Element):
         self.cavity_settings = cavity_settings
 
     @property
-    def status(self) -> str:
+    def status(self) -> STATUS_T:
         """Give the status from the :class:`.CavitySettings`."""
         return self.cavity_settings.status
 
@@ -374,6 +374,8 @@ class FieldMap(Element):
 
         """
         settings = self.cavity_settings
+        if self.status == "failed":
+            return 0.0, 0, "phi_0_rel"
         match which_phase:
             case "phi_0_abs" | "phi_0_rel" | "phi_s":
                 phase = getattr(settings, which_phase)
