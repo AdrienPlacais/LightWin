@@ -29,6 +29,7 @@ from lightwin.failures.helper import (
     sort_by_position,
 )
 from lightwin.util.helper import flatten
+from lightwin.util.typing import ID_NATURE_T
 
 cavities_id = Sequence[int] | Sequence[str]
 nested_cavities_id = Sequence[Sequence[int]] | Sequence[Sequence[str]]
@@ -37,7 +38,7 @@ nested_cavities_id = Sequence[Sequence[int]] | Sequence[Sequence[str]]
 def failed_and_compensating(
     elts: ListOfElements,
     failed: cavities_id | nested_cavities_id,
-    id_nature: Literal["cavity", "element", "name"],
+    id_nature: ID_NATURE_T,
     strategy: STRATEGIES_T,
     compensating_manual: nested_cavities_id | None = None,
     **wtf: Any,

@@ -13,6 +13,7 @@ from lightwin.failures.helper import TIE_POLITICS
 from lightwin.failures.strategy import STRATEGIES_MAPPING
 from lightwin.optimisation.algorithms.factory import ALGORITHM_SELECTOR
 from lightwin.optimisation.objective.factory import OBJECTIVE_PRESETS
+from lightwin.util.typing import ID_NATURE
 
 _WTF_BASE = (
     KeyValConfSpec(
@@ -38,7 +39,7 @@ _WTF_BASE = (
             "Indicates if failed is element index/cavity index/name, "
             "`element` or `cavity` or `name`."
         ),
-        allowed_values=("element", "cavity", "name"),
+        allowed_values=ID_NATURE,
         default_value="element",
     ),
     KeyValConfSpec(

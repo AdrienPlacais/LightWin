@@ -47,12 +47,13 @@ from lightwin.util.typing import (
     CONCATENABLE_ELTS,
     EXPORT_PHASES_T,
     GETTABLE_ELTS_T,
+    ID_NATURE_T,
     REFERENCE_PHASES_T,
 )
 
-element_id = int | str
-elements_id = Sequence[int] | Sequence[str]
-nested_elements_id = Sequence[Sequence[int]] | Sequence[Sequence[str]]
+ELEMENT_ID_T = int | str
+ELEMENTS_ID_T = Sequence[int] | list[str]
+NESTED_ELEMENTS_ID = Sequence[Sequence[int]] | list[list[str]]
 
 
 class FilesInfo(TypedDict):
@@ -355,6 +356,11 @@ class ListOfElements(list):
     ) -> list[FieldMap]: ...
 
     @overload
+    def take(
+        self, ids: Sequence[Sequence[int]], id_nature: Literal["cavity"]
+    ) -> list[list[FieldMap]]: ...
+
+    @overload
     def take(self, ids: int, id_nature: Literal["element"]) -> Element: ...
 
     @overload
@@ -363,34 +369,37 @@ class ListOfElements(list):
     ) -> list[Element]: ...
 
     @overload
+    def take(
+        self, ids: Sequence[Sequence[int]], id_nature: Literal["element"]
+    ) -> list[list[Element]]: ...
+
+    @overload
     def take(self, ids: str, id_nature: Literal["name"]) -> Element: ...
 
     @overload
     def take(
-        self, ids: Sequence[str], id_nature: Literal["name"]
+        self, ids: list[str], id_nature: Literal["name"]
     ) -> list[Element]: ...
 
     @overload
     def take(
-        self,
-        ids: nested_elements_id,
-        id_nature: Literal["cavity", "element", "name"],
-    ) -> list[Sequence[Element]]: ...
+        self, ids: list[list[str]], id_nature: Literal["name"]
+    ) -> list[list[Element]]: ...
 
     def take(
         self,
-        ids: element_id | elements_id | nested_elements_id,
-        id_nature: Literal["cavity", "element", "name"],
+        ids: ELEMENT_ID_T | ELEMENTS_ID_T | NESTED_ELEMENTS_ID,
+        id_nature: ID_NATURE_T,
     ) -> (
         Element
         | list[Element]
-        | list[Sequence[Element]]
+        | list[list[Element]]
         | FieldMap
         | list[FieldMap]
-        | list[Sequence[FieldMap]]
+        | list[list[FieldMap]]
     ):
         """Convert list of indexes or names to a list of :class:`.Element`."""
-        if isinstance(ids, Sequence) and not isinstance(ids, str):
+        if isinstance(ids, (Sequence, list)) and not isinstance(ids, str):
             return [self.take(idx, id_nature) for idx in ids]
 
         match id_nature:

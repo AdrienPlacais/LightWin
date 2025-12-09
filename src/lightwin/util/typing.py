@@ -478,3 +478,8 @@ class BeamKwargs(TypedDict):
     lambda_bunch: float
     q_over_m: float
     m_over_q: float
+
+
+#: Allowed values for the ``id_nature`` key of ``wtf`` configuration table.
+ID_NATURE = ("cavity", "element", "name")
+ID_NATURE_T = Literal["cavity", "element", "name"]
