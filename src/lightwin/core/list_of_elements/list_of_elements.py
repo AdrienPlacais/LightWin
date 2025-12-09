@@ -117,6 +117,7 @@ class ListOfElements(list):
         super().__init__(elts)
         self.by_section_and_lattice: list[list[list[Element]]] | None = None
         self.by_lattice: list[list[Element]]
+        self.by_section: list[list[Element]]
 
         if first_init:
             self._first_init()
@@ -269,10 +270,10 @@ class ListOfElements(list):
 
     def _first_init(self) -> None:
         """Set structure, elements name, some indexes."""
-        by_section = group_elements_by_section(self)
+        self.by_section = group_elements_by_section(self)
         self.by_lattice = group_elements_by_lattice(self)
         self.by_section_and_lattice = group_elements_by_section_and_lattice(
-            by_section
+            self.by_section
         )
         self._set_element_indexes()
 
@@ -386,6 +387,16 @@ class ListOfElements(list):
         self, ids: list[list[str]], id_nature: Literal["name"]
     ) -> list[list[Element]]: ...
 
+    @overload
+    def take(
+        self, ids: int, id_nature: Literal["section", "lattice"]
+    ) -> list[Element]: ...
+
+    @overload
+    def take(
+        self, ids: Sequence[int], id_nature: Literal["section", "lattice"]
+    ) -> list[list[Element]]: ...
+
     def take(
         self,
         ids: ELEMENT_ID_T | ELEMENTS_ID_T | NESTED_ELEMENTS_ID,
@@ -436,6 +447,28 @@ class ListOfElements(list):
                         f"No element named {name} was found in self."
                     )
                     raise StopIteration
+            case "lattice":
+                assert isinstance(ids, int)
+                try:
+                    output = self.by_lattice[ids]
+                except IndexError as e:
+                    msg = (
+                        f"{ids = } is outside of list of lattices of length "
+                        f"{len(self.by_lattice)}\n{e}"
+                    )
+                    logging.error(msg)
+                    raise IndexError(msg)
+            case "section":
+                assert isinstance(ids, int)
+                try:
+                    output = self.by_section[ids]
+                except IndexError as e:
+                    msg = (
+                        f"{ids = } is outside of list of sections of length "
+                        f"{len(self.by_section)}\n{e}"
+                    )
+                    logging.error(msg)
+                    raise IndexError(msg)
             case _:
                 raise OSError(f"{id_nature = } not understood.")
         return output
