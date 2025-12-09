@@ -21,7 +21,11 @@ from lightwin.core.list_of_elements.helper import (
     group_elements_by_lattice,
     is_list_of_list_of_field_maps,
 )
-from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.core.list_of_elements.list_of_elements import (
+    ELEMENTS_ID_T,
+    NESTED_ELEMENTS_ID,
+    ListOfElements,
+)
 from lightwin.failures.helper import (
     TIE_POLITICS_T,
     gather,
@@ -31,16 +35,13 @@ from lightwin.failures.helper import (
 from lightwin.util.helper import flatten
 from lightwin.util.typing import ID_NATURE_T
 
-cavities_id = Sequence[int] | Sequence[str]
-nested_cavities_id = Sequence[Sequence[int]] | Sequence[Sequence[str]]
-
 
 def failed_and_compensating(
     elts: ListOfElements,
-    failed: cavities_id | nested_cavities_id,
+    failed: ELEMENTS_ID_T | NESTED_ELEMENTS_ID,
     id_nature: ID_NATURE_T,
     strategy: STRATEGIES_T,
-    compensating_manual: nested_cavities_id | None = None,
+    compensating_manual: NESTED_ELEMENTS_ID | None = None,
     **wtf: Any,
 ) -> tuple[list[list[FieldMap]], list[list[FieldMap]]]:
     """Determine the compensating cavities for every failure.
@@ -73,6 +74,8 @@ def failed_and_compensating(
 
     """
     failed_cavities = elts.take(failed, id_nature=id_nature)
+    assert isinstance(failed_cavities, list)
+
     assert [cavity.can_be_retuned for cavity in flatten(failed_cavities)]
     tunable_cavities = elts.tunable_cavities
 

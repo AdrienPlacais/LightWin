@@ -240,10 +240,6 @@ class WithFaults(AcceleratorFactory):
 
         return self._n_simulations
 
-    def run(self, *args, **kwargs) -> Accelerator:
-        """Return a single accelerator."""
-        return super().run(*args, **kwargs)
-
     def run_all(self, **kwargs) -> list[Accelerator]:
         """Create the required Accelerators as well as their output folders."""
         out_folders = [
