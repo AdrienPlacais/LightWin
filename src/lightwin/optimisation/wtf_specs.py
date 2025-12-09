@@ -6,6 +6,7 @@
 
 """
 
+from types import NoneType
 from typing import Any
 
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
@@ -17,12 +18,32 @@ from lightwin.util.typing import ID_NATURE
 
 _WTF_BASE = (
     KeyValConfSpec(
+        key="automatic_study",
+        types=(str, NoneType),
+        description=(
+            """Automatically generate the list of failed cavities to avoid
+            manually typing all the cavities identifiers in systematic studies.
+            Possible values are:
+
+            - ``"single cavity failures"``: study all single cavity failures
+              among ``failed_cavities``. ``failed_cavities`` must be a list of
+              elements. It is best used with something like:
+
+              - ``failed = [1, 3, 7]``
+              - ``id_nature = "lattice"``
+
+              All the single cavity failures of lattices 1, 3 and 7 will be
+              studied. Also works very well with ``id_nature = "section"``.
+
+        """
+        ),
+        default_value=None,
+        is_mandatory=False,
+    ),
+    KeyValConfSpec(
         key="failed",
         types=(list,),
-        description=(
-            "Index/name of failed cavities. Must be a `list[list[int]]` or "
-            "`list[list[str]]`."
-        ),
+        description="Identifies list of failed cavities.",
         default_value=[[5]],
     ),
     KeyValConfSpec(
@@ -36,8 +57,9 @@ _WTF_BASE = (
         key="id_nature",
         types=(str,),
         description=(
-            "Indicates if failed is element index/cavity index/name, "
-            "`element` or `cavity` or `name`."
+            "Indicates if `failed` is name of element(s), index of element(s),"
+            "index of cavities. It can also be the index(es) of one or several"
+            "section(s), or of one or several lattice(s)."
         ),
         allowed_values=ID_NATURE,
         default_value="element",

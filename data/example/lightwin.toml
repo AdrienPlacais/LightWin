@@ -2,22 +2,22 @@
 dat_file = "example.dat"
 project_folder = "results_tests/"
 
-[generic_envelope1d]
+[envelope1d]
 export_phase = "phi_0_abs"
 flag_cython = true
 # flag_phi_abs = true  # Deprecated! Use ``reference_phase_policy``.
 method = "RK4"
 n_steps_per_cell = 40
-reference_phase_policy = "phi_0_abs"
+reference_phase_policy = "phi_0_rel"
 tool = "Envelope1D"
 
-[generic_envelope3d]
+[envelope3d]
 # flag_phi_abs = true  # Deprecated! Use ``reference_phase_policy``.
 n_steps_per_cell = 40
 reference_phase_policy = "phi_0_abs"
 tool = "Envelope3D"
 
-[generic_tracewin]
+[tracewin]
 hide = true
 ini_path = "example.ini"
 machine_config_file = "machine_config.toml"
@@ -41,7 +41,7 @@ sigma = [
   [+0.000000e+00, +0.000000e+00, +0.000000e+00, +0.000000e+00, -2.552518e-07, +5.994771e-07],
 ]
 
-[generic_wtf]
+[wtf_generic]
 failed = [["FM120"]]
 id_nature = "name"
 k = 5
@@ -51,7 +51,7 @@ optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 shift = 0
 strategy = "k out of n"
 
-[save_wtf]
+[wtf_save]
 failed = [["FM11"]]
 id_nature = "name"
 k = 3
@@ -60,7 +60,7 @@ optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
 
-[save_wtf.history_kwargs]
+[wtf_save.history_kwargs]
 folder = "optimization_history/"
 get_args = ["w_kin", "phi_abs", "eps_zdelta", "non_norm_eps_zdelta", "mismatch_factor_zdelta", "alpha_zdelta", "beta_zdelta", "gamma_zdelta"]
 get_kwargs = { elt = ["FM8", "FM10", "FM12", "FM14", "FM16", "FM18"], pos = "out", to_deg = true }
@@ -84,16 +84,6 @@ optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "manual"
 
-[generic_design_space]
-design_space_preset = "abs_phase_amplitude"
-from_file = false
-max_absolute_sync_phase_in_deg = 0.0
-max_decrease_k_e_in_percent = 20.0
-max_increase_k_e_in_percent = 180.0
-max_increase_sync_phase_in_percent = 40.0
-maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = true
-min_absolute_sync_phase_in_deg = -90.0
-
 [wtf_corrector_at_exit]
 # Remember to set ``reference_phase_policy`` to ``"phi_s"``!
 failed = [["FM120"]]
@@ -106,14 +96,7 @@ optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 shift = 0
 strategy = "corrector at exit"
 
-
-[design_space_from_file]
-constraints_filepath = "constraints.csv"
-design_space_preset = "abs_phase_amplitude"
-from_file = true
-variables_filepath = "variables.csv"
-
-[tiny_wtf]
+[wtf_tiny]
 failed = [["FM11"]]
 id_nature = "name"
 k = 3
@@ -121,12 +104,39 @@ objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
-[tiny_design_space]
+
+[wtf_systematic_study]
+automatic_study = "single cavity failures"
+failed = [10, 17]
+id_nature = "lattice"
+k = 4
+objective_preset = "EnergyMismatch"
+optimisation_algorithm = "downhill_simplex"
+optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
+shift = 0
+strategy = "k out of n"
+[design_space_generic]
+design_space_preset = "abs_phase_amplitude"
+from_file = false
+max_absolute_sync_phase_in_deg = 0.0
+max_decrease_k_e_in_percent = 20.0
+max_increase_k_e_in_percent = 180.0
+max_increase_sync_phase_in_percent = 40.0
+maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = true
+min_absolute_sync_phase_in_deg = -90.0
+
+[design_space_from_file]
+constraints_filepath = "constraints.csv"
+design_space_preset = "abs_phase_amplitude"
+from_file = true
+variables_filepath = "variables.csv"
+
+[design_space_tiny]
 design_space_preset = "rel_phase_amplitude"
 from_file = true
 variables_filepath = "variables_centered_around_solution.csv"
 
-[fit_phi_s_design_space]
+[design_space_fit_phi_s]
 design_space_preset = "sync_phase_amplitude"
 from_file = false
 max_absolute_sync_phase_in_deg = 0.0

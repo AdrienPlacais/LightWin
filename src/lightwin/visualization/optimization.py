@@ -41,13 +41,24 @@ def mark_objectives_position(
     color: ColorType = OBJECTIVE_COLOR,
     alpha: float = 0.5,
 ) -> None:
-    """Show where objectives are evaluated."""
+    """Show where objectives are evaluated.
+
+    .. todo::
+       Fix bug when several fault scenarios are plotted.
+
+    """
     if fault_scenarios is None:
         logging.info(
             "The ``fault_scenarios`` must be given to plot.factory for the "
             "objectives to be displayed."
         )
         return
+
+    logging.warning(
+        "When several fault scenarios are plotted after each other, they all "
+        "keep the same objective position marker. This is not intended "
+        "behavior."
+    )
 
     objectives_by_element: dict[Element, list[Objective]]
     objectives_by_element = by_element(_get_objectives(fault_scenarios[0]))
