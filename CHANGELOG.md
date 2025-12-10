@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.14.1] -- 2025-12-10
+
+### Changed
+
+- Deprecated numpy API in Cython is no longer used.
+
+### Fixed
+
+- The `k_b` parameter of `FIELD_MAP` was not updated.
+  - We always keep it equal to `k_e` for now.
+
 ## [0.14.0] -- 2025-12-04
 
 ### Added

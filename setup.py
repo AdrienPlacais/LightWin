@@ -86,7 +86,12 @@ def _ext_modules(use_cython: bool) -> list[Extension] | None:
     import numpy as np
 
     extensions = [
-        Extension(module, [file], include_dirs=[np.get_include()])
+        Extension(
+            module,
+            [file],
+            include_dirs=[np.get_include()],
+            define_macros=[("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")],
+        )
         for module, file in zip(CY_MODULES, files, strict=True)
     ]
 

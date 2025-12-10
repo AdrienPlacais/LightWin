@@ -1,7 +1,4 @@
-#cython: language_level=3
-# distutils: boundscheck=False
-# distutils: wraparound=False
-# distutils: cdivision=True
+#cython: language_level=3, boundscheck=False, wraparound=False, cdivision=True
 from libc.math cimport cos, sin
 
 

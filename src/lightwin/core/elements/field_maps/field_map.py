@@ -70,7 +70,7 @@ class FieldMap(Element):
         self.cavity_settings = cavity_settings
 
     @property
-    def status(self) -> str:
+    def status(self) -> STATUS_T:
         """Give the status from the :class:`.CavitySettings`."""
         return self.cavity_settings.status
 
@@ -327,9 +327,13 @@ class FieldMap(Element):
 
         """
         phase, abs_phase_flag, reference = self._phase_for_line(which_phase)
+        k_e = self.cavity_settings.k_e
+        k_b = k_e
         for value, position in zip(
-            (phase, self.cavity_settings.k_e, abs_phase_flag), (3, 6, 10)
+            (phase, k_b, k_e, abs_phase_flag), (3, 5, 6, 10)
         ):
+            if value is None:
+                continue
             if round is not None:
                 value = value.__round__(round)
             self.line.change_argument(value, position)
@@ -374,6 +378,8 @@ class FieldMap(Element):
 
         """
         settings = self.cavity_settings
+        if self.status == "failed":
+            return 0.0, 0, "phi_0_rel"
         match which_phase:
             case "phi_0_abs" | "phi_0_rel" | "phi_s":
                 phase = getattr(settings, which_phase)

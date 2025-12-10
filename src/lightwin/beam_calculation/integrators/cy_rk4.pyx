@@ -1,3 +1,4 @@
+#cython: language_level=3, boundscheck=False, wraparound=False, cdivision=True
 """Define Runge-Kutta integration functions (Cython).
 
 Currently unused, RK4 integration is directly typed where necessary.

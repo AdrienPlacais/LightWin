@@ -1,5 +1,4 @@
-# cy_rk4_zfield.pyx
-#
+#cython: language_level=3, boundscheck=False, wraparound=False, cdivision=True
 import math
 
 cimport cython
@@ -21,8 +20,6 @@ cdef double c = 299792458.0  # speed of light
 from cython.view cimport array as cvarray
 
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
 def z_dummy(double gamma_in):
     """Return an identity transfer matrix (dummy)."""
     cdef np.ndarray[DTYPE_t, ndim=3] r_zz = np.array(
@@ -37,8 +34,6 @@ def z_dummy(double gamma_in):
                                                           dtype=np.float64)
     return r_zz, gamma_phi, None
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
 def z_drift(
         double gamma_in,
         double delta_s,
@@ -146,8 +141,6 @@ def z_field_map_rk4(
     gamma_phi[:, 1] = phi[1:]
     return r_zz, gamma_phi, itg_field
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
 def z_thin_lense(
     complex scaled_e_middle,
     double gamma_in,
@@ -210,8 +203,6 @@ def z_thin_lense(
 
     return mat
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
 def z_superposed_field_maps_rk4(
     double gamma_in,
     double d_z,
@@ -234,8 +225,6 @@ def z_superposed_field_maps_rk4(
     )
 
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
 def z_bend(double gamma_in, double delta_s,
            double factor_1, double factor_2, double factor_3,
            double omega_0_bunch):
