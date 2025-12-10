@@ -1,10 +1,11 @@
 """Define a factory to easily create :class:`.Accelerator`."""
 
 import logging
-from abc import ABC
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Sequence
+from warnings import warn
+
+from _pytest.stash import D
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.core.accelerator.accelerator import Accelerator
@@ -12,8 +13,7 @@ from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.util.typing import BeamKwargs
 
 
-@dataclass
-class AcceleratorFactory(ABC):
+class AcceleratorFactory:
     """A class to create accelerators."""
 
     def __init__(
@@ -21,7 +21,7 @@ class AcceleratorFactory(ABC):
         beam_calculators: BeamCalculator | Sequence[BeamCalculator | None],
         files: dict[str, Any],
         beam: BeamKwargs,
-        **kwargs: dict,
+        **kwargs,
     ) -> None:
         """Facilitate creation of :class:`.Accelerator` objects.
 
@@ -42,69 +42,54 @@ class AcceleratorFactory(ABC):
 
         if isinstance(beam_calculators, BeamCalculator):
             beam_calculators = (beam_calculators,)
-        assert (
-            beam_calculators[0] is not None
-        ), "Need at least one working BeamCalculator."
         self.beam_calculators = beam_calculators
+
+        main_beam_calculator = beam_calculators[0]
+        if main_beam_calculator is None:
+            raise ValueError("Need at least one working BeamCalculator.")
+        #: :class:`.BeamCalculator` that will be used to find compensation
+        #: settings.
+        self.main_beam_calculator = main_beam_calculator
+        self._elts_factory = main_beam_calculator.list_of_elements_factory
         self._beam = beam
 
-    def run(self, *args, **kwargs) -> Accelerator:
-        """Create the object."""
-        accelerator = Accelerator(*args, **kwargs)
-        self._check_consistency_reference_phase_policies(accelerator.l_cav)
-        return accelerator
-
-    def _generate_folders_tree_structure(
-        self,
-        out_folders: Sequence[Path],
-        n_simulations: int,
-    ) -> list[Path]:
-        """Create the proper folders for every :class:`.Accelerator`.
-
-        The default structure is:
-
-        - ``where_original_dat_is/``
-
-          - ``YYYY.MM.DD_HHhMM_SSs_MILLIms/``     <- ``project_folder``
-            (absolute)
-
-            - ``000000_ref/``                     <- ``accelerator_path``
-              (absolute)
-
-              - ``0_FirstBeamCalculatorName/``    <- ``out_folder`` (relative)
-              - (``1_SecondBeamCalculatorName/``) <- ``out_folder`` (relative)
-
-            - ``000001/``
-
-              - ``0_FirstBeamCalculatorName/``
-              - (``1_SecondBeamCalculatorName/``)
-
-            - ``000002/``
-
-              - ``0_FirstBeamCalculatorName/``
-              - (``1_SecondBeamCalculatorName/``)
-
-            - etc
+    def _create_instances(
+        self, n_objects: int, is_reference: bool
+    ) -> list[Accelerator]:
+        r"""Create object.
 
         Parameters
         ----------
-        out_folders :
-            Name of the folders that will store outputs. By default, it is the
-            name of the solver, preceeded by its position in the list of
-            :class:`.BeamCalculator`.
+        n_objects :
+            Number of objects to create.
+        is_reference :
+            If the reference accelerator should be created.
 
         """
-        accelerator_paths = [
-            self.project_folder / f"{i:06d}" for i in range(n_simulations)
-        ]
-        accelerator_paths[0] = accelerator_paths[0].with_name(
-            f"{accelerator_paths[0].name}_ref"
+        accelerator_paths = self._create_output_dirs(
+            n_objects=n_objects, with_reference=is_reference
         )
-        for accel_path in accelerator_paths:
-            for out_folder in out_folders:
-                path = accel_path / out_folder
-                path.mkdir(parents=True, exist_ok=True)
-        return accelerator_paths
+        name = "Working" if is_reference else "Broken"
+        accelerators: list[Accelerator] = []
+        for path in accelerator_paths:
+            acc = Accelerator(
+                name=name,
+                dat_file=self.dat_file,
+                accelerator_path=path,
+                list_of_elements_factory=self._elts_factory,
+                **self._beam,
+            )
+            self._check_consistency_reference_phase_policies(acc.l_cav)
+            accelerators.append(acc)
+        return accelerators
+
+    def create_nominal(self) -> Accelerator:
+        """Create the nominal linac."""
+        return self._create_instances(n_objects=1, is_reference=True)[0]
+
+    def create_failed(self, n_objects: int) -> list[Accelerator]:
+        """Create failed linac(s)."""
+        return self._create_instances(n_objects, is_reference=False)
 
     def _check_consistency_reference_phase_policies(
         self, cavities: Sequence[FieldMap]
@@ -133,146 +118,112 @@ class AcceleratorFactory(ABC):
                 "The cavities do not all have the same reference phase."
             )
 
+    def _create_output_dirs(
+        self, n_objects: int, with_reference: bool = True
+    ) -> list[Path]:
+        """Create the proper out directories for every :class:`.Accelerator`.
 
-class NoFault(AcceleratorFactory):
-    """Factory used to generate a single accelerator, no faults."""
+        The default structure looks like:
 
-    def __init__(
-        self,
-        beam_calculators: BeamCalculator,
-        files: dict[str, Any],
-        beam: BeamKwargs,
-        **kwargs: dict,
-    ) -> None:
-        """Facilitate creation of :class:`.Accelerator`.
+        ```
+        YYYY.MM.DD_HHhMM_SSs_MILLIms/
+        ├── 000000_ref
+        │   ├── 0_Envelope1D/
+        │   └── 1_TraceWin/
+        ├── 000001
+        │   ├── 0_Envelope1D/
+        │   └── 1_TraceWin/
+        ├── 000002
+        │   ├── 0_Envelope1D/
+        │   └── 1_TraceWin/
+        ├── 000003
+        │   ├── 0_Envelope1D/
+        │   └── 1_TraceWin/
+        └── lightwin.log
+        ```
+
+        - The main ``YYYY.MM.DD_HHhMM_SSs_MILLIms/`` directory is created at
+          the same location as the original ``DAT`` file. You can override its
+          name with the ``project_folder`` key in the ``[files]`` ``TOML``
+          section.
+
+        - In every ``accelerator_path`` (eg ``000002/``), you will find one
+          directory per :class:`.BeamCalculator`. In this example, compensation
+          settings were found with :class:`.Envelope1D` and a second simulation
+          was made with :class:`.TraceWin`.
 
         Parameters
         ----------
-        beam_calculators :
-            A unique object to compute propagation of the field. Even if there
-            is a ``s`` at the end of the variable name.
-        files :
-            Configuration entries for the input/output paths.
-        beam :
-            Configuration dictionary holding the initial beam parameters.
-        kwargs :
-            Other configuration dictionaries.
+        n_objects :
+            Number of :class:`.Accelerator` to create.
+        with_reference :
+            If first directory should be the nominal dir called ``000000_ref/``
+            .
+
+        Returns
+        -------
+        list[Path]
+            Output path for every accelerator: ``000000_ref/`` (if
+            ``with_reference``), ``000001/``, ...
 
         """
-        super().__init__(
-            beam_calculators=beam_calculators, files=files, beam=beam, **kwargs
-        )
+        accelerator_paths: list[Path] = []
+        first_index = 0 if with_reference else 1
+        for i in range(first_index, n_objects + first_index):
+            path = self.project_folder / f"{i:06d}"
+            if i == 0:
+                path = path.with_name(f"{path.name}_ref")
 
-    @property
-    def beam_calculator(self) -> BeamCalculator:
-        """Shortcut to get the only existing :class:`.BeamCalculator`."""
-        return self.beam_calculators[0]
+            path.mkdir(parents=True, exist_ok=True)
+            accelerator_paths.append(path)
+
+            for beam_calculator in self.beam_calculators:
+                if beam_calculator is None:
+                    continue
+                beam_calculator_dir = path / beam_calculator.out_folder
+                beam_calculator_dir.mkdir(parents=True, exist_ok=True)
+        return accelerator_paths
+
+
+class NoFault(AcceleratorFactory):
+    """Create single accelerator without failure.
+
+    .. deprecated:: 0.15.0
+       Prefer :class:`AcceleratorFactory`.
+
+    """
+
+    def __init__(self, *args, **kwargs) -> None:
+        warn(
+            "The class NoFault is deprecated. Prefer using AcceleratorFactory.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return super().__init__(*args, **kwargs)
 
     def run(self, *args, **kwargs) -> Accelerator:
-        """Create a single accelerator."""
-        out_folders = (self.beam_calculator.out_folder,)
-        accelerator_path = self._generate_folders_tree_structure(
-            out_folders,
-            n_simulations=1,
-        )[0]
-        list_of_elements_factory = (
-            self.beam_calculator.list_of_elements_factory
-        )
-        name = "Working"
-
-        accelerator = super().run(
-            name=name,
-            dat_file=self.dat_file,
-            accelerator_path=accelerator_path,
-            list_of_elements_factory=list_of_elements_factory,
-            **self._beam,
-        )
-        return accelerator
-
-
-class StudyWithoutFaultsAcceleratorFactory(NoFault):
-    """Alias for :class:`.NoFault`."""
+        return self.create_nominal()
 
 
 class WithFaults(AcceleratorFactory):
-    """Factory used to generate several accelerators for a fault study."""
+    """Create accelerators with failures.
 
-    def __init__(
-        self,
-        beam_calculators: BeamCalculator | Sequence[BeamCalculator | None],
-        files: dict[str, Any],
-        beam: BeamKwargs,
-        wtf: dict[str, Any],
-        **kwargs: dict,
-    ) -> None:
-        """Facilitate creation of :class:`.Accelerator` objects.
+    .. deprecated:: 0.15.0
+       Prefer :class:`AcceleratorFactory`.
 
-        Parameters
-        ----------
-        beam_calculators :
-            Objects that will compute propagation of the beam.
-        files :
-            Configuration entries for the input/output paths.
-        beam :
-            Configuration dictionary holding the initial beam parameters.
-        wtf :
-            Dictionary holding the information on what to fit.
-        kwargs :
-            Other configuration dictionaries.
+    """
 
-        """
-        super().__init__(
-            beam_calculators=beam_calculators, files=files, beam=beam, **kwargs
+    def __init__(self, *args, wtf: dict[str, Any], **kwargs) -> None:
+        warn(
+            "The class WithFaults is deprecated. Prefer using "
+            "AcceleratorFactory.",
+            DeprecationWarning,
+            stacklevel=2,
         )
-        self.failed = wtf["failed"]
-        self._n_simulations = 0
+        self._wtf = wtf
+        return super().__init__(*args, **kwargs)
 
-    @property
-    def n_simulations(self) -> int:
-        """Determine how much simulations will be made."""
-        if self._n_simulations > 0:
-            return self._n_simulations
-
-        self._n_simulations = 1
-
-        if self.failed is not None:
-            self._n_simulations += len(self.failed)
-
-        return self._n_simulations
-
-    def run_all(self, **kwargs) -> list[Accelerator]:
-        """Create the required Accelerators as well as their output folders."""
-        out_folders = [
-            beam_calculator.out_folder
-            for beam_calculator in self.beam_calculators
-            if beam_calculator is not None
-        ]
-
-        accelerator_paths = self._generate_folders_tree_structure(
-            out_folders, n_simulations=self.n_simulations
-        )
-
-        names = [
-            "Working" if i == 0 else "Broken"
-            for i in range(self.n_simulations)
-        ]
-
-        list_of_elements_factory = self.beam_calculators[
-            0
-        ].list_of_elements_factory
-
-        accelerators = [
-            self.run(
-                name=name,
-                dat_file=self.dat_file,
-                accelerator_path=accelerator_path,
-                list_of_elements_factory=list_of_elements_factory,
-                **self._beam,
-            )
-            for name, accelerator_path in zip(names, accelerator_paths)
-        ]
-        return accelerators
-
-
-class FullStudyAcceleratorFactory(WithFaults):
-    """Alias for :class:`WithFaults`."""
+    def run_all(self, *args, **kwargs) -> list[Accelerator]:
+        reference = self.create_nominal()
+        n_objects = len(self._wtf["failed"])
+        return [reference] + self.create_failed(n_objects)

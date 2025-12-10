@@ -11,7 +11,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.accelerator.accelerator import Accelerator
-from lightwin.core.accelerator.factory import NoFault, WithFaults
+from lightwin.core.accelerator.factory import AcceleratorFactory
 from lightwin.core.list_of_elements.list_of_elements import (
     NESTED_ELEMENTS_ID,
     ListOfElements,
@@ -52,6 +52,10 @@ def set_up_accelerators(
 ) -> list[Accelerator]:
     """Create the accelerators.
 
+    .. note::
+       If an automatic study is asked, the ``wtf`` dictionary is updated to
+       explicitly mention the list of failed cavities.
+
     Parameters
     ----------
     config :
@@ -65,28 +69,87 @@ def set_up_accelerators(
         :class:`.Accelerator` per fault scenario.
 
     """
-    if "wtf" not in config:
-        factory = NoFault(beam_calculators=beam_calculators[0], **config)
-        accelerator = factory.run()
-        return [accelerator]
+    factory = AcceleratorFactory(beam_calculators, **config)
+    reference_accelerator = factory.create_nominal()
 
-    # =========================================================================
-    # Dirty patch for automatic studies
-    # =========================================================================
-    if "automatic_study" in config["wtf"]:
-        # Create a useless Accelerator just to get its ListOfElements
-        factory = NoFault(beam_calculators=beam_calculators[0], **config)
-        accelerator = factory.run()
+    wtf = config.get("wtf")
+    if not wtf:
+        return [reference_accelerator]
 
-        # Edit `wtf` dict with number of cavities stored in the desired
-        # lattices/sections
-        config["wtf"] = _edit_wtf_dict_for_automatic_studies(
-            accelerator.elts, config["wtf"]
+    n_scenarios, updated_wtf = _determine_failures(
+        reference_accelerator.elts, wtf
+    )
+    config["wtf"] = updated_wtf
+    accelerators = factory.create_failed(n_objects=n_scenarios)
+    return [reference_accelerator] + accelerators
+
+
+def _determine_failures(
+    elts: ListOfElements, wtf: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    """Expand the ``wtf`` failure specification into explicit failure lists.
+
+    Parameters
+    ----------
+    elts :
+        The ListOfElements of the reference accelerator. Used to determine
+        which cavities will fail.
+    wtf :
+        The original failure specification from the ``TOML`` config.
+
+    Returns
+    -------
+    int
+        The number of fault scenarios. This is also the length of the
+        ``failed`` list.
+    dict[str, Any]
+        A new wtf dict ready to pass to :meth:`.FaultScenarioFactory.create`.
+        In particular, if an automatic study is required, find all the cavities
+        to study.
+
+    Notes
+    -----
+    - If no automatic study is requested, this function does *not* change
+      the meaning of the user's config.
+
+    """
+    new_wtf = dict(wtf)
+
+    id_nature: ID_NATURE_T = wtf.get("id_nature")
+    failed: NESTED_ELEMENTS_ID | list[NESTED_ELEMENTS_ID] = wtf.get("failed")
+    automatic_study: AUTOMATIC_STUDY_T | None = wtf.get("automatic_study")
+
+    if automatic_study is None:
+        return len(failed), new_wtf
+
+    if automatic_study != "single cavity failures":
+        raise ValueError(
+            f"Unsupported automatic_study = {automatic_study!r}. "
+            "Only 'single cavity failures' is supported."
         )
 
-    factory = WithFaults(beam_calculators=beam_calculators, **config)
-    accelerators = factory.run_all()
-    return accelerators
+    if id_nature not in ("section", "lattice"):
+        logging.error(
+            f"id_nature={id_nature!r}, but only 'lattice' or 'section' "
+            f"are valid for automatic_study={automatic_study!r}."
+        )
+
+    lattices_or_sections = elts.take(failed, id_nature)
+    failed_cavities = [
+        cav for cav in flatten(lattices_or_sections) if cav.can_be_retuned
+    ]
+    failed_names = [cav.name for cav in failed_cavities]
+
+    logging.info(
+        "Automatic study enabled. Studying all single cavity failures in "
+        f"{id_nature} index(es) {failed}. "
+        f"List of failed cavities:\n{pformat(failed_names)}"
+    )
+
+    new_failed = [[name] for name in failed_names]
+    new_wtf["id_nature"] = "name"
+    new_wtf["failed"] = new_failed
+    return len(new_failed), new_wtf
 
 
 def set_up_faults(
@@ -101,7 +164,7 @@ def set_up_faults(
     Parameters
     ----------
     config :
-        The full TOML configuration dict.
+        The full ``TOML`` configuration dict.
     beam_calculator :
         The object that will be used for the optimization. Usually, a fast
         solver such as :class:`.CyEnvelope1D`.
@@ -110,7 +173,7 @@ def set_up_faults(
         break and fix.
     objective_factory_class :
         If provided, will override the ``objective_preset``. Used to let user
-        define it's own :class:`.ObjectiveFactory` without altering the source
+        define its own :class:`.ObjectiveFactory` without altering the source
         code.
 
     Returns
@@ -119,15 +182,13 @@ def set_up_faults(
 
     """
     beam_calculator.compute(accelerators[0])
-    design_space = config.get("design_space")
     factory = FaultScenarioFactory(
         accelerators,
         beam_calculator,
-        design_space,
+        config.get("design_space"),
         objective_factory_class=objective_factory_class,
     )
-    wtf = config.get("wtf")
-    return factory.create(**wtf)
+    return factory.create(**config.get("wtf"))
 
 
 def set_up(
@@ -180,73 +241,6 @@ def set_up(
         fault_scenarios,
         ref_simulations_outputs,
     )
-
-
-def _edit_wtf_dict_for_automatic_studies(
-    elts: ListOfElements, wtf: dict[str, Any]
-) -> dict[str, Any]:
-    """Fix the `wtf` dictionary when an automatic study is asked.
-
-    This is a temporary patch; it is mandatory because of a design issue:
-
-    - :class:`.AcceleratorFactory` needs to know the number of failures to
-      create the proper number of :class:`.Accelerator`.
-    - We need :class:`.Accelerator` (or, more precisely,
-      :class:`.ListOfElements`) to know the number of cavities in a given
-      section/lattice and thus the number of failures.
-
-    .. note::
-       ``automatic_study`` doc to put somewhere
-
-        Automatically generate the list of failed cavities to avoid manually
-        typing all the cavities identifiers in systematic studies.
-
-        - ``"single cavity failures"``: study all single cavity failures among
-        ``failed_cavities``. ``failed_cavities`` must be a list of elements.
-        It is best used with something like:
-
-        - ``failed = [1, 3, 7]``
-        - ``id_nature = "lattice"``
-
-        All the single cavity failures of lattices 1, 3 and 7 will be
-        studied. Also works very well with ``id_nature = "section"``.
-
-    """
-    id_nature: ID_NATURE_T = wtf.get("id_nature")
-    failed: NESTED_ELEMENTS_ID | list[NESTED_ELEMENTS_ID] = wtf.get("failed")
-    automatic_study: AUTOMATIC_STUDY_T | None = wtf.get(
-        "automatic_study", None
-    )
-
-    if automatic_study is None:
-        return wtf
-
-    if automatic_study != "single cavity failures":
-        raise ValueError(
-            f"You set {automatic_study = } but the only value that is accepted"
-            " is 'single cavity failures'."
-        )
-
-    if id_nature not in ("section", "lattice"):
-        logging.error(
-            f"{id_nature = }, but 'lattice' or 'section' is expected "
-            f"for {automatic_study = }."
-        )
-
-    lattices_or_sections = elts.take(failed, id_nature)
-    failed_cavities = [
-        x for x in flatten(lattices_or_sections) if x.can_be_retuned
-    ]
-    failed_names = [cav.name for cav in flatten(failed_cavities)]
-
-    logging.critical(
-        "Experimental feature: automatic study. Studying all single "
-        f"cavity failures in {id_nature} of index(es) {failed}. "
-        f"List of failed cavities: {pformat(failed_names)}"
-    )
-    wtf["id_nature"] = "name"
-    wtf["failed"] = [[x] for x in failed_names]
-    return wtf
 
 
 def fix(fault_scenarios: Collection[FaultScenario] | None) -> None:

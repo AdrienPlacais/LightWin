@@ -13,13 +13,13 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
-from lightwin.core.accelerator.factory import WithFaults
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.fault import Fault
 from lightwin.failures.fault_scenario import (
     FaultScenario,
     fault_scenario_factory,
 )
+from lightwin.ui.workflow_setup import set_up_accelerators
 from lightwin.util.pickling import MyCloudPickler, MyPickler
 
 params = [pytest.param((MyCloudPickler,), id="cloudpickle")]
@@ -67,13 +67,11 @@ def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
 
 @pytest.fixture(scope="module")
 def accelerators(
-    solver: BeamCalculator,
-    config: dict[str, dict[str, Any]],
+    solver: BeamCalculator, config: dict[str, dict[str, Any]]
 ) -> list[Accelerator]:
     """Create ref linac, linac we will break, compute ref simulation_output."""
     solvers = (solver,)
-    accelerator_factory = WithFaults(beam_calculators=solvers, **config)
-    accelerators = accelerator_factory.run_all()
+    accelerators = set_up_accelerators(config, solvers)
     solver.compute(accelerators[0])
     return accelerators
 

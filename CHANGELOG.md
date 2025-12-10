@@ -34,6 +34,8 @@ id_nature = "section"
 ### Changed
 
 - Deprecated numpy API in Cython is no longer used.
+- The `Accelerator` factories `NoFault` and `WithFault` are deprecated. Prefer
+  the general purpose `AcceleratorFactory`.
 
 ### Fixed
 

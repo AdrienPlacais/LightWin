@@ -14,7 +14,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.constants import instructions_tests_folder
 from lightwin.core.accelerator.accelerator import Accelerator
-from lightwin.core.accelerator.factory import NoFault
+from lightwin.core.accelerator.factory import AcceleratorFactory
 
 # note: only r_zz matrix will be checked with envelope1d
 all_expected = {
@@ -114,8 +114,8 @@ def accelerator(
     solver: BeamCalculator, config: dict[str, dict[str, Any]]
 ) -> Accelerator:
     """Create an example linac."""
-    accelerator_factory = NoFault(beam_calculators=solver, **config)
-    accelerator = accelerator_factory.run()
+    accelerator_factory = AcceleratorFactory(beam_calculators=solver, **config)
+    accelerator = accelerator_factory.create_nominal()
     return accelerator
 
 
