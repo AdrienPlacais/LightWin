@@ -29,6 +29,8 @@ id_nature = "section"
 > yourself instead of using utility functions from the `ui` module,
 > `automatic_study` will not be supported.
 
+## [0.14.1] -- 2025-12-10
+
 ### Changed
 
 - Deprecated numpy API in Cython is no longer used.
