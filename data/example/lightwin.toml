@@ -106,15 +106,17 @@ optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
 
 [wtf_systematic_study]
-automatic_study = "single cavity failures"
-failed = [10, 17]
-id_nature = "lattice"
+# automatic_study = "single cavity failures"
+automatic_study = "cryomodule failures"
+failed = [1]
+id_nature = "section"
 k = 4
 objective_preset = "EnergyMismatch"
 optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 shift = 0
 strategy = "k out of n"
+
 [design_space_generic]
 design_space_preset = "abs_phase_amplitude"
 from_file = false

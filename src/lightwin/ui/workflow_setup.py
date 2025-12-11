@@ -2,7 +2,6 @@
 
 import logging
 from collections.abc import Collection
-from pprint import pformat
 from typing import Any
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
@@ -12,17 +11,13 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import AcceleratorFactory
-from lightwin.core.list_of_elements.list_of_elements import (
-    NESTED_ELEMENTS_ID,
-    ListOfElements,
-)
 from lightwin.failures.fault_scenario import (
     FaultScenario,
     FaultScenarioFactory,
 )
+from lightwin.failures.strategy import determine_cavities
 from lightwin.optimisation.objective.factory import ObjectiveFactory
-from lightwin.util.helper import flatten
-from lightwin.util.typing import AUTOMATIC_STUDY_T, ID_NATURE_T, BeamKwargs
+from lightwin.util.typing import BeamKwargs
 from lightwin.visualization import plot
 
 
@@ -76,80 +71,12 @@ def set_up_accelerators(
     if not wtf:
         return [reference_accelerator]
 
-    n_scenarios, updated_wtf = _determine_failures(
+    n_scenarios, updated_wtf = determine_cavities(
         reference_accelerator.elts, wtf
     )
     config["wtf"] = updated_wtf
     accelerators = factory.create_failed(n_objects=n_scenarios)
     return [reference_accelerator] + accelerators
-
-
-def _determine_failures(
-    elts: ListOfElements, wtf: dict[str, Any]
-) -> tuple[int, dict[str, Any]]:
-    """Expand the ``wtf`` failure specification into explicit failure lists.
-
-    Parameters
-    ----------
-    elts :
-        The ListOfElements of the reference accelerator. Used to determine
-        which cavities will fail.
-    wtf :
-        The original failure specification from the ``TOML`` config.
-
-    Returns
-    -------
-    int
-        The number of fault scenarios. This is also the length of the
-        ``failed`` list.
-    dict[str, Any]
-        A new wtf dict ready to pass to :meth:`.FaultScenarioFactory.create`.
-        In particular, if an automatic study is required, find all the cavities
-        to study.
-
-    Notes
-    -----
-    - If no automatic study is requested, this function does *not* change
-      the meaning of the user's config.
-
-    """
-    new_wtf = dict(wtf)
-
-    id_nature: ID_NATURE_T = wtf.get("id_nature")
-    failed: NESTED_ELEMENTS_ID | list[NESTED_ELEMENTS_ID] = wtf.get("failed")
-    automatic_study: AUTOMATIC_STUDY_T | None = wtf.get("automatic_study")
-
-    if automatic_study is None:
-        return len(failed), new_wtf
-
-    if automatic_study != "single cavity failures":
-        raise ValueError(
-            f"Unsupported automatic_study = {automatic_study!r}. "
-            "Only 'single cavity failures' is supported."
-        )
-
-    if id_nature not in ("section", "lattice"):
-        logging.error(
-            f"id_nature={id_nature!r}, but only 'lattice' or 'section' "
-            f"are valid for automatic_study={automatic_study!r}."
-        )
-
-    lattices_or_sections = elts.take(failed, id_nature)
-    failed_cavities = [
-        cav for cav in flatten(lattices_or_sections) if cav.can_be_retuned
-    ]
-    failed_names = [cav.name for cav in failed_cavities]
-
-    logging.info(
-        "Automatic study enabled. Studying all single cavity failures in "
-        f"{id_nature} index(es) {failed}. "
-        f"List of failed cavities:\n{pformat(failed_names)}"
-    )
-
-    new_failed = [[name] for name in failed_names]
-    new_wtf["id_nature"] = "name"
-    new_wtf["failed"] = new_failed
-    return len(new_failed), new_wtf
 
 
 def set_up_faults(

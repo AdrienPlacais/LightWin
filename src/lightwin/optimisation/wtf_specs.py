@@ -11,7 +11,7 @@ from typing import Any
 
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
 from lightwin.failures.helper import TIE_POLITICS
-from lightwin.failures.strategy import STRATEGIES_MAPPING
+from lightwin.failures.strategy import AUTOMATIC_STUDY, STRATEGIES_MAPPING
 from lightwin.optimisation.algorithms.factory import ALGORITHM_SELECTOR
 from lightwin.optimisation.objective.factory import OBJECTIVE_PRESETS
 from lightwin.util.typing import ID_NATURE
@@ -35,9 +35,13 @@ _WTF_BASE = (
               All the single cavity failures of lattices 1, 3 and 7 will be
               studied. Also works very well with ``id_nature = "section"``.
 
+            - ``"cryomodule failures"``: study all cryomodule failures. Usage
+              similar to the above.
+
         """
         ),
         default_value=None,
+        allowed_values=AUTOMATIC_STUDY,
         is_mandatory=False,
     ),
     KeyValConfSpec(

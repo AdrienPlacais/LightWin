@@ -483,7 +483,3 @@ class BeamKwargs(TypedDict):
 #: Allowed values for the ``id_nature`` key of ``wtf`` configuration table.
 ID_NATURE = ("cavity", "element", "lattice", "name", "section")
 ID_NATURE_T = Literal["cavity", "element", "lattice", "name", "section"]
-
-#: Allowed values for the ``automatic_study`` key of ``wtf`` configuration
-#: table.
-AUTOMATIC_STUDY_T = Literal["single cavity failures"]
