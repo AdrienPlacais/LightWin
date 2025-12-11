@@ -7,7 +7,6 @@
 """
 
 from types import NoneType
-from typing import Any
 
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
 from lightwin.failures.helper import TIE_POLITICS
@@ -16,29 +15,15 @@ from lightwin.optimisation.algorithms.factory import ALGORITHM_SELECTOR
 from lightwin.optimisation.objective.factory import OBJECTIVE_PRESETS
 from lightwin.util.typing import ID_NATURE
 
-_WTF_BASE = (
+#: Configuration keys that are common to all strategies.
+WTF_COMMON = (
     KeyValConfSpec(
         key="automatic_study",
         types=(str, NoneType),
         description=(
             """Automatically generate the list of failed cavities to avoid
             manually typing all the cavities identifiers in systematic studies.
-            Possible values are:
-
-            - ``"single cavity failures"``: study all single cavity failures
-              among ``failed_cavities``. ``failed_cavities`` must be a list of
-              elements. It is best used with something like:
-
-              - ``failed = [1, 3, 7]``
-              - ``id_nature = "lattice"``
-
-              All the single cavity failures of lattices 1, 3 and 7 will be
-              studied. Also works very well with ``id_nature = "section"``.
-
-            - ``"cryomodule failures"``: study all cryomodule failures. Usage
-              similar to the above.
-
-        """
+            """
         ),
         default_value=None,
         allowed_values=AUTOMATIC_STUDY,
@@ -47,7 +32,12 @@ _WTF_BASE = (
     KeyValConfSpec(
         key="failed",
         types=(list,),
-        description="Identifies list of failed cavities.",
+        description=(
+            "Identifies list of failed cavities. This is typically a list of "
+            "list of cavity identifiers (2D), but it can be a 1D list for "
+            "automatic studies and it must be a 3D array if ``strategy`` is "
+            "set to ``'manual'``."
+        ),
         default_value=[[5]],
     ),
     KeyValConfSpec(
@@ -98,7 +88,8 @@ _WTF_BASE = (
     ),
 )
 
-_WTF_BASE_AUTOMATIC = _WTF_BASE + (
+#: Configuration keys for all strategies but ``"manual"``
+_WTF_COMMON_NON_MANUAL = (
     KeyValConfSpec(
         key="tie_politics",
         types=(str,),
@@ -123,8 +114,7 @@ _WTF_BASE_AUTOMATIC = _WTF_BASE + (
         is_mandatory=False,
     ),
 )
-
-WTF_K_OUT_OF_N = _WTF_BASE_AUTOMATIC + (
+WTF_K_OUT_OF_N_SPECIFIC = _WTF_COMMON_NON_MANUAL + (
     KeyValConfSpec(
         key="k",
         types=(int,),
@@ -133,9 +123,9 @@ WTF_K_OUT_OF_N = _WTF_BASE_AUTOMATIC + (
     ),
 )
 
-K_OUT_OF_N_MONKEY_PATCHES: dict[str, Any] = {}
+WTF_K_OUT_OF_N = WTF_COMMON + WTF_K_OUT_OF_N_SPECIFIC
 
-WTF_L_NEIGHBORING_LATTICES = _WTF_BASE_AUTOMATIC + (
+WTF_L_NEIGHBORING_LATTICES_SPECIFIC = _WTF_COMMON_NON_MANUAL + (
     KeyValConfSpec(
         key="l",
         types=(int,),
@@ -155,9 +145,9 @@ WTF_L_NEIGHBORING_LATTICES = _WTF_BASE_AUTOMATIC + (
         is_mandatory=False,
     ),
 )
-L_NEIGHBORING_LATTICES_MONKEY_PATCHES: dict[str, Any] = {}
+WTF_L_NEIGHBORING_LATTICES = WTF_COMMON + WTF_L_NEIGHBORING_LATTICES_SPECIFIC
 
-WTF_CORRECTOR_AT_EXIT = _WTF_BASE_AUTOMATIC + (
+WTF_CORRECTOR_AT_EXIT_SPECIFC = _WTF_COMMON_NON_MANUAL + (
     KeyValConfSpec(
         key="n_compensating",
         types=(int,),
@@ -181,14 +171,15 @@ WTF_CORRECTOR_AT_EXIT = _WTF_BASE_AUTOMATIC + (
         default_value=2,
     ),
 )
-CORRECTOR_AT_EXIT_MONKEY_PATCHES: dict[str, Any] = {}
-WTF_MANUAL = _WTF_BASE + (
+WTF_CORRECTOR_AT_EXIT = WTF_COMMON + WTF_CORRECTOR_AT_EXIT_SPECIFC
+
+WTF_MANUAL_SPECIFIC = (
     KeyValConfSpec(
         key="failed",
         types=(list,),
         description=(
-            "Index/name of failed cavities. Must be a `list[list[list[int]]]` "
-            "or `list[list[list[str]]]`."
+            "Index/name of failed cavities. For manual strategy, it must be a "
+            "`list[list[list[int]]]` or `list[list[list[str]]]`."
         ),
         default_value=[[[5]]],
         overrides_previously_defined=True,
@@ -206,8 +197,7 @@ WTF_MANUAL = _WTF_BASE + (
         default_value=[[[3, 4, 6, 7]]],
     ),
 )
-
-MANUAL_MONKEY_PATCHES: dict[str, Any] = {}
+WTF_MANUAL = WTF_COMMON + WTF_MANUAL_SPECIFIC
 
 
 WTF_CONFIGS = {
@@ -217,8 +207,8 @@ WTF_CONFIGS = {
     "manual": WTF_MANUAL,
 }
 WTF_MONKEY_PATCHES = {
-    "corrector at exit": CORRECTOR_AT_EXIT_MONKEY_PATCHES,
-    "k out of n": K_OUT_OF_N_MONKEY_PATCHES,
-    "l neighboring lattices": L_NEIGHBORING_LATTICES_MONKEY_PATCHES,
-    "manual": MANUAL_MONKEY_PATCHES,
+    "corrector at exit": {},
+    "k out of n": {},
+    "l neighboring lattices": {},
+    "manual": {},
 }

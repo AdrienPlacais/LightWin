@@ -4,13 +4,13 @@ Configuration
 .. toctree::
    :maxdepth: 5
 
-   configuration.files
-   configuration.beam
-   configuration.beam_calculator
-   configuration.plots
-   configuration.wtf
-   configuration.design_space
-   configuration.evaluators
+   files
+   beam
+   beam_calculator
+   plots
+   wtf
+   design_space
+   evaluators
 
 Most of the configuration of LightWin is performed through a `TOML` configuration file, which should be given as argument to several objects initialisation.
 The configuration file is treated with the help of the `tomllib <https://docs.python.org/3/library/tomllib.html>`_ module.

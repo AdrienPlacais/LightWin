@@ -338,8 +338,8 @@ def global_downstream[T](
 
 
 def corrector_at_exit(
-    elements: Sequence[cavities_id],
-    failed_elements: Sequence[cavities_id],
+    elements: ELEMENTS_ID_T,
+    failed_elements: ELEMENTS_ID_T,
     *,
     n_compensating: int,
     n_correctors: int,
@@ -348,7 +348,7 @@ def corrector_at_exit(
     remove_failed: bool = False,
     include_correctors: bool = False,
     **kwargs,
-) -> list[cavities_id]:
+) -> ELEMENTS_ID_T:
     r"""Return ``k out of n`` cavities, plus additional cavities at exit.
 
     The idea behind this strategy is the following:

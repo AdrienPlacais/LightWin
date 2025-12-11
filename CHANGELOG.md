@@ -12,10 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In the `[wtf]` section of the `TOML` configuration file:
   - `id_nature` can be set to `"lattice"` or `"section"`. The indexes listed in
     `failed` will then be lattice or section index.
-  - New entry `automatic_study`. Only one value allowed for now: `"single
-cavity failures"`. All the cavities indicated in `failed` will be failed one
-    after another. Typical usage; this will run a systematic study of all single
-    cavity failures in the second section.
+  - New entry `automatic_study`. Two values allowed for now: `"single
+cavity failures"` and `"cryomodule failures"`. All the cavities/cryomodules
+    indicated in `failed` will be failed one after another. Typical usage; this
+    will run a systematic study of all single cavity failures in the second
+    section.
 
 ```toml
 automatic_study = "single cavity failures"

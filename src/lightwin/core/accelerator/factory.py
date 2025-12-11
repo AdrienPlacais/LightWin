@@ -5,8 +5,6 @@ from pathlib import Path
 from typing import Any, Sequence
 from warnings import warn
 
-from _pytest.stash import D
-
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.field_map import FieldMap
@@ -123,24 +121,22 @@ class AcceleratorFactory:
     ) -> list[Path]:
         """Create the proper out directories for every :class:`.Accelerator`.
 
-        The default structure looks like:
+        The default structure looks like::
 
-        ```
-        YYYY.MM.DD_HHhMM_SSs_MILLIms/
-        ├── 000000_ref
-        │   ├── 0_Envelope1D/
-        │   └── 1_TraceWin/
-        ├── 000001
-        │   ├── 0_Envelope1D/
-        │   └── 1_TraceWin/
-        ├── 000002
-        │   ├── 0_Envelope1D/
-        │   └── 1_TraceWin/
-        ├── 000003
-        │   ├── 0_Envelope1D/
-        │   └── 1_TraceWin/
-        └── lightwin.log
-        ```
+           YYYY.MM.DD_HHhMM_SSs_MILLIms/
+           ├── 000000_ref
+           │   ├── 0_Envelope1D/
+           │   └── 1_TraceWin/
+           ├── 000001
+           │   ├── 0_Envelope1D/
+           │   └── 1_TraceWin/
+           ├── 000002
+           │   ├── 0_Envelope1D/
+           │   └── 1_TraceWin/
+           ├── 000003
+           │   ├── 0_Envelope1D/
+           │   └── 1_TraceWin/
+           └── lightwin.log
 
         - The main ``YYYY.MM.DD_HHhMM_SSs_MILLIms/`` directory is created at
           the same location as the original ``DAT`` file. You can override its
@@ -162,7 +158,6 @@ class AcceleratorFactory:
 
         Returns
         -------
-        list[Path]
             Output path for every accelerator: ``000000_ref/`` (if
             ``with_reference``), ``000001/``, ...
 
