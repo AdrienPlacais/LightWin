@@ -1,17 +1,44 @@
 Entry,Type,Description,Mandatory?,Allowed values
-`failed`,`list`,"Index/name of failed cavities.
+`automatic_study`,"`str` or
 
-Must be a `list[list[int]]` or
+`NoneType`","Automatically generate the
 
-`list[list[str]]`.",✅,
+list of failed cavities to
+
+avoid manually typing all the
+
+cavities identifiers in
+
+systematic studies.",❌,"('single cavity failures', 'cryomodule failures')"
+`failed`,`list`,"Identifies list of failed
+
+cavities. This is typically a
+
+list of list of cavity
+
+identifiers (2D), but it can
+
+be a 1D list for automatic
+
+studies and it must be a 3D
+
+array if `` strategy `` is set
+
+to `` 'manual' ``.",✅,
 `history_kwargs`,`dict`,"kwargs for the
 
 :class:`.OptimizationHistory`.",❌,
-`id_nature`,`str`,"Indicates if failed is element
+`id_nature`,`str`,"Indicates if `failed` is name of
 
-index/cavity index/name,
+element (s), index of element
 
-`element` or `cavity` or `name`.",✅,"('element', 'cavity', 'name')"
+(s), index of cavities. It can
+
+also be the index (es) of one
+
+or severalsection (s), or of
+
+one or several lattice (s).",✅,"('cavity', 'element', 'lattice', 'name', 'section')"
 `objective_preset`,`str`,"Objectives for the
 
 optimisation algorithm.",✅,"('CorrectorAtExit', 'EnergyMismatch', 'EnergyPhaseMismatch', 'EnergySeveralMismatches', 'EnergySyncPhaseMismatch', 'experimental', 'rephased_ADS', 'simple_ADS', 'sync_phase_as_objective_ADS')"
@@ -28,24 +55,3 @@ the optimisation algorithm.",❌,
 `strategy`,`str`,"How compensating cavities are
 
 selected.",✅,"('corrector at exit', 'global', 'global_downstream', 'k out of n', 'l neighboring lattices', 'manual')"
-`tie_politics`,`str`,"How to select the compensating
-
-elements when several are
-
-equidistant to the failure.",❌,"('upstream first', 'downstream first')"
-`shift`,`int`,"Distance increase for
-
-downstream elements (`shift <`
-
-`0`) or upstream elements
-
-(`shift > 0`). Used to have a
-
-window of compensating
-
-cavities which is not centered
-
-around the failed elements.",❌,
-`k`,`int`,"Number of compensating
-
-cavities per failed cavity.",✅,

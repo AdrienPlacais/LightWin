@@ -202,10 +202,6 @@ class BeamParameters(InitialBeamParameters):
     @property
     def sigma(self) -> np.ndarray:
         """Give value of sigma."""
-        warnings.warn(
-            "Will be deprecated, unless there is a need for this",
-            FutureWarning,
-        )
         sigma = np.zeros((self.n_points, 6, 6))
 
         sigma_x = np.zeros((self.n_points, 2, 2))

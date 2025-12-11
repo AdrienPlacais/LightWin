@@ -10,11 +10,12 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.accelerator.accelerator import Accelerator
-from lightwin.core.accelerator.factory import NoFault, WithFaults
+from lightwin.core.accelerator.factory import AcceleratorFactory
 from lightwin.failures.fault_scenario import (
     FaultScenario,
-    fault_scenario_factory,
+    FaultScenarioFactory,
 )
+from lightwin.failures.strategy import determine_cavities
 from lightwin.optimisation.objective.factory import ObjectiveFactory
 from lightwin.util.typing import BeamKwargs
 from lightwin.visualization import plot
@@ -46,6 +47,10 @@ def set_up_accelerators(
 ) -> list[Accelerator]:
     """Create the accelerators.
 
+    .. note::
+       If an automatic study is asked, the ``wtf`` dictionary is updated to
+       explicitly mention the list of failed cavities.
+
     Parameters
     ----------
     config :
@@ -55,19 +60,23 @@ def set_up_accelerators(
 
     Returns
     -------
-        The instantiated :class:`.Accelerator`. If there is no fault defined,
-        we return a single :class:`.Accelerator`. If there is a fault, we
-        return a reference :class:`.Accelerator` and a broken one.
+        A nominal :class:`.Accelerator` without failure, and an
+        :class:`.Accelerator` per fault scenario.
 
     """
-    if "wtf" not in config:
-        factory = NoFault(beam_calculators=beam_calculators[0], **config)
-        accelerators = factory.run()
-        return [accelerators]
+    factory = AcceleratorFactory(beam_calculators, **config)
+    reference_accelerator = factory.create_nominal()
 
-    factory = WithFaults(beam_calculators=beam_calculators, **config)
-    accelerators = factory.run_all()
-    return accelerators
+    wtf = config.get("wtf")
+    if not wtf:
+        return [reference_accelerator]
+
+    n_scenarios, updated_wtf = determine_cavities(
+        reference_accelerator.elts, wtf
+    )
+    config["wtf"] = updated_wtf
+    accelerators = factory.create_failed(n_objects=n_scenarios)
+    return [reference_accelerator] + accelerators
 
 
 def set_up_faults(
@@ -82,7 +91,7 @@ def set_up_faults(
     Parameters
     ----------
     config :
-        The full TOML configuration dict.
+        The full ``TOML`` configuration dict.
     beam_calculator :
         The object that will be used for the optimization. Usually, a fast
         solver such as :class:`.CyEnvelope1D`.
@@ -91,7 +100,7 @@ def set_up_faults(
         break and fix.
     objective_factory_class :
         If provided, will override the ``objective_preset``. Used to let user
-        define it's own :class:`.ObjectiveFactory` without altering the source
+        define its own :class:`.ObjectiveFactory` without altering the source
         code.
 
     Returns
@@ -100,13 +109,13 @@ def set_up_faults(
 
     """
     beam_calculator.compute(accelerators[0])
-    fault_scenarios = fault_scenario_factory(
+    factory = FaultScenarioFactory(
         accelerators,
         beam_calculator,
+        config.get("design_space"),
         objective_factory_class=objective_factory_class,
-        **config,
     )
-    return fault_scenarios
+    return factory.create(**config.get("wtf"))
 
 
 def set_up(

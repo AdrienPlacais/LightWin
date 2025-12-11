@@ -23,7 +23,7 @@ Documentation structure
    manual/usage
    manual/examples
    manual/get_method
-   manual/configuration
+   manual/configuration/configuration
    manual/units
    Utility scripts <manual/scripts>
    manual/bibliography
