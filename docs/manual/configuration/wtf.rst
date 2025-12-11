@@ -4,6 +4,9 @@
 ``wtf`` stands for *what to fit*.
 This section parametrizes the failed cavities, as well as how they are fixed.
 
+.. todo::
+   Implement tests for all these configurations keys!
+
 .. toctree::
    :maxdepth: 3
 

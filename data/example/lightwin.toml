@@ -97,8 +97,10 @@ shift = 0
 strategy = "corrector at exit"
 
 [wtf_tiny]
-failed = [["FM11"]]
-id_nature = "name"
+failed = [[11]]
+id_nature = "cavity"
+# So that failed = [[11]] means [[FM11]] instead of [[FM10]]:
+index_offset = 1
 k = 3
 objective_preset = "EnergyPhaseMismatch"
 optimisation_algorithm = "downhill_simplex"

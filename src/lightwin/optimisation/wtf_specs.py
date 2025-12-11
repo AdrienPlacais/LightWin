@@ -6,9 +6,12 @@
 
 """
 
+import logging
 from types import NoneType
+from typing import Any
 
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
+from lightwin.config.table_spec import TableConfSpec
 from lightwin.failures.helper import TIE_POLITICS
 from lightwin.failures.strategy import AUTOMATIC_STUDY, STRATEGIES_MAPPING
 from lightwin.optimisation.algorithms.factory import ALGORITHM_SELECTOR
@@ -57,6 +60,22 @@ WTF_COMMON = (
         ),
         allowed_values=ID_NATURE,
         default_value="element",
+    ),
+    KeyValConfSpec(
+        key="index_offset",
+        types=(int,),
+        description=(
+            """
+            Specify whether user-provided cavity indices are 0-based or
+            1-based. Set `0` if the first cavity has index 0 (Python-style,
+            default). Set `1` if the first cavity has index 1
+            (human-friendly). This affects how the `failed` and
+            `compensating_manual` lists interpret integer indices.
+            """
+        ),
+        allowed_values=(0, 1),
+        default_value=0,
+        is_mandatory=False,
     ),
     KeyValConfSpec(
         key="objective_preset",
@@ -179,7 +198,7 @@ WTF_MANUAL_SPECIFIC = (
         types=(list,),
         description=(
             "Index/name of failed cavities. For manual strategy, it must be a "
-            "`list[list[list[int]]]` or `list[list[list[str]]]`."
+            "3D list."
         ),
         default_value=[[[5]]],
         overrides_previously_defined=True,
@@ -188,16 +207,51 @@ WTF_MANUAL_SPECIFIC = (
         key="compensating_manual",
         types=(list,),
         description=(
-            "Index/name of compensating cavities cavities. Must be a "
-            "`list[list[list[int]]]` or `list[list[list[str]]]`. The number of"
-            " :class:`.FaultScenarios` (length of most outer list) must match "
-            "`failed`. The number of groups of compensating cavities (second "
-            "level) must match `failed`."
+            "Index/name of compensating cavities cavities. Must be a 3D list, "
+            "which two first level lengths must match the ones of `failed`."
         ),
         default_value=[[[3, 4, 6, 7]]],
     ),
 )
 WTF_MANUAL = WTF_COMMON + WTF_MANUAL_SPECIFIC
+
+
+def apply_index_offset(
+    self: TableConfSpec, toml_table: dict[str, Any], **kwargs
+) -> None:
+    """Apply the ``index_offset`` key."""
+    index_offset = toml_table.get("index_offset")
+    if index_offset is None or index_offset == 0:
+        return
+
+    assert isinstance(index_offset, int)
+    id_nature = toml_table.get("id_nature")
+    valid_id_nature = ("cavity", "element", "lattice", "section")
+    if id_nature not in valid_id_nature:
+        logging.warning(
+            f"The configuration key {index_offset = } was disregarded because "
+            f"it makes no sense with {id_nature = }. Index offsetting is "
+            f"implemented for {valid_id_nature}."
+        )
+        return
+
+    applicable = ("failed", "compensating_manual")
+    for key in applicable:
+        indexes = toml_table.get(key, None)
+        if indexes is None:
+            continue
+
+        toml_table[key] = _apply_offset_to_nested_list(indexes, index_offset)
+
+
+def _apply_offset_to_nested_list(x: int | list, offset: int) -> int | list:
+    """Recursively subtract offset from integers in nested lists."""
+    if isinstance(x, int):
+        return x - offset
+    return [_apply_offset_to_nested_list(elem, offset) for elem in x]
+
+
+COMMON_MONKEY_PATCHES = {"_pre_treat": apply_index_offset}
 
 
 WTF_CONFIGS = {
@@ -207,8 +261,11 @@ WTF_CONFIGS = {
     "manual": WTF_MANUAL,
 }
 WTF_MONKEY_PATCHES = {
-    "corrector at exit": {},
-    "k out of n": {},
-    "l neighboring lattices": {},
-    "manual": {},
+    key: COMMON_MONKEY_PATCHES
+    for key in (
+        "corrector at exit",
+        "k out of n",
+        "l neighboring lattices",
+        "manual",
+    )
 }

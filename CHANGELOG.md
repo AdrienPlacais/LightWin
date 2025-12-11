@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In the `[wtf]` section of the `TOML` configuration file:
   - `id_nature` can be set to `"lattice"` or `"section"`. The indexes listed in
     `failed` will then be lattice or section index.
+  - `index_offset = 1` optional configuration key makes indexes in `failed` and
+    `compensating_manual` start at `1` instead of `0`. With this option,
+    `failed = [[50]]` means the 50th cavity/element, not the 51st.
   - New entry `automatic_study`. Two values allowed for now: `"single
 cavity failures"` and `"cryomodule failures"`. All the cavities/cryomodules
     indicated in `failed` will be failed one after another. Typical usage; this

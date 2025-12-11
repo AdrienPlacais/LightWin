@@ -70,10 +70,10 @@ def study(new_evaluations: bool = False) -> list[Accelerator]:
         "beam_calculator": "envelope1d",
         # "beam_calculator_post": "tracewin",
         "beam": "beam",
-        "wtf": "wtf_systematic_study",
-        "design_space": "design_space_fit_phi_s",
-        # "wtf": "wtf_tiny",
-        # "design_space": "design_space_tiny",
+        # "wtf": "wtf_systematic_study",
+        # "design_space": "design_space_fit_phi_s",
+        "wtf": "wtf_tiny",
+        "design_space": "design_space_tiny",
     }
     config = process_config(toml_filepath, toml_keys)
     fault_scenarios = run_simulation(

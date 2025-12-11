@@ -50,11 +50,9 @@ The above example could also be written:
    id_nature = "cavity"
 
 .. note::
-   Indexes start at `0`.
-   Hence, the cavity numbered :math:`i` by the user appears with index `i - 1`.
-
-   .. todo::
-      Add configuration option to allow index start at 1, which is more natural for users.
+   Indexes start at `0` by default.
+   Hence, a cavity numbered :math:`i` by the user corresponds to index `i - 1` internally.
+   If you set `index_offset = 1`, the same cavity will use index `i`, which may feel more natural for users.
 
 Automatic studies
 ^^^^^^^^^^^^^^^^^

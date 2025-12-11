@@ -39,6 +39,25 @@ also be the index (es) of one
 or severalsection (s), or of
 
 one or several lattice (s).",✅,"('cavity', 'element', 'lattice', 'name', 'section')"
+`index_offset`,`int`,"Specify whether user-provided
+
+cavity indices are 0-based or
+
+1-based. Set `0` if the first
+
+cavity has index 0 (
+
+Python-style, default). Set `1`
+
+if the first cavity has index
+
+1 (human-friendly). This
+
+affects how the `failed` and
+
+`compensating_manual` lists
+
+interpret integer indices.",❌,"(0, 1)"
 `objective_preset`,`str`,"Objectives for the
 
 optimisation algorithm.",✅,"('CorrectorAtExit', 'EnergyMismatch', 'EnergyPhaseMismatch', 'EnergySeveralMismatches', 'EnergySyncPhaseMismatch', 'experimental', 'rephased_ADS', 'simple_ADS', 'sync_phase_as_objective_ADS')"
