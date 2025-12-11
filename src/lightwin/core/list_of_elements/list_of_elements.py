@@ -47,12 +47,13 @@ from lightwin.util.typing import (
     CONCATENABLE_ELTS,
     EXPORT_PHASES_T,
     GETTABLE_ELTS_T,
+    ID_NATURE_T,
     REFERENCE_PHASES_T,
 )
 
-element_id = int | str
-elements_id = Sequence[int] | Sequence[str]
-nested_elements_id = Sequence[Sequence[int]] | Sequence[Sequence[str]]
+ELEMENT_ID_T = int | str
+ELEMENTS_ID_T = Sequence[int] | list[str]
+NESTED_ELEMENTS_ID = Sequence[Sequence[int]] | list[list[str]]
 
 
 class FilesInfo(TypedDict):
@@ -116,6 +117,7 @@ class ListOfElements(list):
         super().__init__(elts)
         self.by_section_and_lattice: list[list[list[Element]]] | None = None
         self.by_lattice: list[list[Element]]
+        self.by_section: list[list[Element]]
 
         if first_init:
             self._first_init()
@@ -268,10 +270,10 @@ class ListOfElements(list):
 
     def _first_init(self) -> None:
         """Set structure, elements name, some indexes."""
-        by_section = group_elements_by_section(self)
+        self.by_section = group_elements_by_section(self)
         self.by_lattice = group_elements_by_lattice(self)
         self.by_section_and_lattice = group_elements_by_section_and_lattice(
-            by_section
+            self.by_section
         )
         self._set_element_indexes()
 
@@ -355,6 +357,11 @@ class ListOfElements(list):
     ) -> list[FieldMap]: ...
 
     @overload
+    def take(
+        self, ids: Sequence[Sequence[int]], id_nature: Literal["cavity"]
+    ) -> list[list[FieldMap]]: ...
+
+    @overload
     def take(self, ids: int, id_nature: Literal["element"]) -> Element: ...
 
     @overload
@@ -363,34 +370,47 @@ class ListOfElements(list):
     ) -> list[Element]: ...
 
     @overload
+    def take(
+        self, ids: Sequence[Sequence[int]], id_nature: Literal["element"]
+    ) -> list[list[Element]]: ...
+
+    @overload
     def take(self, ids: str, id_nature: Literal["name"]) -> Element: ...
 
     @overload
     def take(
-        self, ids: Sequence[str], id_nature: Literal["name"]
+        self, ids: list[str], id_nature: Literal["name"]
     ) -> list[Element]: ...
 
     @overload
     def take(
-        self,
-        ids: nested_elements_id,
-        id_nature: Literal["cavity", "element", "name"],
-    ) -> list[Sequence[Element]]: ...
+        self, ids: list[list[str]], id_nature: Literal["name"]
+    ) -> list[list[Element]]: ...
+
+    @overload
+    def take(
+        self, ids: int, id_nature: Literal["section", "lattice"]
+    ) -> list[Element]: ...
+
+    @overload
+    def take(
+        self, ids: Sequence[int], id_nature: Literal["section", "lattice"]
+    ) -> list[list[Element]]: ...
 
     def take(
         self,
-        ids: element_id | elements_id | nested_elements_id,
-        id_nature: Literal["cavity", "element", "name"],
+        ids: ELEMENT_ID_T | ELEMENTS_ID_T | NESTED_ELEMENTS_ID,
+        id_nature: ID_NATURE_T,
     ) -> (
         Element
         | list[Element]
-        | list[Sequence[Element]]
+        | list[list[Element]]
         | FieldMap
         | list[FieldMap]
-        | list[Sequence[FieldMap]]
+        | list[list[FieldMap]]
     ):
         """Convert list of indexes or names to a list of :class:`.Element`."""
-        if isinstance(ids, Sequence) and not isinstance(ids, str):
+        if isinstance(ids, (Sequence, list)) and not isinstance(ids, str):
             return [self.take(idx, id_nature) for idx in ids]
 
         match id_nature:
@@ -427,6 +447,28 @@ class ListOfElements(list):
                         f"No element named {name} was found in self."
                     )
                     raise StopIteration
+            case "lattice":
+                assert isinstance(ids, int)
+                try:
+                    output = self.by_lattice[ids]
+                except IndexError as e:
+                    msg = (
+                        f"{ids = } is outside of list of lattices of length "
+                        f"{len(self.by_lattice)}\n{e}"
+                    )
+                    logging.error(msg)
+                    raise IndexError(msg)
+            case "section":
+                assert isinstance(ids, int)
+                try:
+                    output = self.by_section[ids]
+                except IndexError as e:
+                    msg = (
+                        f"{ids = } is outside of list of sections of length "
+                        f"{len(self.by_section)}\n{e}"
+                    )
+                    logging.error(msg)
+                    raise IndexError(msg)
             case _:
                 raise OSError(f"{id_nature = } not understood.")
         return output

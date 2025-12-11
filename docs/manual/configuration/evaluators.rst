@@ -8,7 +8,7 @@ This section is used to define :class:`.SimulationOutputEvaluator` objects.
 They are used to evaluate the absolute or relative *quality* of compensation settings.
 
 .. csv-table::
-   :file: configuration_entries/evaluator.csv
+   :file: entries/evaluator.csv
    :header-rows: 1
 
 .. note::

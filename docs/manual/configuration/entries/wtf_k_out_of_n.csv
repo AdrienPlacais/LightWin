@@ -1,0 +1,22 @@
+Entry,Type,Description,Mandatory?,Allowed values
+`tie_politics`,`str`,"How to select the compensating
+
+elements when several are
+
+equidistant to the failure.",❌,"('upstream first', 'downstream first')"
+`shift`,`int`,"Distance increase for
+
+downstream elements (`shift <`
+
+`0`) or upstream elements
+
+(`shift > 0`). Used to have a
+
+window of compensating
+
+cavities which is not centered
+
+around the failed elements.",❌,
+`k`,`int`,"Number of compensating
+
+cavities per failed cavity.",✅,

@@ -9,7 +9,7 @@ The units must be consistent with LightWin's system of units, see also :ref:`uni
 
 
 .. csv-table::
-   :file: configuration_entries/beam.csv
+   :file: entries/beam.csv
    :header-rows: 1
 
 

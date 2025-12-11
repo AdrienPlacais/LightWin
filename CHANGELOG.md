@@ -5,11 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0] -- 2025-12-11
+
+### Added
+
+- In the `[wtf]` section of the `TOML` configuration file:
+  - `id_nature` can be set to `"lattice"` or `"section"`. The indexes listed in
+    `failed` will then be lattice or section index.
+  - `index_offset = 1` optional configuration key makes indexes in `failed` and
+    `compensating_manual` start at `1` instead of `0`. With this option,
+    `failed = [[50]]` means the 50th cavity/element, not the 51st.
+  - New entry `automatic_study`. Two values allowed for now: `"single
+cavity failures"` and `"cryomodule failures"`. All the cavities/cryomodules
+    indicated in `failed` will be failed one after another. Typical usage; this
+    will run a systematic study of all single cavity failures in the second
+    section.
+
+```toml
+automatic_study = "single cavity failures"
+failed = [1]
+id_nature = "section"
+```
+
+> [!IMPORTANT]
+> This new feature introduced a new dependency between `AcceleratorFactory` and
+> `FaultScenarioFactory`. If you created your `Accelerator` and `FaultScenario`
+> yourself instead of using utility functions from the `ui` module,
+> `automatic_study` will not be supported.
+
 ## [0.14.1] -- 2025-12-10
 
 ### Changed
 
 - Deprecated numpy API in Cython is no longer used.
+- The `Accelerator` factories `NoFault` and `WithFault` are deprecated. Prefer
+  the general purpose `AcceleratorFactory`.
 
 ### Fixed
 
