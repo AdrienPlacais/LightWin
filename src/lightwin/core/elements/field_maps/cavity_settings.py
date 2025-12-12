@@ -832,7 +832,6 @@ class CavitySettings:
 
         Parameters
         ----------
-        value :
             New rf phase of the synchronous particle at the entrance of the
             cavity.
 

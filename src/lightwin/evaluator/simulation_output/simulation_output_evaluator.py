@@ -261,15 +261,11 @@ class SimulationOutputEvaluator(ABC):
         self.main_ax = axx[0]
         self._struct_ax = axx[1]
 
-    def _add_structure_plot(
-        self,
-        simulation_output: SimulationOutput,
-    ) -> None:
+    def _add_structure_plot(self, simulation_output: SimulationOutput) -> None:
         """Add a plot of the structure in the bottom ax."""
-        elts = simulation_output.element_to_index.keywords["_elts"]
         clean_axes((self._struct_ax,))
         self._struct_ax.set_xlabel(dic.markdown["z_abs"])
-        plot_structure(elts, self._struct_ax)
+        plot_structure(simulation_output.elts, self._struct_ax)
 
     def _add_a_value_plot(
         self,

@@ -57,6 +57,7 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         elts: ListOfElements,
         single_elts_results: list[dict],
         set_of_cavity_settings: SetOfCavitySettings,
+        is_3d: bool = False,
     ) -> SimulationOutput:
         """Transform the outputs of BeamCalculator to a SimulationOutput.
 
@@ -124,11 +125,9 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             ],
         }
 
-        element_to_index = self._generate_element_to_index_func(elts)
+        element_to_index = elts.generate_element_to_index_func(self._solver_id)
         transfer_matrix: TransferMatrix = self.transfer_matrix_factory.run(
-            elts.tm_cumul_in,
-            single_elts_results,
-            element_to_index,
+            elts.tm_cumul_in, single_elts_results, element_to_index
         )
 
         z_abs = elts.get("abs_mesh", remove_first=True)
@@ -141,9 +140,10 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         )
 
         simulation_output = SimulationOutput(
+            elts=elts,
             out_folder=self.out_folder,
-            is_multiparticle=False,  # FIXME
-            is_3d=False,
+            is_multiparticle=False,
+            is_3d=is_3d,
             synch_trajectory=synch_trajectory,
             cav_params=cav_params,
             beam_parameters=beam_parameters,

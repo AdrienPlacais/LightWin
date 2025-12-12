@@ -293,7 +293,11 @@ class Accelerator:
         return path
 
     @classmethod
-    def from_pickle(cls, pickler: MyPickler, path: Path | str) -> Self:
+    def from_pickle(
+        cls,
+        pickler: MyPickler,
+        path: Path | str,
+    ) -> Self:
         """Instantiate object from previously pickled file."""
         accelerator = pickler.unpickle(path)
         return accelerator  # type: ignore
