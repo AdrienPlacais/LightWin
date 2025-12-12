@@ -49,6 +49,7 @@ from lightwin.util.typing import (
     NEEDS_3D,
     NEEDS_MULTIPART,
     POS_T,
+    CavParams,
 )
 
 
@@ -108,7 +109,7 @@ class SimulationOutput:
 
     synch_trajectory: ParticleFullTrajectory
 
-    cav_params: dict[str, list[float | None]] | None
+    cav_params: CavParams
 
     beam_parameters: BeamParameters
 
@@ -124,15 +125,9 @@ class SimulationOutput:
     def __post_init__(self) -> None:
         """Save complementary data, such as :class:`.Element` indexes."""
         self.elt_idx: list[int]
-        if self.cav_params is None:
-            logging.error(
-                "Failed to init SimulationOutput.elt_idx as .cav_params was "
-                "not provided."
-            )
-        else:
-            self.elt_idx = [
-                i for i, _ in enumerate(self.cav_params["v_cav_mv"], start=1)
-            ]
+        self.elt_idx = [
+            i for i, _ in enumerate(self.cav_params["v_cav_mv"], start=1)
+        ]
         self.out_path: Path
         self._linac_id: str | None = None
 

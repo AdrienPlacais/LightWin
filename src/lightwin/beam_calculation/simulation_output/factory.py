@@ -6,33 +6,26 @@ own specific outputs.
 """
 
 from abc import ABC, ABCMeta, abstractmethod
-from dataclasses import dataclass
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
-from lightwin.util.typing import BeamKwargs
+from lightwin.util.typing import BeamKwargs, CavParams
 
 
-@dataclass
 class SimulationOutputFactory(ABC):
     """A base class for creation of :class:`.SimulationOutput`."""
 
     _is_3d: bool
-    _is_multipart: bool
-    _solver_id: str
-    _beam_kwargs: BeamKwargs
 
-    def __post_init__(self) -> None:
-        """Create the factories.
+    def __init__(
+        self, is_multipart: bool, solver_id: str, beam_kwargs: BeamKwargs
+    ) -> None:
+        self._is_multipart = is_multipart
+        self._solver_id = solver_id
+        self._beam_kwargs = beam_kwargs
 
-        The created factories are :class:`.TransferMatrixFactory` and
-        :class:`.BeamParametersFactory`. The sub-class that is used is declared
-        in :meth:`._transfer_matrix_factory_class` and
-        :meth:`._beam_parameters_factory_class`.
-
-        """
         self.transfer_matrix_factory = self._transfer_matrix_factory_class(
             self._is_3d
         )
@@ -53,6 +46,12 @@ class SimulationOutputFactory(ABC):
         """Declare the **class** of the beam parameters factory."""
 
     @abstractmethod
-    def run(self, elts: ListOfElements, *args, **kwargs) -> SimulationOutput:
+    def create(
+        self, elts: ListOfElements, *args, **kwargs
+    ) -> SimulationOutput:
         """Create the :class:`.SimulationOutput`."""
         pass
+
+    @abstractmethod
+    def _get_cav_params(self, *args, **kwargs) -> CavParams:
+        """Load and format a dict containing cavity parameters."""

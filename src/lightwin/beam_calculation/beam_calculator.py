@@ -225,7 +225,7 @@ class BeamCalculator(ABC):
 
     def _generate_simulation_output(self, *args, **kwargs) -> SimulationOutput:
         """Transform the output of ``run`` to a :class:`.SimulationOutput`."""
-        return self.simulation_output_factory.run(*args, **kwargs)
+        return self.simulation_output_factory.create(*args, **kwargs)
 
     @property
     def reference_phase(self) -> REFERENCE_PHASES_T:
