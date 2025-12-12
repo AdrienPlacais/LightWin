@@ -102,10 +102,9 @@ parameters_factory.PARAMETERS_3D
 
         """
         self.simulation_output_factory = SimulationOutputFactoryEnvelope3D(
-            _is_3d=self.is_a_3d_simulation,
-            _is_multipart=self.is_a_multiparticle_simulation,
-            _solver_id=self.id,
-            _beam_kwargs=self._beam_kwargs,
+            is_multipart=self.is_a_multiparticle_simulation,
+            solver_id=self.id,
+            beam_kwargs=self._beam_kwargs,
             out_folder=self.out_folder,
         )
         self.beam_calc_parameters_factory = ElementEnvelope3DParametersFactory(

@@ -141,9 +141,12 @@ class OptimisationAlgorithmFactory:
             :class:`.OptimisationAlgorithm`.
 
         """
-        compute_beam_propagation = partial(
-            self._beam_calculator.run_with_this, elts=subset_elts
-        )
+
+        def compute_beam_propagation(*args, **kwargs):
+            return self._beam_calculator.run_with_this(
+                *args, elts=subset_elts, **kwargs
+            )
+
         default_kwargs: dict[str, Any] = {
             "compensating_elements": compensating_elements,
             "objective_factory": objective_factory,

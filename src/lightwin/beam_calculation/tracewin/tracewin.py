@@ -140,12 +140,11 @@ class TraceWin(BeamCalculator):
         )
 
         self.simulation_output_factory = SimulationOutputFactoryTraceWin(
-            _is_3d=self.is_a_3d_simulation,
-            _is_multipart=self.is_a_multiparticle_simulation,
-            _solver_id=self.id,
-            _beam_kwargs=self._beam_kwargs,
+            is_multipart=self.is_a_multiparticle_simulation,
+            solver_id=self.id,
+            beam_kwargs=self._beam_kwargs,
             out_folder=self.out_folder,
-            _filename=self._filename,
+            filename=self._filename,
             beam_calc_parameters_factory=self.beam_calc_parameters_factory,
         )
 
@@ -422,9 +421,8 @@ class TraceWin(BeamCalculator):
 
         """
         cav_params = simulation_output.cav_params
-        assert cav_params is not None
-        v_cavs: list[float | None] = cav_params["v_cav_mv"]
-        phi_ss: list[float | None] = cav_params["phi_s"]
+        v_cavs = cav_params["v_cav_mv"]
+        phi_ss = cav_params["phi_s"]
 
         for cavity in cavities:
             if set_of_cavity_settings is None:
