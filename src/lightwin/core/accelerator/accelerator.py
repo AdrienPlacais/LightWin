@@ -15,6 +15,7 @@ from typing import Any, Self
 
 import numpy as np
 import pandas as pd
+from numpy.typing import NDArray
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -47,7 +48,7 @@ class Accelerator:
         accelerator_path: Path,
         list_of_elements_factory: ListOfElementsFactory,
         e_mev: float,
-        sigma: np.ndarray,
+        sigma: NDArray[np.float64],
         **kwargs,
     ) -> None:
         r"""Create object.

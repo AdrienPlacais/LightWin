@@ -7,6 +7,7 @@
 
 import logging
 from collections.abc import Sequence
+from functools import lru_cache
 
 import matplotlib.patches as pat
 import numpy as np
@@ -33,6 +34,20 @@ def _get_objectives(fault_scenario: list[Fault] | None) -> list[Objective]:
     ]
 
 
+@lru_cache(100)
+def warn_once():
+    """Raise this warning only once.
+
+    https://stackoverflow.com/questions/31953272/logging-print-message-only-once
+
+    """
+    logging.warning(
+        "When several fault scenarios are plotted after each other, they all "
+        "keep the same objective position marker. This is not intended "
+        "behavior."
+    )
+
+
 def mark_objectives_position(
     ax: Axes,
     fault_scenarios: Sequence[list[Fault]] | None,
@@ -41,13 +56,20 @@ def mark_objectives_position(
     color: ColorType = OBJECTIVE_COLOR,
     alpha: float = 0.5,
 ) -> None:
-    """Show where objectives are evaluated."""
+    """Show where objectives are evaluated.
+
+    .. todo::
+       Fix bug when several fault scenarios are plotted.
+
+    """
     if fault_scenarios is None:
         logging.info(
             "The ``fault_scenarios`` must be given to plot.factory for the "
             "objectives to be displayed."
         )
         return
+
+    warn_once()
 
     objectives_by_element: dict[Element, list[Objective]]
     objectives_by_element = by_element(_get_objectives(fault_scenarios[0]))

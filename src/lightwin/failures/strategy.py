@@ -14,6 +14,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Sequence
 from functools import partial
+from pprint import pformat
 from typing import Any, Literal
 
 from lightwin.core.elements.field_maps.field_map import FieldMap
@@ -21,7 +22,11 @@ from lightwin.core.list_of_elements.helper import (
     group_elements_by_lattice,
     is_list_of_list_of_field_maps,
 )
-from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.core.list_of_elements.list_of_elements import (
+    ELEMENTS_ID_T,
+    NESTED_ELEMENTS_ID,
+    ListOfElements,
+)
 from lightwin.failures.helper import (
     TIE_POLITICS_T,
     gather,
@@ -29,17 +34,15 @@ from lightwin.failures.helper import (
     sort_by_position,
 )
 from lightwin.util.helper import flatten
-
-cavities_id = Sequence[int] | Sequence[str]
-nested_cavities_id = Sequence[Sequence[int]] | Sequence[Sequence[str]]
+from lightwin.util.typing import ID_NATURE_T
 
 
 def failed_and_compensating(
     elts: ListOfElements,
-    failed: cavities_id | nested_cavities_id,
-    id_nature: Literal["cavity", "element", "name"],
+    failed: ELEMENTS_ID_T | NESTED_ELEMENTS_ID,
+    id_nature: ID_NATURE_T,
     strategy: STRATEGIES_T,
-    compensating_manual: nested_cavities_id | None = None,
+    compensating_manual: NESTED_ELEMENTS_ID | None = None,
     **wtf: Any,
 ) -> tuple[list[list[FieldMap]], list[list[FieldMap]]]:
     """Determine the compensating cavities for every failure.
@@ -72,6 +75,8 @@ def failed_and_compensating(
 
     """
     failed_cavities = elts.take(failed, id_nature=id_nature)
+    assert isinstance(failed_cavities, list)
+
     assert [cavity.can_be_retuned for cavity in flatten(failed_cavities)]
     tunable_cavities = elts.tunable_cavities
 
@@ -333,8 +338,8 @@ def global_downstream[T](
 
 
 def corrector_at_exit(
-    elements: Sequence[cavities_id],
-    failed_elements: Sequence[cavities_id],
+    elements: ELEMENTS_ID_T,
+    failed_elements: ELEMENTS_ID_T,
     *,
     n_compensating: int,
     n_correctors: int,
@@ -343,7 +348,7 @@ def corrector_at_exit(
     remove_failed: bool = False,
     include_correctors: bool = False,
     **kwargs,
-) -> list[cavities_id]:
+) -> ELEMENTS_ID_T:
     r"""Return ``k out of n`` cavities, plus additional cavities at exit.
 
     The idea behind this strategy is the following:
@@ -452,3 +457,86 @@ STRATEGIES_T = Literal[
     "l neighboring lattices",
     "manual",
 ]
+
+
+def determine_cavities(
+    elts: ListOfElements, wtf: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    """Expand the ``wtf`` failure specification into explicit failure lists.
+
+    Parameters
+    ----------
+    elts :
+        The ListOfElements of the reference accelerator. Used to determine
+        which cavities will fail.
+    wtf :
+        The original failure specification from the ``TOML`` config.
+
+    Returns
+    -------
+    int
+        The number of fault scenarios. This is also the length of the
+        ``failed`` list.
+    dict[str, Any]
+        A new wtf dict ready to pass to :meth:`.FaultScenarioFactory.create`.
+        In particular, if an automatic study is required, find all the cavities
+        to study.
+
+    Notes
+    -----
+    - If no automatic study is requested, this function does *not* change
+      the meaning of the user's config.
+
+    """
+    new_wtf = dict(wtf)
+
+    id_nature: ID_NATURE_T = wtf.get("id_nature")
+    failed: NESTED_ELEMENTS_ID | list[NESTED_ELEMENTS_ID] = wtf.get("failed")
+    automatic_study: AUTOMATIC_STUDY_T | None = wtf.get("automatic_study")
+
+    if automatic_study is None:
+        return len(failed), new_wtf
+
+    if id_nature not in ("section", "lattice"):
+        logging.error(
+            f"{id_nature = }, but only 'lattice' or 'section' are valid for "
+            f"{automatic_study = }."
+        )
+
+    lattices_or_sections = elts.take(failed, id_nature)
+    failed_cavities = [
+        cav for cav in flatten(lattices_or_sections) if cav.can_be_retuned
+    ]
+    failed_names = {cav.name for cav in failed_cavities}
+
+    if automatic_study == "single cavity failures":
+        new_failed = [[name] for name in failed_names]
+
+    elif automatic_study == "cryomodule failures":
+        cryomodules = [
+            [x.name for x in lattice if x.can_be_retuned]
+            for lattice in elts.by_lattice
+        ]
+        # Gather cryomodules with at least one failed cavity
+        new_failed = [cryo for cryo in cryomodules if set(cryo) & failed_names]
+    else:
+        raise ValueError(
+            f"Unsupported {automatic_study = }. Only {AUTOMATIC_STUDY} are "
+            "supported."
+        )
+
+    logging.info(
+        f"Automatic study enabled. Studying all {automatic_study} in "
+        f"{id_nature} index(es) {failed}. "
+        f"List of failed cavities:\n{pformat(new_failed)}"
+    )
+
+    new_wtf["id_nature"] = "name"
+    new_wtf["failed"] = new_failed
+    return len(new_failed), new_wtf
+
+
+#: Allowed values for the ``automatic_study`` key of ``wtf`` configuration
+#: table.
+AUTOMATIC_STUDY = ("single cavity failures", "cryomodule failures")
+AUTOMATIC_STUDY_T = Literal["single cavity failures", "cryomodule failures"]

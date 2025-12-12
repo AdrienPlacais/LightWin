@@ -18,11 +18,11 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.config.config_manager import process_config
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
-from lightwin.core.accelerator.factory import WithFaults
 from lightwin.failures.fault_scenario import (
     FaultScenario,
     fault_scenario_factory,
 )
+from lightwin.ui.workflow_setup import set_up_accelerators
 
 # Arguments are:
 # ``beam_calculator``, ``reference_phase_policy``, ``flag_cython``, ``export_phase``
@@ -105,8 +105,7 @@ def accelerators(
 ) -> list[Accelerator]:
     """Create ref linac, linac we will break, compute ref simulation_output."""
     solvers = (solver,)
-    accelerator_factory = WithFaults(beam_calculators=solvers, **config)
-    accelerators = accelerator_factory.run_all()
+    accelerators = set_up_accelerators(config, solvers)
     solver.compute(accelerators[0])
     return accelerators
 

@@ -6,7 +6,7 @@
 This section defines what quantities will be plotted at the end of the simulation.
 
 .. csv-table::
-   :file: configuration_entries/plots.csv
+   :file: entries/plots.csv
    :header-rows: 1
 
 .. warning::

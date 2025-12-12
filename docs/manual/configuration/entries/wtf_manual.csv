@@ -1,0 +1,27 @@
+Entry,Type,Description,Mandatory?,Allowed values
+`failed`,`list`,"Index/name of failed cavities.
+
+For manual strategy, it must
+
+be a `list[list[list[int]]]` or
+
+`list[list[list[str]]]`.",✅,
+`compensating_manual`,`list`,"Index/name of compensating
+
+cavities cavities. Must be a
+
+`list[list[list[int]]]` or
+
+`list[list[list[str]]]`. The
+
+number of:class:`.FaultScenarios` (
+
+length of most outer list)
+
+must match `failed`. The number
+
+of groups of compensating
+
+cavities (second level) must
+
+match `failed`.",✅,

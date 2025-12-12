@@ -16,10 +16,11 @@ from lightwin.optimisation.design_space_specs import (
     DESIGN_SPACE_FROM_FILE,
 )
 from lightwin.optimisation.wtf_specs import (
-    WTF_CORRECTOR_AT_EXIT,
-    WTF_K_OUT_OF_N,
-    WTF_L_NEIGHBORING_LATTICES,
-    WTF_MANUAL,
+    WTF_COMMON,
+    WTF_CORRECTOR_AT_EXIT_SPECIFC,
+    WTF_K_OUT_OF_N_SPECIFIC,
+    WTF_L_NEIGHBORING_LATTICES_SPECIFIC,
+    WTF_MANUAL_SPECIFIC,
 )
 from lightwin.visualization.specs import PLOTS_CONFIG
 
@@ -52,7 +53,7 @@ def write_specs_to_csv(
 
 def main() -> None:
     """Generate all the necessary CSV files."""
-    output_dir = doc_folder / "manual/configuration_entries"
+    output_dir = doc_folder / "manual/configuration/entries"
 
     files: dict[str, Sequence[KeyValConfSpec]]
     files = {
@@ -65,10 +66,11 @@ def main() -> None:
         "evaluator": EVALUATORS_CONFIG,
         "files": FILES_CONFIG,
         "plots": PLOTS_CONFIG,
-        "wtf_corrector_at_exit": WTF_CORRECTOR_AT_EXIT,
-        "wtf_k_out_of_n": WTF_K_OUT_OF_N,
-        "wtf_l_neighboring_lattices": WTF_L_NEIGHBORING_LATTICES,
-        "wtf_manual": WTF_MANUAL,
+        "wtf_common": WTF_COMMON,
+        "wtf_corrector_at_exit": WTF_CORRECTOR_AT_EXIT_SPECIFC,
+        "wtf_k_out_of_n": WTF_K_OUT_OF_N_SPECIFIC,
+        "wtf_l_neighboring_lattices": WTF_L_NEIGHBORING_LATTICES_SPECIFIC,
+        "wtf_manual": WTF_MANUAL_SPECIFIC,
     }
 
     for name, specs_list in files.items():

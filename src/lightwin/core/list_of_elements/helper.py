@@ -250,7 +250,7 @@ def indiv_to_cumul_transf_mat(
 
 def group_elements_by_section(
     elts: Sequence[Element], n_to_check: int = 10
-) -> Sequence[Sequence[Element]]:
+) -> list[list[Element]]:
     """Group elements by section."""
     n_sections = (
         _get_first_key_of_idx_dict_higher_than(
@@ -263,7 +263,7 @@ def group_elements_by_section(
         + 1
     )
     if n_sections <= 0:
-        return [elts]
+        return [list(elts)]
 
     by_section = [
         list(filter(lambda elt: elt.idx["section"] == current_section, elts))

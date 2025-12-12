@@ -17,7 +17,7 @@ Space charge effects are not considered.
 It is adapted to high energy problems, such as ADS linacs.
 
 .. csv-table::
-   :file: configuration_entries/beam_calculator_envelope_1d.csv
+   :file: entries/beam_calculator_envelope_1d.csv
    :header-rows: 1
 
 The following elements are explicitly supported.
@@ -33,7 +33,7 @@ In 1D, this is perfectly acceptable for most non-implemented elements that act o
 Envelope solver in 3D, without space charge.
 
 .. csv-table::
-   :file: configuration_entries/beam_calculator_envelope_3d.csv
+   :file: entries/beam_calculator_envelope_3d.csv
    :header-rows: 1
 
 .. note::
@@ -57,7 +57,7 @@ It can be used during the optimization process, though this approach relies on a
 Generally, I use it to re-compute the propagation of the beam in the linac when compensation settings were found (`beam_calculator_post`).
 
 .. csv-table::
-   :file: configuration_entries/beam_calculator_tracewin.csv
+   :file: entries/beam_calculator_tracewin.csv
    :header-rows: 1
 
 Check TraceWin's documentation for the list of command line arguments.

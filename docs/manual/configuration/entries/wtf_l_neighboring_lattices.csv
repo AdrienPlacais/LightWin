@@ -1,0 +1,39 @@
+Entry,Type,Description,Mandatory?,Allowed values
+`tie_politics`,`str`,"How to select the compensating
+
+elements when several are
+
+equidistant to the failure.",❌,"('upstream first', 'downstream first')"
+`shift`,`int`,"Distance increase for
+
+downstream elements (`shift <`
+
+`0`) or upstream elements
+
+(`shift > 0`). Used to have a
+
+window of compensating
+
+cavities which is not centered
+
+around the failed elements.",❌,
+`l`,`int`,"Number of compensating
+
+lattices per failed cavity.",✅,
+"`min_number_of_`
+
+`cavities_in_lattice`",`int`,"Minimum number of compensating
+
+cavities in the lattice; when
+
+a lattice does not reach this
+
+number, we use it anyway for
+
+compensation, but we also take
+
+another lattice. Designed to
+
+remove the lattices that do
+
+not have any cavity.",❌,
