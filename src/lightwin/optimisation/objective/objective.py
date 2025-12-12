@@ -572,7 +572,6 @@ class QuantityIsRegular(Objective):
             will not be used.
 
         """
-        self.ideal_value: None
         super().__init__(
             name=name,
             weight=weight,
@@ -620,6 +619,7 @@ class QuantityIsRegular(Objective):
     def _compute_residuals(
         self, objective_value: list[float] | NDArray[np.float64]
     ) -> float:
+        """Compute standard deviation of objective."""
         return self.weight * float(np.std(objective_value))
 
 
