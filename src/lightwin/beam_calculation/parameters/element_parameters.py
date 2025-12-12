@@ -26,6 +26,9 @@ class ElementBeamCalculatorParameters(ABC):
 
     """
 
+    s_in: int
+    s_out: int
+
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class."""
         return key in recursive_items(vars(self))

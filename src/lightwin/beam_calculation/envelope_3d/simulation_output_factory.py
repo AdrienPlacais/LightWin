@@ -6,6 +6,9 @@ from pathlib import Path
 
 import numpy as np
 
+from lightwin.beam_calculation.envelope_1d.simulation_output_factory import (
+    SimulationOutputFactoryEnvelope1D,
+)
 from lightwin.beam_calculation.envelope_3d.beam_parameters_factory import (
     BeamParametersFactoryEnvelope3D,
 )
@@ -24,7 +27,7 @@ from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 
 
 @dataclass
-class SimulationOutputFactoryEnvelope3D(SimulationOutputFactory):
+class SimulationOutputFactoryEnvelope3D(SimulationOutputFactoryEnvelope1D):
     """A class for creating simulation outputs for :class:`.Envelope3D`."""
 
     out_folder: Path
@@ -56,81 +59,8 @@ class SimulationOutputFactoryEnvelope3D(SimulationOutputFactory):
         elts: ListOfElements,
         single_elts_results: list[dict],
         set_of_cavity_settings: SetOfCavitySettings,
+        is_3d: bool = True,
     ) -> SimulationOutput:
-        """
-        Transform the outputs of BeamCalculator to a SimulationOutput.
-
-        .. todo::
-            Patch in transfer matrix to get proper input transfer matrix. In
-            future, input beam will not hold transf mat in anymore.
-
-        """
-        w_kin = [
-            energy
-            for results in single_elts_results
-            for energy in results["w_kin"]
-        ]
-        w_kin.insert(0, elts.w_kin_in)
-
-        phi_abs_array = [elts.phi_abs_in]
-        for elt_results in single_elts_results:
-            phi_abs = [
-                phi_rel + phi_abs_array[-1]
-                for phi_rel in elt_results["phi_rel"]
-            ]
-            phi_abs_array.extend(phi_abs)
-        synch_trajectory = ParticleFullTrajectory(
-            w_kin=w_kin,
-            phi_abs=phi_abs_array,
-            synchronous=True,
-            beam=self._beam_kwargs,
+        return super().run(
+            elts, single_elts_results, set_of_cavity_settings, is_3d=is_3d
         )
-        gamma_kin = synch_trajectory.gamma
-        assert isinstance(gamma_kin, np.ndarray)
-
-        cav_params = {
-            "v_cav_mv": [
-                (
-                    set_of_cavity_settings[elt].v_cav_mv
-                    if elt in set_of_cavity_settings
-                    else None
-                )
-                for elt in elts
-            ],
-            "phi_s": [
-                (
-                    set_of_cavity_settings[elt].phi_s
-                    if elt in set_of_cavity_settings
-                    else None
-                )
-                for elt in elts
-            ],
-        }
-
-        element_to_index = self._generate_element_to_index_func(elts)
-        transfer_matrix = self.transfer_matrix_factory.run(
-            elts.tm_cumul_in, single_elts_results, element_to_index
-        )
-
-        z_abs = elts.get("abs_mesh", remove_first=True)
-        beam_parameters = self.beam_parameters_factory.factory_method(
-            elts.input_beam.sigma,
-            z_abs,
-            gamma_kin,
-            transfer_matrix,
-            element_to_index,
-        )
-
-        simulation_output = SimulationOutput(
-            out_folder=self.out_folder,
-            is_multiparticle=False,  # FIXME
-            is_3d=True,
-            synch_trajectory=synch_trajectory,
-            cav_params=cav_params,
-            beam_parameters=beam_parameters,
-            element_to_index=element_to_index,
-            transfer_matrix=transfer_matrix,
-            set_of_cavity_settings=set_of_cavity_settings,
-        )
-
-        return simulation_output

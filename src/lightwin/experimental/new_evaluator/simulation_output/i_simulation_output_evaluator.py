@@ -210,8 +210,8 @@ class ISimulationOutputEvaluator(IEvaluator):
         xdata = self._get_single(
             simulation_output, self._x_quantity, fallback_dummy=fallback_dummy
         )
-        if len(xdata) != len(ydata):
-            __import__("pdb").set_trace()
+        # if len(xdata) != len(ydata):
+        #     __import__("pdb").set_trace()
         return np.interp(self.ref_xdata, xdata, ydata)
 
     @final

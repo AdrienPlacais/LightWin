@@ -421,16 +421,12 @@ class TraceWin(BeamCalculator):
            ones in :attr:`.FieldMap.cavity_settings`.
 
         """
+        cav_params = simulation_output.cav_params
+        assert cav_params is not None
+        v_cavs: list[float | None] = cav_params["v_cav_mv"]
+        phi_ss: list[float | None] = cav_params["phi_s"]
+
         for cavity in cavities:
-            phi_abs, v_cav_mv, phi_s = simulation_output.get(
-                "phi_abs",
-                "v_cav_mv",
-                "phi_s",
-                elt=cavity,
-                pos="in",
-                to_deg=False,
-                to_numpy=False,
-            )
             if set_of_cavity_settings is None:
                 # Any cavity during a "normal" run
                 settings = cavity.cavity_settings
@@ -441,7 +437,18 @@ class TraceWin(BeamCalculator):
                 # Non-compensating cavity during a fit
                 continue
 
-            settings.phi_bunch = phi_abs
+            phi_bunch = simulation_output.get(
+                "phi_abs", elt=cavity, pos="in", to_deg=False, to_numpy=False
+            )
+            idx = simulation_output.element_to_index(
+                elt=cavity, return_elt_idx=True
+            )
+            v_cav_mv = v_cavs[idx]
+            assert isinstance(v_cav_mv, float)
+            phi_s = phi_ss[idx]
+            assert isinstance(phi_s, float)
+
+            settings.phi_bunch = phi_bunch
             settings.phi_s = phi_s
             settings.v_cav_mv = v_cav_mv
         return

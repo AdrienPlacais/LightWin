@@ -396,7 +396,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
 
         cav_params = self._get_parameters_of_cavities(path_cal, len(elts))
 
-        element_to_index = self._generate_element_to_index_func(elts)
+        element_to_index = elts.generate_element_to_index_func(self._solver_id)
 
         transfer_matrix = self.transfer_matrix_factory.run(
             elts.tm_cumul_in, path_cal, element_to_index
@@ -409,6 +409,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         )
 
         simulation_output = SimulationOutput(
+            elts=elts,
             out_folder=self.out_folder,
             is_multiparticle=hasattr(beam_parameters, "phiw99"),
             is_3d=True,
@@ -419,12 +420,8 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             element_to_index=element_to_index,
             transfer_matrix=transfer_matrix,
             set_of_cavity_settings=set_of_cavity_settings,
+            pow_lost=results["Powlost"],
         )
-        simulation_output.z_abs = results["z(m)"]
-
-        # FIXME attribute was not declared
-        simulation_output.pow_lost = results["Powlost"]
-
         return simulation_output
 
     def _create_main_results_dictionary(

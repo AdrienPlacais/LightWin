@@ -60,6 +60,8 @@ class SimulationOutput:
 
     Parameters
     ----------
+    elts :
+        Elements on which this object was calculated.
     out_folder :
         Results folder used by the :class:`.BeamCalculator` that created this.
     is_multiparticle :
@@ -92,7 +94,13 @@ class SimulationOutput:
     r_zz_elt :
         Cumulated transfer matrices in the [z-delta] plane. The default is
         None.
+    pow_lost :
+        Lost power along linac in :unit:`W`. Can only be given by
+        :class:`.TraceWin`.
+
     """
+
+    elts: ListOfElements
 
     out_folder: Path
     is_multiparticle: bool
@@ -104,13 +112,14 @@ class SimulationOutput:
 
     beam_parameters: BeamParameters
 
-    element_to_index: ELEMENT_TO_INDEX_T | None
+    element_to_index: ELEMENT_TO_INDEX_T
     set_of_cavity_settings: SetOfCavitySettings
 
     transfer_matrix: TransferMatrix | None = None
-    z_abs: np.ndarray | None = None
+    z_abs: NDArray[np.float64] | None = None
     in_tw_fashion: pd.DataFrame | None = None
-    r_zz_elt: list[np.ndarray] | None = None
+    r_zz_elt: list[NDArray[np.float64]] | None = None
+    pow_lost: NDArray[np.float64] | None = None
 
     def __post_init__(self) -> None:
         """Save complementary data, such as :class:`.Element` indexes."""
@@ -444,7 +453,7 @@ class SimulationOutput:
 
     def plot(
         self, key: str, to_deg: bool = True, grid: bool = True, **kwargs
-    ) -> Axes | np.ndarray:
+    ) -> Axes | NDArray:
         """Plot the key."""
         x_axis = markdown["z_abs"]
         df = pd.DataFrame(
@@ -454,19 +463,6 @@ class SimulationOutput:
             }
         )
         return df.plot(x=x_axis, grid=grid, ylabel=markdown[key], **kwargs)
-
-    def elts(self) -> ListOfElements:
-        """Retrieve the elements associated with this object."""
-        assert (
-            self.element_to_index is not None
-        ), "SimulationOutput.element_to_index should be set"
-        keywords = getattr(self.element_to_index, "keywords", None)
-        assert isinstance(
-            keywords, dict
-        ), "SimulationOutput.element_to_index must be set with functools.paritial"
-        _elts = keywords.get("_elts", None)
-        assert _elts is not None, "SimulationOutput._elts incorrectly set"
-        return _elts
 
 
 def _to_deg(
