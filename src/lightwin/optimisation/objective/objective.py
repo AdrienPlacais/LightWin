@@ -363,6 +363,113 @@ class MinimizeMismatch(Objective):
         return self.weight * res
 
 
+class MinimizeVariation(Objective):
+    """Quantity must be the same.
+
+    We can compare a quantity:
+
+    - at a specific location, *eg* compare floats at the exit of every lattice.
+
+    .. todo::
+       Also implement quantity comparison:
+
+        - on full lattices, *eg* compare arrays on complete lattices.
+
+    This :class:`.Objective` was designed to penalize important quantity
+    variations, while slow variations are fine. It was thought to be utilized
+    with envelopes, where regularity is a relatable objective.
+
+    """
+
+    def __init__(
+        self,
+        name: str,
+        weight: float,
+        get_key: GETTABLE_SIMULATION_OUTPUT_T,
+        get_kwargs: dict[str, Any],
+        descriptor: str | None = None,
+        **kwargs,
+    ) -> None:
+        """
+        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+
+        Note
+        ----
+        Double check the ``elt`` and ``pos`` key-value pairs in ``get_kwargs``.
+        They should be "regular", *eg* the exit of every lattice.
+
+        Parameters
+        ----------
+        name :
+            A short string to describe the objective and access to it.
+        weight :
+            A scaling constant to set the weight of current objective.
+        get_key :
+            Name of the quantity to get.
+        get_kwargs :
+            Keyword arguments for the :meth:`.SimulationOutput.get` method. We
+            do not check its validity, but in general you will want to define
+            the keys ``elt`` and ``pos``. If objective concerns a phase, you
+            may want to precise the ``to_deg`` key. You also should explicit
+            the ``to_numpy`` key.
+        descriptor :
+            A longer string to explain the objective.
+        kwargs :
+            Other keyword arguments. Note that ``reference`` may be passed but
+            will not be used.
+
+        """
+        super().__init__(
+            name=name,
+            weight=weight,
+            get_key=get_key,
+            get_kwargs=get_kwargs,
+            descriptor=descriptor,
+            ideal_value=None,
+        )
+
+    def __str__(self) -> str:
+        """Give objective information value."""
+        return self.position_nature() + f"{'Minimize std': ^21}"
+
+    def _check_get_arguments(
+        self,
+        get_key: GETTABLE_SIMULATION_OUTPUT_T,
+        get_kwargs: dict[str, Any],
+        advised_keys: list[str] = ["to_numpy"],
+    ) -> tuple[GETTABLE_SIMULATION_OUTPUT_T, dict[str, Any]]:
+        """Check validity of ``get_args``, ``get_kwargs``.
+
+        In general, residuals evaluation relies on a
+        :meth:`.SimulationOutput.get` method. This method uses ``get_args`` and
+        ``get_kwargs``; we perform here some basic checks.
+
+        We raise errors instead of warnings of the keys ``"elt"`` and ``"pos"``
+        are missing.
+
+        """
+        if "elt" not in get_kwargs:
+            logging.error(
+                "You should provide an 'elt' key in `get_kwargs` to indicate "
+                "where objective should be evaluated."
+            )
+        if "pos" not in get_kwargs:
+            logging.error(
+                "Regularity checking is not yet implemented for arrays. "
+                "You must provide 'pos' to indicate, in each element, where "
+                "the quantity should be taken."
+            )
+        return super()._check_get_arguments(
+            get_key, get_kwargs, advised_keys=advised_keys
+        )
+
+    def _compute_residuals(
+        self, objective_value: list[float] | NDArray[np.float64]
+    ) -> float:
+        """Compute standard deviation of objective."""
+        return self.weight * float(np.std(objective_value))
+
+
 class QuantityIsBetween(Objective):
     """Quantity must be within some bounds."""
 
@@ -514,113 +621,6 @@ class QuantityIsBetween(Objective):
         if objective_value > self.ideal_value[1]:
             return self.weight * (objective_value - self.ideal_value[1]) ** 2
         return 0.0
-
-
-class QuantityIsRegular(Objective):
-    """Quantity must be the same.
-
-    We can compare a quantity:
-
-    - at a specific location, *eg* compare floats at the exit of every lattice.
-
-    .. todo::
-       Also implement quantity comparison:
-
-        - on full lattices, *eg* compare arrays on complete lattices.
-
-    This :class:`.Objective` was designed to penalize important quantity
-    variations, while slow variations are fine. It was thought to be utilized
-    with envelopes, where regularity is a relatable objective.
-
-    """
-
-    def __init__(
-        self,
-        name: str,
-        weight: float,
-        get_key: GETTABLE_SIMULATION_OUTPUT_T,
-        get_kwargs: dict[str, Any],
-        descriptor: str | None = None,
-        **kwargs,
-    ) -> None:
-        """
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
-
-        Note
-        ----
-        Double check the ``elt`` and ``pos`` key-value pairs in ``get_kwargs``.
-        They should be "regular", *eg* the exit of every lattice.
-
-        Parameters
-        ----------
-        name :
-            A short string to describe the objective and access to it.
-        weight :
-            A scaling constant to set the weight of current objective.
-        get_key :
-            Name of the quantity to get.
-        get_kwargs :
-            Keyword arguments for the :meth:`.SimulationOutput.get` method. We
-            do not check its validity, but in general you will want to define
-            the keys ``elt`` and ``pos``. If objective concerns a phase, you
-            may want to precise the ``to_deg`` key. You also should explicit
-            the ``to_numpy`` key.
-        descriptor :
-            A longer string to explain the objective.
-        kwargs :
-            Other keyword arguments. Note that ``reference`` may be passed but
-            will not be used.
-
-        """
-        super().__init__(
-            name=name,
-            weight=weight,
-            get_key=get_key,
-            get_kwargs=get_kwargs,
-            descriptor=descriptor,
-            ideal_value=None,
-        )
-
-    def __str__(self) -> str:
-        """Give objective information value."""
-        return self.position_nature() + f"{'Minimize std': ^21}"
-
-    def _check_get_arguments(
-        self,
-        get_key: GETTABLE_SIMULATION_OUTPUT_T,
-        get_kwargs: dict[str, Any],
-        advised_keys: list[str] = ["to_numpy"],
-    ) -> tuple[GETTABLE_SIMULATION_OUTPUT_T, dict[str, Any]]:
-        """Check validity of ``get_args``, ``get_kwargs``.
-
-        In general, residuals evaluation relies on a
-        :meth:`.SimulationOutput.get` method. This method uses ``get_args`` and
-        ``get_kwargs``; we perform here some basic checks.
-
-        We raise errors instead of warnings of the keys ``"elt"`` and ``"pos"``
-        are missing.
-
-        """
-        if "elt" not in get_kwargs:
-            logging.error(
-                "You should provide an 'elt' key in `get_kwargs` to indicate "
-                "where objective should be evaluated."
-            )
-        if "pos" not in get_kwargs:
-            logging.error(
-                "Regularity checking is not yet implemented for arrays. "
-                "You must provide 'pos' to indicate, in each element, where "
-                "the quantity should be taken."
-            )
-        return super()._check_get_arguments(
-            get_key, get_kwargs, advised_keys=advised_keys
-        )
-
-    def _compute_residuals(
-        self, objective_value: list[float] | NDArray[np.float64]
-    ) -> float:
-        """Compute standard deviation of objective."""
-        return self.weight * float(np.std(objective_value))
 
 
 class RetrieveArbitrary(Objective):
