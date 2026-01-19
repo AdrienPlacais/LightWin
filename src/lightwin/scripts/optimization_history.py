@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Provide functions to study optimization history."""
+
 import logging
 from collections.abc import Sequence
 from pathlib import Path

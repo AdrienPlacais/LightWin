@@ -5,6 +5,7 @@
     maybe show what the file should look like?
 
 """
+
 from pathlib import Path
 
 from lightwin.beam_calculation.factory import BeamCalculatorsFactory

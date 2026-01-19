@@ -6,6 +6,7 @@
     here.
 
 """
+
 import logging
 from collections.abc import Collection
 from pathlib import Path
