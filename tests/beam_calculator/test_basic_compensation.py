@@ -56,7 +56,7 @@ def config(
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration."""
     out_folder = tmp_path_factory.mktemp("tmp")
-    (solver_key, reference_phase_policy, flag_cython, export_phase) = (
+    solver_key, reference_phase_policy, flag_cython, export_phase = (
         request.param
     )
 
