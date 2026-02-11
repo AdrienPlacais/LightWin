@@ -9,7 +9,7 @@ phase, etc of the beam at the entry of its :class:`.ListOfElements`.
 """
 
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, Self
 
@@ -276,28 +276,58 @@ class Accelerator:
 
     def pickle(
         self, pickler: MyPickler, path: Path | str | None = None
-    ) -> Path:
+    ) -> Path | None:
         """Pickle (save) the object.
 
         This is useful for debug and temporary saves; do not use it for long
         time saving.
 
         """
-        if path is None:
-            path = self.accelerator_path / self.name
-            path = path.with_suffix(".pkl")
-        pickler.pickle(self, path)
-
-        if isinstance(path, str):
-            path = Path(path)
-        return path
+        return pickler.pickle(
+            my_object=self,
+            path=path
+            or (self.accelerator_path / self.name).with_suffix(".pkl"),
+            title=f"Choose where to save Accelerator: {self.name}",
+        )
 
     @classmethod
     def from_pickle(
         cls,
         pickler: MyPickler,
-        path: Path | str,
+        path: Path | str | None = None,
+        linac_id: str | Sequence[str] | None = None,
     ) -> Self:
-        """Instantiate object from previously pickled file."""
-        accelerator = pickler.unpickle(path)
-        return accelerator  # type: ignore
+        """Instantiate object from previously pickled file.
+
+        .. todo::
+            Use the GUI to also ask for the new :class:`Accelerator` name?
+
+        Parameters
+        ----------
+        pickler :
+            Pickler object.
+        path :
+            Path to the pickled object file. If not provided, use ``Tk`` to
+            open GUI and let user choose.
+        linac_id :
+            Use this to override the :func:`.SimulationOutput.linac_id` stored
+            in unpickled :attr:`Accelerator.simulation_outputs`. In particular,
+            used to legend plots.
+
+        """
+        accelerator = pickler.unpickle(path, expected=Accelerator)
+        if accelerator is None:
+            raise TypeError(f"Unpickling {path} failed.")
+        elif not isinstance(accelerator, cls):
+            raise TypeError("Unpickled object is not an Accelerator instance.")
+
+        if linac_id is None:
+            return accelerator
+
+        simulation_outputs = list(accelerator.simulation_outputs.values())
+        if isinstance(linac_id, str):
+            linac_id = [linac_id for _ in simulation_outputs]
+        for so, id in zip(simulation_outputs, linac_id, strict=True):
+            so.linac_id = id
+
+        return accelerator
