@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `Objective`: `MinimizeVariation` to minimize std of a quantity.
 - Check the new `ObjectivesFactory`: `RegularEnvelope` for an example of usage.
 
+### Changed
+
+- `Accelerator.elts` must now be called without the `()`.
+
 ## [0.15.0] -- 2025-12-11
 
 ### Added

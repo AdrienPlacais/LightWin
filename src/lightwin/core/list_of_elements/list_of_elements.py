@@ -129,6 +129,18 @@ class ListOfElements(list):
             filter(lambda cav: isinstance(cav, FieldMap), self)
         )
 
+    def __call__(self, *args, **kwargs) -> None:
+        """Raise custom error when called.
+
+        This is temporary safety measure.
+
+        """
+        raise TypeError(
+            "'ListOfElements' object is not callable. Maybe you are trying to "
+            "call 'Accelerator.elts()'? This was changed in 0.15.1, replace it"
+            " by 'Accelerator.elts'."
+        )
+
     @property
     def w_kin_in(self):
         """Get kinetic energy at entry of first element of self."""
