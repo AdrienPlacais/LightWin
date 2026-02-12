@@ -54,6 +54,15 @@ FILES_CONFIG = (
         default_value=example_folder / "results/",
         is_mandatory=False,
     ),
+    KeyValConfSpec(
+        key="pickle_paths",
+        types=(dict,),
+        description="Associates accelerator names with pickle files. Check "
+        "`dedicated notebook<notebooks-pickling>`.",
+        default_value={},
+        is_mandatory=False,
+        warning_message="Currently not implemented.",
+    ),
 )
 
 
