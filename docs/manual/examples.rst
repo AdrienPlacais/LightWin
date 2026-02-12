@@ -8,3 +8,4 @@ Example notebooks
 
    notebooks/example.ipynb
    notebooks/cavities_reference_phase.ipynb
+   notebooks/pickling.ipynb
