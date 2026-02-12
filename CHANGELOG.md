@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New `Objective`: `MinimizeVariation` to minimize std of a quantity.
 - Check the new `ObjectivesFactory`: `RegularEnvelope` for an example of usage.
+- New `Accelerator.plot` method for rapid plotting of stored data.
 
 ### Changed
 
