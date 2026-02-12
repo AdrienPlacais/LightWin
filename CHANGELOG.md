@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `Accelerator.elts` must now be called without the `()`.
+- Pickling/unpickling objects is more intuitive. Is is explained in the
+  [Pickling notebook tutorial](https://lightwin.readthedocs.io/en/latest/manual/examples.pickling.html).
 
 ## [0.15.0] -- 2025-12-11
 
