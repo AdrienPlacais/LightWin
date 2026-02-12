@@ -19,6 +19,9 @@ from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Literal
 
+LOG_LEVEL_T = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+LOG_LEVEL = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
+
 
 def _get_package_version(package_name: str) -> str:
     """Get the package version."""
@@ -114,11 +117,11 @@ class LogFormatter(logging.Formatter):
 def set_up_logging(
     package_name: str,
     console_log_output: str = "stdout",
-    console_log_level: str = "INFO",
+    console_log_level: LOG_LEVEL_T = "INFO",
     console_log_color: bool = True,
     console_log_line_template: str = "%(color_on)s[%(levelname)-8s] [%(filename)-20s]%(color_off)s %(message)s",
     logfile_file: Path = Path("lightwin.log"),
-    logfile_log_level: str = "INFO",
+    logfile_log_level: LOG_LEVEL_T = "INFO",
     logfile_log_color: bool = False,
     logfile_line_template: str = "%(color_on)s[%(asctime)s] [%(levelname)-8s] [%(filename)-20s]%(color_off)s %(message)s",
 ) -> bool:
@@ -159,7 +162,7 @@ def main():
     if not set_up_logging(
         package_name="LightWin",
         console_log_output="stdout",
-        console_log_level="warning",
+        console_log_level="WARNING",
         console_log_color=True,
         logfile_file=Path("lightwin.log"),
         logfile_log_level="INFO",
