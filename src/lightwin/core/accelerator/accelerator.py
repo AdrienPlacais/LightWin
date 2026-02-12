@@ -11,10 +11,11 @@ phase, etc of the beam at the entry of its :class:`.ListOfElements`.
 import logging
 from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import Any, Self
+from typing import Any, Literal, Self
 
 import numpy as np
 import pandas as pd
+from matplotlib.axes import Axes
 from numpy.typing import NDArray
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
@@ -34,6 +35,7 @@ from lightwin.util.typing import (
     EXPORT_PHASES_T,
     GETTABLE_ACCELERATOR_T,
     GETTABLE_SIMULATION_OUTPUT,
+    GETTABLE_SIMULATION_OUTPUT_T,
     POS_T,
 )
 
@@ -289,6 +291,35 @@ class Accelerator:
             or (self.accelerator_path / self.name).with_suffix(".pkl"),
             title=f"Choose where to save Accelerator: {self.name}",
         )
+
+    def plot(
+        self,
+        key: GETTABLE_SIMULATION_OUTPUT_T,
+        to_deg: bool = True,
+        grid: bool = True,
+        x: Literal["z_abs", "elt_idx"] | None = None,
+        legend_entry: str | None = None,
+        ax: Axes | None = None,
+        **kwargs,
+    ) -> Axes | None:
+        """Plot ``key`` for every stored :class:`.SimulationOutput`.
+
+        This method does not use the default plotting module, but pandas
+        dataframe plotting method.
+
+        """
+        for solver, simulation_output in self.simulation_outputs.items():
+            ax = simulation_output.plot(
+                key,
+                to_deg=to_deg,
+                grid=grid,
+                x=x,
+                legend_entry=legend_entry
+                or f"{simulation_output.linac_id} ({solver})",
+                ax=ax,
+                **kwargs,
+            )
+        return ax
 
     @classmethod
     def from_pickle(
