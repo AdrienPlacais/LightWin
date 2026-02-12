@@ -20,7 +20,7 @@ import math
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Self
+from typing import Any, Literal, Self
 
 import numpy as np
 import pandas as pd
@@ -42,6 +42,7 @@ from lightwin.util.helper import (
 )
 from lightwin.util.pickling import MyPickler
 from lightwin.util.typing import (
+    CONCATENABLE_CAVITY_SETTINGS,
     CONCATENABLE_ELTS,
     GET_ELT_ARG_T,
     GETTABLE_SIMULATION_OUTPUT_T,
@@ -447,17 +448,33 @@ class SimulationOutput:
         return simulation_output  # type: ignore
 
     def plot(
-        self, key: str, to_deg: bool = True, grid: bool = True, **kwargs
-    ) -> Axes | NDArray:
-        """Plot the key."""
-        x_axis = markdown["z_abs"]
+        self,
+        key: GETTABLE_SIMULATION_OUTPUT_T,
+        to_deg: bool = True,
+        grid: bool = True,
+        x: Literal["z_abs", "elt_idx"] | None = None,
+        legend_entry: str | None = None,
+        ax: Axes | None = None,
+        **kwargs,
+    ) -> Axes | None:
+        """Plot the key.
+
+        This method does not use the default plotting module, but pandas
+        dataframe plotting method.
+
+        """
+        x = x or "elt_idx" if key in CONCATENABLE_CAVITY_SETTINGS else "z_abs"
+        x_axis = markdown[x]
         df = pd.DataFrame(
             {
-                x_axis: self.z_abs,
-                markdown[key]: self.get(key, to_deg=to_deg, **kwargs),
+                x_axis: self.get(x, **kwargs),
+                legend_entry
+                or self.linac_id: self.get(key, to_deg=to_deg, **kwargs),
             }
         )
-        return df.plot(x=x_axis, grid=grid, ylabel=markdown[key], **kwargs)
+        return df.plot(
+            x=x_axis, grid=grid, ylabel=markdown[key], ax=ax, **kwargs
+        )
 
 
 def _to_deg(
