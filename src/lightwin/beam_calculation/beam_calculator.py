@@ -84,7 +84,7 @@ class BeamCalculator(ABC):
         )
         self.flag_cython = flag_cython
         self.id: str = f"{self.__class__.__name__}_{next(self._ids)}"
-        self._export_phase = export_phase
+        self._export_phase: EXPORT_PHASES_T = export_phase
 
         if isinstance(out_folder, str):
             out_folder = Path(out_folder)
@@ -262,6 +262,10 @@ class BeamCalculator(ABC):
     ) -> SimulationOutput:
         """Wrap full process to compute propagation of beam in accelerator.
 
+        .. todo::
+            ``recompute_reference`` should be deprecated right? Its role is
+            filled by the pickling.
+
         Parameters
         ----------
         accelerator :
@@ -283,17 +287,15 @@ class BeamCalculator(ABC):
         """
         start_time = time.monotonic()
 
-        self.init_solver_parameters(accelerator)
+        simulation_output = None
+        if accelerator.is_unpickled:
+            simulation_output = self._get_already_calculated(accelerator)
 
-        simulation_output = self.run(accelerator.elts)
-        simulation_output.compute_indirect_quantities(
-            accelerator.elts, ref_simulation_output
-        )
-        if keep_settings:
-            accelerator.keep(
-                simulation_output,
-                exported_phase=self._export_phase,
-                beam_calculator_id=self.id,
+        if simulation_output is None:
+            simulation_output = self._actual_compute(
+                accelerator,
+                keep_settings=keep_settings,
+                ref_simulation_output=ref_simulation_output,
             )
 
         end_time = time.monotonic()
@@ -307,6 +309,53 @@ class BeamCalculator(ABC):
                 "long. will be easy for tracewin."
             )
         return simulation_output
+
+    def _actual_compute(
+        self,
+        accelerator: Accelerator,
+        keep_settings: bool = True,
+        ref_simulation_output: SimulationOutput | None = None,
+    ) -> SimulationOutput:
+        """Wrap the beam propagation of the accelerator."""
+        self.init_solver_parameters(accelerator)
+
+        simulation_output = self.run(accelerator.elts)
+        simulation_output.compute_indirect_quantities(
+            accelerator.elts, ref_simulation_output
+        )
+        if keep_settings:
+            accelerator.keep(
+                simulation_output,
+                exported_phase=self._export_phase,
+                beam_calculator_id=self.id,
+            )
+        return simulation_output
+
+    def _get_already_calculated(
+        self, accelerator: Accelerator
+    ) -> SimulationOutput | None:
+        """Get previously calculated object.
+
+        This method should be used when the :class:`.Accelerator` is an
+        unpickled object.
+
+        .. todo::
+            Support when the order of BeamCalculator changed?
+
+        """
+        simulation_output = accelerator.simulation_outputs.get(self.id, None)
+        if simulation_output is not None:
+            logging.info("Skipped calculation of unpickled Accelerator.")
+            return simulation_output
+
+        logging.error(
+            f"Pickled Accelerator {accelerator.name} has no SimulationOutput "
+            f"calculated with current solver {self.id}. Note that it can "
+            "happen if the order of the BeamCalculator is changed, which is a"
+            " known bug. Will try to recompute this Accelerator as it was a "
+            " not-unpickled object."
+        )
+        return
 
     @property
     def cavity_settings_factory(self) -> CavitySettingsFactory:
