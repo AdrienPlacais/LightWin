@@ -19,6 +19,8 @@ dependencies = [
   "cloudpickle>=3, <4",
   "matplotlib>=3.9.1, <4",
   "numpy>=2, <3",
+  # When changing pandas version, also update the associated intersphinx-mapping
+  # in docs/conf.py
   "pandas>=2.2, <3",
   "pandas-stubs>=2.3,<3",
   "palettable>=3.3.3, <4",
