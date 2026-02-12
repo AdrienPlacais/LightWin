@@ -42,6 +42,8 @@ class MyPickler(ABC):
         self,
         my_object: object,
         path: Path | str | None,
+        initialfile: Path | str | None = None,
+        initialdir: Path | str | None = None,
         title: str | None = None,
     ) -> Path | None:
         """Pickle ("save") the object to a binary file."""
@@ -97,6 +99,8 @@ class MyCloudPickler(MyPickler):
         self,
         my_object: object,
         path: Path | str | None,
+        initialfile: Path | str | None = None,
+        initialdir: Path | str | None = None,
         title: str | None = None,
     ) -> Path | None:
         """Pickle ("save") the object to a binary file.
@@ -108,6 +112,12 @@ class MyCloudPickler(MyPickler):
         path :
             Filepath to the pickled object. If ``None``, a GUI dialog will
             prompt the user to select a file.
+        initialdir :
+            The directory that the GUI dialog starts in, when ``path`` is
+            ``None``.
+        initialfile :
+            The file selected upon opening the GUI dialog, when ``path`` is
+            ``None``.
         title :
             Title of the GUI window. Use this to clarify what should be
             pickled.
@@ -118,9 +128,14 @@ class MyCloudPickler(MyPickler):
         pickled.
 
         """
+
         if path is None:
+            if initialfile is None:
+                initialfile = my_object.__class__.__name__ + ".pkl"
+
             path = ask_pickle_filename(
-                initialfile=my_object.__class__.__name__ + ".pkl",
+                initialfile=initialfile,
+                initialdir=initialdir,
                 title=title
                 or f"Choose where the {my_object.__class__} should be pickled "
                 "(saved).",
@@ -190,8 +205,8 @@ class MyCloudPickler(MyPickler):
 
 
 def ask_pickle_filename(
-    initialdir: Path | str = "pickled",
-    initialfile: Path | str = "accelerator.pkl",
+    initialdir: Path | str | None = None,
+    initialfile: Path | str | None = None,
     title: str = "Choose pickle filename",
 ) -> Path | None:
     """Open a GUI dialog to choose the pickle filename.
@@ -222,12 +237,12 @@ def ask_pickle_filename(
     root = Tk()
     root.withdraw()  # Hide the root window
 
-    initialdir = Path(initialdir)
-    initialdir.mkdir(parents=True, exist_ok=True)
+    if initialdir:
+        Path(initialdir).mkdir(parents=True, exist_ok=True)
 
     filepath = asksaveasfilename(
         title=title,
-        initialdir=str(initialdir),
+        initialdir=initialdir,
         initialfile=initialfile,
         defaultextension=".pkl",
         filetypes=[("Pickle files", "*.pkl")],

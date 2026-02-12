@@ -101,11 +101,39 @@ class Accelerator:
 
         self._l_cav = self.elts.l_cav
         self._tracewin_command: list[str] | None = None
+        #: Internal variable telling if this instance was create by unpickling
+        #: a ``PKL`` file.
+        self._is_unpickled: bool = False
 
     @property
     def l_cav(self):
         """Shortcut to easily get list of cavities."""
         return self.elts.l_cav
+
+    @property
+    def is_unpickled(self) -> bool:
+        """Tell if current object was created by unpickling a ``PKL`` file.
+
+        If this flag is ``True``, the main consequence is that the
+        :class:`.BeamCalculator` instances will not re-create new
+        :class:`.SimulationOutput`, and instead return the ones that should
+        already be in :attr:`.simulation_outputs`.
+
+        See Also
+        --------
+        :meth:`.BeamCalculator.compute`
+
+        """
+        return self._is_unpickled
+
+    @is_unpickled.setter
+    def is_unpickled(self, value: bool) -> None:
+        """Update internal value, and also raise a warning."""
+        logging.warning(
+            "You have no reason to modify the value of this attribute. I'll do"
+            " what you ask nonetheless."
+        )
+        self._is_unpickled = value
 
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class."""
@@ -245,6 +273,17 @@ class Accelerator:
            - Store the :class:`.SimulationOutput` in the
              :attr:`.simulation_outputs` dictionary.
 
+        Parameters
+        ----------
+        simulation_output :
+            The instance to keep.
+        exported_phase :
+            The reference phase in the output ``DAT`` file.
+        beam_calculator_id :
+            Unique ID for the :class:`.BeamCalculator` that created
+            ``simulation_output``. Will be the key to access
+            ``simulation_output`` in :attr:`.simulation_outputs`.
+
         """
         set_of_cavity_settings = simulation_output.set_of_cavity_settings
         for cavity, settings in set_of_cavity_settings.items():
@@ -287,8 +326,9 @@ class Accelerator:
         """
         return pickler.pickle(
             my_object=self,
-            path=path
-            or (self.accelerator_path / self.name).with_suffix(".pkl"),
+            path=path,
+            initialfile=self.name + ".pkl",
+            initialdir=self.accelerator_path,
             title=f"Choose where to save Accelerator: {self.name}",
         )
 
@@ -330,8 +370,14 @@ class Accelerator:
     ) -> Self:
         """Instantiate object from previously pickled file.
 
+        .. note::
+           Also sets the "private" attribute :attr:`.Accelerator._is_unpickled`
+           to ``True``.
+
         .. todo::
-            Use the GUI to also ask for the new :class:`Accelerator` name?
+            The GUI may also ask for the new :class:`Accelerator` name? I think
+            it would be too much intricated because I have no GUI specific
+            module. Maybe one day...
 
         Parameters
         ----------
@@ -352,10 +398,14 @@ class Accelerator:
         elif not isinstance(accelerator, cls):
             raise TypeError("Unpickled object is not an Accelerator instance.")
 
+        logging.info(f"Created an Accelerator by unpickling {path}.")
+
+        simulation_outputs = list(accelerator.simulation_outputs.values())
+        accelerator._is_unpickled = True
+
         if linac_id is None:
             return accelerator
 
-        simulation_outputs = list(accelerator.simulation_outputs.values())
         if isinstance(linac_id, str):
             linac_id = [linac_id for _ in simulation_outputs]
         for so, id in zip(simulation_outputs, linac_id, strict=True):

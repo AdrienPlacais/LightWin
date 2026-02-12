@@ -425,27 +425,50 @@ class SimulationOutput:
 
     def pickle(
         self, pickler: MyPickler, path: Path | str | None = None
-    ) -> Path:
+    ) -> Path | None:
         """Pickle (save) the object.
 
         This is useful for debug and temporary saves; do not use it for long
         time saving.
 
         """
-        if path is None:
-            path = self.out_path / "simulation_output.pkl"
-        assert isinstance(path, Path)
-        pickler.pickle(self, path)
-
-        if isinstance(path, str):
-            path = Path(path)
-        return path
+        return pickler.pickle(
+            my_object=self,
+            path=path,
+            initialfile="simulation-output_" + self.linac_id + ".pkl",
+            initialdir=self.out_path,
+            title=f"Choose where to save SimulationOutput: {self.linac_id}",
+        )
 
     @classmethod
-    def from_pickle(cls, pickler: MyPickler, path: Path | str) -> Self:
-        """Instantiate object from previously pickled file."""
-        simulation_output = pickler.unpickle(path)
-        return simulation_output  # type: ignore
+    def from_pickle(
+        cls, pickler: MyPickler, path: Path | str | None = None
+    ) -> Self:
+        """Instantiate object from previously pickled file.
+
+        .. note::
+           The "private" attribute :attr:`.SimulationOutput._is_unpickled` is
+           set to ``True``.
+
+        Parameters
+        ----------
+        pickler :
+            Pickler object.
+        path :
+            Path to the pickled object file. If not provided, use ``Tk`` to
+            open GUI and let user choose.
+
+        """
+        simulation_output = pickler.unpickle(path, expected=SimulationOutput)
+        if simulation_output is None:
+            raise TypeError(f"Unpickling {path} failed.")
+        elif not isinstance(simulation_output, cls):
+            raise TypeError(
+                "Unpickled object is not a SimulationOutput instance."
+            )
+
+        logging.info(f"Created an SimulationOutput by unpickling {path}.")
+        return simulation_output
 
     def plot(
         self,
