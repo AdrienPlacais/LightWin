@@ -8,6 +8,7 @@ from warnings import warn
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.util.pickling import MyCloudPickler
 from lightwin.util.typing import BeamKwargs
 
 
@@ -37,6 +38,7 @@ class AcceleratorFactory:
         """
         self.dat_file = files["dat_file"]
         self.project_folder = files["project_folder"]
+        self._pickle_paths = files.get("pickle_paths", {})
 
         if isinstance(beam_calculators, BeamCalculator):
             beam_calculators = (beam_calculators,)
@@ -51,36 +53,6 @@ class AcceleratorFactory:
         self._elts_factory = main_beam_calculator.list_of_elements_factory
         self._beam = beam
 
-    def _create_instances(
-        self, n_objects: int, is_reference: bool
-    ) -> list[Accelerator]:
-        r"""Create object.
-
-        Parameters
-        ----------
-        n_objects :
-            Number of objects to create.
-        is_reference :
-            If the reference accelerator should be created.
-
-        """
-        accelerator_paths = self._create_output_dirs(
-            n_objects=n_objects, with_reference=is_reference
-        )
-        name = "Working" if is_reference else "Broken"
-        accelerators: list[Accelerator] = []
-        for path in accelerator_paths:
-            acc = Accelerator(
-                name=name,
-                dat_file=self.dat_file,
-                accelerator_path=path,
-                list_of_elements_factory=self._elts_factory,
-                **self._beam,
-            )
-            self._check_consistency_reference_phase_policies(acc.l_cav)
-            accelerators.append(acc)
-        return accelerators
-
     def create_nominal(self) -> Accelerator:
         """Create the nominal linac."""
         return self._create_instances(n_objects=1, is_reference=True)[0]
@@ -88,6 +60,68 @@ class AcceleratorFactory:
     def create_failed(self, n_objects: int) -> list[Accelerator]:
         """Create failed linac(s)."""
         return self._create_instances(n_objects, is_reference=False)
+
+    def _get_pickle_path(self, name: str) -> Path | None:
+        """Get the pickle path, if given in the ``TOML``."""
+        pickle_path = self._pickle_paths.get(name)
+        if pickle_path is None:
+            return None
+        return Path(pickle_path).resolve().absolute()
+
+    def _try_load_from_pickle(
+        self, name: str, pickle_path: Path
+    ) -> Accelerator | None:
+        """Attempt to load accelerator from existing pickle file."""
+        if not pickle_path.is_file():
+            return None
+
+        logging.info(f"Loading {name} from pickle: {pickle_path}")
+        my_pickler = MyCloudPickler()
+        return Accelerator.from_pickle(my_pickler, pickle_path, linac_id=name)
+
+    def _create_accelerator(
+        self, name: str, path: Path, pickle_path: Path | None
+    ) -> Accelerator:
+        """Create a new accelerator instance."""
+        info = f"Creating {name} accelerator"
+        if pickle_path:
+            info += f" (will save to {pickle_path})"
+        logging.info(info)
+        return Accelerator(
+            name=name,
+            dat_file=self.dat_file,
+            accelerator_path=path,
+            list_of_elements_factory=self._elts_factory,
+            pickle_path=pickle_path,
+            **self._beam,
+        )
+
+    def _create_instances(
+        self, n_objects: int, is_reference: bool
+    ) -> list[Accelerator]:
+        """Create accelerator objects, loading from pickle if available."""
+        name = "Working" if is_reference else "Broken"
+        pickle_path = self._get_pickle_path(name)
+
+        if pickle_path is not None:
+            if n_objects != 1:
+                raise NotImplementedError(
+                    f"Pickle operation not supported for multiple Accelerators"
+                    f" (requested {n_objects})"
+                )
+
+            cached = self._try_load_from_pickle(name, pickle_path)
+            if cached:
+                return [cached]
+
+        accelerator_paths = self._create_output_dirs(n_objects, is_reference)
+        accelerators = [
+            self._create_accelerator(name, path, pickle_path)
+            for path in accelerator_paths
+        ]
+
+        self._check_consistency_reference_phase_policies(accelerators[0].l_cav)
+        return accelerators
 
     def _check_consistency_reference_phase_policies(
         self, cavities: Sequence[FieldMap]
