@@ -181,10 +181,11 @@ class FaultScenario(list[Fault]):
         logging.info(f"Solving all the optimization problems took {delta_t}")
         self.optimisation_time = delta_t
 
-        successes = [fault.success for fault in self]
-        self.fix_acc.name = (
-            f"Fixed ({successes.count(True)} of {len(successes)})"
-        )
+        # successes = [fault.success for fault in self]
+        # self.fix_acc.name = (
+        #     f"Fixed ({successes.count(True)} of {len(successes)})"
+        # )
+        self.fix_acc.status = "fix"
 
         self._evaluate_fit_quality(save=True)
 

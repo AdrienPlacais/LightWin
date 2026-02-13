@@ -39,6 +39,8 @@ from lightwin.util.typing import (
     POS_T,
 )
 
+ACCELERATOR_STATUS_T = Literal["reference", "broken", "fix"]
+
 
 class Accelerator:
     """Class holding a :class:`.ListOfElements`."""
@@ -46,6 +48,7 @@ class Accelerator:
     def __init__(
         self,
         name: str,
+        status: ACCELERATOR_STATUS_T,
         dat_file: Path,
         accelerator_path: Path,
         list_of_elements_factory: ListOfElementsFactory,
@@ -60,6 +63,8 @@ class Accelerator:
         ----------
         name :
             Name of the accelerator, used in plots.
+        status :
+            Current status design.
         dat_file :
             Absolute path to the linac ``DAT`` file.
         accelerator_path :
@@ -75,12 +80,18 @@ class Accelerator:
             Where to pickle object. Used in :meth:`.keep`.
 
         """
+        #: Name for the object. The default will be ``"Reference"`` or
+        #: ``"Solution"``. If object is unpickled, the name will be taken from
+        #: the ``TOML`` configuration dictionary.
         self.name = name
+        self.status: ACCELERATOR_STATUS_T = status
         #: Every :class:`.SimulationOutput` instance, associated with the name
         #: of the :class:`.BeamCalculator` that created it. This dictionary is
         #: filled by :meth:`keep`.
         self.simulation_outputs: dict[str, SimulationOutput] = {}
         self.data_in_tw_fashion: pd.DataFrame
+        #: Absolute path where results for each :class:`.BeamCalculator` will
+        #: be stored. Typically, this is a `000001/`-like folder.
         self.accelerator_path = accelerator_path
 
         kwargs = {
@@ -375,6 +386,7 @@ class Accelerator:
         cls,
         pickler: MyPickler,
         path: Path | str | None = None,
+        name: str | None = None,
         linac_id: str | Sequence[str] | None = None,
     ) -> Self:
         """Instantiate object from previously pickled file.
@@ -395,6 +407,8 @@ class Accelerator:
         path :
             Path to the pickled object file. If not provided, use ``Tk`` to
             open GUI and let user choose.
+        name :
+            To override the unpickled :attr:`.Accelerator.name`.
         linac_id :
             Use this to override the :func:`.SimulationOutput.linac_id` stored
             in unpickled :attr:`Accelerator.simulation_outputs`. In particular,
@@ -408,9 +422,11 @@ class Accelerator:
             raise TypeError("Unpickled object is not an Accelerator instance.")
 
         logging.info(f"Created an Accelerator by unpickling {path}.")
+        accelerator._is_unpickled = True
+        if name:
+            accelerator.name = name
 
         simulation_outputs = list(accelerator.simulation_outputs.values())
-        accelerator._is_unpickled = True
 
         if linac_id is None:
             return accelerator
