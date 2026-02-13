@@ -8,6 +8,7 @@ from warnings import warn
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.failures.strategy import determine_cavities
 from lightwin.util.pickling import MyCloudPickler
 from lightwin.util.typing import BeamKwargs
 
@@ -53,6 +54,38 @@ class AcceleratorFactory:
         self._elts_factory = main_beam_calculator.list_of_elements_factory
         self._beam = beam
 
+    def create_all(
+        self, wtf: dict[str, Any] | None = None
+    ) -> tuple[list[Accelerator], dict[str, Any] | None]:
+        """Create reference and broken accelerators.
+
+        Parameters
+        ----------
+        wtf :
+            "What To Fail/Fit" configuration. Can contain automatic fault
+            generation parameters that will be resolved into specific cavity
+            failures.
+
+        Returns
+        -------
+        accelerators :
+            Reference accelerator (index 0) followed by failed accelerators (if
+            any).
+        updated_wtf :
+            The resolved ``wtf`` configuration with explicit cavity failures.
+            None if no wtf was provided.
+
+        """
+        reference = self.create_reference()
+
+        if wtf is None:
+            return [reference], None
+
+        n_scenarios, updated_wtf = determine_cavities(reference.elts, wtf)
+        broken = self.create_all_broken(n_scenarios)
+
+        return [reference] + broken, updated_wtf
+
     def create_reference(self) -> Accelerator:
         """Create the reference (nominal) accelerator.
 
@@ -61,10 +94,26 @@ class AcceleratorFactory:
         The nominal accelerator without failures.
 
         """
-        return self._create_one(name="Working", is_reference=True)
+        return self._create_accelerator(name="Working", is_reference=True)
 
-    def create_scenario(self, scenario_id: int) -> Accelerator:
-        """Create a single fault scenario accelerator.
+    def create_all_broken(self, n_scenarios: int) -> list[Accelerator]:
+        """Create multiple broken accelerators.
+
+        Parameters
+        ----------
+        n_scenarios :
+            Number of broken accelerators to create. This is also the number
+            of :class:`.FaultScenario` we will create.
+
+        Returns
+        -------
+        List of accelerators, one per fault scenario.
+
+        """
+        return [self._create_single_broken(i) for i in range(n_scenarios)]
+
+    def _create_single_broken(self, scenario_id: int) -> Accelerator:
+        """Create a single broken accelerator.
 
         Parameters
         ----------
@@ -77,24 +126,9 @@ class AcceleratorFactory:
         An accelerator for the given fault scenario.
 
         """
-        return self._create_one(
+        return self._create_accelerator(
             name="Broken", is_reference=False, scenario_id=scenario_id
         )
-
-    def create_scenarios(self, n_scenarios: int) -> list[Accelerator]:
-        """Create multiple fault scenario accelerators.
-
-        Parameters
-        ----------
-        n_scenarios :
-            Number of fault scenarios to create.
-
-        Returns
-        -------
-        List of accelerators, one per fault scenario.
-
-        """
-        return [self.create_scenario(i) for i in range(n_scenarios)]
 
     def _get_pickle_path(self, name: str) -> Path | None:
         """Get the pickle path, if given in the ``TOML``."""
@@ -113,23 +147,6 @@ class AcceleratorFactory:
         logging.info(f"Loading {name} from pickle: {pickle_path}")
         my_pickler = MyCloudPickler()
         return Accelerator.from_pickle(my_pickler, pickle_path, linac_id=name)
-
-    def _create_accelerator(
-        self, name: str, path: Path, pickle_path: Path | None
-    ) -> Accelerator:
-        """Create a new accelerator instance."""
-        info = f"Creating {name} accelerator"
-        if pickle_path:
-            info += f" (will save to {pickle_path})"
-        logging.info(info)
-        return Accelerator(
-            name=name,
-            dat_file=self.dat_file,
-            accelerator_path=path,
-            list_of_elements_factory=self._elts_factory,
-            pickle_path=pickle_path,
-            **self._beam,
-        )
 
     def _check_consistency_reference_phase_policies(
         self, cavities: Sequence[FieldMap]
@@ -206,10 +223,10 @@ class AcceleratorFactory:
 
         return path
 
-    def _create_one(
+    def _create_accelerator(
         self, name: str, is_reference: bool, scenario_id: int = 0
     ) -> Accelerator:
-        """Create a single accelerator instance."""
+        """Create an accelerator instance, unpickling it if demanded."""
         pickle_path = self._get_pickle_path(name)
 
         if pickle_path is not None:
@@ -220,10 +237,30 @@ class AcceleratorFactory:
         output_path = self._create_output_dir(
             is_reference=is_reference, scenario_id=scenario_id
         )
-        accelerator = self._create_accelerator(name, output_path, pickle_path)
+        accelerator = self._init_accelerator(name, output_path, pickle_path)
         self._check_consistency_reference_phase_policies(accelerator.l_cav)
         return accelerator
 
+    def _init_accelerator(
+        self, name: str, path: Path, pickle_path: Path | None
+    ) -> Accelerator:
+        """Create a new accelerator instance."""
+        info = f"Creating {name} accelerator"
+        if pickle_path:
+            info += f" (will save to {pickle_path})"
+        logging.info(info)
+        return Accelerator(
+            name=name,
+            dat_file=self.dat_file,
+            accelerator_path=path,
+            list_of_elements_factory=self._elts_factory,
+            pickle_path=pickle_path,
+            **self._beam,
+        )
+
+    # =========================================================================
+    # Deprecated kept for backward compatibility.
+    # =========================================================================
     def create_nominal(self) -> Accelerator:
         """Create the nominal linac.
 
@@ -243,18 +280,21 @@ class AcceleratorFactory:
         """Create failed linac(s).
 
         .. deprecated:: 0.15.1
-           Prefer :meth:`.create_scenarios`.
+           Prefer :meth:`.create_all_broken`.
 
         """
         warn(
             "The method create_failed is deprecated. Prefer using "
-            "create_scenarios.",
+            "create_all_broken.",
             DeprecationWarning,
             stacklevel=2,
         )
-        return self.create_scenarios(n_scenarios=n_objects)
+        return self.create_all_broken(n_scenarios=n_objects)
 
 
+# =========================================================================
+# Deprecated kept for backward compatibility.
+# =========================================================================
 class NoFault(AcceleratorFactory):
     """Create single accelerator without failure.
 
@@ -296,4 +336,4 @@ class WithFaults(AcceleratorFactory):
     def run_all(self, *args, **kwargs) -> list[Accelerator]:
         reference = self.create_reference()
         n_objects = len(self._wtf["failed"])
-        return [reference] + self.create_scenarios(n_objects)
+        return [reference] + self.create_all_broken(n_objects)

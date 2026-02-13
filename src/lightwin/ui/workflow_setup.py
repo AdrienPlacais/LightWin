@@ -15,7 +15,6 @@ from lightwin.failures.fault_scenario import (
     FaultScenario,
     FaultScenarioFactory,
 )
-from lightwin.failures.strategy import determine_cavities
 from lightwin.optimisation.objective.factory import ObjectiveFactory
 from lightwin.util.typing import BeamKwargs
 from lightwin.visualization import plot
@@ -65,16 +64,13 @@ def set_up_accelerators(
 
     """
     factory = AcceleratorFactory(beam_calculators, **config)
-    reference = factory.create_reference()
+    wtf: dict[str, Any] | None = config.get("wtf")
+    accelerators, updated_wtf = factory.create_all(wtf)
 
-    wtf = config.get("wtf")
-    if not wtf:
-        return [reference]
+    if updated_wtf is not None:
+        config["wtf"] = updated_wtf
 
-    n_scenarios, updated_wtf = determine_cavities(reference.elts, wtf)
-    config["wtf"] = updated_wtf
-    failed = factory.create_scenarios(n_scenarios)
-    return [reference] + failed
+    return accelerators
 
 
 def set_up_faults(
