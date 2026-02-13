@@ -29,7 +29,7 @@ from lightwin.core.list_of_elements.helper import (
 )
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.util.helper import recursive_getter, recursive_items
-from lightwin.util.pickling import MyPickler
+from lightwin.util.pickling import MyCloudPickler, MyPickler
 from lightwin.util.typing import (
     CONCATENABLE_ELTS,
     EXPORT_PHASES_T,
@@ -51,6 +51,7 @@ class Accelerator:
         list_of_elements_factory: ListOfElementsFactory,
         e_mev: float,
         sigma: NDArray[np.float64],
+        pickle_path: Path | None = None,
         **kwargs,
     ) -> None:
         r"""Create object.
@@ -70,6 +71,8 @@ class Accelerator:
             Initial beam energy in :unit:`MeV`.
         sigma :
             Initial beam :math:`\sigma` matrix in :unit:`m` and :unit:`rad`.
+        pickle_path :
+            Where to pickle object. Used in :meth:`.keep`.
 
         """
         self.name = name
@@ -104,6 +107,8 @@ class Accelerator:
         #: Internal variable telling if this instance was create by unpickling
         #: a ``PKL`` file.
         self._is_unpickled: bool = False
+        #: If set, :meth:`.keep` will also pickle current instance
+        self._pickle_path: Path | None = pickle_path
 
     @property
     def l_cav(self):
@@ -304,6 +309,10 @@ class Accelerator:
             self.accelerator_path / simulation_output.out_folder
         )
         self.simulation_outputs[beam_calculator_id] = simulation_output
+
+        if self._pickle_path:
+            my_pickler = MyCloudPickler()
+            self.pickle(my_pickler, self._pickle_path)
 
     def elt_at_this_s_idx(
         self, s_idx: int, show_info: bool = False
