@@ -65,18 +65,16 @@ def set_up_accelerators(
 
     """
     factory = AcceleratorFactory(beam_calculators, **config)
-    reference_accelerator = factory.create_nominal()
+    reference = factory.create_reference()
 
     wtf = config.get("wtf")
     if not wtf:
-        return [reference_accelerator]
+        return [reference]
 
-    n_scenarios, updated_wtf = determine_cavities(
-        reference_accelerator.elts, wtf
-    )
+    n_scenarios, updated_wtf = determine_cavities(reference.elts, wtf)
     config["wtf"] = updated_wtf
-    accelerators = factory.create_failed(n_objects=n_scenarios)
-    return [reference_accelerator] + accelerators
+    failed = factory.create_scenarios(n_scenarios)
+    return [reference] + failed
 
 
 def set_up_faults(
