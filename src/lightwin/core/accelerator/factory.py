@@ -6,7 +6,10 @@ from typing import Any, Sequence
 from warnings import warn
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
-from lightwin.core.accelerator.accelerator import Accelerator
+from lightwin.core.accelerator.accelerator import (
+    ACCELERATOR_STATUS_T,
+    Accelerator,
+)
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.failures.strategy import determine_cavities
 from lightwin.util.pickling import MyCloudPickler, MyPickler
@@ -94,7 +97,7 @@ class AcceleratorFactory:
             broken = self.create_all_broken(n_scenarios)
             accelerators.extend(broken)
 
-        additional = self._load_additional_pickles({"Working", "Broken"})
+        additional = self._load_additional_pickles({"Reference", "Solution"})
         if len(additional) > 0:
             logging.warning(
                 "Behavior of additional Accelerator is not well defined. In "
@@ -113,7 +116,9 @@ class AcceleratorFactory:
 
         """
         return self._create_one_accelerator(
-            name="Working", output_path=self.project_folder / "000000_ref"
+            name="Reference",
+            status="reference",
+            output_path=self.project_folder / "000000_ref",
         )
 
     def create_all_broken(self, n_scenarios: int) -> list[Accelerator]:
@@ -132,20 +137,24 @@ class AcceleratorFactory:
         """
         return [
             self._create_one_accelerator(
-                name="Broken", output_path=self.project_folder / f"{i + 1:06d}"
+                name="Solution",
+                status="broken",
+                output_path=self.project_folder / f"{i + 1:06d}",
             )
             for i in range(n_scenarios)
         ]
 
     def _create_one_accelerator(
-        self, name: str, output_path: Path
+        self, name: str, status: ACCELERATOR_STATUS_T, output_path: Path
     ) -> Accelerator:
         """Create or load a single accelerator.
 
         Parameters
         ----------
         name :
-            Accelerator name (e.g., "Working", "Broken").
+            Accelerator name (e.g., "Reference", "Solution").
+        status :
+            Current status design.
         output_path :
             Path where accelerator data will be stored.
 
@@ -161,10 +170,14 @@ class AcceleratorFactory:
             if accelerator is not None:
                 return accelerator
 
-        return self._build_accelerator(name, output_path, pickle_path)
+        return self._build_accelerator(name, status, output_path, pickle_path)
 
     def _build_accelerator(
-        self, name: str, output_path: Path, pickle_path: Path | None
+        self,
+        name: str,
+        status: ACCELERATOR_STATUS_T,
+        output_path: Path,
+        pickle_path: Path | None,
     ) -> Accelerator:
         """Build a new accelerator from scratch.
 
@@ -172,6 +185,8 @@ class AcceleratorFactory:
         ----------
         name :
             Accelerator name.
+        status :
+            Current status design.
         output_path :
             Path where accelerator data will be stored.
         pickle_path :
@@ -191,6 +206,7 @@ class AcceleratorFactory:
 
         accelerator = Accelerator(
             name=name,
+            status=status,
             dat_file=self.dat_file,
             accelerator_path=output_path,
             list_of_elements_factory=self._elts_factory,
@@ -298,7 +314,7 @@ class AcceleratorFactory:
         Parameters
         ----------
         used_names :
-            Names already used for Working/Broken accelerators.
+            Names already used for Reference/Solution accelerators.
 
         Returns
         -------

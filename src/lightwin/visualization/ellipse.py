@@ -13,7 +13,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
 
-from lightwin.core.accelerator.accelerator import Accelerator
+from lightwin.core.accelerator.accelerator import (
+    ACCELERATOR_STATUS_T,
+    Accelerator,
+)
 from lightwin.core.beam_parameters.phase_space.i_phase_space_beam_parameters import (
     PHASE_SPACE_T,
 )
@@ -132,8 +135,9 @@ def plot_ellipse_emittance(
         "F": -eps,
     }
 
-    colors = {"Working": "k", "Broken": "r", "Fixed": "g"}
-    color = colors[accelerator.name.split(" ")[0]]
+    colors: dict[ACCELERATOR_STATUS_T, str]
+    colors = {"reference": "k", "broken": "r", "fix": "g"}
+    color = colors.get(accelerator.status)
     plot_kwargs = {"c": color}
     plot_ellipse(ax, ell_eq, **plot_kwargs)
 
