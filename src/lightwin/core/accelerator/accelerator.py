@@ -55,6 +55,7 @@ class Accelerator:
         e_mev: float,
         sigma: NDArray[np.float64],
         pickle_path: Path | None = None,
+        index: int = 0,
         **kwargs,
     ) -> None:
         r"""Create object.
@@ -78,6 +79,9 @@ class Accelerator:
             Initial beam :math:`\sigma` matrix in :unit:`m` and :unit:`rad`.
         pickle_path :
             Where to pickle object. Used in :meth:`.keep`.
+        index :
+            Corresponding :class:`.FaultScenario` index. A null index is
+            reserved for reference accelerator.
 
         """
         #: Name for the object. The default will be ``"Reference"`` or
@@ -85,6 +89,9 @@ class Accelerator:
         #: the ``TOML`` configuration dictionary.
         self.name = name
         self.status: ACCELERATOR_STATUS_T = status
+        #: Corresponding :class:`.FaultScenario` index. A null index
+        #: is reserved for reference accelerator.
+        self.index = index
         #: Every :class:`.SimulationOutput` instance, associated with the name
         #: of the :class:`.BeamCalculator` that created it. This dictionary is
         #: filled by :meth:`keep`.
@@ -388,6 +395,7 @@ class Accelerator:
         path: Path | str | None = None,
         name: str | None = None,
         linac_id: str | Sequence[str] | None = None,
+        index: int = 0,
     ) -> Self:
         """Instantiate object from previously pickled file.
 
@@ -413,6 +421,10 @@ class Accelerator:
             Use this to override the :func:`.SimulationOutput.linac_id` stored
             in unpickled :attr:`Accelerator.simulation_outputs`. In particular,
             used to legend plots.
+        index :
+            Corresponding :class:`.FaultScenario` index. A null index is
+            reserved for reference accelerator. Will override the ``index``
+            already stored in the unpickled object.
 
         """
         accelerator = pickler.unpickle(path, expected=Accelerator)
@@ -425,6 +437,7 @@ class Accelerator:
         accelerator._is_unpickled = True
         if name:
             accelerator.name = name
+        accelerator.index = index
 
         simulation_outputs = list(accelerator.simulation_outputs.values())
 
