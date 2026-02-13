@@ -115,7 +115,7 @@ def accelerator(
 ) -> Accelerator:
     """Create an example linac."""
     accelerator_factory = AcceleratorFactory(beam_calculators=solver, **config)
-    accelerator = accelerator_factory.create_nominal()
+    accelerator = accelerator_factory.create_reference()
     return accelerator
 
 

@@ -53,13 +53,48 @@ class AcceleratorFactory:
         self._elts_factory = main_beam_calculator.list_of_elements_factory
         self._beam = beam
 
-    def create_nominal(self) -> Accelerator:
-        """Create the nominal linac."""
-        return self._create_instances(n_objects=1, is_reference=True)[0]
+    def create_reference(self) -> Accelerator:
+        """Create the reference (nominal) accelerator.
 
-    def create_failed(self, n_objects: int) -> list[Accelerator]:
-        """Create failed linac(s)."""
-        return self._create_instances(n_objects, is_reference=False)
+        Returns
+        -------
+        The nominal accelerator without failures.
+
+        """
+        return self._create_one(name="Working", is_reference=True)
+
+    def create_scenario(self, scenario_id: int) -> Accelerator:
+        """Create a single fault scenario accelerator.
+
+        Parameters
+        ----------
+        scenario_id :
+            Zero-based index for this scenario (used for output directory
+            naming).
+
+        Returns
+        -------
+        An accelerator for the given fault scenario.
+
+        """
+        return self._create_one(
+            name="Broken", is_reference=False, scenario_id=scenario_id
+        )
+
+    def create_scenarios(self, n_scenarios: int) -> list[Accelerator]:
+        """Create multiple fault scenario accelerators.
+
+        Parameters
+        ----------
+        n_scenarios :
+            Number of fault scenarios to create.
+
+        Returns
+        -------
+        List of accelerators, one per fault scenario.
+
+        """
+        return [self.create_scenario(i) for i in range(n_scenarios)]
 
     def _get_pickle_path(self, name: str) -> Path | None:
         """Get the pickle path, if given in the ``TOML``."""
@@ -96,33 +131,6 @@ class AcceleratorFactory:
             **self._beam,
         )
 
-    def _create_instances(
-        self, n_objects: int, is_reference: bool
-    ) -> list[Accelerator]:
-        """Create accelerator objects, loading from pickle if available."""
-        name = "Working" if is_reference else "Broken"
-        pickle_path = self._get_pickle_path(name)
-
-        if pickle_path is not None:
-            if n_objects != 1:
-                raise NotImplementedError(
-                    f"Pickle operation not supported for multiple Accelerators"
-                    f" (requested {n_objects})"
-                )
-
-            cached = self._try_load_from_pickle(name, pickle_path)
-            if cached:
-                return [cached]
-
-        accelerator_paths = self._create_output_dirs(n_objects, is_reference)
-        accelerators = [
-            self._create_accelerator(name, path, pickle_path)
-            for path in accelerator_paths
-        ]
-
-        self._check_consistency_reference_phase_policies(accelerators[0].l_cav)
-        return accelerators
-
     def _check_consistency_reference_phase_policies(
         self, cavities: Sequence[FieldMap]
     ) -> None:
@@ -150,12 +158,12 @@ class AcceleratorFactory:
                 "The cavities do not all have the same reference phase."
             )
 
-    def _create_output_dirs(
-        self, n_objects: int, with_reference: bool = True
-    ) -> list[Path]:
-        """Create the proper out directories for every :class:`.Accelerator`.
+    def _create_output_dir(
+        self, is_reference: bool, scenario_id: int = 0
+    ) -> Path:
+        """Create output directory for a single accelerator.
 
-        The default structure looks like::
+        The default structure will look like::
 
            YYYY.MM.DD_HHhMM_SSs_MILLIms/
            ├── 000000_ref
@@ -182,36 +190,69 @@ class AcceleratorFactory:
           settings were found with :class:`.Envelope1D` and a second simulation
           was made with :class:`.TraceWin`.
 
-        Parameters
-        ----------
-        n_objects :
-            Number of :class:`.Accelerator` to create.
-        with_reference :
-            If first directory should be the nominal dir called ``000000_ref/``
-            .
+        """
+        if is_reference:
+            path = self.project_folder / "000000_ref"
+        else:
+            path = self.project_folder / f"{scenario_id + 1:06d}"
 
-        Returns
-        -------
-            Output path for every accelerator: ``000000_ref/`` (if
-            ``with_reference``), ``000001/``, ...
+        path.mkdir(parents=True, exist_ok=True)
+
+        for beam_calculator in self.beam_calculators:
+            if beam_calculator is None:
+                continue
+            beam_calculator_dir = path / beam_calculator.out_folder
+            beam_calculator_dir.mkdir(parents=True, exist_ok=True)
+
+        return path
+
+    def _create_one(
+        self, name: str, is_reference: bool, scenario_id: int = 0
+    ) -> Accelerator:
+        """Create a single accelerator instance."""
+        pickle_path = self._get_pickle_path(name)
+
+        if pickle_path is not None:
+            cached = self._try_load_from_pickle(name, pickle_path)
+            if cached:
+                return cached
+
+        output_path = self._create_output_dir(
+            is_reference=is_reference, scenario_id=scenario_id
+        )
+        accelerator = self._create_accelerator(name, output_path, pickle_path)
+        self._check_consistency_reference_phase_policies(accelerator.l_cav)
+        return accelerator
+
+    def create_nominal(self) -> Accelerator:
+        """Create the nominal linac.
+
+        .. deprecated:: 0.15.1
+           Prefer :meth:`.create_nominal`.
 
         """
-        accelerator_paths: list[Path] = []
-        first_index = 0 if with_reference else 1
-        for i in range(first_index, n_objects + first_index):
-            path = self.project_folder / f"{i:06d}"
-            if i == 0:
-                path = path.with_name(f"{path.name}_ref")
+        warn(
+            "The method create_nominal is deprecated. Prefer using "
+            "create_reference.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.create_reference()
 
-            path.mkdir(parents=True, exist_ok=True)
-            accelerator_paths.append(path)
+    def create_failed(self, n_objects: int) -> list[Accelerator]:
+        """Create failed linac(s).
 
-            for beam_calculator in self.beam_calculators:
-                if beam_calculator is None:
-                    continue
-                beam_calculator_dir = path / beam_calculator.out_folder
-                beam_calculator_dir.mkdir(parents=True, exist_ok=True)
-        return accelerator_paths
+        .. deprecated:: 0.15.1
+           Prefer :meth:`.create_scenarios`.
+
+        """
+        warn(
+            "The method create_failed is deprecated. Prefer using "
+            "create_scenarios.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.create_scenarios(n_scenarios=n_objects)
 
 
 class NoFault(AcceleratorFactory):
@@ -231,7 +272,7 @@ class NoFault(AcceleratorFactory):
         return super().__init__(*args, **kwargs)
 
     def run(self, *args, **kwargs) -> Accelerator:
-        return self.create_nominal()
+        return self.create_reference()
 
 
 class WithFaults(AcceleratorFactory):
@@ -253,6 +294,6 @@ class WithFaults(AcceleratorFactory):
         return super().__init__(*args, **kwargs)
 
     def run_all(self, *args, **kwargs) -> list[Accelerator]:
-        reference = self.create_nominal()
+        reference = self.create_reference()
         n_objects = len(self._wtf["failed"])
-        return [reference] + self.create_failed(n_objects)
+        return [reference] + self.create_scenarios(n_objects)
