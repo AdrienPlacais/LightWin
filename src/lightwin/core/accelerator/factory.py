@@ -9,7 +9,7 @@ from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.failures.strategy import determine_cavities
-from lightwin.util.pickling import MyCloudPickler
+from lightwin.util.pickling import MyCloudPickler, MyPickler
 from lightwin.util.typing import BeamKwargs
 
 
@@ -48,16 +48,25 @@ class AcceleratorFactory:
         main_beam_calculator = beam_calculators[0]
         if main_beam_calculator is None:
             raise ValueError("Need at least one working BeamCalculator.")
-        #: :class:`.BeamCalculator` that will be used to find compensation
-        #: settings.
         self.main_beam_calculator = main_beam_calculator
         self._elts_factory = main_beam_calculator.list_of_elements_factory
         self._beam = beam
+
+        self._pickler: MyPickler | None = None
+
+    @property
+    def pickler(self) -> MyPickler:
+        if self._pickler is None:
+            self._pickler = MyCloudPickler()
+        return self._pickler
 
     def create_all(
         self, wtf: dict[str, Any] | None = None
     ) -> tuple[list[Accelerator], dict[str, Any] | None]:
         """Create reference and broken accelerators.
+
+        Also loads any additional pre-computed accelerators from pickle files
+        specified in the configuration.
 
         Parameters
         ----------
@@ -69,32 +78,43 @@ class AcceleratorFactory:
         Returns
         -------
         accelerators :
-            Reference accelerator (index 0) followed by failed accelerators (if
-            any).
+            Reference accelerator (index 0), fault scenario accelerators
+            (if any), followed by any additional pickled accelerators.
         updated_wtf :
             The resolved ``wtf`` configuration with explicit cavity failures.
             None if no wtf was provided.
 
         """
         reference = self.create_reference()
+        accelerators = [reference]
+        updated_wtf = None
 
-        if wtf is None:
-            return [reference], None
+        if wtf is not None:
+            n_scenarios, updated_wtf = determine_cavities(reference.elts, wtf)
+            broken = self.create_all_broken(n_scenarios)
+            accelerators.extend(broken)
 
-        n_scenarios, updated_wtf = determine_cavities(reference.elts, wtf)
-        broken = self.create_all_broken(n_scenarios)
+        additional = self._load_additional_pickles({"Working", "Broken"})
+        if len(additional) > 0:
+            logging.warning(
+                "Behavior of additional Accelerator is not well defined. In "
+                "particular if there are several FaultScenario."
+            )
+        accelerators.extend(additional)
 
-        return [reference] + broken, updated_wtf
+        return accelerators, updated_wtf
 
     def create_reference(self) -> Accelerator:
         """Create the reference (nominal) accelerator.
 
         Returns
         -------
-        The nominal accelerator without failures.
+            The nominal accelerator without failures.
 
         """
-        return self._create_accelerator(name="Working", is_reference=True)
+        return self._create_one_accelerator(
+            name="Working", output_path=self.project_folder / "000000_ref"
+        )
 
     def create_all_broken(self, n_scenarios: int) -> list[Accelerator]:
         """Create multiple broken accelerators.
@@ -107,82 +127,89 @@ class AcceleratorFactory:
 
         Returns
         -------
-        List of accelerators, one per fault scenario.
+            List of accelerators, one per fault scenario.
 
         """
-        return [self._create_single_broken(i) for i in range(n_scenarios)]
+        return [
+            self._create_one_accelerator(
+                name="Broken", output_path=self.project_folder / f"{i + 1:06d}"
+            )
+            for i in range(n_scenarios)
+        ]
 
-    def _create_single_broken(self, scenario_id: int) -> Accelerator:
-        """Create a single broken accelerator.
+    def _create_one_accelerator(
+        self, name: str, output_path: Path
+    ) -> Accelerator:
+        """Create or load a single accelerator.
 
         Parameters
         ----------
-        scenario_id :
-            Zero-based index for this scenario (used for output directory
-            naming).
+        name :
+            Accelerator name (e.g., "Working", "Broken").
+        output_path :
+            Path where accelerator data will be stored.
 
         Returns
         -------
-        An accelerator for the given fault scenario.
+            Loaded from pickle if available, otherwise freshly created.
 
         """
-        return self._create_accelerator(
-            name="Broken", is_reference=False, scenario_id=scenario_id
+        pickle_path = self._get_pickle_path(name)
+
+        if pickle_path is not None:
+            accelerator = self._load_from_pickle(name, pickle_path)
+            if accelerator is not None:
+                return accelerator
+
+        return self._build_accelerator(name, output_path, pickle_path)
+
+    def _build_accelerator(
+        self, name: str, output_path: Path, pickle_path: Path | None
+    ) -> Accelerator:
+        """Build a new accelerator from scratch.
+
+        Parameters
+        ----------
+        name :
+            Accelerator name.
+        output_path :
+            Path where accelerator data will be stored.
+        pickle_path :
+            Optional path where accelerator will be pickled after creation.
+
+        Returns
+        -------
+            Newly created accelerator instance.
+
+        """
+        self._create_output_directories(output_path)
+
+        info = f"Creating {name} accelerator"
+        if pickle_path:
+            info += f" (will save to {pickle_path})"
+        logging.info(info)
+
+        accelerator = Accelerator(
+            name=name,
+            dat_file=self.dat_file,
+            accelerator_path=output_path,
+            list_of_elements_factory=self._elts_factory,
+            pickle_path=pickle_path,
+            **self._beam,
         )
 
-    def _get_pickle_path(self, name: str) -> Path | None:
-        """Get the pickle path, if given in the ``TOML``."""
-        pickle_path = self._pickle_paths.get(name)
-        if pickle_path is None:
-            return None
-        return Path(pickle_path).resolve().absolute()
+        self._check_consistency_reference_phase_policies(accelerator.l_cav)
+        return accelerator
 
-    def _try_load_from_pickle(
-        self, name: str, pickle_path: Path
-    ) -> Accelerator | None:
-        """Attempt to load accelerator from existing pickle file."""
-        if not pickle_path.is_file():
-            return None
+    def _create_output_directories(self, output_path: Path) -> None:
+        """Create output directory structure for an accelerator.
 
-        logging.info(f"Loading {name} from pickle: {pickle_path}")
-        my_pickler = MyCloudPickler()
-        return Accelerator.from_pickle(my_pickler, pickle_path, linac_id=name)
-
-    def _check_consistency_reference_phase_policies(
-        self, cavities: Sequence[FieldMap]
-    ) -> None:
-        """Check that solvers phases are consistent with ``DAT`` file."""
-        if len(cavities) == 0:
-            return
-        beam_calculators = [x for x in self.beam_calculators if x is not None]
-        policies = {
-            beam_calculator: beam_calculator.reference_phase_policy
-            for beam_calculator in beam_calculators
-        }
-
-        n_unique = len(set(policies.values()))
-        if n_unique > 1:
-            logging.warning(
-                "The different BeamCalculator objects have different "
-                "reference phase policies. This may lead to inconsistencies "
-                f"when cavities fail.\n{policies = }"
-            )
-            return
-
-        references = {x.cavity_settings.reference for x in cavities}
-        if len(references) > 1:
-            logging.info(
-                "The cavities do not all have the same reference phase."
-            )
-
-    def _create_output_dir(
-        self, is_reference: bool, scenario_id: int = 0
-    ) -> Path:
-        """Create output directory for a single accelerator.
+        Creates the main accelerator directory and subdirectories for each
+        beam calculator.
 
         The default structure will look like::
 
-           YYYY.MM.DD_HHhMM_SSs_MILLIms/
+           YYYY.MM.DD_HHhmm_SSs_MILLIms/
            ├── 000000_ref
            │   ├── 0_Envelope1D/
            │   └── 1_TraceWin/
@@ -207,56 +234,136 @@ class AcceleratorFactory:
           settings were found with :class:`.Envelope1D` and a second simulation
           was made with :class:`.TraceWin`.
 
-        """
-        if is_reference:
-            path = self.project_folder / "000000_ref"
-        else:
-            path = self.project_folder / f"{scenario_id + 1:06d}"
+        Parameters
+        ----------
+            Base path for the accelerator's output files.
 
-        path.mkdir(parents=True, exist_ok=True)
+        """
+        output_path.mkdir(parents=True, exist_ok=True)
 
         for beam_calculator in self.beam_calculators:
             if beam_calculator is None:
                 continue
-            beam_calculator_dir = path / beam_calculator.out_folder
+            beam_calculator_dir = output_path / beam_calculator.out_folder
             beam_calculator_dir.mkdir(parents=True, exist_ok=True)
 
-        return path
+    def _get_pickle_path(self, name: str) -> Path | None:
+        """Get the pickle path for a named accelerator.
 
-    def _create_accelerator(
-        self, name: str, is_reference: bool, scenario_id: int = 0
-    ) -> Accelerator:
-        """Create an accelerator instance, unpickling it if demanded."""
-        pickle_path = self._get_pickle_path(name)
+        Parameters
+        ----------
+        name :
+            Accelerator name to look up in pickle paths configuration.
 
-        if pickle_path is not None:
-            cached = self._try_load_from_pickle(name, pickle_path)
-            if cached:
-                return cached
+        Returns
+        -------
+            Resolved absolute path if configured, None otherwise.
 
-        output_path = self._create_output_dir(
-            is_reference=is_reference, scenario_id=scenario_id
+        """
+        pickle_path_str = self._pickle_paths.get(name)
+        if pickle_path_str is None:
+            return None
+        return Path(pickle_path_str).resolve().absolute()
+
+    def _load_from_pickle(
+        self, name: str, pickle_path: Path
+    ) -> Accelerator | None:
+        """Load accelerator from pickle file if it exists.
+
+        Parameters
+        ----------
+        name :
+            Accelerator name for logging.
+        pickle_path :
+            Path to pickle file.
+
+        Returns
+        -------
+            Loaded accelerator if file exists, None otherwise.
+
+        """
+        if not pickle_path.is_file():
+            return None
+
+        logging.info(f"Loading {name} from pickle: {pickle_path}")
+        return Accelerator.from_pickle(
+            self.pickler, pickle_path, linac_id=name
         )
-        accelerator = self._init_accelerator(name, output_path, pickle_path)
-        self._check_consistency_reference_phase_policies(accelerator.l_cav)
-        return accelerator
 
-    def _init_accelerator(
-        self, name: str, path: Path, pickle_path: Path | None
-    ) -> Accelerator:
-        """Create a new accelerator instance."""
-        info = f"Creating {name} accelerator"
-        if pickle_path:
-            info += f" (will save to {pickle_path})"
-        logging.info(info)
-        return Accelerator(
-            name=name,
-            dat_file=self.dat_file,
-            accelerator_path=path,
-            list_of_elements_factory=self._elts_factory,
-            pickle_path=pickle_path,
-            **self._beam,
-        )
+    def _load_additional_pickles(
+        self, used_names: set[str]
+    ) -> list[Accelerator]:
+        """Load accelerators from unused pickle paths.
+
+        Parameters
+        ----------
+        used_names :
+            Names already used for Working/Broken accelerators.
+
+        Returns
+        -------
+            Additional accelerators loaded from pickle files.
+
+        """
+        additional = []
+
+        for name in self._pickle_paths:
+            if name in used_names:
+                continue
+
+            pickle_path = self._get_pickle_path(name)
+            if pickle_path is None:
+                continue
+
+            accelerator = self._load_from_pickle(name, pickle_path)
+            if accelerator is None:
+                logging.debug(
+                    f"Skipping '{name}': pickle file does not exist at "
+                    "{pickle_path}"
+                )
+                continue
+
+            logging.info(
+                f"Loading additional accelerator '{name}' from pickle"
+            )
+            additional.append(accelerator)
+
+        return additional
+
+    def _check_consistency_reference_phase_policies(
+        self, cavities: Sequence[FieldMap]
+    ) -> None:
+        """Check that solvers phases are consistent with ``DAT`` file.
+
+        Parameters
+        ----------
+        cavities :
+            Sequence of cavity field maps to check.
+
+        """
+        if len(cavities) == 0:
+            return
+
+        beam_calculators = [x for x in self.beam_calculators if x is not None]
+        policies = {
+            beam_calculator: beam_calculator.reference_phase_policy
+            for beam_calculator in beam_calculators
+        }
+
+        n_unique = len(set(policies.values()))
+        if n_unique > 1:
+            logging.warning(
+                "The different BeamCalculator objects have different "
+                "reference phase policies. This may lead to inconsistencies "
+                f"when cavities fail.\n{policies = }"
+            )
+            return
+
+        references = {x.cavity_settings.reference for x in cavities}
+        if len(references) > 1:
+            logging.info(
+                "The cavities do not all have the same reference phase."
+            )
 
     # =========================================================================
     # Deprecated kept for backward compatibility.
@@ -265,7 +372,7 @@ class AcceleratorFactory:
         """Create the nominal linac.
 
         .. deprecated:: 0.15.1
-           Prefer :meth:`.create_nominal`.
+           Prefer :meth:`.create_reference`.
 
         """
         warn(
