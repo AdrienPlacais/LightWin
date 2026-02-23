@@ -64,15 +64,13 @@ WTF_COMMON = (
     KeyValConfSpec(
         key="index_offset",
         types=(int,),
-        description=(
-            """
+        description=("""
             Specify whether user-provided cavity indices are 0-based or
             1-based. Set `0` if the first cavity has index 0 (Python-style,
             default). Set `1` if the first cavity has index 1
             (human-friendly). This affects how the `failed` and
             `compensating_manual` lists interpret integer indices.
-            """
-        ),
+            """),
         allowed_values=(0, 1),
         default_value=0,
         is_mandatory=False,
