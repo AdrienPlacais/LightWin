@@ -3,8 +3,8 @@ evaluator package
 
 .. automodule:: lightwin.evaluator
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------

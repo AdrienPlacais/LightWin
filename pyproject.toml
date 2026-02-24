@@ -38,16 +38,16 @@ readme = "README.md"
 requires-python = ">=3.12"
 
 [project.optional-dependencies]
-cython = ["cython>=3.2,<4"]
+cython = ["cython>=3.2.4,<4"]
 docs = [
-  "myst-parser>=4, <5",
-  "nbsphinx>=0.9.6, <1",
-  "sphinx-autodoc-typehints>=3.0.1, <4",
-  "sphinx-rtd-theme>=3, <4",
-  "sphinx-tabs>=3.4,<4",
-  "sphinxcontrib-bibtex>=2.6,<3",
+  "myst-parser>=5.0.0, <6",
+  "nbsphinx>=0.9.8, <1",
+  "sphinx-autodoc-typehints>=3.7.0, <4",
+  "sphinx-rtd-theme>=3.1.0, <4",
+  "sphinx-tabs>=3.4.7,<4",
+  "sphinxcontrib-bibtex>=2.6.5,<3",
 ]
-test = ["pytest>=8.3.2, <9"]
+test = ["pytest>=9.0.2, <10"]
 
 [project.scripts]
 lw-combine-solutions = "lightwin.scripts.combine_solutions:main"

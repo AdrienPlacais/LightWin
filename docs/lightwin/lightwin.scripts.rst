@@ -3,8 +3,8 @@ scripts package
 
 .. automodule:: lightwin.scripts
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

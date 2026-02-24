@@ -3,8 +3,8 @@ list\_of\_elements package
 
 .. automodule:: lightwin.core.list_of_elements
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

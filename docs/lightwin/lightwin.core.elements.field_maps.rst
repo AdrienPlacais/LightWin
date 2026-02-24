@@ -3,8 +3,8 @@ field\_maps package
 
 .. automodule:: lightwin.core.elements.field_maps
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

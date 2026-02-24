@@ -38,8 +38,8 @@ WTF_COMMON = (
         description=(
             "Identifies list of failed cavities. This is typically a list of "
             "list of cavity identifiers (2D), but it can be a 1D list for "
-            "automatic studies and it must be a 3D array if ``strategy`` is "
-            "set to ``'manual'``."
+            "automatic studies and it must be a 3D array if `strategy` is "
+            "set to `'manual'`."
         ),
         default_value=[[5]],
     ),

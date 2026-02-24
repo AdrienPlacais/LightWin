@@ -3,8 +3,8 @@ beam\_parameters package
 
 .. automodule:: lightwin.core.beam_parameters
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------

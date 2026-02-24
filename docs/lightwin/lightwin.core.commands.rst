@@ -3,8 +3,8 @@ commands package
 
 .. automodule:: lightwin.core.commands
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

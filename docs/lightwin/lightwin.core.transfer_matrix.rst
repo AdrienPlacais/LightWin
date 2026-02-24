@@ -3,8 +3,8 @@ transfer\_matrix package
 
 .. automodule:: lightwin.core.transfer_matrix
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------
