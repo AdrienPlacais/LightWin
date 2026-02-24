@@ -10,20 +10,23 @@ classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Science/Research",
   "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Scientific/Engineering :: Physics",
 ]
 
 dependencies = [
-  "bayesian-optimization>=3.1, <4",
-  "cloudpickle>=3, <4",
-  "matplotlib>=3.9.1, <4",
-  "numpy>=2, <3",
-  "pandas>=2.2, <3",
-  "pandas-stubs>=2.3,<3",
+  "bayesian-optimization>=3.2.0, <4",
+  "cloudpickle>=3.1.2, <4",
+  "matplotlib>=3.10.8, <4",
+  "numpy>=2.4.2, <3",
+  "pandas>=3.0.1, <4",
+  "pandas-stubs>=3.0.0,<4",
   "palettable>=3.3.3, <4",
-  "pre-commit>=4, <5",
-  "scipy>=1.14, <2",
+  "pre-commit>=4.5.1, <5",
+  "scipy>=1.17.1, <2",
 ]
 description = "Automatically compensate cavity failures in linacs"
 dynamic = ["version"]
@@ -60,7 +63,7 @@ tracker = "https://github.com/AdrienPlacais/LightWin/issues"
 
 [tool.black]
 line-length = 79
-target-version = ["py312"]
+target-version = ["py314"]
 
 [tool.isort]
 line_length = 79
