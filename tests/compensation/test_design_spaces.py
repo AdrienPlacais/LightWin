@@ -100,14 +100,14 @@ def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
 
 @pytest.fixture(scope="class")
 def accelerators(
-    solver: BeamCalculator,
-    config: dict[str, dict[str, Any]],
+    solver: BeamCalculator, config: dict[str, dict[str, Any]]
 ) -> list[Accelerator]:
     """Create ref linac, linac we will break, compute ref simulation_output."""
     solvers = (solver,)
     accelerators = set_up_accelerators(config, solvers)
-    solver.compute(accelerators[0])
-    return accelerators
+    adapted = [sublist[0] for sublist in accelerators.values()]
+    solver.compute(adapted[0])
+    return adapted
 
 
 @pytest.fixture(scope="class")

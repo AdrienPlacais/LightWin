@@ -65,7 +65,7 @@ class AcceleratorFactory:
 
     def create_all(
         self, wtf: dict[str, Any] | None = None
-    ) -> tuple[list[Accelerator], dict[str, Any] | None]:
+    ) -> tuple[dict[int, list[Accelerator]], dict[str, Any] | None]:
         """Create reference and broken accelerators.
 
         Also loads any additional pre-computed accelerators from pickle files
@@ -81,21 +81,21 @@ class AcceleratorFactory:
         Returns
         -------
         accelerators :
-            Reference accelerator (index 0), fault scenario accelerators
-            (if any), followed by any additional pickled accelerators.
+            Dictionary where keys are :class:`.FaultScenario` indexes, and
+            values are lists of corresponding :class:`.Accelerator`. First
+            index corresponds to reference accelerator (no failure).
         updated_wtf :
             The resolved ``wtf`` configuration with explicit cavity failures.
             None if no wtf was provided.
 
         """
         reference = self.create_reference()
-        accelerators = [reference]
+        accelerators = {0: [reference]}
         updated_wtf = None
 
         if wtf is not None:
             n_scenarios, updated_wtf = determine_cavities(reference.elts, wtf)
-            broken = self.create_all_broken(n_scenarios)
-            accelerators.extend(broken)
+            accelerators.update(self.create_all_broken(n_scenarios))
 
         additional = self._load_additional_pickles(
             reserved_names={"Reference", "Solution"}
@@ -105,7 +105,12 @@ class AcceleratorFactory:
                 "Behavior of additional Accelerator is not well defined. In "
                 "particular if there are several FaultScenario."
             )
-        accelerators.extend(additional)
+
+        for index in accelerators:
+            to_add = additional.get(index)
+            if to_add is None:
+                continue
+            accelerators[index].extend(to_add)
 
         return accelerators, updated_wtf
 
@@ -124,7 +129,9 @@ class AcceleratorFactory:
             output_path=self.project_folder / "000000_ref",
         )
 
-    def create_all_broken(self, n_scenarios: int) -> list[Accelerator]:
+    def create_all_broken(
+        self, n_scenarios: int
+    ) -> dict[int, list[Accelerator]]:
         """Unpickle or create from scratch several broken accelerators.
 
         Parameters
@@ -135,18 +142,21 @@ class AcceleratorFactory:
 
         Returns
         -------
-            List of accelerators, one per fault scenario.
+            Dict associating :class:`.FaultScenario` index to corresponding
+            broken :class:`.Accelerator`.
 
         """
-        return [
-            self._create_one_accelerator(
-                name="Solution",
-                status="broken",
-                index=i,
-                output_path=self.project_folder / f"{i + 1:06d}",
-            )
-            for i in range(n_scenarios)
-        ]
+        return {
+            i: [
+                self._create_one_accelerator(
+                    name="Solution",
+                    status="broken",
+                    index=i,
+                    output_path=self.project_folder / f"{i:06d}",
+                )
+            ]
+            for i in range(1, n_scenarios + 1)
+        }
 
     def _create_one_accelerator(
         self,
@@ -506,7 +516,7 @@ class AcceleratorFactory:
 
     def _load_additional_pickles(
         self, reserved_names: set[str] = {"Reference", "Solution"}
-    ) -> list[Accelerator]:
+    ) -> dict[int, list[Accelerator]]:
         """Unpickle additional :class:`.Accelerator`.
 
         Parameters
@@ -517,15 +527,17 @@ class AcceleratorFactory:
 
         Returns
         -------
-            Additional accelerators loaded from pickle files.
+            Additional accelerators loaded from pickle files, associated with
+            their :class:`.FaultScenario` index.
 
         """
-        additional = []
         scenarios = self._pickle_paths.get("scenarios")
         if scenarios is None:
-            return []
+            return {}
 
+        additional: dict[int, list[Accelerator]] = {}
         for index, paths in self._pickle_paths.items():
+            accelerators = []
             for name in paths:
                 if name in reserved_names:
                     continue
@@ -553,8 +565,8 @@ class AcceleratorFactory:
                     f"Loading additional accelerator '{accelerator.id}' from "
                     "pickle."
                 )
-                additional.append(accelerator)
-
+                accelerators.append(accelerator)
+            additional[index] = accelerators
         return additional
 
     # =========================================================================
@@ -588,7 +600,14 @@ class AcceleratorFactory:
             DeprecationWarning,
             stacklevel=2,
         )
-        return self.create_all_broken(n_scenarios=n_objects)
+        accelerators = [
+            accelerator
+            for sorted_by_fault_scenario in self.create_all_broken(
+                n_objects
+            ).values()
+            for accelerator in sorted_by_fault_scenario
+        ]
+        return accelerators
 
 
 # =========================================================================
@@ -635,4 +654,4 @@ class WithFaults(AcceleratorFactory):
     def run_all(self, *args, **kwargs) -> list[Accelerator]:
         reference = self.create_reference()
         n_objects = len(self._wtf["failed"])
-        return [reference] + self.create_all_broken(n_objects)
+        return [reference] + self.create_failed(n_objects)

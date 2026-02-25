@@ -460,18 +460,19 @@ class FaultScenarioFactory:
 
     def __init__(
         self,
-        accelerators: list[Accelerator],
+        accelerators: dict[int, list[Accelerator]],
         beam_calc: BeamCalculator,
         design_space: dict[str, Any],
         objective_factory_class: type[ObjectiveFactory] | None = None,
     ) -> None:
-        """Create the :class:`FaultScenario` objects (factory template).
+        """Init solver parameters for each non-unpickled :class:`.Accelerator`.
 
         Parameters
         ----------
         accelerators :
-            Holds all the linacs. The first one must be the reference linac,
-            while all the others will be to be fixed.
+            Dictionary where keys are :class:`.FaultScenario` indexes, and
+            values are lists of corresponding :class:`.Accelerator`. First
+            index corresponds to reference accelerator (no failure).
         beam_calc :
             The solver that will be called during the optimisation process.
         design_space_kw :
@@ -487,16 +488,20 @@ class FaultScenarioFactory:
             already initialied :class:`.Fault` objects.
 
         """
-        if isinstance(beam_calc, TraceWin):
-            _force_element_to_index_method_creation(accelerators[1], beam_calc)
-
         self._accelerators = accelerators
         self._beam_calculator = beam_calc
-        for accelerator in accelerators:
-            beam_calc.init_solver_parameters(accelerator)
-
         self._design_space_factory = get_design_space_factory(**design_space)
         self._objective_factory_class = objective_factory_class
+
+        for index, acc in accelerators.items():
+            for a in acc:
+                if a.is_unpickled:
+                    continue
+
+                if isinstance(beam_calc, TraceWin) and index > 0:
+                    _force_element_to_index_method_creation(a, beam_calc)
+
+                beam_calc.init_solver_parameters(a)
 
     @overload
     def create(
@@ -531,19 +536,31 @@ class FaultScenarioFactory:
         """
         fault_scenarios: list[FaultScenario] = []
 
-        for i, (accelerator, fault_idx) in enumerate(
-            zip(self._accelerators[1:], failed, strict=True)
-        ):
+        if len(failed) != len(self._accelerators) - 1:
+            raise ValueError(
+                f"We are creating {len(failed)} FaultScenarios, but we have "
+                f"{len(self._accelerators)-1} non-reference groups of "
+                "Accelerators."
+            )
+
+        ref_acc = self._accelerators[0][0]
+        for index, accelerators_by_scenario in self._accelerators.items():
+            if index == 0:
+                continue
+
+            # Position of compensating cavities, when the strategy is manual
             comp_idx = (
-                None if compensating_manual is None else compensating_manual[i]
+                None
+                if compensating_manual is None
+                else compensating_manual[index - 1]
             )
             scenario = FaultScenario(
-                ref_acc=self._accelerators[0],
-                fix_acc=accelerator,
+                ref_acc=ref_acc,
+                fix_acc=accelerators_by_scenario[0],
                 beam_calculator=self._beam_calculator,
                 wtf=wtf,
                 design_space_factory=self._design_space_factory,
-                fault_idx=fault_idx,
+                fault_idx=failed[index - 1],
                 comp_idx=comp_idx,
                 objective_factory_class=self._objective_factory_class,
             )
@@ -597,8 +614,11 @@ def fault_scenario_factory(
         already initialied :class:`.Fault` objects.
 
     """
+    adapted = {
+        index: [accelerator] for index, accelerator in enumerate(accelerators)
+    }
     factory = FaultScenarioFactory(
-        accelerators=accelerators,
+        accelerators=adapted,
         beam_calc=beam_calc,
         design_space=design_space,
         objective_factory_class=objective_factory_class,
