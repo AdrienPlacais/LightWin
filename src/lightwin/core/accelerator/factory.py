@@ -97,7 +97,9 @@ class AcceleratorFactory:
             broken = self.create_all_broken(n_scenarios)
             accelerators.extend(broken)
 
-        additional = self._load_additional_pickles({"Reference", "Solution"})
+        additional = self._load_additional_pickles(
+            reserved_names={"Reference", "Solution"}
+        )
         if len(additional) > 0:
             logging.warning(
                 "Behavior of additional Accelerator is not well defined. In "
@@ -108,7 +110,7 @@ class AcceleratorFactory:
         return accelerators, updated_wtf
 
     def create_reference(self) -> Accelerator:
-        """Create the reference (nominal) accelerator.
+        """Unpickle or create from scratch the reference (nominal) accelerator.
 
         Returns
         -------
@@ -123,7 +125,7 @@ class AcceleratorFactory:
         )
 
     def create_all_broken(self, n_scenarios: int) -> list[Accelerator]:
-        """Create multiple broken accelerators.
+        """Unpickle or create from scratch several broken accelerators.
 
         Parameters
         ----------
@@ -158,7 +160,7 @@ class AcceleratorFactory:
         Parameters
         ----------
         name :
-            Accelerator name (e.g., "Reference", "Solution").
+            Accelerator name (e.g., ``"Reference"``, ``"Solution"``).
         status :
             Current status design.
         index :
@@ -172,7 +174,7 @@ class AcceleratorFactory:
             Loaded from pickle if available, otherwise freshly created.
 
         """
-        pickle_path = self._get_pickle_path(name)
+        pickle_path = self._get_pickle_path(name, index)
 
         if pickle_path is not None:
             accelerator = self._load_from_pickle(
@@ -189,6 +191,9 @@ class AcceleratorFactory:
             pickle_path=pickle_path,
         )
 
+    # =========================================================================
+    # Build Accelerator from scratch
+    # =========================================================================
     def _build_accelerator(
         self,
         name: str,
@@ -285,191 +290,6 @@ class AcceleratorFactory:
             beam_calculator_dir = output_path / beam_calculator.out_folder
             beam_calculator_dir.mkdir(parents=True, exist_ok=True)
 
-    def _parse_pickle_config(self) -> dict[str, Any]:
-        """Parse pickle paths configuration from TOML.
-
-        Expected TOML structure::
-
-            [files.pickle_paths]
-            reference = "reference.pkl"
-
-            # Scenario 1: pre-computed solution (skips optimization)
-            [files.pickle_paths.scenarios.000001]
-            solution = "solution-000001.pkl"
-
-            # Scenario 2: alternatives with custom names (optimization still
-            # runs)
-            [files.pickle_paths.scenarios.000002.alternatives]
-            "Conservative approach" = "design-conservative.pkl"
-            "Aggressive tuning" = "design-aggressive.pkl"
-
-            # Scenario 3: solution + alternatives
-            [files.pickle_paths.scenarios.000003]
-            solution = "solution-000003.pkl"
-
-            [files.pickle_paths.scenarios.000003.alternatives]
-            "Tweaked design" = "tweaked.pkl"
-            "Experimental config" = "experimental.pkl"
-
-        Returns
-        -------
-        dict
-            Parsed configuration with structure::
-
-                {
-                    "reference": Path | None,
-                    "scenarios": {
-                        1: {
-                            "solution": (Path, str | None) | None,
-                            "alternatives": [(Path, str), ...]
-                        },
-                        2: {...},
-                        ...
-                    }
-                }
-
-            Where:
-            - ``reference``: Path to reference accelerator pickle, or None
-            - ``scenarios[index]["solution"]``: Tuple of (path, name). Name is
-              None for auto-generated names. If present, optimization is
-              skipped.
-            - ``scenarios[index]["alternatives"]``: List of (path, name) tuples
-              for alternative designs to compare against the optimized
-              solution.
-
-        """
-        parsed = {
-            "reference": self._get_pickle_path("reference"),
-            "scenarios": {},
-        }
-
-        scenarios_config = self._pickle_paths.get("scenarios", {})
-
-        for scenario_key, scenario_data in scenarios_config.items():
-            try:
-                index = int(scenario_key)
-            except (ValueError, TypeError):
-                logging.error(
-                    f"Invalid scenario '{scenario_key = }' in pickle_paths. "
-                    "Expected format: '000001', '000002', etc."
-                )
-
-                continue
-
-            solution_path = self._get_pickle_path("solution", scenario_data)
-            solution = (solution_path, None) if solution_path else None
-
-            alternatives_config = scenario_data.get("alternatives", {})
-            alternatives = [
-                (
-                    self._get_pickle_path(custom_name, alternatives_config),
-                    custom_name,
-                )
-                for custom_name in alternatives_config
-            ]
-
-            parsed["scenarios"][index] = {
-                "solution": solution,
-                "alternatives": alternatives,
-            }
-
-        return parsed
-
-    def _get_pickle_path(
-        self, name: str, paths_dict: dict | None = None
-    ) -> Path | None:
-        """Get the pickle path for a named accelerator.
-
-        Parameters
-        ----------
-        name :
-            Accelerator name to look up in pickle paths configuration.
-        paths_dict :
-            Dictionary to explore. By default, this is :attr:`.pickle_paths`.
-
-        Returns
-        -------
-            Resolved absolute path if configured, None otherwise.
-
-        """
-        pickle_path_str = (paths_dict or self._pickle_paths).get(name)
-        if pickle_path_str is None:
-            return None
-        return Path(pickle_path_str).resolve().absolute()
-
-    def _load_from_pickle(
-        self, name: str, index: int, pickle_path: Path
-    ) -> Accelerator | None:
-        """Load accelerator from pickle file if it exists.
-
-        Parameters
-        ----------
-        name :
-            Accelerator name.
-        pickle_path :
-            Path to pickle file.
-        index :
-            Corresponding :class:`.FaultScenario` index. A null index is
-            reserved for reference accelerator.
-
-        Returns
-        -------
-            Loaded accelerator if file exists, None otherwise.
-
-        """
-        if not pickle_path.is_file():
-            return None
-
-        logging.info(f"Loading {name} from pickle: {pickle_path}")
-        return Accelerator.from_pickle(
-            self.pickler,
-            pickle_path,
-            accelerator_id=name,
-            index=index,
-        )
-
-    def _load_additional_pickles(
-        self, used_names: set[str]
-    ) -> list[Accelerator]:
-        """Load accelerators from unused pickle paths.
-
-        Parameters
-        ----------
-        used_names :
-            Names already used for Reference/Solution accelerators.
-
-        Returns
-        -------
-            Additional accelerators loaded from pickle files.
-
-        """
-        additional = []
-
-        for name in self._pickle_paths:
-            if name in used_names:
-                continue
-
-            pickle_path = self._get_pickle_path(name)
-            if pickle_path is None:
-                continue
-
-            accelerator = self._load_from_pickle(
-                name, index=index, pickle_path=pickle_path
-            )
-            if accelerator is None:
-                logging.debug(
-                    f"Skipping '{name}': pickle file does not exist at "
-                    f"{pickle_path}"
-                )
-                continue
-
-            logging.info(
-                f"Loading additional accelerator '{name}' from pickle"
-            )
-            additional.append(accelerator)
-
-        return additional
-
     def _check_consistency_reference_phase_policies(
         self, cavities: Sequence[FieldMap]
     ) -> None:
@@ -504,6 +324,238 @@ class AcceleratorFactory:
             logging.info(
                 "The cavities do not all have the same reference phase."
             )
+
+    # =========================================================================
+    # Related to pickling/unpickling Accelerators
+    # =========================================================================
+    def _parse_pickle_config(self) -> dict[str, Any]:
+        """Parse pickle paths configuration from ``TOML``.
+
+        Expected ``TOML`` structure::
+
+            [files.pickle_paths]
+            reference = "reference.pkl"
+
+            # Scenario 1: pre-computed solution (skips optimization)
+            [files.pickle_paths.scenarios.000001]
+            solution = "solution-000001.pkl"
+
+            # Scenario 2: alternatives with custom names (optimization still
+            # runs, the pickled Accelerators will be appended)
+            [files.pickle_paths.scenarios.000002.alternatives]
+            "Conservative approach" = "design-conservative.pkl"
+            "Aggressive tuning" = "design-aggressive.pkl"
+
+            # Scenario 3: solution + alternatives
+            [files.pickle_paths.scenarios.000003]
+            solution = "solution-000003.pkl"
+
+            [files.pickle_paths.scenarios.000003.alternatives]
+            "Tweaked design" = "tweaked.pkl"
+            "Experimental config" = "experimental.pkl"
+
+        Corresponding output dictionary::
+
+            {
+                "Reference": "reference.pkl",
+                "scenarios": {
+                    1: {"Solution": "solution-000001.pkl"},
+                    2: {
+                        "Solution": None,
+                        "Conservative approach": "design-conservative.pkl",
+                        "Aggressive tuning": "design-aggressive.pkl",
+                    },
+                    3: {
+                        "Solution": "solution-000003.pkl",
+                        "Tweaked design": "tweaked.pkl",
+                        "Experimental config": "experimental.pkl",
+                    }
+                }
+            }
+
+        Note
+        ----
+            When a Reference/Solution ``PKL`` is provided but does not exist,
+            the associated :class:`.Accelerator` will be pickled at the end of
+            the simulation.
+
+        Returns
+        -------
+            Parsed configuration with structure::
+
+                {
+                    "Reference": Path | None,
+                    "scenarios": {
+                        1: {
+                            "Solution": Path | None,
+                            "first alternative": Path,
+                            "second alternative": Path,
+                        },
+                        2: {...},
+                        ...
+                    }
+                }
+
+            Where:
+            - ``Reference``: Path to reference accelerator pickle, or None.
+            - ``scenarios[index]``: Dictionary where keys are
+              :attr:`.Accelerator.name`, values are corresponding ``PKL``
+              :class:`.Accelerator` pickle files.
+                 - The key ``"Solution"`` will always be present. If
+                   corresponding value is an existing Path, we will load
+                   ``PKL`` file and skip optimization.
+                 - Other key-values are loaded and compared against optimized
+                   solution (alternative designs).
+
+        """
+        parsed = {
+            "Reference": self._get_pickle_path("reference", index=0),
+            "scenarios": {},
+        }
+
+        scenarios_config = self._pickle_paths.get("scenarios", {})
+
+        for scenario_key, scenario_data in scenarios_config.items():
+            try:
+                index = int(scenario_key)
+            except (ValueError, TypeError):
+                logging.error(
+                    f"Invalid scenario '{scenario_key = }' in pickle_paths. "
+                    "Expected format: '000001', '000002', etc."
+                )
+
+                continue
+
+            alternatives_config = scenario_data.get("alternatives", {})
+            scenario_paths = {
+                custom_name: self._get_pickle_path(
+                    custom_name, alternatives_config
+                )
+                for custom_name in alternatives_config
+            }
+            if "Solution" in scenario_paths:
+                logging.warning(
+                    "A 'Solution' entry was given in '[files.pickle_paths."
+                    f"{scenario_key}.alternatives]'. The proper way to set "
+                    "a pre-computed solution accelerator is to set the "
+                    f"'solution' key in [files.pickle_paths.{scenario_key}]."
+                )
+
+            solution_path = self._get_pickle_path("solution", scenario_data)
+            scenario_paths["Solution"] = (
+                solution_path if solution_path else None
+            )
+
+            parsed["scenarios"][index] = scenario_paths
+
+        return parsed
+
+    def _get_pickle_path(self, name: str, index: int) -> Path | None:
+        """Get the pickle path for a named accelerator.
+
+        Parameters
+        ----------
+        name :
+            Accelerator name to look up in pickle paths configuration.
+        index :
+            :class:`.FaultScenario` index. If not null, we look for ``name``
+            key in ``self._pickle_paths[index]`` subdict.
+
+        Returns
+        -------
+            Resolved absolute path if configured, None otherwise.
+
+        """
+        paths = (
+            self._pickle_paths if index == 0 else self._pickle_paths.get(index)
+        )
+        if paths is None:
+            return
+        pickle_path_str = paths.get(name)
+        if pickle_path_str is None:
+            return None
+        return Path(pickle_path_str).resolve().absolute()
+
+    def _load_from_pickle(
+        self, name: str, index: int, pickle_path: Path
+    ) -> Accelerator | None:
+        """Load accelerator from pickle file if it exists.
+
+        Parameters
+        ----------
+        name :
+            Accelerator name.
+        index :
+            Corresponding :class:`.FaultScenario` index. A null index is
+            reserved for reference accelerator.
+        pickle_path :
+            Path to pickle file.
+
+        Returns
+        -------
+            Loaded accelerator if file exists, None otherwise.
+
+        """
+        if not pickle_path.is_file():
+            return None
+
+        logging.info(f"Loading {name} from pickle: {pickle_path}")
+        return Accelerator.from_pickle(
+            self.pickler, pickle_path, name=name, index=index
+        )
+
+    def _load_additional_pickles(
+        self, reserved_names: set[str] = {"Reference", "Solution"}
+    ) -> list[Accelerator]:
+        """Unpickle additional :class:`.Accelerator`.
+
+        Parameters
+        ----------
+        reserved_names :
+            Names already used for Reference/Solution accelerators; associated
+            paths are not unpickled.
+
+        Returns
+        -------
+            Additional accelerators loaded from pickle files.
+
+        """
+        additional = []
+        scenarios = self._pickle_paths.get("scenarios")
+        if scenarios is None:
+            return []
+
+        for index, paths in self._pickle_paths.items():
+            for name in paths:
+                if name in reserved_names:
+                    continue
+
+                pickle_path = self._get_pickle_path(name=name, index=index)
+                if pickle_path is None:
+                    logging.warning(
+                        f"No Path found for '{name}' key in [files."
+                        f"pickle_paths.scenarios.{index:06d}.alternatives]"
+                    )
+                    continue
+
+                accelerator = self._load_from_pickle(
+                    name, index=index, pickle_path=pickle_path
+                )
+                if accelerator is None:
+                    logging.debug(
+                        f"Skipping '{name}' key in [files.pickle_paths."
+                        f"scenarios.{index:06d}.alternatives] because "
+                        f"'{pickle_path}' does not exist."
+                    )
+                    continue
+
+                logging.info(
+                    f"Loading additional accelerator '{accelerator.id}' from "
+                    "pickle."
+                )
+                additional.append(accelerator)
+
+        return additional
 
     # =========================================================================
     # Deprecated kept for backward compatibility.
