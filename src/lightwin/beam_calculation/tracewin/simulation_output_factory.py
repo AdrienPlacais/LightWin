@@ -352,6 +352,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
 
     def create(
         self,
+        accelerator_id: str,
         elts: ListOfElements,
         path_cal: Path,
         exception: bool,
@@ -362,6 +363,9 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         elts :
             Contains all elements or only a fraction or all the elements.
         path_cal :
@@ -413,6 +417,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         )
 
         simulation_output = SimulationOutput(
+            accelerator_id=accelerator_id,
             elts=elts,
             out_folder=self.out_folder,
             is_multiparticle=hasattr(beam_parameters, "phiw99"),

@@ -25,6 +25,7 @@ from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.helper import equivalent_elt
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.failures import set_of_cavity_settings
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.algorithms.algorithm import (
     OptimisationAlgorithm,
@@ -145,7 +146,9 @@ class Fault:
         fix_elts = fix_acc.elts
 
         simulation_output = beam_calculator.post_optimisation_run_with_this(
-            self.optimized_cavity_settings, fix_elts
+            accelerator_id=fix_acc.id,
+            optimized_cavity_settings=self.optimized_cavity_settings,
+            full_elts=fix_elts,
         )
         simulation_output.compute_indirect_quantities(
             fix_elts, ref_simulation_output=ref_simulation_output

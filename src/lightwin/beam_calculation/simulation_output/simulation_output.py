@@ -62,6 +62,8 @@ class SimulationOutput:
 
     Parameters
     ----------
+    accelerator_id :
+        Associated :attr:`.Accelerator.id`. Looks like: ``0000001_Solution``.
     elts :
         Elements on which this object was calculated.
     out_folder :
@@ -102,6 +104,8 @@ class SimulationOutput:
 
     """
 
+    accelerator_id: str
+
     elts: ListOfElements
 
     out_folder: Path
@@ -130,7 +134,6 @@ class SimulationOutput:
             i for i, _ in enumerate(self.cav_params["v_cav_mv"], start=1)
         ]
         self.out_path: Path
-        self._linac_id: str | None = None
 
     def __str__(self) -> str:
         """Give a resume of the data that is stored."""
@@ -159,23 +162,7 @@ class SimulationOutput:
            MMMh
 
         """
-        return self.linac_id == "000000_ref"
-
-    @property
-    def linac_id(self) -> str:
-        """Tell which linac is studied.
-
-        .. todo::
-           Fix this monstruosity.
-
-        """
-        if self._linac_id is None:
-            self._linac_id = self.out_path.parent.stem
-        return self._linac_id
-
-    @linac_id.setter
-    def linac_id(self, value: str) -> None:
-        self._linac_id = value
+        return self.accelerator_id == "000000_Reference"
 
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class.
@@ -435,9 +422,9 @@ class SimulationOutput:
         return pickler.pickle(
             my_object=self,
             path=path,
-            initialfile="simulation-output_" + self.linac_id + ".pkl",
+            initialfile="simulation-output_" + self.accelerator_id + ".pkl",
             initialdir=self.out_path,
-            title=f"Choose where to save SimulationOutput: {self.linac_id}",
+            title=f"Choose where to save SimulationOutput: {self.accelerator_id}",
         )
 
     @classmethod
@@ -492,7 +479,7 @@ class SimulationOutput:
             {
                 x_axis: self.get(x, **kwargs),
                 legend_entry
-                or self.linac_id: self.get(key, to_deg=to_deg, **kwargs),
+                or self.accelerator_id: self.get(key, to_deg=to_deg, **kwargs),
             }
         )
         return df.plot(

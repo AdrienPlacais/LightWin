@@ -55,6 +55,7 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
 
     def create(
         self,
+        accelerator_id: str,
         elts: ListOfElements,
         single_elts_results: list[dict],
         set_of_cavity_settings: SetOfCavitySettings,
@@ -91,6 +92,7 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         )
 
         simulation_output = SimulationOutput(
+            accelerator_id=accelerator_id,
             elts=elts,
             out_folder=self.out_folder,
             is_multiparticle=self._is_multipart,

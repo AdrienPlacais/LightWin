@@ -225,6 +225,7 @@ class TraceWin(BeamCalculator):
     # set_of_cavity_settings_to_kwargs
     def run(
         self,
+        accelerator_id: str,
         elts: ListOfElements,
         update_reference_phase: bool = False,
         **specific_kwargs,
@@ -233,6 +234,9 @@ class TraceWin(BeamCalculator):
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         elts :
             List of elements in which the beam must be propagated.
         update_reference_phase :
@@ -250,10 +254,16 @@ class TraceWin(BeamCalculator):
             single object.
 
         """
-        return super().run(elts, update_reference_phase, **specific_kwargs)
+        return super().run(
+            accelerator_id=accelerator_id,
+            elts=elts,
+            update_reference_phase=update_reference_phase,
+            **specific_kwargs,
+        )
 
     def run_with_this(
         self,
+        accelerator_id: str,
         set_of_cavity_settings: SetOfCavitySettings | None,
         elts: ListOfElements,
         use_a_copy_for_nominal_settings: bool = True,
@@ -266,6 +276,9 @@ class TraceWin(BeamCalculator):
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         set_of_cavity_settings :
             The new cavity settings to try. If it is None, then the cavity
             settings are taken from the FieldMap objects.
@@ -302,10 +315,11 @@ class TraceWin(BeamCalculator):
         exception = _run_in_bash(command, output_command=not is_a_fit)
 
         # check in which order those two methods should be called
-        simulation_output = self._generate_simulation_output(
-            elts,
-            path_cal,
-            exception,
+        simulation_output = self.simulation_output_factory.create(
+            accelerator_id=accelerator_id,
+            elts=elts,
+            path_cal=path_cal,
+            exception=exception,
             set_of_cavity_settings=set_of_cavity_settings,
         )
         self._post_treat_cavity_setttings(
@@ -317,6 +331,7 @@ class TraceWin(BeamCalculator):
 
     def post_optimisation_run_with_this(
         self,
+        accelerator_id: str,
         optimized_cavity_settings: SetOfCavitySettings,
         full_elts: ListOfElements,
         **specific_kwargs,
@@ -335,6 +350,9 @@ class TraceWin(BeamCalculator):
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         optimized_cavity_settings :
             Optimized parameters.
         full_elts :
@@ -359,7 +377,10 @@ class TraceWin(BeamCalculator):
         # )
 
         simulation_output = self.run_with_this(
-            optimized_cavity_settings, full_elts, **specific_kwargs
+            accelerator_id=accelerator_id,
+            set_of_cavity_settings=optimized_cavity_settings,
+            elts=full_elts,
+            **specific_kwargs,
         )
         return simulation_output
 

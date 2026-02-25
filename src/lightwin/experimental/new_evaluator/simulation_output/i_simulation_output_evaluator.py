@@ -222,7 +222,7 @@ class ISimulationOutputEvaluator(IEvaluator):
     ) -> pd.DataFrame:
         """Get the data from the simulation outputs."""
         data = {
-            f"{sim_out.linac_id} ({sim_out.beam_calculator})": self._get_interpolated(
+            f"{sim_out.accelerator_id} ({sim_out.beam_calculator})": self._get_interpolated(
                 sim_out, fallback_dummy=fallback_dummy
             )
             for sim_out in simulation_outputs

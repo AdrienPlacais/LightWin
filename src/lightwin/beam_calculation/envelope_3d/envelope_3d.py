@@ -125,34 +125,9 @@ parameters_factory.PARAMETERS_3D
             elements_to_dump=(),
         )
 
-    def run(
-        self,
-        elts: ListOfElements,
-        update_reference_phase: bool = False,
-        **kwargs,
-    ) -> SimulationOutput:
-        """Compute beam propagation in 3D, envelope calculation.
-
-        Parameters
-        ----------
-        elts :
-            List of elements in which the beam must be propagated.
-        update_reference_phase :
-            To change the reference phase of cavities when it is different from
-            the one asked in the ``.toml``. To use after the first calculation,
-            if ``BeamCalculator.flag_phi_abs`` does not correspond to
-            ``CavitySettings.reference``.
-
-        Returns
-        -------
-            Holds energy, phase, transfer matrices (among others) packed into a
-            single object.
-
-        """
-        return super().run(elts, update_reference_phase, **kwargs)
-
     def run_with_this(
         self,
+        accelerator_id: str,
         set_of_cavity_settings: SetOfCavitySettings | None,
         elts: ListOfElements,
         use_a_copy_for_nominal_settings: bool = True,
@@ -161,6 +136,9 @@ parameters_factory.PARAMETERS_3D
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         set_of_cavity_settings :
             The new cavity settings to try. If it is None, then the cavity
             settings are taken from the FieldMap objects.
@@ -204,13 +182,17 @@ parameters_factory.PARAMETERS_3D
             phi_abs += elt_results["phi_rel"][-1]
             w_kin = elt_results["w_kin"][-1]
 
-        simulation_output = self._generate_simulation_output(
-            elts, single_elts_results, set_of_cavity_settings
+        simulation_output = self.simulation_output_factory.create(
+            accelerator_id=accelerator_id,
+            elts=elts,
+            single_elts_results=single_elts_results,
+            set_of_cavity_settings=set_of_cavity_settings,
         )
         return simulation_output
 
     def post_optimisation_run_with_this(
         self,
+        accelerator_id: str,
         optimized_cavity_settings: SetOfCavitySettings,
         full_elts: ListOfElements,
         **specific_kwargs,
@@ -222,8 +204,9 @@ parameters_factory.PARAMETERS_3D
 
         """
         simulation_output = self.run_with_this(
-            optimized_cavity_settings,
-            full_elts,
+            accelerator_id=accelerator_id,
+            set_of_cavity_settings=optimized_cavity_settings,
+            elts=full_elts,
             use_a_copy_for_nominal_settings=False,
             **specific_kwargs,
         )

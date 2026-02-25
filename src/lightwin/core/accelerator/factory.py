@@ -405,7 +405,7 @@ class AcceleratorFactory:
         Parameters
         ----------
         name :
-            Accelerator name for logging.
+            Accelerator name.
         pickle_path :
             Path to pickle file.
         index :
@@ -424,7 +424,7 @@ class AcceleratorFactory:
         return Accelerator.from_pickle(
             self.pickler,
             pickle_path,
-            linac_id=name,
+            accelerator_id=name,
             index=index,
         )
 
@@ -459,7 +459,7 @@ class AcceleratorFactory:
             if accelerator is None:
                 logging.debug(
                     f"Skipping '{name}': pickle file does not exist at "
-                    "{pickle_path}"
+                    f"{pickle_path}"
                 )
                 continue
 

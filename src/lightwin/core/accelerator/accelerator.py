@@ -129,6 +129,19 @@ class Accelerator:
         self._pickle_path: Path | None = pickle_path
 
     @property
+    def id(self) -> str:
+        """Produce a unique identifier for current object.
+
+        It is the concatenation of :attr:`.index` and :attr:`.name`::
+
+            000000_Reference        # Default for reference
+            000001_Solution         # Default for broken/fixed of first failure
+            000001_AnotherSolution  # Can be created by unpickling
+
+        """
+        return f"{self.index:06d}_{self.name}"
+
+    @property
     def l_cav(self):
         """Shortcut to easily get list of cavities."""
         return self.elts.l_cav
@@ -382,7 +395,7 @@ class Accelerator:
                 grid=grid,
                 x=x,
                 legend_entry=legend_entry
-                or f"{simulation_output.linac_id} ({solver})",
+                or f"{simulation_output.accelerator_id} ({solver})",
                 ax=ax,
                 **kwargs,
             )
@@ -394,7 +407,7 @@ class Accelerator:
         pickler: MyPickler,
         path: Path | str | None = None,
         name: str | None = None,
-        linac_id: str | Sequence[str] | None = None,
+        accelerator_id: str | Sequence[str] | None = None,
         index: int = 0,
     ) -> Self:
         """Instantiate object from previously pickled file.
@@ -417,7 +430,7 @@ class Accelerator:
             open GUI and let user choose.
         name :
             To override the unpickled :attr:`.Accelerator.name`.
-        linac_id :
+        accelerator_id :
             Use this to override the :func:`.SimulationOutput.linac_id` stored
             in unpickled :attr:`Accelerator.simulation_outputs`. In particular,
             used to legend plots.
@@ -441,12 +454,12 @@ class Accelerator:
 
         simulation_outputs = list(accelerator.simulation_outputs.values())
 
-        if linac_id is None:
+        if accelerator_id is None:
             return accelerator
 
-        if isinstance(linac_id, str):
-            linac_id = [linac_id for _ in simulation_outputs]
-        for so, id in zip(simulation_outputs, linac_id, strict=True):
-            so.linac_id = id
+        if isinstance(accelerator_id, str):
+            accelerator_id = [accelerator_id for _ in simulation_outputs]
+        for so, id in zip(simulation_outputs, accelerator_id, strict=True):
+            so.accelerator_id = id
 
         return accelerator

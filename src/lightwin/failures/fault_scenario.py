@@ -128,6 +128,7 @@ class FaultScenario(list[Fault]):
             opti_method=wtf["optimisation_algorithm"],
             beam_calculator=beam_calculator,
             reference_simulation_output=self._reference_simulation_output,
+            accelerator_id=fix_acc.id,
             **wtf,
         )
         self._objective_factories: list[ObjectiveFactory] = []

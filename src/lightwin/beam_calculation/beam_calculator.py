@@ -128,6 +128,7 @@ class BeamCalculator(ABC):
 
     def run(
         self,
+        accelerator_id: str,
         elts: ListOfElements,
         update_reference_phase: bool = False,
         **kwargs,
@@ -143,6 +144,9 @@ class BeamCalculator(ABC):
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         elts :
             List of elements in which the beam must be propagated.
         update_reference_phase :
@@ -161,7 +165,11 @@ class BeamCalculator(ABC):
 
         """
         simulation_output = self.run_with_this(
-            None, elts, use_a_copy_for_nominal_settings=False, **kwargs
+            accelerator_id=accelerator_id,
+            set_of_cavity_settings=None,
+            elts=elts,
+            use_a_copy_for_nominal_settings=False,
+            **kwargs,
         )
         if update_reference_phase:
             if self.reference_phase == "phi_s":
@@ -175,6 +183,7 @@ class BeamCalculator(ABC):
     @abstractmethod
     def run_with_this(
         self,
+        accelerator_id: str,
         set_of_cavity_settings: SetOfCavitySettings | None,
         elts: ListOfElements,
         use_a_copy_for_nominal_settings: bool = True,
@@ -186,6 +195,9 @@ class BeamCalculator(ABC):
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         set_of_cavity_settings :
             Holds the norms and phases of the compensating cavities.
         elts :
@@ -205,6 +217,7 @@ class BeamCalculator(ABC):
     @abstractmethod
     def post_optimisation_run_with_this(
         self,
+        accelerator_id: str,
         optimized_cavity_settings: SetOfCavitySettings,
         full_elts: ListOfElements,
         **kwargs,
@@ -222,10 +235,6 @@ class BeamCalculator(ABC):
     @abstractmethod
     def init_solver_parameters(self, accelerator: Accelerator) -> None:
         """Init some :class:`BeamCalculator` solver parameters."""
-
-    def _generate_simulation_output(self, *args, **kwargs) -> SimulationOutput:
-        """Transform the output of ``run`` to a :class:`.SimulationOutput`."""
-        return self.simulation_output_factory.create(*args, **kwargs)
 
     @property
     def reference_phase(self) -> REFERENCE_PHASES_T:
@@ -319,7 +328,9 @@ class BeamCalculator(ABC):
         """Wrap the beam propagation of the accelerator."""
         self.init_solver_parameters(accelerator)
 
-        simulation_output = self.run(accelerator.elts)
+        simulation_output = self.run(
+            accelerator_id=accelerator.id, elts=accelerator.elts
+        )
         simulation_output.compute_indirect_quantities(
             accelerator.elts, ref_simulation_output
         )
