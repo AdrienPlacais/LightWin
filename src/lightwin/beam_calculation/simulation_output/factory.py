@@ -47,7 +47,7 @@ class SimulationOutputFactory(ABC):
 
     @abstractmethod
     def create(
-        self, elts: ListOfElements, *args, **kwargs
+        self, accelerator_id: str, elts: ListOfElements, *args, **kwargs
     ) -> SimulationOutput:
         """Create the :class:`.SimulationOutput`."""
         pass
