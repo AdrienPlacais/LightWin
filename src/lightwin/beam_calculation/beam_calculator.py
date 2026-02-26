@@ -356,7 +356,10 @@ class BeamCalculator(ABC):
         """
         simulation_output = accelerator.simulation_outputs.get(self.id, None)
         if simulation_output is not None:
-            logging.info("Skipped calculation of unpickled Accelerator.")
+            logging.info(
+                "Skipped calculation of unpickled Accelerator: "
+                f"{accelerator.id}"
+            )
             return simulation_output
 
         logging.error(

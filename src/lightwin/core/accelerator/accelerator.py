@@ -449,7 +449,6 @@ class Accelerator:
         elif not isinstance(accelerator, cls):
             raise TypeError("Unpickled object is not an Accelerator instance.")
 
-        logging.info(f"Created an Accelerator by unpickling {path}.")
         accelerator._is_unpickled = True
         if name:
             accelerator.name = name
