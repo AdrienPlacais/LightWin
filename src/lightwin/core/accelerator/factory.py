@@ -531,33 +531,36 @@ class AcceleratorFactory:
             their :class:`.FaultScenario` index.
 
         """
+        scenarios: dict[int, dict[str, str]] | None
         scenarios = self._pickle_paths.get("scenarios")
         if scenarios is None:
             return {}
 
         additional: dict[int, list[Accelerator]] = {}
-        for index, paths in self._pickle_paths.items():
+        for index, names_paths in scenarios.items():
             accelerators = []
-            for name in paths:
-                if name in reserved_names:
+            for pickle_name in names_paths:
+                if pickle_name in reserved_names:
                     continue
 
-                pickle_path = self._get_pickle_path(name=name, index=index)
+                pickle_path = self._get_pickle_path(
+                    name=pickle_name, index=index
+                )
                 if pickle_path is None:
-                    logging.warning(
-                        f"No Path found for '{name}' key in [files."
-                        f"pickle_paths.scenarios.{index:06d}.alternatives]"
+                    logging.info(
+                        f"No Path found for '{pickle_name}' key in [files."
+                        f"pickle_paths.scenarios.{index}.alternatives]"
                     )
                     continue
 
                 accelerator = self._load_from_pickle(
-                    name, index=index, pickle_path=pickle_path
+                    pickle_name, index=index, pickle_path=pickle_path
                 )
                 if accelerator is None:
                     logging.debug(
-                        f"Skipping '{name}' key in [files.pickle_paths."
-                        f"scenarios.{index:06d}.alternatives] because "
-                        f"'{pickle_path}' does not exist."
+                        f"Not unpickling '{pickle_name}' key in [files."
+                        f"pickle_paths.scenarios.{index}.alternatives] because"
+                        f" '{pickle_path}' does not exist."
                     )
                     continue
 
