@@ -82,10 +82,10 @@ class KeyValConfSpec:
     def validate(self, toml_value: Any, **kwargs) -> bool:
         """Check that the given ``toml`` line is valid."""
         if self.warning_message:
-            logging.warning(self.warning_message)
+            logging.warning(f"{self.key}: {self.warning_message}")
         if self.error_message:
-            logging.critical(self.error_message)
-            raise OSError(self.error_message)
+            logging.critical(f"{self.key}: {self.error_message}")
+            raise OSError(f"{self.key}: {self.error_message}")
         if self.action is not None:
             return True
 
