@@ -251,7 +251,7 @@ def test_deprecated_flag_phi_abs_false(
             "phi_0_rel"
         ),
         call(
-            "The ``flag_phi_abs`` option is deprecated, prefer using the "
+            "flag_phi_abs: The ``flag_phi_abs`` option is deprecated, prefer using the "
             "``reference_phase_policy``.\nflag_phi_abs=False -> "
             "reference_phase_policy='phi_0_rel'\nflag_phi_abs=True -> "
             "reference_phase_policy='phi_0_abs'"
@@ -293,7 +293,7 @@ def test_deprecated_flag_phi_abs_true(
             "phi_0_abs"
         ),
         call(
-            "The ``flag_phi_abs`` option is deprecated, prefer using the "
+            "flag_phi_abs: The ``flag_phi_abs`` option is deprecated, prefer using the "
             "``reference_phase_policy``.\nflag_phi_abs=False -> "
             "reference_phase_policy='phi_0_rel'\nflag_phi_abs=True -> "
             "reference_phase_policy='phi_0_abs'"
