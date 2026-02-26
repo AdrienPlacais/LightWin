@@ -2,7 +2,7 @@
 
 import logging
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, Self
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.cy_envelope_1d.envelope_1d import CyEnvelope1D
@@ -49,7 +49,27 @@ def _get_beam_calculator(
 
 
 class BeamCalculatorsFactory:
-    """A class to create :class:`.BeamCalculator` objects."""
+    """A class to create :class:`.BeamCalculator` objects.
+
+    Respects singleton pattern, so that only one factory can be created.
+
+    """
+
+    _instance: Self | None = None
+
+    def __new__(cls, *args, **kwargs) -> Self:
+        """Ensure that only one instance of object exists."""
+        if cls._instance is None:
+            logging.info("Creating new BeamCalculatorsFactory instance.")
+            cls._instance = super().__new__(cls)
+        else:
+            logging.info("Re-using previous BeamCalculatorsFactory instance.")
+        return cls._instance
+
+    @classmethod
+    def reset(cls) -> None:
+        """Allow creation of a new factry."""
+        cls._instance = None
 
     def __init__(
         self,
@@ -79,6 +99,9 @@ class BeamCalculatorsFactory:
             Other keyword arguments, not used for the moment.
 
         """
+        if hasattr(self, "_initialized"):
+            return
+
         self.all_beam_calculator_kw = (beam_calculator,)
         if beam_calculator_post is not None:
             self.all_beam_calculator_kw = (
@@ -86,9 +109,11 @@ class BeamCalculatorsFactory:
                 beam_calculator_post,
             )
         self._beam_kwargs = beam
+        self._initialized = True
 
         self._patch_to_remove_misunderstood_key()
         self._original_dat_dir: Path = files["dat_file"].parent
+        self._cache: dict[int, BeamCalculator] = {}
 
     def _patch_to_remove_misunderstood_key(self) -> None:
         """Patch to remove a key not understood by TraceWin. Declare id list.
@@ -107,9 +132,14 @@ class BeamCalculatorsFactory:
         tool: BEAM_CALCULATORS_T,
         export_phase: EXPORT_PHASES_T,
         flag_cython: bool = False,
+        force_new: bool = False,
         **beam_calculator_kw,
     ) -> BeamCalculator:
         """Create a single :class:`.BeamCalculator`.
+
+        If a :class:`.BeamCalculator` was already created with this factory
+        and with the same arguments, we return it instead of instantiating a
+        new one. Unless ``force_new`` is set to ``True``.
 
         Parameters
         ----------
@@ -122,12 +152,28 @@ class BeamCalculatorsFactory:
             The type of phase you want to export for your ``FIELD_MAP``.
         flag_cython :
             If the beam calculator involves loading cython field maps.
+        force_true :
+            To force creation of a new :class:`.BeamCalculator`.
 
         Returns
         -------
             An instance of the proper beam calculator.
 
         """
+        cache_key = self._make_cache_key(
+            reference_phase_policy=reference_phase_policy,
+            tool=tool,
+            export_phase=export_phase,
+            flag_cython=flag_cython,
+            **beam_calculator_kw,
+        )
+        if cache_key in self._cache and not force_new:
+            beam_calculator = self._cache[cache_key]
+            logging.info(
+                f"Re-using existing BeamCalculator: {beam_calculator.id}"
+            )
+            return beam_calculator
+
         beam_calculator_class = _get_beam_calculator(
             tool, flag_cython=flag_cython, **beam_calculator_kw
         )
@@ -139,12 +185,33 @@ class BeamCalculatorsFactory:
             export_phase=export_phase,
             **beam_calculator_kw,
         )
+        logging.info(f"Creating new BeamCalculator: {beam_calculator.id}")
+        self._cache[cache_key] = beam_calculator
         return beam_calculator
 
-    def run_all(self) -> tuple[BeamCalculator, ...]:
+    def _make_cache_key(
+        self,
+        reference_phase_policy: REFERENCE_PHASE_POLICY_T,
+        tool: BEAM_CALCULATORS_T,
+        export_phase: EXPORT_PHASES_T,
+        flag_cython: bool = False,
+        **beam_calculator_kw,
+    ) -> int:
+        """Create unique cache key to avoid re-creating BeamCalculators."""
+        key_data = (
+            reference_phase_policy,
+            tool,
+            export_phase,
+            flag_cython,
+            tuple(sorted(beam_calculator_kw.items())),
+        )
+
+        return hash(key_data)
+
+    def run_all(self, force_new: bool = False) -> tuple[BeamCalculator, ...]:
         """Create all the beam calculators."""
         beam_calculators = [
-            self.run(**beam_calculator_kw)
+            self.run(force_new=force_new, **beam_calculator_kw)
             for beam_calculator_kw in self.all_beam_calculator_kw
         ]
         return tuple(beam_calculators)
