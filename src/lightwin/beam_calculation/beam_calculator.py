@@ -50,7 +50,6 @@ class BeamCalculator(ABC):
     def __init__(
         self,
         reference_phase_policy: REFERENCE_PHASE_POLICY_T,
-        out_folder: Path | str,
         default_field_map_folder: Path | str,
         beam_kwargs: BeamKwargs,
         export_phase: EXPORT_PHASES_T,
@@ -64,10 +63,6 @@ class BeamCalculator(ABC):
         reference_phase_policy :
             How reference phase of :class:`.CavitySettings` will be
             initialized.
-        out_folder :
-            Name of the folder where results should be stored, for each
-            :class:`.Accelerator` under study. This is the name of a folder,
-            not a full path.
         default_field_map_folder :
             Where to look for field map files by default.
         flag_cython :
@@ -85,10 +80,6 @@ class BeamCalculator(ABC):
         self.flag_cython = flag_cython
         self._export_phase: EXPORT_PHASES_T = export_phase
 
-        if isinstance(out_folder, str):
-            out_folder = Path(out_folder)
-        self.out_folder = out_folder
-
         if isinstance(default_field_map_folder, str):
             default_field_map_folder = Path(default_field_map_folder)
         self.default_field_map_folder = (
@@ -101,7 +92,28 @@ class BeamCalculator(ABC):
         self.beam_calc_parameters_factory: (
             ElementBeamCalculatorParametersFactory
         )
-        self.id: str = f"{self.__class__.__name__}_{next(self._ids)}"
+        #: Unique ID for this object. Obtained by prepending its order in the
+        #: list of :class:`BeamCalculator` to its class name. Typically:
+        #: ``"0_Envelope1D"`` or ``"1_TraceWin"``. Note that this will also
+        #: be the name of the directory where results will be saved. Typical
+        #: project structure is::
+        #:
+        #:    YYYY.MM.DD_HHhmm_SSs_MILLIms/
+        #:    ├── 000000_ref
+        #:    │   ├── 0_Envelope1D/
+        #:    │   └── 1_TraceWin/
+        #:    ├── 000001
+        #:    │   ├── 0_Envelope1D/
+        #:    │   └── 1_TraceWin/
+        #:    ├── 000002
+        #:    │   ├── 0_Envelope1D/
+        #:    │   └── 1_TraceWin/
+        #:    ├── 000003
+        #:    │   ├── 0_Envelope1D/
+        #:    │   └── 1_TraceWin/
+        #:    └── lightwin.log
+        #:
+        self.id: str = f"{next(self._ids)}_{self.__class__.__name__}"
         self._set_up_common_factories()
         self._set_up_specific_factories()
 

@@ -63,7 +63,6 @@ arameters_factory.PARAMETERS_1D
         self,
         *,
         reference_phase_policy: REFERENCE_PHASE_POLICY_T,
-        out_folder: Path | str,
         default_field_map_folder: Path | str,
         beam_kwargs: BeamKwargs,
         export_phase: EXPORT_PHASES_T,
@@ -77,7 +76,6 @@ arameters_factory.PARAMETERS_1D
         self.method: ENVELOPE1D_METHODS_T = method
         super().__init__(
             reference_phase_policy=reference_phase_policy,
-            out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
             beam_kwargs=beam_kwargs,
             export_phase=export_phase,
@@ -101,9 +99,8 @@ arameters_factory.PARAMETERS_1D
         """
         self.simulation_output_factory = SimulationOutputFactoryEnvelope1D(
             is_multipart=self.is_a_multiparticle_simulation,
-            solver_id=self.id,
+            beam_calculator_id=self.id,
             beam_kwargs=self._beam_kwargs,
-            out_folder=self.out_folder,
         )
         self.beam_calc_parameters_factory = ElementEnvelope1DParametersFactory(
             method=self.method,

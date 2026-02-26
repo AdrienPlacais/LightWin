@@ -20,10 +20,28 @@ class SimulationOutputFactory(ABC):
     _is_3d: bool
 
     def __init__(
-        self, is_multipart: bool, solver_id: str, beam_kwargs: BeamKwargs
+        self,
+        is_multipart: bool,
+        beam_calculator_id: str,
+        beam_kwargs: BeamKwargs,
     ) -> None:
+        """Create the object.
+
+        Parameters
+        ----------
+        is_multipart :
+            If :class:`.SimulationOutput` are obtained with a multiparticle
+            solver.
+        beam_calculator_id :
+            ID of solver that created this object. Also used as the name of the
+            subdirectory where results should be saved. Typically,
+            ``"0_Envelope1D"`` or ``"1_TraceWin"``.
+        beam_kwargs :
+            Beam properties.
+
+        """
         self._is_multipart = is_multipart
-        self._solver_id = solver_id
+        self._beam_calculator_id = beam_calculator_id
         self._beam_kwargs = beam_kwargs
 
         self.transfer_matrix_factory = self._transfer_matrix_factory_class(

@@ -332,7 +332,9 @@ class Accelerator:
         assert isinstance(original_dat_file, Path)
         filename = original_dat_file.name
         dat_file = (
-            self.accelerator_path / simulation_output.out_folder / filename
+            self.accelerator_path
+            / simulation_output.beam_calculator_id
+            / filename
         )
 
         self.elts.store_settings_in_dat(
@@ -340,7 +342,7 @@ class Accelerator:
         )
 
         simulation_output.out_path = (
-            self.accelerator_path / simulation_output.out_folder
+            self.accelerator_path / simulation_output.beam_calculator_id
         )
         self.simulation_outputs[beam_calculator_id] = simulation_output
 

@@ -64,10 +64,12 @@ class SimulationOutput:
     ----------
     accelerator_id :
         Associated :attr:`.Accelerator.id`. Looks like: ``0000001_Solution``.
+    beam_calculator_id :
+        ID of solver that created this object. Also used as the name of the
+        subdirectory where results should be saved. Typically,
+        ``"0_Envelope1D"`` or ``"1_TraceWin"``.
     elts :
         Elements on which this object was calculated.
-    out_folder :
-        Results folder used by the :class:`.BeamCalculator` that created this.
     is_multiparticle :
         Tells if the simulation is a multiparticle simulation.
     is_3d :
@@ -105,10 +107,10 @@ class SimulationOutput:
     """
 
     accelerator_id: str
+    beam_calculator_id: str
 
     elts: ListOfElements
 
-    out_folder: Path
     is_multiparticle: bool
     is_3d: bool
 
@@ -148,18 +150,11 @@ class SimulationOutput:
         return self.__str__()
 
     @property
-    def beam_calculator(self) -> str:
-        """Use ``out_path`` to retrieve name of :class:`.BeamCalculator`."""
-        if not hasattr(self, "out_path"):
-            return str(self.out_folder)
-        return self.out_path.name
-
-    @property
     def is_reference(self) -> bool:
         """Tell whether this objects concerns a nominal linac.
 
         .. todo::
-           MMMh
+           Not very robust.
 
         """
         return self.accelerator_id == "000000_Reference"
