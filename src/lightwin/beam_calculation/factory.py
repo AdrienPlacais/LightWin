@@ -1,7 +1,6 @@
 """This module holds a factory to create the :class:`.BeamCalculator`."""
 
 import logging
-from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Literal
 
@@ -88,7 +87,6 @@ class BeamCalculatorsFactory:
             )
         self._beam_kwargs = beam
 
-        self.beam_calculators_id: list[str] = []
         self._patch_to_remove_misunderstood_key()
         self._original_dat_dir: Path = files["dat_file"].parent
 
@@ -141,7 +139,6 @@ class BeamCalculatorsFactory:
             export_phase=export_phase,
             **beam_calculator_kw,
         )
-        self.beam_calculators_id.append(beam_calculator.id)
         return beam_calculator
 
     def run_all(self) -> tuple[BeamCalculator, ...]:
