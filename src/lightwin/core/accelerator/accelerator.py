@@ -128,6 +128,9 @@ class Accelerator:
         #: If set, :meth:`.keep` will also pickle current instance
         self._pickle_path: Path | None = pickle_path
 
+    def __str__(self) -> str:
+        return self.id
+
     @property
     def id(self) -> str:
         """Produce a unique identifier for current object.
@@ -369,7 +372,7 @@ class Accelerator:
             path=path,
             initialfile=self.name + ".pkl",
             initialdir=self.accelerator_path,
-            title=f"Choose where to save Accelerator: {self.name}",
+            title=f"Choose where to save Accelerator: {self.id}",
         )
 
     def plot(
