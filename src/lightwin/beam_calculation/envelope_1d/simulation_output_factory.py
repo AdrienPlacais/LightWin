@@ -21,27 +21,13 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.core.particle import ParticleFullTrajectory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.util.typing import (
-    GETTABLE_CAVITY_SETTINGS_T,
-    BeamKwargs,
-    CavParams,
-)
+from lightwin.util.typing import GETTABLE_CAVITY_SETTINGS_T, CavParams
 
 
 class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
     """A class for creating simulation outputs for :class:`.Envelope1D`."""
 
     _is_3d = False
-
-    def __init__(
-        self,
-        is_multipart: bool,
-        solver_id: str,
-        beam_kwargs: BeamKwargs,
-        out_folder: Path,
-    ) -> None:
-        super().__init__(is_multipart, solver_id, beam_kwargs)
-        self.out_folder = out_folder
 
     @property
     def _transfer_matrix_factory_class(self) -> ABCMeta:
@@ -74,7 +60,9 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             beam=self._beam_kwargs,
         )
 
-        element_to_index = elts.generate_element_to_index_func(self._solver_id)
+        element_to_index = elts.generate_element_to_index_func(
+            self._beam_calculator_id
+        )
         transfer_matrix: TransferMatrix = self.transfer_matrix_factory.run(
             elts.tm_cumul_in, single_elts_results, element_to_index
         )
@@ -93,8 +81,8 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
 
         simulation_output = SimulationOutput(
             accelerator_id=accelerator_id,
+            beam_calculator_id=self._beam_calculator_id,
             elts=elts,
-            out_folder=self.out_folder,
             is_multiparticle=self._is_multipart,
             is_3d=self._is_3d,
             synch_trajectory=synch_trajectory,

@@ -47,7 +47,6 @@ class TraceWin(BeamCalculator):
     def __init__(
         self,
         reference_phase_policy: REFERENCE_PHASE_POLICY_T,
-        out_folder: Path | str,
         default_field_map_folder: Path | str,
         beam_kwargs: BeamKwargs,
         export_phase: EXPORT_PHASES_T,
@@ -67,10 +66,6 @@ class TraceWin(BeamCalculator):
         reference_phase_policy :
             How reference phase of :class:`.CavitySettings` will be
             initialized.
-        out_folder :
-            Name of the folder where results should be stored, for each
-            :class:`.Accelerator` under study. This is the name of a folder,
-            not a full path.
         default_field_map_folder :
             Where to look for field map files by default.
         beam_kwargs :
@@ -88,7 +83,7 @@ class TraceWin(BeamCalculator):
         cal_file :
             Name of the results folder. Updated at every call of the
             :func:`init_solver_parameters` method, using
-            ``Accelerator.accelerator_path`` and ``self.out_folder`` attributes.
+            ``Accelerator.accelerator_path`` and ``self.id`` attributes.
 
         """
         self.executable = executable
@@ -103,7 +98,6 @@ class TraceWin(BeamCalculator):
         self._filename = filename
         super().__init__(
             reference_phase_policy=reference_phase_policy,
-            out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
             beam_kwargs=beam_kwargs,
             export_phase=export_phase,
@@ -141,9 +135,8 @@ class TraceWin(BeamCalculator):
 
         self.simulation_output_factory = SimulationOutputFactoryTraceWin(
             is_multipart=self.is_a_multiparticle_simulation,
-            solver_id=self.id,
+            beam_calculator_id=self.id,
             beam_kwargs=self._beam_kwargs,
-            out_folder=self.out_folder,
             filename=self._filename,
             beam_calc_parameters_factory=self.beam_calc_parameters_factory,
         )
@@ -158,7 +151,7 @@ class TraceWin(BeamCalculator):
         ``INI`` file.  It also defines ``base_kwargs``, which should be the
         same for every calculation. Finally, it sets ``path_cal``.
         But this path is more :class:`.ListOfElements` dependent...
-        ``Accelerator.accelerator_path`` + ``out_folder``
+        ``Accelerator.accelerator_path`` + ``self.id``
         (+ ``fault_optimisation_tmp_folder``)
 
         """
@@ -167,7 +160,7 @@ class TraceWin(BeamCalculator):
             if key not in kwargs:
                 kwargs[key] = val
 
-        path_cal = accelerator_path / self.out_folder
+        path_cal = accelerator_path / self.id
         if not path_cal.is_dir():
             path_cal.mkdir()
 
@@ -399,9 +392,7 @@ class TraceWin(BeamCalculator):
             have to use the :class:`.ElementTraceWinParametersFactory` later.
 
         """
-        self.path_cal = Path(
-            accelerator.get("accelerator_path"), self.out_folder
-        )
+        self.path_cal = Path(accelerator.get("accelerator_path"), self.id)
 
         if not self.path_cal.is_dir():
             self.path_cal.mkdir()

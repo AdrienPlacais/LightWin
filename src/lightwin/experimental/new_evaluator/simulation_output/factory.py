@@ -218,7 +218,7 @@ def _out_folders(
                 "You must set the out_path attribute of SimulationOutput "
                 "object. Look at Accelerator.keep_simulation_output."
             )
-            paths.append(x.out_folder)
+            paths.append(x.beam_calculator_id)
             continue
         paths.append(x.out_path)
     return paths

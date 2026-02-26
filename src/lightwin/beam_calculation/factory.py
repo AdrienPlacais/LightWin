@@ -88,21 +88,9 @@ class BeamCalculatorsFactory:
             )
         self._beam_kwargs = beam
 
-        self.out_folders = self._set_out_folders(self.all_beam_calculator_kw)
-
         self.beam_calculators_id: list[str] = []
         self._patch_to_remove_misunderstood_key()
         self._original_dat_dir: Path = files["dat_file"].parent
-
-    def _set_out_folders(
-        self, all_beam_calculator_kw: Sequence[dict[str, Any]]
-    ) -> list[Path]:
-        """Set in which subfolder the results will be saved."""
-        out_folders = [
-            Path(f"{i}_{kw['tool']}")
-            for i, kw in enumerate(all_beam_calculator_kw)
-        ]
-        return out_folders
 
     def _patch_to_remove_misunderstood_key(self) -> None:
         """Patch to remove a key not understood by TraceWin. Declare id list.
@@ -147,7 +135,6 @@ class BeamCalculatorsFactory:
         )
         beam_calculator = beam_calculator_class(
             reference_phase_policy=reference_phase_policy,
-            out_folder=self.out_folders.pop(0),
             default_field_map_folder=self._original_dat_dir,
             beam_kwargs=self._beam_kwargs,
             flag_cython=flag_cython,

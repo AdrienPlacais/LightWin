@@ -330,7 +330,7 @@ class AcceleratorFactory:
         for beam_calculator in self.beam_calculators:
             if beam_calculator is None:
                 continue
-            beam_calculator_dir = output_path / beam_calculator.out_folder
+            beam_calculator_dir = output_path / beam_calculator.id
             beam_calculator_dir.mkdir(parents=True, exist_ok=True)
 
     def _check_consistency_reference_phase_policies(

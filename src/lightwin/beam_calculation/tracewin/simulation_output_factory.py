@@ -325,14 +325,16 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
     def __init__(
         self,
         is_multipart: bool,
-        solver_id: str,
+        beam_calculator_id: str,
         beam_kwargs: BeamKwargs,
-        out_folder: Path,
         filename: Path,
         beam_calc_parameters_factory: ElementTraceWinParametersFactory,
     ) -> None:
-        super().__init__(is_multipart, solver_id, beam_kwargs)
-        self.out_folder = out_folder
+        super().__init__(
+            is_multipart=is_multipart,
+            beam_calculator_id=beam_calculator_id,
+            beam_kwargs=beam_kwargs,
+        )
         self._filename = filename
         self.beam_calc_parameters_factory = beam_calc_parameters_factory
 
@@ -404,7 +406,9 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
 
         cav_params = self._get_cav_params(path_cal, len(elts))
 
-        element_to_index = elts.generate_element_to_index_func(self._solver_id)
+        element_to_index = elts.generate_element_to_index_func(
+            self._beam_calculator_id
+        )
 
         transfer_matrix = self.transfer_matrix_factory.run(
             elts.tm_cumul_in, path_cal, element_to_index
@@ -418,8 +422,8 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
 
         simulation_output = SimulationOutput(
             accelerator_id=accelerator_id,
+            beam_calculator_id=self._beam_calculator_id,
             elts=elts,
-            out_folder=self.out_folder,
             is_multiparticle=hasattr(beam_parameters, "phiw99"),
             is_3d=True,
             z_abs=results["z(m)"],
@@ -457,7 +461,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             s_out = elt_mesh_indexes[-1]
             z_element = z_abs[s_in : s_out + 1]
 
-            elt.beam_calc_param[self._solver_id] = (
+            elt.beam_calc_param[self._beam_calculator_id] = (
                 self.beam_calc_parameters_factory.run(
                     elt, z_element, s_in, s_out
                 )

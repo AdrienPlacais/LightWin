@@ -62,7 +62,6 @@ parameters_factory.PARAMETERS_3D
         self,
         *,
         reference_phase_policy: REFERENCE_PHASE_POLICY_T,
-        out_folder: Path | str,
         default_field_map_folder: Path | str,
         beam_kwargs: BeamKwargs,
         export_phase: EXPORT_PHASES_T,
@@ -78,7 +77,6 @@ parameters_factory.PARAMETERS_3D
         self._phi_s_func = SYNCHRONOUS_PHASE_FUNCTIONS[self._phi_s_definition]
         super().__init__(
             reference_phase_policy=reference_phase_policy,
-            out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
             beam_kwargs=beam_kwargs,
             export_phase=export_phase,
@@ -103,9 +101,8 @@ parameters_factory.PARAMETERS_3D
         """
         self.simulation_output_factory = SimulationOutputFactoryEnvelope3D(
             is_multipart=self.is_a_multiparticle_simulation,
-            solver_id=self.id,
+            beam_calculator_id=self.id,
             beam_kwargs=self._beam_kwargs,
-            out_folder=self.out_folder,
         )
         self.beam_calc_parameters_factory = ElementEnvelope3DParametersFactory(
             method=self.method,
