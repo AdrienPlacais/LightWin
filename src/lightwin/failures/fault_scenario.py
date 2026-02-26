@@ -98,13 +98,15 @@ class FaultScenario(list[Fault]):
         self.ref_acc = ref_acc
         self.fix_acc = fix_acc
         self.beam_calculator = beam_calculator
-        self._transfer_phi0_from_ref_to_broken()
 
         self.wtf = wtf
         self.info_other_sol = info_other_sol
         self.info = {}
         self.optimisation_time: datetime.timedelta
 
+        self.skip_optimization = fix_acc.is_unpickled
+        if self.skip_optimization:
+            return
         self._design_space_factory = design_space_factory
         self._list_of_elements_factory = (
             beam_calculator.list_of_elements_factory
@@ -114,6 +116,7 @@ class FaultScenario(list[Fault]):
             self._reference_simulation_output
         )
 
+        self._transfer_phi0_from_ref_to_broken()
         cavities = strategy.failed_and_compensating(
             fix_acc.elts, failed=fault_idx, compensating_manual=comp_idx, **wtf
         )
@@ -172,6 +175,12 @@ class FaultScenario(list[Fault]):
 
     def fix_all(self) -> None:
         """Fix all the :class:`.Fault` objects in self."""
+        if self.skip_optimization:
+            logging.info(f"Skipped optimization of {self.fix_acc.id}.")
+            logging.error(
+                "Fit quality evaluation was also skipped, to be changed."
+            )
+            return
         start_time = time.monotonic()
 
         simulation_output = self._reference_simulation_output

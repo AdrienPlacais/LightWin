@@ -83,7 +83,6 @@ class BeamCalculator(ABC):
             reference_phase_policy
         )
         self.flag_cython = flag_cython
-        self.id: str = f"{self.__class__.__name__}_{next(self._ids)}"
         self._export_phase: EXPORT_PHASES_T = export_phase
 
         if isinstance(out_folder, str):
@@ -102,6 +101,7 @@ class BeamCalculator(ABC):
         self.beam_calc_parameters_factory: (
             ElementBeamCalculatorParametersFactory
         )
+        self.id: str = f"{self.__class__.__name__}_{next(self._ids)}"
         self._set_up_common_factories()
         self._set_up_specific_factories()
 
