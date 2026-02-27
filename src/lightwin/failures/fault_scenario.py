@@ -104,9 +104,7 @@ class FaultScenario(list[Fault]):
         self.info = {}
         self.optimisation_time: datetime.timedelta
 
-        self.skip_optimization = fix_acc.is_unpickled
-        if self.skip_optimization:
-            return
+        self.skip_optimization = fix_acc.status == "fix"
         self._design_space_factory = design_space_factory
         self._list_of_elements_factory = (
             beam_calculator.list_of_elements_factory
@@ -116,16 +114,12 @@ class FaultScenario(list[Fault]):
             self._reference_simulation_output
         )
 
-        self._transfer_phi0_from_ref_to_broken()
+        self._ensure_phi0_is_preserved()
         cavities = strategy.failed_and_compensating(
             fix_acc.elts, failed=fault_idx, compensating_manual=comp_idx, **wtf
         )
         faults = self._create_faults(*cavities)
         super().__init__(faults)
-
-        self._mark_cavities_to_rephase()
-        for fault in self:
-            fault.pre_compensation_status()
 
         self._optimisation_algorithm_factory = OptimisationAlgorithmFactory(
             opti_method=wtf["optimisation_algorithm"],
@@ -135,6 +129,12 @@ class FaultScenario(list[Fault]):
             **wtf,
         )
         self._objective_factories: list[ObjectiveFactory] = []
+        if self.skip_optimization:
+            return
+
+        self._mark_cavities_to_rephase()
+        for fault in self:
+            fault.pre_compensation_status()
 
     def _create_faults(
         self, *cavities: Sequence[Sequence[FieldMap]]
@@ -154,6 +154,7 @@ class FaultScenario(list[Fault]):
                 broken_elts=self.fix_acc.elts,
                 failed_elements=faulty_cavities,
                 compensating_elements=compensating_cavities,
+                skip_optimization=self.skip_optimization,
             )
             for faulty_cavities, compensating_cavities in zip(
                 *cavities, strict=True
@@ -175,12 +176,6 @@ class FaultScenario(list[Fault]):
 
     def fix_all(self) -> None:
         """Fix all the :class:`.Fault` objects in self."""
-        if self.skip_optimization:
-            logging.info(f"Skipped optimization of {self.fix_acc.id}.")
-            logging.error(
-                "Fit quality evaluation was also skipped, to be changed."
-            )
-            return
         start_time = time.monotonic()
 
         simulation_output = self._reference_simulation_output
@@ -199,10 +194,14 @@ class FaultScenario(list[Fault]):
 
         self._evaluate_fit_quality(save=True)
 
-        self.fix_acc.elts.store_settings_in_dat(
-            self.fix_acc.elts.files_info["dat_file"],
+        if self.skip_optimization:
+            return
+
+        self.fix_acc.keep(
+            simulation_output=simulation_output,
             exported_phase=self.beam_calculator.reference_phase_policy,
-            save=True,
+            beam_calculator_id=self.beam_calculator.id,
+            skip_pickle=False,
         )
 
     def _wrap_fix(
@@ -401,6 +400,8 @@ class FaultScenario(list[Fault]):
            Could probably be simpler.
 
         """
+        if self.skip_optimization:
+            return
         if self._reference_phase_policy == "phi_0_abs":
             return
         cavities = self.fix_acc.l_cav
@@ -422,7 +423,7 @@ class FaultScenario(list[Fault]):
     # =========================================================================
     # Reference phase related
     # =========================================================================
-    def _transfer_phi0_from_ref_to_broken(self) -> None:
+    def _ensure_phi0_is_preserved(self) -> None:
         """Transfer the reference phases from reference linac to broken.
 
         If the absolute initial phases are not kept between reference and
@@ -430,7 +431,11 @@ class FaultScenario(list[Fault]):
         want to avoid when :attr:`.BeamCalculator.reference_phase_policy` is
         set to ``"phi_0_abs"``.
 
+        If the linac was already fixed, we simply skip this step.
+
         """
+        if self.skip_optimization:
+            return
         ref_cavs = (x for x in self.ref_acc.l_cav)
         fix_settings = (x.cavity_settings for x in self.fix_acc.l_cav)
 
