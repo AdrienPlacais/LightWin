@@ -201,7 +201,8 @@ class AcceleratorFactory:
         name :
             Accelerator name (e.g., ``"Reference"``, ``"Solution"``).
         status :
-            Current status design.
+            Current status design. Ignored if the :class:`.Accelerator` is
+            unpickled.
         index :
             Corresponding :class:`.FaultScenario` index. A null index is
             reserved for reference accelerator.
