@@ -303,6 +303,7 @@ class Accelerator:
         simulation_output: SimulationOutput,
         exported_phase: EXPORT_PHASES_T,
         beam_calculator_id: str,
+        skip_pickle: bool = False,
     ) -> None:
         """Save simulation and settings.
 
@@ -322,6 +323,9 @@ class Accelerator:
             Unique ID for the :class:`.BeamCalculator` that created
             ``simulation_output``. Will be the key to access
             ``simulation_output`` in :attr:`.simulation_outputs`.
+        skip_pickle :
+            Use this during failure compensation to avoid pickling after every
+            :class:`.Fault` compensation.
 
         """
         set_of_cavity_settings = simulation_output.set_of_cavity_settings
@@ -346,7 +350,7 @@ class Accelerator:
         )
         self.simulation_outputs[beam_calculator_id] = simulation_output
 
-        if self._pickle_path:
+        if self._pickle_path and not skip_pickle:
             my_pickler = MyCloudPickler()
             self.pickle(my_pickler, self._pickle_path)
 
