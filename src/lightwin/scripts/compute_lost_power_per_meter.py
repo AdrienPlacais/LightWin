@@ -10,6 +10,7 @@ Convert lost power of one or several ``patran1.out`` into lost power per meter.
     May be included to post-processing from within LightWin directly
 
 """
+
 import argparse
 import re
 from pathlib import Path
