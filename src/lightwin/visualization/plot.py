@@ -30,6 +30,7 @@ from palettable.colorbrewer.qualitative import Dark2_8  # type: ignore
 import lightwin.util.dicts_output as dic
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.failures.fault import Fault
+from lightwin.failures.fault_scenario import FaultScenario
 from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
 from lightwin.visualization import structure
 from lightwin.visualization.data_getter import all_accelerators_data
@@ -123,11 +124,11 @@ ERROR_REFERENCE = "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)"
 # Front end
 # =============================================================================
 def factory(
-    accelerators: Sequence[Accelerator],
+    accelerators: dict[int, list[Accelerator]],
     plots: dict[str, Any],
     save_fig: bool = True,
     clean_fig: bool = True,
-    fault_scenarios: Sequence[list[Fault]] | None = None,
+    fault_scenarios: Sequence[FaultScenario] | None = None,
     **kwargs,
 ) -> list[Figure]:
     """Create all the desired plots.
@@ -135,16 +136,17 @@ def factory(
     Parameters
     ----------
     accelerators :
-        The accelerators holding relatable data. Due to bad implementation, the
-        following accelerators are expected:
+        Mapping of scenario index to a list of accelerators for that scenario.
+        Key ``0`` is always the reference (single element). All other keys are
+        "fixed" scenarios, each potentially holding several alternative
+        accelerators that will be overlaid on the same figure::
 
-        - Reference linac, first solver
-        - Reference linac, second solver
-        - Fixed linac, first solver
-        - Fixed linac, second solver
+            {
+                0: [reference_accelerator],
+                1: [fixed_01],
+                2: [fixed_02, alternative_02],
+            }
 
-        If you provide only the two first linacs, the function will still work
-        but they will be plotted twice.
     plots :
         The plot ``TOML`` table.
     save_fig :
@@ -162,32 +164,36 @@ def factory(
         The created figures.
 
     """
+    if 0 not in accelerators:
+        raise ValueError("accelerators must contain key 0 (reference).")
+    if len(accelerators[0]) != 1:
+        raise ValueError(
+            "Reference scenario (key 0) must hold exactly one accelerator."
+        )
     if clean_fig and not save_fig and len(accelerators) > 2:
         logging.warning(
-            "You will only see the plots of the last accelerators, previous "
-            "will be erased without saving."
+            "You will only see the plots of the last scenario; previous "
+            "figures will be erased without saving."
         )
 
-    ref_acc = accelerators[0]
-    # Dirty patch to force plot even when only one accelerator
-    if len(accelerators) == 1:
-        accelerators = (ref_acc, ref_acc)
-
+    ref_acc = accelerators[0][0]
     plots_presets, plots_kwargs = (
         _separate_plot_presets_from_plot_modificators(plots)
     )
+    merged_kwargs = kwargs | plots_kwargs
 
-    figs: list[Figure]
-    figs = [
+    figs: list[Figure] = [
         _plot_preset(
             preset,
-            *(ref_acc, fix_acc),
+            ref_acc,
+            *scenario_accs,
             save_fig=save_fig,
             clean_fig=clean_fig,
             fault_scenarios=fault_scenarios,
-            **_proper_kwargs(preset, kwargs | plots_kwargs),
+            **_proper_kwargs(preset, merged_kwargs),
         )
-        for fix_acc in accelerators[1:]
+        for scenario_idx, scenario_accs in accelerators.items()
+        if scenario_idx != 0  # skip reference-only scenario
         for preset, plot_me in plots_presets.items()
         if plot_me
     ]
@@ -227,7 +233,8 @@ def _separate_plot_presets_from_plot_modificators(
 
 def _plot_preset(
     preset: str,
-    *args: Accelerator,
+    ref_acc: Accelerator,
+    *fix_accs: Accelerator,
     all_y_axis: list[GETTABLE_SIMULATION_OUTPUT_T | Literal["struct"]],
     x_axis: X_AXIS_T = "z_abs",
     save_fig: bool = True,
@@ -239,20 +246,23 @@ def _plot_preset(
     symmetric_plot: bool = False,
     **kwargs,
 ) -> Figure:
-    """Plot a preset.
+    """Plot a preset showing reference and all fixed alternatives for one scenario.
 
     Parameters
     ----------
-    str_preset :
+    preset :
         Key of :data:`ALLOWED_PLOT_PRESETS`.
-    *args :
-        Accelerators to plot. In typical usage, ``args = (Working, Fixed)``
+    ref_acc :
+        The reference accelerator (scenario 0).
+    *fix_accs :
+        One or more accelerators belonging to the same scenario. All are
+        plotted on the same axes, each vs the reference.
     x_axis :
         Name of the x axis.
     all_y_axis :
         Name of all the y axis.
     save_fig :
-        To save Figures or not.
+        To save Figures or not. Figure is saved to the path of ``fix_accs[0]``.
     add_objectives :
         To add the position of objectives to the plots; if True, the
         ``fault_scenarios`` must be provided.
@@ -263,16 +273,19 @@ def _plot_preset(
     get_kwargs :
         Keyword arguments for the :meth:`.SimulationOutput.get` methods.
     symmetric_plot :
-        If plot should be symmetric.
+        If plot should be symmetric around the x axis.
     **kwargs :
         Holds all complementary data on the plots.
 
     """
+    if not fix_accs:
+        raise ValueError("At least one fixed accelerator must be provided.")
+
     fig, axx = create_fig_if_not_exists(
         len(all_y_axis), clean_fig=clean_fig, **kwargs
     )
 
-    colors = None
+    colors: dict[str, ColorType] | None = None
     for i, (ax, y_axis) in enumerate(zip(axx, all_y_axis)):
         try:
             _make_a_subplot(
@@ -280,7 +293,8 @@ def _plot_preset(
                 x_axis,
                 y_axis,
                 colors,
-                *args,
+                ref_acc,
+                *fix_accs,
                 get_kwargs=get_kwargs,
                 symmetric_plot=symmetric_plot,
                 **(usr_kwargs or {}),
@@ -292,6 +306,7 @@ def _plot_preset(
                 f"x and y data.\n{e}"
             )
             raise e
+
         if i == 0:
             colors = _used_colors(ax)
 
@@ -302,7 +317,7 @@ def _plot_preset(
     axx[-1].set_xlabel(dic.markdown[x_axis])
 
     if save_fig:
-        file = Path(args[-1].get("accelerator_path"), f"{preset}.png")
+        file = Path(fix_accs[0].get("accelerator_path"), f"{preset}.png")
         savefig(fig, file)
 
     return fig

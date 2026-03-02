@@ -2,26 +2,6 @@
 dat_file = "example.dat"
 project_folder = "results_tests/"
 
-[proposition_files.pickles_paths]
-reference = "reference.pkl"
-
-# Scenario 1
-[proposition_files.pickle_paths.scenarios.000001]
-solution = "solution-000001.pkl"
-
-# Scenario 2 - alternatives with custom names
-[proposition_files.pickle_paths.scenarios.000002.alternatives]
-"Aggressive tuning" = "design-aggressive.pkl"
-"Conservative approach" = "design-conservative.pkl"
-
-# Scenario 3 - solution + alternatives
-[proposition_files.pickle_paths.scenarios.000003]
-solution = "solution-000003.pkl"
-
-[proposition_files.pickle_paths.scenarios.000003.alternatives]
-"Experimental config" = "experimental.pkl"
-"Tweaked design" = "tweaked.pkl"
-
 [envelope1d]
 export_phase = "phi_0_abs"
 flag_cython = true
