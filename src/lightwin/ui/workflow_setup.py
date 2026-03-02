@@ -237,7 +237,7 @@ def recompute(
 def run_simulation(
     config: dict[str, Any],
     **kwargs,
-) -> list[FaultScenario] | list[Accelerator]:
+) -> list[FaultScenario] | dict[int, list[Accelerator]]:
     """Compute propagation of beam; if failures are defined, fix them.
 
     Parameters
@@ -247,7 +247,6 @@ def run_simulation(
 
     Returns
     -------
-    list[FaultScenario] | list[Accelerator]
         If no failure is defined, return the created accelerators. If failures
         were defined, return the full fault scenarios. Note that you can access
         the accelerator objects with ``FaultScenario.ref_acc`` and
@@ -257,10 +256,9 @@ def run_simulation(
     beam_calculators, accelerators, fault_scenarios, ref_simulation_output = (
         set_up(config, **kwargs)
     )
-    adapted_accelerators = [sublist[0] for sublist in accelerators.values()]
     if fault_scenarios is None:
-        plot.factory(adapted_accelerators, **config)
-        return adapted_accelerators
+        plot.factory(accelerators, **config)
+        return accelerators
 
     fix(fault_scenarios)
     recompute(
@@ -268,8 +266,6 @@ def run_simulation(
         ref_simulation_output[1:],
         accelerators,
     )
-    plot.factory(
-        adapted_accelerators, fault_scenarios=fault_scenarios, **config
-    )
+    plot.factory(accelerators, fault_scenarios=fault_scenarios, **config)
 
     return fault_scenarios

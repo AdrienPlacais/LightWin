@@ -204,7 +204,7 @@ class Fault:
         logging.error(
             "At least one compensating or failed element is already "
             "compensating or faulty, probably in another Fault object. Updated"
-            "its status anyway..."
+            " its status anyway..."
         )
 
     def _post_compensation_status(
