@@ -68,7 +68,7 @@ class BeamCalculatorsFactory:
 
     @classmethod
     def reset(cls) -> None:
-        """Allow creation of a new factry."""
+        """Allow creation of a new factory."""
         cls._instance = None
 
     def __init__(
@@ -203,9 +203,8 @@ class BeamCalculatorsFactory:
             tool,
             export_phase,
             flag_cython,
-            tuple(sorted(beam_calculator_kw.items())),
+            _make_hashable(beam_calculator_kw),
         )
-
         return hash(key_data)
 
     def run_all(self, force_new: bool = False) -> tuple[BeamCalculator, ...]:
@@ -215,3 +214,14 @@ class BeamCalculatorsFactory:
             for beam_calculator_kw in self.all_beam_calculator_kw
         ]
         return tuple(beam_calculators)
+
+
+def _make_hashable(value: Any) -> Any:
+    """Recursively convert unhashable types to hashable equivalents."""
+    if isinstance(value, dict):
+        return tuple(sorted((k, _make_hashable(v)) for k, v in value.items()))
+    if isinstance(value, (list, tuple)):
+        return tuple(_make_hashable(v) for v in value)
+    if isinstance(value, set):
+        return frozenset(_make_hashable(v) for v in value)
+    return value
