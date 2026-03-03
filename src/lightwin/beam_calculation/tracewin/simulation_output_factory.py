@@ -3,7 +3,6 @@
 import logging
 import math
 from abc import ABCMeta
-from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
 
@@ -30,6 +29,10 @@ from lightwin.constants import c
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.core.particle import ParticleFullTrajectory, ParticleInitialState
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
+from lightwin.util.typing import (
+    BeamKwargs,
+    CavParams,
+)
 
 
 # =============================================================================
@@ -291,10 +294,12 @@ def _load_parameters_of_cavities(
 
 def _uniformize_parameters_of_cavities(
     parameters: dict[str, NDArray], n_elts: int
-) -> dict[str, list[float | None]]:
+) -> CavParams:
     """Transform the dict so we have consistent format with other solvers."""
     cavity_numbers = parameters["Cav#"].astype(int)
-    v_cav, phi_s, phi_0 = [], [], []
+    v_cav: list[float | None] = []
+    phi_s: list[float | None] = []
+    phi_0: list[float | None] = []
     cavity_idx = 0
     for elt_idx in range(1, n_elts + 1):
         if elt_idx not in cavity_numbers:
@@ -309,32 +314,33 @@ def _uniformize_parameters_of_cavities(
 
         cavity_idx += 1
 
-    compliant_parameters = {"v_cav_mv": v_cav, "phi_s": phi_s, "phi_0": phi_0}
-    return compliant_parameters
+    return {"v_cav_mv": v_cav, "phi_s": phi_s, "phi_0": phi_0}
 
 
-@dataclass
 class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
     """A class for creating simulation outputs for :class:`.TraceWin`."""
 
-    out_folder: Path
-    _filename: Path
-    beam_calc_parameters_factory: ElementTraceWinParametersFactory
+    _is_3d = True
 
-    def __post_init__(self) -> None:
-        """Set filepath-related attributes and create factories.
+    def __init__(
+        self,
+        is_multipart: bool,
+        beam_calculator_id: str,
+        beam_kwargs: BeamKwargs,
+        filename: Path,
+        beam_calc_parameters_factory: ElementTraceWinParametersFactory,
+    ) -> None:
+        super().__init__(
+            is_multipart=is_multipart,
+            beam_calculator_id=beam_calculator_id,
+            beam_kwargs=beam_kwargs,
+        )
+        self._filename = filename
+        self.beam_calc_parameters_factory = beam_calc_parameters_factory
 
-        The created factories are :class:`.TransferMatrixFactory` and
-        :class:`.BeamParametersFactory`. The sub-class that is used is declared
-        in :meth:`._transfer_matrix_factory_class` and
-        :meth:`._beam_parameters_factory_class`.
-
-        """
         self.load_results = partial(
             _load_results_generic, filename=self._filename
         )
-        # Factories created in ABC's __post_init__
-        return super().__post_init__()
 
     @property
     def _transfer_matrix_factory_class(self) -> ABCMeta:
@@ -346,8 +352,9 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         """Give the **class** of the beam parameters factory."""
         return BeamParametersFactoryTraceWin
 
-    def run(
+    def create(
         self,
+        accelerator_id: str,
         elts: ListOfElements,
         path_cal: Path,
         exception: bool,
@@ -358,6 +365,9 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         elts :
             Contains all elements or only a fraction or all the elements.
         path_cal :
@@ -394,9 +404,11 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             beam=self._beam_kwargs,
         )
 
-        cav_params = self._get_parameters_of_cavities(path_cal, len(elts))
+        cav_params = self._get_cav_params(path_cal, len(elts))
 
-        element_to_index = self._generate_element_to_index_func(elts)
+        element_to_index = elts.generate_element_to_index_func(
+            self._beam_calculator_id
+        )
 
         transfer_matrix = self.transfer_matrix_factory.run(
             elts.tm_cumul_in, path_cal, element_to_index
@@ -409,7 +421,9 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         )
 
         simulation_output = SimulationOutput(
-            out_folder=self.out_folder,
+            accelerator_id=accelerator_id,
+            beam_calculator_id=self._beam_calculator_id,
+            elts=elts,
             is_multiparticle=hasattr(beam_parameters, "phiw99"),
             is_3d=True,
             z_abs=results["z(m)"],
@@ -419,12 +433,8 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             element_to_index=element_to_index,
             transfer_matrix=transfer_matrix,
             set_of_cavity_settings=set_of_cavity_settings,
+            pow_lost=results["Powlost"],
         )
-        simulation_output.z_abs = results["z(m)"]
-
-        # FIXME attribute was not declared
-        simulation_output.pow_lost = results["Powlost"]
-
         return simulation_output
 
     def _create_main_results_dictionary(
@@ -451,18 +461,18 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             s_out = elt_mesh_indexes[-1]
             z_element = z_abs[s_in : s_out + 1]
 
-            elt.beam_calc_param[self._solver_id] = (
+            elt.beam_calc_param[self._beam_calculator_id] = (
                 self.beam_calc_parameters_factory.run(
                     elt, z_element, s_in, s_out
                 )
             )
 
-    def _get_parameters_of_cavities(
+    def _get_cav_params(
         self,
         path_cal: Path,
         n_elts: int,
         filename: Path = Path("Cav_set_point_res.dat"),
-    ) -> dict[str, list[float | None]]:
+    ) -> CavParams:
         """Load and format a dict containing v_cav and phi_s.
 
         It has the same format as :class:`.Envelope1D` solver format.

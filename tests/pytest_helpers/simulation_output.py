@@ -4,7 +4,6 @@ import logging
 from typing import Literal
 
 import numpy as np
-from pytest import approx
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,

@@ -47,6 +47,7 @@ class Fault:
         broken_elts: ListOfElements,
         failed_elements: Sequence[Element],
         compensating_elements: Sequence[Element],
+        skip_optimization: bool = False,
     ) -> None:
         """Create the Fault object.
 
@@ -60,6 +61,9 @@ class Fault:
             List of failed cavities.
         compensating_elements :
             Holds the compensating elements.
+        skip_optimization :
+            Used when the fixed :class:`.Accelerator` was unpikcled and
+            therefore already holds the fixed settings.
 
         """
         self.broken_elts = broken_elts
@@ -78,12 +82,15 @@ class Fault:
         #: This attribute is set at the start of the optimization process in
         #: order to save information on the objectives, variables, best
         #: solution, etc.
-        self.optimisation_algorithm: OptimisationAlgorithm
+        self.optimisation_algorithm: OptimisationAlgorithm | None = None
         #: This attribute is set at the start of the optimization process in
         #: order to keep information on the compensation zone.
         self.subset_elts: ListOfElements
+        self._skip_optimization = skip_optimization
 
-    def fix(self, optimisation_algorithm: OptimisationAlgorithm) -> None:
+    def fix(
+        self, optimisation_algorithm: OptimisationAlgorithm | None
+    ) -> None:
         """Fix the :class:`Fault`. Set ``self.optimized_cavity_settings``.
 
         Also display information on the parametrization of the optimization
@@ -104,15 +111,20 @@ class Fault:
         )
         start_time = time.monotonic()
 
+        if self._skip_optimization:
+            logging.info("Skipped!")
+            return
+
+        assert optimisation_algorithm is not None
         self.optimisation_algorithm = optimisation_algorithm
         _ = optimisation_algorithm.optimize()
 
+        assert self.opti_sol is not None
         delta_t = datetime.timedelta(seconds=time.monotonic() - start_time)
         info = (
             f"Finished! Solving this problem took {delta_t}. Results are:",
             str_objectives_solved(optimisation_algorithm.objectives),
-            "Additional info:",
-            "\n".join(self.opti_sol["info"]),
+            f"Additional info: {'\n'.join(self.opti_sol["info"])}",
         )
         logging.info("\n".join(info))
 
@@ -142,25 +154,36 @@ class Fault:
             upstream :class:`.Fault` as well as of this one.
 
         """
+        if self._skip_optimization:
+            return fix_acc.simulation_outputs[beam_calculator.id]
         fix_elts = fix_acc.elts
 
         simulation_output = beam_calculator.post_optimisation_run_with_this(
-            self.optimized_cavity_settings, fix_elts
+            accelerator_id=fix_acc.id,
+            optimized_cavity_settings=self.optimized_cavity_settings,
+            full_elts=fix_elts,
         )
         simulation_output.compute_indirect_quantities(
             fix_elts, ref_simulation_output=ref_simulation_output
         )
 
+        self._post_compensation_status(reference_phase_policy, fix_elts)
         fix_acc.keep(
             simulation_output,
             exported_phase=reference_phase_policy,
             beam_calculator_id=beam_calculator.id,
+            skip_pickle=True,
         )
-        self._post_compensation_status(reference_phase_policy, fix_elts)
         return simulation_output
 
     def pre_compensation_status(self) -> None:
-        """Mark failed and compensating cavities."""
+        """Mark failed and compensating cavities.
+
+        Skipped if the optimization was already performed.
+
+        """
+        if self._skip_optimization:
+            return
         status_are_valid = True
         allowed = ("nominal", "rephased (in progress)", "rephased (ok)")
         for elt in self.failed_elements:
@@ -181,7 +204,7 @@ class Fault:
         logging.error(
             "At least one compensating or failed element is already "
             "compensating or faulty, probably in another Fault object. Updated"
-            "its status anyway..."
+            " its status anyway..."
         )
 
     def _post_compensation_status(
@@ -190,6 +213,8 @@ class Fault:
         fix_elts: ListOfElements,
     ) -> None:
         """Update cavities status after compensation.
+
+        Skipped if the optimization was already performed.
 
         Compensating cavities of the current fault are marked as retuned,
         meaning they should not be modified further. Their status changes from
@@ -212,6 +237,8 @@ class Fault:
             *All* accelerator elements.
 
         """
+        if self._skip_optimization:
+            return
         new_status = f"compensate ({'ok' if self.success else 'not ok'})"
         assert new_status in ALLOWED_STATUS
         for cav in self.compensating_elements:
@@ -239,7 +266,9 @@ class Fault:
         )
 
     @property
-    def opti_sol(self) -> OptiSol:
+    def opti_sol(self) -> OptiSol | None:
+        if self.optimisation_algorithm is None:
+            return
         return self.optimisation_algorithm.opti_sol
 
     @property
@@ -250,21 +279,44 @@ class Fault:
             Prefer using the ``opti_sol`` attribute.
 
         """
+        if self.opti_sol is None:
+            return {}
         info = dict(self.opti_sol)
         info["objectives_values"] = self.opti_sol["objectives"]
         return info
 
     @property
     def optimized_cavity_settings(self) -> SetOfCavitySettings:
-        """Get the best settings."""
-        return self.opti_sol["cavity_settings"]
+        """Get the settings found by the optimizer.
+
+        If optimization was already performed (unpickled :class:`.Accelerator`)
+        , we return the settings stored in the compensating cavities.
+
+        """
+        if self.opti_sol is not None:
+            return self.opti_sol.get("cavity_settings")
+        if not self._skip_optimization:
+            raise ValueError(
+                "'self.opti_sol' attribute should be set unless we are dealing"
+                " with an already fixed Fault."
+            )
+        cavity_settings = {
+            cav: cav.cavity_settings
+            for cav in self.compensating_elements
+            if isinstance(cav, FieldMap)
+        }
+        return SetOfCavitySettings(cavity_settings)
 
     @property
     def success(self) -> bool:
         """Get the success status."""
+        if self.opti_sol is None:
+            raise ValueError
         return self.opti_sol["success"]
 
     @property
     def objectives(self) -> list[Objective]:
         """Get objectives that were tried for this failure."""
+        if self.optimisation_algorithm is None:
+            return []
         return self.optimisation_algorithm.objectives

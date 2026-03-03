@@ -1,6 +1,7 @@
 """Test that pickling does not raise error."""
 
 from collections.abc import Sequence
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -19,7 +20,7 @@ from lightwin.failures.fault_scenario import (
     FaultScenario,
     fault_scenario_factory,
 )
-from lightwin.ui.workflow_setup import set_up_accelerators
+from lightwin.ui.workflow_setup import set_up_accelerators, set_up_solvers
 from lightwin.util.pickling import MyCloudPickler, MyPickler
 
 params = [pytest.param((MyCloudPickler,), id="cloudpickle")]
@@ -60,9 +61,7 @@ def config(
 @pytest.fixture(scope="module")
 def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
     """Instantiate the solver with the proper parameters."""
-    factory = BeamCalculatorsFactory(**config)
-    my_solver = factory.run_all()[0]
-    return my_solver
+    return set_up_solvers(reset_factory=True, **config)[0]
 
 
 @pytest.fixture(scope="module")
@@ -72,8 +71,9 @@ def accelerators(
     """Create ref linac, linac we will break, compute ref simulation_output."""
     solvers = (solver,)
     accelerators = set_up_accelerators(config, solvers)
-    solver.compute(accelerators[0])
-    return accelerators
+    adapted = [sublist[0] for sublist in accelerators.values()]
+    solver.compute(adapted[0])
+    return adapted
 
 
 @pytest.fixture(scope="module")
@@ -122,37 +122,58 @@ def simulation_output(
     return ref_simulation_output
 
 
+@pytest.fixture(scope="class")
+def pickled_dir(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Create a temporary directory once for the entire test class."""
+    return tmp_path_factory.mktemp("pickled")
+
+
 class TestMyPickler:
     """Test that pickling/unpickling does not raise errors."""
 
     def test_accelerator(
-        self, pickler: MyPickler, accelerator: Accelerator
+        self, pickler: MyPickler, accelerator: Accelerator, pickled_dir: Path
     ) -> None:
         """Check that :class:`.Accelerator` pickling works."""
-        path = accelerator.pickle(pickler)
+        path = accelerator.pickle(pickler, pickled_dir / "accelerator.pkl")
         pickled = Accelerator.from_pickle(pickler, path)
         assert True
 
     def test_list_of_elements(
-        self, pickler: MyPickler, list_of_elements: ListOfElements
+        self,
+        pickler: MyPickler,
+        list_of_elements: ListOfElements,
+        pickled_dir: Path,
     ) -> None:
         """Check that :class:`.ListOfElements` pickling works."""
-        path = list_of_elements.pickle(pickler)
+        path = list_of_elements.pickle(
+            pickler, pickled_dir / "list_of_elements.pkl"
+        )
         pickled = ListOfElements.from_pickle(pickler, path)
         assert True
 
     def test_fault_scenario(
-        self, pickler: MyPickler, fault_scenario: FaultScenario
+        self,
+        pickler: MyPickler,
+        fault_scenario: FaultScenario,
+        pickled_dir: Path,
     ) -> None:
         """Check that :class:`.FaultScenario` pickling works."""
-        path = fault_scenario.pickle(pickler)
+        path = fault_scenario.pickle(
+            pickler, pickled_dir / "fault_scenario.pkl"
+        )
         pickled = FaultScenario.from_pickle(pickler, path)
         assert True
 
     def test_simulation_output(
-        self, pickler: MyPickler, simulation_output: SimulationOutput
+        self,
+        pickler: MyPickler,
+        simulation_output: SimulationOutput,
+        pickled_dir: Path,
     ) -> None:
         """Check that :class:`.SimulationOutput` pickling works."""
-        path = simulation_output.pickle(pickler)
+        path = simulation_output.pickle(
+            pickler, pickled_dir / "simulation_output.pkl"
+        )
         pickled = SimulationOutput.from_pickle(pickler, path)
         assert True

@@ -1,7 +1,6 @@
 """Define a class to easily generate the :class:`.SimulationOutput`."""
 
 from abc import ABCMeta
-from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -22,25 +21,13 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.core.particle import ParticleFullTrajectory
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
+from lightwin.util.typing import GETTABLE_CAVITY_SETTINGS_T, CavParams
 
 
-@dataclass
 class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
     """A class for creating simulation outputs for :class:`.Envelope1D`."""
 
-    out_folder: Path
-
-    def __post_init__(self) -> None:
-        """Create the factories.
-
-        The created factories are :class:`.TransferMatrixFactory` and
-        :class:`.BeamParametersFactory`. The sub-class that is used is declared
-        in :meth:`._transfer_matrix_factory_class` and
-        :meth:`._beam_parameters_factory_class`.
-
-        """
-        # Factories created in ABC's __post_init__
-        return super().__post_init__()
+    _is_3d = False
 
     @property
     def _transfer_matrix_factory_class(self) -> ABCMeta:
@@ -52,8 +39,9 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         """Give the **class** of the beam parameters factory."""
         return BeamParametersFactoryEnvelope1D
 
-    def run(
+    def create(
         self,
+        accelerator_id: str,
         elts: ListOfElements,
         single_elts_results: list[dict],
         set_of_cavity_settings: SetOfCavitySettings,
@@ -65,73 +53,24 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
             future, input beam will not hold transf mat in anymore.
 
         """
-        w_kin = [
-            energy
-            for results in single_elts_results
-            for energy in results["w_kin"]
-        ]
-        w_kin.insert(0, elts.w_kin_in)
-
-        phi_abs_array = [elts.phi_abs_in]
-        for elt_results in single_elts_results:
-            phi_abs = [
-                phi_rel + phi_abs_array[-1]
-                for phi_rel in elt_results["phi_rel"]
-            ]
-            phi_abs_array.extend(phi_abs)
         synch_trajectory = ParticleFullTrajectory(
-            w_kin=w_kin,
-            phi_abs=phi_abs_array,
+            w_kin=self._format_w_kin(elts, single_elts_results),
+            phi_abs=self._format_phi_abs(elts, single_elts_results),
             synchronous=True,
             beam=self._beam_kwargs,
         )
 
-        gamma_kin = synch_trajectory.gamma
-        assert isinstance(gamma_kin, np.ndarray)
-
-        cav_params = {
-            "v_cav_mv": [
-                (
-                    set_of_cavity_settings[elt].v_cav_mv
-                    if elt in set_of_cavity_settings
-                    else None
-                )
-                for elt in elts
-            ],
-            "phi_s": [
-                (
-                    set_of_cavity_settings[elt].phi_s
-                    if elt in set_of_cavity_settings
-                    else None
-                )
-                for elt in elts
-            ],
-            "acceptance_phi": [
-                (
-                    set_of_cavity_settings[elt].acceptance_phi
-                    if elt in set_of_cavity_settings
-                    else None
-                )
-                for elt in elts
-            ],
-            "acceptance_energy": [
-                (
-                    set_of_cavity_settings[elt].acceptance_energy
-                    if elt in set_of_cavity_settings
-                    else None
-                )
-                for elt in elts
-            ],
-        }
-
-        element_to_index = self._generate_element_to_index_func(elts)
+        element_to_index = elts.generate_element_to_index_func(
+            self._beam_calculator_id
+        )
         transfer_matrix: TransferMatrix = self.transfer_matrix_factory.run(
-            elts.tm_cumul_in,
-            single_elts_results,
-            element_to_index,
+            elts.tm_cumul_in, single_elts_results, element_to_index
         )
 
         z_abs = elts.get("abs_mesh", remove_first=True)
+        gamma_kin = synch_trajectory.gamma
+        assert isinstance(gamma_kin, np.ndarray)
+
         beam_parameters = self.beam_parameters_factory.factory_method(
             elts.input_beam.sigma,
             z_abs,
@@ -141,14 +80,60 @@ class SimulationOutputFactoryEnvelope1D(SimulationOutputFactory):
         )
 
         simulation_output = SimulationOutput(
-            out_folder=self.out_folder,
-            is_multiparticle=False,  # FIXME
-            is_3d=False,
+            accelerator_id=accelerator_id,
+            beam_calculator_id=self._beam_calculator_id,
+            elts=elts,
+            is_multiparticle=self._is_multipart,
+            is_3d=self._is_3d,
             synch_trajectory=synch_trajectory,
-            cav_params=cav_params,
+            cav_params=self._get_cav_params(set_of_cavity_settings, elts),
             beam_parameters=beam_parameters,
             element_to_index=element_to_index,
             transfer_matrix=transfer_matrix,
             set_of_cavity_settings=set_of_cavity_settings,
         )
         return simulation_output
+
+    def _format_w_kin(
+        self, elts: ListOfElements, single_elts_results: list[dict]
+    ) -> list[float]:
+        w_kin = [
+            energy
+            for results in single_elts_results
+            for energy in results["w_kin"]
+        ]
+        w_kin.insert(0, elts.w_kin_in)
+        return w_kin
+
+    def _format_phi_abs(
+        self, elts: ListOfElements, single_elts_results: list[dict]
+    ) -> list[float]:
+        phi_abs_array = [elts.phi_abs_in]
+        for elt_results in single_elts_results:
+            phi_abs = [
+                phi_rel + phi_abs_array[-1]
+                for phi_rel in elt_results["phi_rel"]
+            ]
+            phi_abs_array.extend(phi_abs)
+        return phi_abs_array
+
+    def _get_cav_params(
+        self, set_of_cavity_settings: SetOfCavitySettings, elts: ListOfElements
+    ) -> CavParams:
+
+        def get(attr: GETTABLE_CAVITY_SETTINGS_T) -> list[float | None]:
+            return [
+                (
+                    getattr(set_of_cavity_settings[elt], attr)
+                    if elt in set_of_cavity_settings
+                    else None
+                )
+                for elt in elts
+            ]
+
+        return {
+            "v_cav_mv": get("v_cav_mv"),
+            "phi_s": get("phi_s"),
+            "acceptance_phi": get("acceptance_phi"),
+            "acceptance_energy": get("acceptance_energy"),
+        }

@@ -1,7 +1,6 @@
 """Define a class to easily generate the :class:`.SimulationOutput`."""
 
 from abc import ABCMeta
-from dataclasses import dataclass
 
 from lightwin.beam_calculation.cy_envelope_1d.beam_parameters_factory import (
     BeamParametersFactoryCyEnvelope1D,
@@ -14,7 +13,6 @@ from lightwin.beam_calculation.envelope_1d.simulation_output_factory import (
 )
 
 
-@dataclass
 class SimulationOutputFactoryCyEnvelope1D(SimulationOutputFactoryEnvelope1D):
     """A class for creating simulation outputs for :class:`.CyEnvelope1D`."""
 

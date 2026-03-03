@@ -122,7 +122,7 @@ class ISimulationOutputEvaluator(IEvaluator):
                 logging.error(
                     f"Invalid {self._y_quantity} was found in reference "
                     "simulation output, obtained with "
-                    f"{self._ref.beam_calculator} solver. This will cause "
+                    f"{self._ref.beam_calculator_id} solver. This will cause "
                     "interpolation errors."
                 )
         return self._ref_ydata
@@ -193,7 +193,7 @@ class ISimulationOutputEvaluator(IEvaluator):
         data = simulation_output.get(quantity, **self._get_kwargs)
 
         if fallback_dummy and (data is None or data.ndim == 0):
-            logging.error(f"{simulation_output.beam_calculator} error:")
+            logging.error(f"{simulation_output.beam_calculator_id} error:")
             return self._default_dummy(quantity, warn=True)
         return data
 
@@ -210,8 +210,8 @@ class ISimulationOutputEvaluator(IEvaluator):
         xdata = self._get_single(
             simulation_output, self._x_quantity, fallback_dummy=fallback_dummy
         )
-        if len(xdata) != len(ydata):
-            __import__("pdb").set_trace()
+        # if len(xdata) != len(ydata):
+        #     __import__("pdb").set_trace()
         return np.interp(self.ref_xdata, xdata, ydata)
 
     @final
@@ -222,7 +222,7 @@ class ISimulationOutputEvaluator(IEvaluator):
     ) -> pd.DataFrame:
         """Get the data from the simulation outputs."""
         data = {
-            f"{sim_out.linac_id} ({sim_out.beam_calculator})": self._get_interpolated(
+            f"{sim_out.accelerator_id} ({sim_out.beam_calculator_id})": self._get_interpolated(
                 sim_out, fallback_dummy=fallback_dummy
             )
             for sim_out in simulation_outputs

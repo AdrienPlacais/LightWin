@@ -98,13 +98,13 @@ class FaultScenario(list[Fault]):
         self.ref_acc = ref_acc
         self.fix_acc = fix_acc
         self.beam_calculator = beam_calculator
-        self._transfer_phi0_from_ref_to_broken()
 
         self.wtf = wtf
         self.info_other_sol = info_other_sol
         self.info = {}
         self.optimisation_time: datetime.timedelta
 
+        self.skip_optimization = fix_acc.status == "fix"
         self._design_space_factory = design_space_factory
         self._list_of_elements_factory = (
             beam_calculator.list_of_elements_factory
@@ -114,23 +114,27 @@ class FaultScenario(list[Fault]):
             self._reference_simulation_output
         )
 
+        self._ensure_phi0_is_preserved()
         cavities = strategy.failed_and_compensating(
             fix_acc.elts, failed=fault_idx, compensating_manual=comp_idx, **wtf
         )
         faults = self._create_faults(*cavities)
         super().__init__(faults)
 
-        self._mark_cavities_to_rephase()
-        for fault in self:
-            fault.pre_compensation_status()
-
         self._optimisation_algorithm_factory = OptimisationAlgorithmFactory(
             opti_method=wtf["optimisation_algorithm"],
             beam_calculator=beam_calculator,
             reference_simulation_output=self._reference_simulation_output,
+            accelerator_id=fix_acc.id,
             **wtf,
         )
         self._objective_factories: list[ObjectiveFactory] = []
+        if self.skip_optimization:
+            return
+
+        self._mark_cavities_to_rephase()
+        for fault in self:
+            fault.pre_compensation_status()
 
     def _create_faults(
         self, *cavities: Sequence[Sequence[FieldMap]]
@@ -150,6 +154,7 @@ class FaultScenario(list[Fault]):
                 broken_elts=self.fix_acc.elts,
                 failed_elements=faulty_cavities,
                 compensating_elements=compensating_cavities,
+                skip_optimization=self.skip_optimization,
             )
             for faulty_cavities, compensating_cavities in zip(
                 *cavities, strict=True
@@ -181,17 +186,22 @@ class FaultScenario(list[Fault]):
         logging.info(f"Solving all the optimization problems took {delta_t}")
         self.optimisation_time = delta_t
 
-        successes = [fault.success for fault in self]
-        self.fix_acc.name = (
-            f"Fixed ({successes.count(True)} of {len(successes)})"
-        )
+        # successes = [fault.success for fault in self]
+        # self.fix_acc.name = (
+        #     f"Fixed ({successes.count(True)} of {len(successes)})"
+        # )
+        self.fix_acc.status = "fix"
 
         self._evaluate_fit_quality(save=True)
 
-        self.fix_acc.elts.store_settings_in_dat(
-            self.fix_acc.elts.files_info["dat_file"],
+        if self.skip_optimization:
+            return
+
+        self.fix_acc.keep(
+            simulation_output=simulation_output,
             exported_phase=self.beam_calculator.reference_phase_policy,
-            save=True,
+            beam_calculator_id=self.beam_calculator.id,
+            skip_pickle=False,
         )
 
     def _wrap_fix(
@@ -390,6 +400,8 @@ class FaultScenario(list[Fault]):
            Could probably be simpler.
 
         """
+        if self.skip_optimization:
+            return
         if self._reference_phase_policy == "phi_0_abs":
             return
         cavities = self.fix_acc.l_cav
@@ -411,7 +423,7 @@ class FaultScenario(list[Fault]):
     # =========================================================================
     # Reference phase related
     # =========================================================================
-    def _transfer_phi0_from_ref_to_broken(self) -> None:
+    def _ensure_phi0_is_preserved(self) -> None:
         """Transfer the reference phases from reference linac to broken.
 
         If the absolute initial phases are not kept between reference and
@@ -419,7 +431,11 @@ class FaultScenario(list[Fault]):
         want to avoid when :attr:`.BeamCalculator.reference_phase_policy` is
         set to ``"phi_0_abs"``.
 
+        If the linac was already fixed, we simply skip this step.
+
         """
+        if self.skip_optimization:
+            return
         ref_cavs = (x for x in self.ref_acc.l_cav)
         fix_settings = (x.cavity_settings for x in self.fix_acc.l_cav)
 
@@ -458,18 +474,19 @@ class FaultScenarioFactory:
 
     def __init__(
         self,
-        accelerators: list[Accelerator],
+        accelerators: dict[int, list[Accelerator]],
         beam_calc: BeamCalculator,
         design_space: dict[str, Any],
         objective_factory_class: type[ObjectiveFactory] | None = None,
     ) -> None:
-        """Create the :class:`FaultScenario` objects (factory template).
+        """Init solver parameters for each non-unpickled :class:`.Accelerator`.
 
         Parameters
         ----------
         accelerators :
-            Holds all the linacs. The first one must be the reference linac,
-            while all the others will be to be fixed.
+            Dictionary where keys are :class:`.FaultScenario` indexes, and
+            values are lists of corresponding :class:`.Accelerator`. First
+            index corresponds to reference accelerator (no failure).
         beam_calc :
             The solver that will be called during the optimisation process.
         design_space_kw :
@@ -485,16 +502,20 @@ class FaultScenarioFactory:
             already initialied :class:`.Fault` objects.
 
         """
-        if isinstance(beam_calc, TraceWin):
-            _force_element_to_index_method_creation(accelerators[1], beam_calc)
-
         self._accelerators = accelerators
         self._beam_calculator = beam_calc
-        for accelerator in accelerators:
-            beam_calc.init_solver_parameters(accelerator)
-
         self._design_space_factory = get_design_space_factory(**design_space)
         self._objective_factory_class = objective_factory_class
+
+        for index, acc in accelerators.items():
+            for a in acc:
+                if a.is_unpickled:
+                    continue
+
+                if isinstance(beam_calc, TraceWin) and index > 0:
+                    _force_element_to_index_method_creation(a, beam_calc)
+
+                beam_calc.init_solver_parameters(a)
 
     @overload
     def create(
@@ -529,19 +550,31 @@ class FaultScenarioFactory:
         """
         fault_scenarios: list[FaultScenario] = []
 
-        for i, (accelerator, fault_idx) in enumerate(
-            zip(self._accelerators[1:], failed, strict=True)
-        ):
+        if len(failed) != len(self._accelerators) - 1:
+            raise ValueError(
+                f"We are creating {len(failed)} FaultScenarios, but we have "
+                f"{len(self._accelerators)-1} non-reference groups of "
+                "Accelerators."
+            )
+
+        ref_acc = self._accelerators[0][0]
+        for index, accelerators_by_scenario in self._accelerators.items():
+            if index == 0:
+                continue
+
+            # Position of compensating cavities, when the strategy is manual
             comp_idx = (
-                None if compensating_manual is None else compensating_manual[i]
+                None
+                if compensating_manual is None
+                else compensating_manual[index - 1]
             )
             scenario = FaultScenario(
-                ref_acc=self._accelerators[0],
-                fix_acc=accelerator,
+                ref_acc=ref_acc,
+                fix_acc=accelerators_by_scenario[0],
                 beam_calculator=self._beam_calculator,
                 wtf=wtf,
                 design_space_factory=self._design_space_factory,
-                fault_idx=fault_idx,
+                fault_idx=failed[index - 1],
                 comp_idx=comp_idx,
                 objective_factory_class=self._objective_factory_class,
             )
@@ -595,8 +628,11 @@ def fault_scenario_factory(
         already initialied :class:`.Fault` objects.
 
     """
+    adapted = {
+        index: [accelerator] for index, accelerator in enumerate(accelerators)
+    }
     factory = FaultScenarioFactory(
-        accelerators=accelerators,
+        accelerators=adapted,
         beam_calc=beam_calc,
         design_space=design_space,
         objective_factory_class=objective_factory_class,

@@ -47,10 +47,14 @@ class BeamCalculator(ABC):
 
     _ids = count(0)
 
+    @classmethod
+    def reset_ids(cls) -> None:
+        """Reset the id counter. Useful between tests."""
+        cls._ids = count(0)
+
     def __init__(
         self,
         reference_phase_policy: REFERENCE_PHASE_POLICY_T,
-        out_folder: Path | str,
         default_field_map_folder: Path | str,
         beam_kwargs: BeamKwargs,
         export_phase: EXPORT_PHASES_T,
@@ -64,10 +68,6 @@ class BeamCalculator(ABC):
         reference_phase_policy :
             How reference phase of :class:`.CavitySettings` will be
             initialized.
-        out_folder :
-            Name of the folder where results should be stored, for each
-            :class:`.Accelerator` under study. This is the name of a folder,
-            not a full path.
         default_field_map_folder :
             Where to look for field map files by default.
         flag_cython :
@@ -83,12 +83,7 @@ class BeamCalculator(ABC):
             reference_phase_policy
         )
         self.flag_cython = flag_cython
-        self.id: str = f"{self.__class__.__name__}_{next(self._ids)}"
-        self._export_phase = export_phase
-
-        if isinstance(out_folder, str):
-            out_folder = Path(out_folder)
-        self.out_folder = out_folder
+        self._export_phase: EXPORT_PHASES_T = export_phase
 
         if isinstance(default_field_map_folder, str):
             default_field_map_folder = Path(default_field_map_folder)
@@ -102,6 +97,28 @@ class BeamCalculator(ABC):
         self.beam_calc_parameters_factory: (
             ElementBeamCalculatorParametersFactory
         )
+        #: Unique ID for this object. Obtained by prepending its order in the
+        #: list of :class:`BeamCalculator` to its class name. Typically:
+        #: ``"0_Envelope1D"`` or ``"1_TraceWin"``. Note that this will also
+        #: be the name of the directory where results will be saved. Typical
+        #: project structure is::
+        #:
+        #:    YYYY.MM.DD_HHhmm_SSs_MILLIms/
+        #:    ├── 000000_ref
+        #:    │   ├── 0_Envelope1D/
+        #:    │   └── 1_TraceWin/
+        #:    ├── 000001
+        #:    │   ├── 0_Envelope1D/
+        #:    │   └── 1_TraceWin/
+        #:    ├── 000002
+        #:    │   ├── 0_Envelope1D/
+        #:    │   └── 1_TraceWin/
+        #:    ├── 000003
+        #:    │   ├── 0_Envelope1D/
+        #:    │   └── 1_TraceWin/
+        #:    └── lightwin.log
+        #:
+        self.id: str = f"{next(self._ids)}_{self.__class__.__name__}"
         self._set_up_common_factories()
         self._set_up_specific_factories()
 
@@ -128,6 +145,7 @@ class BeamCalculator(ABC):
 
     def run(
         self,
+        accelerator_id: str,
         elts: ListOfElements,
         update_reference_phase: bool = False,
         **kwargs,
@@ -143,6 +161,9 @@ class BeamCalculator(ABC):
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         elts :
             List of elements in which the beam must be propagated.
         update_reference_phase :
@@ -161,7 +182,11 @@ class BeamCalculator(ABC):
 
         """
         simulation_output = self.run_with_this(
-            None, elts, use_a_copy_for_nominal_settings=False, **kwargs
+            accelerator_id=accelerator_id,
+            set_of_cavity_settings=None,
+            elts=elts,
+            use_a_copy_for_nominal_settings=False,
+            **kwargs,
         )
         if update_reference_phase:
             if self.reference_phase == "phi_s":
@@ -175,6 +200,7 @@ class BeamCalculator(ABC):
     @abstractmethod
     def run_with_this(
         self,
+        accelerator_id: str,
         set_of_cavity_settings: SetOfCavitySettings | None,
         elts: ListOfElements,
         use_a_copy_for_nominal_settings: bool = True,
@@ -186,6 +212,9 @@ class BeamCalculator(ABC):
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         set_of_cavity_settings :
             Holds the norms and phases of the compensating cavities.
         elts :
@@ -205,6 +234,7 @@ class BeamCalculator(ABC):
     @abstractmethod
     def post_optimisation_run_with_this(
         self,
+        accelerator_id: str,
         optimized_cavity_settings: SetOfCavitySettings,
         full_elts: ListOfElements,
         **kwargs,
@@ -222,10 +252,6 @@ class BeamCalculator(ABC):
     @abstractmethod
     def init_solver_parameters(self, accelerator: Accelerator) -> None:
         """Init some :class:`BeamCalculator` solver parameters."""
-
-    def _generate_simulation_output(self, *args, **kwargs) -> SimulationOutput:
-        """Transform the output of ``run`` to a :class:`.SimulationOutput`."""
-        return self.simulation_output_factory.run(*args, **kwargs)
 
     @property
     def reference_phase(self) -> REFERENCE_PHASES_T:
@@ -262,6 +288,10 @@ class BeamCalculator(ABC):
     ) -> SimulationOutput:
         """Wrap full process to compute propagation of beam in accelerator.
 
+        .. todo::
+            ``recompute_reference`` should be deprecated right? Its role is
+            filled by the pickling.
+
         Parameters
         ----------
         accelerator :
@@ -283,17 +313,15 @@ class BeamCalculator(ABC):
         """
         start_time = time.monotonic()
 
-        self.init_solver_parameters(accelerator)
+        simulation_output = None
+        if accelerator.is_unpickled:
+            simulation_output = self._get_already_calculated(accelerator)
 
-        simulation_output = self.run(accelerator.elts)
-        simulation_output.compute_indirect_quantities(
-            accelerator.elts, ref_simulation_output
-        )
-        if keep_settings:
-            accelerator.keep(
-                simulation_output,
-                exported_phase=self._export_phase,
-                beam_calculator_id=self.id,
+        if simulation_output is None:
+            simulation_output = self._actual_compute(
+                accelerator,
+                keep_settings=keep_settings,
+                ref_simulation_output=ref_simulation_output,
             )
 
         end_time = time.monotonic()
@@ -307,6 +335,58 @@ class BeamCalculator(ABC):
                 "long. will be easy for tracewin."
             )
         return simulation_output
+
+    def _actual_compute(
+        self,
+        accelerator: Accelerator,
+        keep_settings: bool = True,
+        ref_simulation_output: SimulationOutput | None = None,
+    ) -> SimulationOutput:
+        """Wrap the beam propagation of the accelerator."""
+        self.init_solver_parameters(accelerator)
+
+        simulation_output = self.run(
+            accelerator_id=accelerator.id, elts=accelerator.elts
+        )
+        simulation_output.compute_indirect_quantities(
+            accelerator.elts, ref_simulation_output
+        )
+        if keep_settings:
+            accelerator.keep(
+                simulation_output,
+                exported_phase=self._export_phase,
+                beam_calculator_id=self.id,
+            )
+        return simulation_output
+
+    def _get_already_calculated(
+        self, accelerator: Accelerator
+    ) -> SimulationOutput | None:
+        """Get previously calculated object.
+
+        This method should be used when the :class:`.Accelerator` is an
+        unpickled object.
+
+        .. todo::
+            Support when the order of BeamCalculator changed?
+
+        """
+        simulation_output = accelerator.simulation_outputs.get(self.id, None)
+        if simulation_output is not None:
+            logging.info(
+                "Skipped calculation of unpickled Accelerator: "
+                f"{accelerator.id}"
+            )
+            return simulation_output
+
+        logging.error(
+            f"Pickled Accelerator {accelerator.name} has no SimulationOutput "
+            f"calculated with current solver {self.id}. Note that it can "
+            "happen if the order of the BeamCalculator is changed, which is a"
+            " known bug. Will try to recompute this Accelerator as it was a "
+            " not-unpickled object."
+        )
+        return
 
     @property
     def cavity_settings_factory(self) -> CavitySettingsFactory:

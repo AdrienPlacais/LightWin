@@ -21,6 +21,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import AcceleratorFactory
+from lightwin.ui.workflow_setup import set_up_solvers
 from lightwin.util.solvers import solve_scalar_equation_brent
 
 leapfrog_marker = pytest.mark.xfail(
@@ -87,9 +88,7 @@ params = [
 @pytest.fixture(scope="class")
 def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
     """Instantiate the solver with the proper parameters."""
-    factory = BeamCalculatorsFactory(**config)
-    my_solver = factory.run_all()[0]
-    return my_solver
+    return set_up_solvers(reset_factory=True, **config)[0]
 
 
 @pytest.fixture(scope="class", params=params)
@@ -133,7 +132,7 @@ def accelerator(
 ) -> Accelerator:
     """Create an example linac."""
     accelerator_factory = AcceleratorFactory(beam_calculators=solver, **config)
-    accelerator = accelerator_factory.create_nominal()
+    accelerator = accelerator_factory.create_reference()
     return accelerator
 
 
@@ -251,7 +250,7 @@ def test_deprecated_flag_phi_abs_false(
             "phi_0_rel"
         ),
         call(
-            "The ``flag_phi_abs`` option is deprecated, prefer using the "
+            "flag_phi_abs: The ``flag_phi_abs`` option is deprecated, prefer using the "
             "``reference_phase_policy``.\nflag_phi_abs=False -> "
             "reference_phase_policy='phi_0_rel'\nflag_phi_abs=True -> "
             "reference_phase_policy='phi_0_abs'"
@@ -293,7 +292,7 @@ def test_deprecated_flag_phi_abs_true(
             "phi_0_abs"
         ),
         call(
-            "The ``flag_phi_abs`` option is deprecated, prefer using the "
+            "flag_phi_abs: The ``flag_phi_abs`` option is deprecated, prefer using the "
             "``reference_phase_policy``.\nflag_phi_abs=False -> "
             "reference_phase_policy='phi_0_rel'\nflag_phi_abs=True -> "
             "reference_phase_policy='phi_0_abs'"

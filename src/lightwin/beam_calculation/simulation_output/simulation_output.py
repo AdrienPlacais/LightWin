@@ -20,7 +20,7 @@ import math
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Self
+from typing import Any, Literal, Self
 
 import numpy as np
 import pandas as pd
@@ -42,6 +42,7 @@ from lightwin.util.helper import (
 )
 from lightwin.util.pickling import MyPickler
 from lightwin.util.typing import (
+    CONCATENABLE_CAVITY_SETTINGS,
     CONCATENABLE_ELTS,
     GET_ELT_ARG_T,
     GETTABLE_SIMULATION_OUTPUT_T,
@@ -49,6 +50,7 @@ from lightwin.util.typing import (
     NEEDS_3D,
     NEEDS_MULTIPART,
     POS_T,
+    CavParams,
 )
 
 
@@ -60,8 +62,14 @@ class SimulationOutput:
 
     Parameters
     ----------
-    out_folder :
-        Results folder used by the :class:`.BeamCalculator` that created this.
+    accelerator_id :
+        Associated :attr:`.Accelerator.id`. Looks like: ``0000001_Solution``.
+    beam_calculator_id :
+        ID of solver that created this object. Also used as the name of the
+        subdirectory where results should be saved. Typically,
+        ``"0_Envelope1D"`` or ``"1_TraceWin"``.
+    elts :
+        Elements on which this object was calculated.
     is_multiparticle :
         Tells if the simulation is a multiparticle simulation.
     is_3d :
@@ -92,40 +100,42 @@ class SimulationOutput:
     r_zz_elt :
         Cumulated transfer matrices in the [z-delta] plane. The default is
         None.
+    pow_lost :
+        Lost power along linac in :unit:`W`. Can only be given by
+        :class:`.TraceWin`.
+
     """
 
-    out_folder: Path
+    accelerator_id: str
+    beam_calculator_id: str
+
+    elts: ListOfElements
+
     is_multiparticle: bool
     is_3d: bool
 
     synch_trajectory: ParticleFullTrajectory
 
-    cav_params: dict[str, list[float | None]] | None
+    cav_params: CavParams
 
     beam_parameters: BeamParameters
 
-    element_to_index: ELEMENT_TO_INDEX_T | None
+    element_to_index: ELEMENT_TO_INDEX_T
     set_of_cavity_settings: SetOfCavitySettings
 
     transfer_matrix: TransferMatrix | None = None
-    z_abs: np.ndarray | None = None
+    z_abs: NDArray[np.float64] | None = None
     in_tw_fashion: pd.DataFrame | None = None
-    r_zz_elt: list[np.ndarray] | None = None
+    r_zz_elt: list[NDArray[np.float64]] | None = None
+    pow_lost: NDArray[np.float64] | None = None
 
     def __post_init__(self) -> None:
         """Save complementary data, such as :class:`.Element` indexes."""
         self.elt_idx: list[int]
-        if self.cav_params is None:
-            logging.error(
-                "Failed to init SimulationOutput.elt_idx as .cav_params was "
-                "not provided."
-            )
-        else:
-            self.elt_idx = [
-                i for i, _ in enumerate(self.cav_params["v_cav_mv"], start=1)
-            ]
+        self.elt_idx = [
+            i for i, _ in enumerate(self.cav_params["v_cav_mv"], start=1)
+        ]
         self.out_path: Path
-        self._linac_id: str | None = None
 
     def __str__(self) -> str:
         """Give a resume of the data that is stored."""
@@ -140,37 +150,14 @@ class SimulationOutput:
         return self.__str__()
 
     @property
-    def beam_calculator(self) -> str:
-        """Use ``out_path`` to retrieve name of :class:`.BeamCalculator`."""
-        if not hasattr(self, "out_path"):
-            return str(self.out_folder)
-        return self.out_path.name
-
-    @property
     def is_reference(self) -> bool:
         """Tell whether this objects concerns a nominal linac.
 
         .. todo::
-           MMMh
+           Not very robust.
 
         """
-        return self.linac_id == "000000_ref"
-
-    @property
-    def linac_id(self) -> str:
-        """Tell which linac is studied.
-
-        .. todo::
-           Fix this monstruosity.
-
-        """
-        if self._linac_id is None:
-            self._linac_id = self.out_path.parent.stem
-        return self._linac_id
-
-    @linac_id.setter
-    def linac_id(self, value: str) -> None:
-        self._linac_id = value
+        return self.accelerator_id == "000000_Reference"
 
     def has(self, key: str) -> bool:
         """Tell if the required attribute is in this class.
@@ -420,53 +407,79 @@ class SimulationOutput:
 
     def pickle(
         self, pickler: MyPickler, path: Path | str | None = None
-    ) -> Path:
+    ) -> Path | None:
         """Pickle (save) the object.
 
         This is useful for debug and temporary saves; do not use it for long
         time saving.
 
         """
-        if path is None:
-            path = self.out_path / "simulation_output.pkl"
-        assert isinstance(path, Path)
-        pickler.pickle(self, path)
-
-        if isinstance(path, str):
-            path = Path(path)
-        return path
+        return pickler.pickle(
+            my_object=self,
+            path=path,
+            initialfile="simulation-output_" + self.accelerator_id + ".pkl",
+            initialdir=self.out_path,
+            title=f"Choose where to save SimulationOutput: {self.accelerator_id}",
+        )
 
     @classmethod
-    def from_pickle(cls, pickler: MyPickler, path: Path | str) -> Self:
-        """Instantiate object from previously pickled file."""
-        simulation_output = pickler.unpickle(path)
-        return simulation_output  # type: ignore
+    def from_pickle(
+        cls, pickler: MyPickler, path: Path | str | None = None
+    ) -> Self:
+        """Instantiate object from previously pickled file.
+
+        .. note::
+           The "private" attribute :attr:`.SimulationOutput._is_unpickled` is
+           set to ``True``.
+
+        Parameters
+        ----------
+        pickler :
+            Pickler object.
+        path :
+            Path to the pickled object file. If not provided, use ``Tk`` to
+            open GUI and let user choose.
+
+        """
+        simulation_output = pickler.unpickle(path, expected=SimulationOutput)
+        if simulation_output is None:
+            raise TypeError(f"Unpickling {path} failed.")
+        elif not isinstance(simulation_output, cls):
+            raise TypeError(
+                "Unpickled object is not a SimulationOutput instance."
+            )
+
+        logging.info(f"Created an SimulationOutput by unpickling {path}.")
+        return simulation_output
 
     def plot(
-        self, key: str, to_deg: bool = True, grid: bool = True, **kwargs
-    ) -> Axes | np.ndarray:
-        """Plot the key."""
-        x_axis = markdown["z_abs"]
+        self,
+        key: GETTABLE_SIMULATION_OUTPUT_T,
+        to_deg: bool = True,
+        grid: bool = True,
+        x: Literal["z_abs", "elt_idx"] | None = None,
+        legend_entry: str | None = None,
+        ax: Axes | None = None,
+        **kwargs,
+    ) -> Axes | None:
+        """Plot the key.
+
+        This method does not use the default plotting module, but pandas
+        dataframe plotting method.
+
+        """
+        x = x or "elt_idx" if key in CONCATENABLE_CAVITY_SETTINGS else "z_abs"
+        x_axis = markdown[x]
         df = pd.DataFrame(
             {
-                x_axis: self.z_abs,
-                markdown[key]: self.get(key, to_deg=to_deg, **kwargs),
+                x_axis: self.get(x, **kwargs),
+                legend_entry
+                or self.accelerator_id: self.get(key, to_deg=to_deg, **kwargs),
             }
         )
-        return df.plot(x=x_axis, grid=grid, ylabel=markdown[key], **kwargs)
-
-    def elts(self) -> ListOfElements:
-        """Retrieve the elements associated with this object."""
-        assert (
-            self.element_to_index is not None
-        ), "SimulationOutput.element_to_index should be set"
-        keywords = getattr(self.element_to_index, "keywords", None)
-        assert isinstance(
-            keywords, dict
-        ), "SimulationOutput.element_to_index must be set with functools.paritial"
-        _elts = keywords.get("_elts", None)
-        assert _elts is not None, "SimulationOutput._elts incorrectly set"
-        return _elts
+        return df.plot(
+            x=x_axis, grid=grid, ylabel=markdown[key], ax=ax, **kwargs
+        )
 
 
 def _to_deg(

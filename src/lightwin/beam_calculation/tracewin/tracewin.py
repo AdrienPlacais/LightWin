@@ -47,7 +47,6 @@ class TraceWin(BeamCalculator):
     def __init__(
         self,
         reference_phase_policy: REFERENCE_PHASE_POLICY_T,
-        out_folder: Path | str,
         default_field_map_folder: Path | str,
         beam_kwargs: BeamKwargs,
         export_phase: EXPORT_PHASES_T,
@@ -67,10 +66,6 @@ class TraceWin(BeamCalculator):
         reference_phase_policy :
             How reference phase of :class:`.CavitySettings` will be
             initialized.
-        out_folder :
-            Name of the folder where results should be stored, for each
-            :class:`.Accelerator` under study. This is the name of a folder,
-            not a full path.
         default_field_map_folder :
             Where to look for field map files by default.
         beam_kwargs :
@@ -88,7 +83,7 @@ class TraceWin(BeamCalculator):
         cal_file :
             Name of the results folder. Updated at every call of the
             :func:`init_solver_parameters` method, using
-            ``Accelerator.accelerator_path`` and ``self.out_folder`` attributes.
+            ``Accelerator.accelerator_path`` and ``self.id`` attributes.
 
         """
         self.executable = executable
@@ -103,7 +98,6 @@ class TraceWin(BeamCalculator):
         self._filename = filename
         super().__init__(
             reference_phase_policy=reference_phase_policy,
-            out_folder=out_folder,
             default_field_map_folder=default_field_map_folder,
             beam_kwargs=beam_kwargs,
             export_phase=export_phase,
@@ -140,12 +134,10 @@ class TraceWin(BeamCalculator):
         )
 
         self.simulation_output_factory = SimulationOutputFactoryTraceWin(
-            _is_3d=self.is_a_3d_simulation,
-            _is_multipart=self.is_a_multiparticle_simulation,
-            _solver_id=self.id,
-            _beam_kwargs=self._beam_kwargs,
-            out_folder=self.out_folder,
-            _filename=self._filename,
+            is_multipart=self.is_a_multiparticle_simulation,
+            beam_calculator_id=self.id,
+            beam_kwargs=self._beam_kwargs,
+            filename=self._filename,
             beam_calc_parameters_factory=self.beam_calc_parameters_factory,
         )
 
@@ -159,7 +151,7 @@ class TraceWin(BeamCalculator):
         ``INI`` file.  It also defines ``base_kwargs``, which should be the
         same for every calculation. Finally, it sets ``path_cal``.
         But this path is more :class:`.ListOfElements` dependent...
-        ``Accelerator.accelerator_path`` + ``out_folder``
+        ``Accelerator.accelerator_path`` + ``self.id``
         (+ ``fault_optimisation_tmp_folder``)
 
         """
@@ -168,7 +160,7 @@ class TraceWin(BeamCalculator):
             if key not in kwargs:
                 kwargs[key] = val
 
-        path_cal = accelerator_path / self.out_folder
+        path_cal = accelerator_path / self.id
         if not path_cal.is_dir():
             path_cal.mkdir()
 
@@ -226,6 +218,7 @@ class TraceWin(BeamCalculator):
     # set_of_cavity_settings_to_kwargs
     def run(
         self,
+        accelerator_id: str,
         elts: ListOfElements,
         update_reference_phase: bool = False,
         **specific_kwargs,
@@ -234,6 +227,9 @@ class TraceWin(BeamCalculator):
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         elts :
             List of elements in which the beam must be propagated.
         update_reference_phase :
@@ -251,10 +247,16 @@ class TraceWin(BeamCalculator):
             single object.
 
         """
-        return super().run(elts, update_reference_phase, **specific_kwargs)
+        return super().run(
+            accelerator_id=accelerator_id,
+            elts=elts,
+            update_reference_phase=update_reference_phase,
+            **specific_kwargs,
+        )
 
     def run_with_this(
         self,
+        accelerator_id: str,
         set_of_cavity_settings: SetOfCavitySettings | None,
         elts: ListOfElements,
         use_a_copy_for_nominal_settings: bool = True,
@@ -267,6 +269,9 @@ class TraceWin(BeamCalculator):
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         set_of_cavity_settings :
             The new cavity settings to try. If it is None, then the cavity
             settings are taken from the FieldMap objects.
@@ -303,10 +308,11 @@ class TraceWin(BeamCalculator):
         exception = _run_in_bash(command, output_command=not is_a_fit)
 
         # check in which order those two methods should be called
-        simulation_output = self._generate_simulation_output(
-            elts,
-            path_cal,
-            exception,
+        simulation_output = self.simulation_output_factory.create(
+            accelerator_id=accelerator_id,
+            elts=elts,
+            path_cal=path_cal,
+            exception=exception,
             set_of_cavity_settings=set_of_cavity_settings,
         )
         self._post_treat_cavity_setttings(
@@ -318,6 +324,7 @@ class TraceWin(BeamCalculator):
 
     def post_optimisation_run_with_this(
         self,
+        accelerator_id: str,
         optimized_cavity_settings: SetOfCavitySettings,
         full_elts: ListOfElements,
         **specific_kwargs,
@@ -336,6 +343,9 @@ class TraceWin(BeamCalculator):
 
         Parameters
         ----------
+        accelerator_id :
+            Associated :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         optimized_cavity_settings :
             Optimized parameters.
         full_elts :
@@ -360,7 +370,10 @@ class TraceWin(BeamCalculator):
         # )
 
         simulation_output = self.run_with_this(
-            optimized_cavity_settings, full_elts, **specific_kwargs
+            accelerator_id=accelerator_id,
+            set_of_cavity_settings=optimized_cavity_settings,
+            elts=full_elts,
+            **specific_kwargs,
         )
         return simulation_output
 
@@ -379,9 +392,7 @@ class TraceWin(BeamCalculator):
             have to use the :class:`.ElementTraceWinParametersFactory` later.
 
         """
-        self.path_cal = Path(
-            accelerator.get("accelerator_path"), self.out_folder
-        )
+        self.path_cal = Path(accelerator.get("accelerator_path"), self.id)
 
         if not self.path_cal.is_dir():
             self.path_cal.mkdir()
@@ -421,16 +432,11 @@ class TraceWin(BeamCalculator):
            ones in :attr:`.FieldMap.cavity_settings`.
 
         """
+        cav_params = simulation_output.cav_params
+        v_cavs = cav_params["v_cav_mv"]
+        phi_ss = cav_params["phi_s"]
+
         for cavity in cavities:
-            phi_abs, v_cav_mv, phi_s = simulation_output.get(
-                "phi_abs",
-                "v_cav_mv",
-                "phi_s",
-                elt=cavity,
-                pos="in",
-                to_deg=False,
-                to_numpy=False,
-            )
             if set_of_cavity_settings is None:
                 # Any cavity during a "normal" run
                 settings = cavity.cavity_settings
@@ -441,7 +447,18 @@ class TraceWin(BeamCalculator):
                 # Non-compensating cavity during a fit
                 continue
 
-            settings.phi_bunch = phi_abs
+            phi_bunch = simulation_output.get(
+                "phi_abs", elt=cavity, pos="in", to_deg=False, to_numpy=False
+            )
+            idx = simulation_output.element_to_index(
+                elt=cavity, return_elt_idx=True
+            )
+            v_cav_mv = v_cavs[idx]
+            assert isinstance(v_cav_mv, float)
+            phi_s = phi_ss[idx]
+            assert isinstance(phi_s, float)
+
+            settings.phi_bunch = phi_bunch
             settings.phi_s = phi_s
             settings.v_cav_mv = v_cav_mv
         return

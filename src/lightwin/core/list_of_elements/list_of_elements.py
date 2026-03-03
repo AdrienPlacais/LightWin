@@ -24,7 +24,7 @@ import pandas as pd
 from lightwin.core.beam_parameters.initial_beam_parameters import (
     InitialBeamParameters,
 )
-from lightwin.core.elements.element import Element
+from lightwin.core.elements.element import ELEMENT_TO_INDEX_T, Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
@@ -32,6 +32,7 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
 )
 from lightwin.core.instruction import Instruction
 from lightwin.core.list_of_elements.helper import (
+    equivalent_elt,
     first,
     group_elements_by_lattice,
     group_elements_by_section,
@@ -46,8 +47,10 @@ from lightwin.util.pickling import MyPickler
 from lightwin.util.typing import (
     CONCATENABLE_ELTS,
     EXPORT_PHASES_T,
+    GET_ELT_ARG_T,
     GETTABLE_ELTS_T,
     ID_NATURE_T,
+    POS_T,
     REFERENCE_PHASES_T,
 )
 
@@ -124,6 +127,18 @@ class ListOfElements(list):
 
         self._l_cav: list[FieldMap] = list(
             filter(lambda cav: isinstance(cav, FieldMap), self)
+        )
+
+    def __call__(self, *args, **kwargs) -> None:
+        """Raise custom error when called.
+
+        This is temporary safety measure.
+
+        """
+        raise TypeError(
+            "'ListOfElements' object is not callable. Maybe you are trying to "
+            "call 'Accelerator.elts()'? This was changed in 0.15.1, replace it"
+            " by 'Accelerator.elts'."
         )
 
     @property
@@ -507,6 +522,85 @@ class ListOfElements(list):
 
         """
         return self.files
+
+    def generate_element_to_index_func(
+        self, solver_id: str
+    ) -> ELEMENT_TO_INDEX_T:
+        """Create the func to easily get data at proper mesh index.
+
+        Parameters
+        ----------
+        solver_id :
+            Name of the solver, to identify and take the proper
+            :class:`.ElementBeamCalculatorParameters`.
+
+        """
+        shift = self[0].beam_calc_param[solver_id].s_in
+
+        def element_to_index(
+            elt: Element | str | GET_ELT_ARG_T,
+            pos: POS_T | None = None,
+            return_elt_idx: bool = False,
+            handle_missing_elt: bool = False,
+        ) -> int | slice:
+            """Convert ``elt`` and ``pos`` into a mesh index.
+
+            This way, you can call ``get('w_kin', elt='FM5', pos='out')`` and
+            systematically get the energy at the exit of FM5, whatever the
+            :class:`.BeamCalculator` or the mesh size is.
+
+            .. todo::
+                different functions, for different outputs. At least, an
+                _element_to_index and a _element_to_indexes. And also a different
+                function for when the index element is desired.
+
+            Parameters
+            ----------
+            elt :
+                Element of which you want the index.
+            pos :
+                Index of entry or exit of the :class:`.Element`. If None,
+                return full indexes array.
+            return_elt_idx :
+                Whether the returned index should be the index in ``elts`` or
+                the index in the results array.
+            handle_missing_elt :
+                Look for an equivalent element when ``elt`` is not in ``elts``.
+
+            Returns
+            -------
+            int | slice
+                Index or range of indexes where ``elt`` is.
+
+            """
+            if isinstance(elt, str):
+                elt = equivalent_elt(elts=self, elt=elt)
+            elif elt not in self and handle_missing_elt:
+                logging.debug(
+                    f"{elt = } is not in self. Trying to take an element in "
+                    "self with the same name..."
+                )
+                elt = equivalent_elt(elts=self, elt=elt)
+
+            beam_calc_param = elt.beam_calc_param[solver_id]
+            if return_elt_idx:
+                return self.index(elt)
+
+            if pos is None:
+                return slice(
+                    beam_calc_param.s_in - shift,
+                    beam_calc_param.s_out - shift + 1,
+                )
+            if pos == "in":
+                return beam_calc_param.s_in - shift
+            if pos == "out":
+                return beam_calc_param.s_out - shift
+
+            raise RuntimeError(
+                f"{pos = }, while it must be 'in', 'out' or None"
+            )
+
+        return element_to_index
 
 
 def sumup_cavities(

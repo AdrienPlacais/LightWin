@@ -395,8 +395,12 @@ class MinimizeVariation(Objective):
 
         Note
         ----
-        Double check the ``elt`` and ``pos`` key-value pairs in ``get_kwargs``.
-        They should be "regular", *eg* the exit of every lattice.
+        You should double check that the ``elt`` and the ``pos`` key-value
+        pairs in ``get_kwargs`` are *regular*. Example: the exit of every
+        lattice.
+
+        .. todo::
+           Clarify these docstrings.
 
         Parameters
         ----------

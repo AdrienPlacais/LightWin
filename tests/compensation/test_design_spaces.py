@@ -26,7 +26,7 @@ from lightwin.failures.fault_scenario import (
     FaultScenario,
     fault_scenario_factory,
 )
-from lightwin.ui.workflow_setup import set_up_accelerators
+from lightwin.ui.workflow_setup import set_up_accelerators, set_up_solvers
 
 params = [
     pytest.param(
@@ -93,21 +93,19 @@ def config(
 @pytest.fixture(scope="class")
 def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
     """Instantiate the solver with the proper parameters."""
-    factory = BeamCalculatorsFactory(**config)
-    my_solver = factory.run_all()[0]
-    return my_solver
+    return set_up_solvers(reset_factory=True, **config)[0]
 
 
 @pytest.fixture(scope="class")
 def accelerators(
-    solver: BeamCalculator,
-    config: dict[str, dict[str, Any]],
+    solver: BeamCalculator, config: dict[str, dict[str, Any]]
 ) -> list[Accelerator]:
     """Create ref linac, linac we will break, compute ref simulation_output."""
     solvers = (solver,)
     accelerators = set_up_accelerators(config, solvers)
-    solver.compute(accelerators[0])
-    return accelerators
+    adapted = [sublist[0] for sublist in accelerators.values()]
+    solver.compute(adapted[0])
+    return adapted
 
 
 @pytest.fixture(scope="class")

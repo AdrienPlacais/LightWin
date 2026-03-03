@@ -15,6 +15,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.constants import instructions_tests_folder
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import AcceleratorFactory
+from lightwin.ui.workflow_setup import set_up_solvers
 
 # note: only r_zz matrix will be checked with envelope1d
 all_expected = {
@@ -104,9 +105,7 @@ def config(
 @pytest.fixture
 def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
     """Instantiate the solver with the proper parameters."""
-    factory = BeamCalculatorsFactory(**config)
-    my_solver = factory.run_all()[0]
-    return my_solver
+    return set_up_solvers(reset_factory=True, **config)[0]
 
 
 @pytest.fixture
@@ -115,7 +114,7 @@ def accelerator(
 ) -> Accelerator:
     """Create an example linac."""
     accelerator_factory = AcceleratorFactory(beam_calculators=solver, **config)
-    accelerator = accelerator_factory.create_nominal()
+    accelerator = accelerator_factory.create_reference()
     return accelerator
 
 

@@ -8,7 +8,6 @@
 import logging
 from abc import ABCMeta
 from collections.abc import Collection
-from functools import partial
 from typing import Any, Literal
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
@@ -17,6 +16,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.elements.element import Element
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
 from lightwin.optimisation.algorithms.bayesian_optimization import (
     BayesianOptimizationLW,
@@ -81,6 +81,7 @@ class OptimisationAlgorithmFactory:
         opti_method: ALGORITHMS_T,
         beam_calculator: BeamCalculator,
         reference_simulation_output: SimulationOutput,
+        accelerator_id: str,
         **wtf: Any,
     ) -> None:
         """Save properties common to every optimization algorithhm.
@@ -93,6 +94,9 @@ class OptimisationAlgorithmFactory:
             Object that will be used to compute propagation of the beam.
         reference_simulation_output :
             Simulation of the nominal accelerator.
+        accelerator_id :
+            Associated solution :attr:`.Accelerator.id`. Looks like:
+            ``0000001_Solution``.
         kwargs :
             Other keyword arguments that will be passed to the
             :class:`.OptimisationAlgorithm`.
@@ -102,6 +106,7 @@ class OptimisationAlgorithmFactory:
         self._beam_calculator = beam_calculator
         self._wtf = wtf
         self._reference_simulation_output = reference_simulation_output
+        self._accelerator_id = accelerator_id
 
     def create(
         self,
@@ -141,9 +146,20 @@ class OptimisationAlgorithmFactory:
             :class:`.OptimisationAlgorithm`.
 
         """
-        compute_beam_propagation = partial(
-            self._beam_calculator.run_with_this, elts=subset_elts
-        )
+
+        def compute_beam_propagation(
+            set_of_cavity_settings: SetOfCavitySettings | None,
+            use_a_copy_for_nominal_settings: bool = True,
+            **kwargs,
+        ):
+            return self._beam_calculator.run_with_this(
+                accelerator_id=self._accelerator_id,
+                set_of_cavity_settings=set_of_cavity_settings,
+                elts=subset_elts,
+                use_a_copy_for_nominal_settings=use_a_copy_for_nominal_settings,
+                **kwargs,
+            )
+
         default_kwargs: dict[str, Any] = {
             "compensating_elements": compensating_elements,
             "objective_factory": objective_factory,

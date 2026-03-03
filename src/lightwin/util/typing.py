@@ -1,6 +1,6 @@
 """Define types for better code-completion and linting."""
 
-from typing import Literal, TypedDict
+from typing import Literal, NotRequired, TypedDict
 
 from numpy.typing import NDArray
 
@@ -478,6 +478,21 @@ class BeamKwargs(TypedDict):
     lambda_bunch: float
     q_over_m: float
     m_over_q: float
+
+
+class CavParams(TypedDict):
+    """Holds cavity parameters in a :class:`.SimulationOutput`.
+
+    All lists have the length of the associated :class:`.ListOfElements`. They
+    contain ``None`` where :class:`.Element` is not a :class:`.FieldMap`.
+
+    """
+
+    v_cav_mv: list[float | None]
+    phi_s: list[float | None]
+    acceptance_phi: NotRequired[list[float | None]]
+    acceptance_energy: NotRequired[list[float | None]]
+    phi_0: NotRequired[list[float | None]]
 
 
 #: Allowed values for the ``id_nature`` key of ``wtf`` configuration table.

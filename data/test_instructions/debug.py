@@ -16,12 +16,11 @@ from lightwin.core.accelerator.factory import NoFault
 
 def _set_up_solvers(
     config: dict[str, Any],
-) -> tuple[BeamCalculator, list[str]]:
+) -> BeamCalculator:
     """Create the beam calculators."""
     factory = BeamCalculatorsFactory(**config)
     beam_calculators = factory.run_all()
-    beam_calculators_id = factory.beam_calculators_id
-    return beam_calculators[0], beam_calculators_id
+    return beam_calculators[0]
 
 
 def _set_up_accelerators(
@@ -41,7 +40,7 @@ def set_up(
     Accelerator,
 ]:
     """Set up everything."""
-    beam_calculator, _ = _set_up_solvers(config)
+    beam_calculator = _set_up_solvers(config)
     accelerator = _set_up_accelerators(config, beam_calculator)
     return beam_calculator, accelerator
 

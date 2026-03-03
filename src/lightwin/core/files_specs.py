@@ -9,12 +9,12 @@
 import datetime
 import logging
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
 from lightwin.config.table_spec import TableConfSpec
 from lightwin.constants import example_dat, example_folder
-from lightwin.util.log_manager import set_up_logging
+from lightwin.util.log_manager import LOG_LEVEL, LOG_LEVEL_T, set_up_logging
 
 FILES_CONFIG = (
     KeyValConfSpec(
@@ -30,7 +30,7 @@ FILES_CONFIG = (
         description="Level of messages written in console",
         default_value="INFO",
         is_mandatory=False,
-        allowed_values=("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"),
+        allowed_values=LOG_LEVEL,
     ),
     KeyValConfSpec(
         key="logfile_file",
@@ -45,7 +45,7 @@ FILES_CONFIG = (
         description="Level of messages written in logfile",
         default_value="INFO",
         is_mandatory=False,
-        allowed_values=("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"),
+        allowed_values=LOG_LEVEL,
     ),
     KeyValConfSpec(
         key="project_folder",
@@ -54,13 +54,22 @@ FILES_CONFIG = (
         default_value=example_folder / "results/",
         is_mandatory=False,
     ),
+    KeyValConfSpec(
+        key="pickle_paths",
+        types=(dict,),
+        description="Associates accelerator names with pickle files. Check "
+        "`dedicated notebook<notebooks-pickling>`.",
+        default_value={},
+        is_mandatory=False,
+        warning_message="Currently under implementation.",
+    ),
 )
 
 
 class FilesTableConfSpec(TableConfSpec):
     """Override the default table to add logging and results folder set up."""
 
-    def _pre_treat(self, toml_subdict: dict[str, Any], **kwargs) -> None:
+    def _pre_treat(self, toml_table: dict[str, Any], **kwargs) -> None:
         """Set up the logging as well as the results folder.
 
         .. note::
@@ -68,22 +77,18 @@ class FilesTableConfSpec(TableConfSpec):
             the ``kwargs``.
 
         """
-        super()._pre_treat(toml_subdict, **kwargs)
-        project_path = _create_project_folders(**kwargs, **toml_subdict)
-        _set_up_logging(project_path=project_path, **toml_subdict)
-        if "project_folder" not in toml_subdict:
-            toml_subdict["project_folder"] = project_path
+        super()._pre_treat(toml_table, **kwargs)
+        project_path = _create_project_folders(**kwargs, **toml_table)
+        _set_up_logging(project_path=project_path, **toml_table)
+        if "project_folder" not in toml_table:
+            toml_table["project_folder"] = project_path
 
 
 def _set_up_logging(
     project_path: Path,
     log_file: str = "lightwin.log",
-    logfile_log_level: Literal[
-        "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
-    ] = "INFO",
-    console_log_level: Literal[
-        "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
-    ] = "INFO",
+    logfile_log_level: LOG_LEVEL_T = "INFO",
+    console_log_level: LOG_LEVEL_T = "INFO",
     **toml_subdict,
 ) -> None:
     """Set up the logging."""
@@ -98,9 +103,7 @@ def _set_up_logging(
 
 
 def _create_project_folders(
-    toml_folder: Path,
-    project_folder: str | Path = "",
-    **toml_subdict,
+    toml_folder: Path, project_folder: str | Path = "", **toml_subdict
 ) -> Path:
     """Create a folder to store outputs and log messages."""
     project_path, exist_ok = _set_project_path(toml_folder, project_folder)

@@ -37,10 +37,10 @@ def recursive_getter(
     wanted_key: str, dictionary: dict[str, Any], **kwargs: Any
 ) -> Any:
     """Get first key in a possibly nested dictionary."""
-    for key, value in dictionary.items():
-        if wanted_key == key:
-            return value
+    if wanted_key in dictionary:
+        return dictionary[wanted_key]
 
+    for value in dictionary.values():
         if isinstance(value, dict):
             corresp_value = recursive_getter(wanted_key, value, **kwargs)
             if corresp_value is not None:
