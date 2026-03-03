@@ -16,6 +16,7 @@
 """
 
 import logging
+from collections.abc import Collection
 from pathlib import Path
 from typing import Any, Literal, Sequence
 
@@ -129,6 +130,7 @@ def factory(
     save_fig: bool = True,
     clean_fig: bool = True,
     fault_scenarios: Sequence[FaultScenario] | None = None,
+    only_solver_id: Collection[str] | str | None = None,
     **kwargs,
 ) -> list[Figure]:
     """Create all the desired plots.
@@ -190,6 +192,7 @@ def factory(
             save_fig=save_fig,
             clean_fig=clean_fig,
             fault_scenarios=fault_scenarios,
+            only_solver_id=only_solver_id,
             **_proper_kwargs(preset, merged_kwargs),
         )
         for accelerators_to_plot in plot_groups
@@ -257,7 +260,6 @@ def _build_plot_groups(
 
     for scenario_idx, scenario_accs in accelerators.items():
         if scenario_idx == 0:
-            plot_groups.append([ref_acc])
             continue
 
         computed = [acc for acc in scenario_accs if acc.is_computed()]
@@ -277,6 +279,9 @@ def _build_plot_groups(
 
         plot_groups.append([ref_acc, *computed])
 
+    if len(plot_groups) == 0:
+        plot_groups.append([ref_acc])
+
     return plot_groups
 
 
@@ -292,6 +297,7 @@ def _plot_preset(
     usr_kwargs: dict[str, Any] | None = None,
     get_kwargs: dict[str, bool] | None = None,
     symmetric_plot: bool = False,
+    only_solver_id: Collection[str] | str | None = None,
     **kwargs,
 ) -> Figure:
     """Plot a preset showing reference and all fixed alternatives for one scenario.
@@ -321,6 +327,11 @@ def _plot_preset(
         Keyword arguments for the :meth:`.SimulationOutput.get` methods.
     symmetric_plot :
         If plot should be symmetric around the x axis.
+    only_solver_id :
+        If set, we plot only data obtained with this solver(s). Must be
+        :attr:`.BeamCalculator.id` (or, equivalently, a key(s) in
+        :attr:`.Accelerator.simulation_outputs`). Typical values:
+        ``"0_Envelope1D"`` or ``"1_TraceWin"``.
     **kwargs :
         Holds all complementary data on the plots.
 
@@ -340,6 +351,7 @@ def _plot_preset(
                 *accelerators_to_plot,
                 get_kwargs=get_kwargs,
                 symmetric_plot=symmetric_plot,
+                only_solver_id=only_solver_id,
                 **(usr_kwargs or {}),
             )
         except ValueError as e:
@@ -408,6 +420,7 @@ def _make_a_subplot(
     plot_section: bool = True,
     symmetric_plot: bool = False,
     get_kwargs: dict[str, bool] | None = None,
+    only_solver_id: Collection[str] | str | None = None,
     **usr_kwargs,
 ) -> None:
     """Get proper data and plot it on an Axe.
@@ -431,6 +444,11 @@ def _make_a_subplot(
         If a symmetric plot (wrt x axis) should be added.
     get_kwargs :
         Keyword arguments for the :meth:`.SimulationOutput.get` method.
+    only_solver_id :
+        If set, we plot only data obtained with this solver(s). Must be
+        :attr:`.BeamCalculator.id` (or, equivalently, a key(s) in
+        :attr:`.Accelerator.simulation_outputs`). Typical values:
+        ``"0_Envelope1D"`` or ``"1_TraceWin"``.
     usr_kwargs :
         User-defined ``kwargs``, passed to the |axplot| method.
 
@@ -449,6 +467,7 @@ def _make_a_subplot(
         *accelerators,
         error_presets=ERROR_PRESETS,
         error_reference=ERROR_REFERENCE,
+        only_solver_id=only_solver_id,
         **(get_kwargs or {}),
     )
 
