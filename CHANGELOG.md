@@ -16,6 +16,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Build on `manylinux`.
 
 ## [0.15.1] -- 2026-03-03
+## 0.16.0 -- unreleased
+
+### Changed
+
+- Pickling/unpickling objects is more intuitive. It can be configured from the
+  `TOML`. It is particularly useful to avoid recomputing the same reference
+  `Accelerator` again and again. Also, helps comparing different solutions. More
+  details in the [Pickling notebook tutorial](https://lightwin.readthedocs.io/en/latest/manual/examples.pickling.html).
+- `AcceleratorFactory` produces a `dict[int, list[Accelerator]` instead of a
+  plain `list[Accelerator]`. Keys are `FaultScenario` index, values
+  corresponding `Accelerator`s -- including unpickled `Accelerator`s for
+  comparison.
+  Nothing should change for you if you use the functions from the
+  `ui.workflow_setup` module.
+- `plot.factory` is more robust, and allows plotting any number of
+  `Accelerator`s. Use the `only_solver_id` key to filter by `BeamCalculator`.
+
+## 0.15.1 -- unreleased
 
 ### Added
 
@@ -26,8 +44,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `Accelerator.elts` must now be called without the `()`.
-- Pickling/unpickling objects is more intuitive. Is is explained in the
-  [Pickling notebook tutorial](https://lightwin.readthedocs.io/en/latest/manual/examples.pickling.html).
 
 ## [0.15.0] -- 2025-12-11
 
