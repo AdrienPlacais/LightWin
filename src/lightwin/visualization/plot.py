@@ -176,24 +176,23 @@ def factory(
             "figures will be erased without saving."
         )
 
-    ref_acc = accelerators[0][0]
     plots_presets, plots_kwargs = (
         _separate_plot_presets_from_plot_modificators(plots)
     )
     merged_kwargs = kwargs | plots_kwargs
 
+    plot_groups = _build_plot_groups(accelerators)
+
     figs: list[Figure] = [
         _plot_preset(
             preset,
-            ref_acc,
-            *scenario_accs,
+            *accelerators_to_plot,
             save_fig=save_fig,
             clean_fig=clean_fig,
             fault_scenarios=fault_scenarios,
             **_proper_kwargs(preset, merged_kwargs),
         )
-        for scenario_idx, scenario_accs in accelerators.items()
-        if scenario_idx != 0  # skip reference-only scenario
+        for accelerators_to_plot in plot_groups
         for preset, plot_me in plots_presets.items()
         if plot_me
     ]
@@ -231,10 +230,59 @@ def _separate_plot_presets_from_plot_modificators(
     return plot_presets, plot_kwargs
 
 
+def _build_plot_groups(
+    accelerators: dict[int, list[Accelerator]],
+) -> list[list[Accelerator]]:
+    """Build the groups of accelerators to plot together.
+
+    Each group will produce one figure per preset. The reference accelerator
+    is always first. Scenario 0 produces a group of just ``[ref_acc]``.
+    Other scenarios produce ``[ref_acc, *computed_accs]``, and are skipped
+    entirely if none of their accelerators are computed yet.
+
+    Parameters
+    ----------
+    accelerators :
+        The full scenario mapping as passed to :func:`factory`. Must have the
+        ``0`` key, the corresponding value must be a list containing only
+        the reference :class:`.Accelerator`.
+
+    Returns
+    -------
+        List of accelerator groups, one per scenario to plot.
+
+    """
+    plot_groups: list[list[Accelerator]] = []
+    ref_acc = accelerators[0][0]
+
+    for scenario_idx, scenario_accs in accelerators.items():
+        if scenario_idx == 0:
+            plot_groups.append([ref_acc])
+            continue
+
+        computed = [acc for acc in scenario_accs if acc.is_computed()]
+        n_skipped = len(scenario_accs) - len(computed)
+
+        if n_skipped > 0:
+            logging.info(
+                f"Scenario {scenario_idx}: skipping {n_skipped} uncomputed "
+                f"accelerator(s) out of {len(scenario_accs)}."
+            )
+        if len(computed) == 0:
+            logging.info(
+                f"Scenario {scenario_idx}: no computed accelerators, skipping "
+                "all presets for this scenario."
+            )
+            continue
+
+        plot_groups.append([ref_acc, *computed])
+
+    return plot_groups
+
+
 def _plot_preset(
     preset: str,
-    ref_acc: Accelerator,
-    *fix_accs: Accelerator,
+    *accelerators_to_plot,
     all_y_axis: list[GETTABLE_SIMULATION_OUTPUT_T | Literal["struct"]],
     x_axis: X_AXIS_T = "z_abs",
     save_fig: bool = True,
@@ -252,15 +300,14 @@ def _plot_preset(
     ----------
     preset :
         Key of :data:`ALLOWED_PLOT_PRESETS`.
-    ref_acc :
-        The reference accelerator (scenario 0).
-    *fix_accs :
-        One or more accelerators belonging to the same scenario. All are
-        plotted on the same axes, each vs the reference.
-    x_axis :
-        Name of the x axis.
+    *accelerators_to_plot :
+        Accelerators to plot. First is always the reference. May contain only
+        the reference (scenario 0), or reference + one or more fixed
+        alternatives.
     all_y_axis :
         Name of all the y axis.
+    x_axis :
+        Name of the x axis.
     save_fig :
         To save Figures or not. Figure is saved to the path of ``fix_accs[0]``.
     add_objectives :
@@ -278,9 +325,6 @@ def _plot_preset(
         Holds all complementary data on the plots.
 
     """
-    if not fix_accs:
-        raise ValueError("At least one fixed accelerator must be provided.")
-
     fig, axx = create_fig_if_not_exists(
         len(all_y_axis), clean_fig=clean_fig, **kwargs
     )
@@ -293,8 +337,7 @@ def _plot_preset(
                 x_axis,
                 y_axis,
                 colors,
-                ref_acc,
-                *fix_accs,
+                *accelerators_to_plot,
                 get_kwargs=get_kwargs,
                 symmetric_plot=symmetric_plot,
                 **(usr_kwargs or {}),
@@ -309,7 +352,6 @@ def _plot_preset(
 
         if i == 0:
             colors = _used_colors(ax)
-
         if add_objectives:
             mark_objectives_position(ax, fault_scenarios, y_axis, x_axis)
 
@@ -317,7 +359,9 @@ def _plot_preset(
     axx[-1].set_xlabel(dic.markdown[x_axis])
 
     if save_fig:
-        file = Path(fix_accs[0].get("accelerator_path"), f"{preset}.png")
+        file = Path(
+            accelerators_to_plot[-1].get("accelerator_path"), f"{preset}.png"
+        )
         savefig(fig, file)
 
     return fig
