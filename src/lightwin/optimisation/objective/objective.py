@@ -126,7 +126,7 @@ class Objective(ABC):
         """Get desired value using :meth:`.SimulationOutput.get` method.
 
         .. seealso::
-            :func:`.simulation_output.factory._element_to_index`
+            :attr:`.SimulationOutput.element_to_index`
 
         Parameters
         ----------
