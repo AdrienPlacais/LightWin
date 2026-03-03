@@ -454,7 +454,7 @@ class AcceleratorFactory:
         for scenario_key, scenario_data in pickle_config.items():
             try:
                 index = int(scenario_key)
-            except ValueError, TypeError:
+            except (ValueError, TypeError):
                 logging.error(
                     f"Invalid scenario '{scenario_key = }' in pickle_paths. "
                     "Expected format: '000001', '000002', etc."

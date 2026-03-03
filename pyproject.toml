@@ -63,7 +63,7 @@ tracker = "https://github.com/AdrienPlacais/LightWin/issues"
 
 [tool.black]
 line-length = 79
-target-version = ["py314"]
+target-version = ["py312"]
 
 [tool.isort]
 line_length = 79
