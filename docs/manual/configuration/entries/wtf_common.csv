@@ -22,9 +22,9 @@ be a 1D list for automatic
 
 studies and it must be a 3D
 
-array if `` strategy `` is set
+array if `strategy` is set to
 
-to `` 'manual' ``.",✅,
+`'manual'`.",✅,
 `history_kwargs`,`dict`,"kwargs for the
 
 :class:`.OptimizationHistory`.",❌,
@@ -60,7 +60,7 @@ affects how the `failed` and
 interpret integer indices.",❌,"(0, 1)"
 `objective_preset`,`str`,"Objectives for the
 
-optimisation algorithm.",✅,"('CorrectorAtExit', 'EnergyMismatch', 'EnergyPhaseMismatch', 'EnergySeveralMismatches', 'EnergySyncPhaseMismatch', 'experimental', 'rephased_ADS', 'simple_ADS', 'sync_phase_as_objective_ADS')"
+optimisation algorithm.",✅,"('CorrectorAtExit', 'EnergyMismatch', 'EnergyPhaseMismatch', 'EnergySeveralMismatches', 'EnergySyncPhaseMismatch', 'RegularEnvelope', 'experimental', 'rephased_ADS', 'simple_ADS', 'sync_phase_as_objective_ADS')"
 "`optimisation_`
 
 `algorithm`",`str`,"Name of optimisation

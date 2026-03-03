@@ -3,8 +3,8 @@ tracewin package
 
 .. automodule:: lightwin.beam_calculation.tracewin
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

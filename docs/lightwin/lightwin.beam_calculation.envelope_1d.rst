@@ -3,8 +3,8 @@ envelope\_1d package
 
 .. automodule:: lightwin.beam_calculation.envelope_1d
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

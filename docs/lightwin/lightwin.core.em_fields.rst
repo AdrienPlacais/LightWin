@@ -3,8 +3,8 @@ em\_fields package
 
 .. automodule:: lightwin.core.em_fields
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

@@ -31,7 +31,7 @@ Each inner list represents one :class:`.FaultScenario`.
       ]
       id_nature = "name"
 
-   The above example defines three :class:`.FaultScenario`.
+   The above example defines three :class:`.FaultScenario`\s:
 
       #. The cavity named FM50 is broken.
       #. The cavities FM60 and FM61 are broken.

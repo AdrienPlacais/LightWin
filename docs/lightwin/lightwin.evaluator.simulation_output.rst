@@ -3,8 +3,8 @@ simulation\_output package
 
 .. automodule:: lightwin.evaluator.simulation_output
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

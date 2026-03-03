@@ -3,8 +3,8 @@ parameters package
 
 .. automodule:: lightwin.beam_calculation.parameters
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

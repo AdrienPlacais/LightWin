@@ -30,6 +30,7 @@ from lightwin.optimisation.design_space.helper import phi_s_limits
 from lightwin.optimisation.objective.objective import (
     MinimizeDifferenceWithRef,
     MinimizeMismatch,
+    MinimizeVariation,
     Objective,
     QuantityIsBetween,
 )
@@ -567,6 +568,93 @@ class EnergySeveralMismatches(ObjectiveFactory):
         return objective
 
 
+class RegularEnvelope(ObjectiveFactory):
+    r"""Showcase how :class:`.MinimizeVariation` can be used.
+
+    Here, we take :math:`\beta_{\phi,\,W}` at the exit of the ``n_lattices``
+    lattices after the last failure. We try to minimize standard deviation of
+    these envelopes.
+
+    """
+
+    compensation_zone_override_settings = {
+        "full_lattices": True,
+        "full_linac": False,
+        "start_at_beginning_of_linac": False,
+    }
+
+    def __init__(
+        self,
+        reference_simulation_output: SimulationOutput,
+        broken_elts: ListOfElements,
+        failed_elements: list[Element],
+        compensating_elements: list[Element],
+        design_space_kw: dict[str, Any],
+        n_lattices: int = 5,
+    ) -> None:
+        """Create the object.
+
+        Parameters
+        ----------
+        reference_simulation_output :
+            The reference simulation of the reference linac.
+        broken_elts :
+            List containing all the elements of the broken linac.
+        failed_elements :
+            Cavities that failed.
+        compensating_elements :
+            Cavities that will be used for the compensation.
+        design_space_kw :
+            Holds information on variables/constraints limits/initial values.
+            Used to compute the limits that ``phi_s`` must respect when the
+            synchronous phase is defined as an objective.
+        n_lattices :
+            Number of lattices on which envelope should be checked.
+
+        """
+        super().__init__(
+            reference_simulation_output,
+            broken_elts,
+            failed_elements,
+            compensating_elements,
+            design_space_kw,
+        )
+
+        ultimate_failure = max(failed_elements, key=lambda x: x.idx["elt_idx"])
+        corresponding_lattice = ultimate_failure.idx["lattice"]
+
+        n_following_lattices = broken_elts.take(
+            ids=range(
+                corresponding_lattice + 1,
+                corresponding_lattice + n_lattices + 1,
+            ),
+            id_nature="lattice",
+        )
+        self._objective_elements = [
+            lattice[-1] for lattice in n_following_lattices
+        ]
+
+    def get_objectives(self) -> list[Objective]:
+        """Return twiss and energy at end of lattices after failure."""
+        return [self._get_std_twiss_beta()]
+
+    def _get_std_twiss_beta(self) -> Objective:
+        """Return object to match envelope."""
+        objective = MinimizeVariation(
+            name=markdown["beta_zdelta"],
+            weight=1.0,
+            get_key="beta_zdelta",
+            get_kwargs={
+                "elt": self._objective_elements,
+                "pos": "out",
+                "to_numpy": False,
+            },
+            descriptor="""Minimize variation of envelope between end of every
+            lattice.""",
+        )
+        return objective
+
+
 class Spiral2(CorrectorAtExit):
     """Testing best SPIRAL2 compensation method.
 
@@ -584,6 +672,7 @@ OBJECTIVE_PRESETS = {
     "EnergyPhaseMismatch": EnergyPhaseMismatch,
     "EnergySeveralMismatches": EnergySeveralMismatches,
     "EnergySyncPhaseMismatch": EnergySyncPhaseMismatch,
+    "RegularEnvelope": RegularEnvelope,
     "experimental": CorrectorAtExit,
     "rephased_ADS": EnergyMismatch,
     "simple_ADS": EnergyPhaseMismatch,
@@ -595,6 +684,7 @@ OBJECTIVE_PRESETS_T = Literal[
     "EnergyPhaseMismatch",
     "EnergySeveralMismatches",
     "EnergySyncPhaseMismatch",
+    "RegularEnvelope",
     "experimental",
     "rephased_ADS",
     "simple_ADS",

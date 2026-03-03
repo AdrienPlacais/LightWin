@@ -3,8 +3,8 @@ visualization package
 
 .. automodule:: lightwin.visualization
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------
