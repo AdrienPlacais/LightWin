@@ -285,6 +285,25 @@ class Accelerator:
 
         return results[0] if len(results) == 1 else tuple(results)
 
+    def is_computed(self, solver_id: str | None = None) -> bool:
+        """Determine if propagation was calculated.
+
+        Parameters
+        ----------
+        solver_id :
+            If given, we check if this key was set in
+            :attr:`.simulation_outputs`.
+
+        Returns
+        -------
+        True if propagation was calculated with ``solver_id`` (or with any
+        solver if ``solver_id`` was not given).
+
+        """
+        if solver_id is None:
+            return len(self.simulation_outputs) > 0
+        return solver_id in self.simulation_outputs
+
     def _create_special_getters(self) -> dict[str, Callable]:
         """Create a dict of aliases that can be accessed w/ the get method."""
         # FIXME this won't work with new simulation output

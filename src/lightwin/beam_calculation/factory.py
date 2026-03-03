@@ -1,6 +1,7 @@
 """This module holds a factory to create the :class:`.BeamCalculator`."""
 
 import logging
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Literal, Self
 
@@ -68,63 +69,57 @@ class BeamCalculatorsFactory:
 
     @classmethod
     def reset(cls) -> None:
-        """Allow creation of a new factory."""
+        """Allow creation of a new factory.
+
+        Use this when the ``files`` or the ``beam`` ``TOML`` configuration
+        dicts were updated.
+
+        """
         cls._instance = None
 
     def __init__(
-        self,
-        beam_calculator: dict[str, Any],
-        files: dict[str, Any],
-        beam: BeamKwargs,
-        beam_calculator_post: dict[str, Any] | None = None,
-        **other_kw: dict,
+        self, files: dict[str, Any], beam: BeamKwargs, **kwargs: dict
     ) -> None:
         """
         Set up factory with arguments common to all :class:`.BeamCalculator`.
 
+        Note
+        ----
+        This object was designed to work with constant ``files`` and ``beam``.
+        If those dictionaries happen to change during the execution of the
+        script, execute `BeamCalculatorsFactory.reset()`.
+
         Parameters
         ----------
-        beam_calculator :
-            Configuration entries for the first :class:`.BeamCalculator`, used
-            for optimisation.
         files :
             Configuration entries for the input/output paths.
         beam :
             Configuration dictionary holding the initial beam parameters.
-        beam_calculator_post :
-            Configuration entries for the second optional
-            :class:`.BeamCalculator`, used for a more thorough calculation of
-            the beam propagation once the compensation settings are found.
-        other_kw :
+        kwargs :
             Other keyword arguments, not used for the moment.
 
         """
         if hasattr(self, "_initialized"):
             return
 
-        self.all_beam_calculator_kw = (beam_calculator,)
-        if beam_calculator_post is not None:
-            self.all_beam_calculator_kw = (
-                beam_calculator,
-                beam_calculator_post,
-            )
         self._beam_kwargs = beam
         self._initialized = True
 
-        self._patch_to_remove_misunderstood_key()
+        # self._patch_to_remove_misunderstood_key()
         self._original_dat_dir: Path = files["dat_file"].parent
         self._cache: dict[int, BeamCalculator] = {}
 
-    def _patch_to_remove_misunderstood_key(self) -> None:
+    def _patch_to_remove_misunderstood_key(
+        self, beam_calculator_kw: dict[str, Any]
+    ) -> None:
         """Patch to remove a key not understood by TraceWin. Declare id list.
 
         .. todo::
             fixme
 
         """
-        for beam_calculator_kw in self.all_beam_calculator_kw:
-            if "simulation type" in beam_calculator_kw:
-                del beam_calculator_kw["simulation type"]
+        if "simulation type" in beam_calculator_kw:
+            del beam_calculator_kw["simulation type"]
 
     def run(
         self,
@@ -152,7 +147,7 @@ class BeamCalculatorsFactory:
             The type of phase you want to export for your ``FIELD_MAP``.
         flag_cython :
             If the beam calculator involves loading cython field maps.
-        force_true :
+        force_new :
             To force creation of a new :class:`.BeamCalculator`.
 
         Returns
@@ -160,6 +155,7 @@ class BeamCalculatorsFactory:
             An instance of the proper beam calculator.
 
         """
+        self._patch_to_remove_misunderstood_key(beam_calculator_kw)
         cache_key = self._make_cache_key(
             reference_phase_policy=reference_phase_policy,
             tool=tool,
@@ -207,11 +203,16 @@ class BeamCalculatorsFactory:
         )
         return hash(key_data)
 
-    def run_all(self, force_new: bool = False) -> tuple[BeamCalculator, ...]:
+    def run_all(
+        self,
+        beam_calculators_kw: Sequence[dict[str, Any] | None],
+        force_new: bool = False,
+    ) -> tuple[BeamCalculator, ...]:
         """Create all the beam calculators."""
         beam_calculators = [
             self.run(force_new=force_new, **beam_calculator_kw)
-            for beam_calculator_kw in self.all_beam_calculator_kw
+            for beam_calculator_kw in beam_calculators_kw
+            if beam_calculator_kw is not None
         ]
         return tuple(beam_calculators)
 

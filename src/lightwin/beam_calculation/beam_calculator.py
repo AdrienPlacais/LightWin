@@ -47,6 +47,11 @@ class BeamCalculator(ABC):
 
     _ids = count(0)
 
+    @classmethod
+    def reset_ids(cls) -> None:
+        """Reset the id counter. Useful between tests."""
+        cls._ids = count(0)
+
     def __init__(
         self,
         reference_phase_policy: REFERENCE_PHASE_POLICY_T,

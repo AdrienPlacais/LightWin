@@ -20,6 +20,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import AcceleratorFactory
+from lightwin.ui.workflow_setup import set_up_solvers
 
 # Arguments are: reference_phase_policy, n_steps_per_cell
 params = [
@@ -79,10 +80,7 @@ def config(
 @pytest.fixture(scope="class")
 def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
     """Instantiate the solver with the proper parameters."""
-    BeamCalculatorsFactory.reset()
-    factory = BeamCalculatorsFactory(**config)
-    my_solver = factory.run_all()[0]
-    return my_solver
+    return set_up_solvers(reset_factory=True, **config)[0]
 
 
 @pytest.fixture(scope="class")

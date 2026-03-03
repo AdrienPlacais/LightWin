@@ -21,22 +21,46 @@ from lightwin.visualization import plot
 
 
 def set_up_solvers(
-    config: dict[str, dict[str, Any] | BeamKwargs],
+    files: dict[str, Any],
+    beam: BeamKwargs,
+    beam_calculator: dict[str, Any],
+    beam_calculator_post: dict[str, Any] | None = None,
+    reset_factory: bool = False,
+    **config,
 ) -> tuple[BeamCalculator, ...]:
     """Create the beam calculators.
 
     Parameters
     ----------
+    files :
+        Configuration entries for the input/output paths.
+    beam :
+        Configuration dictionary holding the initial beam parameters.
+    beam_calculator :
+        Configuration entries for the first :class:`.BeamCalculator`, used for
+        optimisation.
+    beam_calculator_post :
+        Configuration entries for the second optional :class:`.BeamCalculator`,
+        used for a more thorough calculation of the beam propagation once the
+        compensation settings are found.
+    reset_factory :
+        Force creation of a new :class:`.BeamCalculatorsFactory`, reset the
+        :class:`.BeamCalculator` counter. Use this if you want to change the
+        ``files`` or ``beam`` without restarting the Python kernel -- for
+        example during ``pytest``.
     config :
-        The full ``TOML`` configuration dictionary.
+        Other ``TOML`` configuration dictionaries.
 
     Returns
     -------
         The objects that will compute the beam propagation.
 
     """
-    factory = BeamCalculatorsFactory(**config)
-    beam_calculators = factory.run_all()
+    if reset_factory:
+        BeamCalculatorsFactory.reset()
+        BeamCalculator.reset_ids()
+    factory = BeamCalculatorsFactory(files=files, beam=beam)
+    beam_calculators = factory.run_all([beam_calculator, beam_calculator_post])
     return beam_calculators
 
 
@@ -147,7 +171,7 @@ def set_up(
         linac per :class:`.BeamCalculator`.
 
     """
-    beam_calculators = set_up_solvers(config)
+    beam_calculators = set_up_solvers(**config)
     accelerators = set_up_accelerators(config, beam_calculators)
 
     fault_scenarios = None
