@@ -441,7 +441,7 @@ class AcceleratorFactory:
         parsed: dict[int, str | dict[str, str]] = {}
 
         ref = pickle_config.pop("Reference", None)
-        if not isinstance(ref, str) and ref is not None:
+        if not isinstance(ref, (str, Path)) and ref is not None:
             logging.error(
                 f"[files.pickle_paths] 'Reference' value is {ref}, but a "
                 "string is expected."
@@ -495,11 +495,13 @@ class AcceleratorFactory:
             path = self._pickle_paths.get(0)
             if path is None:
                 return
+            if isinstance(path, Path):
+                return path.resolve().absolute()
             if isinstance(path, str):
                 return Path(path).resolve().absolute()
             raise TypeError(
                 f"Reference Accelerator pickle {path = } could not be resolved"
-                "to a string."
+                "to a string nor a Path."
             )
 
         scenario = self._pickle_paths.get(index)
