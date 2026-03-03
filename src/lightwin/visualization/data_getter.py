@@ -5,9 +5,10 @@
 
 """
 
-import itertools
 import logging
-from typing import Any, Callable
+from collections.abc import Collection
+from dataclasses import dataclass
+from typing import Any, Callable, Literal, Self
 
 import numpy as np
 from numpy.typing import NDArray
@@ -23,86 +24,164 @@ from lightwin.visualization.helper import (
     X_AXIS_T,
 )
 
+ERROR_REFERENCE_T = Literal[
+    "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)",
+    "ref accelerator (1st solver)",
+    "ref accelerator (2nd solver)",
+]
+
+
+@dataclass
+class _SimData:
+    """Bundle of parallel x/y/kwargs lists for one accelerator's simulations."""
+
+    x: list[NDArray[np.float64]]
+    y: list[NDArray[np.float64]]
+    kw: list[dict[str, Any]]
+
+    def __len__(self) -> int:
+        return len(self.x)
+
+    def __bool__(self) -> bool:
+        return len(self) > 0
+
+    def __iadd__(self, other: Self) -> Self:
+        """Define ``sim_data += other_simdata`` operations."""
+        self.x += other.x
+        self.y += other.y
+        self.kw += other.kw
+        return self
+
 
 def all_accelerators_data(
     x_axis: X_AXIS_T,
     y_axis: GETTABLE_SIMULATION_OUTPUT_T,
     *accelerators: Accelerator,
-    error_presets: dict[str, dict[str, Any]],
-    error_reference: str,
+    error_presets: dict[str, dict[str, str | float]],
+    error_reference: ERROR_REFERENCE_T,
     to_deg: bool = True,
-    none_to_nan: bool = True,
-    to_numpy: bool = True,
-    warn_structure_dependent: bool = False,
+    only_solver_id: Collection[str] | str | None = None,
     **get_kwargs,
-) -> tuple[list[np.ndarray], list[np.ndarray], list[dict[str, Any]]]:
-    """Get x_data, y_data, kwargs from all Accelerators (<=> for 1 subplot)."""
-    x_data, y_data, plt_kwargs = [], [], []
+) -> tuple[
+    list[NDArray[np.float64]], list[NDArray[np.float64]], list[dict[str, Any]]
+]:
+    """Get x_data, y_data, kwargs from all Accelerators (<=> for 1 subplot).
 
-    key = y_axis
-    error_plot = y_axis[-4:] == "_err"
-    if error_plot:
-        key = y_axis[:-4]
+    Parameters
+    ----------
+    x_axis :
+        Data to use as x-axis.
+    y_axis :
+        Data to use as y-axis.
+    *accelerators :
+        Object holding the :class:`.SimulationOutput` to plot.
+    error_presets :
+        Dictionary passed to :func:`_error_calculation_function`.
+    error_reference :
+        Reference in errors calculations.
+    to_deg :
+        If ``y_axis`` data with ``"phi"`` in their name should be converted to
+        degrees.
+    only_solver_id :
+        If set, we plot only data obtained with this solver(s). Must be
+        :attr:`.BeamCalculator.id` (or, equivalently, a key(s) in
+        :attr:`.Accelerator.simulation_outputs`). Typical values:
+        ``"0_Envelope1D"`` or ``"1_TraceWin"``.
 
-    for accelerator in accelerators:
-        x_dat, y_dat, plt_kw = _single_accelerator_all_simulations_data(
+    Returns
+    -------
+    list[NDArray[np.float64]]
+        ``(n,)`` list of x-arrays to plot.
+    list[NDArray[np.float64]]
+        ``(n,)`` list of y-arrays to plot.
+    list[dict]
+        ``(n,)`` list of plot ``kwargs``.
+
+    """
+    if isinstance(only_solver_id, str):
+        only_solver_id = (only_solver_id,)
+
+    error_plot = y_axis.endswith("_err")
+    key = y_axis[:-4] if error_plot else y_axis
+
+    ref_acc = accelerators[0]
+    fix_accs = accelerators[1:]
+
+    ref_acc, *fix_accs = accelerators
+
+    ref = _single_accelerator_all_simulations_data(
+        x_axis,
+        key,
+        ref_acc,
+        only_solver_id=only_solver_id,
+        to_deg=to_deg,
+        **get_kwargs,
+    )
+
+    if not error_plot:
+        result = _SimData(ref.x[:], ref.y[:], ref.kw[:])
+        for acc in fix_accs:
+            fix = _single_accelerator_all_simulations_data(
+                x_axis,
+                key,
+                acc,
+                only_solver_id=only_solver_id,
+                to_deg=to_deg,
+                **get_kwargs,
+            )
+            result += fix
+        return result.x, result.y, _avoid_similar_labels(result.kw)
+
+    fun_error = _error_calculation_function(
+        y_axis, error_presets=error_presets
+    )
+    result = _SimData([], [], [])
+    for acc in fix_accs:
+        fix = _single_accelerator_all_simulations_data(
             x_axis,
             key,
-            accelerator,
+            acc,
+            only_solver_id=only_solver_id,
             to_deg=to_deg,
-            none_to_nan=none_to_nan,
-            to_numpy=to_numpy,
-            warn_structure_dependent=warn_structure_dependent,
             **get_kwargs,
         )
-        x_data += x_dat
-        y_data += y_dat
-        plt_kwargs += plt_kw
+        result += _compute_error(ref, fix, fun_error, error_reference)
 
-    if error_plot:
-        fun_error = _error_calculation_function(
-            y_axis, error_presets=error_presets
-        )
-        x_data, y_data, plt_kwargs = _compute_error(
-            x_data,
-            y_data,
-            plt_kwargs,
-            fun_error,
-            error_reference=error_reference,
-        )
-
-    plt_kwargs = _avoid_similar_labels(plt_kwargs)
-    return x_data, y_data, plt_kwargs
+    return result.x, result.y, _avoid_similar_labels(result.kw)
 
 
 def _single_accelerator_all_simulations_data(
     x_axis: X_AXIS_T,
     y_axis: GETTABLE_SIMULATION_OUTPUT_T,
     accelerator: Accelerator,
+    only_solver_id: Collection[str] | None = None,
     **get_kwargs,
-) -> tuple[list[np.ndarray], list[np.ndarray], list[dict[str, Any]]]:
+) -> _SimData:
     """Get x_data, y_data, kwargs from all SimulationOutputs of Accelerator."""
-    x_data, y_data, plt_kwargs = [], [], []
+    result = _SimData([], [], [])
     ls = "-"
-    for solver, simulation_output in accelerator.simulation_outputs.items():
-        short_solver = solver.split("(")[0]
+
+    for solver_id, simulation_output in accelerator.simulation_outputs.items():
+        if only_solver_id is not None and solver_id not in only_solver_id:
+            continue
+
+        label = solver_id
         if simulation_output.is_multiparticle:
-            short_solver += " (multipart)"
-        label = f"{accelerator.name} {short_solver}"
+            label += " (multipart)"
+        label = f"{accelerator.name} {label}"
 
         x_dat, y_dat, plt_kw = _single_simulation_all_data(
             x_axis, y_axis, simulation_output, label=label, **get_kwargs
         )
-
         plt_kw["label"] = label
         plt_kw["ls"] = ls
         ls = "--"
 
-        x_data.append(x_dat)
-        y_data.append(y_dat)
-        plt_kwargs.append(plt_kw)
+        result.x.append(x_dat)
+        result.y.append(y_dat)
+        result.kw.append(plt_kw)
 
-    return x_data, y_data, plt_kwargs
+    return result
 
 
 def _single_simulation_all_data(
@@ -127,37 +206,45 @@ def _single_simulation_all_data(
                 f"{y_axis} not found in {label}. Setting it to dummy data. "
                 f"Complete SimulationOutput is:\n{simulation_output}"
             )
-        x_data = np.full((10, 1), np.nan)
-        y_data = np.full((10, 1), np.nan)
-        return x_data, y_data, {}
+        dummy = np.full((10,), np.nan)
+        return dummy, dummy, {}
 
-    if (leny := y_data.shape) != (lenx := x_data.shape):
+    if x_data.shape != y_data.shape:
         logging.error(
-            f"Shape mismatch in {label}: {x_axis} has shape {lenx} while "
-            f"{y_axis} has shape {leny}. If this is a TransferMatrix plot "
-            "with TraceWin solver, it is because TraceWin exports one transfer"
-            " matrix per element while LightWin exports one per thin-lense "
-            "(FIXME). Also happends with acceptance_phi and TraceWin. Skipping"
-            f" this plot. Complete SimulationOuptut is:\n{simulation_output}"
+            f"Shape mismatch in {label}: {x_axis} has shape {x_data.shape} "
+            f"while {y_axis} has shape {y_data.shape}. If this is a "
+            "TransferMatrix plot with TraceWin solver, it is because TraceWin "
+            "exports one transfer matrix per element while LightWin exports "
+            "one per thin-lense (FIXME). Also happens with acceptance_phi and "
+            f"TraceWin. Skipping this plot. Complete SimulationOutput "
+            f"is:\n{simulation_output}"
         )
-        y_data = np.full_like(x_data, np.nan)
-        return x_data, y_data, {}
+        return x_data, np.full_like(x_data, np.nan), {}
 
-    plt_kwargs = dic.plot_kwargs[y_axis].copy()
-    return x_data, y_data, plt_kwargs
+    return x_data, y_data, dic.plot_kwargs[y_axis].copy()
 
 
 def _single_simulation_data(
     axis: GETTABLE_SIMULATION_OUTPUT_T,
     simulation_output: SimulationOutput,
     to_deg: bool = True,
+    to_numpy=True,
+    none_to_nan=True,
+    warn_structure_dependent=False,
     **get_kwargs,
 ) -> NDArray[np.float64] | None:
     """Get single data array from single SimulationOutput."""
     # Patch to avoid envelopes being converted again to degrees
     if "envelope_pos" in axis:
         to_deg = False
-    data = simulation_output.get(axis, to_deg=to_deg, **get_kwargs)
+    data = simulation_output.get(
+        axis,
+        to_deg=to_deg,
+        to_numpy=to_numpy,
+        none_to_nan=none_to_nan,
+        warn_structure_dependent=warn_structure_dependent,
+        **get_kwargs,
+    )
     return data
 
 
@@ -185,7 +272,10 @@ def _avoid_similar_labels(plt_kwargs: list[dict]) -> list[dict]:
 def _error_calculation_function(
     y_axis: str,
     error_presets: dict[str, dict[str, Any]],
-) -> tuple[Callable[[np.ndarray, np.ndarray], np.ndarray], str]:
+) -> tuple[
+    Callable[[NDArray[np.float64], NDArray[np.float64]], NDArray[np.float64]],
+    str,
+]:
     """Set the function called to compute error."""
     scale = error_presets[y_axis]["scale"]
     error_computers = {
@@ -200,48 +290,84 @@ def _error_calculation_function(
 
 
 def _compute_error(
-    x_data: list[np.ndarray],
-    y_data: list[np.ndarray],
-    plt_kwargs: list[dict[str, Any]],
-    fun_error: Callable[[np.ndarray, np.ndarray], np.ndarray],
-    error_reference: str,
-) -> tuple[list[np.ndarray], list[np.ndarray], list[dict[str, Any]]]:
-    """Compute error with proper reference and proper function."""
-    simulation_indexes = range(len(x_data))
+    ref: _SimData,
+    fix: _SimData,
+    fun_error: Callable[
+        [NDArray[np.float64], NDArray[np.float64]], NDArray[np.float64]
+    ],
+    error_reference: ERROR_REFERENCE_T,
+) -> _SimData:
+    """Compute error between one reference and one fix accelerator.
+
+    Parameters
+    ----------
+    ref :
+        Data from the reference accelerator (one entry per solver).
+    fix :
+        Data from a single fix accelerator (one entry per solver).
+    fun_error :
+        Function ``(y_ref, y_fix) -> error``.
+    error_reference :
+        Which reference solver(s) to pair with fix solvers.
+
+    Returns
+    -------
+        Error data, one entry per (ref, fix) solver pair.
+
+    """
+    if not ref or not fix:
+        logging.error("Empty data passed to _compute_error, returning empty.")
+        return _SimData([], [], [])
+
+    pairs = _build_solver_pairs(len(ref), len(fix), error_reference)
+    if pairs is None:
+        return _SimData([], [], [])
+
+    x_out, y_out, kw_out = [], [], []
+    for i_ref, i_fix in pairs:
+        x_interp, y_ref, _, y_fix = helper.resample(
+            ref.x[i_ref], ref.y[i_ref], fix.x[i_fix], fix.y[i_fix]
+        )
+        x_out.append(x_interp)
+        y_out.append(fun_error(y_ref, y_fix))
+        kw_out.append(fix.kw[i_fix])
+
+    return _SimData(x_out, y_out, kw_out)
+
+
+def _build_solver_pairs(
+    n_ref: int, n_fix: int, error_reference: ERROR_REFERENCE_T
+) -> list[tuple[int, int]] | None:
+    """Return (i_ref, i_fix) index pairs, or None on error.
+
+    Parameters
+    ----------
+    n_ref :
+        Number of solvers in the reference accelerator.
+    n_fix :
+        Number of solvers in the fix accelerator.
+    error_reference :
+        Pairing strategy.
+
+    Returns
+    -------
+        List of ``(i_ref, i_fix)`` pairs, or ``None`` if the strategy is
+        unsupported given the available solver counts.
+
+    """
     if error_reference == "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)":
-        i_ref = [i for i in range(len(x_data) // 2)]
-    elif error_reference == "ref accelerator (1st solver)":
-        i_ref = [0]
-    elif error_reference == "ref accelerator (2nd solver)":
-        i_ref = [1]
-        if len(x_data) < 4:
+        return [(min(i, n_ref - 1), i) for i in range(n_fix)]
+    if error_reference == "ref accelerator (1st solver)":
+        return [(0, i) for i in range(n_fix)]
+    if error_reference == "ref accelerator (2nd solver)":
+        if n_ref < 2:
             logging.error(
-                f"{error_reference = } not supported when only one "
-                "simulation is performed."
+                f"{error_reference = } not supported: reference has only "
+                f"{n_ref} simulation output(s)."
             )
-
-            return np.full((10, 1), np.nan), np.full((10, 1), np.nan), []
-    else:
-        logging.error(
-            f"{error_reference = }, which is not allowed. Check "
-            "allowed values in _compute_error."
-        )
-        return np.full((10, 1), np.nan), np.full((10, 1), np.nan), []
-
-    i_err = [i for i in simulation_indexes if i not in i_ref]
-    indexes_ref_with_err = itertools.zip_longest(
-        i_ref, i_err, fillvalue=i_ref[0]
+            return None
+        return [(1, i) for i in range(n_fix)]
+    logging.error(
+        f"{error_reference = } is not allowed. Check allowed values."
     )
-
-    x_data_error, y_data_error = [], []
-    for ref, err in indexes_ref_with_err:
-        x_interp, y_ref, _, y_err = helper.resample(
-            x_data[ref], y_data[ref], x_data[err], y_data[err]
-        )
-        error = fun_error(y_ref, y_err)
-
-        x_data_error.append(x_interp)
-        y_data_error.append(error)
-
-    plt_kwargs = [plt_kwargs[i] for i in i_err]
-    return x_data_error, y_data_error, plt_kwargs
+    return None
