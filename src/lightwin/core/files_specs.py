@@ -61,7 +61,6 @@ FILES_CONFIG = (
         "`dedicated notebook<notebooks-pickling>`.",
         default_value={},
         is_mandatory=False,
-        warning_message="Currently under implementation.",
     ),
 )
 

@@ -45,7 +45,7 @@ class AcceleratorFactory:
         #: Parsed dictionary holding path to the different pickles. Typical
         #: structure:
         #:
-        #: .. code-block:: toml
+        #: .. code-block::
         #:
         #:    {
         #:        "Reference": "reference.pkl",
@@ -321,10 +321,6 @@ class AcceleratorFactory:
           settings were found with :class:`.Envelope1D` and a second simulation
           was made with :class:`.TraceWin`.
 
-        Parameters
-        ----------
-            Base path for the accelerator's output files.
-
         """
         output_path.mkdir(parents=True, exist_ok=True)
 
@@ -458,7 +454,7 @@ class AcceleratorFactory:
         for scenario_key, scenario_data in pickle_config.items():
             try:
                 index = int(scenario_key)
-            except (ValueError, TypeError):
+            except ValueError, TypeError:
                 logging.error(
                     f"Invalid scenario '{scenario_key = }' in pickle_paths. "
                     "Expected format: '000001', '000002', etc."

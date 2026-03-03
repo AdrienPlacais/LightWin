@@ -459,9 +459,10 @@ class Accelerator:
         name :
             To override the unpickled :attr:`.Accelerator.name`.
         accelerator_id :
-            Use this to override the :func:`.SimulationOutput.linac_id` stored
-            in unpickled :attr:`Accelerator.simulation_outputs`. In particular,
-            used to legend plots.
+            Use this to override the
+            :attr:`.SimulationOutput.beam_calculator_id` stored in unpickled
+            :attr:`Accelerator.simulation_outputs`. In particular, used to
+            legend plots.
         index :
             Corresponding :class:`.FaultScenario` index. A null index is
             reserved for reference accelerator. Will override the ``index``

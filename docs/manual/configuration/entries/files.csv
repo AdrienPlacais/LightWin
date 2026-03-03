@@ -18,3 +18,10 @@ logfile",❌,"('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')"
 `Path`","Where output results will be
 
 stored",❌,
+`pickle_paths`,`dict`,"Associates accelerator names
+
+with pickle files. Check
+
+`dedicated`
+
+`notebook<notebooks-pickling>`.",❌,

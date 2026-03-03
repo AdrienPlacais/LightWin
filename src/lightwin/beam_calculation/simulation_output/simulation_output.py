@@ -428,10 +428,6 @@ class SimulationOutput:
     ) -> Self:
         """Instantiate object from previously pickled file.
 
-        .. note::
-           The "private" attribute :attr:`.SimulationOutput._is_unpickled` is
-           set to ``True``.
-
         Parameters
         ----------
         pickler :

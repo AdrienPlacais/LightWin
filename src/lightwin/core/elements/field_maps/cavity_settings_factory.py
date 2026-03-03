@@ -6,12 +6,11 @@ from collections.abc import Sequence
 import numpy as np
 
 from lightwin.core.elements.field_maps.cavity_settings import (
-    REFERENCE_PHASES_T,
-    STATUS_T,
     CavitySettings,
     CavityVars,
 )
 from lightwin.tracewin_utils.line import DatLine
+from lightwin.util.typing import REFERENCE_PHASES_T, STATUS_T
 
 
 class CavitySettingsFactory:
