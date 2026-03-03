@@ -181,3 +181,7 @@ if sys.version_info[:2] >= (3, 13) and sphinx.version_info[:2] < (8, 2):  # type
 
     _INVALID_BUILTIN_CLASSES[pathlib.Path] = "pathlib.Path"  # type: ignore
     nitpick_ignore.append(("py:class", "pathlib._local.Path"))
+
+# Try to fix sphinx autodoc not recognizing matplotlib Figure/Axes
+# /home/docs/checkouts/readthedocs.org/user_builds/lightwin/envs/0.16.x/lib/python3.12/site-packages/matplotlib/axes/_base.py:615: WARNING: Cannot resolve forward reference in type annotations of "lightwin.core.accelerator.accelerator.Axes" (module matplotlib.axes._base): name 'Figure' is not defined [sphinx_autodoc_typehints.forward_reference]
+autodoc_use_legacy_class_based = True
