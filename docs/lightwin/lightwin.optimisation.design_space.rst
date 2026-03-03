@@ -3,8 +3,8 @@ design\_space package
 
 .. automodule:: lightwin.optimisation.design_space
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

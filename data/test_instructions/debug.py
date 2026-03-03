@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Define a generic compensation workflow."""
+
 from pathlib import Path
 from typing import Any
 

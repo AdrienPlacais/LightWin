@@ -3,8 +3,8 @@ beam\_calculation package
 
 .. automodule:: lightwin.beam_calculation
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------

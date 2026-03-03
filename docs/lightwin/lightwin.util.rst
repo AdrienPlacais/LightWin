@@ -3,8 +3,8 @@ util package
 
 .. automodule:: lightwin.util
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

@@ -3,8 +3,8 @@ ui package
 
 .. automodule:: lightwin.ui
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

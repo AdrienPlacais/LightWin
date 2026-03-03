@@ -3,8 +3,8 @@ core package
 
 .. automodule:: lightwin.core
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------

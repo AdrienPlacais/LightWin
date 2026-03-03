@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Define a generic compensation workflow."""
+
 import tomllib
 from collections.abc import Collection, Sequence
 from pathlib import Path

@@ -3,8 +3,8 @@ objective package
 
 .. automodule:: lightwin.optimisation.objective
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

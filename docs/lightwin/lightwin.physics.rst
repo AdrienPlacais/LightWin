@@ -3,8 +3,8 @@ physics package
 
 .. automodule:: lightwin.physics
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

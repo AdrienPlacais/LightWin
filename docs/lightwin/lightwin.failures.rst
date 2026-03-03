@@ -3,8 +3,8 @@ failures package
 
 .. automodule:: lightwin.failures
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

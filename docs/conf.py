@@ -88,6 +88,9 @@ nitpicky = True
 nitpick_ignore = [
     # Not recognized by Sphinx, don't know if this is normal
     ("py:class", "numpy.float64"),
+    ("py:class", "np.float64"),
+    ("py:class", "NDArray"),
+    ("py:class", "numpy._typing._array_like._ScalarT"),
     # Due to bad design
     ("py:class", "lightwin.failures.set_of_cavity_settings.FieldMap"),
     ("py:obj", "lightwin.failures.set_of_cavity_settings.FieldMap"),
