@@ -5,14 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.16.0 -- unreleased
+## [0.16.0] -- unreleased
+
+### Added
+
+- The key `pickle_paths` in the `[files]` section of the `TOML` configuration
+  file allows you to control pickling of `Accelerator`s.
+  - If a given `PKL` file exists, it is unpickled and associated calculations
+    are skipped.
+  - If it does not exist, corresponding `Accelerator` is pickled at the end of
+    the simulation.
+  - Configuration file example:
+
+  ```toml
+  [files.pickle_paths]
+  Reference = "reference.pkl"
+
+  # Scenario 1: pre-computed solution (skips optimization if file exists)
+  [files.pickle_paths.000001]
+  Solution = "solution-000001.pkl"
+
+  # Scenario 2: alternatives with custom names (optimization still runs, the
+  # pickled Accelerators will be appended)
+  [files.pickle_paths.000002]
+  "Conservative approach" = "design-conservative.pkl"
+  "Aggressive tuning" = "design-aggressive.pkl"
+
+  # Scenario 3: solution + alternatives
+  [files.pickle_paths.000003]
+  Solution = "solution-000003.pkl"
+  "Tweaked design" = "tweaked.pkl"
+  "Experimental config" = "experimental.pkl"
+  ```
+
+  - [Pickling notebook tutorial](https://lightwin.readthedocs.io/en/latest/manual/examples.pickling.html).
 
 ### Changed
 
-- Pickling/unpickling objects is more intuitive. It can be configured from the
-  `TOML`. It is particularly useful to avoid recomputing the same reference
-  `Accelerator` again and again. Also, helps comparing different solutions. More
-  details in the [Pickling notebook tutorial](https://lightwin.readthedocs.io/en/latest/manual/examples.pickling.html).
 - `AcceleratorFactory` produces a `dict[int, list[Accelerator]` instead of a
   plain `list[Accelerator]`. Keys are `FaultScenario` index, values
   corresponding `Accelerator`s -- including unpickled `Accelerator`s for
