@@ -18,7 +18,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["cp312", "cp313"]
+        include:
+          - python: "cp312"
+            python_version: "3.12"
+          - python: "cp313"
+            python_version: "3.13"
+          - python: "cp314"
+            python_version: "3.14"
         # This is taken from numpy's wheel.yml
         # See also: https://github.com/github/feedback/discussions/7835#discussioncomment-1769026
         buildplat:
@@ -55,7 +61,7 @@ jobs:
       - name: 🐍 Setup Python ${{ matrix.python }} on ${{ matrix.buildplat[0] }}
         uses: actions/setup-python@v5
         with:
-          python-version: "3.14"
+          python-version: ${{ matrix.python_version }}
 
       - name: 🛠️ Install system dependencies for Pillow (Linux only)
         if: runner.os == 'Linux'
