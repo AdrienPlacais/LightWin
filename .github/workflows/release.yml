@@ -74,7 +74,7 @@ jobs:
           fi
 
       - name: 🔧 Build wheels
-        uses: pypa/cibuildwheel@v2.22.0
+        uses: pypa/cibuildwheel@v3.3.1
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
           # These are at 0.15.1 release, my project built with manylinux_2_17
