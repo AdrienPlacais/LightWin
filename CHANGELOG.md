@@ -51,6 +51,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `plot.factory` is more robust, and allows plotting any number of
   `Accelerator`s. Use the `only_solver_id` key to filter by `BeamCalculator`.
 
+## [0.15.2] -- 2026-03-04
+
+### Added
+
+- Build on Python 3.14.
+
+### Fixed
+
+- Build on `manylinux`.
+
 ## [0.15.1] -- 2026-03-03
 
 ### Added
