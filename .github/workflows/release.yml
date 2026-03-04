@@ -71,6 +71,11 @@ jobs:
         uses: pypa/cibuildwheel@v2.22.0
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
+          # These are at 0.15.1 release, my project built with manylinux_2_17
+          # but Scipy 1.17 has no builds for this version. Building from
+          # source needs OpenBLAS, not installed by default
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
 
       - name: 📤 Upload artifact
         uses: actions/upload-artifact@v4
