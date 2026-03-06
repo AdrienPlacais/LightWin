@@ -12,7 +12,6 @@ from lightwin.optimisation.objective.objective import (
 
 
 class MinimizeMismatch(_MinimizeMismatch):
-
     def __init__(self, *args, **kwargs):
         logging.warning(
             "MinimizeMismatch has moved to "

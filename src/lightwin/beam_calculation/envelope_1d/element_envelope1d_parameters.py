@@ -6,8 +6,8 @@ It holds the transfer matrix function that is used, according to the solver
 (Runge-Kutta or leapfrog) and their version (Python or Cython), as well as the
 meshing in accelerating elements.
 
-The :class:`.Element` objects with a transfer matrix are ``DRIFT``,
-``SOLENOID``, ``QUAD``, ``FIELD_MAP``, ``BEND``.
+The |E| objects with a transfer matrix are ``DRIFT``, ``SOLENOID``, ``QUAD``,
+``FIELD_MAP``, ``BEND``.
 
 """
 
@@ -105,7 +105,7 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         cavity_settings: Any = None,
         **kwargs,
     ) -> dict:
-        """Calculate beam propagation in the :class:`.Element`."""
+        """Calculate beam propagation in the |E|."""
         gamma_in = convert.energy(w_kin, "kin to gamma", **self._beam_kwargs)
         tm_kwargs = self.transfer_matrix_kw(
             w_kin=w_kin,
@@ -170,7 +170,7 @@ class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
     """Hold the properties to compute transfer matrix of a :class:`.Drift`.
 
     As this is 1D, it is also used for :class:`.Solenoid`, :class:`.Quad`,
-    broken :class:`.FieldMap`.
+    broken |FM|.
 
     """
 
@@ -199,7 +199,7 @@ class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
 
 
 class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
-    """Hold the properties to compute transfer matrix of a :class:`.FieldMap`.
+    """Hold the properties to compute transfer matrix of a |FM|.
 
     Non-accelerating cavities will use :class:`.DriftEnvelope1DParameters`
     instead.
@@ -391,10 +391,8 @@ def _get_phi_0_rel(cavity_settings: CavitySettings) -> float:
 
 
 class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
-    """
-    Hold properties to compute transfer matrix of :class:`.SuperposedFieldMap`.
-
-    """
+    """Hold properties to compute transfer matrix of
+    :class:`.SuperposedFieldMap`."""
 
     def __init__(
         self,
@@ -504,8 +502,7 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
     def re_set_for_broken_cavity(self) -> None:
         """Make beam calculator call Drift func instead of FieldMap."""
         raise NotImplementedError(
-            "superposed field maps should not be modified during execution for"
-            " now"
+            "superposed field maps should not be modified during execution for now"
         )
 
 
@@ -561,8 +558,7 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
         k_x: float,
         index_is_lower_than_unity: bool,
     ) -> tuple[float, float, float]:
-        r"""
-        Compute factors to speed up the transfer matrix calculation.
+        r"""Compute factors to speed up the transfer matrix calculation.
 
         ``factor_1`` is:
 

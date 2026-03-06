@@ -15,7 +15,7 @@ class TransferMatrixFactoryEnvelope1D(TransferMatrixFactory):
     def _preprocess(
         self, single_elt_results: list[dict[str, Any]]
     ) -> np.ndarray:
-        """Preprocess the data given by the :class:`.BeamCalculator`."""
+        """Preprocess the data given by the |BC|."""
         individual = [
             results["r_zz"][i]
             for results in single_elt_results
@@ -34,8 +34,7 @@ class TransferMatrixFactoryEnvelope1D(TransferMatrixFactory):
         Parameters
         ----------
         first_cumulated_transfer_matrix :
-            Cumulated transfer matrix at beginning of :class:`.ListOfElements`
-            under study.
+            Cumulated transfer matrix at beginning of |LOE| under study.
         single_elts_results :
             Results of the solver.
 

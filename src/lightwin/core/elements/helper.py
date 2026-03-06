@@ -10,7 +10,7 @@ from lightwin.core.elements.element import Element
 def give_name_to_elements(
     elts: Sequence[Element], warn_default_element_names: bool = True
 ) -> None:
-    """Give to every :class:`.Element` the name TraceWin would give it."""
+    """Give to every |E| the name TraceWin would give it."""
     civil_register: dict[str, int] = {}
     elements_with_a_default_name = []
     for elt in elts:
@@ -108,6 +108,7 @@ def force_a_lattice_for_every_element(elts: Sequence[Element]) -> None:
         * - ``QP4``
           - None
           - 1
+
     """
     idx_lattice = 0
     for elt in elts:

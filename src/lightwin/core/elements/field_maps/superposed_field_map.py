@@ -26,9 +26,8 @@ from lightwin.tracewin_utils.line import DatLine
 class SuperposedFieldMap(Element):
     """A single element holding several field maps.
 
-    We override its type to make Python believe it is a :class:`.FieldMap`,
-    while is is just an :class:`.Element`. So take care of keeping their
-    methods consistent!
+    We override its type to make Python believe it is a |FM|, while is is just
+    an |E|. So take care of keeping their methods consistent!
 
     .. todo::
         Remove idx in lattice, lattice, section arguments. can take this from
@@ -238,7 +237,7 @@ class SuperposedPlaceHolderCmd(DummyCommand):
 def unpack_superposed(
     packed: Collection[FieldMap | SuperposedFieldMap],
 ) -> list[FieldMap]:
-    """Extract the :class:`.FieldMap` from :class:`.SuperposedFieldMap`."""
+    """Extract the |FM| from :class:`.SuperposedFieldMap`."""
     unpacked = [
         elt
         for obj in packed

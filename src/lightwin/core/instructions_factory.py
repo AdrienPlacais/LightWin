@@ -1,8 +1,8 @@
-"""Define methods to easily create :class:`.Command` or :class:`.Element`.
+"""Define methods to easily create :class:`.Command` or |E|.
 
 .. todo::
-    Instantiate this in :class:`.BeamCalculator`. It could be initialized with
-    the ``load_electromagnetic_files`` flag (False for TraceWin), the list of
+    Instantiate this in |BC|. It could be initialized with the
+    ``load_electromagnetic_files`` flag (False for TraceWin), the list of
     implemented elements/commands (ex Envelope3D, not everything is set).
 
 .. todo::
@@ -164,14 +164,14 @@ class InstructionsFactory:
         command_fac :
             A factory to create :class:`.Command`.
         element_fac :
-            A factory to create :class:`.Element`.
+            A factory to create |E|.
         instruction_kw :
             Keywords given to the ``run`` method of the proper factory.
 
         Returns
         -------
-            Proper :class:`.Command` or :class:`.Element`, or :class:`.Dummy`,
-            or :class:`.Comment`.
+            Proper :class:`.Command` or |E|, or :class:`.Dummy`, or
+            :class:`.Comment`.
 
         """
         if not dat_line.instruction:

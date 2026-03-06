@@ -58,10 +58,10 @@ class CyEnvelope1D(Envelope1D):
         )
 
     def _set_up_specific_factories(self) -> None:
-        """Set up the factories specific to the :class:`.BeamCalculator`.
+        """Set up the factories specific to the |BC|.
 
         This method is called in the :meth:`.BeamCalculator.__init__`, hence it
-        appears only in the base :class:`.BeamCalculator`.
+        appears only in the base |BC|.
 
         """
         self.simulation_output_factory = SimulationOutputFactoryCyEnvelope1D(

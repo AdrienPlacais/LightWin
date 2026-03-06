@@ -1,4 +1,4 @@
-"""Define a master class for :class:`.Element` and :class:`.Command`.
+"""Define a master class for |E| and :class:`.Command`.
 
 .. todo::
     The ``line`` is edited to remove personalized name, weight and always have
@@ -69,18 +69,27 @@ class Instruction(ABC):
             )
 
     def __str__(self) -> str:
-        """Give name of current command. Used by LW to identify elements."""
+        """Give name of current command.
+
+        Used by LW to identify elements.
+
+        """
         return self.name
 
     def __repr__(self) -> str:
-        """Give more information than __str__. Used for display only."""
+        """Give more information than __str__.
+
+        Used for display only.
+
+        """
         if self.name:
             f"{self.__class__.__name__:15s} {self.name}"
         return f"{self.__class__.__name__:15s} {self.line}"
 
     @property
     def name(self) -> str:
-        """Give personalized name of instruction if exists, default otherwise."""
+        """Give personalized name of instruction if exists, default
+        otherwise."""
         if hasattr(self, "_personalized_name") and self._personalized_name:
             return self._personalized_name
         if hasattr(self, "_default_name"):
@@ -216,4 +225,8 @@ class Comment(Dummy):
 
 
 class LineJump(Comment):
-    """An object corresponding to an empty line. Basically a comment."""
+    """An object corresponding to an empty line.
+
+    Basically a comment.
+
+    """

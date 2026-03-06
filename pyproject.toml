@@ -70,6 +70,12 @@ line_length = 79
 profile = "black"
 src_paths = ["./src"]
 
+[tool.docformatter]
+black = true
+blank = true
+wrap-descriptions = 79
+wrap-summaries = 79
+
 [tool.pytest.ini_options]
 addopts = ["--import-mode=importlib", "--strict-markers"]
 filterwarnings = ["ignore:.*cKDTree.*:DeprecationWarning"]

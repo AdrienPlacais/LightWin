@@ -59,7 +59,8 @@ class SuperposedFields(Field):
         amplitudes: Collection[float],
         phi_0_rels: Collection[float],
     ) -> complex:
-        """Sum the e_x components from all :class:`.Field` instances at position ``pos``."""
+        """Sum the e_x components from all :class:`.Field` instances at
+        position ``pos``."""
         return sum(
             field.e_x(pos, phi, amplitude, phi_0_rel)
             for field, amplitude, phi_0_rel in self._params(
@@ -74,7 +75,8 @@ class SuperposedFields(Field):
         amplitudes: Collection[float],
         phi_0_rels: Collection[float],
     ) -> complex:
-        """Sum the e_y components from all :class:`.Field` instances at position ``pos``."""
+        """Sum the e_y components from all :class:`.Field` instances at
+        position ``pos``."""
         return sum(
             field.e_y(pos, phi, amplitude, phi_0_rel)
             for field, amplitude, phi_0_rel in self._params(
@@ -90,7 +92,8 @@ class SuperposedFields(Field):
         phi_0_rels: Collection[float],
         complex_output: bool = True,
     ) -> complex | float:
-        """Sum the e_z components from all :class:`.Field` instances at position ``pos``."""
+        """Sum the e_z components from all :class:`.Field` instances at
+        position ``pos``."""
         return sum(
             field.e_z(
                 pos,
@@ -111,7 +114,8 @@ class SuperposedFields(Field):
         amplitudes: Collection[float],
         phi_0_rels: Collection[float],
     ) -> complex:
-        """Sum the b_x components from all :class:`.Field` instances at position ``pos``."""
+        """Sum the b_x components from all :class:`.Field` instances at
+        position ``pos``."""
         return sum(
             field.b_x(pos, phi, amplitude, phi_0_rel)
             for field, amplitude, phi_0_rel in self._params(
@@ -126,7 +130,8 @@ class SuperposedFields(Field):
         amplitudes: Collection[float],
         phi_0_rels: Collection[float],
     ) -> complex:
-        """Sum the b_y components from all :class:`.Field` instances at position ``pos``."""
+        """Sum the b_y components from all :class:`.Field` instances at
+        position ``pos``."""
         return sum(
             field.b_y(pos, phi, amplitude, phi_0_rel)
             for field, amplitude, phi_0_rel in self._params(
@@ -141,7 +146,8 @@ class SuperposedFields(Field):
         amplitudes: Collection[float],
         phi_0_rels: Collection[float],
     ) -> complex:
-        """Sum the b_z components from all :class:`.Field` instances at position ``pos``."""
+        """Sum the b_z components from all :class:`.Field` instances at
+        position ``pos``."""
         return sum(
             field.b_z(pos, phi, amplitude, phi_0_rel)
             for field, amplitude, phi_0_rel in self._params(
@@ -174,5 +180,9 @@ class SuperposedFields(Field):
         return compl_combined, rea_combined
 
     def shift(self) -> None:
-        """Shift the field maps. Not applicable for :class:`SuperposedFields`."""
+        """Shift the field maps.
+
+        Not applicable for :class:`SuperposedFields`.
+
+        """
         pass

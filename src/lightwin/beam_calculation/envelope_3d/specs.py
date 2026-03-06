@@ -17,8 +17,7 @@ ENVELOPE3D_CONFIG = BEAM_CALCULATOR_BASE_CONFIG + (
         key="flag_cython",
         types=(bool,),
         description=(
-            "Not implemented yet. If we should use the Cython implementation "
-            "(faster)."
+            "Not implemented yet. If we should use the Cython implementation (faster)."
         ),
         default_value=False,
         is_mandatory=False,
@@ -37,8 +36,7 @@ ENVELOPE3D_CONFIG = BEAM_CALCULATOR_BASE_CONFIG + (
         key="n_steps_per_cell",
         types=(int,),
         description=(
-            "Number of integrating steps per cavity cell. Recommended value "
-            "is 40."
+            "Number of integrating steps per cavity cell. Recommended value is 40."
         ),
         default_value=40,
         is_mandatory=False,

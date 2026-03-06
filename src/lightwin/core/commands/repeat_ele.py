@@ -22,8 +22,7 @@ class RepeatEle(Command):
     ) -> None:
         """Instantiate object."""
         logging.warning(
-            "REPEAT_ELE under implementation. Behavior not tested w.r.t "
-            "lattice number."
+            "REPEAT_ELE under implementation. Behavior not tested w.r.t lattice number."
         )
         super().__init__(line, dat_idx)
         self.k_times = int(line.splitted[1])
@@ -38,7 +37,6 @@ class RepeatEle(Command):
         number_of_elements = 0
         stop = start
         for instruction in instructions[start:]:
-
             if number_of_elements == self.n_following:
                 self.influenced = slice(start, stop)
                 return

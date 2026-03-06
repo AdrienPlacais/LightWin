@@ -31,7 +31,7 @@ def _lex(text: str) -> list[str]:
 
     Tokenize into:
 
-      - roles like :class:`.Accelerator` (keeps trailing punctuation)
+      - roles like |A| (keeps trailing punctuation)
       - backtick blocks like `...` possibly with adjacent leading '(' or
         trailing ')','.', etc.
       - words (no spaces)

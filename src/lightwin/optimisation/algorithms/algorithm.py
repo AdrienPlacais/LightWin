@@ -91,8 +91,7 @@ class OptimisationAlgorithm(ABC):
             Holds :class:`.Variable`, :class:`.Constraint`.
         compute_beam_propagation :
             Takes in a :class:`.SetOfCavitySettings`, propages the beam in a
-            version of ``elts`` that uses them, and produce a
-            :class:`.SimulationOutput`.
+            version of ``elts`` that uses them, and produce a |SO|.
         cavity_settings_factory :
             An object that can create :class:`.SetOfCavitySettings` easily.
         reference_simulation_output :

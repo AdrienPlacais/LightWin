@@ -109,7 +109,6 @@ def simulation_outputs(
 
 @pytest.mark.envelope1d
 class TestOptimisationAlgorithms:
-
     def test_w_kin(
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
     ) -> None:

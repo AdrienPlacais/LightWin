@@ -10,11 +10,7 @@ from typing import Any
 import pytest
 
 from lightwin.config.full_specs import SimplestConfSpec
-from lightwin.constants import (
-    example_dat,
-    example_ini,
-    example_machine_config,
-)
+from lightwin.constants import example_dat, example_ini, example_machine_config
 
 CONFIG_KEYS = {
     "beam": "beam",

@@ -43,7 +43,7 @@ class Freq(Command):
         freq_bunch: float | None = None,
         **kwargs: float,
     ) -> list[Instruction]:
-        """Set :class:`.FieldMap` frequency.
+        """Set |FM| frequency.
 
         If another :class:`Freq` is found, we stop and the new :class:`Freq`
         will be dealt with later.
@@ -51,14 +51,13 @@ class Freq(Command):
         .. note::
             We should not encounter any :class:`.SuperposedFieldMap`, as the
             :class:`.SuperposeMap` commands should be *after* this
-            :class:`.Freq`. In other words, the :class:`.FieldMap` instances
-            are not superposed yet.
+            :class:`.Freq`. In other words, the |FM| instances are not
+            superposed yet.
 
         """
         if freq_bunch is None:
             logging.warning(
-                "The bunch frequency was not provided. Setting it to RF "
-                "frequency..."
+                "The bunch frequency was not provided. Setting it to RF frequency..."
             )
             freq_bunch = self.f_rf_mhz
 

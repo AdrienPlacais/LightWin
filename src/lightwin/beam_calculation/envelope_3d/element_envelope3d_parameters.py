@@ -40,10 +40,9 @@ from lightwin.util.typing import BeamKwargs
 
 
 class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
-    """Hold the parameters to compute beam propagation in an :class:`.Element`.
+    """Hold the parameters to compute beam propagation in an |E|.
 
-    has and get method inherited from ElementCalculatorParameters parent
-    class.
+    has and get method inherited from ElementCalculatorParameters parent class.
 
     """
 
@@ -206,7 +205,7 @@ class SolenoidEnvelope3DParameters(ElementEnvelope3DParameters):
 
 
 class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
-    """Hold the properties to compute transfer matrix of a :class:`.FieldMap`.
+    """Hold the properties to compute transfer matrix of a |FM|.
 
     Non-accelerating cavities will use :class:`.DriftEnvelope3DParameters`
     instead.

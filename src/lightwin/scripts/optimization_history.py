@@ -28,8 +28,7 @@ def load(
 def get_optimization_objective_names(
     objectives: pd.DataFrame,
 ) -> tuple[list[str], list[str]]:
-    """
-    Separate data from :class:`.Objective` and from :class:`.SimulationOutput`.
+    """Separate data from :class:`.Objective` and from |SO|.
 
     We expect that objectives have a ``|`` in their name, simulation outputs do
     not.

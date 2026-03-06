@@ -27,7 +27,7 @@ from lightwin.evaluator.types import post_treated_value_t, ref_value_t, value_t
 #     """Hold the place for a post treater.
 #
 #     If you want to plot the data as imported from the
-#     :class:`.SimulationOutput`, set the first of the ``post_treaters`` keys to:
+#     |SO|, set the first of the ``post_treaters`` keys to:
 #     partial(_do_nothing, to_plot=True)
 #
 #     """
@@ -38,9 +38,8 @@ def do_nothing(
 ) -> post_treated_value_t:
     """Hold the place for a post treater.
 
-    If you want to plot the data as imported from the
-    :class:`.SimulationOutput`, set the first of the ``post_treaters`` keys to:
-    partial(_do_nothing, to_plot=True)
+    If you want to plot the data as imported from the |SO|, set the first of
+    the ``post_treaters`` keys to: partial(_do_nothing, to_plot=True)
 
     """
     return value

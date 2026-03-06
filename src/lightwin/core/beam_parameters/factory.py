@@ -29,7 +29,7 @@ from lightwin.util.typing import PHASE_SPACE_T, BeamKwargs
 class BeamParametersFactory(ABC):
     """Declare factory method, that returns the :class:`.BeamParameters`.
 
-    Subclassed by every :class:`.BeamCalculator`.
+    Subclassed by every |BC|.
 
     """
 
@@ -65,10 +65,9 @@ class BeamParametersFactory(ABC):
         """Ensure that inputs are arrays with proper shape, compute beta."""
         z_abs = np.atleast_1d(z_abs)
         gamma_kin = np.atleast_1d(gamma_kin)
-        assert gamma_kin.shape == z_abs.shape, (
-            f"Shape mismatch: {gamma_kin.shape = } different from"
-            f" {z_abs.shape = }."
-        )
+        assert (
+            gamma_kin.shape == z_abs.shape
+        ), f"Shape mismatch: {gamma_kin.shape = } different from {z_abs.shape = }."
 
         beta_kin = converters.energy(
             gamma_kin, "gamma to beta", **self._beam_kwargs
@@ -241,8 +240,7 @@ class BeamParametersFactory(ABC):
 # Subclassed by ListOfElements
 # (for now, ListOfElements is common to every BeamCalculator)
 class InitialBeamParametersFactory(ABC):
-    """
-    This is used when creating new :class:`.ListOfElements`.
+    """This is used when creating new |LOE|.
 
     This factory is not subclassed. Only one instance should be created.
 

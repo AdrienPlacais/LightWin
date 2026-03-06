@@ -297,7 +297,8 @@ class TestDictToToml:
     def test_no_overwrite(
         self, mock_conf_spec: MagicMock, tmp_path: Path
     ) -> None:
-        """Test that dict_to_toml does not overwrite an existing file by default."""
+        """Test that dict_to_toml does not overwrite an existing file by
+        default."""
         toml_path = tmp_path / "test.toml"
         toml_path.touch()  # Create the file to simulate pre-existence
         toml_fulldict = {"beam": {"key1": "value1"}}
@@ -346,7 +347,8 @@ class TestDictToToml:
     def test_calls_to_toml_strings(
         self, mock_conf_spec: MagicMock, tmp_path: Path
     ) -> None:
-        """Test that dict_to_toml calls ConfSpec.to_toml_strings with the correct arguments."""
+        """Test that dict_to_toml calls ConfSpec.to_toml_strings with the
+        correct arguments."""
         toml_path = tmp_path / "test.toml"
         toml_fulldict = {"beam": {"key1": "value1"}}
 

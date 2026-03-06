@@ -21,8 +21,7 @@ IMPLEMENTED_CONSTRAINTS = ("phi_s",)  #:
 
 @dataclass
 class Constraint(DesignSpaceParameter):
-    """
-    A single constraint.
+    """A single constraint.
 
     For now, it can only be a synchronous phase limits.
 
@@ -50,8 +49,7 @@ class Constraint(DesignSpaceParameter):
 
     @property
     def n_constraints(self) -> int:
-        """
-        Return number of embedded constraints in this object.
+        """Return number of embedded constraints in this object.
 
         A lower + and upper bound count as two constraints.
 
@@ -65,7 +63,11 @@ class Constraint(DesignSpaceParameter):
     def evaluate(
         self, simulation_output: SimulationOutput
     ) -> tuple[float, float]:
-        """Check if constraint is respected. They should be < 0."""
+        """Check if constraint is respected.
+
+        They should be < 0.
+
+        """
         value = self.get_value(simulation_output)
         const = (self.limits[0] - value, value - self.limits[1])
         return const

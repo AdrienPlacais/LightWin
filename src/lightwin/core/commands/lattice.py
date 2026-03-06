@@ -96,15 +96,13 @@ class Lattice(Command):
     ) -> int:
         """Get lattice number of current object.
 
-        We look for :class:`.Element` in ``instructions`` in reversed order,
-        starting from ``self``. We take the first non negative lattice index
-        that we find, and return it + 1.
-        If we do not find anything, this is because no :class:`.Element` had a
-        defined lattice number before.
+        We look for |E| in ``instructions`` in reversed order, starting from
+        ``self``. We take the first non negative lattice index that we find,
+        and return it + 1. If we do not find anything, this is because no |E|
+        had a defined lattice number before.
 
-        This approach allows for :class:`.Element` without a lattice number, as
-        for examples drifts between a :class:`LatticeEnd` and a
-        :class:`Lattice`.
+        This approach allows for |E| without a lattice number, as for examples
+        drifts between a :class:`LatticeEnd` and a :class:`Lattice`.
 
         """
         instructions_before_self = instructions[:index]

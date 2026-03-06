@@ -1,4 +1,4 @@
-"""Define base :class:`Element`, declined in Drift, FieldMap, etc.
+"""Define base |E|, declined in Drift, FieldMap, etc.
 
 .. todo::
     clean the patch for the 'name'. my has and get methods do not work with
@@ -177,7 +177,11 @@ class Element(Instruction):
         return False
 
     def update_status(self, new_status: STATUS_T) -> None:
-        """Change the status of the element. To override."""
+        """Change the status of the element.
+
+        To override.
+
+        """
         if not self.can_be_retuned:
             logging.error(
                 f"You want to give {new_status = } to the element f{self.name},"
@@ -193,7 +197,7 @@ class Element(Instruction):
 
 
 class ELEMENT_TO_INDEX_T(Protocol):
-    """Type for function linking an :class:`Element` or its name to its index.
+    """Type for function linking an |E| or its name to its index.
 
     In particular, it is used for the ``get`` methods.
 
@@ -206,31 +210,30 @@ class ELEMENT_TO_INDEX_T(Protocol):
         pos: POS_T | None = None,
         return_elt_idx: bool = False,
         handle_missing_elt: bool = False,
-    ) -> int | slice: ...
+    ) -> int | slice:
+        """Return indexes of element ``elt``.
 
-    """Return indexes of element ``elt``.
+        Parameters
+        ----------
+        elt :
+            |E| for which you want position. Can be the :attr:`.Element.name`
+            attribute or the |E| instance itself.
+        pos :
+            Position within the |E|. If not provided, all indexes of |E| will
+            be returned.
+        return_elt_idx :
+            Return a position in a |LOE| instance. Used for arguments such as
+            `phi_s`, which holds one value per |E|.
+        handle_missing_elt :
+            Look for an equivalent element when ``elt`` is not in ``_elts``.
 
-    Parameters
-    ----------
-    elt :
-        :class:`.Element` for which you want position. Can be the
-        :attr:`.Element.name` attribute or the :class:`.Element` instance
-        itself.
-    pos :
-        Position within the :class:`.Element`. If not provided, all indexes of
-        :class:`.Element` will be returned.
-    return_elt_idx :
-        Return a position in a :class:`.ListOfElements` instance. Used for
-        arguments such as `phi_s`, which holds one value per :class:`.Element`.
-    handle_missing_elt :
-        Look for an equivalent element when ``elt`` is not in ``_elts``.
+        Returns
+        -------
+            Index(es) of given ``elt``, at given ``pos``. Returns all indexes
+            in this default function.
 
-    Returns
-    -------
-        Index(es) of given ``elt``, at given ``pos``. Returns all indexes in
-        this default function.
-
-    """
+        """
+        ...
 
 
 def default_element_to_index(
@@ -245,17 +248,16 @@ def default_element_to_index(
     Parameters
     ----------
     elt :
-        :class:`.Element` for which you want position. Can be the
-        :attr:`.Element.name` attribute or the :class:`.Element` instance
-        itself. Actually unused in this default function.
-    pos :
-        Position within the :class:`.Element`. If not provided, all indexes of
-        :class:`.Element` will be returned. Actually unused in this default
+        |E| for which you want position. Can be the :attr:`.Element.name`
+        attribute or the |E| instance itself. Actually unused in this default
         function.
+    pos :
+        Position within the |E|. If not provided, all indexes of |E| will be
+        returned. Actually unused in this default function.
     return_elt_idx :
-        Return a position in a :class:`.ListOfElements` instance. Used for
-        arguments such as `phi_s`, which holds one value per :class:`.Element`.
-        Actually unused in this default function.
+        Return a position in a |LOE| instance. Used for arguments such as
+        `phi_s`, which holds one value per |E|. Actually unused in this default
+        function.
     handle_missing_elt :
         Look for an equivalent element when ``elt`` is not in ``_elts``.
 

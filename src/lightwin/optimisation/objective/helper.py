@@ -9,7 +9,7 @@ from lightwin.optimisation.objective.objective import Objective
 def by_element(
     objectives: Collection[Objective],
 ) -> dict[Element, list[Objective]]:
-    """Sort the provided objectives per :class:`.Element`."""
+    """Sort the provided objectives per |E|."""
     objectives_by_element: dict[Element, list[Objective]] = {}
 
     for obj in objectives:

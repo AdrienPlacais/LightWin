@@ -1,10 +1,10 @@
-"""Define :class:`Accelerator`, the highest-level class of LightWin.
+"""Define |A|, the highest-level class of LightWin.
 
 It holds, well... an accelerator. This accelerator has a
-:class:`.ListOfElements`. For each :class:`.BeamCalculator` defined, it has a
-:class:`.SimulationOutput` stored in :attr:`Accelerator.simulation_outputs`.
-Additionally, it has a :class:`.ParticleInitialState`, which describes energy,
-phase, etc of the beam at the entry of its :class:`.ListOfElements`.
+|LOE|. For each |BC| defined, it has a |SO| stored in
+:attr:`Accelerator.simulation_outputs`. Additionally, it has a
+:class:`.ParticleInitialState`, which describes energy, phase, etc of the beam
+at the entry of its |LOE|.
 
 """
 
@@ -43,7 +43,7 @@ ACCELERATOR_STATUS_T = Literal["reference", "broken", "fix"]
 
 
 class Accelerator:
-    """Class holding a :class:`.ListOfElements`."""
+    """Class holding a |LOE|."""
 
     def __init__(
         self,
@@ -69,8 +69,7 @@ class Accelerator:
         dat_file :
             Absolute path to the linac ``DAT`` file.
         accelerator_path :
-            Absolute path where results for each :class:`.BeamCalculator` will
-            be stored.
+            Absolute path where results for each |BC| will be stored.
         list_of_elements_factory :
             A factory to create the list of elements.
         e_mev :
@@ -80,8 +79,8 @@ class Accelerator:
         pickle_path :
             Where to pickle object. Used in :meth:`.keep`.
         index :
-            Corresponding :class:`.FaultScenario` index. A null index is
-            reserved for reference accelerator.
+            Corresponding |FS| index. A null index is reserved for reference
+            accelerator.
 
         """
         #: Name for the object. The default will be ``"Reference"`` or
@@ -89,16 +88,15 @@ class Accelerator:
         #: the ``TOML`` configuration dictionary.
         self.name = name
         self.status: ACCELERATOR_STATUS_T = status
-        #: Corresponding :class:`.FaultScenario` index. A null index
-        #: is reserved for reference accelerator.
+        #: Corresponding |FS| index. A null index is reserved for reference
+        #: accelerator.
         self.index = index
-        #: Every :class:`.SimulationOutput` instance, associated with the name
-        #: of the :class:`.BeamCalculator` that created it. This dictionary is
-        #: filled by :meth:`keep`.
+        #: Every |SO| instance, associated with the name of the |BC| that
+        #: created it. This dictionary is filled by :meth:`keep`.
         self.simulation_outputs: dict[str, SimulationOutput] = {}
         self.data_in_tw_fashion: pd.DataFrame
-        #: Absolute path where results for each :class:`.BeamCalculator` will
-        #: be stored. Typically, this is a `000001/`-like folder.
+        #: Absolute path where results for each |BC| will be stored. Typically,
+        #: this is a `000001/`-like folder.
         self.accelerator_path = accelerator_path
 
         kwargs = {
@@ -154,9 +152,8 @@ class Accelerator:
         """Tell if current object was created by unpickling a ``PKL`` file.
 
         If this flag is ``True``, the main consequence is that the
-        :class:`.BeamCalculator` instances will not re-create new
-        :class:`.SimulationOutput`, and instead return the ones that should
-        already be in :attr:`.simulation_outputs`.
+        |BC| instances will not re-create new |SO|, and instead return the ones
+        that should already be in :attr:`.simulation_outputs`.
 
         See Also
         --------
@@ -192,9 +189,9 @@ class Accelerator:
         .. note::
             Simulation-related quantities (e.g., beam parameters, transfer
             matrices) are stored in the :attr:`simulation_outputs` dictionary,
-            where each key is the name of a :class:`.BeamCalculator` solver
-            (e.g., ``"CyEnvelope1D_0"``, ``"TraceWin_1"``), and each value is a
-            corresponding :class:`.SimulationOutput` object.
+            where each key is the name of a |BC| solver (e.g.,
+            ``"CyEnvelope1D_0"``, ``"TraceWin_1"``), and each value is a
+            corresponding |SO| object.
 
             If simulations have been performed using multiple solvers,
             :meth:`Accelerator.get` becomes ambiguous and should be avoided
@@ -327,10 +324,9 @@ class Accelerator:
         """Save simulation and settings.
 
         In particular:
-           - Store the cavity settings in the appropriate :class:`.FieldMap`.
+           - Store the cavity settings in the appropriate |FM|.
            - Save the settings in a ``DAT`` file.
-           - Store the :class:`.SimulationOutput` in the
-             :attr:`.simulation_outputs` dictionary.
+           - Store the |SO| in the :attr:`.simulation_outputs` dictionary.
 
         Parameters
         ----------
@@ -339,12 +335,12 @@ class Accelerator:
         exported_phase :
             The reference phase in the output ``DAT`` file.
         beam_calculator_id :
-            Unique ID for the :class:`.BeamCalculator` that created
-            ``simulation_output``. Will be the key to access
-            ``simulation_output`` in :attr:`.simulation_outputs`.
+            Unique ID for the |BC| that created ``simulation_output``. Will be
+            the key to access ``simulation_output`` in
+            :attr:`.simulation_outputs`.
         skip_pickle :
             Use this during failure compensation to avoid pickling after every
-            :class:`.Fault` compensation.
+            |F| compensation.
 
         """
         set_of_cavity_settings = simulation_output.set_of_cavity_settings
@@ -410,7 +406,7 @@ class Accelerator:
         ax: Axes | None = None,
         **kwargs,
     ) -> Axes | None:
-        """Plot ``key`` for every stored :class:`.SimulationOutput`.
+        """Plot ``key`` for every stored |SO|.
 
         This method does not use the default plotting module, but pandas
         dataframe plotting method.
@@ -445,9 +441,9 @@ class Accelerator:
            to ``True``.
 
         .. todo::
-            The GUI may also ask for the new :class:`Accelerator` name? I think
-            it would be too much intricated because I have no GUI specific
-            module. Maybe one day...
+            The GUI may also ask for the new |A| name? I think it would be too
+            much intricated because I have no GUI specific module. Maybe one
+            day...
 
         Parameters
         ----------
@@ -464,9 +460,9 @@ class Accelerator:
             :attr:`Accelerator.simulation_outputs`. In particular, used to
             legend plots.
         index :
-            Corresponding :class:`.FaultScenario` index. A null index is
-            reserved for reference accelerator. Will override the ``index``
-            already stored in the unpickled object.
+            Corresponding |FS| index. A null index is reserved for reference
+            accelerator. Will override the ``index`` already stored in the
+            unpickled object.
 
         """
         accelerator = pickler.unpickle(path, expected=Accelerator)

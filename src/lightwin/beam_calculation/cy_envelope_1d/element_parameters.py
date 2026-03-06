@@ -86,7 +86,7 @@ class DriftCyEnvelope1DParameters(
     """Hold the properties to compute transfer matrix of a :class:`.Drift`.
 
     As this is 1D, it is also used for :class:`.Solenoid`, :class:`.Quad`,
-    broken :class:`.FieldMap`.
+    broken |FM|.
 
     """
 
@@ -94,7 +94,7 @@ class DriftCyEnvelope1DParameters(
 class FieldMapCyEnvelope1DParameters(
     FieldMapEnvelope1DParameters, ElementCyEnvelope1DParameters
 ):
-    """Hold the properties to compute transfer matrix of a :class:`.FieldMap`.
+    """Hold the properties to compute transfer matrix of a |FM|.
 
     Non-accelerating cavities will use :class:`.DriftEnvelope1DParameters`
     instead.
@@ -126,10 +126,8 @@ class FieldMapCyEnvelope1DParameters(
 class SuperposedFieldMapCyEnvelope1DParameters(
     SuperposedFieldMapEnvelope1DParameters, ElementCyEnvelope1DParameters
 ):
-    """
-    Hold properties to compute transfer matrix of :class:`.SuperposedFieldMap`.
-
-    """
+    """Hold properties to compute transfer matrix of
+    :class:`.SuperposedFieldMap`."""
 
     def __init__(self, *args, **kwargs) -> None:
         """Create the specific parameters for a superposed field map."""

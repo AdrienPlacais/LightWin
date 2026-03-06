@@ -1,1 +1,1 @@
-"""Define the :class:`.Accelerator` and a factory to create it."""
+"""Define the |A| and a factory to create it."""

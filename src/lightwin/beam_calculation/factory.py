@@ -1,4 +1,4 @@
-"""This module holds a factory to create the :class:`.BeamCalculator`."""
+"""This module holds a factory to create the |BC|."""
 
 import logging
 from collections.abc import Sequence
@@ -27,7 +27,7 @@ BEAM_CALCULATORS_T = Literal["Envelope1D", "TraceWin", "Envelope3D"]
 def _get_beam_calculator(
     tool: BEAM_CALCULATORS_T, flag_cython: bool, **kwargs
 ) -> type:
-    """Get the proper :class:`.BeamCalculator` constructor."""
+    """Get the proper |BC| constructor."""
     match tool, flag_cython:
         case "Envelope1D", False:
             return Envelope1D
@@ -37,8 +37,7 @@ def _get_beam_calculator(
             return Envelope3D
         case "Envelope3D", True:
             logging.warning(
-                "No Cython implementation for Envelope3D. Using Python "
-                "implementation."
+                "No Cython implementation for Envelope3D. Using Python implementation."
             )
             return Envelope3D
         case "TraceWin", _:
@@ -50,7 +49,7 @@ def _get_beam_calculator(
 
 
 class BeamCalculatorsFactory:
-    """A class to create :class:`.BeamCalculator` objects.
+    """A class to create |BC| objects.
 
     Respects singleton pattern, so that only one factory can be created.
 
@@ -80,8 +79,7 @@ class BeamCalculatorsFactory:
     def __init__(
         self, files: dict[str, Any], beam: BeamKwargs, **kwargs: dict
     ) -> None:
-        """
-        Set up factory with arguments common to all :class:`.BeamCalculator`.
+        """Set up factory with arguments common to all |BC|.
 
         Note
         ----
@@ -130,17 +128,16 @@ class BeamCalculatorsFactory:
         force_new: bool = False,
         **beam_calculator_kw,
     ) -> BeamCalculator:
-        """Create a single :class:`.BeamCalculator`.
+        """Create a single |BC|.
 
-        If a :class:`.BeamCalculator` was already created with this factory
-        and with the same arguments, we return it instead of instantiating a
-        new one. Unless ``force_new`` is set to ``True``.
+        If a |BC| was already created with this factory and with the same
+        arguments, we return it instead of instantiating a new one. Unless
+        ``force_new`` is set to ``True``.
 
         Parameters
         ----------
         reference_phase_policy :
-            How reference phase of :class:`.CavitySettings` will be
-            initialized.
+            How reference phase of |CS| will be initialized.
         tool :
             The name of the beam calculator to construct.
         export_phase :
@@ -148,7 +145,7 @@ class BeamCalculatorsFactory:
         flag_cython :
             If the beam calculator involves loading cython field maps.
         force_new :
-            To force creation of a new :class:`.BeamCalculator`.
+            To force creation of a new |BC|.
 
         Returns
         -------

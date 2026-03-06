@@ -44,28 +44,27 @@ class FieldFactory:
         """Raise an error if Cython is asked."""
         if self.load_cython_field_maps:
             logging.warning(
-                "Field objects do not handle Cython yet. Will disregard cython"
-                "loading."
+                "Field objects do not handle Cython yet. Will disregard cythonloading."
             )
 
     def _gather_primary_files_to_load(
         self, field_maps: Collection[FieldMap | SuperposedFieldMap]
     ) -> dict[tuple[Path, str, float, float], list[FieldMap]]:
-        """Associate :class:`.FieldMap` objects using the same fields.
+        """Associate |FM| objects using the same fields.
 
-        :class:`.SuperposedFieldMap` are replaced by the list of
-        :class:`.FieldMap` they superpose.
+        :class:`.SuperposedFieldMap` are replaced by the list of |FM| they
+        superpose.
 
         Parameters
         ----------
         field_maps :
-            All the :class:`.FieldMap` instances requiring a :class:`.Field`.
+            All the |FM| instances requiring a :class:`.Field`.
 
         Returns
         -------
             A dictionary where each key is the tuple of arguments to
-            instantiate a :class:`.Field`, and value is the list of
-            :class:`.FieldMap` that will share this object.
+            instantiate a :class:`.Field`, and value is the list of |FM| that
+            will share this object.
 
         """
         all_field_maps = unpack_superposed(field_maps)
@@ -89,7 +88,11 @@ class FieldFactory:
     def _check_uniformity_of_types(
         self, to_load: dict[tuple[Path, str, float, float], list[FieldMap]]
     ) -> None:
-        """Check that for a file name, all corresp. object have same geom."""
+        """Check that for a file name, all corresp.
+
+        object have same geom.
+
+        """
         for (_, filename, _, _), field_maps in to_load.items():
             different_types = {type(x) for x in field_maps}
             if len(different_types) != 1:
@@ -118,9 +121,9 @@ class FieldFactory:
         return
 
     def _create_superposed(self, field_maps: Collection[FieldMap]) -> None:
-        """Create :class:`.SuperposedFieldMap` from :class:`.FieldMap`.
+        """Create :class:`.SuperposedFieldMap` from |FM|.
 
-        Classic :class:`.FieldMap` remain untouched.
+        Classic |FM| remain untouched.
 
         """
         superposed = [

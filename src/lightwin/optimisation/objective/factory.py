@@ -42,7 +42,7 @@ from lightwin.util.dicts_output import markdown
 
 
 class ObjectiveFactory(ABC):
-    """A base class to create all the :class:`.Objective` of a :class:`.Fault`.
+    """A base class to create all the :class:`.Objective` of a |F|.
 
     It is intended to be sub-classed to make presets. Look at
     :class:`EnergyPhaseMismatch` or :class:`EnergySyncPhaseMismatch` for
@@ -481,8 +481,7 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
         return objective
 
     def _get_phi_s(self, cavity: FieldMap) -> Objective:
-        """
-        Objective to have sync phase within bounds.
+        """Objective to have sync phase within bounds.
 
         .. todo::
             Allow ``from_file``.
@@ -693,7 +692,7 @@ OBJECTIVE_PRESETS_T = Literal[
 
 @dataclass(frozen=True)
 class PackedElements:
-    """Pack :class:`.Element` info to instantiate :class:`.ObjectiveFactory`.
+    """Pack |E| info to instantiate :class:`.ObjectiveFactory`.
 
     See Also
     --------
@@ -710,7 +709,7 @@ class PackedElements:
 
 
 class ObjectiveMetaFactory:
-    """An object creating :class:`.ObjectiveFactory` for every :class:`.Fault`."""
+    """An object creating :class:`.ObjectiveFactory` for every |F|."""
 
     def __init__(self, reference_simulation_output: SimulationOutput) -> None:
         self._reference_simulation_output = reference_simulation_output

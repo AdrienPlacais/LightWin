@@ -1,4 +1,8 @@
-"""Define :class:`ThinSteering`. It does nothing."""
+"""Define :class:`ThinSteering`.
+
+It does nothing.
+
+"""
 
 from lightwin.core.elements.element import Element
 from lightwin.tracewin_utils.line import DatLine

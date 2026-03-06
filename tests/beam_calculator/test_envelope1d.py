@@ -195,7 +195,8 @@ class TestSolver1D:
 
 
 def test_inverted_bounds_warning() -> None:
-    """Tests that the method accepts inverted bounds with a warning and still finds the roots."""
+    """Tests that the method accepts inverted bounds with a warning and still
+    finds the roots."""
 
     def example_func(x: float, a: float) -> float:
         return x - a
@@ -210,7 +211,8 @@ def test_inverted_bounds_warning() -> None:
 
 
 def test_no_sign_change_warning() -> None:
-    """Tests that lack of sign change in Brent's method triggers a warning and returns NaN."""
+    """Tests that lack of sign change in Brent's method triggers a warning and
+    returns NaN."""
 
     def example_func(x: float, a: float) -> float:
         return x**2 + a

@@ -1,8 +1,8 @@
 """Store cavity settings that can change during an optimisation.
 
 .. note::
-    As for now, :class:`.FieldMap` is the only :class:`.Element` to have its
-    properties in a dedicated object.
+    As for now, |FM| is the only |E| to have its properties in a dedicated
+    object.
 
 .. todo::
     Similar to synchronous phase, allow for V_cav to be "master" instead of
@@ -115,16 +115,14 @@ class CavitySettings:
             Bunch frequency in :unit:`MHz`.
         freq_cavity_mhz :
             Frequency of the cavity in :unit:`MHz`. The default is None, which
-            happens when the :class:`.ListOfElements` is under creation and we
-            did not process the ``FREQ`` commands yet.
-        transf_mat_func_wrappers :
-            A dictionary which keys are the different :class:`.BeamCalculator`
-            ids, and values are corresponding functions to compute propagation
-            of the beam.
+            happens when the |LOE| is under creation and we did not process the
+            ``FREQ`` commands yet. transf_mat_func_wrappers : A dictionary
+            which keys are the different |BC| ids, and values are corresponding
+            functions to compute propagation of the beam.
         phi_s_funcs :
-            A dictionary which keys are the different :class:`.BeamCalculator`
-            ids, and values are corresponding functions to compute synchronous
-            phase and accelerating voltage from the ouput of corresponding
+            A dictionary which keys are the different |BC| ids, and values are
+            corresponding functions to compute synchronous phase and
+            accelerating voltage from the ouput of corresponding
             ``transf_mat_func_wrapper``.
         field :
             Holds the parameters that are geometry-specific, such as
@@ -223,8 +221,7 @@ class CavitySettings:
         Parameters
         ----------
         base :
-            The reference :class:`CavitySettings`. *A priori*, this is the
-            nominal settings.
+            The reference |CS|. *A priori*, this is the nominal settings.
         cavity_vars :
             Amplitude, phase, status and reference to override the ones in
             ``base``. Provided during optimization process.
@@ -232,7 +229,7 @@ class CavitySettings:
         Returns
         -------
         Self
-            A new :class:`CavitySettings` with modified amplitude and phase.
+            A new |CS| with modified amplitude and phase.
 
         """
         if cavity_vars is not None:
@@ -329,8 +326,8 @@ class CavitySettings:
     def set_bunch_to_rf_freq_func(
         self, freq_cavity_mhz: float | None = None
     ) -> None:
-        """
-        Set the rf frequency, and methods to switch between freq definitions.
+        """Set the rf frequency, and methods to switch between freq
+        definitions.
 
         This method is called a first time at the instantiation of ``self``;
         it will be called once again if a :class:`.Freq` command is found.
@@ -441,8 +438,7 @@ class CavitySettings:
             self.phi_ref
         except MissingAttributeError as e:
             raise MissingAttributeError(
-                f"The new reference phase ({reference}) cannot be "
-                f"calculated."
+                f"The new reference phase ({reference}) cannot be calculated."
             ) from e
 
     @property
@@ -560,8 +556,7 @@ class CavitySettings:
 
         if not hasattr(self, "_phi_s"):
             raise MissingAttributeError(
-                f"{self = }: phi_0_abs, phi_0_rel, phi_s are all "
-                "uninitialized."
+                f"{self = }: phi_0_abs, phi_0_rel, phi_s are all uninitialized."
             )
 
         self.phi_0_rel = self._phi_s_to_phi_0_rel(self._phi_s)
@@ -633,7 +628,7 @@ class CavitySettings:
 
         This function is called within two contexts.
 
-         * When initializing the :class:`.BeamCalculator` specific parameters
+         * When initializing the |BC| specific parameters
            (:class:`.ElementBeamCalculatorParameters`).
          * When re-initalizing the :class:`.ElementBeamCalculatorParameters`
            because the ``status`` of the cavity changed, and in particular when
@@ -685,10 +680,9 @@ class CavitySettings:
             cavity.
         kwargs :
             Other keyword arguments that will be passed to the function that
-            will compute propagation of the beam in the :class:`.FieldMap`.
-            Note that you should check that ``phi_0_rel`` key is removed in
-            your :class:`.BeamCalculator`, to avoid a clash in the
-            `_phi_0_rel_to_cavity_parameters` function.
+            will compute propagation of the beam in the |FM|. Note that you
+            should check that ``phi_0_rel`` key is removed in your |BC|, to
+            avoid a clash in the `_phi_0_rel_to_cavity_parameters` function.
 
         See Also
         --------
@@ -726,8 +720,7 @@ class CavitySettings:
             if hasattr(self, key):
                 continue
             raise MissingAttributeError(
-                f"Cannot compute cavity parameters from phi_0_rel if {key} is "
-                "not set."
+                f"Cannot compute cavity parameters from phi_0_rel if {key} is not set."
             )
         results = self._transf_mat_func_wrapper(
             w_kin=self.w_kin,
@@ -867,8 +860,8 @@ class CavitySettings:
         This is mandatory when the reference phase is changed. In particular,
         it is the case when studying a sub-list of elements with
         :class:`.TraceWin`. With this solver, the entry phase in the first
-        element of the sub-:class:`.ListOfElements` is always 0.0, even if is
-        not the first element of the linac.
+        element of the sub-|LOE| is always 0.0, even if is not the first
+        element of the linac.
 
         Parameters
         ----------
@@ -878,8 +871,8 @@ class CavitySettings:
 
         Examples
         --------
-        >>> phi_in_1st_element = 0.
-        >>> phi_in_20th_element = 55.
+        >>> phi_in_1st_element = 0.0
+        >>> phi_in_20th_element = 55.0
         >>> 25th_element: FieldMap
         >>> 25th_element.cavity_settings.shift_phi_bunch(
         >>> ... phi_in_20th_element - phi_in_1st_element

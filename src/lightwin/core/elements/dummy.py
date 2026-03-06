@@ -1,4 +1,8 @@
-"""Define :class:`DummyElement`. It does nothing."""
+"""Define :class:`DummyElement`.
+
+It does nothing.
+
+"""
 
 from lightwin.core.elements.element import Element
 from lightwin.tracewin_utils.line import DatLine

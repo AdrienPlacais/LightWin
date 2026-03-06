@@ -1,4 +1,5 @@
-"""Define class generating :class:`.BeamParameters` for :class:`.Envelope1D`."""
+"""Define class generating :class:`.BeamParameters` for
+:class:`.Envelope1D`."""
 
 import numpy as np
 

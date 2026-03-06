@@ -20,9 +20,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.util import helper
 from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
-from lightwin.visualization.helper import (
-    X_AXIS_T,
-)
+from lightwin.visualization.helper import X_AXIS_T
 
 ERROR_REFERENCE_T = Literal[
     "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)",
@@ -33,7 +31,8 @@ ERROR_REFERENCE_T = Literal[
 
 @dataclass
 class _SimData:
-    """Bundle of parallel x/y/kwargs lists for one accelerator's simulations."""
+    """Bundle of parallel x/y/kwargs lists for one accelerator's
+    simulations."""
 
     x: list[NDArray[np.float64]]
     y: list[NDArray[np.float64]]
@@ -74,7 +73,7 @@ def all_accelerators_data(
     y_axis :
         Data to use as y-axis.
     *accelerators :
-        Object holding the :class:`.SimulationOutput` to plot.
+        Object holding the |SO| to plot.
     error_presets :
         Dictionary passed to :func:`_error_calculation_function`.
     error_reference :

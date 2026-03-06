@@ -131,10 +131,10 @@ def k_out_of_n[T](
     cavities :cite:`saini_assessment_2021,Yee-Rendon2022a`.
 
     .. note::
-        ``T`` can represent a :class:`.Element`, or a list of
-        :class:`.Element`. Returned type/data structure will be the same as
-        what was given in arguments. This function is hereby also used by
-        :func:`l_neighboring_lattices` which gives in lattices.
+        ``T`` can represent a |E|, or a list of |E|. Returned type/data
+        structure will be the same as what was given in arguments. This
+        function is hereby also used by :func:`l_neighboring_lattices` which
+        gives in lattices.
 
     Parameters
     ----------
@@ -521,8 +521,7 @@ def determine_cavities(
         new_failed = [cryo for cryo in cryomodules if set(cryo) & failed_names]
     else:
         raise ValueError(
-            f"Unsupported {automatic_study = }. Only {AUTOMATIC_STUDY} are "
-            "supported."
+            f"Unsupported {automatic_study = }. Only {AUTOMATIC_STUDY} are supported."
         )
 
     logging.info(

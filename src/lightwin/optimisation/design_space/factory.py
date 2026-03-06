@@ -28,8 +28,8 @@ from lightwin.util.typing import GETTABLE_FIELD_MAP, VARIABLES_T
 
 @dataclass
 class DesignSpaceFactory(ABC):
-    """
-    Base class to handle :class:`.Variable` and :class:`.Constraint` creation.
+    """Base class to handle :class:`.Variable` and :class:`.Constraint`
+    creation.
 
     Parameters
     ----------
@@ -282,8 +282,8 @@ class SyncPhaseAmplitude(DesignSpaceFactory):
 # =============================================================================
 @dataclass
 class AbsPhaseAmplitudeWithConstrainedSyncPhase(DesignSpaceFactory):
-    r"""
-    Optimise :math:`\phi_{0,\,\mathrm{abs}}`, :math:`k_e`. :math:`\phi_s` is constrained.
+    r"""Optimise :math:`\phi_{0,\,\mathrm{abs}}`, :math:`k_e`. :math:`\phi_s` is
+    constrained.
 
     .. warning::
         The selected :class:`.OptimisationAlgorithm` must support the
@@ -297,8 +297,8 @@ class AbsPhaseAmplitudeWithConstrainedSyncPhase(DesignSpaceFactory):
 
 @dataclass
 class RelPhaseAmplitudeWithConstrainedSyncPhase(DesignSpaceFactory):
-    r"""
-    Optimise :math:`\phi_{0,\,\mathrm{rel}}`, :math:`k_e`. :math:`\phi_s` is constrained.
+    r"""Optimise :math:`\phi_{0,\,\mathrm{rel}}`, :math:`k_e`. :math:`\phi_s` is
+    constrained.
 
     .. warning::
         The selected :class:`.OptimisationAlgorithm` must support the

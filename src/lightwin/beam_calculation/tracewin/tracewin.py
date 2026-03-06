@@ -1,9 +1,9 @@
-"""Define a :class:`.BeamCalculator` that will call TraceWin from cmd line.
+"""Define a |BC| that will call TraceWin from cmd line.
 
-It inherits from :class:`.BeamCalculator` base class.  It solves the motion of
-the particles in envelope or multipart, in 3D. In contrary to
-:class:`.Envelope1D` solver, it is not a real solver but an interface with
-``TraceWin`` which must be installed on your machine.
+It inherits from |BC| base class.  It solves the motion of the particles in
+envelope or multipart, in 3D. In contrary to :class:`.Envelope1D` solver, it is
+not a real solver but an interface with ``TraceWin`` which must be installed on
+your machine.
 
 """
 
@@ -64,8 +64,7 @@ class TraceWin(BeamCalculator):
         Parameters
         ----------
         reference_phase_policy :
-            How reference phase of :class:`.CavitySettings` will be
-            initialized.
+            How reference phase of |CS| will be initialized.
         default_field_map_folder :
             Where to look for field map files by default.
         beam_kwargs :
@@ -78,8 +77,7 @@ class TraceWin(BeamCalculator):
             Path to the ``INI`` TraceWin file.
         base_kwargs :
             TraceWin optional arguments. Override what is defined in ``INI``,
-            but overriden by arguments from :class:`.ListOfElements` and
-            :class:`.SimulationOutput`.
+            but overriden by arguments from |LOE| and |SO|.
         cal_file :
             Name of the results folder. Updated at every call of the
             :func:`init_solver_parameters` method, using
@@ -115,10 +113,10 @@ class TraceWin(BeamCalculator):
             )
 
     def _set_up_specific_factories(self) -> None:
-        """Set up the factories specific to the :class:`.BeamCalculator`.
+        """Set up the factories specific to the |BC|.
 
         This method is called in the :meth:`.BeamCalculator.__init__`, hence it
-        appears only in the base :class:`.BeamCalculator`.
+        appears only in the base |BC|.
 
         """
         self.beam_calc_parameters_factory = ElementTraceWinParametersFactory()
@@ -146,13 +144,12 @@ class TraceWin(BeamCalculator):
     ) -> tuple[list[str], Path]:
         """Define the 'base' command for TraceWin.
 
-        This part of the command is the same for every :class:`.ListOfElements`
-        and every :class:`.Fault`. It sets the TraceWin executable, the
-        ``INI`` file.  It also defines ``base_kwargs``, which should be the
-        same for every calculation. Finally, it sets ``path_cal``.
-        But this path is more :class:`.ListOfElements` dependent...
-        ``Accelerator.accelerator_path`` + ``self.id``
-        (+ ``fault_optimisation_tmp_folder``)
+        This part of the command is the same for every |LOE| and every |F|. It
+        sets the TraceWin executable, the ``INI`` file.  It also defines
+        ``base_kwargs``, which should be the same for every calculation.
+        Finally, it sets ``path_cal``. But this path is more |LOE| dependent...
+        ``Accelerator.accelerator_path`` + ``self.id`` (+
+        ``fault_optimisation_tmp_folder``)
 
         """
         kwargs = kwargs.copy()
@@ -181,11 +178,11 @@ class TraceWin(BeamCalculator):
         """Set the full TraceWin command.
 
         It contains the 'base' command, which includes every argument that is
-        common to every calculation with this :class:`.BeamCalculator`: path to
-        ``INI`` file, to executable...
+        common to every calculation with this |BC|: path to ``INI`` file, to
+        executable...
 
-        It contains the :class:`.ListOfElements` command: path to the ``DAT``
-        file, initial energy and beam properties.
+        It contains the |LOE| command: path to the ``DAT`` file, initial energy
+        and beam properties.
 
         It can contain some :class:`.SetOfCavitySettings` commands: ``ele``
         arguments to modify some cavities tuning.
@@ -278,10 +275,9 @@ class TraceWin(BeamCalculator):
         elts :
             List of elements in which the beam should be propagated.
         use_a_copy_for_nominal_settings :
-            To copy the nominal :class:`.CavitySettings` and avoid altering
-            their nominal counterpart. Set it to True during optimisation, to
-            False when you want to keep the current settings. The default is
-            True.
+            To copy the nominal |CS| and avoid altering their nominal
+            counterpart. Set it to True during optimisation, to False when you
+            want to keep the current settings. The default is True.
 
         Returns
         -------
@@ -385,11 +381,11 @@ class TraceWin(BeamCalculator):
 
         .. note::
             In contrary to :class:`.Envelope1D` and :class:`.Envelope3D`, this
-            routine does not set parameters for the :class:`.BeamCalculator`.
-            As a matter of a fact, TraceWin is a standalone code and does not
-            need out solver parameters.
-            However, if we want to save the meshing used by TraceWin, we will
-            have to use the :class:`.ElementTraceWinParametersFactory` later.
+            routine does not set parameters for the |BC|. As a matter of a
+            fact, TraceWin is a standalone code and does not need out solver
+            parameters. However, if we want to save the meshing used by
+            TraceWin, we will have to use the
+            :class:`.ElementTraceWinParametersFactory` later.
 
         """
         self.path_cal = Path(accelerator.get("accelerator_path"), self.id)
@@ -423,12 +419,12 @@ class TraceWin(BeamCalculator):
         cavities: Sequence[FieldMap],
         simulation_output: SimulationOutput,
     ) -> None:
-        """Store cavity settings in the appropriate :class:`.CavitySettings`.
+        """Store cavity settings in the appropriate |CS|.
 
         .. note::
            When we are under a fitting process, *i.e.* when
            ``set_of_cavity_settings`` is not ``None``, we update the
-           :class:`.CavitySettings` in the ``set_of_cavity_settings``, not the
+           |CS| in the ``set_of_cavity_settings``, not the
            ones in :attr:`.FieldMap.cavity_settings`.
 
         """
@@ -489,7 +485,6 @@ def _run_in_bash(
 
     if exception != 0 and output_error:
         logging.warning(
-            "A message was returned when executing following "
-            f"command:\n\t{stderr}"
+            f"A message was returned when executing following command:\n\t{stderr}"
         )
     return exception != 0

@@ -41,11 +41,10 @@ class Envelope3D(BeamCalculator):
     """A 3D envelope solver.
 
     As transverse effects are generally not predominant, I do not use this
-    solver very often and a lot of elements are not implemented.
-    The current list of explicitly supported elements is:
+    solver very often and a lot of elements are not implemented. The current
+    list of explicitly supported elements is:
 
-    .. configkeys:: lightwin.beam_calculation.envelope_3d.element_envelope3d_\
-parameters_factory.PARAMETERS_3D
+    .. configkeys:: lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.PARAMETERS_3D
        :n_cols: 2
 
     The default behavior when an element in the input ``DAT`` file is not
@@ -93,10 +92,10 @@ parameters_factory.PARAMETERS_3D
         )
 
     def _set_up_specific_factories(self) -> None:
-        """Set up the factories specific to the :class:`.BeamCalculator`.
+        """Set up the factories specific to the |BC|.
 
         This method is called in the :meth:`.BeamCalculator.__init__`, hence it
-        appears only in the base :class:`.BeamCalculator`.
+        appears only in the base |BC|.
 
         """
         self.simulation_output_factory = SimulationOutputFactoryEnvelope3D(
@@ -142,9 +141,9 @@ parameters_factory.PARAMETERS_3D
         elts :
             List of elements in which the beam must be propagated.
         use_a_copy_for_nominal_settings :
-            To copy the nominal :class:`.CavitySettings` and avoid altering
-            their nominal counterpart. Set it to True during optimisation, to
-            False when you want to keep the current settings.
+            To copy the nominal |CS| and avoid altering their nominal
+            counterpart. Set it to True during optimisation, to False when you
+            want to keep the current settings.
 
         Returns
         -------
@@ -212,12 +211,13 @@ parameters_factory.PARAMETERS_3D
     def init_solver_parameters(self, accelerator: Accelerator) -> None:
         """Create the number of steps, meshing, transfer functions for elts.
 
-        The solver parameters are stored in the :class:`.Element`'s
+        The solver parameters are stored in the |E|'s
         ``beam_calc_param``.
 
         Parameters
         ----------
-            Object which :class:`.ListOfElements` must be initialized.
+        accelerator :
+            Object which |LOE| must be initialized.
 
         """
         elts = accelerator.elts

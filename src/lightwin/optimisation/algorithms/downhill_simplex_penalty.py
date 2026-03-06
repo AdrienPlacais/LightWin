@@ -15,8 +15,8 @@ from lightwin.optimisation.algorithms.downhill_simplex import DownhillSimplex
 
 
 class DownhillSimplexPenalty(DownhillSimplex):
-    """
-    A Downhill Simplex method, with a penalty function to consider constraints.
+    """A Downhill Simplex method, with a penalty function to consider
+    constraints.
 
     Everything is inherited from :class:`.DownhillSimplex`.
 

@@ -1,6 +1,6 @@
 """Define monkey patches for deprecated options.
 
-They are common to all :class:`.BeamCalculator`.
+They are common to all |BC|.
 
 """
 

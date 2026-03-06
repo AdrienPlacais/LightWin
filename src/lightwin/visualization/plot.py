@@ -248,7 +248,7 @@ def _build_plot_groups(
     accelerators :
         The full scenario mapping as passed to :func:`factory`. Must have the
         ``0`` key, the corresponding value must be a list containing only
-        the reference :class:`.Accelerator`.
+        the reference |A|.
 
     Returns
     -------
@@ -300,7 +300,8 @@ def _plot_preset(
     only_solver_id: Collection[str] | str | None = None,
     **kwargs,
 ) -> Figure:
-    """Plot a preset showing reference and all fixed alternatives for one scenario.
+    """Plot a preset showing reference and all fixed alternatives for one
+    scenario.
 
     Parameters
     ----------

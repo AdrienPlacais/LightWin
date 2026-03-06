@@ -231,8 +231,7 @@ class ConfSpec:
 
             except ValueError:
                 logging.error(
-                    f"The table entry {table_id} should be given but was not "
-                    "found."
+                    f"The table entry {table_id} should be given but was not found."
                 )
                 they_are_all_present = False
         return they_are_all_present

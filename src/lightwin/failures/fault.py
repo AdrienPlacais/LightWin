@@ -1,4 +1,4 @@
-"""Define the class :class:`Fault`.
+"""Define the class |F|.
 
 Its purpose is to hold information on a failure and to fix it.
 
@@ -62,8 +62,8 @@ class Fault:
         compensating_elements :
             Holds the compensating elements.
         skip_optimization :
-            Used when the fixed :class:`.Accelerator` was unpikcled and
-            therefore already holds the fixed settings.
+            Used when the fixed |A| was unpikcled and therefore already holds
+            the fixed settings.
 
         """
         self.broken_elts = broken_elts
@@ -91,7 +91,7 @@ class Fault:
     def fix(
         self, optimisation_algorithm: OptimisationAlgorithm | None
     ) -> None:
-        """Fix the :class:`Fault`. Set ``self.optimized_cavity_settings``.
+        """Fix the |F|. Set ``self.optimized_cavity_settings``.
 
         Also display information on the parametrization of the optimization
         problem, the solution that was found.
@@ -102,7 +102,7 @@ class Fault:
             The optimization algorithm to be used, already initialized.
         simulation_output :
             The most recent simulation, that includes the compensation settings
-            of all :class:`.Fault` upstream of ``self``.
+            of all |F| upstream of ``self``.
 
         """
         logging.info(
@@ -124,7 +124,7 @@ class Fault:
         info = (
             f"Finished! Solving this problem took {delta_t}. Results are:",
             str_objectives_solved(optimisation_algorithm.objectives),
-            f"Additional info: {'\n'.join(self.opti_sol["info"])}",
+            f"Additional info: {'\n'.join(self.opti_sol['info'])}",
         )
         logging.info("\n".join(info))
 
@@ -151,7 +151,7 @@ class Fault:
         Returns
         -------
             Most recent simulation, that includes the compensation settings of
-            upstream :class:`.Fault` as well as of this one.
+            upstream |F| as well as of this one.
 
         """
         if self._skip_optimization:
@@ -289,8 +289,8 @@ class Fault:
     def optimized_cavity_settings(self) -> SetOfCavitySettings:
         """Get the settings found by the optimizer.
 
-        If optimization was already performed (unpickled :class:`.Accelerator`)
-        , we return the settings stored in the compensating cavities.
+        If optimization was already performed (unpickled |A|) , we return the
+        settings stored in the compensating cavities.
 
         """
         if self.opti_sol is not None:

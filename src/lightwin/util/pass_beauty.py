@@ -179,11 +179,9 @@ def insert_pass_beauty_instructions(
     number: int = 666333,
     link_k_g: bool = True,
 ) -> None:
-    """
-    Overwrite :class:`.ListOfElements` to include pass beauty instructions.
+    """Overwrite |LOE| to include pass beauty instructions.
 
-    The ``fault_scenario.fix_acc.elts`` (a :class:`.ListOfElements`) will
-    be overwritten.
+    The ``fault_scenario.fix_acc.elts`` (a |LOE|) will be overwritten.
 
     """
     if not isinstance(fault_scenarios := fault_scenario, FaultScenario):
@@ -235,8 +233,7 @@ def _is_adapted_to_pass_beauty(
 
     if not beam_calculator.base_kwargs.get("cancel_matchingP", False):
         logging.warning(
-            "Doing a Partran optimisation may take a very long time. Doing it "
-            "anyway."
+            "Doing a Partran optimisation may take a very long time. Doing it anyway."
         )
         return True
     return True

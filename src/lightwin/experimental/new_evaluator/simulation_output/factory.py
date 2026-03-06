@@ -67,7 +67,7 @@ class SimulationOutputEvaluatorsFactory:
         Parameters
         ----------
         accelerators :
-            Objects holding all the different :class:`.SimulationOutput`.
+            Objects holding all the different |SO|.
         solver_ids :
             Name of the reference solver(s). If several are provided, we use
             the first one by default; we use the following if necessary data
@@ -115,11 +115,10 @@ class SimulationOutputEvaluatorsFactory:
         evaluators :
             Evaluations to realize.
         accelerators :
-            Objects holding all the :class:`.SimulationOutput` to be evaluated.
+            Objects holding all the |SO| to be evaluated.
         beam_solver_ids :
-            Name of the solvers that created the :class:`.SimulationOutput`.
-            They must be keys of the :attr:`.Accelerator.simulation_outputs`
-            dictionary.
+            Name of the solvers that created the |SO|. They must be keys of the
+            :attr:`.Accelerator.simulation_outputs` dictionary.
         csv_kwargs :
             Keyword arguments passed to :func:`.pandas_helper.to_csv`.
         get_overrides :

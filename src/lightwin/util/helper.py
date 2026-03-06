@@ -199,8 +199,7 @@ def range_vals_object(obj: object, name: str) -> str:
 # Files functions
 # =============================================================================
 def save_energy_phase_tm(lin: object) -> None:
-    """
-    Save energy, phase, transfer matrix as a function of s.
+    """Save energy, phase, transfer matrix as a function of s.
 
     s [m]   E[MeV]  phi[rad]  M_11    M_12    M_21    M_22
 

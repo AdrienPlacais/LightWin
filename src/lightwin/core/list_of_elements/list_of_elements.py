@@ -1,11 +1,11 @@
-"""Define a ``list`` of :class:`.Element`, with some additional methods.
+"""Define a ``list`` of |E|, with some additional methods.
 
-Two objects can have a :class:`ListOfElements` as attribute:
+Two objects can have a |LOE| as attribute:
 
-* :class:`.Accelerator`: holds all the :class:`.Element` of the linac.
-* :class:`.Fault`: it holds only a fraction of the linac
-  :class:`.Element`. Beam will be propagated a huge number of times during
-  optimisation process, so we recompute only the strict necessary.
+* |A|: holds all the |E| of the linac.
+* |F|: it holds only a fraction of the linac |E|. Beam will be propagated a
+  huge number of times during optimisation process, so we recompute only the
+  strict necessary.
 
 .. todo::
     Delete ``dat_filecontent``, which does the same thing as ``elts_n_cmds`` but
@@ -105,8 +105,8 @@ class ListOfElements(list):
 
             * ``dat_file``: absolute path to the ``DAT`` file
             * ``elts_n_cmds``: list of objects representing dat content
-            * ``accelerator_path``: where calculation results for each
-              :class:`.BeamCalculator` will be stored.
+            * ``accelerator_path``: where calculation results for each |BC|
+               will be stored.
             * ``dat_filecontent``: list of list of str, holding content of the
               ``DAT``.
 
@@ -166,12 +166,12 @@ class ListOfElements(list):
         superposed :
            How superposed field maps should be treated.
 
-           - If ``"unpack"``, we insert the :class:`.FieldMap` contained in
-             the :class:`.SuperposedFieldMap`.
+           - If ``"unpack"``, we insert the |FM| contained in the
+             :class:`.SuperposedFieldMap`.
            - If ``"remove"``, we remove the :class:`.SuperposedFieldMap` from
              the output.
            - If ``"keep"``, we return the :class:`.SuperposedFieldMap` along
-             with the :class:`.FieldMap`.
+             with the |FM|.
 
         """
         cavities = self._l_cav
@@ -189,7 +189,7 @@ class ListOfElements(list):
     def tunable_cavities(self) -> list[FieldMap]:
         """All the elements that can be used for compensation.
 
-        For now, only :class:`.FieldMap`. But in the future... Who knows?
+        For now, only |FM|. But in the future... Who knows?
 
         """
         return [cavity for cavity in self.l_cav if cavity.can_be_retuned]
@@ -304,10 +304,10 @@ class ListOfElements(list):
     def force_reference_phases_to(self, reference: REFERENCE_PHASES_T) -> None:
         """Change the reference phase of the cavities in ``self``.
 
-        This method is called by the :class:`.BeamCalculator`. It is used after
-        the first propagation of the beam in the full :class:`ListOfElements`,
-        to force every :class:`.CavitySettings` to use the reference phase
-        specified by the ``beam_calculator`` entry of the ``TOML``.
+        This method is called by the |BC|. It is used after the first
+        propagation of the beam in the full |LOE|, to force every |CS| to use
+        the reference phase specified by the ``beam_calculator`` entry of the
+        ``TOML``.
 
         """
         for cavity in self.l_cav:
@@ -326,8 +326,8 @@ class ListOfElements(list):
 
         This method is called several times:
 
-        * Once per :class:`.Fault` (only the compensation zone is saved).
-        * When all the :class:`.Fault` were dealt with.
+        * Once per |F| (only the compensation zone is saved).
+        * When all the |F| were dealt with.
 
         It is also called by :meth:`.Accelerator.keep` method.
 
@@ -342,10 +342,10 @@ class ListOfElements(list):
 
         Note
         ----
-        LightWin rephases cavities if the first :class:`.Element`
-        in ``self`` is not the first of the linac. This way, the beam enters
-        each cavity with the intended phase in :class:`.TraceWin` (no effect
-        if the phases are exported as relative phase).
+        LightWin rephases cavities if the first |E| in ``self`` is not the
+        first of the linac. This way, the beam enters each cavity with the
+        intended phase in :class:`.TraceWin` (no effect if the phases are
+        exported as relative phase).
 
         Raises
         ------
@@ -424,7 +424,7 @@ class ListOfElements(list):
         | list[FieldMap]
         | list[list[FieldMap]]
     ):
-        """Convert list of indexes or names to a list of :class:`.Element`."""
+        """Convert list of indexes or names to a list of |E|."""
         if isinstance(ids, (Sequence, list)) and not isinstance(ids, str):
             return [self.take(idx, id_nature) for idx in ids]
 
@@ -435,8 +435,7 @@ class ListOfElements(list):
                     output = self.l_cav[ids]
                 except IndexError:
                     logging.error(
-                        f"{ids = } is outside of list of elements of length "
-                        f"{len(self)}"
+                        f"{ids = } is outside of list of elements of length {len(self)}"
                     )
                     raise IndexError
 
@@ -546,8 +545,8 @@ class ListOfElements(list):
             """Convert ``elt`` and ``pos`` into a mesh index.
 
             This way, you can call ``get('w_kin', elt='FM5', pos='out')`` and
-            systematically get the energy at the exit of FM5, whatever the
-            :class:`.BeamCalculator` or the mesh size is.
+            systematically get the energy at the exit of FM5, whatever the |BC|
+            or the mesh size is.
 
             .. todo::
                 different functions, for different outputs. At least, an
@@ -559,8 +558,8 @@ class ListOfElements(list):
             elt :
                 Element of which you want the index.
             pos :
-                Index of entry or exit of the :class:`.Element`. If None,
-                return full indexes array.
+                Index of entry or exit of the |E|. If None, return full indexes
+                array.
             return_elt_idx :
                 Whether the returned index should be the index in ``elts`` or
                 the index in the results array.

@@ -65,11 +65,11 @@ class TransferMatrix:
             Cumulated transfer matrices. The default is None, in which case the
             ``individual`` transfer matrices must be given.
         element_to_index :
-            Takes an :class:`.Element`, its name, ``'first'`` or ``'last'`` as
-            argument, and returns corresponding index. Index should be the same
-            in all the arrays attributes of this class: ``z_abs``,
-            ``beam_parameters`` attributes, etc. Used to easily ``get`` the
-            desired properties at the proper position.
+            Takes an |E|, its name, ``'first'`` or ``'last'`` as argument, and
+            returns corresponding index. Index should be the same in all the
+            arrays attributes of this class: ``z_abs``, ``beam_parameters``
+            attributes, etc. Used to easily ``get`` the desired properties at
+            the proper position.
 
         """
         self.is_3d = is_3d
@@ -89,7 +89,7 @@ class TransferMatrix:
         self.n_points = n_points
 
         self.cumulated = cumulated
-        #: Takes an :class:`.Element`, its name, ``'first'`` or ``'last'`` as
+        #: Takes an |E|, its name, ``'first'`` or ``'last'`` as
         #: argument, and returns corresponding index. Index should be the same
         #: in all the arrays attributes of this class: ``z_abs``,
         #: ``beam_parameters`` attributes, etc. Used to easily ``get`` the
@@ -135,6 +135,7 @@ class TransferMatrix:
         Returns
         -------
             Attribute(s) at the requested location.
+
         """
         out = []
 

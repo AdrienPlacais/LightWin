@@ -2,27 +2,25 @@
 
 "pickling" a file comes down to saving it in binary format. It can be loaded
 and used again later, even with a different Python instance. This is useful
-when you want to study a :class:`.Fault` that took a long time to be
-compensated, or a :class:`.SimulationOutput` obtained by a time-consuming
-TraceWin multiparticle simulation.
+when you want to study a |F| that took a long time to be compensated, or a |SO|
+obtained by a time-consuming TraceWin multiparticle simulation.
 
 .. warning::
     This a very basic pickling. Do not use for long-term storage, but for debug
     only.
 
 .. note::
-    Some attributes such as lambda function in :class:`.FieldMap` or modules in
-    :class:`.SimulationOutput` cannot be pickled by the built-in `pickle`
-    module. I do not plan to refactor them, so for now we stick with
-    `cloudpickle` module.
+    Some attributes such as lambda function in |FM| or modules in |SO| cannot
+    be pickled by the built-in `pickle` module. I do not plan to refactor them,
+    so for now we stick with `cloudpickle` module.
 
 Some objects have built-in `pickle` and `unpickle` methods, namely:
 
-    - :class:`.Accelerator`
-    - :class:`.Fault`
-    - :class:`.FaultScenario`
-    - :class:`.ListOfElements`
-    - :class:`.SimulationOutput`
+    - |A|
+    - |F|
+    - |FS|
+    - |LOE|
+    - |SO|
 
 """
 
@@ -137,8 +135,7 @@ class MyCloudPickler(MyPickler):
                 initialfile=initialfile,
                 initialdir=initialdir,
                 title=title
-                or f"Choose where the {my_object.__class__} should be pickled "
-                "(saved).",
+                or f"Choose where the {my_object.__class__} should be pickled (saved).",
             )
         else:
             path = Path(path).resolve().absolute()
@@ -193,8 +190,7 @@ class MyCloudPickler(MyPickler):
             )
         if path is None:
             logging.error(
-                "You provided `path = None`, so I do not have anything to "
-                "unpickle."
+                "You provided `path = None`, so I do not have anything to unpickle."
             )
             return
         with open(path, "rb") as f:

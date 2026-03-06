@@ -12,7 +12,7 @@
 
 See Also
 --------
-:class:`.CavitySettings`
+|CS|
 
 """
 
@@ -46,8 +46,7 @@ EXTENSION_TO_COMPONENT = {
 class Field(ABC):
     r"""Generic electro-magnetic field.
 
-    This object can be shared by several :class:`.Element` and we create as few
-    as possible.
+    This object can be shared by several |E| and we create as few as possible.
 
     """
 
@@ -183,7 +182,11 @@ class Field(ABC):
         ...
 
     def shift(self) -> None:
-        """Shift the field maps. Used in SUPERPOSE_MAP."""
+        """Shift the field maps.
+
+        Used in SUPERPOSE_MAP.
+
+        """
         raise NotImplementedError(
             "This should be implemented for every Field object. The idea is "
             "simply to offset the z variable, which depends on the length of "
@@ -212,7 +215,11 @@ class Field(ABC):
         )
 
     def _patch_to_keep_consistency(self, n_interp: Any, n_cell: int) -> None:
-        """Save ``n_cell`` and ``n_z``. Temporary solution."""
+        """Save ``n_cell`` and ``n_z``.
+
+        Temporary solution.
+
+        """
         if not (isinstance(n_interp, tuple) and len(n_interp) == 1):
             raise ValueError(f"{n_interp = } but should be a 1D tuple.")
         self.n_z = n_interp[0]

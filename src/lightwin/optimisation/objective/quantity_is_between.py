@@ -13,7 +13,6 @@ from lightwin.optimisation.objective.objective import (
 
 
 class QuantityIsBetween(_QuantityIsBetween):
-
     def __init__(self, *args, **kwargs):
         logging.warning(
             "QuantityIsBetween has moved to "

@@ -205,8 +205,7 @@ SIMULATION_OUTPUT_EVALUATOR_PRESETS = {
 def presets_for_fault_scenario_rel_diff_at_some_element(
     quantity: str, elt: Element | str, ref_simulation_output: SimulationOutput
 ) -> dict[str, Callable | int | str | tuple[Callable]]:
-    """
-    Create the settings to evaluate a difference @ some element exit.
+    """Create the settings to evaluate a difference @ some element exit.
 
     Used for `FaultScenario` s.
 
@@ -239,8 +238,7 @@ def presets_for_fault_scenario_rel_diff_at_some_element(
 def presets_for_fault_scenario_rms_over_full_linac(
     quantity: str, ref_simulation_output: SimulationOutput
 ) -> dict[str, Callable | int | str | tuple[Callable]]:
-    """
-    Create the settings to evaluate a RMS error over full linac.
+    """Create the settings to evaluate a RMS error over full linac.
 
     Used for `FaultScenario` s.
 

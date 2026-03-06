@@ -45,15 +45,13 @@ from lightwin.util.typing import (
 class Envelope1D(BeamCalculator):
     """The fastest beam calculator, adapted to high energies.
 
-    The following elements are explicitly supported.
-    Note that, by default, an element that is implemented but not explicitly
-    supported is replaced by a ``DRIFT``.
-    In 1D, this is perfectly acceptable for most non-implemented elements that
-    act on the transverse dynamics, such as ``THIN_LENS``.
+    The following elements are explicitly supported. Note that, by default, an
+    element that is implemented but not explicitly supported is replaced by a
+    ``DRIFT``. In 1D, this is perfectly acceptable for most non-implemented
+    elements that act on the transverse dynamics, such as ``THIN_LENS``.
 
-    .. configkeys:: lightwin.beam_calculation.envelope_1d.element_envelope1d_p\
-arameters_factory.PARAMETERS_1D
-        :n_cols: 3
+    .. configkeys:: lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory.PARAMETERS_1D
+       :n_cols: 3
 
     """
 
@@ -85,10 +83,10 @@ arameters_factory.PARAMETERS_1D
         self._phi_s_func = SYNCHRONOUS_PHASE_FUNCTIONS[self._phi_s_definition]
 
     def _set_up_specific_factories(self) -> None:
-        """Set up the factories specific to the :class:`.BeamCalculator`.
+        """Set up the factories specific to the |BC|.
 
         This method is called in the :meth:`.BeamCalculator.__init__`, hence it
-        appears only in the base :class:`.BeamCalculator`.
+        appears only in the base |BC|.
 
         .. todo::
             ``default_field_map_folder`` has a wrong default value. Should take
@@ -170,14 +168,13 @@ arameters_factory.PARAMETERS_1D
             ``0000001_Solution``.
         set_of_cavity_settings :
             The new cavity settings to try. If it is None, then the cavity
-            settings are taken from the :class:`.FieldMap` objects.
+            settings are taken from the |FM| objects.
         elts :
             List of elements in which the beam must be propagated.
         use_a_copy_for_nominal_settings :
-            To copy the nominal :class:`.CavitySettings` and avoid altering
-            their nominal counterpart. Set it to True during optimisation, to
-            False when you want to keep the current settings. The default is
-            True.
+            To copy the nominal |CS| and avoid altering their nominal
+            counterpart. Set it to True during optimisation, to False when you
+            want to keep the current settings. The default is True.
 
         Returns
         -------
@@ -249,11 +246,12 @@ arameters_factory.PARAMETERS_1D
         """Create the number of steps, meshing, transfer functions for elts.
 
         The solver parameters are stored in the ``beam_calc_param`` attribute
-        of :class:`.Element`.
+        of |E|.
 
         Parameters
         ----------
-            Object which :class:`.ListOfElements` must be initialized.
+        accelerator :
+            Object which |LOE| must be initialized.
 
         """
         elts = accelerator.elts
@@ -291,7 +289,7 @@ arameters_factory.PARAMETERS_1D
         Also store these quantities in ``cavity_settings``.
 
         .. todo::
-           Integrate this to :class:`.CavitySettings`.
+           Integrate this to |CS|.
 
         """
         v_cav_mv, phi_s = self._phi_s_func(**results)

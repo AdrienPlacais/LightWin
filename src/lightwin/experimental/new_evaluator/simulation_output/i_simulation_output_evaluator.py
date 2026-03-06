@@ -1,4 +1,4 @@
-"""Define the base object for :class:`.SimulationOutput` evaluators."""
+"""Define the base object for |SO| evaluators."""
 
 import logging
 from collections.abc import Sequence
@@ -28,7 +28,7 @@ from lightwin.util.typing import (
 
 @dataclass
 class GetKwargs(dict):
-    """kwargs to forward to :meth:`.SimulationOutput.get`."""
+    """Kwargs to forward to :meth:`.SimulationOutput.get`."""
 
     #: Element(s) at which quantities should be evaluated. Use it if evaluation
     #: takes too long. In general, we ``get`` data along the whole linac even
@@ -66,7 +66,7 @@ class GetKwargs(dict):
 
 
 class ISimulationOutputEvaluator(IEvaluator):
-    """Base class for :class:`.SimulationOutput` evaluations."""
+    """Base class for |SO| evaluations."""
 
     _x_quantity: GETTABLE_SIMULATION_OUTPUT_T = "z_abs"
     #: Whether a NaN in the data array systematically makes the test fail.

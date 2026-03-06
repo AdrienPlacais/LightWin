@@ -45,8 +45,8 @@ def wrap_approx(
     pos: Literal["in", "out"] | None = "out",
     **get_kwargs,
 ) -> bool:
-    """
-    Compare ``key`` from 2 :class:`.SimulationOutput` using ``pytest.approx``.
+    """Compare ``key`` from 2 :class:`.SimulationOutput` using
+    ``pytest.approx``.
 
     By default, will compare ``key`` at the exit of the last element of the
     linac.

@@ -1,4 +1,4 @@
-"""Define a class to easily generate the :class:`.SimulationOutput`."""
+"""Define a class to easily generate the |SO|."""
 
 import logging
 import math
@@ -29,10 +29,7 @@ from lightwin.constants import c
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.core.particle import ParticleFullTrajectory, ParticleInitialState
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
-from lightwin.util.typing import (
-    BeamKwargs,
-    CavParams,
-)
+from lightwin.util.typing import BeamKwargs, CavParams
 
 
 # =============================================================================
@@ -132,8 +129,8 @@ def _set_phase_related_results(
 ) -> dict[str, NDArray]:
     """Compute the phases, pos, frequencies.
 
-    Also shift position and phase if :class:`.ListOfElements` under study does
-    not start at the beginning of the linac.
+    Also shift position and phase if |LOE| under study does not start at the
+    beginning of the linac.
 
     TraceWin always starts with ``z=0`` and ``phi_abs=0``, even when we are not
     at the beginning of the linac (sub ``DAT``).
@@ -153,8 +150,8 @@ def _set_phase_related_results(
     -------
         Same as input, but with ``lambda`` and ``phi_abs`` keys defined.
         ``phi_abs`` and ``z(m)`` keys are modified in order to be null the
-        beginning of the linac (not at the beginning of the
-        :class:`.ListOfElements` under study!).
+        beginning of the linac (not at the beginning of the |LOE| under
+        study!).
 
     """
     results["z(m)"] += z_in
@@ -213,8 +210,7 @@ def _remove_incomplete_line(filepath: Path) -> None:
 
 
 def _add_dummy_data(filepath: Path, elts: ListOfElements) -> None:
-    """
-    Add dummy data at the end of the ``OUT`` to reach end of linac.
+    """Add dummy data at the end of the ``OUT`` to reach end of linac.
 
     We also round the column 'z', to avoid a too big mismatch between the z
     column and what we should have.
@@ -231,8 +227,7 @@ def _add_dummy_data(filepath: Path, elts: ListOfElements) -> None:
 
         if last_element_in_file is not elts[-1]:
             logging.warning(
-                "Incomplete `OUT` file. Trying to complete with "
-                "dummy data..."
+                "Incomplete `OUT` file. Trying to complete with dummy data..."
             )
             elts_to_add = elts[last_idx_in_file:]
             last_pos = np.round(float(line.split()[1]), 4)
@@ -360,8 +355,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         exception: bool,
         set_of_cavity_settings: SetOfCavitySettings,
     ) -> SimulationOutput:
-        """
-        Create an object holding all relatable simulation results.
+        """Create an object holding all relatable simulation results.
 
         Parameters
         ----------
@@ -378,7 +372,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         Returns
         -------
             Holds all relatable data in a consistent way between the different
-            :class:`.BeamCalculator` objects.
+            |BC| objects.
 
         """
         if exception:

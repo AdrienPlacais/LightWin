@@ -1,7 +1,6 @@
 """Define functions useful for beam parameters calculations.
 
-For more information on the units that are used in this module, see
-:ref:`units-label`.
+For more information on the units that are used in this module, see |units|.
 
 """
 
@@ -29,15 +28,14 @@ def reconstruct_sigma(
     beta_kin: NDArray | None = None,
     **beam,
 ) -> NDArray:
-    r"""
-    Set :math:`\sigma` matrix from the two top components and emittance.
+    r"""Set :math:`\sigma` matrix from the two top components and emittance.
 
     Inputs are in :unit:`mm` and :unit:`mrad`, but the :math:`\sigma` matrix is
     in SI units (:unit:`m` and :unit:`rad`).
 
     See Also
     --------
-    :ref:`units-label`.
+    |units|.
 
     Parameters
     ----------
@@ -302,8 +300,7 @@ def sigma_from_transfer_matrices(
     sigma_in: NDArray,
     tm_cumul: NDArray,
 ) -> NDArray:
-    r"""
-    Compute the :math:`\sigma` beam matrices over the linac.
+    r"""Compute the :math:`\sigma` beam matrices over the linac.
 
     ``sigma_in`` and transfer matrices shall have same units, in the same phase
     space.
@@ -334,8 +331,7 @@ def sigma_from_transfer_matrices(
 # Compute quantities from Twiss and emittance
 # =============================================================================
 def envelopes_from_twiss_eps(twiss: NDArray, eps: NDArray | float) -> NDArray:
-    r"""
-    Compute the envelopes from the Twiss parameters and emittance.
+    r"""Compute the envelopes from the Twiss parameters and emittance.
 
     Parameters
     ----------

@@ -54,7 +54,7 @@ def zone_to_recompute(
     Parameters
     ----------
     broken_elts :
-        :class:`.ListOfElements` from the broken linac.
+        |LOE| from the broken linac.
     objective_position_preset :
         Short strings that must be in :data:`.POSITION_TO_INDEX` dictionary to
         determine where the objectives should be evaluated.
@@ -63,13 +63,12 @@ def zone_to_recompute(
         converted to element index in the routine.
     full_lattices :
         If you want the compensation zone to encompass full lattices only. It
-        is a little bit slower as more :class:`.Element` are calculated. Plus,
-        it has no impact even with :class:`.TraceWin` solver. Keeping it in
-        case it has an impact that I did not see.
+        is a little bit slower as more |E| are calculated. Plus, it has no
+        impact even with :class:`.TraceWin` solver. Keeping it in case it has
+        an impact that I did not see.
     full_linac :
         To compute full linac at every step of the optimisation process. Can be
-        very time-consuming, but may be necessary with some future
-        :class:`.BeamCalculator`.
+        very time-consuming, but may be necessary with some future |BC|.
     start_at_beginning_of_linac :
         To make compensation zone start at the beginning of  the linac. The
         default is False.
@@ -77,7 +76,7 @@ def zone_to_recompute(
     Returns
     -------
     elts_of_compensation_zone :
-        :class:`.Element` objects of the compensation zone.
+        |E| objects of the compensation zone.
     objective_elements :
         Where objectives are evaluated.
 

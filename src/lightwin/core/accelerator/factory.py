@@ -1,4 +1,4 @@
-"""Define a factory to easily create :class:`.Accelerator`."""
+"""Define a factory to easily create |A|."""
 
 import logging
 from pathlib import Path
@@ -26,7 +26,7 @@ class AcceleratorFactory:
         beam: BeamKwargs,
         **kwargs,
     ) -> None:
-        """Facilitate creation of :class:`.Accelerator` objects.
+        """Facilitate creation of |A| objects.
 
         Parameters
         ----------
@@ -110,9 +110,9 @@ class AcceleratorFactory:
         Returns
         -------
         accelerators :
-            Dictionary where keys are :class:`.FaultScenario` indexes, and
-            values are lists of corresponding :class:`.Accelerator`. First
-            index corresponds to reference accelerator (no failure).
+            Dictionary where keys are |FS| indexes, and values are lists of
+            corresponding |A|. First index corresponds to reference accelerator
+            (no failure).
         updated_wtf :
             The resolved ``wtf`` configuration with explicit cavity failures.
             None if no wtf was provided.
@@ -167,12 +167,11 @@ class AcceleratorFactory:
         ----------
         n_scenarios :
             Number of broken accelerators to create. This is also the number
-            of :class:`.FaultScenario` we will create.
+            of |FS| we will create.
 
         Returns
         -------
-            Dict associating :class:`.FaultScenario` index to corresponding
-            broken :class:`.Accelerator`.
+            Dict associating |FS| index to corresponding broken |A|.
 
         """
         return {
@@ -201,11 +200,10 @@ class AcceleratorFactory:
         name :
             Accelerator name (e.g., ``"Reference"``, ``"Solution"``).
         status :
-            Current status design. Ignored if the :class:`.Accelerator` is
-            unpickled.
+            Current status design. Ignored if the |A| is unpickled.
         index :
-            Corresponding :class:`.FaultScenario` index. A null index is
-            reserved for reference accelerator.
+            Corresponding |FS| index. A null index is reserved for reference
+            accelerator.
         output_path :
             Path where accelerator data will be stored.
 
@@ -260,8 +258,8 @@ class AcceleratorFactory:
         status :
             Current status design.
         index :
-            Corresponding :class:`.FaultScenario` index. A null index is
-            reserved for reference accelerator.
+            Corresponding |FS| index. A null index is reserved for reference
+            accelerator.
         output_path :
             Path where accelerator data will be stored.
         pickle_path :
@@ -317,9 +315,9 @@ class AcceleratorFactory:
           section.
 
         - In every ``accelerator_path`` (eg ``000002/``), you will find one
-          directory per :class:`.BeamCalculator`. In this example, compensation
-          settings were found with :class:`.Envelope1D` and a second simulation
-          was made with :class:`.TraceWin`.
+          directory per |BC|. In this example, compensation settings were found
+          with :class:`.Envelope1D` and a second simulation was made with
+          :class:`.TraceWin`.
 
         """
         output_path.mkdir(parents=True, exist_ok=True)
@@ -376,8 +374,7 @@ class AcceleratorFactory:
         Note
         ----
         When a Reference/Solution ``PKL`` is provided but does not exist,
-        the associated :class:`.Accelerator` will be pickled at the end of
-        the simulation.
+        the associated |A| will be pickled at the end of the simulation.
 
         Parameters
         ----------
@@ -429,13 +426,13 @@ class AcceleratorFactory:
                         "Solution": "solution-000003.pkl",
                         "Tweaked design": "tweaked.pkl",
                         "Experimental config": "experimental.pkl",
-                    }
+                    },
                 }
 
             - 0: Path to reference accelerator pickle, or None.
             - ``scenarios[index]``: Sub-dictionary where keys are
               :attr:`.Accelerator.name`, values are corresponding ``PKL``
-              :class:`.Accelerator` pickle files.
+              |A| pickle files.
 
         """
         parsed: dict[int, str | dict[str, str]] = {}
@@ -483,8 +480,8 @@ class AcceleratorFactory:
         name :
             Accelerator name to look up in pickle paths configuration.
         index :
-            :class:`.FaultScenario` index. If not null, we look for ``name``
-            key in ``self._pickle_paths[index]`` subdict.
+            |FS| index. If not null, we look for ``name`` key in
+            ``self._pickle_paths[index]`` subdict.
 
         Returns
         -------
@@ -528,8 +525,8 @@ class AcceleratorFactory:
         name :
             Accelerator name.
         index :
-            Corresponding :class:`.FaultScenario` index. A null index is
-            reserved for reference accelerator.
+            Corresponding |FS| index. A null index is reserved for reference
+            accelerator.
         pickle_path :
             Path to pickle file.
 
@@ -549,7 +546,7 @@ class AcceleratorFactory:
     def _load_additional_pickles(
         self, reserved_names: set[str] = {"Reference", "Solution"}
     ) -> dict[int, list[Accelerator]]:
-        """Unpickle additional :class:`.Accelerator`.
+        """Unpickle additional |A|.
 
         Parameters
         ----------
@@ -560,7 +557,7 @@ class AcceleratorFactory:
         Returns
         -------
             Additional accelerators loaded from pickle files, associated with
-            their :class:`.FaultScenario` index.
+            their |FS| index.
 
         """
         additional: dict[int, list[Accelerator]] = {}
@@ -585,8 +582,7 @@ class AcceleratorFactory:
                     continue
 
                 logging.info(
-                    f"Loading additional accelerator '{accelerator.id}' from "
-                    "pickle."
+                    f"Loading additional accelerator '{accelerator.id}' from pickle."
                 )
                 accelerators.append(accelerator)
             additional[index] = accelerators
@@ -603,8 +599,7 @@ class AcceleratorFactory:
 
         """
         warn(
-            "The method create_nominal is deprecated. Prefer using "
-            "create_reference.",
+            "The method create_nominal is deprecated. Prefer using create_reference.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -618,8 +613,7 @@ class AcceleratorFactory:
 
         """
         warn(
-            "The method create_failed is deprecated. Prefer using "
-            "create_all_broken.",
+            "The method create_failed is deprecated. Prefer using create_all_broken.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -666,8 +660,7 @@ class WithFaults(AcceleratorFactory):
 
     def __init__(self, *args, wtf: dict[str, Any], **kwargs) -> None:
         warn(
-            "The class WithFaults is deprecated. Prefer using "
-            "AcceleratorFactory.",
+            "The class WithFaults is deprecated. Prefer using AcceleratorFactory.",
             DeprecationWarning,
             stacklevel=2,
         )

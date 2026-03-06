@@ -50,8 +50,7 @@ def process_config(
     Returns
     -------
         A dictionary holding all the keyword arguments that will be passed to
-        LightWin objects, eg ``beam_calculator`` will be passed to
-        :class:`.BeamCalculator`.
+        LightWin objects, eg ``beam_calculator`` will be passed to |BC|.
 
     """
     raw_toml = _load_toml(toml_path)
@@ -155,8 +154,7 @@ def _process_toml(
     for key, value in config_keys.items():
         if value not in raw_toml:
             raise KeyError(
-                f"Expected table '{value}' for key '{key}' not found in the "
-                "TOML file."
+                f"Expected table '{value}' for key '{key}' not found in the TOML file."
             )
         toml_fulldict[key] = raw_toml[value]
 

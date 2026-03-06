@@ -223,6 +223,7 @@ def is_a_valid_3d_field(
     Returns
     -------
         Whether the field is valid.
+
     """
     if field.shape != (n_z + 1, n_y + 1, n_x + 1):
         logging.error(

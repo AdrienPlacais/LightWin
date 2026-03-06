@@ -72,7 +72,7 @@ def z_field_map_rk4(
     complex_e_func: FieldFuncComplexTimedComponent,
     real_e_func: FieldFuncTimedComponent,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], complex]:
-    r"""Calculate the transfer matrix of :class:`.FieldMap` using Runge-Kutta.
+    r"""Calculate the transfer matrix of |FM| using Runge-Kutta.
 
     We slice the field map in a serie of drift-thin acceleration gap-drift. We
     pre-compute some constants to speed up the calculation:
@@ -173,8 +173,8 @@ def z_thin_lense(
     half_dz: float,
     omega0_rf: float,
 ) -> NDArray[np.float64]:
-    r"""
-    Compute propagation in a slice of field map using thin lense approximation.
+    r"""Compute propagation in a slice of field map using thin lense
+    approximation.
 
     Thin lense approximation: drift-acceleration-drift. The transfer matrix of
     the thin accelerating gap is:
@@ -358,8 +358,7 @@ def z_field_map_leapfrog(
     omega_0_bunch: float,
     **kwargs,
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], float]:
-    """
-    Calculate the transfer matrix of a ``FIELD_MAP`` using leapfrog.
+    """Calculate the transfer matrix of a ``FIELD_MAP`` using leapfrog.
 
     .. todo::
         clean, fix, separate leapfrog integration in dedicated module

@@ -161,8 +161,7 @@ class DesignSpace:
             parameter = getattr(self, parameter_name)
             if len(parameter) == 0:
                 logging.info(
-                    f"{parameter_name} not defined for this DesignSpace. "
-                    "Skipping... "
+                    f"{parameter_name} not defined for this DesignSpace. Skipping... "
                 )
                 continue
 

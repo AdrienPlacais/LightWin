@@ -165,6 +165,18 @@ rst_prolog = """
 .. |issue| replace:: issue
 .. _issue: https://github.com/AdrienPlacais/LightWin/issues
 
+.. |units| replace:: :ref:`units-label`
+
+.. |A| replace:: :class:`.Accelerator`
+.. |BC| replace:: :class:`.BeamCalculator`
+.. |CS| replace:: :class:`.CavitySettings`
+.. |E| replace:: :class:`.Element`
+.. |F| replace:: :class:`.Fault`
+.. |FS| replace:: :class:`.FaultScenario`
+.. |FM| replace:: :class:`.FieldMap`
+.. |LOE| replace:: :class:`.ListOfElements`
+.. |SO| replace:: :class:`.SimulationOutput`
+
 """
 
 # -- Bug fixes ---------------------------------------------------------------

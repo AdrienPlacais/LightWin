@@ -1,12 +1,10 @@
 """Gather the beam parameters of all the phase spaces.
 
-For a list of the units associated with every parameter, see
-:ref:`units-label`.
+For a list of the units associated with every parameter, see |units|.
 
 """
 
 import logging
-import warnings
 from dataclasses import dataclass
 from typing import Any, Literal, Self
 
@@ -60,11 +58,11 @@ class BeamParameters(InitialBeamParameters):
         :math:`[x-x']` and :math:`[y-y']` planes. Only used with multiparticle
         simulations.
     element_to_index :
-        Takes an :class:`.Element`, its name, ``'first'`` or ``'last'`` as
-        argument, and returns corresponding index. Index should be the same in
-        all the arrays attributes of this class: ``z_abs``, ``beam_parameters``
-        attributes, etc. Used to easily ``get`` the desired properties at the
-        proper position.
+        Takes an |E|, its name, ``'first'`` or ``'last'`` as argument, and
+        returns corresponding index. Index should be the same in all the arrays
+        attributes of this class: ``z_abs``, ``beam_parameters`` attributes,
+        etc. Used to easily ``get`` the desired properties at the proper
+        position.
 
     """
 
@@ -256,8 +254,8 @@ class BeamParameters(InitialBeamParameters):
     def _create_tracewin_command(
         self, warn_missing_phase_space: bool = True
     ) -> list[str]:
-        """
-        Turn emittance, alpha, beta from the proper phase-spaces into command.
+        """Turn emittance, alpha, beta from the proper phase-spaces into
+        command.
 
         When phase-spaces were not created, we return np.nan which will
         ultimately lead TraceWin to take this data from its ``INI`` file.

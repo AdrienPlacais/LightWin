@@ -1,12 +1,11 @@
-"""Define an object to create :class:`.ListOfElements`.
+"""Define an object to create |LOE|.
 
-Its main goal is to initialize :class:`.ListOfElements` with the proper input
-synchronous particle and beam properties.
-:meth:`.whole_list_run` is called within the :class:`.Accelerator` and generate
-a full :class:`.ListOfElements` from scratch.
+Its main goal is to initialize |LOE| with the proper input synchronous particle
+and beam properties. :meth:`.whole_list_run` is called within the |A| and
+generate a full |LOE| from scratch.
 
-:meth:`.subset_list_run` is called within :class:`.Fault` and generates a
-:class:`.ListOfElements` that contains only a fraction of the linac.
+:meth:`.subset_list_run` is called within |F| and generates a |LOE| that
+contains only a fraction of the linac.
 
 .. todo::
     Also handle ``DST`` file in :meth:`.subset_list_run`.
@@ -17,8 +16,8 @@ a full :class:`.ListOfElements` from scratch.
 
 .. todo::
     Find a smart way to sublass :class:`.ListOfElementsFactory` according to
-    the :class:`.BeamCalculator`... Loading field maps not necessary with
-    :class:`.TraceWin` for example.
+    the |BC|... Loading field maps not necessary with :class:`.TraceWin` for
+    example.
 
 .. todo::
     The ``elements_to_dump`` key should be in the configuration file
@@ -74,12 +73,11 @@ class ListOfElementsFactory:
 
         .. note::
             For now, we have only one ``input_beam`` parameters, we create only
-            one :class:`.ListOfElements`. Hence we create in the most general
-            way possible.
-            We instantiate :class:`.InitialBeamParametersFactory` with
+            one |LOE|. Hence we create in the most general way possible. We
+            instantiate :class:`.InitialBeamParametersFactory` with
             ``is_3d=True`` and ``is_multipart=True`` because it will work with
-            all the :class:`.BeamCalculator` objects -- some phase-spaces may
-            be created but never used though.
+            all the |BC| objects -- some phase-spaces may be created but never
+            used though.
 
         Parameters
         ----------
@@ -101,7 +99,7 @@ class ListOfElementsFactory:
         load_cython_field_maps :
             If the solver is implemented in cython.
         elements_to_dump :
-            Explicit list of :class:`.Element` that can be safely ignored.
+            Explicit list of |E| that can be safely ignored.
 
         """
         freq_bunch_mhz = beam_kwargs["f_bunch_mhz"]
@@ -134,17 +132,16 @@ class ListOfElementsFactory:
         z_in: float,
         instructions_to_insert: Collection[Instruction | DatLine] = (),
     ) -> ListOfElements:
-        r"""Create a new :class:`.ListOfElements`, encompassing a full linac.
+        r"""Create a new |LOE|, encompassing a full linac.
 
-        Factory function called from within the :class:`.Accelerator` object.
+        Factory function called from within the |A| object.
 
         Parameters
         ----------
         dat_file :
             Absolute path to the ``DAT`` file.
         accelerator_path :
-            Absolute path where results for each :class:`.BeamCalculator` will
-            be stored.
+            Absolute path where results for each |BC| will be stored.
         sigma_in :
             :math:`\sigma` beam matrix at the entrance of the linac.
         w_kin :
@@ -161,8 +158,8 @@ class ListOfElementsFactory:
 
         Returns
         -------
-            Contains all the :class:`.Element` of the linac, as well as the
-            proper particle and beam properties at its entry.
+            Contains all the |E| of the linac, as well as the proper particle
+            and beam properties at its entry.
 
         """
         dat_filecontent = dat_filecontent_from_file(
@@ -201,11 +198,11 @@ class ListOfElementsFactory:
         simulation_output: SimulationOutput,
         files_from_full_list_of_elements: FilesInfo,
     ) -> ListOfElements:
-        """Create a :class:`.ListOfElements` as subset of a previous one.
+        """Create a |LOE| as subset of a previous one.
 
         Factory function used during the fitting process, called by a
-        :class:`.Fault` object. During this optimisation process, we compute
-        the propagation of the beam only on the smallest possible subset of the
+        |F| object. During this optimisation process, we compute the
+        propagation of the beam only on the smallest possible subset of the
         linac.
 
         It creates the proper :class:`.ParticleInitialState` and
@@ -222,8 +219,7 @@ class ListOfElementsFactory:
         simulation_output :
             Holds the results of the pre-existing list of elements.
         files_from_full_list_of_elements :
-            The `files` attribute of :class:`.ListOfElements` from the full
-            :class:`.ListOfElements`.
+            The `files` attribute of |LOE| from the full |LOE|.
 
         Returns
         -------

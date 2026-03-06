@@ -1,9 +1,9 @@
-"""Define a class to store several :class:`.CavitySettings`.
+"""Define a class to store several |CS|.
 
 .. todo::
     I should create a :class:`.SetOfCavitySettings` with
-    :class:`.CavitySettings` for every cavity of the compensation zone.
-    Mandatory to recompute the synchronous phases.
+    |CS| for every cavity of the compensation zone. Mandatory to recompute the
+    synchronous phases.
 
 """
 
@@ -47,7 +47,7 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
         return [getattr(settings, key) for settings in self._ordered_settings]
 
     def __dir__(self) -> Sequence[str]:
-        """Return the stored variables and some of :class:`CavitySettings`."""
+        """Return the stored variables and some of |CS|."""
         return sorted(dir(self.__class__) + list(CONCATENABLE_CAVITY_SETTINGS))
 
     @classmethod
@@ -76,14 +76,12 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
 
         We give each cavity settings from ``set_of_cavity_settings`` if they
         are listed in this object. If they are not, we give them their default
-        :class:`.CavitySettings` (`FieldMap.cavity_settings` attribute).
-        This method is used to generate :class:`.SimulationOutput` where all
-        the cavity settings are explicitly defined.
+        |CS| (`FieldMap.cavity_settings` attribute). This method is used to
+        generate |SO| where all the cavity settings are explicitly defined.
 
         .. note::
             In fact, may be useless. In the future, the nominal cavities will
-            also have their own :class:`.CavitySettings` in the compensation
-            zone.
+            also have their own |CS| in the compensation zone.
 
         .. todo::
             Should create the full SetOfCavitySettings directly from the
@@ -98,15 +96,14 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
             Object holding the settings of some cavities (typically, the
             settings of compensating cavities as given by an
             :class:`.OptimisationAlgorithm`). When it is None, every
-            :class:`.CavitySettings` is taken from the :class:`.FieldMap`
-            object (corresponds to run without optimisation).
+            |CS| is taken from the |FM| object (corresponds to run without
+            optimisation).
         cavities :
-            All the cavities that should have :class:`.CavitySettings`
-            (typically, all the cavities in a sub-:class:`.ListOfElements`
-            studied during an optimisation process).
+            All the cavities that should have |CS| (typically, all the cavities
+            in a sub-|LOE| studied during an optimisation process).
         use_a_copy_for_nominal_settings :
-            To create new :class:`.CavitySettings` for the cavities not already
-            in ``set_of_cavity_settings``. Allows to compute quantities such as
+            To create new |CS| for the cavities not already in
+            ``set_of_cavity_settings``. Allows to compute quantities such as
             synchronous phase without altering the original one.
 
         Returns
@@ -131,9 +128,9 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
     def re_set_elements_index_to_absolute_value(self) -> None:
         """Update cavities index to properly set `ele[n][v]` commands.
 
-        When switching from a sub-:class:`.ListOfElements` during the
-        optimisation process to the full :class:`.ListOfElements` after the
-        optimisation, we must update index ``n`` in the ``ele[n][v]]`` command.
+        When switching from a sub-|LOE| during the optimisation process to the
+        full |LOE| after the optimisation, we must update index ``n`` in the
+        ``ele[n][v]]`` command.
 
         """
         for cavity, setting in self.items():
@@ -141,7 +138,7 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
             setting.index = absolute_index
 
     def _order(self) -> tuple[Sequence[FieldMap], Sequence[CavitySettings]]:
-        """Return all the :class:`.Element` in ``self`` in good order."""
+        """Return all the |E| in ``self`` in good order."""
         ordered_cav = sorted(self.keys(), key=lambda cav: cav.idx["elt_idx"])
         ordered_settings = [self[cav] for cav in ordered_cav]
         return ordered_cav, ordered_settings
@@ -155,9 +152,8 @@ def _settings_getter(
     """Take the settings from the set of settings if possible.
 
     If ``cavity`` is not listed in ``set_of_cavity_settings``, take its nominal
-    :class:`.CavitySettings` instead. In the latter case, ``instantiate_new``
-    will force the creation of a new :class:`.CavitySettings` with the same
-    settings.
+    |CS| instead. In the latter case, ``instantiate_new`` will force the
+    creation of a new |CS| with the same settings.
 
     Parameters
     ----------
@@ -168,7 +164,7 @@ def _settings_getter(
         :class:`.OptimisationAlgorithm`), or an empty dict.
     instantiate_new :
         To force the creation of a new object; will allow to keep the original
-        :class:`.CavitySettings` unaltered.
+        |CS| unaltered.
 
     Returns
     -------

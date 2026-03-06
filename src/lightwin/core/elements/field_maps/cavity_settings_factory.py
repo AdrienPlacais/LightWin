@@ -1,4 +1,4 @@
-"""Create :class:`.CavitySettings` from various contexts."""
+"""Create |CS| from various contexts."""
 
 import math
 from collections.abc import Sequence
@@ -14,7 +14,7 @@ from lightwin.util.typing import REFERENCE_PHASES_T, STATUS_T
 
 
 class CavitySettingsFactory:
-    """Base class to create :class:`.CavitySettings` objects."""
+    """Base class to create |CS| objects."""
 
     def __init__(self, freq_bunch_mhz: float) -> None:
         """Instantiate factory, with attributes common to all cavities."""
@@ -45,14 +45,14 @@ class CavitySettingsFactory:
         reference: REFERENCE_PHASES_T,
         status: STATUS_T,
     ) -> list[CavitySettings]:
-        """
-        Create the cavity settings to try during/at the end of an optimization.
+        """Create the cavity settings to try during/at the end of an
+        optimization.
 
         Parameters
         ----------
         base_settings :
             Nominal cavity settings, serving as a "base" for creating the new
-            :class:`.CavitySettings`.
+            |CS|.
         var :
             Holds amplitudes in the first half, phases in the second half.
         reference :

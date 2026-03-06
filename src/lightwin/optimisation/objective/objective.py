@@ -74,7 +74,7 @@ class Objective(ABC):
         self.name: str = name
         #: Weight :math:`w` of current objective.
         self.weight: float = weight
-        #: Name of the quantity to get from :class:`.SimulationOutput`,
+        #: Name of the quantity to get from |SO|,
         self.get_key: GETTABLE_SIMULATION_OUTPUT_T = get_key
         #: Keyword arguments for the :meth:`.SimulationOutput.get` method.
         self.get_kwargs: dict[str, Any] = get_kwargs
@@ -133,10 +133,9 @@ class Objective(ABC):
         simulation_output :
             Object to ``get`` ``self.get_key`` from.
         handle_missing_elt :
-            Automatically look for an equivalent :class:`.Element` when the
-            current one is not in :class:`.SimulationOutput`. Set it to
-            ``True`` when calculating reference value (reference
-            :class:`.Element` is not in compensating list of elements).
+            Automatically look for an equivalent |E| when the current one is
+            not in |SO|. Set it to ``True`` when calculating reference value
+            (reference |E| is not in compensating list of elements).
 
         """
         return simulation_output.get(
@@ -197,8 +196,7 @@ class Objective(ABC):
         Parameters
         ----------
         objective_value :
-            Value of :attr:`.Objective.name`, taken from a
-            :class:`.SimulationOutput`.
+            Value of :attr:`.Objective.name`, taken from a |SO|.
 
         Returns
         -------
@@ -236,8 +234,8 @@ class MinimizeDifferenceWithRef(Objective):
         reference: SimulationOutput,
         descriptor: str | None = None,
     ) -> None:
-        """
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+        """Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
 
         Parameters
         ----------
@@ -299,8 +297,8 @@ class MinimizeMismatch(Objective):
         reference: SimulationOutput,
         descriptor: str | None = None,
     ) -> None:
-        """
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+        """Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
 
         Parameters
         ----------
@@ -390,8 +388,8 @@ class MinimizeVariation(Objective):
         descriptor: str | None = None,
         **kwargs,
     ) -> None:
-        """
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+        """Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
 
         Note
         ----
@@ -487,8 +485,8 @@ class QuantityIsBetween(Objective):
         descriptor: str | None = None,
         loss_function: str | None = None,
     ) -> None:
-        """
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+        """Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
 
         Parameters
         ----------
@@ -535,8 +533,8 @@ class QuantityIsBetween(Objective):
         descriptor: str | None = None,
         loss_function: str | None = None,
     ) -> Self:
-        r"""
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+        r"""Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
 
         Parameters
         ----------
@@ -604,8 +602,7 @@ class QuantityIsBetween(Objective):
         Parameters
         ----------
         objective_value :
-            Value of :attr:`.Objective.name`, taken from a
-            :class:`.SimulationOutput`.
+            Value of :attr:`.Objective.name`, taken from a |SO|.
 
         Returns
         -------
@@ -643,8 +640,8 @@ class RetrieveArbitrary(Objective):
         ideal_value: float,
         descriptor: str | None = None,
     ) -> None:
-        """
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+        """Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
 
         Parameters
         ----------

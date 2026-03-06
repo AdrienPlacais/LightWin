@@ -84,7 +84,6 @@ class Initial(Generic):
 
 
 if __name__ == "__main__":
-
     property_1 = np.linspace(0, 10, 11)
     property_1 = np.vstack((property_1, property_1**2))
 

@@ -19,8 +19,7 @@ def create_fig_if_not_exists(
     clean_fig: bool = False,
     **kwargs,
 ) -> tuple[Figure, list[Axes]]:
-    """
-    Check if figures were already created, create it if not.
+    """Check if figures were already created, create it if not.
 
     Parameters
     ----------

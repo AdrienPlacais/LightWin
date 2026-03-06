@@ -1,1 +1,1 @@
-"""Define solver parameters for each :class:`.Element`."""
+"""Define solver parameters for each |E|."""

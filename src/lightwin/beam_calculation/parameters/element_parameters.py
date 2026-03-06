@@ -1,8 +1,7 @@
 """Define a base class for :class:`ElementBeamCalculatorParameters`.
 
-It is an attribute of an :class:`.Element`, and holds parameters that depend on
-both the :class:`.Element` under study and the :class:`.BeamCalculator` solver
-that is used.
+It is an attribute of an |E|, and holds parameters that depend on both the |E|
+under study and the |BC| solver that is used.
 
 Currently, it is used by :class:`.Envelope1D` and :class:`.Envelope3D` only, as
 :class:`.TraceWin` handles it itself.
@@ -20,7 +19,7 @@ from lightwin.util.typing import GETTABLE_BEAM_CALC_PARAMETERS_T
 
 
 class ElementBeamCalculatorParameters(ABC):
-    """Parent class to hold solving parameters. Attribute of :class:`.Element`.
+    """Parent class to hold solving parameters. Attribute of |E|.
 
     Used by :class:`.Envelope1D` and :class:`.Envelope3D`.
 

@@ -11,7 +11,7 @@ from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
 class TransferMatrixFactory(ABC):
     """Provide a method for easy creation of :class:`.TransferMatrix`.
 
-    This class should be subclassed by every :class:`.BeamCalculator`.
+    This class should be subclassed by every |BC|.
 
     """
 
@@ -32,7 +32,7 @@ class TransferMatrixFactory(ABC):
     def _preprocess(
         self, single_elt_results: list[dict[str, Any]]
     ) -> np.ndarray:
-        """Preprocess the data given by the :class:`.BeamCalculator`."""
+        """Preprocess the data given by the |BC|."""
         raise NotImplementedError("Method not overriden.")
 
     @abstractmethod
