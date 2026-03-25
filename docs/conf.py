@@ -33,7 +33,7 @@ sys.path.append(os.path.abspath("./_ext"))
 
 project = "LightWin"
 author = "A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
-copyright = "2025, " + author
+copyright = "2026, " + author
 
 # See https://protips.readthedocs.io/git-tag-version.html
 # The full version, including alpha/beta/rc tags.
