@@ -59,8 +59,8 @@ class SimulationOutputEvaluatorsFactory:
 
     def run(
         self,
-        accelerators: Sequence[Accelerator],
-        solvers_ids: str | Sequence[str],
+        accelerators: dict[int, list[Accelerator]],
+        solvers_ids: str | Sequence[str] | None = None,
     ) -> list[ISimulationOutputEvaluator]:
         """Instantiate all the evaluators.
 
@@ -76,15 +76,18 @@ class SimulationOutputEvaluatorsFactory:
         """
         if isinstance(solvers_ids, str):
             solvers_ids = (solvers_ids,)
+        elif solvers_ids is None:
+            solvers_ids = tuple(accelerators[0][0].simulation_outputs.keys())
 
         evaluators: list[ISimulationOutputEvaluator] = []
 
         for i, (constructor, kwargs) in enumerate(
             self._constructors_n_kwargs.items()
         ):
+
             for id in solvers_ids:
                 evaluator = constructor(
-                    reference=accelerators[0].simulation_outputs[id],
+                    reference=accelerators[0][0].simulation_outputs[id],
                     fignum=100 + i,
                     plotter=self._plotter,
                     **kwargs,
@@ -103,19 +106,24 @@ class SimulationOutputEvaluatorsFactory:
     def batch_evaluate(
         self,
         evaluators: Collection[ISimulationOutputEvaluator],
-        accelerators: Sequence[Accelerator],
+        accelerators: dict[int, list[Accelerator]],
         csv_kwargs: dict[str, Any] | None = None,
         get_overrides: dict[str, Any] | None = None,
         **kwargs,
     ) -> pd.DataFrame:
         """Evaluate several evaluators.
 
+        Evaluations are recursiverly performed on all the provided |A| for
+        every |FS| index.
+
         Parameters
         ----------
         evaluators :
             Evaluations to realize.
         accelerators :
-            Objects holding all the |SO| to be evaluated.
+            Objects holding all the |SO| to be evaluated. Keys are |FS| index,
+            values list of corresponding |A| (the list is of length 1, unless
+            there are unpickled |A|).
         beam_solver_ids :
             Name of the solvers that created the |SO|. They must be keys of the
             :attr:`.Accelerator.simulation_outputs` dictionary.
@@ -127,24 +135,31 @@ class SimulationOutputEvaluatorsFactory:
             run on a smaller portion of the linac.
 
         """
-        simulation_outputs = [
-            simulation
-            for acc in accelerators
-            for simulation in acc.simulation_outputs.values()
-        ]
-        elts = [x.elts for x in accelerators]
-        folder = _out_folders(simulation_outputs)[-1]
-
         tests = {}
         data_used_for_tests = {}
-        for evaluator in evaluators:
-            test, data = evaluator.evaluate(
-                *simulation_outputs, **(get_overrides or {})
-            )
-            evaluator.plot(data, elts=elts, png_folder=folder, **kwargs)
+        folder = Path("default_eval_folder")
 
-            tests[repr(evaluator)] = test
-            data_used_for_tests[str(evaluator)] = data
+        references = list(accelerators[0][0].simulation_outputs.values())
+
+        for fs, accel in accelerators.items():
+            if fs == 0:
+                continue
+            simulation_outputs = [
+                simulation
+                for acc in accel
+                for simulation in acc.simulation_outputs.values()
+            ]
+            elts = [x.elts for x in accel]
+            folder = _out_folders(simulation_outputs)[0]
+
+            for evaluator in evaluators:
+                test, data = evaluator.evaluate(
+                    *(references + simulation_outputs), **(get_overrides or {})
+                )
+                evaluator.plot(data, elts=elts, png_folder=folder, **kwargs)
+
+                tests[f"{fs}_{repr(evaluator)}"] = test
+                data_used_for_tests[f"{fs}_{evaluator}"] = data
 
         tests_as_pd = pd.DataFrame(tests)
         pandas_helper.to_csv(
