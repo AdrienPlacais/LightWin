@@ -111,8 +111,16 @@ class Objective(ABC):
         """Tell nature and position of objective."""
         message = f"{self.get_key:>23}"
 
-        elt = str(self.get_kwargs.get("elt", "NA"))
-        message += f" @elt {elt:>5}"
+        elements = self.get_kwargs.get("elt", "NA")
+        if hasattr(elements, "__iter__") and not isinstance(elements, str):
+            elts = list(elements)
+            if len(elts) > 3:
+                formatted = f"{elts[0]}..{elts[-1]} ({len(elts)})"
+            else:
+                formatted = " ".join(str(x) for x in elts)
+        else:
+            formatted = str(elements)
+        message += f" @elt {formatted:>5}"
 
         pos = str(self.get_kwargs.get("pos", "NA"))
         message += f" ({pos:>3}) | {self.weight:>5} | "
