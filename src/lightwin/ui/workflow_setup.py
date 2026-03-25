@@ -288,3 +288,42 @@ def run_simulation(
     plot.factory(accelerators, fault_scenarios=fault_scenarios, **config)
 
     return fault_scenarios
+
+
+def run_simulation_new(
+    config: dict[str, Any],
+    **kwargs,
+) -> tuple[dict[int, list[Accelerator]], list[FaultScenario] | None]:
+    """Compute propagation of beam; if failures are defined, fix them.
+
+    Parameters
+    ----------
+    config :
+        The full TOML configuration dict.
+
+    Returns
+    -------
+    accelerators : dict[int, list[Accelerator]]
+        Keys are |FS| indexes (0 is for reference). Values are corresponding
+        |A| as a list; there is typically one |A| in each list, and additional
+        ones are unpickled.
+    fault_scenarios :
+        Returned if failure(s) were defined.
+
+    """
+    beam_calculators, accelerators, fault_scenarios, ref_simulation_output = (
+        set_up(config, **kwargs)
+    )
+    if fault_scenarios is None:
+        plot.factory(accelerators, **config)
+        return accelerators, None
+
+    fix(fault_scenarios)
+    recompute(
+        beam_calculators[1:],
+        ref_simulation_output[1:],
+        accelerators,
+    )
+    plot.factory(accelerators, fault_scenarios=fault_scenarios, **config)
+
+    return accelerators, fault_scenarios
