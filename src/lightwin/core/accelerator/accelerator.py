@@ -478,8 +478,7 @@ class Accelerator:
 
         simulation_outputs = list(accelerator.simulation_outputs.values())
 
-        if accelerator_id is None:
-            return accelerator
+        accelerator_id = accelerator_id or accelerator.id
 
         if isinstance(accelerator_id, str):
             accelerator_id = [accelerator_id for _ in simulation_outputs]

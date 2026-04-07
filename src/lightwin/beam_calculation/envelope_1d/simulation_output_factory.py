@@ -1,7 +1,6 @@
 """Define a class to easily generate the |SO|."""
 
 from abc import ABCMeta
-from pathlib import Path
 
 import numpy as np
 
