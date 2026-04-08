@@ -3,7 +3,7 @@
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Collection
-from typing import Any, Self, Sequence
+from typing import Any, Literal, Self, Sequence
 
 import numpy as np
 from numpy.typing import NDArray
@@ -19,6 +19,11 @@ from lightwin.util.typing import (
     GETTABLE_SIMULATION_OUTPUT_T,
 )
 
+#: Value of ``elt`` from ``get_kwargs`` when an objective must be evaluated
+#: over all elements of the compensation zone.
+MAGIC_ALL_ELTS = "full compensation zone"
+MAGIC_ALL_ELTS_T = Literal["full compensation zone"]
+
 
 class Objective(ABC):
     """Hold an objective and methods to evaluate it.
@@ -31,6 +36,9 @@ class Objective(ABC):
     #: List of authorized values for the ``get_key``. Checked by the
     #: :meth:`._check_get_arguments` method
     _gettable: Collection[str] = GETTABLE_SIMULATION_OUTPUT
+
+    #: get_kwargs that should raise a warning if they are not present.
+    _advised_get_kwargs: set[str] = {"elt", "pos", "to_numpy"}
 
     def __init__(
         self,
@@ -69,6 +77,8 @@ class Objective(ABC):
             A longer string to explain the objective.
 
         """
+        if "phi" in get_key:
+            self._advised_get_kwargs.add("to_deg")
         get_key, get_kwargs = self._check_get_arguments(get_key, get_kwargs)
         #: Short string describing the objective.
         self.name: str = name
@@ -107,11 +117,19 @@ class Objective(ABC):
 
         return message
 
+    def __repr__(self) -> str:
+        """Give arguments initializing this object."""
+        return (
+            f"Objective(name={self.name}, weight={self.weight}, get_key="
+            f"{self.get_key}, get_kwargs={self.get_kwargs}, ideal_value="
+            f"{self.ideal_value}, descriptor={self.descriptor})"
+        )
+
     def position_nature(self) -> str:
         """Tell nature and position of objective."""
         message = f"{self.get_key:>23}"
 
-        elements = self.get_kwargs.get("elt", "NA")
+        elements = self.get_kwargs.get("elt", MAGIC_ALL_ELTS)
         if hasattr(elements, "__iter__") and not isinstance(elements, str):
             elts = list(elements)
             if len(elts) > 3:
@@ -122,8 +140,9 @@ class Objective(ABC):
             formatted = str(elements)
         message += f" @elt {formatted:>5}"
 
-        pos = str(self.get_kwargs.get("pos", "NA"))
-        message += f" ({pos:>3}) | {self.weight:>5} | "
+        pos = self.get_kwargs.get("pos")
+        message += f" ({str(pos):>3}) |" if pos else "       |"
+        message += f" {self.weight:>5} | "
         return message
 
     def _value_getter(
@@ -156,7 +175,6 @@ class Objective(ABC):
         self,
         get_key: GETTABLE_SIMULATION_OUTPUT_T,
         get_kwargs: dict[str, Any],
-        advised_keys: list[str] = ["elt", "pos", "to_numpy"],
     ) -> tuple[GETTABLE_SIMULATION_OUTPUT_T, dict[str, Any]]:
         """Check validity of ``get_args``, ``get_kwargs``.
 
@@ -171,14 +189,12 @@ class Objective(ABC):
                 f"method. Authorized values are:\n{self._gettable = }"
             )
 
-        if "phi" in get_key:
-            advised_keys.append("to_deg")
-        for key in advised_keys:
+        for key in self._advised_get_kwargs:
             if key in get_kwargs:
                 continue
             logging.warning(
                 f"{key = } is recommended to avoid undetermined behavior but "
-                "was not found."
+                f"was not found.\n{repr(self)}"
             )
         return get_key, get_kwargs
 

@@ -8,6 +8,7 @@
 import logging
 from collections.abc import Sequence
 from functools import lru_cache
+from typing import Literal
 
 import matplotlib.patches as pat
 import numpy as np
@@ -18,7 +19,11 @@ from matplotlib.typing import ColorType
 from lightwin.core.elements.element import Element
 from lightwin.failures.fault import Fault
 from lightwin.optimisation.objective.helper import by_element
-from lightwin.optimisation.objective.objective import Objective
+from lightwin.optimisation.objective.objective import (
+    MAGIC_ALL_ELTS,
+    MAGIC_ALL_ELTS_T,
+    Objective,
+)
 from lightwin.visualization.helper import X_AXIS_T, create_fig_if_not_exists
 from lightwin.visualization.structure import patch_kwargs
 
@@ -71,9 +76,15 @@ def mark_objectives_position(
 
     warn_once()
 
-    objectives_by_element: dict[Element, list[Objective]]
+    objectives_by_element: dict[Element | MAGIC_ALL_ELTS_T, list[Objective]]
     objectives_by_element = by_element(_get_objectives(fault_scenarios[0]))
     for elt in objectives_by_element:
+        if elt == MAGIC_ALL_ELTS:
+            logging.info(
+                "Skipped plotting of an objective spanning a complete "
+                "compensation zone."
+            )
+            continue
         kwargs = patch_kwargs(elt, x_axis, color=color, alpha=alpha, pos="out")
 
         if y_axis != "struct":
