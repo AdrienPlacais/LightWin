@@ -1,9 +1,4 @@
-"""Define a factory function to create :class:`.OptimisationAlgorithm`.
-
-.. todo::
-    Docstrings
-
-"""
+"""Define a factory function to create :class:`.OptimisationAlgorithm`."""
 
 import logging
 from abc import ABCMeta
@@ -32,6 +27,9 @@ from lightwin.optimisation.algorithms.explorator import Explorator
 from lightwin.optimisation.algorithms.least_squares import LeastSquares
 from lightwin.optimisation.algorithms.least_squares_penalty import (
     LeastSquaresPenalty,
+)
+from lightwin.optimisation.algorithms.predefined_solution import (
+    PredefinedSolution,
 )
 from lightwin.optimisation.algorithms.simulated_annealing import (
     SimulatedAnnealing,
@@ -117,15 +115,31 @@ class OptimisationAlgorithmFactory:
     ) -> OptimisationAlgorithm:
         """Instantiate an optimisation algorithm for a given fault."""
         default_kwargs = self._make_default_kwargs(
-            compensating_elements,
-            objective_factory,
-            design_space,
-            subset_elts,
+            compensating_elements, objective_factory, design_space, subset_elts
         )
         self._log_common_keys(self._wtf, default_kwargs)
         final_kwargs = {**default_kwargs, **self._wtf}
         algorithm = self._class(**final_kwargs)
         return algorithm
+
+    def create_from_preset(
+        self,
+        compensating_elements: Collection[Element],
+        objective_factory: ObjectiveFactory,
+        design_space: DesignSpace,
+        subset_elts: ListOfElements,
+        predefined_cavity_settings: SetOfCavitySettings,
+        predefined_simulation_output: SimulationOutput | None = None,
+    ) -> PredefinedSolution:
+        """Instantiate a fake optimization algorithm bypassing the solver."""
+        default_kwargs = self._make_default_kwargs(
+            compensating_elements, objective_factory, design_space, subset_elts
+        )
+        return PredefinedSolution(
+            predefined_cavity_settings=predefined_cavity_settings,
+            predefined_simulation_output=predefined_simulation_output,
+            **default_kwargs,
+        )
 
     def _make_default_kwargs(
         self,

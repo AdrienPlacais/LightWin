@@ -91,7 +91,7 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
             raise ValueError(f"Output of BO should have a {key = }.\n{result}")
 
         sol = self._to_numpy(**result["params"])
-        cavity_settings = self._create_set_of_cavity_settings(sol)
+        cavity_settings = self._to_set_of_cavity_settings(sol)
 
         opti_sol: OptiSol = {
             "var": sol,

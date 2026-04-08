@@ -104,6 +104,7 @@ class FaultScenario(list[Fault]):
         self.info = {}
         self.optimisation_time: datetime.timedelta
 
+        #: If optimization should be skipped for these :class:`.Fault`\s.
         self.skip_optimization = fix_acc.status == "fix"
         self._design_space_factory = design_space_factory
         self._list_of_elements_factory = (
@@ -259,8 +260,30 @@ class FaultScenario(list[Fault]):
     def _prepare_fix_objects(
         self, fault: Fault, simulation_output: SimulationOutput
     ) -> OptimisationAlgorithm:
-        """Create objects to instantiate the
-        :class:`.OptimisationAlgorithm`."""
+        """Create objects to instantiate the :class:`.OptimisationAlgorithm`.
+
+        In particular:
+            - build :class:`.DesignSpace`
+            - build :class:`.ObjectiveFactory`
+            - extract |LOE| corresponding to zone to recompute
+              - this ``subset_elts`` is kept as a |F| attribute.
+            - create :class:`.OptimisationAlgorithm`.
+              - if :attr:`.skip_optimization` is ``True``, we rather
+                instantiate the special :class:`.PredefinedSolution`.
+
+        Parameters
+        ----------
+        fault :
+            The fault to fix.
+        simulation_output :
+            The most recent simulation, that includes the compensation settings
+            of all |F| upstream of ``fault``.
+
+        Returns
+        -------
+            Object that will fix the failure.
+
+        """
         design_space = self._design_space_factory.create(
             fault.compensating_elements, fault.reference_elements
         )
@@ -285,13 +308,34 @@ class FaultScenario(list[Fault]):
             f"{subset_elts.phi_abs_in:.2f} rad"
         )
 
-        optimisation_algorithm = self._optimisation_algorithm_factory.create(
-            fault.compensating_elements,
-            objective_factory,
-            design_space,
-            subset_elts,
+        if not self.skip_optimization:
+            return self._optimisation_algorithm_factory.create(
+                compensating_elements=fault.compensating_elements,
+                objective_factory=objective_factory,
+                design_space=design_space,
+                subset_elts=subset_elts,
+            )
+
+        simulation_outputs = self.fix_acc.simulation_outputs
+        predefined_simulation_output = simulation_outputs.get(
+            self.beam_calculator.id
         )
-        return optimisation_algorithm
+        if predefined_simulation_output is None:
+            raise ValueError(
+                "Fixed accelerator do not have a SimulationOutput calculated "
+                f"with current solver {self.beam_calculator.id}."
+            )
+        predefined_cavity_settings = (
+            predefined_simulation_output.set_of_cavity_settings
+        )
+        return self._optimisation_algorithm_factory.create_from_preset(
+            compensating_elements=fault.compensating_elements,
+            objective_factory=objective_factory,
+            design_space=design_space,
+            subset_elts=subset_elts,
+            predefined_cavity_settings=predefined_cavity_settings,
+            predefined_simulation_output=predefined_simulation_output,
+        )
 
     def _evaluate_fit_quality(
         self,

@@ -121,7 +121,7 @@ class Explorator(OptimisationAlgorithm):
         assert var is not None
         assert fun is not None
 
-        cavity_settings = self._create_set_of_cavity_settings(var)
+        cavity_settings = self._to_set_of_cavity_settings(var)
         opti_sol: OptiSol = {
             "var": var,
             "cavity_settings": cavity_settings,

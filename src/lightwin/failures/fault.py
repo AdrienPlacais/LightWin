@@ -111,18 +111,20 @@ class Fault:
         )
         start_time = time.monotonic()
 
-        if self._skip_optimization:
-            logging.info("Skipped!")
-            return
-
         assert optimisation_algorithm is not None
         self.optimisation_algorithm = optimisation_algorithm
+
+        if self._skip_optimization:
+            info = "Skipped!"
+        else:
+            info = "Finished!"
+
         _ = optimisation_algorithm.optimize()
 
         assert self.opti_sol is not None
         delta_t = datetime.timedelta(seconds=time.monotonic() - start_time)
         info = (
-            f"Finished! Solving this problem took {delta_t}. Results are:",
+            f"{info} Solving this problem took {delta_t}. Results are:",
             str_objectives_solved(optimisation_algorithm.objectives),
             f"Additional info: {'\n'.join(self.opti_sol['info'])}",
         )

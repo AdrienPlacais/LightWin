@@ -23,9 +23,7 @@ from lightwin.evaluator.simulation_output.presets import (
 from lightwin.evaluator.simulation_output.simulation_output_evaluator import (
     SimulationOutputEvaluator,
 )
-from lightwin.failures.fault import Fault
 from lightwin.optimisation.objective.factory import ObjectiveFactory
-from lightwin.optimisation.objective.objective import Objective
 from lightwin.util.dicts_output import markdown
 from lightwin.util.helper import chunks, pd_output
 

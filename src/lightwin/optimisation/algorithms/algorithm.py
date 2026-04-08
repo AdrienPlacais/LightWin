@@ -27,6 +27,7 @@ from pathlib import Path
 from typing import Any, Callable, TypedDict
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -48,17 +49,23 @@ from lightwin.util.typing import REFERENCE_PHASES
 class OptiSol(TypedDict):
     """Hold information on the solution."""
 
-    var: np.ndarray | list[float]  # Value of variables
-    cavity_settings: SetOfCavitySettings  # Value of var, but more logical
-    fun: np.ndarray | list[float]  # Value of objectives
-    objectives: dict[str, float]  # Value of objectives, but more logical
-    success: bool  # If optimization was successful
-    info: list[str]  # Complementary information
+    #: Value of variables
+    var: NDArray[np.float64] | list[float]
+    #: Value of var, but more logical
+    cavity_settings: SetOfCavitySettings
+    #: Value of objectives
+    fun: NDArray[np.float64] | list[float]
+    #: Value of objectives, but more logical
+    objectives: dict[str, float]
+    #: If optimization was successful
+    success: bool
+    #: Complementary information
+    info: list[str]
 
 
 ComputeBeamPropagationT = Callable[[SetOfCavitySettings], SimulationOutput]
 ComputeResidualsT = Callable[[SimulationOutput], Any]
-ComputeConstraintsT = Callable[[SimulationOutput], np.ndarray]
+ComputeConstraintsT = Callable[[SimulationOutput], NDArray[np.float64]]
 
 
 class OptimisationAlgorithm(ABC):
@@ -196,21 +203,19 @@ class OptimisationAlgorithm(ABC):
     def _format_constraints(self) -> Any:
         """Adapt all :class:`.Constraint` to this optimisation algorithm."""
 
-    def _wrapper_residuals(self, var: np.ndarray) -> np.ndarray:
+    def _wrapper_residuals(
+        self, var: NDArray[np.float64]
+    ) -> NDArray[np.float64]:
         """Compute residuals from an array of variable values."""
         self.history.add_settings(var)
-        cav_settings = self._create_set_of_cavity_settings(var)
+        cav_settings = self._to_set_of_cavity_settings(var)
         simulation_output = self.compute_beam_propagation(cav_settings)
         residuals = self._compute_residuals(simulation_output)
         self.history.add_objective_values(list(residuals), simulation_output)
         self.history.checkpoint()
         return residuals
 
-    def _finalize(self) -> None:
-        """End the optimization process."""
-        self.history.save()
-
-    def _norm_wrapper_residuals(self, var: np.ndarray) -> float:
+    def _norm_wrapper_residuals(self, var: NDArray[np.float64]) -> float:
         """Compute norm of residuals vector from array of variable values."""
         res = float(np.linalg.norm(self._wrapper_residuals(var)))
         return res
@@ -230,8 +235,8 @@ class OptimisationAlgorithm(ABC):
             objective.residual = residual
         self.history.save()
 
-    def _create_set_of_cavity_settings(
-        self, var: np.ndarray
+    def _to_set_of_cavity_settings(
+        self, var: NDArray[np.float64]
     ) -> SetOfCavitySettings:
         """Transform ``var`` into generic :class:`.SetOfCavitySettings`.
 
@@ -268,7 +273,9 @@ class OptimisationAlgorithm(ABC):
             several_cavity_settings, self.compensating_elements
         )
 
-    def _get_objective_values(self, var: np.ndarray) -> dict[str, float]:
+    def _get_objective_values(
+        self, var: NDArray[np.float64]
+    ) -> dict[str, float]:
         """Save the full array of objective values."""
         values = self._wrapper_residuals(var)
         objectives_values = {
@@ -326,13 +333,13 @@ class OptimizationHistory:
 
         self._rename_previous_files()
 
-        self._settings: list[np.ndarray] = []
+        self._settings: list[NDArray[np.float64]] = []
         self._objectives: list[list[float | None] | list[str]] = list(
             self._init_objective_hist(
                 objectives_names, reference_simulation_output
             )
         )
-        self._constraints: list[list[float] | np.ndarray | None] = []
+        self._constraints: list[list[float] | NDArray[np.float64] | None] = []
 
         self._start_idx = 0
         self._iteration_count: int = 0
@@ -346,7 +353,7 @@ class OptimizationHistory:
         self.save = lambda: None
         self.checkpoint = lambda: None
 
-    def add_settings(self, var: np.ndarray) -> None:
+    def add_settings(self, var: NDArray[np.float64]) -> None:
         """Add a new set of cavity settings."""
         self._settings.append(var)
 
@@ -404,7 +411,7 @@ class OptimizationHistory:
         self._objectives.append(objectives + sim_output_vals)
 
     def add_constraint_values(
-        self, constraints: list | np.ndarray | None
+        self, constraints: list | NDArray[np.float64] | None
     ) -> None:
         """Add some constraint values."""
         self._constraints.append(constraints)
@@ -453,7 +460,7 @@ class OptimizationHistory:
 
 
 def _save_values(
-    filepath: Path, values: list[list[float] | np.ndarray | None]
+    filepath: Path, values: list[list[float] | NDArray[np.float64] | None]
 ) -> None:
     """Save the ``values`` to ``filepath`` (can be objectives or constraints).
 
