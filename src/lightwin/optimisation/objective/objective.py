@@ -19,10 +19,10 @@ from lightwin.util.typing import (
     GETTABLE_SIMULATION_OUTPUT_T,
 )
 
-#: Value of ``elt`` from ``get_kwargs`` when an objective must be evaluated
-#: over all elements of the compensation zone.
-MAGIC_ALL_ELTS = "full compensation zone"
-MAGIC_ALL_ELTS_T = Literal["full compensation zone"]
+#: Default value of ``elt`` from ``get_kwargs``. Corresponds to evaluation on
+#: all the elements. But you may prefer set them manually.
+DEFAULT_ELT_KEY = "all"
+DEFAULT_ALL_ELT_KEY_T = Literal["all"]
 
 
 class Objective(ABC):
@@ -132,7 +132,7 @@ class Objective(ABC):
         """Tell nature and position of objective."""
         message = f"{self.get_key:>23}"
 
-        elements = self.get_kwargs.get("elt", MAGIC_ALL_ELTS)
+        elements = self.get_kwargs.get("elt", DEFAULT_ELT_KEY)
         if hasattr(elements, "__iter__") and not isinstance(elements, str):
             elts = list(elements)
             if len(elts) > 3:
@@ -654,7 +654,7 @@ class QuantityIsBetween(Objective):
 class RemainBelow(Objective):
     """Maximum of quantity must remain below some value."""
 
-    _advised_get_kwargs: set[str] = {"to_numpy"}
+    _advised_get_kwargs: set[str] = {"elt", "to_numpy"}
 
     def __init__(
         self,
