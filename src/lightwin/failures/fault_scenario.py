@@ -303,7 +303,7 @@ class FaultScenario(list[Fault]):
         fault.subset_elts = subset_elts
         logging.info(
             "Created a ListOfElements ecompassing a linac subset.\n"
-            f"Encompasses: {subset_elts[0]} to {subset_elts[1]}\nw_kin_in = "
+            f"Encompasses: {subset_elts[0]} to {subset_elts[-1]}\nw_kin_in = "
             f"{subset_elts.w_kin_in:.2f} MeV\nphi_abs_in = "
             f"{subset_elts.phi_abs_in:.2f} rad"
         )

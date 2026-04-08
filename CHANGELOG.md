@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   fake the optimization process.
 - New `ObjectivesFactory`: `RemainBelow`. Sets an upper limit for a variable.
 
+### Fixed
+
+- Information message when creating `ListOfElements` subset printed wrong end of
+  linac subset.
+
 ## [0.16.0] -- 2026-03-04
 
 ### Added
