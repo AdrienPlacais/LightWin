@@ -48,6 +48,7 @@ from lightwin.util.typing import (
     REFERENCE_PHASE_POLICY_T,
     REFERENCE_PHASES,
     REFERENCE_PHASES_T,
+    DesignSpaceKw,
 )
 
 
@@ -263,13 +264,13 @@ class FaultScenario(list[Fault]):
         """Create objects to instantiate the :class:`.OptimisationAlgorithm`.
 
         In particular:
-            - build :class:`.DesignSpace`
-            - build :class:`.ObjectiveFactory`
-            - extract |LOE| corresponding to zone to recompute
-              - this ``subset_elts`` is kept as a |F| attribute.
-            - create :class:`.OptimisationAlgorithm`.
-              - if :attr:`.skip_optimization` is ``True``, we rather
-                instantiate the special :class:`.PredefinedSolution`.
+        - build :class:`.DesignSpace`
+        - build :class:`.ObjectiveFactory`
+        - extract |LOE| corresponding to zone to recompute
+          - this ``subset_elts`` is kept as a |F| attribute.
+        - create :class:`.OptimisationAlgorithm`.
+          - if :attr:`.skip_optimization` is ``True``, we rather
+            instantiate the special :class:`.PredefinedSolution`.
 
         Parameters
         ----------
@@ -288,10 +289,10 @@ class FaultScenario(list[Fault]):
             fault.compensating_elements, fault.reference_elements
         )
         objective_factory = self._objective_meta_factory.create(
-            self.wtf["objective_preset"],
-            self._design_space_factory.design_space_kw,
-            fault.packed_elements,
-            self._objective_factory_class,
+            objective_preset=self.wtf["objective_preset"],
+            limits_from_design_space_kw=self._design_space_factory.limits_from_design_space_kw,
+            packed_elements=fault.packed_elements,
+            objective_factory_class=self._objective_factory_class,
         )
         self._objective_factories.append(objective_factory)
 
@@ -521,7 +522,7 @@ class FaultScenarioFactory:
         self,
         accelerators: dict[int, list[Accelerator]],
         beam_calc: BeamCalculator,
-        design_space: dict[str, Any],
+        design_space: DesignSpaceKw,
         objective_factory_class: type[ObjectiveFactory] | None = None,
     ) -> None:
         """Init solver parameters for each non-unpickled |A|.

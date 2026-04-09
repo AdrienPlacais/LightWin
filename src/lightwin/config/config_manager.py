@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from lightwin.config.full_specs import ConfSpec
+from lightwin.util.typing import ConfigKw
 
 
 class ConfigFileNotFoundError(FileNotFoundError):
@@ -29,7 +30,7 @@ def process_config(
     warn_mismatch: bool = False,
     override: dict[str, dict[str, Any]] | None = None,
     conf_specs_t: type[ConfSpec] = ConfSpec,
-) -> dict[str, dict[str, Any]]:
+) -> ConfigKw:
     """Load and test the configuration file.
 
     Parameters
@@ -125,7 +126,7 @@ def _process_toml(
     *,
     warn_mismatch: bool,
     override: dict[str, dict[str, Any]] | None,
-) -> dict[str, dict[str, Any]]:
+) -> ConfigKw:
     """Extract the dicts asked by user. Override some keys if requested.
 
     Parameters

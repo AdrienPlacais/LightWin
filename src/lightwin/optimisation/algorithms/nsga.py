@@ -146,11 +146,10 @@ class NSGA3Algorithm(OptimisationAlgorithm):
         need more generations to converge.
 
         """
-        _MIN_REF_DIRS = 100
-
+        _MIN_REF_DIRS = max(50, 10 * self.n_obj)
         n_partitions = next(
             p
-            for p in range(1, 20)
+            for p in range(1, 500)
             if comb(self.n_obj + p - 1, p) >= _MIN_REF_DIRS
         )
         n_ref_dirs = comb(self.n_obj + n_partitions - 1, n_partitions)
@@ -330,10 +329,10 @@ class NSGA3AlgorithmMulti(NSGA3Algorithm):
 
     @property
     def _default_kwargs(self) -> dict[str, Any]:
-        _MIN_REF_DIRS = 100
+        _MIN_REF_DIRS = max(50, 10 * self.n_obj)
         n_partitions = next(
             p
-            for p in range(1, 20)
+            for p in range(1, 500)
             if comb(self.n_obj + p - 1, p) >= _MIN_REF_DIRS
         )
         n_ref_dirs = comb(self.n_obj + n_partitions - 1, n_partitions)

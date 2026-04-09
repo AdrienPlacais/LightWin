@@ -12,8 +12,12 @@ from lightwin.config.table_spec import TableConfSpec
 from lightwin.core.beam_specs import BEAM_CONFIG, BeamTableConfSpec
 from lightwin.core.files_specs import FILES_CONFIG, FilesTableConfSpec
 from lightwin.evaluator.specs import EVALUATORS_CONFIG
-from lightwin.optimisation.design_space_specs import DESIGN_SPACE_CONFIGS
+from lightwin.optimisation.design_space_specs import (
+    DESIGN_SPACE_CONFIGS,
+    DesignSpaceConfSpec,
+)
 from lightwin.optimisation.wtf_specs import WTF_CONFIGS, WTF_MONKEY_PATCHES
+from lightwin.util.typing import ConfigKw
 from lightwin.visualization.specs import PLOTS_CONFIG
 
 
@@ -77,7 +81,7 @@ class ConfSpec:
             )
         if design_space:
             table_of_specs.append(
-                TableConfSpec(
+                DesignSpaceConfSpec(
                     "design_space",
                     design_space,
                     DESIGN_SPACE_CONFIGS,
@@ -178,7 +182,7 @@ class ConfSpec:
 
     def prepare(
         self,
-        toml_fulldict: dict[str, dict[str, Any]],
+        toml_fulldict: ConfigKw,
         toml_folder: Path,
         id_type: Literal[
             "configured_object", "table_entry"

@@ -16,7 +16,7 @@ from lightwin.failures.fault_scenario import (
     FaultScenarioFactory,
 )
 from lightwin.optimisation.objective.factory import ObjectiveFactory
-from lightwin.util.typing import BeamKwargs
+from lightwin.util.typing import BeamKwargs, ConfigKw
 from lightwin.visualization import plot
 
 
@@ -63,8 +63,7 @@ def set_up_solvers(
 
 
 def set_up_accelerators(
-    config: dict[str, dict[str, Any] | BeamKwargs],
-    beam_calculators: tuple[BeamCalculator, ...],
+    config: ConfigKw, beam_calculators: tuple[BeamCalculator, ...]
 ) -> dict[int, list[Accelerator]]:
     """Create the accelerators.
 
@@ -97,7 +96,7 @@ def set_up_accelerators(
 
 
 def set_up_faults(
-    config: dict[str, dict[str, Any] | BeamKwargs],
+    config: ConfigKw,
     beam_calculator: BeamCalculator,
     accelerators: dict[int, list[Accelerator]],
     objective_factory_class: type[ObjectiveFactory] | None = None,
@@ -127,19 +126,22 @@ def set_up_faults(
 
     """
     beam_calculator.compute(accelerators[0][0])
+    design_space_kw = config.get("design_space", None)
+    if design_space_kw is None:
+        raise ValueError("design_space configuration is necessary")
     factory = FaultScenarioFactory(
         accelerators,
         beam_calculator,
-        config.get("design_space"),
+        design_space_kw,
         objective_factory_class=objective_factory_class,
     )
-    return factory.create(**config.get("wtf"))
+    wtf = config.get("wtf", None)
+    if wtf is None:
+        raise ValueError("wtf configuration is necessary")
+    return factory.create(**wtf)
 
 
-def set_up(
-    config: dict[str, dict[str, Any] | BeamKwargs],
-    **kwargs,
-) -> tuple[
+def set_up(config: ConfigKw, **kwargs) -> tuple[
     tuple[BeamCalculator, ...],
     dict[int, list[Accelerator]],
     list[FaultScenario] | None,
@@ -254,8 +256,7 @@ def recompute(
 
 
 def run_simulation(
-    config: dict[str, Any],
-    **kwargs,
+    config: ConfigKw, **kwargs
 ) -> list[FaultScenario] | dict[int, list[Accelerator]]:
     """Compute propagation of beam; if failures are defined, fix them.
 
@@ -291,8 +292,7 @@ def run_simulation(
 
 
 def run_simulation_new(
-    config: dict[str, Any],
-    **kwargs,
+    config: ConfigKw, **kwargs
 ) -> tuple[dict[int, list[Accelerator]], list[FaultScenario] | None]:
     """Compute propagation of beam; if failures are defined, fix them.
 

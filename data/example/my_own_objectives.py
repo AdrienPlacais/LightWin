@@ -92,7 +92,7 @@ class MyObjectiveFactory(ObjectiveFactory):
             broken_elts=broken_elts,
             failed_elements=failed_elements,
             compensating_elements=compensating_elements,
-            design_space_kw=design_space_kw,
+            limits_from_design_space_kw=design_space_kw,
         )
 
     def get_objectives(self) -> list[Objective]:

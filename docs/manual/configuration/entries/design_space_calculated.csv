@@ -1,7 +1,25 @@
 Entry,Type,Description,Mandatory?,Allowed values
 `design_space_preset`,`str`,"What are the variables and
 
-constraints.",✅,"('abs_phase_amplitude', 'rel_phase_amplitude', 'sync_phase_amplitude', 'abs_phase_amplitude_with_constrained_sync_phase', 'rel_phase_amplitude_with_constrained_sync_phase', 'everything', 'unconstrained', 'unconstrained_rel', 'constrained_sync_phase', 'sync_phase_as_variable')"
+constraints.",✅,"('AbsPhaseAmplitude', 'AbsPhaseAmplitudeWithConstrainedSyncPhase', 'Everything', 'RelPhaseAmplitude', 'RelPhaseAmplitudeWithConstrainedSyncPhase', 'SyncPhaseAmplitude', 'UserDefined', 'abs_phase_amplitude', 'abs_phase_amplitude_with_constrained_sync_phase', 'everything', 'rel_phase_amplitude', 'rel_phase_amplitude_with_constrained_sync_phase', 'sync_phase_amplitude', 'user_defined', 'unconstrained', 'unconstrained_rel', 'constrained_sync_phase', 'sync_phase_as_variable')"
+`variable_names`,"`list` or
+
+`tuple`","What to use as variables if ``
+
+design_space_preset `` is set
+
+to `` ""UserDefined"" ``. In
+
+this case, this key is
+
+mandatory.",❌,
+`constraint_names`,"`list` or
+
+`tuple`","What to use as constraints if
+
+`` design_space_preset `` is
+
+set to `` ""UserDefined"" ``.",❌,
 `from_file`,`bool`,"If variable limits/constraints
 
 should be taken from a file.",✅,

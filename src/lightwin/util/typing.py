@@ -1,6 +1,8 @@
 """Define types for better code-completion and linting."""
 
-from typing import Literal, NotRequired, TypedDict
+from collections.abc import Collection
+from pathlib import Path
+from typing import Any, Literal, NotRequired, TypedDict
 
 from numpy.typing import NDArray
 
@@ -625,6 +627,73 @@ GET_ELT_ARG_T = Literal["first", "last"]
 #: Implemented optimization variables
 VARIABLES = ("k_e",) + REFERENCE_PHASES
 VARIABLES_T = Literal["k_e"] | REFERENCE_PHASES_T
+#: Implemented optimization constraints
+CONSTRAINTS = ("phi_s",)
+CONSTRAINTS_T = Literal["phi_s"]
+
+#: Implemented :class:`.DesignSpaceFactory` presets.
+DESIGN_SPACES = (
+    "AbsPhaseAmplitude",
+    "AbsPhaseAmplitudeWithConstrainedSyncPhase",
+    "Everything",
+    "RelPhaseAmplitude",
+    "RelPhaseAmplitudeWithConstrainedSyncPhase",
+    "SyncPhaseAmplitude",
+    "UserDefined",
+    "abs_phase_amplitude",
+    "abs_phase_amplitude_with_constrained_sync_phase",
+    "everything",
+    "rel_phase_amplitude",
+    "rel_phase_amplitude_with_constrained_sync_phase",
+    "sync_phase_amplitude",
+    "user_defined",
+    # Deprecated
+    "unconstrained",
+    "unconstrained_rel",
+    "constrained_sync_phase",
+    "sync_phase_as_variable",
+)
+DESIGN_SPACES_T = Literal[
+    "AbsPhaseAmplitude",
+    "AbsPhaseAmplitudeWithConstrainedSyncPhase",
+    "Everything",
+    "RelPhaseAmplitude",
+    "RelPhaseAmplitudeWithConstrainedSyncPhase",
+    "SyncPhaseAmplitude",
+    "UserDefined",
+    "abs_phase_amplitude",
+    "abs_phase_amplitude_with_constrained_sync_phase",
+    "everything",
+    "rel_phase_amplitude",
+    "rel_phase_amplitude_with_constrained_sync_phase",
+    "sync_phase_amplitude",
+    "user_defined",
+    # Deprecated
+    "unconstrained",
+    "unconstrained_rel",
+    "constrained_sync_phase",
+    "sync_phase_as_variable",
+]
+
+
+class DesignSpaceKw(TypedDict):
+    """Holds all ``TOML`` configuration entries for design space."""
+
+    design_space_preset: DESIGN_SPACES_T
+
+    from_file: bool
+    variables_filepaths: NotRequired[Path]
+    constraints_filepaths: NotRequired[Path]
+
+    variable_names: NotRequired[Collection[VARIABLES_T]]
+    constraints_names: NotRequired[Collection[CONSTRAINTS_T]]
+
+    max_increase_sync_phase_in_percent: NotRequired[float]
+    max_absolute_sync_phase_in_deg: NotRequired[float]
+    min_absolute_sync_phase_in_deg: NotRequired[float]
+    max_decrease_k_e_in_percent: NotRequired[float]
+    max_increase_k_e_in_percent: NotRequired[float]
+    maximum_k_e_is_calculated_wrt_maximum_k_e_of_section: NotRequired[bool]
 
 
 class BeamKwargs(TypedDict):
@@ -662,3 +731,16 @@ class CavParams(TypedDict):
 #: Allowed values for the ``id_nature`` key of ``wtf`` configuration table.
 ID_NATURE = ("cavity", "element", "lattice", "name", "section")
 ID_NATURE_T = Literal["cavity", "element", "lattice", "name", "section"]
+
+
+class ConfigKw(TypedDict):
+    """Holds all configuration dicts."""
+
+    files: dict[str, Any]
+    beam: BeamKwargs
+    beam_calculator: dict[str, Any]
+    beam_calculator_post: NotRequired[dict[str, Any]]
+    plots: dict[str, Any]
+    wtf: NotRequired[dict[str, Any]]
+    design_space: NotRequired[DesignSpaceKw]
+    evaluators: NotRequired[dict[str, Any]]

@@ -107,6 +107,16 @@ optimisation_algorithm = "downhill_simplex"
 optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
 
+[wtf_with_constraints]
+failed = [["FM120"]]
+id_nature = "name"
+k = 3
+objective_preset = "EnergyMismatch"
+optimisation_algorithm = "NSGA-III Multi-threaded"
+# optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
+shift = 0
+strategy = "k out of n"
+
 [wtf_systematic_study]
 # automatic_study = "single cavity failures"
 automatic_study = "cryomodule failures"
@@ -160,6 +170,21 @@ max_increase_sync_phase_in_percent = 40.0
 maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = true
 min_absolute_sync_phase_in_deg = -90.0
 
+[design_space_user_defined]
+design_space_preset = "UserDefined"
+from_file = false
+max_absolute_sync_phase_in_deg = 0.0
+max_decrease_k_e_in_percent = 20.0
+max_increase_k_e_in_percent = 180.0
+max_increase_sync_phase_in_percent = 40.0
+maximum_k_e_is_calculated_wrt_maximum_k_e_of_section = true
+min_absolute_sync_phase_in_deg = -90.0
+
+[design_space_with_constraints]
+constraints_filepath = "constraints.csv"
+design_space_preset = "RelPhaseAmplitudeWithConstrainedSyncPhase"
+from_file = true
+variables_filepath = "variables.csv"
 
 [plots_minimal]
 acceptance = true

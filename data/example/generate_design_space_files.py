@@ -8,14 +8,13 @@
 
 from pathlib import Path
 
-from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.config.config_manager import process_config
-from lightwin.core.accelerator.factory import (
-    StudyWithoutFaultsAcceleratorFactory,
-)
-from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.optimisation.design_space.design_space import DesignSpace
-from lightwin.optimisation.design_space.factory import get_design_space_factory
+from lightwin.optimisation.design_space.factory import (
+    DesignSpaceFactory,
+    get_design_space_factory,
+)
+from lightwin.ui.workflow_setup import set_up
 
 
 def main() -> None:
@@ -26,65 +25,33 @@ def main() -> None:
     toml_keys = {
         "files": "files",
         "beam": "beam",
-        "beam_calculator": "generic_envelope1d",
+        "beam_calculator": "envelope1d",
         "design_space": "design_space_to_generate_files",
     }
-    configuration = process_config(toml_filepath, toml_keys)
+    config = process_config(toml_filepath, toml_keys)
 
-    # =========================================================================
-    # Beam calculators
-    # =========================================================================
-    beam_calculator_factory = BeamCalculatorsFactory(**configuration)
-    beam_calculator = beam_calculator_factory.run_all()[0]
+    _, accelerators, _, _ = set_up(config)
+    field_maps = accelerators[0][0].elts.l_cav
 
-    # =========================================================================
-    # Accelerators
-    # =========================================================================
-    accelerator_factory = StudyWithoutFaultsAcceleratorFactory(
-        beam_calculator=beam_calculator,
-        **configuration["files"],
-    )
-    accelerator = accelerator_factory.run()
+    design_space_kw = config.get("design_space")
+    if design_space_kw is None:
+        raise ValueError("missing 'design_space' key")
 
-    # =========================================================================
-    # Compute propagation of the beam
-    # =========================================================================
-    beam_calculator.compute(accelerator)
-
-    # Take only the FieldMap objects
-    cavities: list[FieldMap] = accelerator.elts.l_cav
-    elements_to_put_in_file = cavities
-
-    # =========================================================================
-    # Set up generic Variable, Constraint objects
-    # =========================================================================
-    if configuration["design_space"]["design_space_preset"] != "everything":
-        print(
-            "Warning! Modifying the design_space_preset entry to have all "
-            "the possible variables and constraints in the output file."
-        )
-        configuration["design_space"]["design_space_preset"] = "everything"
-
-    design_space_factory = get_design_space_factory(
-        **configuration["design_space"]
-    )
-    design_space = design_space_factory.create(
-        elements_to_put_in_file, elements_to_put_in_file
-    )
-
+    design_space_factory = get_design_space_factory(**design_space_kw)
+    design_space = design_space_factory.create(field_maps, field_maps)
     design_space.to_files(
         basepath=Path("./"),
         variables_filename="variables",
         constraints_filename="constraints",
         overwrite=True,
     )
-    variables_filepath = Path("variables.csv")
-    constraints_filepath = Path("constraints.csv")
-
-    # Now try to create a DesignSpace from the files
-    design_space = DesignSpace.from_files(
-        ("FM4", "FM5"), variables_filepath, ("k_e", "phi_0_abs"), None, None
-    )
+    # variables_filepath = Path("variables.csv")
+    # constraints_filepath = Path("constraints.csv")
+    #
+    # # Now try to create a DesignSpace from the files
+    # design_space_kw = DesignSpace.from_files(
+    #     ("FM4", "FM5"), variables_filepath, ("k_e", "phi_0_abs"), None, None
+    # )
 
 
 if __name__ == "__main__":

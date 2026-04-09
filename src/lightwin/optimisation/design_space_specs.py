@@ -1,21 +1,43 @@
 """Define how the design space should be configured."""
 
+import tomllib
 from pathlib import Path
+from typing import Any
 
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
+from lightwin.config.table_spec import TableConfSpec
 from lightwin.constants import example_constraints, example_variables
-from lightwin.optimisation.design_space.factory import (
-    DESIGN_SPACE_FACTORY_PRESETS,
-)
+from lightwin.optimisation.design_space import design_space
+from lightwin.util.typing import DESIGN_SPACES
 
 _DESIGN_SPACE_BASE = (
     KeyValConfSpec(
         key="design_space_preset",
         types=(str,),
         description="What are the variables and constraints.",
-        allowed_values=tuple(DESIGN_SPACE_FACTORY_PRESETS.keys()),
+        allowed_values=DESIGN_SPACES,
         default_value="SyncPhaseAmplitude",
         is_mandatory=True,
+    ),
+    KeyValConfSpec(
+        key="variable_names",
+        types=(list, tuple),
+        description="""What to use as variables if ``design_space_preset`` is
+set to ``"UserDefined"``. In this case, this key is mandatory.""",
+        default_value=("k_e", "phi_s"),
+        is_mandatory=False,
+        warning_message="""variable_names was given but is ignored as
+design_space_preset is not 'UserDefined'.""",
+    ),
+    KeyValConfSpec(
+        key="constraint_names",
+        types=(list, tuple),
+        description="""What to use as constraints if ``design_space_preset`` is
+set to ``"UserDefined"``.""",
+        default_value=(),
+        is_mandatory=False,
+        warning_message="""constraint_names was given but is ignored as
+design_space_preset is not 'UserDefined'.""",
     ),
     KeyValConfSpec(
         key="from_file",
@@ -102,7 +124,40 @@ DESIGN_SPACE_FROM_FILE = _DESIGN_SPACE_BASE + (
     ),
 )
 
+
 DESIGN_SPACE_CONFIGS = {
     False: DESIGN_SPACE_CALCULATED,
     True: DESIGN_SPACE_FROM_FILE,
 }
+
+
+class DesignSpaceConfSpec(TableConfSpec):
+    """Set specifications for the design space."""
+
+    def _pre_treat(self, toml_table: dict[str, Any], **kwargs) -> None:
+        super()._pre_treat(toml_table, **kwargs)
+        self._adapt_to_user_defined(toml_table)
+
+    def _adapt_to_user_defined(self, toml_table: dict[str, Any]) -> None:
+        """Update keys for user-defined design space preset.
+
+        - Remove their default warnings.
+        - Declate ``variable_names`` as mandatory.
+
+        """
+        design_space_preset = toml_table.get("design_space_preset")
+        if design_space_preset is None:
+            return
+        if design_space_preset not in {"UserDefined", "user_defined"}:
+            return
+
+        warning_to_remove = {"variable_names", "constraint_names"}
+        now_mandatory = {"variable_names"}
+
+        for name in warning_to_remove:
+            keyval = self._get_proper_spec(name)
+            if keyval is None:
+                continue
+            keyval.warning_message = None
+            if name in now_mandatory:
+                keyval.is_mandatory = True

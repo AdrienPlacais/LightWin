@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `OptimisationAlgorithm`: NSGA-III, adapted to high-dimensionality
   problems.
 - New `ObjectivesFactory`: `RemainBelow`. Sets an upper limit for a variable.
+- Refactored creation of `DesignSpaceFactory`. Opens way to manual definition
+  of variables in `TOML`. Initial values, limits cannot be set in `TOML` yet.
 
 ### Fixed
 
