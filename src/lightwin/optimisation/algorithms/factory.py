@@ -28,6 +28,10 @@ from lightwin.optimisation.algorithms.least_squares import LeastSquares
 from lightwin.optimisation.algorithms.least_squares_penalty import (
     LeastSquaresPenalty,
 )
+from lightwin.optimisation.algorithms.nsga import (
+    NSGA3Algorithm,
+    NSGA3AlgorithmMulti,
+)
 from lightwin.optimisation.algorithms.predefined_solution import (
     PredefinedSolution,
 )
@@ -50,7 +54,8 @@ ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
     "least_squares_penalty": LeastSquaresPenalty,
     "nelder_mead": DownhillSimplex,
     "nelder_mead_penalty": DownhillSimplexPenalty,
-    # "nsga": NSGA,
+    "NSGA-III": NSGA3Algorithm,
+    "NSGA-III Multi-threaded": NSGA3AlgorithmMulti,
     "simulated_annealing": SimulatedAnnealing,
 }
 
@@ -66,7 +71,8 @@ ALGORITHMS_T = Literal[
     "least_squares_penalty",
     "nelder_mead",
     "nelder_mead_penalty",
-    # "nsga",
+    "NSGA-III",
+    "NSGA-III Multi-threaded",
     "simulated_annealing",
 ]
 

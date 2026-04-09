@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `OptimisationAlgorithm`: `PredefinedSolution`. It is automatically created
   when the `Accelerator` is unpickled and uses the stored `SimulationOutput` to
   fake the optimization process.
+- New `OptimisationAlgorithm`: NSGA-III, adapted to high-dimensionality
+  problems.
 - New `ObjectivesFactory`: `RemainBelow`. Sets an upper limit for a variable.
 
 ### Fixed
