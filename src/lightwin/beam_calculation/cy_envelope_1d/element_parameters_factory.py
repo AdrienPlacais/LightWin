@@ -22,6 +22,7 @@ from lightwin.core.elements.field_maps.superposed_field_map import (
 )
 from lightwin.core.elements.quad import Quad
 from lightwin.core.elements.solenoid import Solenoid
+from lightwin.core.elements.thin_steering import ThinSteering
 
 #: Implemented elements; a non-implemented element will be replaced by a Drift.
 #: A warning will be raised.
@@ -35,6 +36,7 @@ CY_PARAMETERS_1D = {
     Quad: DriftCyEnvelope1DParameters,
     Solenoid: DriftCyEnvelope1DParameters,
     SuperposedFieldMap: SuperposedFieldMapCyEnvelope1DParameters,
+    ThinSteering: DriftCyEnvelope1DParameters,
 }
 
 
