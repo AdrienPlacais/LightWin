@@ -498,11 +498,10 @@ class CavitySettings:
         self._status = value
         if value == "failed":
             self.k_e = 0.0
-            self.phi_s = np.nan
-            self.v_cav_mv = np.nan
             if self.reference == "phi_s":
                 self.set_reference("phi_0_rel", phi_ref=0.0)
-
+            self.phi_s = np.nan
+            self.v_cav_mv = np.nan
         self._check_consistency_of_status_and_reference()
 
     # =============================================================================

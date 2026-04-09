@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Information message when creating `ListOfElements` subset printed wrong end of
   linac subset.
+- Synchronous phases can be used as constraints again.
 
 ## [0.16.0] -- 2026-03-04
 
