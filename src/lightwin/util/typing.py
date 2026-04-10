@@ -630,6 +630,8 @@ VARIABLES_T = Literal["k_e"] | REFERENCE_PHASES_T
 #: Implemented optimization constraints
 CONSTRAINTS = ("phi_s",)
 CONSTRAINTS_T = Literal["phi_s"]
+#: optimization status
+OPTIMIZATION_STATUS = Literal["not started", "in progress", "finished"]
 
 #: Implemented :class:`.DesignSpaceFactory` presets.
 DESIGN_SPACES = (
