@@ -34,6 +34,7 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.util.typing import (
     EXPORT_PHASES_T,
+    OPTIMIZATION_STATUS,
     REFERENCE_PHASE_POLICY_T,
     REFERENCE_PHASES,
     REFERENCE_PHASES_T,
@@ -185,9 +186,8 @@ class BeamCalculator(ABC):
         """
         simulation_output = self.run_with_this(
             accelerator_id=accelerator_id,
-            set_of_cavity_settings=None,
+            set_of_cavity_settings=SetOfCavitySettings.nominal(elts),
             elts=elts,
-            use_a_copy_for_nominal_settings=False,
             **kwargs,
         )
         if update_reference_phase:
@@ -203,9 +203,10 @@ class BeamCalculator(ABC):
     def run_with_this(
         self,
         accelerator_id: str,
-        set_of_cavity_settings: SetOfCavitySettings | None,
+        set_of_cavity_settings: SetOfCavitySettings,
         elts: ListOfElements,
-        use_a_copy_for_nominal_settings: bool = True,
+        optimization_status: OPTIMIZATION_STATUS,
+        **kwargs,
     ) -> SimulationOutput:
         """Perform a simulation with new cavity settings.
 
@@ -221,10 +222,9 @@ class BeamCalculator(ABC):
             Holds the norms and phases of the compensating cavities.
         elts :
             List of elements in which the beam should be propagated.
-        use_a_copy_for_nominal_settings :
-            To copy the nominal |CS| and avoid altering
-            their nominal counterpart. Set it to True during optimisation, to
-            False when you want to keep the current settings.
+        optimization_status :
+            Only used by :class:`.TraceWin`, to prevent errors during
+            optimization phase.
 
         Returns
         -------

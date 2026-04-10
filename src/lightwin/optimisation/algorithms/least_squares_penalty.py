@@ -41,7 +41,7 @@ class LeastSquaresPenalty(LeastSquares):
 
     def _norm_wrapper_residuals(self, var: np.ndarray) -> float:
         """Give residuals with a penalty."""
-        cav_settings = self._to_set_of_cavity_settings(var)
+        cav_settings = self._to_cavity_settings(var)
         simulation_output = self.compute_beam_propagation(cav_settings)
         residuals = self._compute_residuals(simulation_output)
         constraints_evaluations = self.compute_constraints(simulation_output)

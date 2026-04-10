@@ -161,7 +161,7 @@ def _pass_beauty_instructions(
     )
 
     adjusts = set_of_cavity_settings_to_adjust(
-        fault.optimized_cavity_settings, number=number, link_k_g=link_k_g
+        fault._compensation_settings, number=number, link_k_g=link_k_g
     )
     if len(adjusts) < 2:
         logging.error(

@@ -186,7 +186,7 @@ class NSGA3Algorithm(OptimisationAlgorithm):
             constraints are defined.
 
         """
-        cav_settings = self._to_set_of_cavity_settings(var)
+        cav_settings = self._to_cavity_settings(var)
         simulation_output = self.compute_beam_propagation(cav_settings)
 
         residuals = self._compute_residuals(simulation_output)
@@ -233,7 +233,7 @@ class NSGA3Algorithm(OptimisationAlgorithm):
             )
 
         objectives = self._get_objective_values(x_best)
-        cavity_settings = self._to_set_of_cavity_settings(x_best)
+        cavity_settings = self._to_cavity_settings(x_best)
 
         opti_sol: OptiSol = {
             "var": x_best,
@@ -347,7 +347,7 @@ class NSGA3AlgorithmMulti(NSGA3Algorithm):
         self, var: NDArray[np.float64]
     ) -> tuple[NDArray[np.float64], NDArray[np.float64] | None]:
         """Evaluate one candidate - thread-safe via lock on history writes."""
-        cav_settings = self._to_set_of_cavity_settings(var)
+        cav_settings = self._to_cavity_settings(var)
         simulation_output = self.compute_beam_propagation(cav_settings)
         residuals = self._compute_residuals(simulation_output)
 

@@ -23,6 +23,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
@@ -124,9 +125,9 @@ class Envelope3D(BeamCalculator):
     def run_with_this(
         self,
         accelerator_id: str,
-        set_of_cavity_settings: SetOfCavitySettings | None,
+        set_of_cavity_settings: SetOfCavitySettings,
         elts: ListOfElements,
-        use_a_copy_for_nominal_settings: bool = True,
+        **kwargs,
     ) -> SimulationOutput:
         """Compute beam propagation with non-nominal settings.
 
@@ -140,10 +141,6 @@ class Envelope3D(BeamCalculator):
             settings are taken from the FieldMap objects.
         elts :
             List of elements in which the beam must be propagated.
-        use_a_copy_for_nominal_settings :
-            To copy the nominal |CS| and avoid altering their nominal
-            counterpart. Set it to True during optimisation, to False when you
-            want to keep the current settings.
 
         Returns
         -------
@@ -155,14 +152,8 @@ class Envelope3D(BeamCalculator):
         w_kin = elts.w_kin_in
         phi_abs = elts.phi_abs_in
 
-        set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(
-            set_of_cavity_settings,
-            elts.l_cav,
-            use_a_copy_for_nominal_settings=use_a_copy_for_nominal_settings,
-        )
-
         for elt in elts:
-            cavity_settings = set_of_cavity_settings.get(elt, None)
+            cavity_settings = set_of_cavity_settings.get(elt)
             _store_entry_phase_in_settings(phi_abs, cavity_settings)
 
             func = elt.beam_calc_param[self.id].transf_mat_function_wrapper
@@ -203,7 +194,6 @@ class Envelope3D(BeamCalculator):
             accelerator_id=accelerator_id,
             set_of_cavity_settings=optimized_cavity_settings,
             elts=full_elts,
-            use_a_copy_for_nominal_settings=False,
             **specific_kwargs,
         )
         return simulation_output

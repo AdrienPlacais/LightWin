@@ -7,11 +7,15 @@
 
 """
 
-from collections.abc import Collection, Sequence
-from typing import Self, TypeVar
+from collections.abc import Collection, Mapping, Sequence
+from typing import Literal, Self, TypeVar
 
+from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
-from lightwin.util.typing import CONCATENABLE_CAVITY_SETTINGS
+from lightwin.util.typing import (
+    CONCATENABLE_CAVITY_SETTINGS,
+    OPTIMIZATION_STATUS,
+)
 
 FieldMap = TypeVar("FieldMap")
 
@@ -51,26 +55,11 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
         return sorted(dir(self.__class__) + list(CONCATENABLE_CAVITY_SETTINGS))
 
     @classmethod
-    def from_cavity_settings(
-        cls,
-        several_cavity_settings: Collection[CavitySettings],
-        compensating_cavities: Collection[FieldMap],
-    ) -> Self:
-        """Create the proper dictionary."""
-        zipper = zip(
-            compensating_cavities, several_cavity_settings, strict=True
-        )
-        settings = {
-            cavity: cavity_settings for cavity, cavity_settings in zipper
-        }
-        return cls(settings)
-
-    @classmethod
     def from_incomplete_set(
         cls,
-        set_of_cavity_settings: Self | dict[FieldMap, CavitySettings] | None,
+        compensating_cavity_settings: Mapping[FieldMap, CavitySettings] | None,
         cavities: Collection[FieldMap],
-        use_a_copy_for_nominal_settings: bool = True,
+        optimization_status: OPTIMIZATION_STATUS,
     ) -> Self:
         """Create an object with settings for all the field maps.
 
@@ -83,47 +72,44 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
             In fact, may be useless. In the future, the nominal cavities will
             also have their own |CS| in the compensation zone.
 
-        .. todo::
-            Should create the full SetOfCavitySettings directly from the
-            OptimisationAlgorithm. For now, the OptimisationAlgorithm creates a
-            first SetOfCavitySettings. Then, the BeamCalculator calls this
-            method to generate a new SetOfCavitySettings. Ugly, especially
-            given the fact that OptimisationAlgorithm has its ListOfElements.
-
         Parameters
         ----------
-        set_of_cavity_settings :
-            Object holding the settings of some cavities (typically, the
-            settings of compensating cavities as given by an
-            :class:`.OptimisationAlgorithm`). When it is None, every
-            |CS| is taken from the |FM| object (corresponds to run without
-            optimisation).
+        compensating_cavity_settings :
+            Maps compensating cavities to their compensation settings.
         cavities :
-            All the cavities that should have |CS| (typically, all the cavities
+            All cavities that should have a |CS| (typically, all the cavities
             in a sub-|LOE| studied during an optimisation process).
-        use_a_copy_for_nominal_settings :
-            To create new |CS| for the cavities not already in
-            ``set_of_cavity_settings``. Allows to compute quantities such as
-            synchronous phase without altering the original one.
+        optimization_status :
+            Used when ``cavity`` is not in ``cavity_settings`` (*ie*, when the
+            cavity is not a compensating cavity). During optimization, we
+            return a copy of its |CS| to avoid altering the original. When
+            optimization is over, we return the original to set it's final
+            ``phi_s``, ``phi_0_rel``, ``phi_rf``, etc.
 
         Returns
         -------
-            A :class:`.SetOfCavitySettings` with settings from
-            ``set_of_cavity_settings`` or from ``cavities`` if not in
-            ``set_of_cavity_settings``.
+            Settings for all cavities in ``cavities``.
 
         """
-        if set_of_cavity_settings is None:
-            empty: dict[FieldMap, CavitySettings] = {}
-            set_of_cavity_settings = SetOfCavitySettings(empty)
-
         complete_set_of_settings = {
-            cavity: _settings_getter(
-                cavity, set_of_cavity_settings, use_a_copy_for_nominal_settings
+            cavity: _get_settings(
+                cavity,
+                compensating_cavity_settings or SetOfCavitySettings({}),
+                optimization_status,
             )
             for cavity in cavities
         }
         return cls(complete_set_of_settings)
+
+    @classmethod
+    def nominal(cls, elements: Collection[Element]) -> Self:
+        """Get |CS| from objects."""
+        settings = {
+            cav: settings
+            for cav in elements
+            if (settings := getattr(cav, "cavity_settings", None)) is not None
+        }
+        return cls(settings)
 
     def re_set_elements_index_to_absolute_value(self) -> None:
         """Update cavities index to properly set `ele[n][v]` commands.
@@ -144,16 +130,15 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
         return ordered_cav, ordered_settings
 
 
-def _settings_getter(
+def _get_settings(
     cavity: FieldMap,
-    set_of_cavity_settings: SetOfCavitySettings,
-    instantiate_new: bool,
+    compensating_cavity_settings: Mapping[FieldMap, CavitySettings],
+    optimization_status: OPTIMIZATION_STATUS,
 ) -> CavitySettings:
     """Take the settings from the set of settings if possible.
 
     If ``cavity`` is not listed in ``set_of_cavity_settings``, take its nominal
-    |CS| instead. In the latter case, ``instantiate_new`` will force the
-    creation of a new |CS| with the same settings.
+    |CS| instead.
 
     Parameters
     ----------
@@ -162,19 +147,26 @@ def _settings_getter(
     set_of_cavity_settings :
         Different cavity settings (a priori given by an
         :class:`.OptimisationAlgorithm`), or an empty dict.
-    instantiate_new :
-        To force the creation of a new object; will allow to keep the original
-        |CS| unaltered.
+    optimization_status :
+        Used when ``cavity`` is not in ``cavity_settings`` (*ie*, when the
+        cavity is not a compensating cavity). During optimization, we return a
+        copy of its |CS| to avoid altering the original.
+        When optimization is over, we return the original to set it's final
+        ``phi_s``, ``phi_0_rel``, ``phi_rf``, etc.
 
     Returns
     -------
         Cavity settings for ``cavity``.
 
     """
-    if not instantiate_new:
-        return set_of_cavity_settings.get(cavity, cavity.cavity_settings)
+    if cavity in compensating_cavity_settings:
+        return compensating_cavity_settings[cavity]
 
-    return set_of_cavity_settings.get(
-        cavity,
-        CavitySettings.copy(cavity.cavity_settings),
-    )
+    settings = cavity.cavity_settings
+
+    if optimization_status == "in progress":
+        new_settings = CavitySettings.copy(settings, info="getter")
+        return new_settings
+    if optimization_status == "finished":
+        return settings
+    return ValueError(f"{optimization_status = } not understood")

@@ -2,7 +2,7 @@
 
 import logging
 from abc import ABCMeta
-from collections.abc import Collection
+from collections.abc import Collection, Mapping
 from typing import Any, Literal
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
@@ -10,6 +10,8 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
@@ -40,6 +42,7 @@ from lightwin.optimisation.algorithms.simulated_annealing import (
 )
 from lightwin.optimisation.design_space.design_space import DesignSpace
 from lightwin.optimisation.objective.factory import ObjectiveFactory
+from lightwin.util.typing import OPTIMIZATION_STATUS
 
 #: Maps the ``optimisation_algorithm`` key in the ``TOML`` file to the actual
 #: :class:`.OptimisationAlgorithm` we use.
@@ -168,15 +171,26 @@ class OptimisationAlgorithmFactory:
         """
 
         def compute_beam_propagation(
-            set_of_cavity_settings: SetOfCavitySettings | None,
-            use_a_copy_for_nominal_settings: bool = True,
+            cavity_settings: Mapping[FieldMap, CavitySettings] | None,
             **kwargs,
         ):
+            """Wrap propagation of the beam.
+
+            Parameters
+            ----------
+            cavity_settings :
+                Maps compensating cavities with the settings to be tried.
+
+            """
+            set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(
+                compensating_cavity_settings=cavity_settings,
+                cavities=subset_elts.cavities(superposed="remove"),
+                optimization_status="in progress",
+            )
             return self._beam_calculator.run_with_this(
                 accelerator_id=self._accelerator_id,
                 set_of_cavity_settings=set_of_cavity_settings,
                 elts=subset_elts,
-                use_a_copy_for_nominal_settings=use_a_copy_for_nominal_settings,
                 **kwargs,
             )
 

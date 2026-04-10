@@ -24,6 +24,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
 )
@@ -117,47 +118,12 @@ class Envelope1D(BeamCalculator):
             elements_to_dump=(),
         )
 
-    def run(
-        self,
-        accelerator_id: str,
-        elts: ListOfElements,
-        update_reference_phase: bool = False,
-        **kwargs,
-    ) -> SimulationOutput:
-        """Compute beam propagation in 1D, envelope calculation.
-
-        Parameters
-        ----------
-        accelerator_id :
-            Associated :attr:`.Accelerator.id`. Looks like:
-            ``0000001_Solution``.
-        elts :
-            List of elements in which the beam must be propagated.
-        update_reference_phase :
-            To change the reference phase of cavities when it is different from
-            the one asked in the ``TOML``. To use after the first calculation,
-            if :attr:`.BeamCalculator.reference_phase_policy` does not align
-            with :attr:`.CavitySettings.reference`.
-
-        Returns
-        -------
-            Holds energy, phase, transfer matrices (among others) packed into a
-            single object.
-
-        """
-        return super().run(
-            accelerator_id=accelerator_id,
-            elts=elts,
-            update_reference_phase=update_reference_phase,
-            **kwargs,
-        )
-
     def run_with_this(
         self,
         accelerator_id: str,
-        set_of_cavity_settings: SetOfCavitySettings | None,
+        set_of_cavity_settings: SetOfCavitySettings,
         elts: ListOfElements,
-        use_a_copy_for_nominal_settings: bool = True,
+        **kwargs,
     ) -> SimulationOutput:
         """Use solver on ``elts``, including the ``set_of_cavity_settings``.
 
@@ -171,10 +137,6 @@ class Envelope1D(BeamCalculator):
             settings are taken from the |FM| objects.
         elts :
             List of elements in which the beam must be propagated.
-        use_a_copy_for_nominal_settings :
-            To copy the nominal |CS| and avoid altering their nominal
-            counterpart. Set it to True during optimisation, to False when you
-            want to keep the current settings. The default is True.
 
         Returns
         -------
@@ -182,18 +144,13 @@ class Envelope1D(BeamCalculator):
             single object.
 
         """
+        logging.error(f"calculating linac {accelerator_id}")
         single_elts_results = []
         w_kin = elts.w_kin_in
         phi_abs = elts.phi_abs_in
 
-        set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(
-            set_of_cavity_settings,
-            elts.cavities(superposed="remove"),
-            use_a_copy_for_nominal_settings=use_a_copy_for_nominal_settings,
-        )
-
         for elt in elts:
-            cavity_settings = set_of_cavity_settings.get(elt, None)
+            cavity_settings = set_of_cavity_settings.get(elt)
             _store_entry_phase_in_settings(phi_abs, cavity_settings)
             # Patch
             if isinstance(elt, SuperposedFieldMap):
@@ -211,6 +168,11 @@ class Envelope1D(BeamCalculator):
 
             phi_abs += elt_results["phi_rel"][-1]
             w_kin = elt_results["w_kin"][-1]
+
+            if elt.name == "FM119":
+                logging.error(f"LoE: {id(elt)} ({len(elts)})")
+                for s in (elt.cavity_settings, cavity_settings):
+                    logging.error(f"{s} | {hasattr(s, "_phi_rf")}")
 
         simulation_output = self.simulation_output_factory.create(
             accelerator_id=accelerator_id,
@@ -237,7 +199,6 @@ class Envelope1D(BeamCalculator):
             accelerator_id=accelerator_id,
             set_of_cavity_settings=optimized_cavity_settings,
             elts=full_elts,
-            use_a_copy_for_nominal_settings=False,
             **specific_kwargs,
         )
         return simulation_output

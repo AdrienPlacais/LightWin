@@ -22,7 +22,7 @@ list of implemented algorithms in the :mod:`.algorithm` module.
 
 import logging
 from abc import ABC, abstractmethod
-from collections.abc import Collection
+from collections.abc import Collection, Mapping
 from pathlib import Path
 from typing import Any, Callable, TypedDict
 
@@ -36,14 +36,12 @@ from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.cavity_settings_factory import (
     CavitySettingsFactory,
 )
-from lightwin.failures.set_of_cavity_settings import (
-    FieldMap,
-    SetOfCavitySettings,
-)
+from lightwin.core.elements.field_maps.field_map import FieldMap
+from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.design_space.design_space import DesignSpace
 from lightwin.optimisation.objective.factory import ObjectiveFactory
 from lightwin.optimisation.objective.objective import str_objectives
-from lightwin.util.typing import REFERENCE_PHASES
+from lightwin.util.typing import REFERENCE_PHASES, REFERENCE_PHASES_T
 
 
 class OptiSol(TypedDict):
@@ -52,7 +50,7 @@ class OptiSol(TypedDict):
     #: Value of variables
     var: NDArray[np.float64] | list[float]
     #: Value of var, but more logical
-    cavity_settings: SetOfCavitySettings
+    cavity_settings: dict[FieldMap, CavitySettings]
     #: Value of objectives
     fun: NDArray[np.float64] | list[float]
     #: Value of objectives, but more logical
@@ -63,7 +61,9 @@ class OptiSol(TypedDict):
     info: list[str]
 
 
-ComputeBeamPropagationT = Callable[[SetOfCavitySettings], SimulationOutput]
+ComputeBeamPropagationT = Callable[
+    [Mapping[FieldMap, CavitySettings]], SimulationOutput
+]
 ComputeResidualsT = Callable[[SimulationOutput], Any]
 ComputeConstraintsT = Callable[[SimulationOutput], NDArray[np.float64]]
 
@@ -111,7 +111,7 @@ class OptimisationAlgorithm(ABC):
             during optimization.
 
         """
-        self.compensating_elements = compensating_elements
+        self.compensating_elements = tuple(compensating_elements)
 
         self._objective_factory = objective_factory
         self.objectives = self._objective_factory.objectives
@@ -121,6 +121,18 @@ class OptimisationAlgorithm(ABC):
         if self.supports_constraints:
             assert self._design_space.compute_constraints is not None
         self._variables = self._design_space.variables
+
+        _reference_phase = tuple(
+            {x.name for x in self._variables if "phi" in x.name}
+        )
+        assert (
+            len(_reference_phase) == 1
+        ), "Only one phase variable should be set"
+        assert (
+            _reference_phase[0] in REFERENCE_PHASES
+        ), f"{_reference_phase} is an invalid phase variable"
+        self._reference_phase: REFERENCE_PHASES_T = _reference_phase[0]
+
         self._constraints = self._design_space.constraints
 
         self.compute_beam_propagation = compute_beam_propagation
@@ -208,7 +220,7 @@ class OptimisationAlgorithm(ABC):
     ) -> NDArray[np.float64]:
         """Compute residuals from an array of variable values."""
         self.history.add_settings(var)
-        cav_settings = self._to_set_of_cavity_settings(var)
+        cav_settings = self._to_cavity_settings(var)
         simulation_output = self.compute_beam_propagation(cav_settings)
         residuals = self._compute_residuals(simulation_output)
         self.history.add_objective_values(list(residuals), simulation_output)
@@ -235,43 +247,43 @@ class OptimisationAlgorithm(ABC):
             objective.residual = residual
         self.history.save()
 
-    def _to_set_of_cavity_settings(
+    def _to_cavity_settings(
         self, var: NDArray[np.float64]
-    ) -> SetOfCavitySettings:
-        """Transform ``var`` into generic :class:`.SetOfCavitySettings`.
+    ) -> dict[FieldMap, CavitySettings]:
+        """Transform ``var`` into :class:`.CavitySettings`.
 
         Parameters
         ----------
         var :
-            An array holding the variables to try.
+            A ``(2n,)`` array holding the settings to try, where first half
+            holds the amplitudes and second the phases.
 
         Returns
         -------
-        SetOfCavitySettings
-            Object holding the settings of all the cavities.
+            Maps compensating elements with their :class:`.CavitySettings`.
 
         """
-        reference = [x for x in self.variable_names if "phi" in x][0]
-        assert reference in REFERENCE_PHASES, (
-            f"{reference = } is not allowed as a reference phase. Allowed "
-            f"values are: {REFERENCE_PHASES = }."
-        )
-        original_settings: list[CavitySettings]
+        amplitudes = list(var[var.shape[0] // 2 :])
+        phases = list(var[: var.shape[0] // 2])
+
         original_settings = [
             cavity.cavity_settings for cavity in self.compensating_elements
         ]
 
-        several_cavity_settings = (
-            self.cavity_settings_factory.from_optimisation_algorithm(
+        cavity_settings_to_try = (
+            self.cavity_settings_factory.for_optimisation_algorithm(
                 base_settings=original_settings,
-                var=var,
-                reference=reference,
-                status="compensate (in progress)",
+                amplitudes=amplitudes,
+                phases=phases,
+                reference=self._reference_phase,
             )
         )
-        return SetOfCavitySettings.from_cavity_settings(
-            several_cavity_settings, self.compensating_elements
-        )
+        return {
+            cav: settings
+            for cav, settings in zip(
+                self.compensating_elements, cavity_settings_to_try, strict=True
+            )
+        }
 
     def _get_objective_values(
         self, var: NDArray[np.float64]

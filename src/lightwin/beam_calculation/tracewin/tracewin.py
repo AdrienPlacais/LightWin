@@ -36,6 +36,7 @@ from lightwin.tracewin_utils.interface import (
 )
 from lightwin.util.typing import (
     EXPORT_PHASES_T,
+    OPTIMIZATION_STATUS,
     REFERENCE_PHASE_POLICY_T,
     BeamKwargs,
 )
@@ -218,6 +219,7 @@ class TraceWin(BeamCalculator):
         accelerator_id: str,
         elts: ListOfElements,
         update_reference_phase: bool = False,
+        optimization_status: OPTIMIZATION_STATUS = "not started",
         **specific_kwargs,
     ) -> SimulationOutput:
         """Run TraceWin.
@@ -248,6 +250,7 @@ class TraceWin(BeamCalculator):
             accelerator_id=accelerator_id,
             elts=elts,
             update_reference_phase=update_reference_phase,
+            optimization_status=optimization_status,
             **specific_kwargs,
         )
 
@@ -256,8 +259,8 @@ class TraceWin(BeamCalculator):
         accelerator_id: str,
         set_of_cavity_settings: SetOfCavitySettings | None,
         elts: ListOfElements,
-        use_a_copy_for_nominal_settings: bool = True,
-        **specific_kwargs,
+        optimization_status: OPTIMIZATION_STATUS,
+        **kwargs,
     ) -> SimulationOutput:
         """Perform a simulation with new cavity settings.
 
@@ -274,10 +277,9 @@ class TraceWin(BeamCalculator):
             settings are taken from the FieldMap objects.
         elts :
             List of elements in which the beam should be propagated.
-        use_a_copy_for_nominal_settings :
-            To copy the nominal |CS| and avoid altering their nominal
-            counterpart. Set it to True during optimisation, to False when you
-            want to keep the current settings. The default is True.
+        optimization_status :
+            To prevent errors interrupting simulation during optimization
+            phases.
 
         Returns
         -------
@@ -285,23 +287,19 @@ class TraceWin(BeamCalculator):
             single object.
 
         """
-        if specific_kwargs not in (None, {}):
-            logging.critical(f"{specific_kwargs = }: deprecated.")
+        if set_of_cavity_settings is None:
+            set_of_cavity_settings = SetOfCavitySettings({})
+        if kwargs not in (None, {}):
+            logging.critical(f"{kwargs = }: deprecated.")
 
-        if specific_kwargs is None:
-            specific_kwargs = {}
-
-        set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(
-            set_of_cavity_settings,
-            elts.cavities(superposed="remove"),
-            use_a_copy_for_nominal_settings=use_a_copy_for_nominal_settings,
-        )
+        if kwargs is None:
+            kwargs = {}
 
         command, path_cal = self._tracewin_full_command(
-            elts, set_of_cavity_settings, **specific_kwargs
+            elts, set_of_cavity_settings, **kwargs
         )
-        is_a_fit = use_a_copy_for_nominal_settings
-        exception = _run_in_bash(command, output_command=not is_a_fit)
+        is_not_a_fit = optimization_status != "in progress"
+        exception = _run_in_bash(command, output_command=is_not_a_fit)
 
         # check in which order those two methods should be called
         simulation_output = self.simulation_output_factory.create(
