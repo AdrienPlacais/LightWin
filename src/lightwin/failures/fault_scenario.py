@@ -137,6 +137,10 @@ class FaultScenario(list[Fault]):
         self._mark_cavities_to_rephase()
         for fault in self:
             fault.pre_compensation_status()
+        self.beam_calculator.compute(
+            self.fix_acc,
+            ref_simulation_output=self._reference_simulation_output,
+        )
 
     def _create_faults(
         self, *cavities: Sequence[Sequence[FieldMap]]
@@ -187,11 +191,6 @@ class FaultScenario(list[Fault]):
         delta_t = datetime.timedelta(seconds=time.monotonic() - start_time)
         logging.info(f"Solving all the optimization problems took {delta_t}")
         self.optimisation_time = delta_t
-
-        # successes = [fault.success for fault in self]
-        # self.fix_acc.name = (
-        #     f"Fixed ({successes.count(True)} of {len(successes)})"
-        # )
         self.fix_acc.status = "fix"
 
         self._evaluate_fit_quality(save=True)
