@@ -125,7 +125,6 @@ def set_up_faults(
         The instantiated fault scenarios.
 
     """
-    beam_calculator.compute(accelerators[0][0])
     design_space_kw = config.get("design_space", None)
     if design_space_kw is None:
         raise ValueError("design_space configuration is necessary")
@@ -135,6 +134,7 @@ def set_up_faults(
         design_space_kw,
         objective_factory_class=objective_factory_class,
     )
+
     wtf = config.get("wtf", None)
     if wtf is None:
         raise ValueError("wtf configuration is necessary")
@@ -173,17 +173,16 @@ def set_up(config: ConfigKw, **kwargs) -> tuple[
     beam_calculators = set_up_solvers(**config)
     accelerators = set_up_accelerators(config, beam_calculators)
 
+    ref_simulations_outputs = [
+        x.compute(accelerators[0][0]) for x in beam_calculators
+    ]
+
     fault_scenarios = None
     if "wtf" in config:
         fault_scenarios = set_up_faults(
             config, beam_calculators[0], accelerators, **kwargs
         )
 
-    # TODO check if this could come before the FaultScenario creation (because
-    # we also compute a reference SimulationOutput in this routine)
-    ref_simulations_outputs = [
-        x.compute(accelerators[0][0]) for x in beam_calculators
-    ]
     return (
         beam_calculators,
         accelerators,
