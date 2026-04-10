@@ -49,12 +49,13 @@ class SimulatedAnnealing(OptimisationAlgorithm):
     def _generate_opti_sol(self, result: OptimizeResult) -> OptiSol:
         """Package the results into an OptiSol dictionary."""
         cavity_settings = self._to_cavity_settings(result.x)
+        objectives, _ = self._evaluate_solution(result.x)
         result.message.insert(0, "SimulatedAnnealing:")
         opti_sol: OptiSol = {
             "var": result.x,
             "cavity_settings": cavity_settings,
             "fun": result.fun,
-            "objectives": self._get_objective_values(result.x),
+            "objectives": objectives,
             "success": result.success,
             "info": result.message,
         }

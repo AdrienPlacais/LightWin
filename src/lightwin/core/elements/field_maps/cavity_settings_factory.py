@@ -32,7 +32,7 @@ class CavitySettingsFactory:
         status = "nominal"
 
         cavity_settings = CavitySettings(
-            k_e, phi_0, reference, status, self.freq_bunch_mhz, info="DAT"
+            k_e, phi_0, reference, status, self.freq_bunch_mhz
         )
         return cavity_settings
 
@@ -63,7 +63,7 @@ class CavitySettingsFactory:
             for k_e, phi in zip(amplitudes, phases, strict=True)
         )
         return [
-            CavitySettings.copy(base, vars, info="optim algo")
+            CavitySettings.copy(base, vars)
             for base, vars in zip(base_settings, as_cavity_vars, strict=True)
         ]
 

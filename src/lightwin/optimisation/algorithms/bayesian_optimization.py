@@ -92,12 +92,13 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
 
         sol = self._to_numpy(**result["params"])
         cavity_settings = self._to_cavity_settings(sol)
+        objectives, _ = self._evaluate_solution(sol)
 
         opti_sol: OptiSol = {
             "var": sol,
             "cavity_settings": cavity_settings,
             "fun": result["target"],
-            "objectives": self._get_objective_values(sol),
+            "objectives": objectives,
             "success": True,
             "info": ["Bayesian Optimization"],
         }

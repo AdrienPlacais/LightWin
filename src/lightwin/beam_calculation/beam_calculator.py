@@ -233,7 +233,6 @@ class BeamCalculator(ABC):
 
         """
 
-    @abstractmethod
     def post_optimisation_run_with_this(
         self,
         accelerator_id: str,
@@ -250,6 +249,12 @@ class BeamCalculator(ABC):
         the whole linac.
 
         """
+        return self.run_with_this(
+            accelerator_id=accelerator_id,
+            set_of_cavity_settings=optimized_cavity_settings,
+            elts=full_elts,
+            **kwargs,
+        )
 
     @abstractmethod
     def init_solver_parameters(self, accelerator: Accelerator) -> None:

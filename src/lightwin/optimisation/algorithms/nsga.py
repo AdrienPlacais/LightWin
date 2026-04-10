@@ -1,5 +1,6 @@
 """Define the NSGA-III many-objective optimisation algorithm."""
 
+import logging
 import os
 import threading
 from collections.abc import Callable
@@ -11,6 +12,7 @@ import numpy as np
 from numpy.typing import NDArray
 from pymoo.algorithms.moo.nsga3 import NSGA3
 from pymoo.core.problem import Problem
+from pymoo.core.result import Result
 from pymoo.optimize import minimize as pymoo_minimize
 from pymoo.util.ref_dirs import get_reference_directions
 
@@ -186,25 +188,16 @@ class NSGA3Algorithm(OptimisationAlgorithm):
             constraints are defined.
 
         """
-        cav_settings = self._to_cavity_settings(var)
-        simulation_output = self.compute_beam_propagation(cav_settings)
+        objectives, constraints = self._evaluate_solution(var)
+        residuals = np.array(list(objectives.values()))
+        constraints_arr = (
+            np.array(list(constraints.values()))
+            if constraints is not None
+            else None
+        )
+        return residuals, constraints_arr
 
-        residuals = self._compute_residuals(simulation_output)
-
-        self.history.add_settings(var)
-        self.history.add_objective_values(list(residuals), simulation_output)
-
-        constraints = None
-        if self.n_constr > 0:
-            constraints = self._design_space.compute_constraints(
-                simulation_output
-            )
-            self.history.add_constraint_values(constraints)
-
-        self.history.checkpoint()
-        return residuals, constraints
-
-    def _generate_opti_sol(self, result) -> OptiSol:
+    def _generate_opti_sol(self, result: Result) -> OptiSol:
         """Pick the best solution from the Pareto front and format it.
 
         "Best" is defined as the Pareto-front member with the smallest
@@ -220,25 +213,27 @@ class NSGA3Algorithm(OptimisationAlgorithm):
         """
         if result.X is None:
             x_best = np.array([var.x_0 for var in self._variables])
+            funs = np.full(self.n_obj, np.nan)
             success = False
             message = "No feasible solution found by NSGA-III."
         else:
             norms = np.linalg.norm(result.F, axis=1)
             best_idx = int(np.argmin(norms))
             x_best = result.X[best_idx]
+            funs = result.F[best_idx]
             success = True
             message = (
                 f"NSGA-III converged. "
                 f"Pareto front contains {len(result.X)} solution(s)."
             )
 
-        objectives = self._get_objective_values(x_best)
         cavity_settings = self._to_cavity_settings(x_best)
+        objectives, _ = self._evaluate_solution(x_best)
 
         opti_sol: OptiSol = {
             "var": x_best,
             "cavity_settings": cavity_settings,
-            "fun": np.array(list(objectives.values())),
+            "fun": funs,
             "objectives": objectives,
             "success": success,
             "info": [self.__class__.__name__, message],
@@ -346,16 +341,39 @@ class NSGA3AlgorithmMulti(NSGA3Algorithm):
     def _evaluate_individual(
         self, var: NDArray[np.float64]
     ) -> tuple[NDArray[np.float64], NDArray[np.float64] | None]:
-        """Evaluate one candidate - thread-safe via lock on history writes."""
+        """Evaluate one candidate — thread-safe via lock on history writes.
+
+        The simulation runs outside the lock (fully parallel). History writes
+        are batched and serialised via ``_history_lock``.
+
+        """
+        raise NotImplementedError
         cav_settings = self._to_cavity_settings(var)
         simulation_output = self.compute_beam_propagation(cav_settings)
+
         residuals = self._compute_residuals(simulation_output)
+        objectives = {
+            str(objective): value
+            for objective, value in zip(
+                self.objectives, residuals, strict=True
+            )
+        }
 
         constraints = None
+        constraints_arr = None
         if self.n_constr > 0:
-            constraints = self._design_space.compute_constraints(
-                simulation_output
-            )
+            constraints = {}
+            for constraint in self._constraints:
+                value = constraint.get_value(simulation_output)
+                if not np.isnan(constraint.x_min):
+                    constraints[f"{constraint} (lower)"] = float(
+                        constraint.x_min - value
+                    )
+                if not np.isnan(constraint.x_max):
+                    constraints[f"{constraint} (upper)"] = float(
+                        value - constraint.x_max
+                    )
+            constraints_arr = np.array(list(constraints.values()))
 
         with self._history_lock:
             self.history.add_settings(var)
@@ -363,10 +381,10 @@ class NSGA3AlgorithmMulti(NSGA3Algorithm):
                 list(residuals), simulation_output
             )
             if constraints is not None:
-                self.history.add_constraint_values(constraints)
+                self.history.add_constraint_values(list(constraints.values()))
             self.history.checkpoint()
 
-        return residuals, constraints
+        return residuals, constraints_arr
 
     def _problem(self) -> _LightWinProblemMulti:
         """Create a multi-threaded problem."""

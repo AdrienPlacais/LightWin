@@ -122,11 +122,12 @@ class Explorator(OptimisationAlgorithm):
         assert fun is not None
 
         cavity_settings = self._to_cavity_settings(var)
+        objectives, _ = self._evaluate_solution(var)
         opti_sol: OptiSol = {
             "var": var,
             "cavity_settings": cavity_settings,
             "fun": fun,
-            "objectives": self._get_objective_values(var),
+            "objectives": objectives,
             "success": True,
             "info": ["Explorator"],
         }

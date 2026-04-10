@@ -61,12 +61,13 @@ class DownhillSimplex(OptimisationAlgorithm):
     def _generate_opti_sol(self, result: OptimizeResult) -> OptiSol:
         """Store the optimization results."""
         cavity_settings = self._to_cavity_settings(result.x)
+        objectives, _ = self._evaluate_solution(result.x)
 
         opti_sol: OptiSol = {
             "var": result.x,
             "cavity_settings": cavity_settings,
             "fun": result.fun,
-            "objectives": self._get_objective_values(result.x),
+            "objectives": objectives,
             "success": result.success,
             "info": [self.__class__.__name__, result.message],
         }

@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Synchronous phases in constraints calculations was taken from
+  `SimulationOutput.elts` (nominal settings) instead of
+  `SimulationOutput.set_of_cavity_settings`. This bug was nasty. Fixing it
+  dramatically improved constrained optimization.
 - Information message when creating `ListOfElements` subset printed wrong end of
   linac subset.
 - Synchronous phases can be used as constraints again.

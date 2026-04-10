@@ -133,8 +133,9 @@ class Envelope1D(BeamCalculator):
             Associated :attr:`.Accelerator.id`. Looks like:
             ``0000001_Solution``.
         set_of_cavity_settings :
-            The new cavity settings to try. If it is None, then the cavity
-            settings are taken from the |FM| objects.
+            The cavity settings to use for every cavity in ``elts``. They can
+            be given by an optimization algorithm, or taken from cavity
+            objects.
         elts :
             List of elements in which the beam must be propagated.
 
@@ -144,7 +145,6 @@ class Envelope1D(BeamCalculator):
             single object.
 
         """
-        logging.error(f"calculating linac {accelerator_id}")
         single_elts_results = []
         w_kin = elts.w_kin_in
         phi_abs = elts.phi_abs_in
@@ -169,37 +169,11 @@ class Envelope1D(BeamCalculator):
             phi_abs += elt_results["phi_rel"][-1]
             w_kin = elt_results["w_kin"][-1]
 
-            if elt.name == "FM119":
-                logging.error(f"LoE: {id(elt)} ({len(elts)})")
-                for s in (elt.cavity_settings, cavity_settings):
-                    logging.error(f"{s} | {hasattr(s, "_phi_rf")}")
-
         simulation_output = self.simulation_output_factory.create(
             accelerator_id=accelerator_id,
             elts=elts,
             single_elts_results=single_elts_results,
             set_of_cavity_settings=set_of_cavity_settings,
-        )
-        return simulation_output
-
-    def post_optimisation_run_with_this(
-        self,
-        accelerator_id: str,
-        optimized_cavity_settings: SetOfCavitySettings,
-        full_elts: ListOfElements,
-        **specific_kwargs,
-    ) -> SimulationOutput:
-        """Run :class:`Envelope1D` with optimized cavity settings.
-
-        With this solver, we have nothing to do, nothing to update. Just call
-        the regular :meth:`run_with_this` method.
-
-        """
-        simulation_output = self.run_with_this(
-            accelerator_id=accelerator_id,
-            set_of_cavity_settings=optimized_cavity_settings,
-            elts=full_elts,
-            **specific_kwargs,
         )
         return simulation_output
 

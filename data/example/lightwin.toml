@@ -108,11 +108,12 @@ optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 strategy = "k out of n"
 
 [wtf_with_constraints]
-failed = [["FM120"]]
+failed = [["FM12"]]
 id_nature = "name"
-k = 1
+k = 3
 objective_preset = "EnergyMismatch"
 optimisation_algorithm = "NSGA-III"
+# optimisation_algorithm = "NSGA-III Multi-threaded"
 # optimisation_algorithm_kwargs = { options = { disp = false, adaptive = true } }
 shift = 0
 strategy = "k out of n"

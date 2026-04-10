@@ -165,7 +165,7 @@ class Fault:
         optimized_cavity_settings = SetOfCavitySettings.from_incomplete_set(
             self._compensation_settings,
             fix_elts.l_cav,
-            optimization_status="in progress",
+            optimization_status="finished",
         )
         simulation_output = beam_calculator.post_optimisation_run_with_this(
             accelerator_id=fix_acc.id,

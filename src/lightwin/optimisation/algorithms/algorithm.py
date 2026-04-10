@@ -24,7 +24,7 @@ import logging
 from abc import ABC, abstractmethod
 from collections.abc import Collection, Mapping
 from pathlib import Path
-from typing import Any, Callable, TypedDict
+from typing import Any, Callable, NotRequired, TypedDict, final
 
 import numpy as np
 from numpy.typing import NDArray
@@ -37,7 +37,6 @@ from lightwin.core.elements.field_maps.cavity_settings_factory import (
     CavitySettingsFactory,
 )
 from lightwin.core.elements.field_maps.field_map import FieldMap
-from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.design_space.design_space import DesignSpace
 from lightwin.optimisation.objective.factory import ObjectiveFactory
 from lightwin.optimisation.objective.objective import str_objectives
@@ -53,8 +52,12 @@ class OptiSol(TypedDict):
     cavity_settings: dict[FieldMap, CavitySettings]
     #: Value of objectives
     fun: NDArray[np.float64] | list[float]
-    #: Value of objectives, but more logical
+    #: Maps name of objectives with their value.
     objectives: dict[str, float]
+    #: Value of constraint violation
+    cv: NotRequired[float]
+    #: Maps name of constaint with cv value.
+    constraints: NotRequired[dict[str, float]]
     #: If optimization was successful
     success: bool
     #: Complementary information
@@ -219,19 +222,15 @@ class OptimisationAlgorithm(ABC):
         self, var: NDArray[np.float64]
     ) -> NDArray[np.float64]:
         """Compute residuals from an array of variable values."""
-        self.history.add_settings(var)
-        cav_settings = self._to_cavity_settings(var)
-        simulation_output = self.compute_beam_propagation(cav_settings)
-        residuals = self._compute_residuals(simulation_output)
-        self.history.add_objective_values(list(residuals), simulation_output)
-        self.history.checkpoint()
-        return residuals
+        objectives, _ = self._evaluate_solution(var)
+        return np.array(list(objectives.values()))
 
     def _norm_wrapper_residuals(self, var: NDArray[np.float64]) -> float:
         """Compute norm of residuals vector from array of variable values."""
         res = float(np.linalg.norm(self._wrapper_residuals(var)))
         return res
 
+    @final
     def _finalize(self, opti_sol: OptiSol) -> None:
         """End the optimization process.
 
@@ -239,12 +238,25 @@ class OptimisationAlgorithm(ABC):
            - Save the optimization history if applicable.
            - Store final residual values in the appropriate :class:`.Objective`
              instances.
+           - Record final constraint values in history if applicable.
 
         """
         for objective, residual in zip(
             self.objectives, opti_sol["objectives"].values(), strict=True
         ):
             objective.residual = residual
+
+        fresh_objectives, constraints = self._evaluate_solution(
+            opti_sol["var"]
+        )
+
+        if constraints is not None:
+            opti_sol["constraints"] = constraints
+            opti_sol["cv"] = float(
+                np.sum(np.maximum(list(constraints.values()), 0.0))
+            )
+
+        self._check_consistency(opti_sol, fresh_objectives)
         self.history.save()
 
     def _to_cavity_settings(
@@ -285,16 +297,79 @@ class OptimisationAlgorithm(ABC):
             )
         }
 
-    def _get_objective_values(
+    @final
+    def _evaluate_solution(
         self, var: NDArray[np.float64]
-    ) -> dict[str, float]:
-        """Save the full array of objective values."""
-        values = self._wrapper_residuals(var)
-        objectives_values = {
+    ) -> tuple[dict[str, float], dict[str, float] | None]:
+        """Evaluate objectives and constraints for a single solution.
+
+        Runs the simulation once and returns both, avoiding redundant beam
+        propagation calls when both are needed (e.g. in :meth:`._finalize`).
+
+        Parameters
+        ----------
+        var :
+            Array of variable values.
+
+        Returns
+        -------
+        objectives :
+            Maps objective names to their values.
+        constraints :
+            Constraint violation array, or ``None`` if no constraints defined.
+
+        """
+        cav_settings = self._to_cavity_settings(var)
+        simulation_output = self.compute_beam_propagation(cav_settings)
+
+        residuals = self._compute_residuals(simulation_output)
+        objectives = {
             str(objective): value
-            for objective, value in zip(self.objectives, values, strict=True)
+            for objective, value in zip(
+                self.objectives, residuals, strict=True
+            )
         }
-        return objectives_values
+
+        cv = None
+        constraints = None
+        if self.n_constr > 0:
+            cv = self._design_space.compute_constraints(simulation_output)
+            constraints = {str(c): c for c in cv}
+
+        self.history.add_settings(var)
+        self.history.add_objective_values(list(residuals), simulation_output)
+        if cv is not None:
+            self.history.add_constraint_values(cv)
+        self.history.checkpoint()
+
+        return objectives, constraints
+
+    @final
+    def _check_consistency(
+        self, opti_sol: OptiSol, fresh_objectives: dict[str, float]
+    ) -> None:
+        """Compare stored objectives with a fresh evaluation."""
+        stored = np.array(list(opti_sol["objectives"].values()))
+        fresh = np.array(list(fresh_objectives.values()))
+
+        if np.allclose(stored, fresh, rtol=1e-3):
+            logging.debug("Consistency check passed.")
+            return
+
+        rel_diff = np.abs(fresh - stored) / (np.abs(stored) + 1e-12)
+        logging.warning(
+            f"Consistency check FAILED for {self.__class__.__name__}:\n"
+            + "\n".join(
+                f"  {name}: stored={s:.6g}, fresh={f:.6g}, rel_diff={d:.2e}"
+                for name, s, f, d in zip(
+                    opti_sol["objectives"].keys(),
+                    stored,
+                    fresh,
+                    rel_diff,
+                    strict=True,
+                )
+            )
+        )
 
 
 class OptimizationHistory:

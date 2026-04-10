@@ -177,27 +177,6 @@ class Envelope3D(BeamCalculator):
         )
         return simulation_output
 
-    def post_optimisation_run_with_this(
-        self,
-        accelerator_id: str,
-        optimized_cavity_settings: SetOfCavitySettings,
-        full_elts: ListOfElements,
-        **specific_kwargs,
-    ) -> SimulationOutput:
-        """Run Envelope3D with optimized cavity settings.
-
-        With this solver, we have nothing to do, nothing to update. Just call
-        the regular `run_with_this` method.
-
-        """
-        simulation_output = self.run_with_this(
-            accelerator_id=accelerator_id,
-            set_of_cavity_settings=optimized_cavity_settings,
-            elts=full_elts,
-            **specific_kwargs,
-        )
-        return simulation_output
-
     def init_solver_parameters(self, accelerator: Accelerator) -> None:
         """Create the number of steps, meshing, transfer functions for elts.
 

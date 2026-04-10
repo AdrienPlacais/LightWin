@@ -159,13 +159,15 @@ def _get_settings(
         Cavity settings for ``cavity``.
 
     """
+    # Compensating cavity
     if cavity in compensating_cavity_settings:
         return compensating_cavity_settings[cavity]
 
     settings = cavity.cavity_settings
 
+    # Non-compensating cavity. We return a copy in order to not alter it
     if optimization_status == "in progress":
-        new_settings = CavitySettings.copy(settings, info="getter")
+        new_settings = CavitySettings.copy(settings)
         return new_settings
     if optimization_status == "finished":
         return settings

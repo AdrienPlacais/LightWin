@@ -96,7 +96,6 @@ class CavitySettings:
         ) = None,
         phi_s_funcs: dict[str, PHI_S_FUNC_T] | None = None,
         field: Field | None = None,
-        info: str = "??",
     ) -> None:
         """Instantiate the object.
 
@@ -130,12 +129,13 @@ class CavitySettings:
             interpolated field maps.
 
         """
-        self.info = info
-        if "compensate" in status:
-            logging.critical(f"Creating {self}")
         self._status: STATUS_T
         self._status = status
         self._w_kin: float
+        if k_e < 0.0:
+            raise ValueError(
+                "k_e should be positive. Maybe it was mistaken with phase?"
+            )
         self.k_e = k_e
         self._reference: REFERENCE_PHASES_T
         self.set_reference(
@@ -185,7 +185,6 @@ class CavitySettings:
         cls,
         base: Self,
         cavity_vars: CavityVars | None = None,
-        info: str = "???",
     ) -> Self:
         """Create cavity settings, based on ``base``.
 
@@ -221,7 +220,6 @@ class CavitySettings:
             transf_mat_func_wrappers=base._transf_mat_func_wrappers,
             phi_s_funcs=base._phi_s_funcs,
             field=base.field,
-            info=info,
         )
 
         return settings
@@ -241,7 +239,6 @@ class CavitySettings:
             ``None`` means that the phase was not calculated.
 
         """
-        return str(id(self)) + " " + self.info
         out = f"Status: {self.status:>10} | "
         out += f"Reference: {self.reference:>10} | "
         phases_as_string = [
@@ -453,8 +450,6 @@ class CavitySettings:
     @property
     def phi_ref(self) -> float:
         """Give the reference phase."""
-        if "compensate" in self.status:
-            logging.warning(f"{self} accessing ref")
         phi = getattr(self, self.reference)
         assert isinstance(phi, float), f"Reference phase = {phi} is invalid."
         return phi
@@ -466,8 +461,6 @@ class CavitySettings:
         We delete non-reference phase to force their re-calculation.
 
         """
-        if "compensate" in self.status:
-            logging.warning(f"{self} setting ref")
         self._delete_non_reference_phases()
         setattr(self, self.reference, value)
 
@@ -508,12 +501,7 @@ class CavitySettings:
 
         """
         assert value in ALLOWED_STATUS
-        if "compensate" in getattr(self, "_status", "no"):
-            logging.warning(f"{self} update status1")
-
         self._status = value
-        if "compensate" in value:
-            logging.warning(f"{self} update status2")
         if value == "failed":
             self.k_e = 0.0
             if self.reference == "phi_s":
@@ -528,8 +516,6 @@ class CavitySettings:
     @property
     def phi_0_abs(self) -> float:
         """Get the absolute entry phase, compute if necessary."""
-        if "compensate" in self.status:
-            logging.warning(f"{self} accessing abs")
         if hasattr(self, "_phi_0_abs"):
             return self._phi_0_abs
 
@@ -546,8 +532,6 @@ class CavitySettings:
     @phi_0_abs.setter
     def phi_0_abs(self, value: float) -> None:
         """Set the absolute entry phase."""
-        if "compensate" in self.status:
-            logging.warning(f"{self} set abs")
         self._phi_0_abs = value
 
     @phi_0_abs.deleter
@@ -555,8 +539,6 @@ class CavitySettings:
         """Delete attribute."""
         if not hasattr(self, "_phi_0_abs"):
             return
-        if "compensate" in self.status:
-            logging.warning(f"{self} del abs")
         del self._phi_0_abs
 
     # =============================================================================
@@ -565,8 +547,6 @@ class CavitySettings:
     @property
     def phi_0_rel(self) -> float:
         """Get the relative entry phase, compute it if necessary."""
-        if "compensate" in self.status:
-            logging.warning(f"{self} del rel")
         if hasattr(self, "_phi_0_rel"):
             return self._phi_0_rel
 
@@ -590,8 +570,6 @@ class CavitySettings:
     @phi_0_rel.setter
     def phi_0_rel(self, value: float) -> None:
         """Set the relative entry phase."""
-        if "compensate" in self.status:
-            logging.warning(f"{self} set rel")
         self._phi_0_rel = value
 
     @phi_0_rel.deleter
@@ -599,8 +577,6 @@ class CavitySettings:
         """Delete attribute."""
         if not hasattr(self, "_phi_0_rel"):
             return
-        if "compensate" in self.status:
-            logging.warning(f"{self} del rel")
         del self._phi_0_rel
 
     # =============================================================================
@@ -619,14 +595,11 @@ class CavitySettings:
         set_cavity_parameters_methods
 
         """
-        if "compensate" in self.status:
-            logging.warning(f"{self} access s")
         if hasattr(self, "_phi_s"):
             return self._phi_s
 
         for key in ("phi_rf", "phi_0_rel"):
             if not hasattr(self, key):
-                __import__("pdb").set_trace()
                 raise MissingAttributeError(
                     f"{self}: cannot compute phi_s if {key} was not set."
                 )
@@ -637,8 +610,10 @@ class CavitySettings:
     @phi_s.setter
     def phi_s(self, value: float) -> None:
         """Set the synchronous phase to desired value."""
-        if "compensate" in self.status:
-            logging.warning(f"{self} set s")
+        if value < -math.pi or value > math.pi:
+            raise ValueError(
+                f"sync phase should be within [-pi, pi]. {value = }"
+            )
         self._phi_s = value
         del self.acceptance_phi
         del self.acceptance_energy
@@ -648,8 +623,6 @@ class CavitySettings:
         """Delete the synchronous phase."""
         if not hasattr(self, "_phi_s"):
             return
-        if "compensate" in self.status:
-            logging.warning(f"{self} del s")
         del self._phi_s
         del self.acceptance_phi
         del self.acceptance_energy
@@ -846,8 +819,6 @@ class CavitySettings:
     @property
     def phi_rf(self) -> float:
         """Get the rf phase of synch particle at entrance of cavity."""
-        if "compensate" in self.status:
-            logging.warning(f"{self} access rf")
         return self._phi_rf
 
     @phi_rf.setter
@@ -867,8 +838,6 @@ class CavitySettings:
             cavity.
 
         """
-        if "compensate" in self.status:
-            logging.warning(f"{self} set rf")
         self._phi_rf = value
         self._phi_bunch = self.rf_phase_to_bunch_phase(value)
         self._delete_non_reference_phases()
@@ -883,22 +852,16 @@ class CavitySettings:
     @phi_rf.deleter
     def phi_rf(self) -> None:
         """Remove rf phase."""
-        if "compensate" in self.status:
-            logging.warning(f"{self} del rf")
         del self._phi_rf
 
     @property
     def phi_bunch(self) -> float:
         """Return the entry phase of the synchronous particle (bunch ref)."""
-        if "compensate" in self.status:
-            logging.warning(f"{self} access bunch")
         return self._phi_bunch
 
     @phi_bunch.setter
     def phi_bunch(self, value: float) -> None:
         """Convert bunch to rf frequency."""
-        if "compensate" in self.status:
-            logging.warning(f"{self} set bunch")
         self._phi_bunch = value
         self._phi_rf = self.bunch_phase_to_rf_phase(value)
         self._delete_non_reference_phases()
@@ -930,8 +893,6 @@ class CavitySettings:
         >>> )  # now phi_0_abs and phi_0_rel are properly understood
 
         """
-        if "compensate" in self.status:
-            logging.warning(f"{self} shift bunch")
         self.phi_bunch = self._phi_bunch - delta_phi_bunch
         if not check_positive:
             return
