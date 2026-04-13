@@ -50,8 +50,8 @@ class SetSyncPhase(Command):
 
         When we apply this method, LightWin believes that the phase given in
         the ``DAT`` file is an absolute or relative phase. We update the
-        ``reference`` of the :class:`.CavitySettings`, as well as the actual
-        value of ``phi_ref == phi_s``.
+        ``reference`` of the |CS|, as well as the actual value of ``phi_ref ==
+        phi_s``.
 
         """
         for cavity in instructions[self.influenced]:
@@ -72,8 +72,8 @@ class SetSyncPhase(Command):
 
         .. note::
            We keep old implementation for now. But this method returns nothing
-           because the ``to_line`` method of :class:`.FieldMap` already
-           handles adding a ``SET_SYNC_PHASE`` when necessary.
+           because the ``to_line`` method of |FM| already handles adding a
+           ``SET_SYNC_PHASE`` when necessary.
 
         """
         return []

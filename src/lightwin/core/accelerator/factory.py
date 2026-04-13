@@ -1,4 +1,4 @@
-"""Define a factory to easily create :class:`.Accelerator`."""
+"""Define a factory to easily create |A|."""
 
 import logging
 from pathlib import Path
@@ -26,7 +26,7 @@ class AcceleratorFactory:
         beam: BeamKwargs,
         **kwargs,
     ) -> None:
-        """Facilitate creation of :class:`.Accelerator` objects.
+        """Facilitate creation of |A| objects.
 
         Parameters
         ----------
@@ -110,9 +110,9 @@ class AcceleratorFactory:
         Returns
         -------
         accelerators :
-            Dictionary where keys are :class:`.FaultScenario` indexes, and
-            values are lists of corresponding :class:`.Accelerator`. First
-            index corresponds to reference accelerator (no failure).
+            Dictionary where keys are |FS| indexes, and values are lists of
+            corresponding |A|. First index corresponds to reference accelerator
+            (no failure).
         updated_wtf :
             The resolved ``wtf`` configuration with explicit cavity failures.
             None if no wtf was provided.
@@ -167,12 +167,11 @@ class AcceleratorFactory:
         ----------
         n_scenarios :
             Number of broken accelerators to create. This is also the number
-            of :class:`.FaultScenario` we will create.
+            of |FS| we will create.
 
         Returns
         -------
-            Dict associating :class:`.FaultScenario` index to corresponding
-            broken :class:`.Accelerator`.
+            Dict associating |FS| index to corresponding broken |A|.
 
         """
         return {
@@ -185,6 +184,168 @@ class AcceleratorFactory:
                 )
             ]
             for i in range(1, n_scenarios + 1)
+        }
+
+    def _create_one_accelerator(
+        self,
+        name: str,
+        status: ACCELERATOR_STATUS_T,
+        index: int,
+        output_path: Path,
+    ) -> Accelerator:
+        """Create or load a single accelerator.
+
+        Parameters
+        ----------
+        name :
+            Accelerator name (e.g., ``"Reference"``, ``"Solution"``).
+        status :
+            Current status design. Ignored if the |A| is unpickled.
+        index :
+            Corresponding |FS| index. A null index is reserved for reference
+            accelerator.
+        output_path :
+            Path where accelerator data will be stored.
+
+        Returns
+        -------
+            Loaded from pickle if available, otherwise freshly created.
+
+        """
+        pickle_path = self._get_pickle_path(name, index)
+
+        if pickle_path is not None:
+            accelerator = self._load_from_pickle(
+                name, index=index, pickle_path=pickle_path
+            )
+            if accelerator is not None:
+                logging.info(
+                    f"Created {accelerator.id} Accelerator by unpickling "
+                    f"'{pickle_path}'."
+                )
+                return accelerator
+
+        accelerator = self._build_accelerator(
+            name,
+            status,
+            index=index,
+            output_path=output_path,
+            pickle_path=pickle_path,
+        )
+        info = f"Created {accelerator.id} Accelerator"
+        if pickle_path:
+            info += f" (will be pickled to '{pickle_path}')"
+        logging.info(info + ".")
+        return accelerator
+
+    # =========================================================================
+    # Build Accelerator from scratch
+    # =========================================================================
+    def _build_accelerator(
+        self,
+        name: str,
+        status: ACCELERATOR_STATUS_T,
+        index: int,
+        output_path: Path,
+        pickle_path: Path | None,
+    ) -> Accelerator:
+        """Build a new accelerator from scratch.
+
+        Parameters
+        ----------
+        name :
+            Accelerator name.
+        status :
+            Current status design.
+        index :
+            Corresponding |FS| index. A null index is reserved for reference
+            accelerator.
+        output_path :
+            Path where accelerator data will be stored.
+        pickle_path :
+            Optional path where accelerator will be pickled after creation.
+
+        Returns
+        -------
+            Newly created accelerator instance.
+
+        """
+        self._create_output_directories(output_path)
+
+        accelerator = Accelerator(
+            name=name,
+            status=status,
+            index=index,
+            dat_file=self.dat_file,
+            accelerator_path=output_path,
+            list_of_elements_factory=self._elts_factory,
+            pickle_path=pickle_path,
+            **self._beam,
+        )
+
+        self._check_consistency_reference_phase_policies(accelerator.l_cav)
+        return accelerator
+
+    def _create_output_directories(self, output_path: Path) -> None:
+        """Create output directory structure for an accelerator.
+
+        Creates the main accelerator directory and subdirectories for each
+        beam calculator.
+
+        The default structure will look like::
+
+           YYYY.MM.DD_HHhmm_SSs_MILLIms/
+           ├── 000000_ref
+           │   ├── 0_Envelope1D/
+           │   └── 1_TraceWin/
+           ├── 000001
+           │   ├── 0_Envelope1D/
+           │   └── 1_TraceWin/
+           ├── 000002
+           │   ├── 0_Envelope1D/
+           │   └── 1_TraceWin/
+           ├── 000003
+           │   ├── 0_Envelope1D/
+           │   └── 1_TraceWin/
+           └── lightwin.log
+
+        - The main ``YYYY.MM.DD_HHhMM_SSs_MILLIms/`` directory is created at
+          the same location as the original ``DAT`` file. You can override its
+          name with the ``project_folder`` key in the ``[files]`` ``TOML``
+          section.
+
+        - In every ``accelerator_path`` (eg ``000002/``), you will find one
+          directory per |BC|. In this example, compensation settings were found
+          with :class:`.Envelope1D` and a second simulation was made with
+          :class:`.TraceWin`.
+
+        """
+        output_path.mkdir(parents=True, exist_ok=True)
+
+        for beam_calculator in self.beam_calculators:
+            if beam_calculator is None:
+                continue
+            beam_calculator_dir = output_path / beam_calculator.id
+            beam_calculator_dir.mkdir(parents=True, exist_ok=True)
+
+    def _check_consistency_reference_phase_policies(
+        self, cavities: Sequence[FieldMap]
+    ) -> None:
+        """Check that solvers phases are consistent with ``DAT`` file.
+
+        Parameters
+        ----------
+        cavities :
+            Sequence of cavity field maps to check.
+
+        """
+        if len(cavities) == 0:
+            return
+
+        beam_calculators = [x for x in self.beam_calculators if x is not None]
+        policies = {
+            beam_calculator: beam_calculator.reference_phase_policy
+            for beam_calculator in beam_calculators
         }
 
     def _create_one_accelerator(
@@ -241,85 +402,17 @@ class AcceleratorFactory:
         return accelerator
 
     # =========================================================================
-    # Build Accelerator from scratch
+    # Related to pickling/unpickling Accelerators
     # =========================================================================
-    def _build_accelerator(
-        self,
-        name: str,
-        status: ACCELERATOR_STATUS_T,
-        index: int,
-        output_path: Path,
-        pickle_path: Path | None,
-    ) -> Accelerator:
-        """Build a new accelerator from scratch.
+    def _parse_pickle_config(
+        self, pickle_config: dict[str, str | dict[str, str]]
+    ) -> dict[int, str | dict[str, str]]:
+        """Parse pickle paths configuration from ``TOML``.
 
-        Parameters
-        ----------
-        name :
-            Accelerator name.
-        status :
-            Current status design.
-        index :
-            Corresponding :class:`.FaultScenario` index. A null index is
-            reserved for reference accelerator.
-        output_path :
-            Path where accelerator data will be stored.
-        pickle_path :
-            Optional path where accelerator will be pickled after creation.
-
-        Returns
-        -------
-            Newly created accelerator instance.
-
-        """
-        self._create_output_directories(output_path)
-
-        accelerator = Accelerator(
-            name=name,
-            status=status,
-            index=index,
-            dat_file=self.dat_file,
-            accelerator_path=output_path,
-            list_of_elements_factory=self._elts_factory,
-            pickle_path=pickle_path,
-            **self._beam,
-        )
-
-        self._check_consistency_reference_phase_policies(accelerator.l_cav)
-        return accelerator
-
-    def _create_output_directories(self, output_path: Path) -> None:
-        """Create output directory structure for an accelerator.
-
-        Creates the main accelerator directory and subdirectories for each
-        beam calculator.
-
-        The default structure will look like::
-
-           YYYY.MM.DD_HHhmm_SSs_MILLIms/
-           ├── 000000_ref
-           │   ├── 0_Envelope1D/
-           │   └── 1_TraceWin/
-           ├── 000001
-           │   ├── 0_Envelope1D/
-           │   └── 1_TraceWin/
-           ├── 000002
-           │   ├── 0_Envelope1D/
-           │   └── 1_TraceWin/
-           ├── 000003
-           │   ├── 0_Envelope1D/
-           │   └── 1_TraceWin/
-           └── lightwin.log
-
-        - The main ``YYYY.MM.DD_HHhMM_SSs_MILLIms/`` directory is created at
-          the same location as the original ``DAT`` file. You can override its
-          name with the ``project_folder`` key in the ``[files]`` ``TOML``
-          section.
-
-        - In every ``accelerator_path`` (eg ``000002/``), you will find one
-          directory per :class:`.BeamCalculator`. In this example, compensation
-          settings were found with :class:`.Envelope1D` and a second simulation
-          was made with :class:`.TraceWin`.
+        Note
+        ----
+        When a Reference/Solution ``PKL`` is provided but does not exist,
+        the associated |A| will be pickled at the end of the simulation.
 
         """
         output_path.mkdir(parents=True, exist_ok=True)
@@ -334,50 +427,6 @@ class AcceleratorFactory:
         self, cavities: Sequence[FieldMap]
     ) -> None:
         """Check that solvers phases are consistent with ``DAT`` file.
-
-        Parameters
-        ----------
-        cavities :
-            Sequence of cavity field maps to check.
-
-        """
-        if len(cavities) == 0:
-            return
-
-        beam_calculators = [x for x in self.beam_calculators if x is not None]
-        policies = {
-            beam_calculator: beam_calculator.reference_phase_policy
-            for beam_calculator in beam_calculators
-        }
-
-        n_unique = len(set(policies.values()))
-        if n_unique > 1:
-            logging.warning(
-                "The different BeamCalculator objects have different "
-                "reference phase policies. This may lead to inconsistencies "
-                f"when cavities fail.\n{policies = }"
-            )
-            return
-
-        references = {x.cavity_settings.reference for x in cavities}
-        if len(references) > 1:
-            logging.info(
-                "The cavities do not all have the same reference phase."
-            )
-
-    # =========================================================================
-    # Related to pickling/unpickling Accelerators
-    # =========================================================================
-    def _parse_pickle_config(
-        self, pickle_config: dict[str, str | dict[str, str]]
-    ) -> dict[int, str | dict[str, str]]:
-        """Parse pickle paths configuration from ``TOML``.
-
-        Note
-        ----
-        When a Reference/Solution ``PKL`` is provided but does not exist,
-        the associated :class:`.Accelerator` will be pickled at the end of
-        the simulation.
 
         Parameters
         ----------
@@ -429,13 +478,13 @@ class AcceleratorFactory:
                         "Solution": "solution-000003.pkl",
                         "Tweaked design": "tweaked.pkl",
                         "Experimental config": "experimental.pkl",
-                    }
+                    },
                 }
 
             - 0: Path to reference accelerator pickle, or None.
             - ``scenarios[index]``: Sub-dictionary where keys are
               :attr:`.Accelerator.name`, values are corresponding ``PKL``
-              :class:`.Accelerator` pickle files.
+              |A| pickle files.
 
         """
         parsed: dict[int, str | dict[str, str]] = {}
@@ -483,8 +532,8 @@ class AcceleratorFactory:
         name :
             Accelerator name to look up in pickle paths configuration.
         index :
-            :class:`.FaultScenario` index. If not null, we look for ``name``
-            key in ``self._pickle_paths[index]`` subdict.
+            |FS| index. If not null, we look for ``name`` key in
+            ``self._pickle_paths[index]`` subdict.
 
         Returns
         -------
@@ -528,8 +577,8 @@ class AcceleratorFactory:
         name :
             Accelerator name.
         index :
-            Corresponding :class:`.FaultScenario` index. A null index is
-            reserved for reference accelerator.
+            Corresponding |FS| index. A null index is reserved for reference
+            accelerator.
         pickle_path :
             Path to pickle file.
 
@@ -549,7 +598,7 @@ class AcceleratorFactory:
     def _load_additional_pickles(
         self, reserved_names: set[str] = {"Reference", "Solution"}
     ) -> dict[int, list[Accelerator]]:
-        """Unpickle additional :class:`.Accelerator`.
+        """Unpickle additional |A|.
 
         Parameters
         ----------
@@ -560,7 +609,7 @@ class AcceleratorFactory:
         Returns
         -------
             Additional accelerators loaded from pickle files, associated with
-            their :class:`.FaultScenario` index.
+            their |FS| index.
 
         """
         additional: dict[int, list[Accelerator]] = {}
@@ -585,8 +634,7 @@ class AcceleratorFactory:
                     continue
 
                 logging.info(
-                    f"Loading additional accelerator '{accelerator.id}' from "
-                    "pickle."
+                    f"Loading additional accelerator '{accelerator.id}' from pickle."
                 )
                 accelerators.append(accelerator)
             additional[index] = accelerators
@@ -603,8 +651,7 @@ class AcceleratorFactory:
 
         """
         warn(
-            "The method create_nominal is deprecated. Prefer using "
-            "create_reference.",
+            "The method create_nominal is deprecated. Prefer using create_reference.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -618,8 +665,7 @@ class AcceleratorFactory:
 
         """
         warn(
-            "The method create_failed is deprecated. Prefer using "
-            "create_all_broken.",
+            "The method create_failed is deprecated. Prefer using create_all_broken.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -666,8 +712,7 @@ class WithFaults(AcceleratorFactory):
 
     def __init__(self, *args, wtf: dict[str, Any], **kwargs) -> None:
         warn(
-            "The class WithFaults is deprecated. Prefer using "
-            "AcceleratorFactory.",
+            "The class WithFaults is deprecated. Prefer using AcceleratorFactory.",
             DeprecationWarning,
             stacklevel=2,
         )

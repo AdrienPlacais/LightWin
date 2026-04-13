@@ -1,4 +1,4 @@
-"""Define a class to easily generate the :class:`.SimulationOutput`."""
+"""Define a class to easily generate the |SO|."""
 
 from abc import ABCMeta
 

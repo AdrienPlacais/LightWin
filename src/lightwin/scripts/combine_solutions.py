@@ -25,7 +25,6 @@ simulation_2
     | 000001
     | ...
 
-
 """
 
 import argparse
@@ -109,7 +108,8 @@ def _select_best_simulations(
     paths: Sequence[Path],
     criterion_to_minimize: str,
 ) -> tuple[pd.Series, pd.DataFrame]:
-    """Give the name of the best solution according to ``criterion_to_minimize``
+    """Give the name of the best solution according to
+    ``criterion_to_minimize``
 
     Parameters
     ----------

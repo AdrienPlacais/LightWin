@@ -1,6 +1,8 @@
 """Define types for better code-completion and linting."""
 
-from typing import Literal, NotRequired, TypedDict
+from collections.abc import Collection
+from pathlib import Path
+from typing import Any, Literal, NotRequired, TypedDict
 
 from numpy.typing import NDArray
 
@@ -51,31 +53,195 @@ GETTABLE_BEAM_PARAMETERS_PHASE_SPACE_T = (
 GETTABLE_BEAM_PARAMETERS = (
     # fmt: off
     (
-        "alpha_phiw", "beta_phiw", "envelope_energy_phiw", "envelope_pos_phiw", "eps_phiw", "eps_no_normalization_phiw", "eps_normalized_phiw", "gamma_phiw", "sigma_phiw", "twiss_phiw",
-        "alpha_phiw99", "beta_phiw99", "envelope_energy_phiw99", "envelope_pos_phiw99", "eps_phiw99", "eps_no_normalization_phiw99", "eps_normalized_phiw99", "gamma_phiw99", "sigma_phiw99", "twiss_phiw99",
-        "alpha_t", "beta_t", "envelope_energy_t", "envelope_pos_t", "eps_t", "eps_no_normalization_t", "eps_normalized_t", "gamma_t", "sigma_t", "twiss_t",
-        "alpha_x", "beta_x", "envelope_energy_x", "envelope_pos_x", "eps_x", "eps_no_normalization_x", "eps_normalized_x", "gamma_x", "sigma_x", "twiss_x",
-        "alpha_x99", "beta_x99", "envelope_energy_x99", "envelope_pos_x99", "eps_x99", "eps_no_normalization_x99", "eps_normalized_x99", "gamma_x99", "sigma_x99", "twiss_x99",
-        "alpha_y", "beta_y", "envelope_energy_y", "envelope_pos_y", "eps_y", "eps_no_normalization_y", "eps_normalized_y", "gamma_y", "sigma_y", "twiss_y",
-        "alpha_y99", "beta_y99", "envelope_energy_y99", "envelope_pos_y99", "eps_y99", "eps_no_normalization_y99", "eps_normalized_y99", "gamma_y99", "sigma_y99", "twiss_y99",
-        "alpha_z", "beta_z", "envelope_energy_z", "envelope_pos_z", "eps_z", "eps_no_normalization_z", "eps_normalized_z", "gamma_z", "sigma_z", "twiss_z",
-        "alpha_zdelta", "beta_zdelta", "envelope_energy_zdelta", "envelope_pos_zdelta", "eps_zdelta", "eps_no_normalization_zdelta", "eps_normalized_zdelta", "gamma_zdelta", "sigma_zdelta", "twiss_zdelta",
-    ) + GETTABLE_BEAM_PARAMETERS_PHASE_SPACE
+        "alpha_phiw",
+        "beta_phiw",
+        "envelope_energy_phiw",
+        "envelope_pos_phiw",
+        "eps_phiw",
+        "eps_no_normalization_phiw",
+        "eps_normalized_phiw",
+        "gamma_phiw",
+        "sigma_phiw",
+        "twiss_phiw",
+        "alpha_phiw99",
+        "beta_phiw99",
+        "envelope_energy_phiw99",
+        "envelope_pos_phiw99",
+        "eps_phiw99",
+        "eps_no_normalization_phiw99",
+        "eps_normalized_phiw99",
+        "gamma_phiw99",
+        "sigma_phiw99",
+        "twiss_phiw99",
+        "alpha_t",
+        "beta_t",
+        "envelope_energy_t",
+        "envelope_pos_t",
+        "eps_t",
+        "eps_no_normalization_t",
+        "eps_normalized_t",
+        "gamma_t",
+        "sigma_t",
+        "twiss_t",
+        "alpha_x",
+        "beta_x",
+        "envelope_energy_x",
+        "envelope_pos_x",
+        "eps_x",
+        "eps_no_normalization_x",
+        "eps_normalized_x",
+        "gamma_x",
+        "sigma_x",
+        "twiss_x",
+        "alpha_x99",
+        "beta_x99",
+        "envelope_energy_x99",
+        "envelope_pos_x99",
+        "eps_x99",
+        "eps_no_normalization_x99",
+        "eps_normalized_x99",
+        "gamma_x99",
+        "sigma_x99",
+        "twiss_x99",
+        "alpha_y",
+        "beta_y",
+        "envelope_energy_y",
+        "envelope_pos_y",
+        "eps_y",
+        "eps_no_normalization_y",
+        "eps_normalized_y",
+        "gamma_y",
+        "sigma_y",
+        "twiss_y",
+        "alpha_y99",
+        "beta_y99",
+        "envelope_energy_y99",
+        "envelope_pos_y99",
+        "eps_y99",
+        "eps_no_normalization_y99",
+        "eps_normalized_y99",
+        "gamma_y99",
+        "sigma_y99",
+        "twiss_y99",
+        "alpha_z",
+        "beta_z",
+        "envelope_energy_z",
+        "envelope_pos_z",
+        "eps_z",
+        "eps_no_normalization_z",
+        "eps_normalized_z",
+        "gamma_z",
+        "sigma_z",
+        "twiss_z",
+        "alpha_zdelta",
+        "beta_zdelta",
+        "envelope_energy_zdelta",
+        "envelope_pos_zdelta",
+        "eps_zdelta",
+        "eps_no_normalization_zdelta",
+        "eps_normalized_zdelta",
+        "gamma_zdelta",
+        "sigma_zdelta",
+        "twiss_zdelta",
+    )
+    + GETTABLE_BEAM_PARAMETERS_PHASE_SPACE
     # fmt: on
 )
 GETTABLE_BEAM_PARAMETERS_T = (
     # fmt: off
     Literal[
-        "alpha_phiw", "beta_phiw", "envelope_energy_phiw", "envelope_pos_phiw", "eps_phiw", "eps_no_normalization_phiw", "eps_normalized_phiw", "gamma_phiw", "sigma_phiw", "twiss_phiw",
-        "alpha_phiw99", "beta_phiw99", "envelope_energy_phiw99", "envelope_pos_phiw99", "eps_phiw99", "eps_no_normalization_phiw99", "eps_normalized_phiw99", "gamma_phiw99", "sigma_phiw99", "twiss_phiw99",
-        "alpha_t", "beta_t", "envelope_energy_t", "envelope_pos_t", "eps_t", "eps_no_normalization_t", "eps_normalized_t", "gamma_t", "sigma_t", "twiss_t",
-        "alpha_x", "beta_x", "envelope_energy_x", "envelope_pos_x", "eps_x", "eps_no_normalization_x", "eps_normalized_x", "gamma_x", "sigma_x", "twiss_x",
-        "alpha_x99", "beta_x99", "envelope_energy_x99", "envelope_pos_x99", "eps_x99", "eps_no_normalization_x99", "eps_normalized_x99", "gamma_x99", "sigma_x99", "twiss_x99",
-        "alpha_y", "beta_y", "envelope_energy_y", "envelope_pos_y", "eps_y", "eps_no_normalization_y", "eps_normalized_y", "gamma_y", "sigma_y", "twiss_y",
-        "alpha_y99", "beta_y99", "envelope_energy_y99", "envelope_pos_y99", "eps_y99", "eps_no_normalization_y99", "eps_normalized_y99", "gamma_y99", "sigma_y99", "twiss_y99",
-        "alpha_z", "beta_z", "envelope_energy_z", "envelope_pos_z", "eps_z", "eps_no_normalization_z", "eps_normalized_z", "gamma_z", "sigma_z", "twiss_z",
-        "alpha_zdelta", "beta_zdelta", "envelope_energy_zdelta", "envelope_pos_zdelta", "eps_zdelta", "eps_no_normalization_zdelta", "eps_normalized_zdelta", "gamma_zdelta", "sigma_zdelta", "twiss_zdelta",
-    ] | GETTABLE_BEAM_PARAMETERS_PHASE_SPACE_T
+        "alpha_phiw",
+        "beta_phiw",
+        "envelope_energy_phiw",
+        "envelope_pos_phiw",
+        "eps_phiw",
+        "eps_no_normalization_phiw",
+        "eps_normalized_phiw",
+        "gamma_phiw",
+        "sigma_phiw",
+        "twiss_phiw",
+        "alpha_phiw99",
+        "beta_phiw99",
+        "envelope_energy_phiw99",
+        "envelope_pos_phiw99",
+        "eps_phiw99",
+        "eps_no_normalization_phiw99",
+        "eps_normalized_phiw99",
+        "gamma_phiw99",
+        "sigma_phiw99",
+        "twiss_phiw99",
+        "alpha_t",
+        "beta_t",
+        "envelope_energy_t",
+        "envelope_pos_t",
+        "eps_t",
+        "eps_no_normalization_t",
+        "eps_normalized_t",
+        "gamma_t",
+        "sigma_t",
+        "twiss_t",
+        "alpha_x",
+        "beta_x",
+        "envelope_energy_x",
+        "envelope_pos_x",
+        "eps_x",
+        "eps_no_normalization_x",
+        "eps_normalized_x",
+        "gamma_x",
+        "sigma_x",
+        "twiss_x",
+        "alpha_x99",
+        "beta_x99",
+        "envelope_energy_x99",
+        "envelope_pos_x99",
+        "eps_x99",
+        "eps_no_normalization_x99",
+        "eps_normalized_x99",
+        "gamma_x99",
+        "sigma_x99",
+        "twiss_x99",
+        "alpha_y",
+        "beta_y",
+        "envelope_energy_y",
+        "envelope_pos_y",
+        "eps_y",
+        "eps_no_normalization_y",
+        "eps_normalized_y",
+        "gamma_y",
+        "sigma_y",
+        "twiss_y",
+        "alpha_y99",
+        "beta_y99",
+        "envelope_energy_y99",
+        "envelope_pos_y99",
+        "eps_y99",
+        "eps_no_normalization_y99",
+        "eps_normalized_y99",
+        "gamma_y99",
+        "sigma_y99",
+        "twiss_y99",
+        "alpha_z",
+        "beta_z",
+        "envelope_energy_z",
+        "envelope_pos_z",
+        "eps_z",
+        "eps_no_normalization_z",
+        "eps_normalized_z",
+        "gamma_z",
+        "sigma_z",
+        "twiss_z",
+        "alpha_zdelta",
+        "beta_zdelta",
+        "envelope_energy_zdelta",
+        "envelope_pos_zdelta",
+        "eps_zdelta",
+        "eps_no_normalization_zdelta",
+        "eps_normalized_zdelta",
+        "gamma_zdelta",
+        "sigma_zdelta",
+        "twiss_zdelta",
+    ]
+    | GETTABLE_BEAM_PARAMETERS_PHASE_SPACE_T
     # fmt: on
 )
 
@@ -149,7 +315,7 @@ GETTABLE_BEAM_CALC_PARAMETERS_T = Literal[
 REFERENCE_PHASES = ("phi_0_abs", "phi_0_rel", "phi_s")
 REFERENCE_PHASES_T = Literal["phi_0_abs", "phi_0_rel", "phi_s"]
 
-#: Reference phase policy at :class:`.BeamCalculator` creation. Note that some
+#: Reference phase policy at |BC| creation. Note that some
 #: cavities can see their reference phase change during execution of the code,
 #: according to the compensations strategy.
 REFERENCE_PHASE_POLICY = REFERENCE_PHASES + ("as_in_original_dat",)
@@ -214,7 +380,7 @@ GETTABLE_CAVITY_SETTINGS_T = (
     | REFERENCE_PHASES_T
 )
 
-#: Attributes from :class:`.CavitySettings` to concatenate into
+#: Attributes from |CS| to concatenate into
 #: a list when called from :meth:`.ListOfElements.get` (or
 #: :meth:`.SimulationOutput.get`)
 CONCATENABLE_CAVITY_SETTINGS = (
@@ -275,7 +441,7 @@ _UNCONCATENABLE = (
     # maps used to compute phi_s and v_cav
     "w_kin",
 )
-#: Attributes from :class:`.Element` or :class:`.FieldMap` to concatenate into
+#: Attributes from |E| or |FM| to concatenate into
 #: a list when called from :meth:`.ListOfElements.get` (or
 #: :meth:`.SimulationOutput.get`, :meth:`.Accelerator.get`)
 CONCATENABLE_ELTS = tuple(
@@ -377,7 +543,7 @@ GETTABLE_TRANSFER_MATRIX_T = Literal[
     "r_zdelta_22",
 ]
 
-#: Attributes that you can get from 3D :class:`.SimulationOutput`.
+#: Attributes that you can get from 3D |SO|.
 NEEDS_3D = (
     "eps_t",
     "eps_x",
@@ -394,7 +560,7 @@ NEEDS_3D_T = Literal[
     "mismatch_factor_x",
     "mismatch_factor_y",
 ]
-#: Attributes that you can get from multipart :class:`.SimulationOutput`.
+#: Attributes that you can get from multipart |SO|.
 NEEDS_MULTIPART = ("eps_phiw99", "eps_x99", "eps_y99", "pow_lost")
 NEEDS_MULTIPART_T = Literal["eps_phiw99", "eps_x99", "eps_y99", "pow_lost"]
 #: Attributes that can be extracted with :meth:`.SimulationOutput.get` method.
@@ -461,6 +627,75 @@ GET_ELT_ARG_T = Literal["first", "last"]
 #: Implemented optimization variables
 VARIABLES = ("k_e",) + REFERENCE_PHASES
 VARIABLES_T = Literal["k_e"] | REFERENCE_PHASES_T
+#: Implemented optimization constraints
+CONSTRAINTS = ("phi_s",)
+CONSTRAINTS_T = Literal["phi_s"]
+#: optimization status
+OPTIMIZATION_STATUS = Literal["not started", "in progress", "finished"]
+
+#: Implemented :class:`.DesignSpaceFactory` presets.
+DESIGN_SPACES = (
+    "AbsPhaseAmplitude",
+    "AbsPhaseAmplitudeWithConstrainedSyncPhase",
+    "Everything",
+    "RelPhaseAmplitude",
+    "RelPhaseAmplitudeWithConstrainedSyncPhase",
+    "SyncPhaseAmplitude",
+    "UserDefined",
+    "abs_phase_amplitude",
+    "abs_phase_amplitude_with_constrained_sync_phase",
+    "everything",
+    "rel_phase_amplitude",
+    "rel_phase_amplitude_with_constrained_sync_phase",
+    "sync_phase_amplitude",
+    "user_defined",
+    # Deprecated
+    "unconstrained",
+    "unconstrained_rel",
+    "constrained_sync_phase",
+    "sync_phase_as_variable",
+)
+DESIGN_SPACES_T = Literal[
+    "AbsPhaseAmplitude",
+    "AbsPhaseAmplitudeWithConstrainedSyncPhase",
+    "Everything",
+    "RelPhaseAmplitude",
+    "RelPhaseAmplitudeWithConstrainedSyncPhase",
+    "SyncPhaseAmplitude",
+    "UserDefined",
+    "abs_phase_amplitude",
+    "abs_phase_amplitude_with_constrained_sync_phase",
+    "everything",
+    "rel_phase_amplitude",
+    "rel_phase_amplitude_with_constrained_sync_phase",
+    "sync_phase_amplitude",
+    "user_defined",
+    # Deprecated
+    "unconstrained",
+    "unconstrained_rel",
+    "constrained_sync_phase",
+    "sync_phase_as_variable",
+]
+
+
+class DesignSpaceKw(TypedDict):
+    """Holds all ``TOML`` configuration entries for design space."""
+
+    design_space_preset: DESIGN_SPACES_T
+
+    from_file: bool
+    variables_filepaths: NotRequired[Path]
+    constraints_filepaths: NotRequired[Path]
+
+    variable_names: NotRequired[Collection[VARIABLES_T]]
+    constraints_names: NotRequired[Collection[CONSTRAINTS_T]]
+
+    max_increase_sync_phase_in_percent: NotRequired[float]
+    max_absolute_sync_phase_in_deg: NotRequired[float]
+    min_absolute_sync_phase_in_deg: NotRequired[float]
+    max_decrease_k_e_in_percent: NotRequired[float]
+    max_increase_k_e_in_percent: NotRequired[float]
+    maximum_k_e_is_calculated_wrt_maximum_k_e_of_section: NotRequired[bool]
 
 
 class BeamKwargs(TypedDict):
@@ -481,10 +716,10 @@ class BeamKwargs(TypedDict):
 
 
 class CavParams(TypedDict):
-    """Holds cavity parameters in a :class:`.SimulationOutput`.
+    """Holds cavity parameters in a |SO|.
 
-    All lists have the length of the associated :class:`.ListOfElements`. They
-    contain ``None`` where :class:`.Element` is not a :class:`.FieldMap`.
+    All lists have the length of the associated |LOE|. They
+    contain ``None`` where |E| is not a |FM|.
 
     """
 
@@ -498,3 +733,16 @@ class CavParams(TypedDict):
 #: Allowed values for the ``id_nature`` key of ``wtf`` configuration table.
 ID_NATURE = ("cavity", "element", "lattice", "name", "section")
 ID_NATURE_T = Literal["cavity", "element", "lattice", "name", "section"]
+
+
+class ConfigKw(TypedDict):
+    """Holds all configuration dicts."""
+
+    files: dict[str, Any]
+    beam: BeamKwargs
+    beam_calculator: dict[str, Any]
+    beam_calculator_post: NotRequired[dict[str, Any]]
+    plots: dict[str, Any]
+    wtf: NotRequired[dict[str, Any]]
+    design_space: NotRequired[DesignSpaceKw]
+    evaluators: NotRequired[dict[str, Any]]

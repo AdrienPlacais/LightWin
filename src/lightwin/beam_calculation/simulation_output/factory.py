@@ -1,7 +1,7 @@
-"""Define a class to easily generate the :class:`.SimulationOutput`.
+"""Define a class to easily generate the |SO|.
 
-This class should be subclassed by every :class:`.BeamCalculator` to match its
-own specific outputs.
+This class should be subclassed by every |BC| to match its own specific
+outputs.
 
 """
 
@@ -15,7 +15,7 @@ from lightwin.util.typing import BeamKwargs, CavParams
 
 
 class SimulationOutputFactory(ABC):
-    """A base class for creation of :class:`.SimulationOutput`."""
+    """A base class for creation of |SO|."""
 
     _is_3d: bool
 
@@ -30,8 +30,7 @@ class SimulationOutputFactory(ABC):
         Parameters
         ----------
         is_multipart :
-            If :class:`.SimulationOutput` are obtained with a multiparticle
-            solver.
+            If |SO| are obtained with a multiparticle solver.
         beam_calculator_id :
             ID of solver that created this object. Also used as the name of the
             subdirectory where results should be saved. Typically,
@@ -67,7 +66,7 @@ class SimulationOutputFactory(ABC):
     def create(
         self, accelerator_id: str, elts: ListOfElements, *args, **kwargs
     ) -> SimulationOutput:
-        """Create the :class:`.SimulationOutput`."""
+        """Create the |SO|."""
         pass
 
     @abstractmethod

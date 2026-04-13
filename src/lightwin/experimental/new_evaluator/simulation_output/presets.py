@@ -146,7 +146,11 @@ class LongitudinalEmittance(ISimulationOutputEvaluator):
         )
 
     def post_treat(self, raw_df: pd.DataFrame) -> pd.DataFrame:
-        """Compute relative diff w.r.t. reference value @ z = 0."""
+        """Compute relative diff w.r.t.
+
+        reference value @ z = 0.
+
+        """
         return 1e2 * (raw_df - self.ref_ydata) / self.ref_ydata
 
 
@@ -263,10 +267,7 @@ class SynchronousPhases(ISimulationOutputEvaluator):
 
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
-        return (
-            f"All {self.markdown} are within [{self._min:0.2f}, "
-            f"{self._max:-.2f}] (deg)"
-        )
+        return f"All {self.markdown} are within [{self._min:0.2f}, {self._max:-.2f}] (deg)"
 
 
 class TransverseMismatchFactor(LongitudinalMismatchFactor):
@@ -276,7 +277,7 @@ class TransverseMismatchFactor(LongitudinalMismatchFactor):
 
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
-        return f"At end of linac, {self.markdown} $< " f"{self._max:0.2f}$"
+        return f"At end of linac, {self.markdown} $< {self._max:0.2f}$"
 
 
 SIMULATION_OUTPUT_EVALUATORS = {

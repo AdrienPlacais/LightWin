@@ -14,8 +14,7 @@ import pandas as pd
 from lightwin.optimisation.design_space.design_space_parameter import (
     DesignSpaceParameter,
 )
-
-IMPLEMENTED_VARIABLES = ("k_e", "phi_0_abs", "phi_0_rel", "phi_s")  #:
+from lightwin.util.typing import VARIABLES
 
 
 @dataclass
@@ -87,6 +86,6 @@ class Variable(DesignSpaceParameter):
 
     def __post_init__(self):
         """Convert values in deg for output if it is angle."""
-        if self.name not in IMPLEMENTED_VARIABLES:
+        if self.name not in VARIABLES:
             logging.warning(f"Variable {self.name} not tested.")
         super().__post_init__()

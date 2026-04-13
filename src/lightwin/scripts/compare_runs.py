@@ -1,4 +1,5 @@
-"""Define functions to compare several runs based on their ``evaluations.csv``."""
+"""Define functions to compare several runs based on their
+``evaluations.csv``."""
 
 from pathlib import Path
 
@@ -26,7 +27,8 @@ def concatenate_evaluation_files(
 
     """
     df = pd.read_csv(
-        evaluation_folder / "evaluations.csv", usecols=(evaluation_namecol,)  # type: ignore
+        evaluation_folder / "evaluations.csv",
+        usecols=(evaluation_namecol,),  # type: ignore
     )
     new_name = f"{simulation_id}: (mean {df.mean().iloc[0]:.2f} std {df.std().iloc[0]:.2f})"
     df.rename(columns={evaluation_namecol: new_name}, inplace=True)

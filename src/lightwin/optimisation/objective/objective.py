@@ -3,7 +3,7 @@
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Collection
-from typing import Any, Self, Sequence
+from typing import Any, Literal, Self, Sequence
 
 import numpy as np
 from numpy.typing import NDArray
@@ -19,6 +19,11 @@ from lightwin.util.typing import (
     GETTABLE_SIMULATION_OUTPUT_T,
 )
 
+#: Default value of ``elt`` from ``get_kwargs``. Corresponds to evaluation on
+#: all the elements. But you may prefer set them manually.
+DEFAULT_ELT_KEY = "all"
+DEFAULT_ALL_ELT_KEY_T = Literal["all"]
+
 
 class Objective(ABC):
     """Hold an objective and methods to evaluate it.
@@ -31,6 +36,9 @@ class Objective(ABC):
     #: List of authorized values for the ``get_key``. Checked by the
     #: :meth:`._check_get_arguments` method
     _gettable: Collection[str] = GETTABLE_SIMULATION_OUTPUT
+
+    #: get_kwargs that should raise a warning if they are not present.
+    _advised_get_kwargs: set[str] = {"elt", "pos", "to_numpy"}
 
     def __init__(
         self,
@@ -69,12 +77,13 @@ class Objective(ABC):
             A longer string to explain the objective.
 
         """
-        get_key, get_kwargs = self._check_get_arguments(get_key, get_kwargs)
+        if "phi" in get_key:
+            self._advised_get_kwargs.add("to_deg")
         #: Short string describing the objective.
         self.name: str = name
         #: Weight :math:`w` of current objective.
         self.weight: float = weight
-        #: Name of the quantity to get from :class:`.SimulationOutput`,
+        #: Name of the quantity to get from |SO|,
         self.get_key: GETTABLE_SIMULATION_OUTPUT_T = get_key
         #: Keyword arguments for the :meth:`.SimulationOutput.get` method.
         self.get_kwargs: dict[str, Any] = get_kwargs
@@ -89,6 +98,10 @@ class Objective(ABC):
         self.descriptor = " ".join((descriptor or "").split())
         #: Residual value at the end of the optimization process.
         self.residual: float
+
+        get_key, get_kwargs = self._check_get_arguments(get_key, get_kwargs)
+        self.get_key = get_key
+        self.get_kwargs = get_kwargs
 
     def __str__(self) -> str:
         """Give objective information value."""
@@ -107,15 +120,32 @@ class Objective(ABC):
 
         return message
 
+    def __repr__(self) -> str:
+        """Give arguments initializing this object."""
+        return (
+            f"Objective(name={self.name}, weight={self.weight}, get_key="
+            f"{self.get_key}, get_kwargs={self.get_kwargs}, ideal_value="
+            f"{self.ideal_value}, descriptor={self.descriptor})"
+        )
+
     def position_nature(self) -> str:
         """Tell nature and position of objective."""
         message = f"{self.get_key:>23}"
 
-        elt = str(self.get_kwargs.get("elt", "NA"))
-        message += f" @elt {elt:>5}"
+        elements = self.get_kwargs.get("elt", DEFAULT_ELT_KEY)
+        if hasattr(elements, "__iter__") and not isinstance(elements, str):
+            elts = list(elements)
+            if len(elts) > 3:
+                formatted = f"{elts[0]}..{elts[-1]} ({len(elts)})"
+            else:
+                formatted = " ".join(str(x) for x in elts)
+        else:
+            formatted = str(elements)
+        message += f" @elt {formatted:>5}"
 
-        pos = str(self.get_kwargs.get("pos", "NA"))
-        message += f" ({pos:>3}) | {self.weight:>5} | "
+        pos = self.get_kwargs.get("pos")
+        message += f" ({str(pos):>3}) |" if pos else "       |"
+        message += f" {self.weight:>5} | "
         return message
 
     def _value_getter(
@@ -133,10 +163,9 @@ class Objective(ABC):
         simulation_output :
             Object to ``get`` ``self.get_key`` from.
         handle_missing_elt :
-            Automatically look for an equivalent :class:`.Element` when the
-            current one is not in :class:`.SimulationOutput`. Set it to
-            ``True`` when calculating reference value (reference
-            :class:`.Element` is not in compensating list of elements).
+            Automatically look for an equivalent |E| when the current one is
+            not in |SO|. Set it to ``True`` when calculating reference value
+            (reference |E| is not in compensating list of elements).
 
         """
         return simulation_output.get(
@@ -149,7 +178,6 @@ class Objective(ABC):
         self,
         get_key: GETTABLE_SIMULATION_OUTPUT_T,
         get_kwargs: dict[str, Any],
-        advised_keys: list[str] = ["elt", "pos", "to_numpy"],
     ) -> tuple[GETTABLE_SIMULATION_OUTPUT_T, dict[str, Any]]:
         """Check validity of ``get_args``, ``get_kwargs``.
 
@@ -164,14 +192,12 @@ class Objective(ABC):
                 f"method. Authorized values are:\n{self._gettable = }"
             )
 
-        if "phi" in get_key:
-            advised_keys.append("to_deg")
-        for key in advised_keys:
+        for key in self._advised_get_kwargs:
             if key in get_kwargs:
                 continue
             logging.warning(
                 f"{key = } is recommended to avoid undetermined behavior but "
-                "was not found."
+                f"was not found.\n{repr(self)}"
             )
         return get_key, get_kwargs
 
@@ -197,8 +223,7 @@ class Objective(ABC):
         Parameters
         ----------
         objective_value :
-            Value of :attr:`.Objective.name`, taken from a
-            :class:`.SimulationOutput`.
+            Value of :attr:`.Objective.name`, taken from a |SO|.
 
         Returns
         -------
@@ -236,8 +261,8 @@ class MinimizeDifferenceWithRef(Objective):
         reference: SimulationOutput,
         descriptor: str | None = None,
     ) -> None:
-        """
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+        """Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
 
         Parameters
         ----------
@@ -299,8 +324,8 @@ class MinimizeMismatch(Objective):
         reference: SimulationOutput,
         descriptor: str | None = None,
     ) -> None:
-        """
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+        """Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
 
         Parameters
         ----------
@@ -390,8 +415,8 @@ class MinimizeVariation(Objective):
         descriptor: str | None = None,
         **kwargs,
     ) -> None:
-        """
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+        """Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
 
         Note
         ----
@@ -487,8 +512,8 @@ class QuantityIsBetween(Objective):
         descriptor: str | None = None,
         loss_function: str | None = None,
     ) -> None:
-        """
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+        """Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
 
         Parameters
         ----------
@@ -535,8 +560,8 @@ class QuantityIsBetween(Objective):
         descriptor: str | None = None,
         loss_function: str | None = None,
     ) -> Self:
-        r"""
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+        r"""Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
 
         Parameters
         ----------
@@ -604,8 +629,7 @@ class QuantityIsBetween(Objective):
         Parameters
         ----------
         objective_value :
-            Value of :attr:`.Objective.name`, taken from a
-            :class:`.SimulationOutput`.
+            Value of :attr:`.Objective.name`, taken from a |SO|.
 
         Returns
         -------
@@ -627,6 +651,118 @@ class QuantityIsBetween(Objective):
         return 0.0
 
 
+class RemainBelow(Objective):
+    """Maximum of quantity must remain below some value."""
+
+    _advised_get_kwargs: set[str] = {"elt", "to_numpy"}
+
+    def __init__(
+        self,
+        name: str,
+        weight: float,
+        get_key: GETTABLE_SIMULATION_OUTPUT_T,
+        get_kwargs: dict[str, Any],
+        limit: float,
+        descriptor: str | None = None,
+        loss_function: str | None = None,
+    ) -> None:
+        """Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
+
+        Parameters
+        ----------
+        name :
+            A short string to describe the objective and access to it.
+        weight :
+            A scaling constant to set the weight of current objective.
+        get_key :
+            Name of the quantity to get.
+        get_kwargs :
+            Keyword arguments for the :meth:`.SimulationOutput.get` method. We
+            do not check its validity, but in general you will want to define
+            the keys ``elt`` and ``pos``. If objective concerns a phase, you
+            may want to precise the ``to_deg`` key. You also should explicit
+            the ``to_numpy`` key.
+        limit :
+            Upper bound for the value.
+        loss_function :
+            Indicates how the residuals are handled when the quantity is
+            outside the limits. Currently not implemented.
+
+        """
+        self.ideal_value: float
+        super().__init__(
+            name=name,
+            weight=weight,
+            get_key=get_key,
+            get_kwargs=get_kwargs,
+            ideal_value=limit,
+            descriptor=descriptor,
+        )
+        if loss_function is not None:
+            logging.warning("Loss functions not implemented.")
+
+    def __str__(self) -> str:
+        """Give objective information value."""
+        message = self.position_nature()
+        message += f"<{self.ideal_value:+.2e}"
+        return message
+
+    def _value_getter(
+        self,
+        simulation_output: SimulationOutput,
+        handle_missing_elt: bool = False,
+    ) -> float:
+        """Get desired value using :meth:`.SimulationOutput.get` method.
+
+        .. seealso::
+            :attr:`.SimulationOutput.element_to_index`
+
+        Parameters
+        ----------
+        simulation_output :
+            Object to ``get`` ``self.get_key`` from.
+        handle_missing_elt :
+            Automatically look for an equivalent |E| when the current one is
+            not in |SO|. Set it to ``True`` when calculating reference value
+            (reference |E| is not in compensating list of elements).
+
+        """
+        return np.nanmax(
+            simulation_output.get(
+                self.get_key,
+                **self.get_kwargs,
+                handle_missing_elt=handle_missing_elt,
+            )
+        )
+
+    def _compute_residuals(self, objective_value: float) -> float:
+        r"""Compute residual (loss), *ie* what we want to minimize.
+
+        This method applies a quadratic penalty if the value is above the limit
+        .
+
+        Parameters
+        ----------
+        objective_value :
+            Value of :attr:`.Objective.name`, taken from a |SO|.
+
+        Returns
+        -------
+            residual for current objective, scaled by :attr:`.Objective.weight`.
+            The loss function is defined as:
+
+            - :math:`0` if :math:`x \leq x_u`, *ie* if
+              ``objective_value`` is under :attr:`.Objective.ideal_value`
+            - :math:`w \times (x - x_{u})^2` otherwise, where
+              :math:`w` is :attr:`.Objective.weight`.
+
+        """
+        if objective_value > self.ideal_value:
+            return self.weight * (objective_value - self.ideal_value) ** 2
+        return 0.0
+
+
 class RetrieveArbitrary(Objective):
     """Retrieve arbitrary value given by user.
 
@@ -643,8 +779,8 @@ class RetrieveArbitrary(Objective):
         ideal_value: float,
         descriptor: str | None = None,
     ) -> None:
-        """
-        Set complementary :meth:`.SimulationOutput.get` flags, reference value.
+        """Set complementary :meth:`.SimulationOutput.get` flags, reference
+        value.
 
         Parameters
         ----------

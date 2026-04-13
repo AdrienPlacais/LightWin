@@ -1,4 +1,4 @@
-"""Define a class to store outputs from different :class:`.BeamCalculator`.
+"""Define a class to store outputs from different |BC|.
 
 .. todo::
     Do I really need the `r_zz_elt` key??
@@ -56,7 +56,7 @@ from lightwin.util.typing import (
 
 @dataclass(eq=False)
 class SimulationOutput:
-    """Store the information produced by a :class:`.BeamCalculator`.
+    """Store the information produced by a |BC|.
 
     Used for fitting, post-processing, plotting.
 
@@ -83,11 +83,11 @@ class SimulationOutput:
         Holds emittance, Twiss parameters, envelopes in the various phase
         spaces.
     element_to_index :
-        Takes an :class:`.Element`, its name, 'first' or 'last' as argument,
-        and returns corresponding index. Index should be the same in all the
-        arrays attributes of this class: ``z_abs``, ``beam_parameters``
-        attributes, etc.  Used to easily ``get`` the desired properties at the
-        proper position.
+        Takes an |E|, its name, 'first' or 'last' as argument, and returns
+        corresponding index. Index should be the same in all the arrays
+        attributes of this class: ``z_abs``, ``beam_parameters`` attributes,
+        etc.  Used to easily ``get`` the desired properties at the proper
+        position.
     set_of_cavity_settings :
         The cavity parameters used for the simulation.
     transfer_matrix :
@@ -95,8 +95,8 @@ class SimulationOutput:
     z_abs :
         Absolute position in the linac in m. The default is None.
     in_tw_fashion :
-        A way to output the :class:`.SimulationOutput` in the same way as the
-        ``Data`` tab of TraceWin. The default is None.
+        A way to output the |SO| in the same way as the ``Data`` tab of
+        TraceWin. The default is None.
     r_zz_elt :
         Cumulated transfer matrices in the [z-delta] plane. The default is
         None.
@@ -130,7 +130,7 @@ class SimulationOutput:
     pow_lost: NDArray[np.float64] | None = None
 
     def __post_init__(self) -> None:
-        """Save complementary data, such as :class:`.Element` indexes."""
+        """Save complementary data, such as |E| indexes."""
         self.elt_idx: list[int]
         self.elt_idx = [
             i for i, _ in enumerate(self.cav_params["v_cav_mv"], start=1)
@@ -297,7 +297,8 @@ class SimulationOutput:
                 and self.transfer_matrix
             ):
                 val = self.transfer_matrix.get(
-                    key, to_numpy=False  # type: ignore[arg-type]
+                    key,
+                    to_numpy=False,  # type: ignore[arg-type]
                 )
             elif key in NEEDS_3D and not self.is_3d:
                 val = None
@@ -315,7 +316,7 @@ class SimulationOutput:
                     return_elt_idx = False
                     if key in CONCATENABLE_ELTS:
                         # With these keys, `val` holds one value per
-                        # :class:`.Element`, not one per mesh point.
+                        # |E|, not one per mesh point.
                         return_elt_idx = True
                     idx = self.element_to_index(
                         elt=elt,
@@ -371,8 +372,7 @@ class SimulationOutput:
         Parameters
         ----------
         elts :
-            A full :class:`.ListOfElements`, containing all the elements of the
-            linac.
+            A full |LOE|, containing all the elements of the linac.
         ref_simulation_output :
             Reference simulation output; providing it allows calculation of
             mismatch factor.

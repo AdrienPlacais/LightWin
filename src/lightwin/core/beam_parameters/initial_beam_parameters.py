@@ -1,7 +1,6 @@
-"""Gather beam parameters at the entrance of a :class:`.ListOfElements`.
+"""Gather beam parameters at the entrance of a |LOE|.
 
-For a list of the units associated with every parameter, see
-:ref:`units-label`.
+For a list of the units associated with every parameter, see |units|.
 
 """
 
@@ -30,8 +29,8 @@ from .phase_space.initial_phase_space_beam_parameters import (
 
 @dataclass
 class InitialBeamParameters:
-    r"""
-    Hold all emittances, envelopes, etc in various planes at a single position.
+    r"""Hold all emittances, envelopes, etc in various planes at a single
+    position.
 
     Parameters
     ----------
@@ -80,8 +79,8 @@ class InitialBeamParameters:
         return out
 
     def has(self, key: str) -> bool:
-        """
-        Tell if the attribute exists, either directly or within a phase space.
+        """Tell if the attribute exists, either directly or within a phase
+        space.
 
         Notes
         -----
@@ -91,8 +90,8 @@ class InitialBeamParameters:
 
             .. code-block:: python
 
-                self.has('twiss_zdelta')
-                self.zdelta.has('twiss')
+                self.has("twiss_zdelta")
+                self.zdelta.has("twiss")
 
         See Also
         --------
@@ -113,8 +112,8 @@ class InitialBeamParameters:
         phase_space_name: PHASE_SPACE_T | None = None,
         **kwargs: Any,
     ) -> Any:
-        """
-        Get attribute values from the beam or its nested phase space objects.
+        """Get attribute values from the beam or its nested phase space
+        objects.
 
         This method supports flexible ways of accessing attributes such as
         ``alpha``, ``beta``, etc., which are common to all
@@ -234,8 +233,8 @@ class InitialBeamParameters:
     def _create_tracewin_command(
         self, warn_missing_phase_space: bool = True
     ) -> list[str]:
-        """
-        Turn emittance, alpha, beta from the proper phase-spaces into command.
+        """Turn emittance, alpha, beta from the proper phase-spaces into
+        command.
 
         When phase-spaces were not created, we return np.nan which will
         ultimately lead TraceWin to take this data from its ``INI`` file.

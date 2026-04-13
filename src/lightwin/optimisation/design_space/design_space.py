@@ -9,6 +9,7 @@ from typing import Any, Self, overload
 
 import numpy as np
 import pandas as pd
+from numpy.typing import NDArray
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -78,7 +79,7 @@ class DesignSpace:
 
     def compute_constraints(
         self, simulation_output: SimulationOutput
-    ) -> np.ndarray:
+    ) -> NDArray[np.float64]:
         """Compute constraint violation for ``simulation_output``."""
         constraints_with_tuples = [
             constraint.evaluate(simulation_output)
@@ -161,8 +162,7 @@ class DesignSpace:
             parameter = getattr(self, parameter_name)
             if len(parameter) == 0:
                 logging.info(
-                    f"{parameter_name} not defined for this DesignSpace. "
-                    "Skipping... "
+                    f"{parameter_name} not defined for this DesignSpace. Skipping... "
                 )
                 continue
 

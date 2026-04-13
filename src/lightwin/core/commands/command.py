@@ -76,8 +76,8 @@ class Command(Instruction):
         instructions_after_self: Sequence[Instruction],
         *stop_types: type,
     ) -> slice:
-        """
-        Determine the indexes of the instructions affected by an instruction.
+        """Determine the indexes of the instructions affected by an
+        instruction.
 
         We return the indexes of instructions between the first of
         ``instructions`` and the first instruction which type is in

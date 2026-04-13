@@ -8,10 +8,9 @@
 
 import logging
 from abc import ABC
-from collections.abc import Collection, Sequence
-from dataclasses import dataclass
+from collections.abc import Callable, Collection, Sequence
 from pathlib import Path
-from typing import Self
+from typing import Any, Unpack
 
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
@@ -23,43 +22,57 @@ from lightwin.optimisation.design_space.helper import (
     same_value_as_nominal,
 )
 from lightwin.optimisation.design_space.variable import Variable
-from lightwin.util.typing import GETTABLE_FIELD_MAP, VARIABLES_T
+from lightwin.util.typing import (
+    CONSTRAINTS,
+    CONSTRAINTS_T,
+    DESIGN_SPACES_T,
+    GETTABLE_FIELD_MAP,
+    VARIABLES,
+    VARIABLES_T,
+    DesignSpaceKw,
+)
 
 
-@dataclass
 class DesignSpaceFactory(ABC):
-    """
-    Base class to handle :class:`.Variable` and :class:`.Constraint` creation.
+    """Base class to handle :class:`.Variable` and :class:`.Constraint`
+    creation.
 
     Parameters
     ----------
-    reference_elements :
-       All the elements with the reference setting.
-    compensating_elements :
-        The elements from the linac under fixing that will be used for
-        compensation.
     design_space_kw :
         The entries of ``[design_space]`` in ``TOML`` configuration file.
 
     """
 
-    design_space_kw: dict[str, Path]
+    def __init__(
+        self,
+        *,
+        variables_names: Collection[VARIABLES_T],
+        from_file: bool,
+        constraints_names: Collection[CONSTRAINTS_T] = (),
+        variables_filepath: Path | None = None,
+        constraints_filepath: Path | None = None,
+        **design_space_kw: Any,
+    ) -> None:
+        """Init object."""
+        self.variables_names = tuple(variables_names)
+        self.constraints_names = tuple(constraints_names)
 
-    def __post_init__(self):
-        """Declare complementary variables."""
-        self.variables_names: Sequence[VARIABLES_T]
         self.variables_filepath: Path
-        if not hasattr(self, "variables_names"):
-            raise ValueError("You must define at least one variable name.")
-
-        self.constraints_names: Sequence[VARIABLES_T]
         self.constraints_filepath: Path
-        if not hasattr(self, "constraints_names"):
-            self.constraints_names = ()
 
-        from_file = self.design_space_kw["from_file"]
+        #: Actual factory method
+        self.create: Callable[
+            [Sequence[Element], Sequence[Element]], DesignSpace
+        ] = self._create_from_kw
+
         if from_file:
-            self.use_files(**self.design_space_kw)
+            self._use_files(
+                variables_filepath=variables_filepath,
+                constraints_filepath=constraints_filepath,
+            )
+        #: Stores additional kw to compute design space limits
+        self.limits_from_design_space_kw = design_space_kw
 
     def _check_can_be_retuned(
         self, compensating_elements: Collection[Element]
@@ -67,7 +80,7 @@ class DesignSpaceFactory(ABC):
         """Check that given elements can be retuned."""
         assert all([elt.can_be_retuned for elt in compensating_elements])
 
-    def _run_variables(
+    def _instantiate_variables(
         self,
         compensating_elements: Collection[FieldMap],
         reference_elements: Collection[Element],
@@ -88,7 +101,7 @@ class DesignSpaceFactory(ABC):
                 variables.append(variable)
         return variables
 
-    def _run_constraints(
+    def _instantiate_constraints(
         self,
         compensating_elements: Collection[Element],
         reference_elements: Collection[Element],
@@ -108,17 +121,21 @@ class DesignSpaceFactory(ABC):
                 constraints.append(constraint)
         return constraints
 
-    def create(
+    def _create_from_kw(
         self,
         compensating_elements: Sequence[Element],
         reference_elements: Sequence[Element],
     ) -> DesignSpace:
-        """Set up variables and constraints."""
+        """Set up variables and constraints.
+
+        Limits are calculated from nominal values.
+
+        """
         self._check_can_be_retuned(compensating_elements)
-        variables = self._run_variables(
+        variables = self._instantiate_variables(
             compensating_elements, reference_elements
         )
-        constraints = self._run_constraints(
+        constraints = self._instantiate_constraints(
             compensating_elements, reference_elements
         )
         design_space = DesignSpace(variables, constraints)
@@ -178,37 +195,28 @@ class DesignSpaceFactory(ABC):
         return limits_calculator(
             reference_element=reference_element,
             reference_elements=reference_elements,
-            **self.design_space_kw,
+            **self.limits_from_design_space_kw,
         )
 
-    def use_files(
+    def _use_files(
         self,
-        variables_filepath: Path,
+        variables_filepath: Path | None = None,
         constraints_filepath: Path | None = None,
-        **design_space_kw: Path,
-    ) -> Self:
-        """Tell factory to generate design space from the provided files.
+    ) -> None:
+        """Tell factory to generate design space from the provided files."""
+        self.create = self._create_from_file
 
-        Parameters
-        ----------
-        variables_filepath :
-            Path to the ``variables.csv`` file.
-        constraints_filepath :
-            Path to the ``constraints.csv`` file.
-
-        """
+        if variables_filepath is None:
+            raise ValueError("variables_filepath must be provided")
         self.variables_filepath = variables_filepath
+
         if constraints_filepath is not None:
             self.constraints_filepath = constraints_filepath
-        self.create = self._create_from_file
-        if design_space_kw:
-            self.design_space_kw.update(design_space_kw)
-        return self
 
     def _create_from_file(
         self,
-        compensating_elements: list[Element],
-        reference_elements: list[Element] | None = None,
+        compensating_elements: Sequence[Element],
+        reference_elements: Sequence[Element] | None = None,
     ) -> DesignSpace:
         """Use the :meth:`.DesignSpace.from_files` constructor.
 
@@ -238,18 +246,58 @@ class DesignSpaceFactory(ABC):
         return design_space
 
 
+class UserDefinedDesignSpaceFactory(DesignSpaceFactory):
+    """Let user choose variables and constraints from ``TOML``."""
+
+    def __init__(self, **design_space_kw) -> None:
+        super().__init__(**design_space_kw)
+
+
 # =============================================================================
 # Unconstrained design spaces
 # =============================================================================
-@dataclass
-class AbsPhaseAmplitude(DesignSpaceFactory):
+#
+class _Preset(DesignSpaceFactory):
+    """Create design space with predefined keys variables/constraints.
+
+    Raise warning if variables/constraints were set in the ``TOML``.
+
+    """
+
+    _preset_variables: tuple[VARIABLES_T, ...]
+    _preset_constraints: tuple[CONSTRAINTS_T, ...] = ()
+
+    def __init__(
+        self,
+        *,
+        variables_names: Collection[VARIABLES_T] | None = None,
+        constraints_names: Collection[CONSTRAINTS_T] | None = None,
+        **design_space_kw,
+    ) -> None:
+        if variables_names is not None:
+            logging.info(
+                "`variables_names` was given but will be disregarded."
+            )
+        if constraints_names is not None:
+            logging.info(
+                "`constraints_names` was given but will be disregarded."
+            )
+
+        return super().__init__(
+            variables_names=self._preset_variables,
+            constraints_names=self._preset_constraints,
+            **design_space_kw,
+        )
+
+
+class AbsPhaseAmplitude(_Preset):
     r"""Optimise over :math:`\phi_{0,\,\mathrm{abs}}` and :math:`k_e`."""
 
-    variables_names = ("phi_0_abs", "k_e")
+    _preset_variables = ("phi_0_abs", "k_e")
+    _preset_constraints = ()
 
 
-@dataclass
-class RelPhaseAmplitude(DesignSpaceFactory):
+class RelPhaseAmplitude(_Preset):
     r"""Optimise over :math:`\phi_{0,\,\mathrm{rel}}` and :math:`k_e`.
 
     The same as :class:`AbsPhaseAmplitude`, but the phase variable is
@@ -259,11 +307,11 @@ class RelPhaseAmplitude(DesignSpaceFactory):
 
     """
 
-    variables_names = ("phi_0_rel", "k_e")
+    _preset_variables = ("phi_0_rel", "k_e")
+    _preset_constraints = ()
 
 
-@dataclass
-class SyncPhaseAmplitude(DesignSpaceFactory):
+class SyncPhaseAmplitude(_Preset):
     r"""Optimise over :math:`\phi_s` and :math:`k_e`.
 
     Synchronous phases outside of the bounds will not ocurr, without setting
@@ -274,16 +322,16 @@ class SyncPhaseAmplitude(DesignSpaceFactory):
 
     """
 
-    variables_names = ("phi_s", "k_e")
+    _preset_variables = ("phi_s", "k_e")
+    _preset_constraints = ()
 
 
 # =============================================================================
 # Design spaces with constraints; OptimisationAlgorithm must support it!
 # =============================================================================
-@dataclass
-class AbsPhaseAmplitudeWithConstrainedSyncPhase(DesignSpaceFactory):
-    r"""
-    Optimise :math:`\phi_{0,\,\mathrm{abs}}`, :math:`k_e`. :math:`\phi_s` is constrained.
+class AbsPhaseAmplitudeWithConstrainedSyncPhase(_Preset):
+    r"""Optimise :math:`\phi_{0,\,\mathrm{abs}}`, :math:`k_e`. :math:`\phi_s` is
+    constrained.
 
     .. warning::
         The selected :class:`.OptimisationAlgorithm` must support the
@@ -291,14 +339,13 @@ class AbsPhaseAmplitudeWithConstrainedSyncPhase(DesignSpaceFactory):
 
     """
 
-    variables_names = ("phi_0_abs", "k_e")
-    constraints_names = ("phi_s",)
+    _preset_variables = ("phi_0_abs", "k_e")
+    _preset_constraints = ("phi_s",)
 
 
-@dataclass
-class RelPhaseAmplitudeWithConstrainedSyncPhase(DesignSpaceFactory):
-    r"""
-    Optimise :math:`\phi_{0,\,\mathrm{rel}}`, :math:`k_e`. :math:`\phi_s` is constrained.
+class RelPhaseAmplitudeWithConstrainedSyncPhase(_Preset):
+    r"""Optimise :math:`\phi_{0,\,\mathrm{rel}}`, :math:`k_e`. :math:`\phi_s` is
+    constrained.
 
     .. warning::
         The selected :class:`.OptimisationAlgorithm` must support the
@@ -306,15 +353,14 @@ class RelPhaseAmplitudeWithConstrainedSyncPhase(DesignSpaceFactory):
 
     """
 
-    variables_names = ("phi_0_rel", "k_e")
-    constraints_names = ("phi_s",)
+    _preset_variables = ("phi_0_rel", "k_e")
+    _preset_constraints = ("phi_s",)
 
 
 # =============================================================================
 # To create ``variables.csv`` and ``constraints.csv``
 # =============================================================================
-@dataclass
-class Everything(DesignSpaceFactory):
+class Everything(_Preset):
     """This class creates all possible variables and constraints.
 
     This is not to be used in an optimisation problem, but rather to save in a
@@ -322,13 +368,8 @@ class Everything(DesignSpaceFactory):
 
     """
 
-    variables_names = (
-        "k_e",
-        "phi_s",
-        "phi_0_abs",
-        "phi_0_rel",
-    )
-    constraints_names = ("phi_s",)
+    _preset_variables = VARIABLES
+    _preset_constraints = CONSTRAINTS
 
     def run(self, *args, **kwargs) -> DesignSpace:
         """Launch normal run but with an info message."""
@@ -343,7 +384,6 @@ class Everything(DesignSpaceFactory):
 # =============================================================================
 # Deprecated aliases
 # =============================================================================
-@dataclass
 class Unconstrained(AbsPhaseAmplitude):
     """Deprecated alias to :class:`AbsPhaseAmplitude`.
 
@@ -353,7 +393,6 @@ class Unconstrained(AbsPhaseAmplitude):
     """
 
 
-@dataclass
 class UnconstrainedRel(RelPhaseAmplitude):
     """Deprecated alias to :class:`RelPhaseAmplitude`.
 
@@ -363,7 +402,6 @@ class UnconstrainedRel(RelPhaseAmplitude):
     """
 
 
-@dataclass
 class SyncPhaseAsVariable(SyncPhaseAmplitude):
     """Deprecated alias to :class:`SyncPhaseAmplitude`.
 
@@ -373,7 +411,6 @@ class SyncPhaseAsVariable(SyncPhaseAmplitude):
     """
 
 
-@dataclass
 class ConstrainedSyncPhase(AbsPhaseAmplitudeWithConstrainedSyncPhase):
     """Deprecated alias to :class:`AbsPhaseAmplitudeWithConstrainedSyncPhase`.
 
@@ -383,13 +420,21 @@ class ConstrainedSyncPhase(AbsPhaseAmplitudeWithConstrainedSyncPhase):
     """
 
 
-DESIGN_SPACE_FACTORY_PRESETS = {
+DESIGN_SPACE_FACTORY_PRESETS: dict[
+    DESIGN_SPACES_T, type[DesignSpaceFactory]
+] = {
+    "AbsPhaseAmplitude": AbsPhaseAmplitude,
+    "AbsPhaseAmplitudeWithConstrainedSyncPhase": AbsPhaseAmplitudeWithConstrainedSyncPhase,
+    "Everything": Everything,
+    "RelPhaseAmplitude": RelPhaseAmplitude,
+    "RelPhaseAmplitudeWithConstrainedSyncPhase": RelPhaseAmplitudeWithConstrainedSyncPhase,
+    "SyncPhaseAmplitude": SyncPhaseAmplitude,
     "abs_phase_amplitude": AbsPhaseAmplitude,
-    "rel_phase_amplitude": RelPhaseAmplitude,
-    "sync_phase_amplitude": SyncPhaseAmplitude,
     "abs_phase_amplitude_with_constrained_sync_phase": AbsPhaseAmplitudeWithConstrainedSyncPhase,
-    "rel_phase_amplitude_with_constrained_sync_phase": RelPhaseAmplitudeWithConstrainedSyncPhase,
     "everything": Everything,
+    "rel_phase_amplitude": RelPhaseAmplitude,
+    "rel_phase_amplitude_with_constrained_sync_phase": RelPhaseAmplitudeWithConstrainedSyncPhase,
+    "sync_phase_amplitude": SyncPhaseAmplitude,
     # Deprecated
     "unconstrained": AbsPhaseAmplitude,
     "unconstrained_rel": RelPhaseAmplitude,
@@ -399,7 +444,8 @@ DESIGN_SPACE_FACTORY_PRESETS = {
 
 
 def get_design_space_factory(
-    design_space_preset: str, **design_space_kw: Path
+    design_space_preset: DESIGN_SPACES_T = "SyncPhaseAmplitude",
+    **design_space_kw: Unpack[DesignSpaceKw],
 ) -> DesignSpaceFactory:
     """Select proper factory, instantiate it and return it.
 
@@ -414,7 +460,5 @@ def get_design_space_factory(
     design_space_factory_class = DESIGN_SPACE_FACTORY_PRESETS[
         design_space_preset
     ]
-    design_space_factory = design_space_factory_class(
-        design_space_kw=design_space_kw,
-    )
+    design_space_factory = design_space_factory_class(**design_space_kw)
     return design_space_factory

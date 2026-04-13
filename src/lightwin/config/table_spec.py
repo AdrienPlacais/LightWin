@@ -182,8 +182,8 @@ class TableConfSpec:
     def _set_specs_as_dict(
         self, toml_table: dict[str, Any] | None = None
     ) -> dict[str, KeyValConfSpec]:
-        """
-        Select and prepare :class:`.KeyValConfSpec` used to validate this table.
+        """Select and prepare :class:`.KeyValConfSpec` used to validate this
+        table.
 
         This method is responsible for determining which specification set
         applies to the current table, especially when the available specs
@@ -238,10 +238,7 @@ class TableConfSpec:
             return spec
         if self.can_have_untested_keys:
             return
-        msg = (
-            f"The table {self.table_entry} has no specs for property "
-            f"{spec_name}"
-        )
+        msg = f"The table {self.table_entry} has no specs for property {spec_name}"
         logging.error(msg)
         raise OSError(msg)
 

@@ -1,24 +1,45 @@
 """Define helper function for objectives."""
 
+from collections import defaultdict
 from collections.abc import Collection
 
 from lightwin.core.elements.element import Element
-from lightwin.optimisation.objective.objective import Objective
+from lightwin.optimisation.objective.objective import (
+    DEFAULT_ALL_ELT_KEY_T,
+    DEFAULT_ELT_KEY,
+    Objective,
+)
 
 
 def by_element(
     objectives: Collection[Objective],
-) -> dict[Element, list[Objective]]:
-    """Sort the provided objectives per :class:`.Element`."""
-    objectives_by_element: dict[Element, list[Objective]] = {}
+) -> dict[Element | DEFAULT_ALL_ELT_KEY_T, list[Objective]]:
+    """Sort the provided objectives per |E|.
+
+    Parameters
+    ----------
+    objectives :
+        Objectives you want the evaluation position from.
+
+    Returns
+    -------
+        Maps every |E| at which at least one objective is evaluated to
+        corresponding objectives.
+
+    """
+    objectives_by_element: dict[
+        Element | DEFAULT_ALL_ELT_KEY_T, list[Objective]
+    ] = defaultdict(list)
 
     for obj in objectives:
         get_kwargs = getattr(obj, "get_kwargs", None)
         if get_kwargs is None:
             continue
-        element = get_kwargs["elt"]
 
-        if element not in objectives_by_element:
-            objectives_by_element[element] = []
+        element = get_kwargs.get("elt", DEFAULT_ELT_KEY)
+        if hasattr(element, "__iter__"):
+            for e in element:
+                objectives_by_element[e].append(obj)
+            continue
         objectives_by_element[element].append(obj)
     return objectives_by_element

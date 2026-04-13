@@ -195,8 +195,7 @@ WTF_MANUAL_SPECIFIC = (
         key="failed",
         types=(list,),
         description=(
-            "Index/name of failed cavities. For manual strategy, it must be a "
-            "3D list."
+            "Index/name of failed cavities. For manual strategy, it must be a 3D list."
         ),
         default_value=[[[5]]],
         overrides_previously_defined=True,

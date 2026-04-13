@@ -1,7 +1,6 @@
 """Hold the beam parameters in a single phase space.
 
-For a list of the units associated with every parameter, see
-:ref:`units-label`.
+For a list of the units associated with every parameter, see |units|.
 
 .. note::
     In this module, angles are stored in :unit:`deg`, not in :unit:`rad`!

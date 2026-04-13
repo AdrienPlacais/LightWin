@@ -6,11 +6,10 @@ from lightwin.core.elements.field_maps.field_map import FieldMap
 class FieldMap100(FieldMap):
     """1D rf electric field along ``z``.
 
-    It corresponds to the legacy :class:`.FieldMap`. This is the only kind of
-    ``FIELD_MAP`` currently supported by :class:`.Envelope1D` (although 1D
-    static electric field could also be implemented).
+    It corresponds to the legacy |FM|. This is the only kind of ``FIELD_MAP``
+    currently supported by :class:`.Envelope1D` (although 1D static electric
+    field could also be implemented).
 
-    As for now, it only inherits from the :class:`.FieldMap` and does not bring
-    anything new.
+    As for now, it only inherits from the |FM| and does not bring anything new.
 
     """

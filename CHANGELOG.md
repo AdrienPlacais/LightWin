@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.16.1] -- 2026-04-13
+
+### Added
+
+- New `OptimisationAlgorithm`: `PredefinedSolution`. It is automatically created
+  when the `Accelerator` is unpickled and uses the stored `SimulationOutput` to
+  fake the optimization process.
+- New `OptimisationAlgorithm`: NSGA-III, adapted to high-dimensionality
+  problems.
+- New `ObjectivesFactory`: `RemainBelow`. Sets an upper limit for a variable.
+- Refactored creation of `DesignSpaceFactory`. Opens way to manual definition
+  of variables/constraints in `TOML`, rather than using
+  `design_space_preset = abs_phase_amplitude` or
+  `design_space_preset = RelPhaseAmplitudeWithConstrainedSyncPhase`.
+  - [x] Choose `design_space_preset = UserDefined`
+  - [x] Set `variable_names = ['k_e', 'phi_0_abs`] (for example)
+  - [x] Set `constraint_names = ['phi_s']` (for example)
+  - [ ] Ensure that order of variables is not hard-coded somewhere.
+  - [ ] Find an intuitive way to set limits for the different variables and
+        constraints.
+
+### Fixed
+
+- Synchronous phases can be used as constraints again.
+  - Synchronous phases in constraints calculations was taken from
+    `SimulationOutput.elts` (nominal settings) instead of
+    `SimulationOutput.set_of_cavity_settings`. This bug was nasty. Fixing it
+    dramatically improved constrained optimization.
+- Information message when creating `ListOfElements` subset printed wrong end of
+  linac subset.
+
 ## [0.16.0] -- 2026-03-04
 
 ### Added
@@ -39,6 +70,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ```
 
   - [Pickling notebook tutorial](https://lightwin.readthedocs.io/en/latest/manual/examples.pickling.html).
+
+### Changed
+
+- `AcceleratorFactory` produces a `dict[int, list[Accelerator]` instead of a
+  plain `list[Accelerator]`. Keys are `FaultScenario` index, values
+  corresponding `Accelerator`s -- including unpickled `Accelerator`s for
+  comparison.
+  Nothing should change for you if you use the functions from the
+  `ui.workflow_setup` module.
+- `plot.factory` is more robust, and allows plotting any number of
+  `Accelerator`s. Use the `only_solver_id` key to filter by `BeamCalculator`.
 
 ## [0.15.2] -- 2026-03-04
 

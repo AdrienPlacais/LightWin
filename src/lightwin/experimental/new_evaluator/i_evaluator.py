@@ -70,7 +70,11 @@ class IEvaluator(ABC):
         pass
 
     def post_treat(self, raw_df: pd.DataFrame) -> pd.DataFrame:
-        """Perform operations on data. By default, return data as is."""
+        """Perform operations on data.
+
+        By default, return data as is.
+
+        """
         return raw_df
 
     @abstractmethod

@@ -82,13 +82,13 @@ def compute_error_transfer_matrix(
 
 
 def load_phase_space(accelerator: Accelerator) -> list[np.ndarray]:
-    """
-    Load Partran phase-space data.
+    """Load Partran phase-space data.
 
     Phase-space files are obtained with:
         Input data & Beam: Partran
         Phase spaces or beam distributions: Output at element n
         Then save all particle as ASCII.
+
     """
     folder = os.path.join(
         accelerator.get("project_folder"), "results/phase_space/"

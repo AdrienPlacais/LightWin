@@ -78,8 +78,7 @@ def _ext_modules(use_cython: bool) -> list[Extension] | None:
             print("At least one file missing. Not building Cython modules.\n")
             return []
         print(
-            "At least one PYX file missing. Checking if equivalent C files "
-            "provided..."
+            "At least one PYX file missing. Checking if equivalent C files provided..."
         )
         return _ext_modules(use_cython=False)
 

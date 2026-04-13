@@ -24,6 +24,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
 )
@@ -45,15 +46,13 @@ from lightwin.util.typing import (
 class Envelope1D(BeamCalculator):
     """The fastest beam calculator, adapted to high energies.
 
-    The following elements are explicitly supported.
-    Note that, by default, an element that is implemented but not explicitly
-    supported is replaced by a ``DRIFT``.
-    In 1D, this is perfectly acceptable for most non-implemented elements that
-    act on the transverse dynamics, such as ``THIN_LENS``.
+    The following elements are explicitly supported. Note that, by default, an
+    element that is implemented but not explicitly supported is replaced by a
+    ``DRIFT``. In 1D, this is perfectly acceptable for most non-implemented
+    elements that act on the transverse dynamics, such as ``THIN_LENS``.
 
-    .. configkeys:: lightwin.beam_calculation.envelope_1d.element_envelope1d_p\
-arameters_factory.PARAMETERS_1D
-        :n_cols: 3
+    .. configkeys:: lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters_factory.PARAMETERS_1D
+       :n_cols: 3
 
     """
 
@@ -85,10 +84,10 @@ arameters_factory.PARAMETERS_1D
         self._phi_s_func = SYNCHRONOUS_PHASE_FUNCTIONS[self._phi_s_definition]
 
     def _set_up_specific_factories(self) -> None:
-        """Set up the factories specific to the :class:`.BeamCalculator`.
+        """Set up the factories specific to the |BC|.
 
         This method is called in the :meth:`.BeamCalculator.__init__`, hence it
-        appears only in the base :class:`.BeamCalculator`.
+        appears only in the base |BC|.
 
         .. todo::
             ``default_field_map_folder`` has a wrong default value. Should take
@@ -119,47 +118,12 @@ arameters_factory.PARAMETERS_1D
             elements_to_dump=(),
         )
 
-    def run(
-        self,
-        accelerator_id: str,
-        elts: ListOfElements,
-        update_reference_phase: bool = False,
-        **kwargs,
-    ) -> SimulationOutput:
-        """Compute beam propagation in 1D, envelope calculation.
-
-        Parameters
-        ----------
-        accelerator_id :
-            Associated :attr:`.Accelerator.id`. Looks like:
-            ``0000001_Solution``.
-        elts :
-            List of elements in which the beam must be propagated.
-        update_reference_phase :
-            To change the reference phase of cavities when it is different from
-            the one asked in the ``TOML``. To use after the first calculation,
-            if :attr:`.BeamCalculator.reference_phase_policy` does not align
-            with :attr:`.CavitySettings.reference`.
-
-        Returns
-        -------
-            Holds energy, phase, transfer matrices (among others) packed into a
-            single object.
-
-        """
-        return super().run(
-            accelerator_id=accelerator_id,
-            elts=elts,
-            update_reference_phase=update_reference_phase,
-            **kwargs,
-        )
-
     def run_with_this(
         self,
         accelerator_id: str,
-        set_of_cavity_settings: SetOfCavitySettings | None,
+        set_of_cavity_settings: SetOfCavitySettings,
         elts: ListOfElements,
-        use_a_copy_for_nominal_settings: bool = True,
+        **kwargs,
     ) -> SimulationOutput:
         """Use solver on ``elts``, including the ``set_of_cavity_settings``.
 
@@ -169,15 +133,11 @@ arameters_factory.PARAMETERS_1D
             Associated :attr:`.Accelerator.id`. Looks like:
             ``0000001_Solution``.
         set_of_cavity_settings :
-            The new cavity settings to try. If it is None, then the cavity
-            settings are taken from the :class:`.FieldMap` objects.
+            The cavity settings to use for every cavity in ``elts``. They can
+            be given by an optimization algorithm, or taken from cavity
+            objects.
         elts :
             List of elements in which the beam must be propagated.
-        use_a_copy_for_nominal_settings :
-            To copy the nominal :class:`.CavitySettings` and avoid altering
-            their nominal counterpart. Set it to True during optimisation, to
-            False when you want to keep the current settings. The default is
-            True.
 
         Returns
         -------
@@ -189,14 +149,8 @@ arameters_factory.PARAMETERS_1D
         w_kin = elts.w_kin_in
         phi_abs = elts.phi_abs_in
 
-        set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(
-            set_of_cavity_settings,
-            elts.cavities(superposed="remove"),
-            use_a_copy_for_nominal_settings=use_a_copy_for_nominal_settings,
-        )
-
         for elt in elts:
-            cavity_settings = set_of_cavity_settings.get(elt, None)
+            cavity_settings = set_of_cavity_settings.get(elt)
             _store_entry_phase_in_settings(phi_abs, cavity_settings)
             # Patch
             if isinstance(elt, SuperposedFieldMap):
@@ -223,37 +177,16 @@ arameters_factory.PARAMETERS_1D
         )
         return simulation_output
 
-    def post_optimisation_run_with_this(
-        self,
-        accelerator_id: str,
-        optimized_cavity_settings: SetOfCavitySettings,
-        full_elts: ListOfElements,
-        **specific_kwargs,
-    ) -> SimulationOutput:
-        """Run :class:`Envelope1D` with optimized cavity settings.
-
-        With this solver, we have nothing to do, nothing to update. Just call
-        the regular :meth:`run_with_this` method.
-
-        """
-        simulation_output = self.run_with_this(
-            accelerator_id=accelerator_id,
-            set_of_cavity_settings=optimized_cavity_settings,
-            elts=full_elts,
-            use_a_copy_for_nominal_settings=False,
-            **specific_kwargs,
-        )
-        return simulation_output
-
     def init_solver_parameters(self, accelerator: Accelerator) -> None:
         """Create the number of steps, meshing, transfer functions for elts.
 
         The solver parameters are stored in the ``beam_calc_param`` attribute
-        of :class:`.Element`.
+        of |E|.
 
         Parameters
         ----------
-            Object which :class:`.ListOfElements` must be initialized.
+        accelerator :
+            Object which |LOE| must be initialized.
 
         """
         elts = accelerator.elts
@@ -291,7 +224,7 @@ arameters_factory.PARAMETERS_1D
         Also store these quantities in ``cavity_settings``.
 
         .. todo::
-           Integrate this to :class:`.CavitySettings`.
+           Integrate this to |CS|.
 
         """
         v_cav_mv, phi_s = self._phi_s_func(**results)

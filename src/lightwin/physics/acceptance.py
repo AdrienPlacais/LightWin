@@ -12,9 +12,7 @@ import numpy as np
 
 from lightwin.constants import c
 from lightwin.physics.converters import energy
-from lightwin.util.solvers import (
-    solve_scalar_equation_brent,
-)
+from lightwin.util.solvers import solve_scalar_equation_brent
 from lightwin.util.typing import BeamKwargs
 
 

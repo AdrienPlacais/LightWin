@@ -23,9 +23,7 @@ from lightwin.evaluator.simulation_output.presets import (
 from lightwin.evaluator.simulation_output.simulation_output_evaluator import (
     SimulationOutputEvaluator,
 )
-from lightwin.failures.fault import Fault
 from lightwin.optimisation.objective.factory import ObjectiveFactory
-from lightwin.optimisation.objective.objective import Objective
 from lightwin.util.dicts_output import markdown
 from lightwin.util.helper import chunks, pd_output
 
@@ -142,8 +140,7 @@ class ListOfSimulationOutputEvaluators(list):
 
 
 class FaultScenarioSimulationOutputEvaluators:
-    """
-    A more specific class to evaluate settings found for a `FaultScenario`.
+    """A more specific class to evaluate settings found for a `FaultScenario`.
 
     This class was designed to be used when all the faults of a `FaultScenario`
     are fixed, to output several performance indicators in a compact way. No
@@ -176,8 +173,7 @@ class FaultScenarioSimulationOutputEvaluators:
         objective_factories: Collection[ObjectiveFactory],
         additional_elts: tuple[Element | str] | None = None,
     ) -> tuple[list[Element | str], list[str]]:
-        """
-        Set where the relative difference of `quantities` will be evaluated.
+        """Set where the relative difference of `quantities` will be evaluated.
 
         It is at the end of each compensation zone, plus at the exit of
         additional elements if given.

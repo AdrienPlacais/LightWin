@@ -32,8 +32,7 @@ _PURE_TRACEWIN_CONFIG = (
         key="algo",
         types=(int,),
         description=(
-            "Optimization using algorithm (0: Owner, 1: Simplex, 2: Diff. "
-            "evo.)"
+            "Optimization using algorithm (0: Owner, 1: Simplex, 2: Diff. evo.)"
         ),
         default_value=0,
         is_mandatory=False,
@@ -618,8 +617,7 @@ TRACEWIN_CONFIG = (
             is_a_path_that_must_exists=True,
             is_mandatory=False,
             warning_message=(
-                "Providing `executable` will override `machine_config_file` "
-                "settings."
+                "Providing `executable` will override `machine_config_file` settings."
             ),
         ),
         KeyValConfSpec(

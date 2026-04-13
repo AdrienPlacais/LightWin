@@ -1,4 +1,4 @@
-"""Define configuration entries that are common to all :class:`.BeamCalculator`."""
+"""Define configuration entries that are common to all |BC|."""
 
 from types import NoneType
 

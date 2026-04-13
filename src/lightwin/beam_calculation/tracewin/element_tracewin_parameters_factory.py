@@ -28,8 +28,7 @@ class ElementTraceWinParametersFactory(ElementBeamCalculatorParametersFactory):
             In contrary to :class:`.Envelope1D` and :class:`.Envelope3D`, this
             method is called *after* a simulation. As a matter of fact,
             TraceWin does not need our solver parameters to run. However, we
-            need to link TraceWin's array of results with our
-            :class:`.ListOfElements`.
+            need to link TraceWin's array of results with our |LOE|.
 
         See Also
         --------

@@ -26,6 +26,7 @@ dependencies = [
   "pandas-stubs>=3.0.0,<4",
   "palettable>=3.3.3, <4",
   "pre-commit>=4.5.1, <5",
+  "pymoo>=0.6.1,<1",
   "scipy>=1.17.1, <2",
 ]
 description = "Automatically compensate cavity failures in linacs"
@@ -69,6 +70,12 @@ target-version = ["py312"]
 line_length = 79
 profile = "black"
 src_paths = ["./src"]
+
+[tool.docformatter]
+black = true
+blank = true
+wrap-descriptions = 79
+wrap-summaries = 79
 
 [tool.pytest.ini_options]
 addopts = ["--import-mode=importlib", "--strict-markers"]

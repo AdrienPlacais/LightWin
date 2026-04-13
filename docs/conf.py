@@ -33,7 +33,7 @@ sys.path.append(os.path.abspath("./_ext"))
 
 project = "LightWin"
 author = "A. Plaçais, F. Bouly, J.-M. Lagniel, D. Uriot, B. Yee-Rendon"
-copyright = "2025, " + author
+copyright = "2026, " + author
 
 # See https://protips.readthedocs.io/git-tag-version.html
 # The full version, including alpha/beta/rc tags.
@@ -164,6 +164,18 @@ rst_prolog = """
 
 .. |issue| replace:: issue
 .. _issue: https://github.com/AdrienPlacais/LightWin/issues
+
+.. |units| replace:: :ref:`units-label`
+
+.. |A| replace:: :class:`.Accelerator`
+.. |BC| replace:: :class:`.BeamCalculator`
+.. |CS| replace:: :class:`.CavitySettings`
+.. |E| replace:: :class:`.Element`
+.. |F| replace:: :class:`.Fault`
+.. |FS| replace:: :class:`.FaultScenario`
+.. |FM| replace:: :class:`.FieldMap`
+.. |LOE| replace:: :class:`.ListOfElements`
+.. |SO| replace:: :class:`.SimulationOutput`
 
 """
 

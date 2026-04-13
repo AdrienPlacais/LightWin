@@ -27,7 +27,7 @@ def is_list_of(elts: Sequence, type_to_check: Type) -> TypeGuard[Type]:
 
 
 def is_list_of_elements(elts: Sequence) -> TypeGuard[list[Element]]:
-    """Check that all elements of input are :class:`.Element`."""
+    """Check that all elements of input are |E|."""
     # if isinstance(elts, ListOfElements):
     #     return True
     if hasattr(elts, "input_particle"):
@@ -38,14 +38,14 @@ def is_list_of_elements(elts: Sequence) -> TypeGuard[list[Element]]:
 def is_list_of_list_of_elements(
     elts: Sequence,
 ) -> TypeGuard[list[list[Element]]]:
-    """Check that input is a nested list of :class:`.Element`."""
+    """Check that input is a nested list of |E|."""
     return all([is_list_of_elements(sub_elts) for sub_elts in elts])
 
 
 def is_list_of_list_of_field_maps(
     elts: Sequence,
 ) -> TypeGuard[list[list[FieldMap]]]:
-    """Check that input is a nested list of :class:`.Element`."""
+    """Check that input is a nested list of |E|."""
     return all([is_list_of(sub_elts, FieldMap) for sub_elts in elts])
 
 
@@ -128,10 +128,9 @@ def equivalent_elt_idx(
 
     .. important::
         This routine uses the name of the element and not its adress. So
-        it will not complain if the :class:`.Element` object that you asked for
-        is not in this list of elements.
-        In the contrary, it was meant to find equivalent cavities between
-        different lists of elements.
+        it will not complain if the |E| object that you asked for is not in
+        this list of elements. In the contrary, it was meant to find equivalent
+        cavities between different lists of elements.
 
     See also
     --------
@@ -144,9 +143,8 @@ def equivalent_elt_idx(
         List of elements where you want the position.
     elt :
         Element of which you want the position. If you give a str, it should be
-        the name of an element. If it is an :class:`.Element`, we take its name
-        in the routine. Magic keywords ``'first'``, ``'last'`` are also
-        accepted.
+        the name of an element. If it is an |E|, we take its name in the
+        routine. Magic keywords ``'first'``, ``'last'`` are also accepted.
 
     Returns
     -------
@@ -189,10 +187,9 @@ def equivalent_elt(
 
     .. important::
         This routine uses the name of the element and not its adress. So
-        it will not complain if the :class:`.Element` object that you asked for
-        is not in this list of elements.
-        In the contrary, it was meant to find equivalent cavities between
-        different lists of elements.
+        it will not complain if the |E| object that you asked for is not in
+        this list of elements. In the contrary, it was meant to find equivalent
+        cavities between different lists of elements.
 
     See also
     --------
@@ -205,9 +202,8 @@ def equivalent_elt(
         List of elements where you want the position.
     elt :
         Element of which you want the position. If you give a str, it should be
-        the name of an element. If it is an :class:`.Element`, we take its name
-        in the routine. Magic keywords ``'first'``, ``'last'`` are also
-        accepted.
+        the name of an element. If it is an |E|, we take its name in the
+        routine. Magic keywords ``'first'``, ``'last'`` are also accepted.
 
     Returns
     -------
@@ -325,7 +321,7 @@ def _get_first_key_of_idx_dict_higher_than(
         List of elements to check.
     index_name :
         Name of the index to get. Must be a key of in the ``idx`` attribute of
-        :class:`.Element`.
+        |E|.
     first_or_last :
         If we want to check the ``n_to_check`` first or last elements.
     higher_than :
@@ -383,11 +379,11 @@ def first[T](
     Raises ``StopIteration`` if no item satisfying the condition is found
     and default is not given or doesn't satisfy the condition.
 
-    >>> first( (1,2,3), condition=lambda x: x % 2 == 0)
+    >>> first((1, 2, 3), condition=lambda x: x % 2 == 0)
     2
     >>> first(range(3, 100))
     3
-    >>> first( () )
+    >>> first(())
     Traceback (most recent call last):
     ...
     StopIteration
@@ -397,10 +393,11 @@ def first[T](
     Traceback (most recent call last):
     ...
     StopIteration
-    >>> first([1,3,5], default=1, condition=lambda x: x % 2 == 0)
+    >>> first([1, 3, 5], default=1, condition=lambda x: x % 2 == 0)
     Traceback (most recent call last):
     ...
     StopIteration
+
     """
 
     try:

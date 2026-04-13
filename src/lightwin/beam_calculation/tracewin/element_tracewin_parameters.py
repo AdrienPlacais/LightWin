@@ -3,8 +3,7 @@
 .. note::
     TraceWin does not need this to run. It is a placeholder, to keep
     consistency with :class:`.Envelope1D` and :class:`.Envelope3D`.
-    Also useful to compare :class:`.SimulationOutput` created by this solver
-    and others.
+    Also useful to compare |SO| created by this solver and others.
 
 """
 
@@ -22,8 +21,8 @@ class ElementTraceWinParameters(ElementBeamCalculatorParameters):
 
     Unnecessary for TraceWin, but useful to link the meshing in TraceWin to
     other simulations. Hence, it is not created by the init_solver_parameters
-    as for Envelope1D!!
-    Instead, meshing is deducted from the TraceWin output files.
+    as for Envelope1D!! Instead, meshing is deducted from the TraceWin output
+    files.
 
     """
 

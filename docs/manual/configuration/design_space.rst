@@ -53,3 +53,19 @@ You can also re-use following files in `data/example`:
 .. csv-table::
    :file: entries/design_space_from_file.csv
    :header-rows: 1
+
+Under implementation
+--------------------
+
+The `design_space_preset = UserDefined` will allow you to directly define variables and constraints from the `TOML`.
+
+.. code-block:: toml
+
+   design_space_preset =  "UserDefined"
+   variable_names = ["phi_0_rel", "k_e"]
+   constraint_names = ["phi_s"]
+
+List of allowed variables are listed in :data:`.VARIABLES`.
+List of allowed constraints are in :data:`.CONSTRAINTS`.
+As for now, the limits and initial values are set in the same way as before: from a file or using the `max_absolute_sync_phase_in_deg` etc keywords.
+I am still thinking on how to let user easily choose any variable, constraint, limits, etc.

@@ -117,8 +117,8 @@ def dat_filecontent_from_smaller_list_of_elements(
     original_instructions: Sequence[Instruction],
     elts: Collection[Element],
 ) -> tuple[list[DatLine], list[Instruction]]:
-    """
-    Create a ``DAT`` with only elements of ``elts`` (and concerned commands).
+    """Create a ``DAT`` with only elements of ``elts`` (and concerned
+    commands).
 
     Properties of the FIELD_MAP, i.e. amplitude and phase, remain untouched.
 

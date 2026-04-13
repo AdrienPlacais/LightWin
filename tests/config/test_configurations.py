@@ -15,9 +15,7 @@ from typing import Any
 
 import pytest
 
-from lightwin.config.config_manager import (
-    _load_toml,
-)
+from lightwin.config.config_manager import _load_toml
 from lightwin.config.full_specs import ConfSpec
 from lightwin.constants import example_config
 
@@ -54,8 +52,7 @@ CONFIG_KEYS = (
     pytest.param(
         ({"wtf": "wtf_l_neighboring_lattices"},),
         id=(
-            "Configuration of compensating cavities with l neighboring "
-            "lattices method."
+            "Configuration of compensating cavities with l neighboring lattices method."
         ),
     ),
     pytest.param(

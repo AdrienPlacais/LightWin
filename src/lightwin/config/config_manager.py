@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from lightwin.config.full_specs import ConfSpec
+from lightwin.util.typing import ConfigKw
 
 
 class ConfigFileNotFoundError(FileNotFoundError):
@@ -29,7 +30,7 @@ def process_config(
     warn_mismatch: bool = False,
     override: dict[str, dict[str, Any]] | None = None,
     conf_specs_t: type[ConfSpec] = ConfSpec,
-) -> dict[str, dict[str, Any]]:
+) -> ConfigKw:
     """Load and test the configuration file.
 
     Parameters
@@ -50,8 +51,7 @@ def process_config(
     Returns
     -------
         A dictionary holding all the keyword arguments that will be passed to
-        LightWin objects, eg ``beam_calculator`` will be passed to
-        :class:`.BeamCalculator`.
+        LightWin objects, eg ``beam_calculator`` will be passed to |BC|.
 
     """
     raw_toml = _load_toml(toml_path)
@@ -126,7 +126,7 @@ def _process_toml(
     *,
     warn_mismatch: bool,
     override: dict[str, dict[str, Any]] | None,
-) -> dict[str, dict[str, Any]]:
+) -> ConfigKw:
     """Extract the dicts asked by user. Override some keys if requested.
 
     Parameters
@@ -155,8 +155,7 @@ def _process_toml(
     for key, value in config_keys.items():
         if value not in raw_toml:
             raise KeyError(
-                f"Expected table '{value}' for key '{key}' not found in the "
-                "TOML file."
+                f"Expected table '{value}' for key '{key}' not found in the TOML file."
             )
         toml_fulldict[key] = raw_toml[value]
 

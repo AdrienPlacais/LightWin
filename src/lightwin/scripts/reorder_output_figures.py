@@ -13,8 +13,7 @@ def _create_output_folder(
     out_images = simulation_folder / out_folder_name
     if out_images.exists():
         raise FileExistsError(
-            f"{out_images = } already exists. Maybe you already run this "
-            "script?"
+            f"{out_images = } already exists. Maybe you already run this script?"
         )
     out_images.mkdir(exist_ok=False)
     return out_images

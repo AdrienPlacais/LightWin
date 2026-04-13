@@ -125,8 +125,7 @@ class BeamTableConfSpec(TableConfSpec):
         super()._pre_treat(toml_subdict, **kwargs)
         if not hasattr(self, "specs_as_dict"):
             raise AttributeError(
-                "You must call the _set_specs_as_dict method before calling "
-                "this."
+                "You must call the _set_specs_as_dict method before calling this."
             )
 
         toml_subdict["sigma"] = np.array(toml_subdict["sigma"])
@@ -161,8 +160,7 @@ class BeamTableConfSpec(TableConfSpec):
         if sigma_shape != (6, 6):
             sigma_shape_is_ok = False
             logging.error(
-                "The sigma matrix should have shape (6, 6), but has "
-                f"{sigma_shape}"
+                f"The sigma matrix should have shape (6, 6), but has {sigma_shape}"
             )
 
         return default_tests and sigma_shape_is_ok

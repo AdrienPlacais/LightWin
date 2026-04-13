@@ -1,4 +1,4 @@
-"""Define a class to easily create :class:`.Element` objects."""
+"""Define a class to easily create |E| objects."""
 
 from pathlib import Path
 from typing import Any
@@ -105,7 +105,7 @@ IMPLEMENTED_ELEMENTS = {
 
 
 class ElementFactory:
-    """An object to create :class:`.Element` objects."""
+    """An object to create |E| objects."""
 
     def __init__(
         self,

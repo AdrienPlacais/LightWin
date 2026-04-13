@@ -20,7 +20,7 @@ def compute_beam(
     beam_calculator: BeamCalculator,
     config: dict[str, dict[str, Any]],
 ) -> tuple[Accelerator, SimulationOutput]:
-    """Create the :class:`.Accelerator` and compute beam in it.
+    """Create the |A| and compute beam in it.
 
     Parameters
     ----------
@@ -31,7 +31,7 @@ def compute_beam(
 
     Returns
     -------
-        An accelerator with its :class:`.SimulationOutput`.
+        An accelerator with its |SO|.
 
     """
     accelerator_factory = NoFault(beam_calculators=beam_calculator, **config)
@@ -43,7 +43,7 @@ def compute_beam(
 def compute_beams(
     beam_calculators: Collection[BeamCalculator], config_files: dict[str, Any]
 ) -> tuple[list[Accelerator], list[SimulationOutput]]:
-    """Propagate beam with all :class:`.BeamCalculator`."""
+    """Propagate beam with all |BC|."""
     accelerators, simulation_outputs = zip(
         *(
             compute_beam(beam_calculator, config_files)

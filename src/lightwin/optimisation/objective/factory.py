@@ -42,7 +42,7 @@ from lightwin.util.dicts_output import markdown
 
 
 class ObjectiveFactory(ABC):
-    """A base class to create all the :class:`.Objective` of a :class:`.Fault`.
+    """A base class to create all the :class:`.Objective` of a |F|.
 
     It is intended to be sub-classed to make presets. Look at
     :class:`EnergyPhaseMismatch` or :class:`EnergySyncPhaseMismatch` for
@@ -74,7 +74,7 @@ class ObjectiveFactory(ABC):
         broken_elts: ListOfElements,
         failed_elements: Collection[Element],
         compensating_elements: Collection[Element],
-        design_space_kw: dict[str, Any],
+        limits_from_design_space_kw: dict[str, Any],
     ) -> None:
         """Create the object.
 
@@ -104,7 +104,7 @@ class ObjectiveFactory(ABC):
         self._failed_elements = tuple(failed_elements)
         self._compensating_elements = tuple(compensating_elements)
 
-        self._design_space_kw = design_space_kw
+        self._limits_from_design_space_kw = limits_from_design_space_kw
 
         assert all([elt.can_be_retuned for elt in self._compensating_elements])
         #: List of elements were an objective is evaluated
@@ -481,8 +481,7 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
         return objective
 
     def _get_phi_s(self, cavity: FieldMap) -> Objective:
-        """
-        Objective to have sync phase within bounds.
+        """Objective to have sync phase within bounds.
 
         .. todo::
             Allow ``from_file``.
@@ -490,12 +489,14 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
         """
         reference_cavity = equivalent_elt(self._reference_elts, cavity)
 
-        if self._design_space_kw["from_file"]:
+        if self._limits_from_design_space_kw["from_file"]:
             raise OSError(
                 "For now, synchronous phase cannot be taken from the variables"
                 " or constraints.csv files when used as objectives."
             )
-        limits = phi_s_limits(reference_cavity, **self._design_space_kw)
+        limits = phi_s_limits(
+            reference_cavity, **self._limits_from_design_space_kw
+        )
 
         objective = QuantityIsBetween(
             name=markdown["phi_s"].replace("deg", "rad"),
@@ -693,7 +694,7 @@ OBJECTIVE_PRESETS_T = Literal[
 
 @dataclass(frozen=True)
 class PackedElements:
-    """Pack :class:`.Element` info to instantiate :class:`.ObjectiveFactory`.
+    """Pack |E| info to instantiate :class:`.ObjectiveFactory`.
 
     See Also
     --------
@@ -710,7 +711,7 @@ class PackedElements:
 
 
 class ObjectiveMetaFactory:
-    """An object creating :class:`.ObjectiveFactory` for every :class:`.Fault`."""
+    """An object creating :class:`.ObjectiveFactory` for every |F|."""
 
     def __init__(self, reference_simulation_output: SimulationOutput) -> None:
         self._reference_simulation_output = reference_simulation_output
@@ -718,7 +719,7 @@ class ObjectiveMetaFactory:
     def create(
         self,
         objective_preset: OBJECTIVE_PRESETS_T,
-        design_space_kw: dict[str, Any],
+        limits_from_design_space_kw: dict[str, Any],
         packed_elements: PackedElements,
         objective_factory_class: type[ObjectiveFactory] | None = None,
     ) -> ObjectiveFactory:
@@ -732,7 +733,7 @@ class ObjectiveMetaFactory:
             packed_elements.broken_elts,
             packed_elements.failed_elements,
             packed_elements.compensating_elements,
-            design_space_kw=design_space_kw,
+            limits_from_design_space_kw=limits_from_design_space_kw,
         )
         return objective_factory
 

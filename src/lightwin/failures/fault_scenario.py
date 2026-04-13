@@ -1,7 +1,7 @@
-"""Define a list-based class holding all the :class:`.Fault` to fix.
+"""Define a list-based class holding all the |F| to fix.
 
 We also define :func:`fault_scenario_factory`, a factory function creating all
-the required :class:`FaultScenario` objects.
+the required |FS| objects.
 
 """
 
@@ -48,6 +48,7 @@ from lightwin.util.typing import (
     REFERENCE_PHASE_POLICY_T,
     REFERENCE_PHASES,
     REFERENCE_PHASES_T,
+    DesignSpaceKw,
 )
 
 
@@ -67,7 +68,7 @@ class FaultScenario(list[Fault]):
         objective_factory_class: type[ObjectiveFactory] | None = None,
         **kwargs,
     ) -> None:
-        """Create the :class:`FaultScenario` and the :class:`.Fault` objects.
+        """Create the |FS| and the |F| objects.
 
         Parameters
         ----------
@@ -104,6 +105,7 @@ class FaultScenario(list[Fault]):
         self.info = {}
         self.optimisation_time: datetime.timedelta
 
+        #: If optimization should be skipped for these :class:`.Fault`\s.
         self.skip_optimization = fix_acc.status == "fix"
         self._design_space_factory = design_space_factory
         self._list_of_elements_factory = (
@@ -135,11 +137,15 @@ class FaultScenario(list[Fault]):
         self._mark_cavities_to_rephase()
         for fault in self:
             fault.pre_compensation_status()
+        self.beam_calculator.compute(
+            self.fix_acc,
+            ref_simulation_output=self._reference_simulation_output,
+        )
 
     def _create_faults(
         self, *cavities: Sequence[Sequence[FieldMap]]
     ) -> list[Fault]:
-        """Create the :class:`.Fault` objects.
+        """Create the |F| objects.
 
         Parameters
         ----------
@@ -164,7 +170,7 @@ class FaultScenario(list[Fault]):
 
     @property
     def _reference_simulation_output(self) -> SimulationOutput:
-        """Determine wich :class:`.SimulationOutput` is the reference."""
+        """Determine wich |SO| is the reference."""
         solvers_already_used = list(self.ref_acc.simulation_outputs.keys())
         assert len(solvers_already_used) > 0, (
             "You must compute propagation of the beam in the reference linac "
@@ -175,7 +181,7 @@ class FaultScenario(list[Fault]):
         return reference_simulation_output
 
     def fix_all(self) -> None:
-        """Fix all the :class:`.Fault` objects in self."""
+        """Fix all the |F| objects in self."""
         start_time = time.monotonic()
 
         simulation_output = self._reference_simulation_output
@@ -185,11 +191,6 @@ class FaultScenario(list[Fault]):
         delta_t = datetime.timedelta(seconds=time.monotonic() - start_time)
         logging.info(f"Solving all the optimization problems took {delta_t}")
         self.optimisation_time = delta_t
-
-        # successes = [fault.success for fault in self]
-        # self.fix_acc.name = (
-        #     f"Fixed ({successes.count(True)} of {len(successes)})"
-        # )
         self.fix_acc.status = "fix"
 
         self._evaluate_fit_quality(save=True)
@@ -223,12 +224,12 @@ class FaultScenario(list[Fault]):
             The fault to fix.
         simulation_output :
             The most recent simulation, that includes the compensation settings
-            of all :class:`.Fault` upstream of ``fault``.
+            of all |F| upstream of ``fault``.
 
         Returns
         -------
             Most recent simulation, that includes the compensation settings of
-            upstream :class:`.Fault` as well as of this one.
+            upstream |F| as well as of this one.
 
         """
         optimisation_algorithm = self._prepare_fix_objects(
@@ -259,15 +260,38 @@ class FaultScenario(list[Fault]):
     def _prepare_fix_objects(
         self, fault: Fault, simulation_output: SimulationOutput
     ) -> OptimisationAlgorithm:
-        """Create objects to instantiate the :class:`.OptimisationAlgorithm`."""
+        """Create objects to instantiate the :class:`.OptimisationAlgorithm`.
+
+        In particular:
+        - build :class:`.DesignSpace`
+        - build :class:`.ObjectiveFactory`
+        - extract |LOE| corresponding to zone to recompute
+          - this ``subset_elts`` is kept as a |F| attribute.
+        - create :class:`.OptimisationAlgorithm`.
+          - if :attr:`.skip_optimization` is ``True``, we rather
+            instantiate the special :class:`.PredefinedSolution`.
+
+        Parameters
+        ----------
+        fault :
+            The fault to fix.
+        simulation_output :
+            The most recent simulation, that includes the compensation settings
+            of all |F| upstream of ``fault``.
+
+        Returns
+        -------
+            Object that will fix the failure.
+
+        """
         design_space = self._design_space_factory.create(
             fault.compensating_elements, fault.reference_elements
         )
         objective_factory = self._objective_meta_factory.create(
-            self.wtf["objective_preset"],
-            self._design_space_factory.design_space_kw,
-            fault.packed_elements,
-            self._objective_factory_class,
+            objective_preset=self.wtf["objective_preset"],
+            limits_from_design_space_kw=self._design_space_factory.limits_from_design_space_kw,
+            packed_elements=fault.packed_elements,
+            objective_factory_class=self._objective_factory_class,
         )
         self._objective_factories.append(objective_factory)
 
@@ -279,18 +303,39 @@ class FaultScenario(list[Fault]):
         fault.subset_elts = subset_elts
         logging.info(
             "Created a ListOfElements ecompassing a linac subset.\n"
-            f"Encompasses: {subset_elts[0]} to {subset_elts[1]}\nw_kin_in = "
+            f"Encompasses: {subset_elts[0]} to {subset_elts[-1]}\nw_kin_in = "
             f"{subset_elts.w_kin_in:.2f} MeV\nphi_abs_in = "
             f"{subset_elts.phi_abs_in:.2f} rad"
         )
 
-        optimisation_algorithm = self._optimisation_algorithm_factory.create(
-            fault.compensating_elements,
-            objective_factory,
-            design_space,
-            subset_elts,
+        if not self.skip_optimization:
+            return self._optimisation_algorithm_factory.create(
+                compensating_elements=fault.compensating_elements,
+                objective_factory=objective_factory,
+                design_space=design_space,
+                subset_elts=subset_elts,
+            )
+
+        simulation_outputs = self.fix_acc.simulation_outputs
+        predefined_simulation_output = simulation_outputs.get(
+            self.beam_calculator.id
         )
-        return optimisation_algorithm
+        if predefined_simulation_output is None:
+            raise ValueError(
+                "Fixed accelerator do not have a SimulationOutput calculated "
+                f"with current solver {self.beam_calculator.id}."
+            )
+        predefined_cavity_settings = (
+            predefined_simulation_output.set_of_cavity_settings
+        )
+        return self._optimisation_algorithm_factory.create_from_preset(
+            compensating_elements=fault.compensating_elements,
+            objective_factory=objective_factory,
+            design_space=design_space,
+            subset_elts=subset_elts,
+            predefined_cavity_settings=predefined_cavity_settings,
+            predefined_simulation_output=predefined_simulation_output,
+        )
 
     def _evaluate_fit_quality(
         self,
@@ -348,7 +393,7 @@ class FaultScenario(list[Fault]):
     def _simulations_that_should_be_compared(
         self, id_solver_ref: str | None, id_solver_fix: str | None
     ) -> tuple[SimulationOutput, SimulationOutput]:
-        """Get proper :class:`.SimulationOutput` for comparison."""
+        """Get proper |SO| for comparison."""
         if id_solver_ref is None:
             id_solver_ref = list(self.ref_acc.simulation_outputs.keys())[0]
 
@@ -449,7 +494,7 @@ class FaultScenario(list[Fault]):
 
     @property
     def _reference_phase_policy(self) -> REFERENCE_PHASE_POLICY_T:
-        """Give reference phase policy of :class:`.BeamCalculator`."""
+        """Give reference phase policy of |BC|."""
         return self.beam_calculator.reference_phase_policy
 
     def _resolve_reference_phase(
@@ -470,23 +515,23 @@ class FaultScenario(list[Fault]):
 
 
 class FaultScenarioFactory:
-    """This objects consistently create :class:`.FaultScenario`."""
+    """This objects consistently create |FS|."""
 
     def __init__(
         self,
         accelerators: dict[int, list[Accelerator]],
         beam_calc: BeamCalculator,
-        design_space: dict[str, Any],
+        design_space: DesignSpaceKw,
         objective_factory_class: type[ObjectiveFactory] | None = None,
     ) -> None:
-        """Init solver parameters for each non-unpickled :class:`.Accelerator`.
+        """Init solver parameters for each non-unpickled |A|.
 
         Parameters
         ----------
         accelerators :
-            Dictionary where keys are :class:`.FaultScenario` indexes, and
-            values are lists of corresponding :class:`.Accelerator`. First
-            index corresponds to reference accelerator (no failure).
+            Dictionary where keys are |FS| indexes, and values are lists of
+            corresponding |A|. First index corresponds to reference accelerator
+            (no failure).
         beam_calc :
             The solver that will be called during the optimisation process.
         design_space_kw :
@@ -498,8 +543,8 @@ class FaultScenarioFactory:
 
         Returns
         -------
-            Holds all the initialized :class:`FaultScenario` objects, holding their
-            already initialied :class:`.Fault` objects.
+            Holds all the initialized |FS| objects, holding their already
+            initialied |F| objects.
 
         """
         self._accelerators = accelerators
@@ -553,7 +598,7 @@ class FaultScenarioFactory:
         if len(failed) != len(self._accelerators) - 1:
             raise ValueError(
                 f"We are creating {len(failed)} FaultScenarios, but we have "
-                f"{len(self._accelerators)-1} non-reference groups of "
+                f"{len(self._accelerators) - 1} non-reference groups of "
                 "Accelerators."
             )
 
@@ -591,7 +636,7 @@ def fault_scenario_factory(
     objective_factory_class: type[ObjectiveFactory] | None = None,
     **kwargs,
 ) -> list[FaultScenario]:
-    """Create the :class:`FaultScenario` objects (factory template).
+    """Create the |FS| objects (factory template).
 
     .. deprecated:: 0.14.1
        Prefer the more flexible:
@@ -599,10 +644,10 @@ def fault_scenario_factory(
        .. code-block:: python
 
           factory = FaultScenarioFactory(
-             accelerators=accelerators,
-             beam_calc=beam_calc,
-             design_space=design_space,
-             objective_factory_class=objective_factory_class,
+              accelerators=accelerators,
+              beam_calc=beam_calc,
+              design_space=design_space,
+              objective_factory_class=objective_factory_class,
           )
           fault_scenarios = factory.create(**wtf)
 
@@ -624,8 +669,8 @@ def fault_scenario_factory(
 
     Returns
     -------
-        Holds all the initialized :class:`FaultScenario` objects, holding their
-        already initialied :class:`.Fault` objects.
+        Holds all the initialized |FS| objects, holding their already
+        initialied |F| objects.
 
     """
     adapted = {
@@ -644,14 +689,13 @@ def _force_element_to_index_method_creation(
     accelerator: Accelerator,
     beam_calculator: BeamCalculator,
 ) -> None:
-    """Run a first simulation to link :class:`.Element` with their index.
+    """Run a first simulation to link |E| with their index.
 
     .. note::
-        To initalize a :class:`.Fault`, you need a sub:class:`.ListOfElements`.
-        To create the latter, you need a ``_element_to_index`` method. It can
-        only be created if you know the number of steps in every
-        :class:`.Element`. So, for :class:`.TraceWin`, we run a first
-        simulation.
+        To initalize a |F|, you need a sub|LOE|. To create the latter, you need
+        a ``_element_to_index`` method. It can only be created if you know the
+        number of steps in every |E|. So, for :class:`.TraceWin`, we run a
+        first simulation.
 
     """
     beam_calculator.compute(accelerator)

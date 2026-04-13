@@ -1,13 +1,8 @@
-"""Define a factory function to create :class:`.OptimisationAlgorithm`.
-
-.. todo::
-    Docstrings
-
-"""
+"""Define a factory function to create :class:`.OptimisationAlgorithm`."""
 
 import logging
 from abc import ABCMeta
-from collections.abc import Collection
+from collections.abc import Collection, Mapping
 from typing import Any, Literal
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
@@ -15,6 +10,8 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.algorithms.algorithm import OptimisationAlgorithm
@@ -33,11 +30,19 @@ from lightwin.optimisation.algorithms.least_squares import LeastSquares
 from lightwin.optimisation.algorithms.least_squares_penalty import (
     LeastSquaresPenalty,
 )
+from lightwin.optimisation.algorithms.nsga import (
+    NSGA3Algorithm,
+    NSGA3AlgorithmMulti,
+)
+from lightwin.optimisation.algorithms.predefined_solution import (
+    PredefinedSolution,
+)
 from lightwin.optimisation.algorithms.simulated_annealing import (
     SimulatedAnnealing,
 )
 from lightwin.optimisation.design_space.design_space import DesignSpace
 from lightwin.optimisation.objective.factory import ObjectiveFactory
+from lightwin.util.typing import OPTIMIZATION_STATUS
 
 #: Maps the ``optimisation_algorithm`` key in the ``TOML`` file to the actual
 #: :class:`.OptimisationAlgorithm` we use.
@@ -52,7 +57,8 @@ ALGORITHM_SELECTOR: dict[str, ABCMeta] = {
     "least_squares_penalty": LeastSquaresPenalty,
     "nelder_mead": DownhillSimplex,
     "nelder_mead_penalty": DownhillSimplexPenalty,
-    # "nsga": NSGA,
+    "NSGA-III": NSGA3Algorithm,
+    "NSGA-III Multi-threaded": NSGA3AlgorithmMulti,
     "simulated_annealing": SimulatedAnnealing,
 }
 
@@ -68,7 +74,8 @@ ALGORITHMS_T = Literal[
     "least_squares_penalty",
     "nelder_mead",
     "nelder_mead_penalty",
-    # "nsga",
+    "NSGA-III",
+    "NSGA-III Multi-threaded",
     "simulated_annealing",
 ]
 
@@ -117,15 +124,31 @@ class OptimisationAlgorithmFactory:
     ) -> OptimisationAlgorithm:
         """Instantiate an optimisation algorithm for a given fault."""
         default_kwargs = self._make_default_kwargs(
-            compensating_elements,
-            objective_factory,
-            design_space,
-            subset_elts,
+            compensating_elements, objective_factory, design_space, subset_elts
         )
         self._log_common_keys(self._wtf, default_kwargs)
         final_kwargs = {**default_kwargs, **self._wtf}
         algorithm = self._class(**final_kwargs)
         return algorithm
+
+    def create_from_preset(
+        self,
+        compensating_elements: Collection[Element],
+        objective_factory: ObjectiveFactory,
+        design_space: DesignSpace,
+        subset_elts: ListOfElements,
+        predefined_cavity_settings: SetOfCavitySettings,
+        predefined_simulation_output: SimulationOutput | None = None,
+    ) -> PredefinedSolution:
+        """Instantiate a fake optimization algorithm bypassing the solver."""
+        default_kwargs = self._make_default_kwargs(
+            compensating_elements, objective_factory, design_space, subset_elts
+        )
+        return PredefinedSolution(
+            predefined_cavity_settings=predefined_cavity_settings,
+            predefined_simulation_output=predefined_simulation_output,
+            **default_kwargs,
+        )
 
     def _make_default_kwargs(
         self,
@@ -148,15 +171,26 @@ class OptimisationAlgorithmFactory:
         """
 
         def compute_beam_propagation(
-            set_of_cavity_settings: SetOfCavitySettings | None,
-            use_a_copy_for_nominal_settings: bool = True,
+            cavity_settings: Mapping[FieldMap, CavitySettings] | None,
             **kwargs,
         ):
+            """Wrap propagation of the beam.
+
+            Parameters
+            ----------
+            cavity_settings :
+                Maps compensating cavities with the settings to be tried.
+
+            """
+            set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(
+                compensating_cavity_settings=cavity_settings,
+                cavities=subset_elts.cavities(superposed="remove"),
+                optimization_status="in progress",
+            )
             return self._beam_calculator.run_with_this(
                 accelerator_id=self._accelerator_id,
                 set_of_cavity_settings=set_of_cavity_settings,
                 elts=subset_elts,
-                use_a_copy_for_nominal_settings=use_a_copy_for_nominal_settings,
                 **kwargs,
             )
 

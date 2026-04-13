@@ -103,8 +103,7 @@ class KeyValConfSpec:
         if isinstance(toml_value, self.types):
             return True
         logging.warning(
-            f"Type error in {self.key}. {toml_value = } type not in "
-            f"{self.types = }"
+            f"Type error in {self.key}. {toml_value = } type not in {self.types = }"
         )
         return False
 

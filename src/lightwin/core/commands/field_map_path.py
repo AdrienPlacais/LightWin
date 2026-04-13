@@ -59,7 +59,7 @@ class FieldMapPath(Command):
     def apply(
         self, instructions: list[Instruction], **kwargs: float
     ) -> list[Instruction]:
-        """Set :class:`.FieldMap` field folder up.
+        """Set |FM| field folder up.
 
         If another :class:`FieldMapPath` is found, we stop and this command
         will be applied later.

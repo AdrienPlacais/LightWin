@@ -20,7 +20,7 @@ from lightwin.experimental.new_evaluator.simulation_output.factory import (
     SimulationOutputEvaluatorsFactory,
 )
 from lightwin.failures.fault_scenario import FaultScenario
-from lightwin.ui.workflow_setup import run_simulation
+from lightwin.ui.workflow_setup import run_simulation_new
 from lightwin.util.pass_beauty import insert_pass_beauty_instructions
 
 
@@ -37,7 +37,7 @@ def add_beauty_instructions(
 
 
 def _perform_evaluations(
-    accelerators: Sequence[Accelerator],
+    accelerators: dict[int, list[Accelerator]],
     evaluator_kw: Collection[dict[str, str | float | bool]] | None = None,
     get_overrides: dict[str, Any] | None = None,
 ) -> pd.DataFrame:
@@ -53,17 +53,16 @@ def _perform_evaluations(
         evaluator_kw = config["evaluators"]["simulation_output"]
     assert evaluator_kw is not None
     factory = SimulationOutputEvaluatorsFactory(evaluator_kw)
-    evaluators = factory.run(
-        accelerators,
-        solvers_ids=list(accelerators[0].simulation_outputs.keys())[0],
-    )
+    evaluators = factory.run(accelerators)
     tests = factory.batch_evaluate(
         evaluators, accelerators, get_overrides=get_overrides
     )
     return tests
 
 
-def study(new_evaluations: bool = False) -> list[Accelerator]:
+def study(
+    new_evaluations: bool = False,
+) -> tuple[dict[int, list[Accelerator]], list[FaultScenario]]:
     toml_filepath = Path("lightwin.toml")
     toml_keys = {
         "files": "files",
@@ -71,21 +70,14 @@ def study(new_evaluations: bool = False) -> list[Accelerator]:
         "beam_calculator": "envelope1d",
         # "beam_calculator_post": "tracewin",
         "beam": "beam",
-        # "wtf": "wtf_systematic_study",
-        # "design_space": "design_space_fit_phi_s",
-        "wtf": "wtf_tiny",
-        "design_space": "design_space_tiny",
+        "wtf": "wtf_with_constraints",
+        "design_space": "design_space_with_constraints",
+        # "wtf": "wtf_tiny",
+        # "design_space": "design_space_tiny",
     }
     config = process_config(toml_filepath, toml_keys)
-    fault_scenarios = run_simulation(
-        config,
-        # objective_factory_class=MyObjectiveFactory,
-    )
-
-    fs = fault_scenarios[0]
-    assert isinstance(fs, FaultScenario)
-    accelerators = [fs.ref_acc, fs.fix_acc]
-    fix = list(accelerators[1].simulation_outputs.values())[0]
+    accelerators, fault_scenarios = run_simulation_new(config)
+    assert fault_scenarios is not None
 
     if new_evaluations:
         # Example
@@ -94,9 +86,9 @@ def study(new_evaluations: bool = False) -> list[Accelerator]:
 
         get_overrides = None
         _perform_evaluations(accelerators, get_overrides=get_overrides)
-    return list(accelerators)
+    return accelerators, fault_scenarios
 
 
 if __name__ == "__main__":
-    accelerators = study()
+    accelerators, fault_scenarios = study()
     plt.show()

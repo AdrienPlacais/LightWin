@@ -1,6 +1,5 @@
 """Hold a ``FIELD_MAP``.
 
-
 .. todo::
     Hande phi_s fitting with :class:`.TraceWin`.
 
@@ -71,7 +70,7 @@ class FieldMap(Element):
 
     @property
     def status(self) -> STATUS_T:
-        """Give the status from the :class:`.CavitySettings`."""
+        """Give the status from the |CS|."""
         return self.cavity_settings.status
 
     @property
@@ -142,8 +141,7 @@ class FieldMap(Element):
         self.cavity_settings = cavity_settings
 
     def has(self, key: str) -> bool:
-        """
-        Tell if required attribute is in this object or its cavity settings.
+        """Tell if required attribute is in this object or its cavity settings.
 
         Parameters
         ----------
@@ -412,7 +410,11 @@ class FieldMap(Element):
 
     @property
     def z_0(self) -> float:
-        """Shifting constant of the field map. Used in superposed maps."""
+        """Shifting constant of the field map.
+
+        Used in superposed maps.
+
+        """
         return self._z_0
 
     @z_0.setter

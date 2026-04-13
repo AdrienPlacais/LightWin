@@ -23,6 +23,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
+from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
@@ -41,11 +42,10 @@ class Envelope3D(BeamCalculator):
     """A 3D envelope solver.
 
     As transverse effects are generally not predominant, I do not use this
-    solver very often and a lot of elements are not implemented.
-    The current list of explicitly supported elements is:
+    solver very often and a lot of elements are not implemented. The current
+    list of explicitly supported elements is:
 
-    .. configkeys:: lightwin.beam_calculation.envelope_3d.element_envelope3d_\
-parameters_factory.PARAMETERS_3D
+    .. configkeys:: lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters_factory.PARAMETERS_3D
        :n_cols: 2
 
     The default behavior when an element in the input ``DAT`` file is not
@@ -93,10 +93,10 @@ parameters_factory.PARAMETERS_3D
         )
 
     def _set_up_specific_factories(self) -> None:
-        """Set up the factories specific to the :class:`.BeamCalculator`.
+        """Set up the factories specific to the |BC|.
 
         This method is called in the :meth:`.BeamCalculator.__init__`, hence it
-        appears only in the base :class:`.BeamCalculator`.
+        appears only in the base |BC|.
 
         """
         self.simulation_output_factory = SimulationOutputFactoryEnvelope3D(
@@ -125,9 +125,9 @@ parameters_factory.PARAMETERS_3D
     def run_with_this(
         self,
         accelerator_id: str,
-        set_of_cavity_settings: SetOfCavitySettings | None,
+        set_of_cavity_settings: SetOfCavitySettings,
         elts: ListOfElements,
-        use_a_copy_for_nominal_settings: bool = True,
+        **kwargs,
     ) -> SimulationOutput:
         """Compute beam propagation with non-nominal settings.
 
@@ -141,10 +141,6 @@ parameters_factory.PARAMETERS_3D
             settings are taken from the FieldMap objects.
         elts :
             List of elements in which the beam must be propagated.
-        use_a_copy_for_nominal_settings :
-            To copy the nominal :class:`.CavitySettings` and avoid altering
-            their nominal counterpart. Set it to True during optimisation, to
-            False when you want to keep the current settings.
 
         Returns
         -------
@@ -156,14 +152,8 @@ parameters_factory.PARAMETERS_3D
         w_kin = elts.w_kin_in
         phi_abs = elts.phi_abs_in
 
-        set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(
-            set_of_cavity_settings,
-            elts.l_cav,
-            use_a_copy_for_nominal_settings=use_a_copy_for_nominal_settings,
-        )
-
         for elt in elts:
-            cavity_settings = set_of_cavity_settings.get(elt, None)
+            cavity_settings = set_of_cavity_settings.get(elt)
             _store_entry_phase_in_settings(phi_abs, cavity_settings)
 
             func = elt.beam_calc_param[self.id].transf_mat_function_wrapper
@@ -187,37 +177,16 @@ parameters_factory.PARAMETERS_3D
         )
         return simulation_output
 
-    def post_optimisation_run_with_this(
-        self,
-        accelerator_id: str,
-        optimized_cavity_settings: SetOfCavitySettings,
-        full_elts: ListOfElements,
-        **specific_kwargs,
-    ) -> SimulationOutput:
-        """Run Envelope3D with optimized cavity settings.
-
-        With this solver, we have nothing to do, nothing to update. Just call
-        the regular `run_with_this` method.
-
-        """
-        simulation_output = self.run_with_this(
-            accelerator_id=accelerator_id,
-            set_of_cavity_settings=optimized_cavity_settings,
-            elts=full_elts,
-            use_a_copy_for_nominal_settings=False,
-            **specific_kwargs,
-        )
-        return simulation_output
-
     def init_solver_parameters(self, accelerator: Accelerator) -> None:
         """Create the number of steps, meshing, transfer functions for elts.
 
-        The solver parameters are stored in the :class:`.Element`'s
+        The solver parameters are stored in the |E|'s
         ``beam_calc_param``.
 
         Parameters
         ----------
-            Object which :class:`.ListOfElements` must be initialized.
+        accelerator :
+            Object which |LOE| must be initialized.
 
         """
         elts = accelerator.elts

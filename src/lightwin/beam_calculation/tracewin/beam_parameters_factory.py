@@ -93,8 +93,8 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
         phase_space_name: Literal["x", "y", "zdelta"],
         results: dict[str, np.ndarray],
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        r"""
-        Retrieve the data necessary to reconstruct :math:`\sigma` beam matrix.
+        r"""Retrieve the data necessary to reconstruct :math:`\sigma` beam
+        matrix.
 
         Parameters
         ----------
@@ -133,8 +133,7 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
         phase_space_name: Literal["x99", "y99", "phiw99"],
         results: dict[str, np.ndarray],
     ) -> np.ndarray:
-        r"""
-        Retrieve the 99% emittances.
+        r"""Retrieve the 99% emittances.
 
         .. todo::
             normalized or not???

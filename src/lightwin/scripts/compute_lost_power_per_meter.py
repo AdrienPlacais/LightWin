@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""
-Convert lost power of one or several ``patran1.out`` into lost power per meter.
+"""Convert lost power of one or several ``patran1.out`` into lost power per
+meter.
 
 .. todo::
     Sometimes the lost power in first row is 1e-10 or something? Check this out
@@ -35,8 +35,7 @@ DEFINITIONS = {
     "running_mean": "The power at z is averaged over z-0.5m and z+0.5m. A "
     + "gaussian weighting function is used so that z has more weight than "
     + "z +/- 0.5 m.",
-    "meter_per_meter": "We sum the lost power between 0 and 1m, then 1 and"
-    " 2m, etc.",
+    "meter_per_meter": "We sum the lost power between 0 and 1m, then 1 and 2m, etc.",
 }
 
 

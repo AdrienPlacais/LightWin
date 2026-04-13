@@ -1,4 +1,4 @@
-"""Gather the configurations for the different :class:`.BeamCalculator`."""
+"""Gather the configurations for the different |BC|."""
 
 from lightwin.beam_calculation.envelope_1d.specs import (
     ENVELOPE1D_CONFIG,

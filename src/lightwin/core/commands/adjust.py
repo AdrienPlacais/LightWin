@@ -65,7 +65,7 @@ class Adjust(Command):
     def set_influenced_elements(
         self, instructions: list[Instruction], **kwargs: float
     ) -> None:
-        """Apply command to first :class:`.Element` that is found."""
+        """Apply command to first |E| that is found."""
         start = self.idx["dat_idx"] + 1
         indexes_between_this_cmd_and_element = (
             self._indexes_between_this_command_and(

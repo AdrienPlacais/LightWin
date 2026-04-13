@@ -20,9 +20,30 @@ from lightwin.ui.workflow_setup import set_up_accelerators, set_up_solvers
 
 params = [
     pytest.param(
+        ("bayesian_optimization",),
+        id="Bayesian Optimization",
+        marks=(
+            pytest.mark.slow,
+            pytest.mark.xfail(
+                condition=True, reason="Unchecked implementation"
+            ),
+        ),
+    ),
+    pytest.param(
         ("downhill_simplex",), marks=pytest.mark.smoke, id="Downhill Simplex"
     ),
     pytest.param(("least_squares",), id="Least Squares"),
+    pytest.param(("NSGA-III",), id="NSGA-III", marks=pytest.mark.slow),
+    pytest.param(
+        ("NSGA-III Multi-threaded",),
+        id="NSGA-III Multi-threaded",
+        marks=pytest.mark.slow,
+    ),
+    pytest.param(
+        ("simulated_annealing",),
+        id="Simulated Annealing",
+        marks=pytest.mark.slow,
+    ),
 ]
 
 
@@ -49,6 +70,7 @@ def config(
         "wtf": {
             "optimisation_algorithm": optimisation_algorithm,
         },
+        "beam_calculator": {"flag_cython": True},
     }
     # Remove Downhill Simplex specific kwargs
     if optimisation_algorithm != "downhill_simplex":
@@ -109,7 +131,6 @@ def simulation_outputs(
 
 @pytest.mark.envelope1d
 class TestOptimisationAlgorithms:
-
     def test_w_kin(
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
     ) -> None:

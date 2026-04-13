@@ -1,6 +1,6 @@
 """Define functions to switch between the various phases.
 
-Mainly used by :class:`.CavitySettings`.
+Mainly used by |CS|.
 
 """
 

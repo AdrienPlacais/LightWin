@@ -17,8 +17,7 @@ def solve_scalar_equation_brent(
     x_bounds: tuple[float, float],
     warning: bool = True,
 ) -> float:
-    """
-    Solve a scalar equation for multiple parameters using Brent's method.
+    """Solve a scalar equation for multiple parameters using Brent's method.
 
     Parameters
     ----------
@@ -37,6 +36,7 @@ def solve_scalar_equation_brent(
     -------
     float
         Root found for the parameter value. NaN if no root is found.
+
     """
 
     x_left, x_right = x_bounds

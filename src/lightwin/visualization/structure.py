@@ -54,7 +54,7 @@ def patch_kwargs(
     pos :
         Where the patch should start. Set it to ``"out"`` to mark an
         :class:`.Objective` position, which are generally evaluated at the exit
-        of an :class:`.Element`.
+        of an |E|.
 
     """
     if idx is None:

@@ -1,20 +1,18 @@
-"""Create :class:`.CavitySettings` from various contexts."""
+"""Create |CS| from various contexts."""
 
 import math
 from collections.abc import Sequence
-
-import numpy as np
 
 from lightwin.core.elements.field_maps.cavity_settings import (
     CavitySettings,
     CavityVars,
 )
 from lightwin.tracewin_utils.line import DatLine
-from lightwin.util.typing import REFERENCE_PHASES_T, STATUS_T
+from lightwin.util.typing import REFERENCE_PHASES_T
 
 
 class CavitySettingsFactory:
-    """Base class to create :class:`.CavitySettings` objects."""
+    """Base class to create |CS| objects."""
 
     def __init__(self, freq_bunch_mhz: float) -> None:
         """Instantiate factory, with attributes common to all cavities."""
@@ -38,43 +36,36 @@ class CavitySettingsFactory:
         )
         return cavity_settings
 
-    def from_optimisation_algorithm(
+    def for_optimisation_algorithm(
         self,
         base_settings: Sequence[CavitySettings],
-        var: np.ndarray,
+        amplitudes: Sequence[float],
+        phases: Sequence[float],
         reference: REFERENCE_PHASES_T,
-        status: STATUS_T,
     ) -> list[CavitySettings]:
-        """
-        Create the cavity settings to try during/at the end of an optimization.
+        """Create the cavity settings to try during an optimization.
 
         Parameters
         ----------
         base_settings :
             Nominal cavity settings, serving as a "base" for creating the new
-            :class:`.CavitySettings`.
-        var :
-            Holds amplitudes in the first half, phases in the second half.
+            |CS|.
+        amplitudes :
+            ``(n,)`` array of field amplitudes.
+        phases :
+            ``(n,)`` array of field phases.
         reference :
             Nature of the phase to use as reference for the optimization.
-        status :
-            Status of the cavities.
 
         """
-        amplitudes = list(var[var.shape[0] // 2 :])
-        phases = list(var[: var.shape[0] // 2])
-        new_cavity_vars = (
-            CavityVars(k_e, phi, status, reference)
+        as_cavity_vars = (
+            CavityVars(k_e, phi, "compensate (in progress)", reference)
             for k_e, phi in zip(amplitudes, phases, strict=True)
         )
-
-        several_cavity_settings = [
-            CavitySettings.copy(base, new_vars)
-            for base, new_vars in zip(
-                base_settings, new_cavity_vars, strict=True
-            )
+        return [
+            CavitySettings.copy(base, vars)
+            for base, vars in zip(base_settings, as_cavity_vars, strict=True)
         ]
-        return several_cavity_settings
 
     def _reference(
         self, absolute_phase_flag: bool, set_sync_phase: bool

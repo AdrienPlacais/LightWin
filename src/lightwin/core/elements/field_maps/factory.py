@@ -1,4 +1,4 @@
-"""Define a class to easily create :class:`.FieldMap` objects.
+"""Define a class to easily create |FM| objects.
 
 This element has its own factory as I expect that creating field maps will
 become very complex in the future: 3D, superposed fields...
@@ -51,7 +51,7 @@ def warn_once(geometry: int):
 
 
 class FieldMapFactory:
-    """An object to create :class:`.FieldMap` objects."""
+    """An object to create |FM| objects."""
 
     def __init__(
         self,

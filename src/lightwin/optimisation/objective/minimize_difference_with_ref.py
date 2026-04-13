@@ -13,7 +13,6 @@ from lightwin.optimisation.objective.objective import (
 
 
 class MinimizeDifferenceWithRef(_MinimizeDifferenceWithRef):
-
     def __init__(self, *args, **kwargs):
         logging.warning(
             "MinimizeDifferenceWithRef has moved to "

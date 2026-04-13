@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Define an utility function to compare two :class:`.BeamCalculator`.
+"""Define an utility function to compare two |BC|.
 
 .. todo::
     Allow for undetermined number of BeamCalculator in the config, and update

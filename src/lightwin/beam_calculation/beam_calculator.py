@@ -1,9 +1,8 @@
 """Define a base class for beam propagation computing tools.
 
-The base class :class:`BeamCalculator` allows to compute the propagation of
-the beam in a :class:`.ListOfElements`, possibly with a specific
-:class:`.SetOfCavitySettings` (optimisation process). It should return a
-:class:`.SimulationOutput`.
+The base class |BC| allows to compute the propagation of the beam in a |LOE|,
+possibly with a specific :class:`.SetOfCavitySettings` (optimisation process).
+It should return a |SO|.
 
 .. todo::
     Precise that BeamParametersFactory and TransferMatrixFactory are mandatory.
@@ -35,6 +34,7 @@ from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.util.typing import (
     EXPORT_PHASES_T,
+    OPTIMIZATION_STATUS,
     REFERENCE_PHASE_POLICY_T,
     REFERENCE_PHASES,
     REFERENCE_PHASES_T,
@@ -49,7 +49,11 @@ class BeamCalculator(ABC):
 
     @classmethod
     def reset_ids(cls) -> None:
-        """Reset the id counter. Useful between tests."""
+        """Reset the id counter.
+
+        Useful between tests.
+
+        """
         cls._ids = count(0)
 
     def __init__(
@@ -66,8 +70,7 @@ class BeamCalculator(ABC):
         Parameters
         ----------
         reference_phase_policy :
-            How reference phase of :class:`.CavitySettings` will be
-            initialized.
+            How reference phase of |CS| will be initialized.
         default_field_map_folder :
             Where to look for field map files by default.
         flag_cython :
@@ -78,7 +81,7 @@ class BeamCalculator(ABC):
             The type of phase you want to export for your ``FIELD_MAP``.
 
         """
-        #: How reference phase of :class:`.CavitySettings` will be initialized.
+        #: How reference phase of |CS| will be initialized.
         self.reference_phase_policy: REFERENCE_PHASE_POLICY_T = (
             reference_phase_policy
         )
@@ -98,7 +101,7 @@ class BeamCalculator(ABC):
             ElementBeamCalculatorParametersFactory
         )
         #: Unique ID for this object. Obtained by prepending its order in the
-        #: list of :class:`BeamCalculator` to its class name. Typically:
+        #: list of |BC| to its class name. Typically:
         #: ``"0_Envelope1D"`` or ``"1_TraceWin"``. Note that this will also
         #: be the name of the directory where results will be saved. Typical
         #: project structure is::
@@ -127,8 +130,8 @@ class BeamCalculator(ABC):
 
         .. note::
             Was used to set the :class:`.ListOfElementsFactory`. But now, every
-            :class:`.BeamCalculator` instantiates it differently, so it is
-            created in ``_set_up_specific_factories``.
+            |BC| instantiates it differently, so it is created in
+            ``_set_up_specific_factories``.
 
         .. todo::
             ``default_field_map_folder`` has a wrong default value. Should take
@@ -141,7 +144,7 @@ class BeamCalculator(ABC):
 
     @abstractmethod
     def _set_up_specific_factories(self) -> None:
-        """Set up the factories specific to the :class:`.BeamCalculator`."""
+        """Set up the factories specific to the |BC|."""
 
     def run(
         self,
@@ -183,9 +186,8 @@ class BeamCalculator(ABC):
         """
         simulation_output = self.run_with_this(
             accelerator_id=accelerator_id,
-            set_of_cavity_settings=None,
+            set_of_cavity_settings=SetOfCavitySettings.nominal(elts),
             elts=elts,
-            use_a_copy_for_nominal_settings=False,
             **kwargs,
         )
         if update_reference_phase:
@@ -201,9 +203,10 @@ class BeamCalculator(ABC):
     def run_with_this(
         self,
         accelerator_id: str,
-        set_of_cavity_settings: SetOfCavitySettings | None,
+        set_of_cavity_settings: SetOfCavitySettings,
         elts: ListOfElements,
-        use_a_copy_for_nominal_settings: bool = True,
+        optimization_status: OPTIMIZATION_STATUS,
+        **kwargs,
     ) -> SimulationOutput:
         """Perform a simulation with new cavity settings.
 
@@ -219,10 +222,9 @@ class BeamCalculator(ABC):
             Holds the norms and phases of the compensating cavities.
         elts :
             List of elements in which the beam should be propagated.
-        use_a_copy_for_nominal_settings :
-            To copy the nominal :class:`.CavitySettings` and avoid altering
-            their nominal counterpart. Set it to True during optimisation, to
-            False when you want to keep the current settings.
+        optimization_status :
+            Only used by :class:`.TraceWin`, to prevent errors during
+            optimization phase.
 
         Returns
         -------
@@ -231,7 +233,6 @@ class BeamCalculator(ABC):
 
         """
 
-    @abstractmethod
     def post_optimisation_run_with_this(
         self,
         accelerator_id: str,
@@ -248,10 +249,16 @@ class BeamCalculator(ABC):
         the whole linac.
 
         """
+        return self.run_with_this(
+            accelerator_id=accelerator_id,
+            set_of_cavity_settings=optimized_cavity_settings,
+            elts=full_elts,
+            **kwargs,
+        )
 
     @abstractmethod
     def init_solver_parameters(self, accelerator: Accelerator) -> None:
-        """Init some :class:`BeamCalculator` solver parameters."""
+        """Init some |BC| solver parameters."""
 
     @property
     def reference_phase(self) -> REFERENCE_PHASES_T:
@@ -364,8 +371,7 @@ class BeamCalculator(ABC):
     ) -> SimulationOutput | None:
         """Get previously calculated object.
 
-        This method should be used when the :class:`.Accelerator` is an
-        unpickled object.
+        This method should be used when the |A| is an unpickled object.
 
         .. todo::
             Support when the order of BeamCalculator changed?

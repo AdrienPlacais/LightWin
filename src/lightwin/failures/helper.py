@@ -28,11 +28,11 @@ def _distance_to_ref[T](
     Parameters
     ----------
     element :
-        First object from which you want distance. Often, an :class:`.Element`
-        of a lattice that will potentially be used for compensation.
+        First object from which you want distance. Often, an |E| of a lattice
+        that will potentially be used for compensation.
     failed :
         Second object or list of object from which you want distance. Often, a
-        list of failed :class:`.Element` or a list of lattices with a fault.
+        list of failed |E| or a list of lattices with a fault.
     all_elements :
         All the elements/lattices/sections.
     tie_politics :
@@ -101,7 +101,7 @@ def sort_by_position[T](
     ----------
     failed :
         Second object or list of object from which you want distance. Often, a
-        list of failed :class:`.Element` or a list of lattices with a fault.
+        list of failed |E| or a list of lattices with a fault.
     all_elements :
         All the elements/lattices/sections.
     tie_politics :
@@ -128,7 +128,8 @@ def sort_by_position[T](
 def remove_lists_with_less_than_n_elements[T](
     elements: Sequence[Sequence[T]], minimum_size: int = 1
 ) -> list[list[T]]:
-    """Return a list where objects have a minimum length of ``minimum_size``."""
+    """Return a list where objects have a minimum length of
+    ``minimum_size``."""
     out = [list(x) for x in elements if len(x) >= minimum_size]
     return out
 

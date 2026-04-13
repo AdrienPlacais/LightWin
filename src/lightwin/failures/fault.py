@@ -1,4 +1,4 @@
-"""Define the class :class:`Fault`.
+"""Define the class |F|.
 
 Its purpose is to hold information on a failure and to fix it.
 
@@ -14,7 +14,7 @@ Its purpose is to hold information on a failure and to fix it.
 import datetime
 import logging
 import time
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.simulation_output.simulation_output import (
@@ -22,9 +22,11 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.helper import equivalent_elt
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.failures import set_of_cavity_settings
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.algorithms.algorithm import (
     OptimisationAlgorithm,
@@ -62,8 +64,8 @@ class Fault:
         compensating_elements :
             Holds the compensating elements.
         skip_optimization :
-            Used when the fixed :class:`.Accelerator` was unpikcled and
-            therefore already holds the fixed settings.
+            Used when the fixed |A| was unpikcled and therefore already holds
+            the fixed settings.
 
         """
         self.broken_elts = broken_elts
@@ -91,7 +93,7 @@ class Fault:
     def fix(
         self, optimisation_algorithm: OptimisationAlgorithm | None
     ) -> None:
-        """Fix the :class:`Fault`. Set ``self.optimized_cavity_settings``.
+        """Fix the |F|. Set ``self.optimized_cavity_settings``.
 
         Also display information on the parametrization of the optimization
         problem, the solution that was found.
@@ -102,7 +104,7 @@ class Fault:
             The optimization algorithm to be used, already initialized.
         simulation_output :
             The most recent simulation, that includes the compensation settings
-            of all :class:`.Fault` upstream of ``self``.
+            of all |F| upstream of ``self``.
 
         """
         logging.info(
@@ -111,20 +113,22 @@ class Fault:
         )
         start_time = time.monotonic()
 
-        if self._skip_optimization:
-            logging.info("Skipped!")
-            return
-
         assert optimisation_algorithm is not None
         self.optimisation_algorithm = optimisation_algorithm
+
+        if self._skip_optimization:
+            info = "Skipped!"
+        else:
+            info = "Finished!"
+
         _ = optimisation_algorithm.optimize()
 
         assert self.opti_sol is not None
         delta_t = datetime.timedelta(seconds=time.monotonic() - start_time)
         info = (
-            f"Finished! Solving this problem took {delta_t}. Results are:",
+            f"{info} Solving this problem took {delta_t}. Results are:",
             str_objectives_solved(optimisation_algorithm.objectives),
-            f"Additional info: {'\n'.join(self.opti_sol["info"])}",
+            f"Additional info: {'\n'.join(self.opti_sol['info'])}",
         )
         logging.info("\n".join(info))
 
@@ -151,16 +155,21 @@ class Fault:
         Returns
         -------
             Most recent simulation, that includes the compensation settings of
-            upstream :class:`.Fault` as well as of this one.
+            upstream |F| as well as of this one.
 
         """
         if self._skip_optimization:
             return fix_acc.simulation_outputs[beam_calculator.id]
         fix_elts = fix_acc.elts
 
+        optimized_cavity_settings = SetOfCavitySettings.from_incomplete_set(
+            self._compensation_settings,
+            fix_elts.l_cav,
+            optimization_status="finished",
+        )
         simulation_output = beam_calculator.post_optimisation_run_with_this(
             accelerator_id=fix_acc.id,
-            optimized_cavity_settings=self.optimized_cavity_settings,
+            optimized_cavity_settings=optimized_cavity_settings,
             full_elts=fix_elts,
         )
         simulation_output.compute_indirect_quantities(
@@ -286,26 +295,28 @@ class Fault:
         return info
 
     @property
-    def optimized_cavity_settings(self) -> SetOfCavitySettings:
+    def _compensation_settings(self) -> dict[FieldMap, CavitySettings]:
         """Get the settings found by the optimizer.
 
-        If optimization was already performed (unpickled :class:`.Accelerator`)
-        , we return the settings stored in the compensating cavities.
+        If optimization was already performed (unpickled |A|) , we return the
+        settings stored in the compensating cavities.
 
         """
+        # Classic
         if self.opti_sol is not None:
-            return self.opti_sol.get("cavity_settings")
+            return self.opti_sol["cavity_settings"]
+        # Unpickled (which skipped optimization), but an optimization was asked
         if not self._skip_optimization:
             raise ValueError(
                 "'self.opti_sol' attribute should be set unless we are dealing"
                 " with an already fixed Fault."
             )
-        cavity_settings = {
+        # Unpickled
+        return {
             cav: cav.cavity_settings
             for cav in self.compensating_elements
             if isinstance(cav, FieldMap)
         }
-        return SetOfCavitySettings(cavity_settings)
 
     @property
     def success(self) -> bool:

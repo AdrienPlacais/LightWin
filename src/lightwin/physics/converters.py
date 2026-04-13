@@ -72,9 +72,9 @@ def longitudinal(
     """Convert energies between longitudinal phase spaces."""
     conversion_functions = {
         "zprime gamma to zdelta": lambda zp, gam: zp * gam**-2 * 1e-1,
-        "zprime kin to zdelta": lambda zp, kin: zp
-        * (1.0 + kin / e_rest_mev) ** -2
-        * 1e-1,
+        "zprime kin to zdelta": lambda zp, kin: (
+            zp * (1.0 + kin / e_rest_mev) ** -2 * 1e-1
+        ),
     }
     return conversion_functions[key](long_in, ene)
 

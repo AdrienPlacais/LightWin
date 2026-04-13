@@ -20,8 +20,7 @@ class TransferMatrixFactoryTraceWin(TransferMatrixFactory):
         filename: str = "Transfer_matrix1.dat",
         high_def: bool = False,
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-        """
-        Get the full transfer matrices calculated by TraceWin.
+        """Get the full transfer matrices calculated by TraceWin.
 
         Parameters
         ----------

@@ -103,10 +103,9 @@ class MatplotlibPlotter(IPlotter):
     ) -> None:
         """Add a plot to show the structure of the linac."""
         if elts is None:
-            assert hasattr(self, "_elts"), (
-                "Please provide at least a defaut ListOfElements for structure"
-                " plots."
-            )
+            assert hasattr(
+                self, "_elts"
+            ), "Please provide at least a defaut ListOfElements for structure plots."
             elts = self._elts
         plot_structure(axes[-1], elts, x_axis)
 

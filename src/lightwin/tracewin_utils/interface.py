@@ -129,8 +129,7 @@ def beam_calculator_to_command(
 
 
 def list_of_elements_to_command(dat_filepath: Path) -> list[str]:
-    """
-    Return a command from :class:`.ListOfElements` attributes.
+    """Return a command from |LOE| attributes.
 
     :class:`.ParticleInitialState` and :class:`.BeamParameters` have their own
     method, they are not called from here.
@@ -194,10 +193,10 @@ def set_of_cavity_settings_to_command(
     set_of_cavity_settings :
         All the new cavity settings.
     phi_bunch_first_element :
-        Phase of synchronous particle at entry of first element of
-        :class:`.ListOfElements` under study.
+        Phase of synchronous particle at entry of first element of |LOE| under
+        study.
     idx_first_element :
-        Index of first element of :class:`.ListOfElements` under study.
+        Index of first element of |LOE| under study.
 
     Returns
     -------
@@ -250,10 +249,9 @@ def _cavity_settings_to_command(
     cavity_settings :
         Settings to try.
     delta_phi_bunch :
-        Phase at entry of first element of :class:`.ListOfElements` under
-        study.
+        Phase at entry of first element of |LOE| under study.
     delta_index :
-        Index of the first element of :class:`.ListOfElements` under study.
+        Index of the first element of |LOE| under study.
 
     Returns
     -------
@@ -341,8 +339,7 @@ def _proper_type(
         return value
 
     logging.warning(
-        f"Input value {value} is a {type(value)} while it should be a "
-        f"{my_type}."
+        f"Input value {value} is a {type(value)} while it should be a {my_type}."
     )
     try:
         value = my_type(value)
@@ -351,7 +348,6 @@ def _proper_type(
 
     except ValueError:
         logging.error(
-            "Unsuccessful type conversion. Returning np.nan to completely "
-            "ignore key."
+            "Unsuccessful type conversion. Returning np.nan to completely ignore key."
         )
         return np.nan

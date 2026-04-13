@@ -3,6 +3,7 @@
 from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 from scipy.optimize import Bounds, OptimizeResult, minimize
 
 from lightwin.optimisation.algorithms.algorithm import (
@@ -59,19 +60,20 @@ class DownhillSimplex(OptimisationAlgorithm):
 
     def _generate_opti_sol(self, result: OptimizeResult) -> OptiSol:
         """Store the optimization results."""
-        cavity_settings = self._create_set_of_cavity_settings(result.x)
+        cavity_settings = self._to_cavity_settings(result.x)
+        objectives, _ = self._evaluate_solution(result.x)
 
         opti_sol: OptiSol = {
             "var": result.x,
             "cavity_settings": cavity_settings,
             "fun": result.fun,
-            "objectives": self._get_objective_values(result.x),
+            "objectives": objectives,
             "success": result.success,
             "info": [self.__class__.__name__, result.message],
         }
         return opti_sol
 
-    def _format_variables(self) -> tuple[np.ndarray, Bounds]:
+    def _format_variables(self) -> tuple[NDArray[np.float64], Bounds]:
         """Convert the :class:`.Variable` to an array and ``Bounds``."""
         x_0 = np.array([var.x_0 for var in self._variables])
         _bounds = np.array([var.limits for var in self._variables])

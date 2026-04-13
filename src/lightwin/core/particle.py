@@ -1,14 +1,13 @@
 """Define objects to store initial state/trajectory of a particle.
 
 - :class:`ParticleInitialState` is just here to save the position and
-  energy of a particle at the entrance of the linac. Saved as an
-  :class:`.ListOfElements` attribute.
+  energy of a particle at the entrance of the linac. Saved as an |LOE|
+  attribute.
 
 - :class:`ParticleFullTrajectory` saves the energy, phase, position of a
   particle along the linac. As a single :class:`ParticleInitialState` can
   lead to several :class:`ParticleFullTrajectory` (according to size of the
-  mesh, the solver, etc), :class:`.ParticleFullTrajectory` are stored in
-  :class:`.SimulationOutput`.
+  mesh, the solver, etc), :class:`.ParticleFullTrajectory` are stored in |SO|.
 
 """
 
@@ -32,7 +31,7 @@ from lightwin.util.typing import GETTABLE_PARTICLE_T, BeamKwargs
 class ParticleInitialState:
     """Hold the initial energy/phase of a particle, and if it is synchronous.
 
-    It is used for :class:`.ListOfElements` attribute.
+    It is used for |LOE| attribute.
 
     """
 
@@ -53,7 +52,7 @@ class ParticleInitialState:
 class ParticleFullTrajectory:
     r"""Hold the full energy, phase, etc of a particle.
 
-    It is stored in a :class:`.SimulationOutput`.
+    It is stored in a |SO|.
 
     Phase is defined as:
 

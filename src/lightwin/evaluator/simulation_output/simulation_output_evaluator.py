@@ -2,7 +2,7 @@
 
 .. note::
     We do not directly evaluate a :class:`.SetOfCavitySettings` though, but
-    rather a :class:`.SimulationOutput`.
+    rather a |SO|.
 
 .. todo::
     different factories for evaluation during the fit and evaluation after
@@ -57,9 +57,8 @@ class SimulationOutputEvaluator(ABC):
         A function that takes the simulation output under study as argument,
         and returns the value to be studied.
     ref_simulation_output :
-        The simulation output of a nominal :class:`.Accelerator`. It is up to
-        the user to verify that the :class:`.BeamCalculator` is the same
-        between the reference and the fixed :class:`.SimulationOutput`.
+        The simulation output of a nominal |A|. It is up to the user to verify
+        that the |BC| is the same between the reference and the fixed |SO|.
     ref_value_getter :
         A function that takes the reference simulation ouput and the simulation
         output under study as arguments, and returns the reference value. In
@@ -215,8 +214,8 @@ class SimulationOutputEvaluator(ABC):
     ) -> NDArray | float:
         """Apply all the ``post_treaters`` functions.
 
-        Can also plot the post-treated data after all or some of the
-        post-treatments have been performed.
+        Can also plot the post-treated data after all or some of the post-
+        treatments have been performed.
 
         """
         for post_treater in self.post_treaters:

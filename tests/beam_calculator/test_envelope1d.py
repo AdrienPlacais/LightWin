@@ -14,7 +14,6 @@ from tests.pytest_helpers.simulation_output import wrap_approx
 
 import lightwin.config.config_manager as config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
-from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
@@ -195,7 +194,8 @@ class TestSolver1D:
 
 
 def test_inverted_bounds_warning() -> None:
-    """Tests that the method accepts inverted bounds with a warning and still finds the roots."""
+    """Tests that the method accepts inverted bounds with a warning and still
+    finds the roots."""
 
     def example_func(x: float, a: float) -> float:
         return x - a
@@ -210,7 +210,8 @@ def test_inverted_bounds_warning() -> None:
 
 
 def test_no_sign_change_warning() -> None:
-    """Tests that lack of sign change in Brent's method triggers a warning and returns NaN."""
+    """Tests that lack of sign change in Brent's method triggers a warning and
+    returns NaN."""
 
     def example_func(x: float, a: float) -> float:
         return x**2 + a

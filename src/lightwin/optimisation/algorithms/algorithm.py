@@ -22,11 +22,12 @@ list of implemented algorithms in the :mod:`.algorithm` module.
 
 import logging
 from abc import ABC, abstractmethod
-from collections.abc import Collection
+from collections.abc import Collection, Mapping
 from pathlib import Path
-from typing import Any, Callable, TypedDict
+from typing import Any, Callable, NotRequired, TypedDict, final
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -35,30 +36,39 @@ from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.cavity_settings_factory import (
     CavitySettingsFactory,
 )
-from lightwin.failures.set_of_cavity_settings import (
-    FieldMap,
-    SetOfCavitySettings,
-)
+from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.optimisation.design_space.design_space import DesignSpace
 from lightwin.optimisation.objective.factory import ObjectiveFactory
 from lightwin.optimisation.objective.objective import str_objectives
-from lightwin.util.typing import REFERENCE_PHASES
+from lightwin.util.typing import REFERENCE_PHASES, REFERENCE_PHASES_T
 
 
 class OptiSol(TypedDict):
     """Hold information on the solution."""
 
-    var: np.ndarray | list[float]  # Value of variables
-    cavity_settings: SetOfCavitySettings  # Value of var, but more logical
-    fun: np.ndarray | list[float]  # Value of objectives
-    objectives: dict[str, float]  # Value of objectives, but more logical
-    success: bool  # If optimization was successful
-    info: list[str]  # Complementary information
+    #: Value of variables
+    var: NDArray[np.float64] | list[float]
+    #: Value of var, but more logical
+    cavity_settings: dict[FieldMap, CavitySettings]
+    #: Value of objectives
+    fun: NDArray[np.float64] | list[float]
+    #: Maps name of objectives with their value.
+    objectives: dict[str, float]
+    #: Value of constraint violation
+    cv: NotRequired[float]
+    #: Maps name of constaint with cv value.
+    constraints: NotRequired[dict[str, float]]
+    #: If optimization was successful
+    success: bool
+    #: Complementary information
+    info: list[str]
 
 
-ComputeBeamPropagationT = Callable[[SetOfCavitySettings], SimulationOutput]
+ComputeBeamPropagationT = Callable[
+    [Mapping[FieldMap, CavitySettings]], SimulationOutput
+]
 ComputeResidualsT = Callable[[SimulationOutput], Any]
-ComputeConstraintsT = Callable[[SimulationOutput], np.ndarray]
+ComputeConstraintsT = Callable[[SimulationOutput], NDArray[np.float64]]
 
 
 class OptimisationAlgorithm(ABC):
@@ -91,8 +101,7 @@ class OptimisationAlgorithm(ABC):
             Holds :class:`.Variable`, :class:`.Constraint`.
         compute_beam_propagation :
             Takes in a :class:`.SetOfCavitySettings`, propages the beam in a
-            version of ``elts`` that uses them, and produce a
-            :class:`.SimulationOutput`.
+            version of ``elts`` that uses them, and produce a |SO|.
         cavity_settings_factory :
             An object that can create :class:`.SetOfCavitySettings` easily.
         reference_simulation_output :
@@ -105,7 +114,7 @@ class OptimisationAlgorithm(ABC):
             during optimization.
 
         """
-        self.compensating_elements = compensating_elements
+        self.compensating_elements = tuple(compensating_elements)
 
         self._objective_factory = objective_factory
         self.objectives = self._objective_factory.objectives
@@ -115,6 +124,18 @@ class OptimisationAlgorithm(ABC):
         if self.supports_constraints:
             assert self._design_space.compute_constraints is not None
         self._variables = self._design_space.variables
+
+        _reference_phase = tuple(
+            {x.name for x in self._variables if "phi" in x.name}
+        )
+        assert (
+            len(_reference_phase) == 1
+        ), "Only one phase variable should be set"
+        assert (
+            _reference_phase[0] in REFERENCE_PHASES
+        ), f"{_reference_phase} is an invalid phase variable"
+        self._reference_phase: REFERENCE_PHASES_T = _reference_phase[0]
+
         self._constraints = self._design_space.constraints
 
         self.compute_beam_propagation = compute_beam_propagation
@@ -197,25 +218,19 @@ class OptimisationAlgorithm(ABC):
     def _format_constraints(self) -> Any:
         """Adapt all :class:`.Constraint` to this optimisation algorithm."""
 
-    def _wrapper_residuals(self, var: np.ndarray) -> np.ndarray:
+    def _wrapper_residuals(
+        self, var: NDArray[np.float64]
+    ) -> NDArray[np.float64]:
         """Compute residuals from an array of variable values."""
-        self.history.add_settings(var)
-        cav_settings = self._create_set_of_cavity_settings(var)
-        simulation_output = self.compute_beam_propagation(cav_settings)
-        residuals = self._compute_residuals(simulation_output)
-        self.history.add_objective_values(list(residuals), simulation_output)
-        self.history.checkpoint()
-        return residuals
+        objectives, _ = self._evaluate_solution(var)
+        return np.array(list(objectives.values()))
 
-    def _finalize(self) -> None:
-        """End the optimization process."""
-        self.history.save()
-
-    def _norm_wrapper_residuals(self, var: np.ndarray) -> float:
+    def _norm_wrapper_residuals(self, var: NDArray[np.float64]) -> float:
         """Compute norm of residuals vector from array of variable values."""
         res = float(np.linalg.norm(self._wrapper_residuals(var)))
         return res
 
+    @final
     def _finalize(self, opti_sol: OptiSol) -> None:
         """End the optimization process.
 
@@ -223,60 +238,138 @@ class OptimisationAlgorithm(ABC):
            - Save the optimization history if applicable.
            - Store final residual values in the appropriate :class:`.Objective`
              instances.
+           - Record final constraint values in history if applicable.
 
         """
         for objective, residual in zip(
             self.objectives, opti_sol["objectives"].values(), strict=True
         ):
             objective.residual = residual
+
+        fresh_objectives, constraints = self._evaluate_solution(
+            opti_sol["var"]
+        )
+
+        if constraints is not None:
+            opti_sol["constraints"] = constraints
+            opti_sol["cv"] = float(
+                np.sum(np.maximum(list(constraints.values()), 0.0))
+            )
+
+        self._check_consistency(opti_sol, fresh_objectives)
         self.history.save()
 
-    def _create_set_of_cavity_settings(
-        self, var: np.ndarray
-    ) -> SetOfCavitySettings:
-        """Transform ``var`` into generic :class:`.SetOfCavitySettings`.
+    def _to_cavity_settings(
+        self, var: NDArray[np.float64]
+    ) -> dict[FieldMap, CavitySettings]:
+        """Transform ``var`` into :class:`.CavitySettings`.
 
         Parameters
         ----------
         var :
-            An array holding the variables to try.
+            A ``(2n,)`` array holding the settings to try, where first half
+            holds the amplitudes and second the phases.
 
         Returns
         -------
-        SetOfCavitySettings
-            Object holding the settings of all the cavities.
+            Maps compensating elements with their :class:`.CavitySettings`.
 
         """
-        reference = [x for x in self.variable_names if "phi" in x][0]
-        assert reference in REFERENCE_PHASES, (
-            f"{reference = } is not allowed as a reference phase. Allowed "
-            f"values are: {REFERENCE_PHASES = }."
-        )
-        original_settings: list[CavitySettings]
+        amplitudes = list(var[var.shape[0] // 2 :])
+        phases = list(var[: var.shape[0] // 2])
+
         original_settings = [
             cavity.cavity_settings for cavity in self.compensating_elements
         ]
 
-        several_cavity_settings = (
-            self.cavity_settings_factory.from_optimisation_algorithm(
+        cavity_settings_to_try = (
+            self.cavity_settings_factory.for_optimisation_algorithm(
                 base_settings=original_settings,
-                var=var,
-                reference=reference,
-                status="compensate (in progress)",
+                amplitudes=amplitudes,
+                phases=phases,
+                reference=self._reference_phase,
             )
         )
-        return SetOfCavitySettings.from_cavity_settings(
-            several_cavity_settings, self.compensating_elements
-        )
-
-    def _get_objective_values(self, var: np.ndarray) -> dict[str, float]:
-        """Save the full array of objective values."""
-        values = self._wrapper_residuals(var)
-        objectives_values = {
-            str(objective): value
-            for objective, value in zip(self.objectives, values, strict=True)
+        return {
+            cav: settings
+            for cav, settings in zip(
+                self.compensating_elements, cavity_settings_to_try, strict=True
+            )
         }
-        return objectives_values
+
+    @final
+    def _evaluate_solution(
+        self, var: NDArray[np.float64]
+    ) -> tuple[dict[str, float], dict[str, float] | None]:
+        """Evaluate objectives and constraints for a single solution.
+
+        Runs the simulation once and returns both, avoiding redundant beam
+        propagation calls when both are needed (e.g. in :meth:`._finalize`).
+
+        Parameters
+        ----------
+        var :
+            Array of variable values.
+
+        Returns
+        -------
+        objectives :
+            Maps objective names to their values.
+        constraints :
+            Constraint violation array, or ``None`` if no constraints defined.
+
+        """
+        cav_settings = self._to_cavity_settings(var)
+        simulation_output = self.compute_beam_propagation(cav_settings)
+
+        residuals = self._compute_residuals(simulation_output)
+        objectives = {
+            str(objective): value
+            for objective, value in zip(
+                self.objectives, residuals, strict=True
+            )
+        }
+
+        cv = None
+        constraints = None
+        if self.n_constr > 0:
+            cv = self._design_space.compute_constraints(simulation_output)
+            constraints = {str(c): c for c in cv}
+
+        self.history.add_settings(var)
+        self.history.add_objective_values(list(residuals), simulation_output)
+        if cv is not None:
+            self.history.add_constraint_values(cv)
+        self.history.checkpoint()
+
+        return objectives, constraints
+
+    @final
+    def _check_consistency(
+        self, opti_sol: OptiSol, fresh_objectives: dict[str, float]
+    ) -> None:
+        """Compare stored objectives with a fresh evaluation."""
+        stored = np.array(list(opti_sol["objectives"].values()))
+        fresh = np.array(list(fresh_objectives.values()))
+
+        if np.allclose(stored, fresh, rtol=1e-3):
+            logging.debug("Consistency check passed.")
+            return
+
+        rel_diff = np.abs(fresh - stored) / (np.abs(stored) + 1e-12)
+        logging.warning(
+            f"Consistency check FAILED for {self.__class__.__name__}:\n"
+            + "\n".join(
+                f"  {name}: stored={s:.6g}, fresh={f:.6g}, rel_diff={d:.2e}"
+                for name, s, f, d in zip(
+                    opti_sol["objectives"].keys(),
+                    stored,
+                    fresh,
+                    rel_diff,
+                    strict=True,
+                )
+            )
+        )
 
 
 class OptimizationHistory:
@@ -327,13 +420,13 @@ class OptimizationHistory:
 
         self._rename_previous_files()
 
-        self._settings: list[np.ndarray] = []
+        self._settings: list[NDArray[np.float64]] = []
         self._objectives: list[list[float | None] | list[str]] = list(
             self._init_objective_hist(
                 objectives_names, reference_simulation_output
             )
         )
-        self._constraints: list[list[float] | np.ndarray | None] = []
+        self._constraints: list[list[float] | NDArray[np.float64] | None] = []
 
         self._start_idx = 0
         self._iteration_count: int = 0
@@ -347,7 +440,7 @@ class OptimizationHistory:
         self.save = lambda: None
         self.checkpoint = lambda: None
 
-    def add_settings(self, var: np.ndarray) -> None:
+    def add_settings(self, var: NDArray[np.float64]) -> None:
         """Add a new set of cavity settings."""
         self._settings.append(var)
 
@@ -405,7 +498,7 @@ class OptimizationHistory:
         self._objectives.append(objectives + sim_output_vals)
 
     def add_constraint_values(
-        self, constraints: list | np.ndarray | None
+        self, constraints: list | NDArray[np.float64] | None
     ) -> None:
         """Add some constraint values."""
         self._constraints.append(constraints)
@@ -454,7 +547,7 @@ class OptimizationHistory:
 
 
 def _save_values(
-    filepath: Path, values: list[list[float] | np.ndarray | None]
+    filepath: Path, values: list[list[float] | NDArray[np.float64] | None]
 ) -> None:
     """Save the ``values`` to ``filepath`` (can be objectives or constraints).
 

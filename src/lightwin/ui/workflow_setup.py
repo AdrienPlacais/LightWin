@@ -16,7 +16,7 @@ from lightwin.failures.fault_scenario import (
     FaultScenarioFactory,
 )
 from lightwin.optimisation.objective.factory import ObjectiveFactory
-from lightwin.util.typing import BeamKwargs
+from lightwin.util.typing import BeamKwargs, ConfigKw
 from lightwin.visualization import plot
 
 
@@ -37,17 +37,15 @@ def set_up_solvers(
     beam :
         Configuration dictionary holding the initial beam parameters.
     beam_calculator :
-        Configuration entries for the first :class:`.BeamCalculator`, used for
-        optimisation.
+        Configuration entries for the first |BC|, used for optimisation.
     beam_calculator_post :
-        Configuration entries for the second optional :class:`.BeamCalculator`,
-        used for a more thorough calculation of the beam propagation once the
-        compensation settings are found.
+        Configuration entries for the second optional |BC|, used for a more
+        thorough calculation of the beam propagation once the compensation
+        settings are found.
     reset_factory :
         Force creation of a new :class:`.BeamCalculatorsFactory`, reset the
-        :class:`.BeamCalculator` counter. Use this if you want to change the
-        ``files`` or ``beam`` without restarting the Python kernel -- for
-        example during ``pytest``.
+        |BC| counter. Use this if you want to change the ``files`` or ``beam``
+        without restarting the Python kernel -- for example during ``pytest``.
     config :
         Other ``TOML`` configuration dictionaries.
 
@@ -65,8 +63,7 @@ def set_up_solvers(
 
 
 def set_up_accelerators(
-    config: dict[str, dict[str, Any] | BeamKwargs],
-    beam_calculators: tuple[BeamCalculator, ...],
+    config: ConfigKw, beam_calculators: tuple[BeamCalculator, ...]
 ) -> dict[int, list[Accelerator]]:
     """Create the accelerators.
 
@@ -83,9 +80,9 @@ def set_up_accelerators(
 
     Returns
     -------
-        Dictionary where keys are :class:`.FaultScenario` indexes, and
-        values are lists of corresponding :class:`.Accelerator`. First
-        index corresponds to reference accelerator (no failure).
+        Dictionary where keys are |FS| indexes, and values are lists of
+        corresponding |A|. First index corresponds to reference accelerator (no
+        failure).
 
     """
     factory = AcceleratorFactory(beam_calculators, **config)
@@ -99,13 +96,13 @@ def set_up_accelerators(
 
 
 def set_up_faults(
-    config: dict[str, dict[str, Any] | BeamKwargs],
+    config: ConfigKw,
     beam_calculator: BeamCalculator,
     accelerators: dict[int, list[Accelerator]],
     objective_factory_class: type[ObjectiveFactory] | None = None,
     **kwargs,
 ) -> list[FaultScenario]:
-    """Create all the :class:`.Fault`, gather them in :class:`.FaultScenario`.
+    """Create all the |F|, gather them in |FS|.
 
     Parameters
     ----------
@@ -115,9 +112,9 @@ def set_up_faults(
         The object that will be used for the optimization. Usually, a fast
         solver such as :class:`.CyEnvelope1D`.
     accelerators :
-        Dictionary where keys are :class:`.FaultScenario` indexes, and values
-        are lists of corresponding :class:`.Accelerator`. First index
-        corresponds to reference accelerator (no failure).
+        Dictionary where keys are |FS| indexes, and values are lists of
+        corresponding |A|. First index corresponds to reference accelerator (no
+        failure).
     objective_factory_class :
         If provided, will override the ``objective_preset``. Used to let user
         define its own :class:`.ObjectiveFactory` without altering the source
@@ -128,20 +125,23 @@ def set_up_faults(
         The instantiated fault scenarios.
 
     """
-    beam_calculator.compute(accelerators[0][0])
+    design_space_kw = config.get("design_space", None)
+    if design_space_kw is None:
+        raise ValueError("design_space configuration is necessary")
     factory = FaultScenarioFactory(
         accelerators,
         beam_calculator,
-        config.get("design_space"),
+        design_space_kw,
         objective_factory_class=objective_factory_class,
     )
-    return factory.create(**config.get("wtf"))
+
+    wtf = config.get("wtf", None)
+    if wtf is None:
+        raise ValueError("wtf configuration is necessary")
+    return factory.create(**wtf)
 
 
-def set_up(
-    config: dict[str, dict[str, Any] | BeamKwargs],
-    **kwargs,
-) -> tuple[
+def set_up(config: ConfigKw, **kwargs) -> tuple[
     tuple[BeamCalculator, ...],
     dict[int, list[Accelerator]],
     list[FaultScenario] | None,
@@ -160,19 +160,22 @@ def set_up(
         The objects to compute the beam. Typically, they are two: one for the
         optimization, and a second slower one to run a more precise simulation.
     accelerators :
-        Dictionary where keys are :class:`.FaultScenario` indexes, and values
-        are lists of corresponding :class:`.Accelerator`. First index
-        corresponds to reference accelerator (no failure).
+        Dictionary where keys are |FS| indexes, and values are lists of
+        corresponding |A|. First index corresponds to reference accelerator (no
+        failure).
      fault_scenarios :
         The created failures. Will be None if no ``"wtf"`` entry was given in
         ``config``.
      ref_simulations_outputs :
-        A reference :class:`.SimulationOutput` corresponding to the nominal
-        linac per :class:`.BeamCalculator`.
+        A reference |SO| corresponding to the nominal linac per |BC|.
 
     """
     beam_calculators = set_up_solvers(**config)
     accelerators = set_up_accelerators(config, beam_calculators)
+
+    ref_simulations_outputs = [
+        x.compute(accelerators[0][0]) for x in beam_calculators
+    ]
 
     fault_scenarios = None
     if "wtf" in config:
@@ -180,11 +183,6 @@ def set_up(
             config, beam_calculators[0], accelerators, **kwargs
         )
 
-    # TODO check if this could come before the FaultScenario creation (because
-    # we also compute a reference SimulationOutput in this routine)
-    ref_simulations_outputs = [
-        x.compute(accelerators[0][0]) for x in beam_calculators
-    ]
     return (
         beam_calculators,
         accelerators,
@@ -226,16 +224,14 @@ def recompute(
     beam_calculators :
         One or several beam calculators.
     references :
-        A reference :class:`.SimulationOutput` per :class:`.BeamCalculator`,
-        ideally generated by the same :class:`.BeamCalculator`.
+        A reference |SO| per |BC|, ideally generated by the same |BC|.
     accelerators :
-        Dictionary where keys are :class:`.FaultScenario` indexes, and values
-        are lists of corresponding :class:`.Accelerator`. First index
-        corresponds to reference accelerator (no failure).
+        Dictionary where keys are |FS| indexes, and values are lists of
+        corresponding |A|. First index corresponds to reference accelerator (no
+        failure).
 
     Returns
     -------
-    list[list[SimulationOutput]]
         A nested list of simulation results.
 
     """
@@ -259,8 +255,7 @@ def recompute(
 
 
 def run_simulation(
-    config: dict[str, Any],
-    **kwargs,
+    config: ConfigKw, **kwargs
 ) -> list[FaultScenario] | dict[int, list[Accelerator]]:
     """Compute propagation of beam; if failures are defined, fix them.
 
@@ -293,3 +288,41 @@ def run_simulation(
     plot.factory(accelerators, fault_scenarios=fault_scenarios, **config)
 
     return fault_scenarios
+
+
+def run_simulation_new(
+    config: ConfigKw, **kwargs
+) -> tuple[dict[int, list[Accelerator]], list[FaultScenario] | None]:
+    """Compute propagation of beam; if failures are defined, fix them.
+
+    Parameters
+    ----------
+    config :
+        The full TOML configuration dict.
+
+    Returns
+    -------
+    accelerators : dict[int, list[Accelerator]]
+        Keys are |FS| indexes (0 is for reference). Values are corresponding
+        |A| as a list; there is typically one |A| in each list, and additional
+        ones are unpickled.
+    fault_scenarios :
+        Returned if failure(s) were defined.
+
+    """
+    beam_calculators, accelerators, fault_scenarios, ref_simulation_output = (
+        set_up(config, **kwargs)
+    )
+    if fault_scenarios is None:
+        plot.factory(accelerators, **config)
+        return accelerators, None
+
+    fix(fault_scenarios)
+    recompute(
+        beam_calculators[1:],
+        ref_simulation_output[1:],
+        accelerators,
+    )
+    plot.factory(accelerators, fault_scenarios=fault_scenarios, **config)
+
+    return accelerators, fault_scenarios

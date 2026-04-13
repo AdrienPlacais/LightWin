@@ -122,10 +122,9 @@ class IPlotter(ABC):
     ) -> None:
         """Add a plot to show the structure of the linac."""
         if elts is None:
-            assert hasattr(self, "_elts"), (
-                "Please provide at least a defaut ListOfElements for structure"
-                " plots."
-            )
+            assert hasattr(
+                self, "_elts"
+            ), "Please provide at least a defaut ListOfElements for structure plots."
             elts = self._elts
         if self._sections:
             self._plot_sections(axes, elts, x_axis)
