@@ -348,58 +348,20 @@ class AcceleratorFactory:
             for beam_calculator in beam_calculators
         }
 
-    def _create_one_accelerator(
-        self,
-        name: str,
-        status: ACCELERATOR_STATUS_T,
-        index: int,
-        output_path: Path,
-    ) -> Accelerator:
-        """Create or load a single accelerator.
-
-        Parameters
-        ----------
-        name :
-            Accelerator name (e.g., ``"Reference"``, ``"Solution"``).
-        status :
-            Current status design. Ignored if the :class:`.Accelerator` is
-            unpickled.
-        index :
-            Corresponding :class:`.FaultScenario` index. A null index is
-            reserved for reference accelerator.
-        output_path :
-            Path where accelerator data will be stored.
-
-        Returns
-        -------
-            Loaded from pickle if available, otherwise freshly created.
-
-        """
-        pickle_path = self._get_pickle_path(name, index)
-
-        if pickle_path is not None:
-            accelerator = self._load_from_pickle(
-                name, index=index, pickle_path=pickle_path
+        n_unique = len(set(policies.values()))
+        if n_unique > 1:
+            logging.warning(
+                "The different BeamCalculator objects have different "
+                "reference phase policies. This may lead to inconsistencies "
+                f"when cavities fail.\n{policies = }"
             )
-            if accelerator is not None:
-                logging.info(
-                    f"Created {accelerator.id} Accelerator by unpickling "
-                    f"'{pickle_path}'."
-                )
-                return accelerator
+            return
 
-        accelerator = self._build_accelerator(
-            name,
-            status,
-            index=index,
-            output_path=output_path,
-            pickle_path=pickle_path,
-        )
-        info = f"Created {accelerator.id} Accelerator"
-        if pickle_path:
-            info += f" (will be pickled to '{pickle_path}')"
-        logging.info(info + ".")
-        return accelerator
+        references = {x.cavity_settings.reference for x in cavities}
+        if len(references) > 1:
+            logging.info(
+                "The cavities do not all have the same reference phase."
+            )
 
     # =========================================================================
     # Related to pickling/unpickling Accelerators
@@ -413,20 +375,6 @@ class AcceleratorFactory:
         ----
         When a Reference/Solution ``PKL`` is provided but does not exist,
         the associated |A| will be pickled at the end of the simulation.
-
-        """
-        output_path.mkdir(parents=True, exist_ok=True)
-
-        for beam_calculator in self.beam_calculators:
-            if beam_calculator is None:
-                continue
-            beam_calculator_dir = output_path / beam_calculator.id
-            beam_calculator_dir.mkdir(parents=True, exist_ok=True)
-
-    def _check_consistency_reference_phase_policies(
-        self, cavities: Sequence[FieldMap]
-    ) -> None:
-        """Check that solvers phases are consistent with ``DAT`` file.
 
         Parameters
         ----------
