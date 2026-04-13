@@ -45,7 +45,7 @@ repos:
     rev: 26.1.0
     hooks:
       - id: black
-  # Also have options in pyproject.toml
+  # Also have options in pyproject.toml.
   - repo: https://github.com/PyCQA/docformatter
     rev: v1.7.7
     hooks:
