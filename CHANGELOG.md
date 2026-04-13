@@ -16,17 +16,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   problems.
 - New `ObjectivesFactory`: `RemainBelow`. Sets an upper limit for a variable.
 - Refactored creation of `DesignSpaceFactory`. Opens way to manual definition
-  of variables in `TOML`. Initial values, limits cannot be set in `TOML` yet.
+  of variables/constraints in `TOML`, rather than using
+  `design_space_preset = abs_phase_amplitude` or
+  `design_space_preset = RelPhaseAmplitudeWithConstrainedSyncPhase`.
+  - [x] Choose `design_space_preset = UserDefined`
+  - [x] Set `variable_names = ['k_e', 'phi_0_abs`] (for example)
+  - [x] Set `constraint_names = ['phi_s']` (for example)
+  - [ ] Ensure that order of variables is not hard-coded somewhere.
+  - [ ] Find an intuitive way to set limits for the different variables and
+        constraints.
 
 ### Fixed
 
-- Synchronous phases in constraints calculations was taken from
-  `SimulationOutput.elts` (nominal settings) instead of
-  `SimulationOutput.set_of_cavity_settings`. This bug was nasty. Fixing it
-  dramatically improved constrained optimization.
+- Synchronous phases can be used as constraints again.
+  - Synchronous phases in constraints calculations was taken from
+    `SimulationOutput.elts` (nominal settings) instead of
+    `SimulationOutput.set_of_cavity_settings`. This bug was nasty. Fixing it
+    dramatically improved constrained optimization.
 - Information message when creating `ListOfElements` subset printed wrong end of
   linac subset.
-- Synchronous phases can be used as constraints again.
 
 ## [0.16.0] -- 2026-03-04
 

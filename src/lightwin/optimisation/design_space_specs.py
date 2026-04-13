@@ -1,13 +1,11 @@
 """Define how the design space should be configured."""
 
-import tomllib
 from pathlib import Path
 from typing import Any
 
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
 from lightwin.config.table_spec import TableConfSpec
 from lightwin.constants import example_constraints, example_variables
-from lightwin.optimisation.design_space import design_space
 from lightwin.util.typing import DESIGN_SPACES
 
 _DESIGN_SPACE_BASE = (
@@ -150,6 +148,13 @@ class DesignSpaceConfSpec(TableConfSpec):
             return
         if design_space_preset not in {"UserDefined", "user_defined"}:
             return
+
+        keyval = self._get_proper_spec("design_space_preset")
+        assert keyval is not None
+        keyval.error_message = (
+            "UserDefined design spaces are under implementation. Behavior may "
+            "be undefined."
+        )
 
         warning_to_remove = {"variable_names", "constraint_names"}
         now_mandatory = {"variable_names"}
