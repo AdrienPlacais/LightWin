@@ -1,3 +1,5 @@
+# The name of the table should match the one returned by:
+# import socket;socket.gethostname()
 [lpsc5057x]
 X11_full = "/usr/bin/local/bin/TraceWin/./TraceWin"
 noX11_full = "/usr/local/bin/TraceWin/./TraceWin_noX11"
