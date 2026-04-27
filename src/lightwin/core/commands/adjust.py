@@ -54,7 +54,27 @@ class Adjust(Command):
         start_step: float | None = None,
         k_n: float | None = None,
     ) -> str:
-        """Create the :class:`.DatLine` corresponding to ``self`` object."""
+        """Create the :class:`.DatLine` corresponding to ``self`` object.
+
+        Parameters
+        ----------
+        number :
+            Number of the diagnostics this command should be associated to.
+        vth_variable :
+            Position of the variable to adjust.
+        n_link :
+            Link this command with other ``ADJUST`` with the same ``n_link``,
+            if different from 0.
+        mini :
+            Minimum variable value.
+        maxi :
+            Maximum variable value.
+        start_step :
+            Step size of the first iteration.
+        k_n :
+            Corrective coefficient when two variables are linked.
+
+        """
         line = f"ADJUST {number} {vth_variable} {n_link}"
         for optional_variable in (mini, maxi, start_step, k_n):
             if optional_variable is None:
@@ -65,14 +85,20 @@ class Adjust(Command):
     def set_influenced_elements(
         self, instructions: list[Instruction], **kwargs: float
     ) -> None:
-        """Apply command to first |E| that is found."""
+        r"""Apply command to the first |E| that is found.
+
+        Potential :class:`.Command`\s between current object and the influenced
+        |E| are discarded.
+
+        """
         start = self.idx["dat_idx"] + 1
         indexes_between_this_cmd_and_element = (
             self._indexes_between_this_command_and(
                 instructions[start:], Element
             )
         )
-        self.influenced = indexes_between_this_cmd_and_element.stop
+        idx_element = indexes_between_this_cmd_and_element.stop
+        self.influenced = slice(idx_element, idx_element + 1)
         return
 
     def apply(self, *args, **kwargs) -> list[Instruction]:
