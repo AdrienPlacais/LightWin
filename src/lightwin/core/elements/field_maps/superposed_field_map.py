@@ -192,7 +192,7 @@ class SuperposedFieldMap(Element):
         """Raise an error."""
         raise NotImplementedError
 
-    def to_line(self, *args, **kwargs) -> list[str]:
+    def to_line(self, *args, **kwargs) -> list[str] | None:
         """Convert the object back into a line in the ``DAT`` file."""
         # return self.line.original_line.split()
         logging.warning("Calling the to_line for superpose")
@@ -221,16 +221,16 @@ class SuperposedPlaceHolderElt(DummyElement):
             **kwargs,
         )
 
-    def to_line(self, *args, **kwargs) -> list[str]:
-        """Convert the object back into a line in the ``.dat`` file."""
+    def to_line(self, *args, **kwargs) -> list[str] | None:
+        """Convert the object back into a line in the ``DAT`` file."""
         return self.line.original_line.split()
 
 
 class SuperposedPlaceHolderCmd(DummyCommand):
     """Inserted in place of field maps and superpose map commands."""
 
-    def to_line(self, *args, **kwargs) -> list[str]:
-        """Convert the object back into a line in the ``.dat`` file."""
+    def to_line(self, *args, **kwargs) -> list[str] | None:
+        """Convert the object back into a line in the ``DAT`` file."""
         return self.line.original_line.split()
 
 

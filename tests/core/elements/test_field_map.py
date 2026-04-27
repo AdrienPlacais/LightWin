@@ -135,7 +135,6 @@ def test_to_line_phi_0_rel(field_map: FieldMap) -> None:
 def test_to_line_phi_s(field_map: FieldMap) -> None:
     """Check that proper phase is written in the ``DAT`` line."""
     expected = [
-        "SET_SYNC_PHASE\n",
         "FIELD_MAP",
         "100",
         "415.16",

@@ -225,6 +225,11 @@ class CavitySettings:
         return settings
 
     @property
+    def is_broken(self) -> bool:
+        """Tell if cavity is broken."""
+        return "failed" in self.status
+
+    @property
     def w_kin(self) -> float:
         return self._w_kin
 
@@ -314,6 +319,9 @@ class CavitySettings:
 
         1. We check that if the cavity is rephased, its reference phase is
            not :math:`phi_{0,\,\mathrm{abs}}`
+
+        In versions ``< 0.16.2``, we also performed:
+
         2. If the cavity is broken, we check that its reference phase is not
            synchronous because it is not defined.
 
@@ -324,10 +332,6 @@ class CavitySettings:
                 "consistent with it's `rephased` status."
             )
             return
-        if "failed" in self.status:
-            assert (
-                self.reference != "phi_s"
-            ), "Failed cavities with synchronous phase ref leads to bugs."
 
     def set_bunch_to_rf_freq_func(
         self, freq_cavity_mhz: float | None = None
@@ -465,7 +469,19 @@ class CavitySettings:
         setattr(self, self.reference, value)
 
     def _delete_non_reference_phases(self) -> None:
-        """Reset the phases that are not the reference to None."""
+        """Delete phases which are not reference.
+
+        It is used to force the re-calculation of non-reference phase, for
+        example when the energy of the synchronous particle has changed.
+
+        .. note::
+           When the cavity is broken, we skip these deletions as changing the
+           :property:`.status` already set ``phi_s`` to ``nan`` and
+           ``phi_0_abs`` and ``phi_0_rel`` to ``0.0``.
+
+        """
+        if self.is_broken:
+            return
         for phase in REFERENCE_PHASES:
             if phase == self.reference:
                 continue
@@ -491,6 +507,9 @@ class CavitySettings:
         Also checks consistency between the value of the new status and the
         value of the :attr:`.reference`.
 
+        Breaking the cavity (*ie* when ``value="failed"``) sets synchronous
+        phase to ``nan``, and the two ``phi_0`` to ``0.0``.
+
         .. todo::
             Check that beam_calc_param is still updated. As in
             FieldMap.update_status
@@ -504,9 +523,9 @@ class CavitySettings:
         self._status = value
         if value == "failed":
             self.k_e = 0.0
-            if self.reference == "phi_s":
-                self.set_reference("phi_0_rel", phi_ref=0.0)
-            self.phi_s = np.nan
+            self._phi_s = np.nan
+            self._phi_0_rel = 0.0
+            self._phi_0_abs = 0.0
             self.v_cav_mv = np.nan
         self._check_consistency_of_status_and_reference()
 

@@ -338,11 +338,10 @@ class FieldMap(Element):
             self.line.change_argument(value, position)
 
         line = super().to_line(*args, **kwargs)
+
         if line is None:
             logging.error("``FieldMap.to_line`` should not produce None")
             return None
-        if reference == "phi_s":
-            line.insert(0, "SET_SYNC_PHASE\n")
         return line
 
     # May be useless, depending on to_line implementation
