@@ -44,6 +44,8 @@ from lightwin.tracewin_utils.line import DatLine
 IMPLEMENTED_COMMANDS = {
     "ADJUST": Adjust,
     "ADJUST_STEERER": DummyCommand,
+    "ADJUST_STEERER_BX": DummyCommand,
+    "ADJUST_STEERER_BY": DummyCommand,
     "DUMMY_COMMAND": DummyCommand,
     "CHOPPER": Chopper,
     "END": End,

@@ -100,10 +100,7 @@ class DiagDSize2(Diagnostic):
     n_attributes = (3, 4)
 
     def __init__(
-        self,
-        line: DatLine,
-        dat_idx: int | None = None,
-        **kwargs: str,
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Force an element with null-length, with no index."""
         super().__init__(line, dat_idx, **kwargs)
@@ -113,6 +110,39 @@ class DiagDSize2(Diagnostic):
         if line.n_args == 4:
             self.accuracy = float(line.splitted[4])
 
+    @classmethod
+    @override
+    def _args_to_line(
+        cls,
+        number: int,
+        x_rms_beam_delta_size: float = 0.0,
+        y_rms_beam_delta_size: float = 0.0,
+        accuracy: float = 0.0,
+    ) -> str:
+        """Convert list of arguments to corresponding line of ``DAT`` file.
+
+        Parameters
+        ----------
+        number :
+            Diagnostic number.
+        x_rms_beam_delta_size :
+            Wanted x RMS beam delta size in :unit:`mm`.
+        y_rms_beam_delta_size :
+            Wanted y RMS beam delta size in :unit:`mm`.
+        accuracy :
+            Size accuracy in :unit:`mm`.
+
+        Returns
+        -------
+            Corresponding line in ``DAT`` file, as understood by TraceWin.
+
+        """
+        line = (
+            f"DIAG_DSIZE2 {number} {x_rms_beam_delta_size} "
+            f"{y_rms_beam_delta_size} {accuracy}"
+        )
+        return line
+
 
 class DiagDSize3(Diagnostic):
     """Measure delta phase spread between two positions."""
@@ -121,10 +151,7 @@ class DiagDSize3(Diagnostic):
     n_attributes = (3, 4)
 
     def __init__(
-        self,
-        line: DatLine,
-        dat_idx: int | None = None,
-        **kwargs: str,
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Force an element with null-length, with no index."""
         super().__init__(line, dat_idx, **kwargs)
@@ -143,7 +170,24 @@ class DiagDSize3(Diagnostic):
         accuracy: float = 0.0,
         low_pass_filter_frequency: float | None = None,
     ) -> str:
-        """Convert list of arguments to corresponding line of dat file."""
+        """Convert list of arguments to corresponding line of ``DAT`` file.
+
+        Parameters
+        ----------
+        number :
+            Diagnostic number.
+        rms_delta_phase_spread :
+            Wanted RMS delta phase spread in degrees.
+        accuracy :
+            Phase spread accuracy in degrees.
+        low_pass_filter_frequency :
+            Low-pass filter frequency in :unit:`MHz`.
+
+        Returns
+        -------
+            Corresponding line in ``DAT`` file, as understood by TraceWin.
+
+        """
         line = f"DIAG_DSIZE3 {number} {rms_delta_phase_spread} {accuracy}"
         if low_pass_filter_frequency is not None:
             line += " " + str(low_pass_filter_frequency)
