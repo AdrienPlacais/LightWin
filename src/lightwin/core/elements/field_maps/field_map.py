@@ -13,6 +13,7 @@
 
 """
 
+import logging
 import math
 from pathlib import Path
 from typing import Any
@@ -308,7 +309,7 @@ class FieldMap(Element):
         *args,
         round: int | None = None,
         **kwargs,
-    ) -> list[str]:
+    ) -> list[str] | None:
         """Convert the object back into a line in the ``DAT`` file.
 
         Parameters
@@ -337,6 +338,9 @@ class FieldMap(Element):
             self.line.change_argument(value, position)
 
         line = super().to_line(*args, **kwargs)
+        if line is None:
+            logging.error("``FieldMap.to_line`` should not produce None")
+            return None
         if reference == "phi_s":
             line.insert(0, "SET_SYNC_PHASE\n")
         return line
