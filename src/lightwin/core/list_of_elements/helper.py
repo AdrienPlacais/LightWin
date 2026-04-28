@@ -17,6 +17,7 @@ from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.util.typing import GET_ELT_ARG_T
 
 ListOfElements = TypeVar("ListOfElements")
+T = TypeVar("T")
 
 
 def is_list_of(elts: Sequence, type_to_check: Type) -> TypeGuard[Type]:
@@ -73,15 +74,15 @@ def filter_out(
 
 
 def filter_elts(
-    elts: ListOfElements | Sequence[Element], type_to_check: Type
-) -> list[Type]:
+    elts: ListOfElements | Sequence[Element], type_to_check: type[T]
+) -> list[T]:
     """Filter elements according to their type.
 
     .. note::
         Used only for :func:`filter_cav`, may be simpler?
 
     """
-    return list(filter(lambda elt: isinstance(elt, type_to_check), elts))
+    return [elt for elt in elts if isinstance(elt, type_to_check)]
 
 
 filter_cav = partial(filter_elts, type_to_check=FieldMap)
