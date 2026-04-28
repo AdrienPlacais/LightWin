@@ -54,6 +54,7 @@ class SetSyncPhase(Command):
         phi_s``.
 
         """
+        instructions = super().apply(instructions, **kwargs)
         for cavity in instructions[self.influenced]:
             assert isinstance(cavity, FieldMap)
             settings = cavity.cavity_settings

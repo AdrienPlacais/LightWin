@@ -88,6 +88,7 @@ class SuperposeMap(Command):
         is replaced by a SuperposedFieldMap.
 
         """
+        instructions = super().apply(instructions, **kwargs)
         instructions_to_merge = instructions[self.influenced]
         self._apply_set_sync_phase(instructions, instructions_to_merge)
         total_length = self._total_length_m(instructions_to_merge)

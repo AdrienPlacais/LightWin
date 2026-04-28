@@ -49,6 +49,8 @@ class Instruction(ABC):
 
         self._personalized_name = line.personalized_name
         self._default_name: str
+        #: Objects (generally commands) influencing this object
+        self.influencing_instructions: list[object] = []
 
     def _assert_correct_number_of_args(self, idx: int) -> None:
         """Check if given number of arguments is ok."""

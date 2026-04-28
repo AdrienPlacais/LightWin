@@ -50,6 +50,7 @@ class Lattice(Command):
         self, instructions: list[Instruction], **kwargs: float
     ) -> list[Instruction]:
         """Set lattice section number of elements in current lattice."""
+        instructions = super().apply(instructions, **kwargs)
         index = self.idx["dat_idx"]
 
         current_lattice_number = self._current_lattice_number(

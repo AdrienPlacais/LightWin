@@ -16,6 +16,7 @@ DIAGNOSTIC commands to perform a beauty pass.
 from typing import override
 
 from lightwin.core.commands.command import Command
+from lightwin.core.commands.steerer import Steerer
 from lightwin.core.elements.element import Element
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
@@ -32,15 +33,15 @@ class Adjust(Command):
     ) -> None:
         """Instantiate the object."""
         super().__init__(line, dat_idx, **kwargs)
-        self.number = int(line.splitted[1])
-        self.vth_variable = int(line.splitted[2])
-        self.n_link = int(line.splitted[3]) if len(line.splitted) > 3 else 0
-        self.min = float(line.splitted[4]) if len(line.splitted) > 4 else None
-        self.max = float(line.splitted[5]) if len(line.splitted) > 5 else None
-        self.start_step = (
-            float(line.splitted[6]) if len(line.splitted) > 6 else None
-        )
-        self.k_n = float(line.splitted[7]) if len(line.splitted) > 7 else None
+        splitted = line.splitted
+        n_args = len(splitted)
+        self.number = int(splitted[1])
+        self.vth_variable = int(splitted[2])
+        self.n_link = int(splitted[3]) if n_args > 3 else 0
+        self.min = float(splitted[4]) if n_args > 4 else None
+        self.max = float(splitted[5]) if n_args > 5 else None
+        self.start_step = float(splitted[6]) if n_args > 6 else None
+        self.k_n = float(splitted[7]) if n_args > 7 else None
 
     @classmethod
     @override
@@ -104,3 +105,83 @@ class Adjust(Command):
     def apply(self, *args, **kwargs) -> list[Instruction]:
         """Do not apply anything."""
         raise NotImplementedError
+
+
+class AdjustSteerer(Command):
+    """Command to adjust steerers."""
+
+    is_implemented = True
+    n_attributes = range(1, 5)
+    _command_in_tw = "ADJUST_STEERER"
+
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs
+    ) -> None:
+        super().__init__(line, dat_idx, **kwargs)
+        self.number = int(line.splitted[1])
+        self.min = float(line.splitted[2]) if len(line.splitted) > 5 else None
+        self.max = float(line.splitted[3]) if len(line.splitted) > 5 else None
+        self.first_step = (
+            float(line.splitted[4]) if len(line.splitted) > 6 else None
+        )
+
+    @classmethod
+    @override
+    def _args_to_line(
+        cls,
+        number: int,
+        mini: float = 0,
+        maxi: float = 0,
+        first_step: float = 0,
+        personalized_name: str | None = None,
+    ) -> str:
+        """Create the :class:`.DatLine` corresponding to ``self`` object.
+
+        Parameters
+        ----------
+        number :
+            Number of the diagnostics this command should be associated to.
+        mini :
+            Minimum variable value.
+        maxi :
+            Maximum variable value.
+        start_step :
+        personalized_name :
+            Name.
+
+        """
+        line = f"{cls._command_in_tw} {number} {mini} {maxi} {first_step}"
+        if personalized_name is not None:
+            line = f"{personalized_name} : {line}"
+        return line
+
+    def set_influenced_elements(
+        self, instructions: list[Instruction], **kwargs: float
+    ) -> None:
+        r"""Apply command to the first :class:`.Steerer` that is found.
+
+        Potential :class:`.Command`\s between current object and the influenced
+        :class:`.Steerer` are discarded.
+
+        """
+        start = self.idx["dat_idx"] + 1
+        indexes_between_this_cmd_and_element = (
+            self._indexes_between_this_command_and(
+                instructions[start:], Steerer
+            )
+        )
+        idx_element = indexes_between_this_cmd_and_element.stop
+        self.influenced = slice(idx_element, idx_element + 1)
+        return
+
+    def apply(self, *args, **kwargs) -> list[Instruction]:
+        """Do not apply anything."""
+        raise NotImplementedError
+
+
+class AdjustSteererBx(AdjustSteerer):
+    _command_in_tw = "ADJUST_STEERER_BX"
+
+
+class AdjustSteererBy(AdjustSteerer):
+    _command_in_tw = "ADJUST_STEERER_BY"
