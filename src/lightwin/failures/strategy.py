@@ -112,6 +112,15 @@ def failed_and_compensating(
         # factory
         failed_gathered.append([])
 
+    def dat_idx_key(fm):
+        return fm.idx["dat_idx"]
+
+    failed_gathered = [
+        sorted(group, key=dat_idx_key) for group in failed_gathered
+    ]
+    compensating_gathered = [
+        sorted(group, key=dat_idx_key) for group in compensating_gathered
+    ]
     return failed_gathered, compensating_gathered
 
 
