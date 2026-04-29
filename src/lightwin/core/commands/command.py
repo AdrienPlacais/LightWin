@@ -1,8 +1,7 @@
 """Define the base class from which all commands will inherit."""
 
-from abc import abstractmethod
 from collections.abc import Iterable, Sequence
-from typing import Any, final, override
+from typing import Any, override
 
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine

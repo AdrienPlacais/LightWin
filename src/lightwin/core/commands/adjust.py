@@ -174,10 +174,6 @@ class AdjustSteerer(Command):
         self.influenced = slice(idx_element, idx_element + 1)
         return
 
-    def apply(self, *args, **kwargs) -> list[Instruction]:
-        """Do not apply anything."""
-        raise NotImplementedError
-
 
 class AdjustSteererBx(AdjustSteerer):
     _command_in_tw = "ADJUST_STEERER_BX"
