@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [??]
+
+### Added
+
+- New elements/commands:
+  - `DiagDsize2`, `DiagDsize3`
+  - `Steerer`, `AdjustSteerer`
+- `pass_beauty` examples to perform transverse matching in TraceWin, once
+  longitudinal settings are found in LightWin. The example is adapted to SPIRAL2
+  SC linac.
+
+### Changed
+
+- Compensating and failed cavities are now displayed in the order they appear in
+  the linac.
+- In automatic studies, failures are sorted by the order they appear in the
+  linac.
+
 ## [0.16.2] -- 2026-04-13
 
 ### Fixed
