@@ -507,7 +507,8 @@ def determine_cavities(
     failed_cavities = [
         cav for cav in flatten(lattices_or_sections) if cav.can_be_retuned
     ]
-    failed_names = {cav.name for cav in failed_cavities}
+    failed_names: list[str] = [cav.name for cav in failed_cavities]
+    failed_names_set: set[str] = set(failed_names)
 
     if automatic_study == "single cavity failures":
         new_failed = [[name] for name in failed_names]
@@ -518,7 +519,9 @@ def determine_cavities(
             for lattice in elts.by_lattice
         ]
         # Gather cryomodules with at least one failed cavity
-        new_failed = [cryo for cryo in cryomodules if set(cryo) & failed_names]
+        new_failed = [
+            cryo for cryo in cryomodules if set(cryo) & failed_names_set
+        ]
     else:
         raise ValueError(
             f"Unsupported {automatic_study = }. Only {AUTOMATIC_STUDY} are supported."
