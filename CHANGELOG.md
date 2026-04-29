@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- New elements/commands:
-  - `DiagDsize2`, `DiagDsize3`
+- New elements/commands are implemented/supported:
+  - `DiagDsize2`, `DiagDsize3`, `DiagPosition`
   - `Steerer`, `AdjustSteerer`
 - `pass_beauty` examples to perform transverse matching in TraceWin, once
   longitudinal settings are found in LightWin. The example is adapted to SPIRAL2

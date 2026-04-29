@@ -27,10 +27,7 @@ class Diagnostic(Element):
     is_implemented = False
 
     def __init__(
-        self,
-        line: DatLine,
-        dat_idx: int | None = None,
-        **kwargs: str,
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Force an element with null-length, with no index."""
         super().__init__(line, dat_idx, **kwargs)
@@ -54,7 +51,34 @@ class DiagPosition(Diagnostic):
     """Measure position."""
 
     is_implemented = True
-    n_attributes = 4
+    n_attributes = range(3, 5)
+
+    def __init__(
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
+    ) -> None:
+        """Force an element with null-length, with no index."""
+        super().__init__(line, dat_idx, **kwargs)
+        splitted = line.splitted
+        self.x_pos = float(splitted[2])
+        self.y_pos = float(splitted[3])
+        if line.n_args == 4:
+            self.accuracy = float(splitted[4])
+
+    @classmethod
+    @override
+    def _args_to_line(
+        cls,
+        number: int,
+        x_pos: float = 0.0,
+        y_pos: float = 0.0,
+        accuracy: float = 0.0,
+        personalized_name: str | None = None,
+    ) -> str:
+        """Convert list of arguments to corresponding line of ``DAT`` file."""
+        line = f"DIAG_POSITION {number} {x_pos} {y_pos} {accuracy}"
+        if personalized_name:
+            line = f"{personalized_name} : {line}"
+        return line
 
 
 class DiagDPosition(Diagnostic):
@@ -118,6 +142,7 @@ class DiagDSize2(Diagnostic):
         x_rms_beam_delta_size: float = 0.0,
         y_rms_beam_delta_size: float = 0.0,
         accuracy: float = 0.0,
+        personalized_name: str | None = None,
     ) -> str:
         """Convert list of arguments to corresponding line of ``DAT`` file.
 
@@ -141,6 +166,8 @@ class DiagDSize2(Diagnostic):
             f"DIAG_DSIZE2 {number} {x_rms_beam_delta_size} "
             f"{y_rms_beam_delta_size} {accuracy}"
         )
+        if personalized_name:
+            line = f"{personalized_name} : {line}"
         return line
 
 
