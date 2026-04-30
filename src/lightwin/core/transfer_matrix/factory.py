@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.core.transfer_matrix.transfer_matrix import TransferMatrix
 
@@ -15,10 +16,7 @@ class TransferMatrixFactory(ABC):
 
     """
 
-    def __init__(
-        self,
-        is_3d: bool,
-    ) -> None:
+    def __init__(self, is_3d: bool) -> None:
         """Store if simulation is in 3D or not.
 
         Parameters
@@ -31,7 +29,7 @@ class TransferMatrixFactory(ABC):
 
     def _preprocess(
         self, single_elt_results: list[dict[str, Any]]
-    ) -> np.ndarray:
+    ) -> NDArray[np.float64]:
         """Preprocess the data given by the |BC|."""
         raise NotImplementedError("Method not overriden.")
 

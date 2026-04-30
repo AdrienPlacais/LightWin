@@ -23,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In automatic studies, failures are sorted by the order they appear in the
   linac.
 
+## Fixed
+
+- TraceWin subprocesses exceptions do not throw away the entire run. Instead,
+  dummy `SimulationOutput` are created.
+
 ## [0.16.2] -- 2026-04-13
 
 ### Fixed

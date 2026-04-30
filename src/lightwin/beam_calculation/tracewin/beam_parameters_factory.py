@@ -3,6 +3,7 @@
 from typing import Literal
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.core.beam_parameters.beam_parameters import BeamParameters
 from lightwin.core.beam_parameters.factory import BeamParametersFactory
@@ -15,9 +16,9 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
 
     def factory_method(
         self,
-        z_abs: np.ndarray,
-        gamma_kin: np.ndarray,
-        results: dict[str, np.ndarray],
+        z_abs: NDArray[np.float64],
+        gamma_kin: NDArray[np.float64],
+        results: dict[str, NDArray[np.float64]],
         element_to_index: ELEMENT_TO_INDEX_T,
     ) -> BeamParameters:
         """Create the :class:`.BeamParameters` object."""
@@ -91,8 +92,8 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
     def _extract_phase_space_data_for_sigma(
         self,
         phase_space_name: Literal["x", "y", "zdelta"],
-        results: dict[str, np.ndarray],
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        results: dict[str, NDArray[np.float64]],
+    ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
         r"""Retrieve the data necessary to reconstruct :math:`\sigma` beam
         matrix.
 
@@ -131,8 +132,8 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
     def _extract_emittance_for_99percent(
         self,
         phase_space_name: Literal["x99", "y99", "phiw99"],
-        results: dict[str, np.ndarray],
-    ) -> np.ndarray:
+        results: dict[str, NDArray[np.float64]],
+    ) -> NDArray[np.float64]:
         r"""Retrieve the 99% emittances.
 
         .. todo::
@@ -158,3 +159,30 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
         }
         assert phase_space_name in getters
         return getters[phase_space_name]
+
+    def factory_method_dummy(
+        self,
+        z_abs: NDArray[np.float64],
+        gamma_kin: NDArray[np.float64],
+        element_to_index: ELEMENT_TO_INDEX_T,
+    ) -> BeamParameters:
+        """Create a NaN-filled BeamParameters when no file was produced."""
+        n = z_abs.shape[0]
+        nan = np.full(n, np.nan)
+        dummy_results = {
+            "SizeX": nan,
+            "SizeY": nan,
+            "SizeZ": nan,
+            "sxx'": nan,
+            "syy'": nan,
+            "szdp": nan,
+            "ex": nan,
+            "ey": nan,
+            "ezdp": nan,
+            "ex99": nan,
+            "ey99": nan,
+            "ep99": nan,
+        }
+        return self.factory_method(
+            z_abs, gamma_kin, dummy_results, element_to_index
+        )
