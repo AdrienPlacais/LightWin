@@ -30,13 +30,24 @@ from pprint import pformat
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.tracewin.tracewin import TraceWin
-from lightwin.core.commands.adjust import Adjust
-from lightwin.core.elements.diagnostic import DiagDSize2, DiagDSize3
+from lightwin.core.commands.adjust import (
+    Adjust,
+    AdjustSteerer,
+    AdjustSteererBx,
+    AdjustSteererBy,
+)
+from lightwin.core.commands.steerer import Steerer
+from lightwin.core.elements.diagnostic import (
+    DiagDSize2,
+    DiagDSize3,
+    DiagPosition,
+)
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.quad import Quad
 from lightwin.core.instruction import Instruction
+from lightwin.core.list_of_elements.helper import filter_elts
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.fault_scenario import FaultScenario
 from lightwin.failures.helper import nested_containing_desired
@@ -111,10 +122,12 @@ def insert_field_map_pass_beauty_instructions(
     return
 
 
-def insert_quadrupole_retuning_instructions(
+def insert_transverse_matching_instructions(
     fault_scenario: FaultScenario | Collection[FaultScenario],
     beam_calculator: BeamCalculator,
-    number: int = 666334,
+    retune_steerers: bool = True,
+    retune_quadrupoles: bool = True,
+    number: int = 666000,
 ) -> None:
     """Overwrite |LOE| to include pass beauty instructions.
 
@@ -130,18 +143,22 @@ def insert_quadrupole_retuning_instructions(
         One or several failure scenarios, each with only one |F|.
     beam_calculator :
         A solver accepting beauty pass. Typically, :class:`.TraceWin`.
-    number_of_dsize :
-        Number of :class:`.DiagDSize2` diagnostics.
+    retune_steerers :
+        If steerers should be re-adjusted.
+    retune_quadrupoles :
+        If quadrupoles should be retuned to keep a clean envelope.
     number :
         The ID of diags/adjusts.
 
     """
     if not isinstance(fault_scenarios := fault_scenario, FaultScenario):
         for fault_scenario in fault_scenarios:
-            insert_quadrupole_retuning_instructions(
+            insert_transverse_matching_instructions(
                 fault_scenario,
                 beam_calculator,
                 number=number,
+                retune_steerers=retune_steerers,
+                retune_quadrupoles=retune_quadrupoles,
             )
         return
 
@@ -152,8 +169,11 @@ def insert_quadrupole_retuning_instructions(
     assert _is_adapted_to_pass_beauty(beam_calculator)
     assert isinstance(fault_scenario, FaultScenario)
 
-    instructions = _spiral2_qp_retuning_instructions(
-        fault_scenario, number=number
+    instructions = _spiral2_transverse_matching_instructions(
+        fault_scenario,
+        number=number,
+        retune_steerers=retune_steerers,
+        retune_quadrupoles=retune_quadrupoles,
     )
 
     accelerator = fault_scenario.fix_acc
@@ -391,30 +411,50 @@ def _field_map_pass_beauty_instructions(
 # =============================================================================
 # Quadrupole retuning
 # =============================================================================
-def _spiral2_qp_retuning_instructions(
-    fault_scenario: FaultScenario, number: int = 666334
+def _spiral2_transverse_matching_instructions(
+    fault_scenario: FaultScenario,
+    number: int = 666000,
+    retune_steerers: bool = True,
+    retune_quadrupoles: bool = True,
 ) -> list[Instruction]:
-    """Create ``ADJUST`` et ``DIAG_DSIZE2`` commands."""
+    """Create commands for transverse rematching."""
     fault = fault_scenario[0]
     fix_elts = fault_scenario.fix_acc.elts
     altered = fault.compensating_elements + fault.failed_elements
-    _lattices_idx = set(sorted([elt.idx["lattice"] for elt in altered]))
-    altered_lattices = [fix_elts.by_lattice[i] for i in _lattices_idx]
+    altered_lattices_idx = set(sorted([elt.idx["lattice"] for elt in altered]))
+    altered_lattices = [fix_elts.by_lattice[i] for i in altered_lattices_idx]
 
-    compensating_quadrupoles = _spiral2_quadrupoles(altered_lattices)
-    diag_quadrupoles = compensating_quadrupoles[1::3]
-    diagnostics = _dsize2_diagnostics(
-        diag_quadrupoles=diag_quadrupoles, number=number
-    )
-    adjusts = _quadrupole_adjust_commands(
-        compensating_quadrupoles=compensating_quadrupoles, number=number
-    )
-    if len(adjusts) < 2:
-        logging.error("Not enough DIAG_DSIZE2 for pass beauty.")
-        return []
+    steerers_diags, steerers_adjusts = (), ()
+    if retune_steerers:
+        steerers_quadrupoles = _get_steerers_and_qps(
+            fix_elts, altered_lattices_idx
+        )
+        steerers_adjusts = _steerer_adjust_commands(
+            steerers_quadrupoles, number=number + 100
+        )
+        steerers_diags = _steerer_diag_commands(
+            by_lattice=fix_elts.by_lattice,
+            adjust_steerers=steerers_adjusts,
+            number=number + 100,
+        )
+
+    qp_diagnostics, qp_adjusts = (), ()
+    if retune_quadrupoles:
+        compensating_quadrupoles = _spiral2_quadrupoles(altered_lattices)
+        diag_quadrupoles = compensating_quadrupoles[1::3]
+        qp_diagnostics = _dsize2_diagnostics(
+            diag_quadrupoles=diag_quadrupoles, number=number
+        )
+        qp_adjusts = _quadrupole_adjust_commands(
+            compensating_quadrupoles=compensating_quadrupoles, number=number
+        )
+        if len(qp_adjusts) < 2:
+            logging.error("Not enough DIAG_DSIZE2 for pass beauty.")
+            return []
 
     instructions = sorted(
-        [*diagnostics, *adjusts], key=lambda x: x.idx["dat_idx"]
+        [*steerers_adjusts, *steerers_diags, *qp_diagnostics, *qp_adjusts],
+        key=lambda x: x.idx["dat_idx"],
     )
     return instructions
 
@@ -443,10 +483,90 @@ def _spiral2_quadrupoles(lattices: list[list[Element]]) -> list[Quad]:
         assert q2.length_m == 65e-3
         assert q3.grad > 0.0
         assert q3.length_m == 130e-3
-    logging.error(
-        f"Detected quadrupoles are\n{pformat(quadrupoles,width=120)}"
-    )
     return quadrupoles
+
+
+def _get_steerers_and_qps(
+    elts: ListOfElements, altered_lattices_idx: Collection[int]
+) -> dict[Steerer, Quad]:
+    """Get all steerers after first alteration, as well as associated qps."""
+    steerers_quadrupoles: dict[Steerer, Quad] = {}
+    first_altered = min(altered_lattices_idx)
+    # We remove two lattices:
+    # - exit of linac
+    # - last "real" lattice because the DIAG must be one lattice after
+    lattices_after_first_alteration = elts.by_lattice[first_altered:-2]
+
+    for lattice in lattices_after_first_alteration:
+        quadrupoles = filter_elts(lattice, Quad)
+
+        for qp in quadrupoles:
+            steerers = filter_elts(qp.influencing_instructions, Steerer)
+            for steerer in steerers:
+                steerers_quadrupoles[steerer] = qp
+    return steerers_quadrupoles
+
+
+def _steerer_adjust_commands(
+    steerers_quadrupoles: Mapping[Steerer, Quad], number: int
+) -> list[AdjustSteerer]:
+    """Create adjust steerer commands."""
+    adjust_steerers: list[AdjustSteerer] = []
+
+    for st, qp in steerers_quadrupoles.items():
+        if qp.grad < 0.0:
+            cls = AdjustSteererBx
+        else:
+            cls = AdjustSteererBy
+
+        adjust = cls.from_args(
+            st.idx["dat_idx"],
+            number=number + qp.idx["lattice"],
+            mini=0,
+            maxi=0,
+            first_step=0.25,
+        )
+        adjust_steerers.append(adjust)
+    return adjust_steerers
+
+
+def _steerer_diag_commands(
+    by_lattice: list[list[Element]],
+    adjust_steerers: list[AdjustSteerer],
+    number: int,
+) -> list[DiagPosition]:
+    """Add a diag in the middle of first QP, in the lattice following
+    steerers."""
+    diagnostics: list[DiagPosition] = []
+
+    for adjust in adjust_steerers:
+        if isinstance(adjust, AdjustSteererBy):
+            continue
+        next_lattice_idx = adjust.number - number + 1
+        if next_lattice_idx + 1 >= len(by_lattice):
+            continue
+        next_lattice = by_lattice[next_lattice_idx]
+        qps = filter_elts(next_lattice, Quad)
+        if len(qps) != 3:
+            continue
+
+        if next_lattice_idx <= 12:
+            name = "LINA-BPM"
+        else:
+            name = "LINB-BPM"
+            next_lattice_idx -= 12
+        name = f"{name}{next_lattice_idx+1:02}1"
+        diag = DiagPosition.from_args(
+            dat_idx=qps[1].idx["dat_idx"],
+            number=adjust.number,
+            x_pos=0,
+            y_pos=0,
+            accuracy=0.25,
+            personalized_name=name,
+        )
+        diagnostics.append(diag)
+    logging.critical(pformat(diagnostics))
+    return diagnostics
 
 
 def _dsize2_diagnostics(
