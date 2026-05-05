@@ -494,10 +494,9 @@ def _run_in_bash(command: Sequence[str], output_command: bool = True) -> None:
 
     """
     if output_command:
-        output = "\n\t".join(command)
         logging.info(
-            f"Running command with arguments:\n\t{output}\n"
-            f"In case of error, copy-paste the command:\n{command}"
+            f"Running command with arguments:\n\t{"\n\t".join(command)}\n"
+            f"In case of error, copy-paste the command:\n{' '.join(command)}"
         )
 
     subprocess.run(command, capture_output=True, check=True)
