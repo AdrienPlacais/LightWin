@@ -1,5 +1,6 @@
-"""Define :class:`Edge`. It does nothing.
+"""Define :class:`Edge`.
 
+It does nothing.
 .. todo::
     Check behavior w.r.t. LATTICE.
 

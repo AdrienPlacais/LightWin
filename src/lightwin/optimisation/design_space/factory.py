@@ -330,8 +330,9 @@ class SyncPhaseAmplitude(_Preset):
 # Design spaces with constraints; OptimisationAlgorithm must support it!
 # =============================================================================
 class AbsPhaseAmplitudeWithConstrainedSyncPhase(_Preset):
-    r"""Optimise :math:`\phi_{0,\,\mathrm{abs}}`, :math:`k_e`. :math:`\phi_s` is
-    constrained.
+    r"""Optimise :math:`\phi_{0,\,\mathrm{abs}}`, :math:`k_e`.
+
+    :math:`\phi_s` is constrained.
 
     .. warning::
         The selected :class:`.OptimisationAlgorithm` must support the
@@ -344,8 +345,9 @@ class AbsPhaseAmplitudeWithConstrainedSyncPhase(_Preset):
 
 
 class RelPhaseAmplitudeWithConstrainedSyncPhase(_Preset):
-    r"""Optimise :math:`\phi_{0,\,\mathrm{rel}}`, :math:`k_e`. :math:`\phi_s` is
-    constrained.
+    r"""Optimise :math:`\phi_{0,\,\mathrm{rel}}`, :math:`k_e`.
+
+    :math:`\phi_s` is constrained.
 
     .. warning::
         The selected :class:`.OptimisationAlgorithm` must support the

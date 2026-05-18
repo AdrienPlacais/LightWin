@@ -56,31 +56,32 @@ class TableConfSpec:
             | None
         ) = None,
     ) -> None:
-        """Set a table of properties. Correspond to a [table] in the ``TOML``.
+        """Set a table of properties.
 
-        Parameters
-        ----------
-        configured_object :
-            Name of the object that will receive associated parameters.
-        table_entry :
-            Name of the table in the ``TOML`` file, without brackets.
-        specs :
-            The :class:`.KeyValConfSpec` objects in the current table. When the
-            format of the table depends on the value of a key, provide a
-            dictionary linking every possible table with the corresponding
-            value.
-        is_mandatory :
-            If the current table must be provided.
-        can_have_untested_keys :
-            If LightWin should remain calm when some keys are provided in the
-            ``TOML`` but do not correspond to any :class:`.KeyValConfSpec`.
-        selectkey_n_default :
-            Must be given if ``specs`` is a dict. First value is name of the
-            spec, second value is default value. We will look for this spec in
-            the configuration file and select the proper ``Collection`` of
-            ``KeyValConfSpec`` accordingly.
-        monkey_patches :
-            Same keys as ``specs``, to override some default methods.
+        Correspond to a [table] in the ``TOML``.
+                Parameters
+                ----------
+                configured_object :
+                    Name of the object that will receive associated parameters.
+                table_entry :
+                    Name of the table in the ``TOML`` file, without brackets.
+                specs :
+                    The :class:`.KeyValConfSpec` objects in the current table. When the
+                    format of the table depends on the value of a key, provide a
+                    dictionary linking every possible table with the corresponding
+                    value.
+                is_mandatory :
+                    If the current table must be provided.
+                can_have_untested_keys :
+                    If LightWin should remain calm when some keys are provided in the
+                    ``TOML`` but do not correspond to any :class:`.KeyValConfSpec`.
+                selectkey_n_default :
+                    Must be given if ``specs`` is a dict. First value is name of the
+                    spec, second value is default value. We will look for this spec in
+                    the configuration file and select the proper ``Collection`` of
+                    ``KeyValConfSpec`` accordingly.
+                monkey_patches :
+                    Same keys as ``specs``, to override some default methods.
 
         """
         self.configured_object = configured_object
@@ -331,11 +332,12 @@ class TableConfSpec:
         return all_is_validated
 
     def _post_treat(self, toml_table: dict[str, Any], **kwargs) -> None:
-        """Edit some values, create new ones. To call after validation.
+        """Edit some values, create new ones.
 
-        .. note::
-            In general, the edited values will not be validated. To handle with
-            care.
+        To call after validation.
+                .. note::
+                    In general, the edited values will not be validated. To handle with
+                    care.
 
         """
         self._make_paths_absolute(toml_table, **kwargs)

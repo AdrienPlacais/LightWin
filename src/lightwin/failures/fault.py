@@ -93,18 +93,19 @@ class Fault:
     def fix(
         self, optimisation_algorithm: OptimisationAlgorithm | None
     ) -> None:
-        """Fix the |F|. Set ``self.optimized_cavity_settings``.
+        """Fix the |F|.
 
-        Also display information on the parametrization of the optimization
-        problem, the solution that was found.
+        Set ``self.optimized_cavity_settings``.
+                Also display information on the parametrization of the optimization
+                problem, the solution that was found.
 
-        Parameters
-        ----------
-        optimisation_algorithm :
-            The optimization algorithm to be used, already initialized.
-        simulation_output :
-            The most recent simulation, that includes the compensation settings
-            of all |F| upstream of ``self``.
+                Parameters
+                ----------
+                optimisation_algorithm :
+                    The optimization algorithm to be used, already initialized.
+                simulation_output :
+                    The most recent simulation, that includes the compensation settings
+                    of all |F| upstream of ``self``.
 
         """
         logging.info(

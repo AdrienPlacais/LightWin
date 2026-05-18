@@ -19,9 +19,10 @@ from lightwin.util.typing import GETTABLE_BEAM_CALC_PARAMETERS_T
 
 
 class ElementBeamCalculatorParameters(ABC):
-    """Parent class to hold solving parameters. Attribute of |E|.
+    """Parent class to hold solving parameters.
 
-    Used by :class:`.Envelope1D` and :class:`.Envelope3D`.
+    Attribute of |E|.     Used by :class:`.Envelope1D` and
+    :class:`.Envelope3D`.
 
     """
 

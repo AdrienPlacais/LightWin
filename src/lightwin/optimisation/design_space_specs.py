@@ -21,21 +21,25 @@ _DESIGN_SPACE_BASE = (
         key="variable_names",
         types=(list, tuple),
         description="""What to use as variables if ``design_space_preset`` is
-set to ``"UserDefined"``. In this case, this key is mandatory.""",
+set to ``"UserDefined"``. In this case, this key is mandatory."""
+                                                                 ,
         default_value=("k_e", "phi_s"),
         is_mandatory=False,
         warning_message="""variable_names was given but is ignored as
-design_space_preset is not 'UserDefined'.""",
+design_space_preset is not 'UserDefined'."""
+                                            ,
     ),
     KeyValConfSpec(
         key="constraint_names",
         types=(list, tuple),
         description="""What to use as constraints if ``design_space_preset`` is
-set to ``"UserDefined"``.""",
+set to ``"UserDefined"``."""
+                            ,
         default_value=(),
         is_mandatory=False,
         warning_message="""constraint_names was given but is ignored as
-design_space_preset is not 'UserDefined'.""",
+design_space_preset is not 'UserDefined'."""
+                                            ,
     ),
     KeyValConfSpec(
         key="from_file",

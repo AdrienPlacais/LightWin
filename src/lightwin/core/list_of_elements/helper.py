@@ -399,7 +399,6 @@ def first[T](
     StopIteration
 
     """
-
     try:
         return next(x for x in iterable if condition(x))
     except StopIteration:

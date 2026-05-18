@@ -38,7 +38,6 @@ def solve_scalar_equation_brent(
         Root found for the parameter value. NaN if no root is found.
 
     """
-
     x_left, x_right = x_bounds
     if x_left > x_right:
         x_left, x_right = x_right, x_left

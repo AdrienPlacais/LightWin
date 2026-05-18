@@ -120,10 +120,9 @@ class MyObjectiveFactory(ObjectiveFactory):
         """Determine which (sub)list of elements should be recomputed.
 
         Also gives the elements where objectives are evaluated. You can
-        override this method for your specific preset.
-        By default, it will call the :func:`.zone_to_recompute` to dynamically
-        determine a zone as small as possible, but encompassing all the
-        compensating and failed elements.
+        override this method for your specific preset. By default, it will call
+        the :func:`.zone_to_recompute` to dynamically determine a zone as small
+        as possible, but encompassing all the compensating and failed elements.
 
         This method is called at the object creation. It requires the
         ``objective_position_preset`` attribute to be defined.
@@ -154,9 +153,11 @@ class MyObjectiveFactory(ObjectiveFactory):
             get_key="beta_zdelta",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
             reference=self._reference_simulation_output,
-            descriptor="""Minimize diff. of envelope between ref and fix at the
+            descriptor=\
+                       """Minimize diff. of envelope between ref and fix at the
             exit of provided element.
-            """,
+            """
+               ,
         )
         return objective
 

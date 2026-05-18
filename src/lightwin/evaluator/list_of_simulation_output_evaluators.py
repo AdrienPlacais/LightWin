@@ -176,8 +176,8 @@ class FaultScenarioSimulationOutputEvaluators:
         """Set where the relative difference of `quantities` will be evaluated.
 
         It is at the end of each compensation zone, plus at the exit of
-        additional elements if given.
-        Also set `columns` to  ease `pandas` `DataFrame` creation.
+        additional elements if given. Also set `columns` to  ease `pandas`
+        `DataFrame` creation.
 
         """
         elts = [
