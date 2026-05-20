@@ -5,7 +5,7 @@ For more information on the units that are used in this module, see |units|.
 """
 
 import logging
-from typing import overload
+from typing import Literal, overload
 
 import numpy as np
 from numpy.typing import NDArray
@@ -18,7 +18,7 @@ from lightwin.util.typing import PHASE_SPACE_T, PHASE_SPACES, BeamKwargs
 # Compute quantities from the sigma beam matrix
 # =============================================================================
 def reconstruct_sigma(
-    phase_space_name: str,
+    phase_space_name: PHASE_SPACE_T,
     sigma_00: NDArray,
     sigma_01: NDArray,
     eps: NDArray,
@@ -99,7 +99,7 @@ def reconstruct_sigma(
 
 @overload
 def eps_from_sigma(
-    phase_space_name: str,
+    phase_space_name: Literal["x", "x99", "y", "y99", "zdelta"],
     sigma: NDArray,
     gamma_kin: NDArray,
     beta_kin: NDArray,
@@ -109,7 +109,7 @@ def eps_from_sigma(
 
 @overload
 def eps_from_sigma(
-    phase_space_name: str,
+    phase_space_name: Literal["x", "x99", "y", "y99", "zdelta"],
     sigma: NDArray,
     gamma_kin: float,
     beta_kin: float,
@@ -118,7 +118,7 @@ def eps_from_sigma(
 
 
 def eps_from_sigma(
-    phase_space_name: str,
+    phase_space_name: Literal["x", "x99", "y", "y99", "zdelta"],
     sigma: NDArray,
     gamma_kin: NDArray | float,
     beta_kin: NDArray | float,
@@ -186,7 +186,7 @@ def eps_from_sigma(
 
 
 def twiss_from_sigma(
-    phase_space_name: str,
+    phase_space_name: Literal["zdelta", "x", "y", "x99", "y99"],
     sigma: NDArray,
     eps_no_normalization: NDArray | float,
     tol: float = 1e-8,
@@ -253,8 +253,7 @@ def twiss_from_sigma(
 # TODO would be possible to skip this with TW, where envelope_pos is
 # already known
 def envelopes_from_sigma(
-    phase_space_name: str,
-    sigma: NDArray,
+    phase_space_name: PHASE_SPACE_T, sigma: NDArray
 ) -> NDArray:
     r"""Compute the envelopes.
 
@@ -297,8 +296,7 @@ def envelopes_from_sigma(
 # Compute quantities from the transfer matrix
 # =============================================================================
 def sigma_from_transfer_matrices(
-    sigma_in: NDArray,
-    tm_cumul: NDArray,
+    sigma_in: NDArray[np.float64], tm_cumul: NDArray[np.float64]
 ) -> NDArray:
     r"""Compute the :math:`\sigma` beam matrices over the linac.
 
@@ -330,7 +328,9 @@ def sigma_from_transfer_matrices(
 # =============================================================================
 # Compute quantities from Twiss and emittance
 # =============================================================================
-def envelopes_from_twiss_eps(twiss: NDArray, eps: NDArray | float) -> NDArray:
+def envelopes_from_twiss_eps(
+    twiss: NDArray[np.float64], eps: NDArray[np.float64] | float
+) -> NDArray[np.float64]:
     r"""Compute the envelopes from the Twiss parameters and emittance.
 
     Parameters
@@ -347,7 +347,7 @@ def envelopes_from_twiss_eps(twiss: NDArray, eps: NDArray | float) -> NDArray:
         energy envelope in second.
 
     """
-    if isinstance(eps, float):
+    if isinstance(eps, (float, int)):
         envelopes = np.sqrt(twiss[1:] * eps)
         return envelopes
 
@@ -361,8 +361,8 @@ def envelopes_from_twiss_eps(twiss: NDArray, eps: NDArray | float) -> NDArray:
 # =============================================================================
 @overload
 def eps_from_other_phase_space(
-    other_phase_space_name: str,
-    phase_space_name: str,
+    other_phase_space_name: PHASE_SPACE_T,
+    phase_space_name: PHASE_SPACE_T,
     eps_other: NDArray,
     gamma_kin: NDArray,
     beta_kin: NDArray,
@@ -372,8 +372,8 @@ def eps_from_other_phase_space(
 
 @overload
 def eps_from_other_phase_space(
-    other_phase_space_name: str,
-    phase_space_name: str,
+    other_phase_space_name: PHASE_SPACE_T,
+    phase_space_name: PHASE_SPACE_T,
     eps_other: float,
     gamma_kin: float,
     beta_kin: float,
@@ -382,8 +382,8 @@ def eps_from_other_phase_space(
 
 
 def eps_from_other_phase_space(
-    other_phase_space_name: str,
-    phase_space_name: str,
+    other_phase_space_name: PHASE_SPACE_T,
+    phase_space_name: PHASE_SPACE_T,
     eps_other: NDArray | float,
     gamma_kin: NDArray | float,
     beta_kin: NDArray | float,
@@ -441,11 +441,11 @@ def eps_from_other_phase_space(
 
 
 def twiss_from_other_phase_space(
-    other_phase_space_name: str,
-    phase_space_name: str,
-    twiss_other: NDArray,
-    gamma_kin: NDArray | float,
-    beta_kin: NDArray | float,
+    other_phase_space_name: PHASE_SPACE_T,
+    phase_space_name: PHASE_SPACE_T,
+    twiss_other: NDArray[np.float64],
+    gamma_kin: NDArray[np.float64] | float,
+    beta_kin: NDArray[np.float64] | float,
     **beam,
 ) -> NDArray:
     """Compute Twiss parameters from Twiss parameters in another plane.
@@ -489,7 +489,7 @@ def twiss_from_other_phase_space(
 # Utility
 # =============================================================================
 def mismatch_from_arrays(
-    ref: NDArray, fix: NDArray, transp: bool = False
+    ref: NDArray[np.float64], fix: NDArray[np.float64], transp: bool = False
 ) -> NDArray:
     """Compute the mismatch factor between two ellipses."""
     assert isinstance(ref, np.ndarray)
@@ -516,8 +516,10 @@ def mismatch_from_arrays(
 
 
 def resample_twiss_on_fix(
-    reference_z_abs: NDArray, reference_twiss: NDArray, z_abs: NDArray
-) -> NDArray:
+    reference_z_abs: NDArray[np.float64],
+    reference_twiss: NDArray[np.float64],
+    z_abs: NDArray[np.float64],
+) -> NDArray[np.float64]:
     """Interpolate ref Twiss on fix Twiss to compute mismatch afterwards."""
     n_points = z_abs.shape[0]
     out_shape = (n_points, 3)

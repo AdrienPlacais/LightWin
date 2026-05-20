@@ -34,10 +34,7 @@ class BeamParametersFactory(ABC):
     """
 
     def __init__(
-        self,
-        is_3d: bool,
-        is_multipart: bool,
-        beam_kwargs: BeamKwargs,
+        self, is_3d: bool, is_multipart: bool, beam_kwargs: BeamKwargs
     ) -> None:
         """Initialize the class."""
         self.phase_spaces = self._determine_phase_spaces(is_3d, is_multipart)
