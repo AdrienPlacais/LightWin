@@ -1,10 +1,9 @@
 """Define |A|, the highest-level class of LightWin.
 
-It holds, well... an accelerator. This accelerator has a
-|LOE|. For each |BC| defined, it has a |SO| stored in
-:attr:`Accelerator.simulation_outputs`. Additionally, it has a
-:class:`.ParticleInitialState`, which describes energy, phase, etc of the beam
-at the entry of its |LOE|.
+It holds, well... an accelerator. This accelerator has a |LOE|. For each |BC|
+defined, it has a |SO| stored in :attr:`Accelerator.simulation_outputs`.
+Additionally, it has a :class:`.ParticleInitialState`, which describes energy,
+phase, etc of the beam at the entry of its |LOE|.
 
 """
 

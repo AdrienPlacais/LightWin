@@ -80,7 +80,6 @@ def rk4_2d(
         Variation of ``u`` and ``v`` between ``x`` and ``x+dx``.
 
     """
-
     half_dx = 0.5 * dx
     k_1u, k_1v = delta(x, u, v)
     k_2u, k_2v = delta(x + half_dx, u + 0.5 * k_1u, v + 0.5 * k_1v)

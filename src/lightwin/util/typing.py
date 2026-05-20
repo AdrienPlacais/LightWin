@@ -572,8 +572,8 @@ class BeamKwargs(TypedDict):
 class CavParams(TypedDict):
     """Holds cavity parameters in a |SO|.
 
-    All lists have the length of the associated |LOE|. They
-    contain ``None`` where |E| is not a |FM|.
+    All lists have the length of the associated |LOE|. They contain ``None``
+    where |E| is not a |FM|.
 
     """
 

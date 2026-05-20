@@ -72,9 +72,8 @@ class Constraint(DesignSpaceParameter):
 
         Currently bugged. When trying too access ``phi_s``, we get the value
         stored in ``SimulationOutput.elts`` instead of the one in
-        ``SetOfCavitySettings``.
-        So we end up with the ``phi_s`` from the broken linac instead of the
-        ones in the cavity settings we just tried.
+        ``SetOfCavitySettings``. So we end up with the ``phi_s`` from the
+        broken linac instead of the ones in the cavity settings we just tried.
 
         """
         for key, value in simulation_output.set_of_cavity_settings.items():

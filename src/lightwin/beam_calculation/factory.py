@@ -116,10 +116,11 @@ class BeamCalculatorsFactory:
     def _patch_to_remove_misunderstood_key(
         self, beam_calculator_kw: dict[str, Any]
     ) -> None:
-        """Patch to remove a key not understood by TraceWin. Declare id list.
+        """Patch to remove a key not understood by TraceWin.
 
-        .. todo::
-            fixme
+        Declare id list.
+                .. todo::
+                    fixme
 
         """
         if "simulation type" in beam_calculator_kw:
