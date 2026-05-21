@@ -1,9 +1,10 @@
 """Provide an easy way to generate :class:`.TransferMatrix`."""
 
 import logging
-import os
+from pathlib import Path
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.core.elements.element import ELEMENT_TO_INDEX_T
 from lightwin.core.transfer_matrix.factory import TransferMatrixFactory
@@ -16,10 +17,10 @@ class TransferMatrixFactoryTraceWin(TransferMatrixFactory):
 
     def _load_transfer_matrices(
         self,
-        path_cal: str,
+        path_cal: str | Path,
         filename: str = "Transfer_matrix1.dat",
         high_def: bool = False,
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
         """Get the full transfer matrices calculated by TraceWin.
 
         Parameters
@@ -49,17 +50,19 @@ class TransferMatrixFactoryTraceWin(TransferMatrixFactory):
             )
             high_def = False
 
-        path = os.path.join(path_cal, filename)
+        if isinstance(path_cal, str):
+            path_cal = Path(path_cal)
+        path = path_cal / filename
         elements_numbers, position_in_m, transfer_matrices = (
             load.transfer_matrices(path)
         )
-        logging.debug(f"successfully loaded {path}")
+        logging.debug(f"Successfully loaded {path}")
         return elements_numbers, position_in_m, transfer_matrices
 
     def run(
         self,
-        tm_cumul_in: np.ndarray,
-        path_cal: str,
+        tm_cumul_in: NDArray[np.float64],
+        path_cal: str | Path,
         element_to_index: ELEMENT_TO_INDEX_T,
     ) -> TransferMatrix:
         r"""Load the TraceWin transfer matrix file and create the object.
@@ -87,3 +90,18 @@ class TransferMatrixFactoryTraceWin(TransferMatrixFactory):
             element_to_index=element_to_index,
         )
         return transfer_matrix
+
+    def run_dummy(
+        self,
+        tm_cumul_in: NDArray[np.float64],
+        n_elts: int,
+        element_to_index: ELEMENT_TO_INDEX_T,
+    ) -> TransferMatrix:
+        """Create a NaN-filled TransferMatrix when no file was produced."""
+        cumulated = np.full((n_elts, 6, 6), np.nan)
+        return TransferMatrix(
+            self.is_3d,
+            first_cumulated_transfer_matrix=tm_cumul_in,
+            cumulated=cumulated,
+            element_to_index=element_to_index,
+        )

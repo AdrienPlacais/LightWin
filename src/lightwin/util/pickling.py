@@ -126,7 +126,6 @@ class MyCloudPickler(MyPickler):
         pickled.
 
         """
-
         if path is None:
             if initialfile is None:
                 initialfile = my_object.__class__.__name__ + ".pkl"

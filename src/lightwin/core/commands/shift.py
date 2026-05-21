@@ -30,5 +30,6 @@ class Shift(Command):
         self, instructions: list[Instruction], **kwargs: float
     ) -> list[Instruction]:
         """Do nothing."""
+        instructions = super().apply(instructions, **kwargs)
         logging.error("Shift not implemented.")
         return instructions

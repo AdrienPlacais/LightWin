@@ -42,6 +42,12 @@ from lightwin.util.typing import (
 )
 
 
+class TraceWinException(subprocess.SubprocessError):
+    """Specific exception for TraceWin subprocess error."""
+
+    pass
+
+
 class TraceWin(BeamCalculator):
     """Hold a TraceWin beam calculator."""
 
@@ -299,14 +305,23 @@ class TraceWin(BeamCalculator):
             elts, set_of_cavity_settings, **kwargs
         )
         is_not_a_fit = optimization_status != "in progress"
-        exception = _run_in_bash(command, output_command=is_not_a_fit)
 
-        # check in which order those two methods should be called
+        command_failed = False
+        try:
+            _run_in_bash(command, output_command=is_not_a_fit)
+        except subprocess.CalledProcessError as e:
+            logging.warning(
+                f"TraceWin exited with return code {e.returncode}.\n"
+                f"stderr:\n{e.stderr.decode()}\n"
+                f"stdout:\n{e.stdout.decode()}"
+            )
+            command_failed = True
+
         simulation_output = self.simulation_output_factory.create(
             accelerator_id=accelerator_id,
             elts=elts,
             path_cal=path_cal,
-            exception=exception,
+            command_failed=command_failed,
             set_of_cavity_settings=set_of_cavity_settings,
         )
         self._post_treat_cavity_setttings(
@@ -461,28 +476,27 @@ class TraceWin(BeamCalculator):
 # =============================================================================
 # Bash
 # =============================================================================
-def _run_in_bash(
-    command: list[str], output_command: bool = True, output_error: bool = False
-) -> bool:
-    """Run given command in bash."""
-    output = "\n\t".join(command)
+def _run_in_bash(command: Sequence[str], output_command: bool = True) -> None:
+    """Run given command in bash.
+
+    Parameters
+    ----------
+    command :
+        The command to run.
+    output_command :
+        If the command should be logged.
+
+
+    Returns
+    -------
+    bool
+        True if the process failed (non-zero return code), False otherwise.
+
+    """
     if output_command:
-        logging.info(f"Running command:\n\t{output}")
-
-    process = subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-    stdout, stderr = process.communicate()
-    exception = process.wait()
-
-    # exception = False
-    # for line in process.stdout:
-    # if output_error:
-    # print(line)
-    # exception = True
-
-    if exception != 0 and output_error:
-        logging.warning(
-            f"A message was returned when executing following command:\n\t{stderr}"
+        logging.info(
+            f"Running command with arguments:\n\t{"\n\t".join(command)}\n"
+            f"In case of error, copy-paste the command:\n{' '.join(command)}"
         )
-    return exception != 0
+
+    subprocess.run(command, capture_output=True, check=True)

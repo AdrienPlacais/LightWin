@@ -49,6 +49,8 @@ class Instruction(ABC):
 
         self._personalized_name = line.personalized_name
         self._default_name: str
+        #: Objects (generally commands) influencing this object
+        self.influencing_instructions: list[object] = []
 
     def _assert_correct_number_of_args(self, idx: int) -> None:
         """Check if given number of arguments is ok."""
@@ -96,35 +98,20 @@ class Instruction(ABC):
             return self._default_name
         return str(self.line)
 
-    def to_line(self, *args, **kwargs) -> list[str]:
-        """Convert the object back into a ``DAT`` line."""
+    def to_line(self, *args, **kwargs) -> list[str] | None:
+        """Convert the object back into a ``DAT`` line.
+
+        If the returned value is None, it means that current instruction is
+        handled elsewhere. In particular, this is the case for
+        :class:`.SetSyncPhase` behavior which is now handled in |FM|.
+
+        """
         return self.line.splitted_full
 
     def increment_dat_position(self, increment: int = 1) -> None:
         """Increment dat index for when another instruction is inserted."""
         self.idx["dat_idx"] += increment
         self.line.idx += 1
-
-    def insert_dat_line(
-        self,
-        *args,
-        dat_filecontent: list[DatLine],
-        previously_inserted: int = 0,
-        **kwargs,
-    ) -> None:
-        """Insert the current object in the ``dat_filecontent`` object.
-
-        Parameters
-        ----------
-        dat_filecontent :
-            The list of instructions, in the form of a list of lines.
-        previously_inserted :
-            Number of :class:`.Instruction` that were already inserted in the
-            given ``dat_filecontent``.
-
-        """
-        index = self.line.idx + previously_inserted
-        dat_filecontent.insert(index, self.line)
 
     def insert_line(
         self,
@@ -145,7 +132,9 @@ class Instruction(ABC):
 
         """
         index = self.idx["dat_idx"] + previously_inserted
-        dat_filecontent.insert(index, self.to_line(*args, **kwargs))
+        line = self.to_line(*args, **kwargs)
+        if line is not None:
+            dat_filecontent.insert(index, line)
 
     def insert_object(self, instructions: MutableSequence[Self]) -> None:
         """Insert current instruction in a list full of other instructions."""

@@ -52,7 +52,7 @@ from lightwin.tracewin_utils.dat_files import (
     export_dat_filecontent,
 )
 from lightwin.tracewin_utils.line import DatLine
-from lightwin.util.typing import BeamKwargs
+from lightwin.util.typing import REFERENCE_PHASES_T, BeamKwargs
 
 
 class ListOfElementsFactory:
@@ -333,7 +333,7 @@ class ListOfElementsFactory:
         *,
         instructions_to_insert: Collection[Instruction] = (),
         append_stem: str = "",
-        which_phase: str = "phi_0_rel",
+        which_phase: REFERENCE_PHASES_T = "phi_0_rel",
     ) -> ListOfElements:
         """Create new list of elements, based on an exising one.
 
@@ -345,15 +345,13 @@ class ListOfElementsFactory:
             Maybe gather some things with the subset?
 
         """
-        original_dat = elts.files["dat_file"]
-        assert isinstance(original_dat, Path)
-        new_dat = original_dat
+        fixed_dat_path = elts.files["dat_file"]
+        beauty_dat_path = fixed_dat_path
         if append_stem:
-            new_dat = new_dat.with_stem(new_dat.stem + "_" + append_stem)
-        shutil.copy(original_dat, new_dat)
-
-        accelerator_path = elts.files["accelerator_path"]
-        assert isinstance(accelerator_path, Path)
+            beauty_dat_path = beauty_dat_path.with_stem(
+                beauty_dat_path.stem + "_" + append_stem
+            )
+        shutil.copy(fixed_dat_path, beauty_dat_path)
 
         kwargs = {
             "w_kin": elts.input_particle.w_kin,
@@ -363,10 +361,12 @@ class ListOfElementsFactory:
         }
 
         new_elts = self.whole_list_run(
-            dat_file=new_dat,
-            accelerator_path=accelerator_path,
+            dat_file=beauty_dat_path,
+            accelerator_path=elts.files["accelerator_path"],
             instructions_to_insert=instructions_to_insert,
             **kwargs,
         )
-        export_dat_filecontent(new_elts.files["dat_filecontent"], new_dat)
+        export_dat_filecontent(
+            new_elts.files["dat_filecontent"], beauty_dat_path
+        )
         return new_elts

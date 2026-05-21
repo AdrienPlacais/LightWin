@@ -50,6 +50,7 @@ class Lattice(Command):
         self, instructions: list[Instruction], **kwargs: float
     ) -> list[Instruction]:
         """Set lattice section number of elements in current lattice."""
+        instructions = super().apply(instructions, **kwargs)
         index = self.idx["dat_idx"]
 
         current_lattice_number = self._current_lattice_number(
@@ -66,7 +67,10 @@ class Lattice(Command):
 
             if isinstance(instruction, (Command, Comment)):
                 continue
-            assert isinstance(element := instruction, Element)
+            assert isinstance(element := instruction, Element), (
+                f"Expected an Element but got a {type(instruction)}\n"
+                f"{instruction}"
+            )
             if not element.increment_lattice_idx:
                 continue
 

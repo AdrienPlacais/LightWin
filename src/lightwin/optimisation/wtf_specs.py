@@ -24,9 +24,9 @@ WTF_COMMON = (
         key="automatic_study",
         types=(str, NoneType),
         description=(
-            """Automatically generate the list of failed cavities to avoid
-            manually typing all the cavities identifiers in systematic studies.
-            """
+            "Automatically generate the list of failed cavities to avoid"
+            "manually typing all the cavities identifiers in systematic"
+            "studies."
         ),
         default_value=None,
         allowed_values=AUTOMATIC_STUDY,
@@ -64,13 +64,13 @@ WTF_COMMON = (
     KeyValConfSpec(
         key="index_offset",
         types=(int,),
-        description=("""
-            Specify whether user-provided cavity indices are 0-based or
-            1-based. Set `0` if the first cavity has index 0 (Python-style,
-            default). Set `1` if the first cavity has index 1
-            (human-friendly). This affects how the `failed` and
-            `compensating_manual` lists interpret integer indices.
-            """),
+        description=(
+            "Specify whether user-provided cavity indices are 0-based or"
+            "1-based. Set `0` if the first cavity has index 0 (Python-style,"
+            "default). Set `1` if the first cavity has index 1 (human-friendly"
+            "). This affects how the `failed` and `compensating_manual` lists"
+            "interpret integer indices."
+        ),
         allowed_values=(0, 1),
         default_value=0,
         is_mandatory=False,

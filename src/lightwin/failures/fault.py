@@ -14,7 +14,7 @@ Its purpose is to hold information on a failure and to fix it.
 import datetime
 import logging
 import time
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.simulation_output.simulation_output import (
@@ -26,7 +26,6 @@ from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.helper import equivalent_elt
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
-from lightwin.failures import set_of_cavity_settings
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings
 from lightwin.optimisation.algorithms.algorithm import (
     OptimisationAlgorithm,
@@ -93,18 +92,19 @@ class Fault:
     def fix(
         self, optimisation_algorithm: OptimisationAlgorithm | None
     ) -> None:
-        """Fix the |F|. Set ``self.optimized_cavity_settings``.
+        """Fix the |F|.
 
-        Also display information on the parametrization of the optimization
-        problem, the solution that was found.
+        Set ``self.optimized_cavity_settings``.
+                Also display information on the parametrization of the optimization
+                problem, the solution that was found.
 
-        Parameters
-        ----------
-        optimisation_algorithm :
-            The optimization algorithm to be used, already initialized.
-        simulation_output :
-            The most recent simulation, that includes the compensation settings
-            of all |F| upstream of ``self``.
+                Parameters
+                ----------
+                optimisation_algorithm :
+                    The optimization algorithm to be used, already initialized.
+                simulation_output :
+                    The most recent simulation, that includes the compensation settings
+                    of all |F| upstream of ``self``.
 
         """
         logging.info(
@@ -163,7 +163,7 @@ class Fault:
         fix_elts = fix_acc.elts
 
         optimized_cavity_settings = SetOfCavitySettings.from_incomplete_set(
-            self._compensation_settings,
+            self.compensation_settings,
             fix_elts.l_cav,
             optimization_status="finished",
         )
@@ -295,7 +295,7 @@ class Fault:
         return info
 
     @property
-    def _compensation_settings(self) -> dict[FieldMap, CavitySettings]:
+    def compensation_settings(self) -> dict[FieldMap, CavitySettings]:
         """Get the settings found by the optimizer.
 
         If optimization was already performed (unpickled |A|) , we return the

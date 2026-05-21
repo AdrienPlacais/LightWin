@@ -3,7 +3,12 @@
 from pathlib import Path
 from typing import Any
 
-from lightwin.core.commands.adjust import Adjust
+from lightwin.core.commands.adjust import (
+    Adjust,
+    AdjustSteerer,
+    AdjustSteererBx,
+    AdjustSteererBy,
+)
 from lightwin.core.commands.chopper import Chopper
 from lightwin.core.commands.command import Command
 from lightwin.core.commands.dummy_command import DummyCommand
@@ -43,7 +48,9 @@ from lightwin.tracewin_utils.line import DatLine
 #: Commands handled by LightWin.
 IMPLEMENTED_COMMANDS = {
     "ADJUST": Adjust,
-    "ADJUST_STEERER": DummyCommand,
+    "ADJUST_STEERER": AdjustSteerer,
+    "ADJUST_STEERER_BX": AdjustSteererBx,
+    "ADJUST_STEERER_BY": AdjustSteererBy,
     "DUMMY_COMMAND": DummyCommand,
     "CHOPPER": Chopper,
     "END": End,

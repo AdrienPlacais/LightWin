@@ -270,6 +270,46 @@ class SynchronousPhases(ISimulationOutputEvaluator):
         return f"All {self.markdown} are within [{self._min:0.2f}, {self._max:-.2f}] (deg)"
 
 
+class TransverseEnvelopeX(ISimulationOutputEvaluator):
+    """Check that transverse envelopes remains reasonable."""
+
+    _y_quantity = "beta_x"
+
+    def __init__(
+        self,
+        max_envelope: NDArray[np.float64] | float,
+        reference: SimulationOutput,
+        fignum: int,
+        plotter: MatplotlibPlotter | None = None,
+    ) -> None:
+        super().__init__(reference, fignum, plotter)
+        self._max = max_envelope
+
+    def __repr__(self) -> str:
+        """Give a short description of what this class does."""
+        return f"Envelope {self.markdown} stays reasonable"
+
+
+class TransverseEnvelopeY(ISimulationOutputEvaluator):
+    """Check that transverse envelopes remains reasonable."""
+
+    _y_quantity = "beta_y"
+
+    def __init__(
+        self,
+        max_envelope: NDArray[np.float64] | float,
+        reference: SimulationOutput,
+        fignum: int,
+        plotter: MatplotlibPlotter | None = None,
+    ) -> None:
+        super().__init__(reference, fignum, plotter)
+        self._max = max_envelope
+
+    def __repr__(self) -> str:
+        """Give a short description of what this class does."""
+        return f"Envelope {self.markdown} stays reasonable"
+
+
 class TransverseMismatchFactor(LongitudinalMismatchFactor):
     """Check that mismatch factor at end is not too high."""
 
@@ -290,4 +330,6 @@ SIMULATION_OUTPUT_EVALUATORS = {
     "PowerLoss": PowerLoss,
     "SynchronousPhases": SynchronousPhases,
     "TransverseMismatchFactor": TransverseMismatchFactor,
+    "TransverseEnvelopeX": TransverseEnvelopeX,
+    "TransverseEnvelopeY": TransverseEnvelopeY,
 }

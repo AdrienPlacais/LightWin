@@ -8,6 +8,7 @@ from pprint import pformat
 from typing import Literal
 
 import numpy as np
+from numpy.typing import NDArray
 
 from lightwin.core.instruction import Instruction
 
@@ -124,9 +125,7 @@ def slice_dat_line(line: str) -> list[str]:
     return _split_weighted_elements(line)
 
 
-def table_structure_file(
-    path: Path,
-) -> list[list[str]]:
+def table_structure_file(path: Path) -> list[list[str]]:
     """Load the file produced by ``Data`` ``Save table to file``."""
     file_content = []
     with open(path, encoding="utf-8") as file:
@@ -141,7 +140,7 @@ def table_structure_file(
     return file_content
 
 
-def results(path: Path, prop: str) -> np.ndarray:
+def results(path: Path, prop: str) -> NDArray[np.float64]:
     """Load a property from TraceWin's "Data" table.
 
     Parameters
@@ -183,7 +182,9 @@ def results(path: Path, prop: str) -> np.ndarray:
     return data_ref
 
 
-def transfer_matrices(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def transfer_matrices(
+    path: Path,
+) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
     """Load the transfer matrix as calculated by TraceWin."""
     transfer_matrices = []
     position_in_m = []
@@ -204,7 +205,7 @@ def transfer_matrices(path: Path) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     return elements_numbers, position_in_m, transfer_matrices
 
 
-def _transfer_matrix(lines: list[str]) -> np.ndarray:
+def _transfer_matrix(lines: list[str]) -> NDArray[np.float64]:
     """Load a single element transfer matrix."""
     transfer_matrix = np.empty((6, 6), dtype=float)
     for i, line in enumerate(lines):

@@ -347,6 +347,14 @@ class ListOfElements(list):
         intended phase in :class:`.TraceWin` (no effect if the phases are
         exported as relative phase).
 
+        .. warning::
+           This method can manually add a ``SET_SYNC_PHASE`` command, without
+           :meth:`.SetSyncPhase.to_line`. It happens when a ``FIELD_MAP`` has a
+           reference phase different from ``"phi_s"`` but this changed during
+           the simulation.
+        .. todo::
+
+           The manual addition of "SET_SYNC_PHASE" is very patchy.
         Raises
         ------
         NotImplementedError
@@ -354,12 +362,30 @@ class ListOfElements(list):
 
         """
         if exported_phase in ("as_in_original_dat",):
-            raise NotImplementedError
+            raise NotImplementedError(f"{exported_phase = }")
         self.files["dat_file"] = dat_file
-        dat_filecontent = [
-            instruction.to_line(which_phase=exported_phase, inplace=False)
-            for instruction in self.files["elts_n_cmds"]
-        ]
+        dat_filecontent = []
+        for instruction in self.files["elts_n_cmds"]:
+            line = instruction.to_line(
+                which_phase=exported_phase, inplace=False
+            )
+            if line is None:
+                logging.info(
+                    f"Did not insert a line corresponding to {instruction = } "
+                    "because it's 'to_line' method returned 'None'."
+                )
+                continue
+
+            if (
+                isinstance((field_map := instruction), FieldMap)
+                and field_map.cavity_settings.reference == "phi_s"
+                and "SET_SYNC_PHASE" not in " ".join(dat_filecontent[-1])
+            ):
+                dat_filecontent.append(["SET_SYNC_PHASE"])
+                continue
+
+            dat_filecontent.append(line)
+
         if save:
             export_dat_filecontent(dat_filecontent, dat_file)
 

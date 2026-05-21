@@ -30,9 +30,9 @@ def return_value_should_be_plotted(partial_function: Callable) -> bool:
 
     This function only works on functions defined by ``functools.partial``. If
     it is not (lambda function, "classic" function), we consider that the
-    plotting was not desired.
-    We check if the 'to_plot' keyword was given in the partial definition, and
-    if it is not we also consider that the plot was not wanted.
+    plotting was not desired. We check if the 'to_plot' keyword was given in
+    the partial definition, and if it is not we also consider that the plot was
+    not wanted.
 
     """
     if not isinstance(partial_function, partial):

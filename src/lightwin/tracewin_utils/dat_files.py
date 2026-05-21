@@ -98,19 +98,28 @@ def _insert_instructions(
     dat_filecontent: list[DatLine],
     instructions_to_insert: Collection[Instruction | DatLine] = (),
 ) -> None:
-    """Insert the desired instructions in the ``dat_filecontent``."""
+    """Insert the desired instructions in the ``dat_filecontent``.
+
+    Every instruction will be inserted at index ``dat_idx``. We keep track of
+    the previously inserted instructions, so that everything is inserted at the
+    right place, whatever the previous number of inserted instructions was.
+
+    Parameters
+    ----------
+    dat_filecontent :
+        Content of a ``DAT`` file.
+    instructions_to_insert :
+        Instructions to insert.
+
+    """
     logging.info(
         "Will insert following instructions:\n"
         f"{pformat(instructions_to_insert, width=120)}"
     )
     for i, instruction in enumerate(instructions_to_insert):
-        if isinstance(instruction, DatLine):
-            dat_filecontent.insert(instruction.idx + i, instruction)
-            continue
-
-        instruction.insert_dat_line(
-            dat_filecontent=dat_filecontent, previously_inserted=i
-        )
+        if isinstance(instruction, Instruction):
+            instruction = instruction.line
+        dat_filecontent.insert(instruction.idx + i, instruction)
 
 
 def dat_filecontent_from_smaller_list_of_elements(

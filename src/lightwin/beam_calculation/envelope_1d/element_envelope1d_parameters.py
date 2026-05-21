@@ -1,10 +1,10 @@
 """Define a class to hold solver parameters for :class:`.Envelope1D`.
 
-This module holds :class:`ElementEnvelope1DParameters`, that inherits
-from the Abstract Base Class :class:`.ElementBeamCalculatorParameters`.
-It holds the transfer matrix function that is used, according to the solver
-(Runge-Kutta or leapfrog) and their version (Python or Cython), as well as the
-meshing in accelerating elements.
+This module holds :class:`ElementEnvelope1DParameters`, that inherits from the
+Abstract Base Class :class:`.ElementBeamCalculatorParameters`. It holds the
+transfer matrix function that is used, according to the solver (Runge-Kutta or
+leapfrog) and their version (Python or Cython), as well as the meshing in
+accelerating elements.
 
 The |E| objects with a transfer matrix are ``DRIFT``, ``SOLENOID``, ``QUAD``,
 ``FIELD_MAP``, ``BEND``.

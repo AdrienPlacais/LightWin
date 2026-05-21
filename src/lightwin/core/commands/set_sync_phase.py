@@ -7,12 +7,12 @@
 
 import logging
 from collections.abc import Sequence
-from typing import Literal
 
 from lightwin.core.commands.command import Command
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
+from lightwin.util.typing import REFERENCE_PHASES_T
 
 
 class SetSyncPhase(Command):
@@ -54,6 +54,7 @@ class SetSyncPhase(Command):
         phi_s``.
 
         """
+        instructions = super().apply(instructions, **kwargs)
         for cavity in instructions[self.influenced]:
             assert isinstance(cavity, FieldMap)
             settings = cavity.cavity_settings
@@ -63,21 +64,24 @@ class SetSyncPhase(Command):
         return list(instructions)
 
     def to_line(
-        self,
-        *args,
-        which_phase: Literal["phi_0_abs", "phi_0_rel", "phi_s"],
-        **kwargs,
+        self, *args, which_phase: REFERENCE_PHASES_T, **kwargs
     ) -> list[str]:
-        """Return the command, commented if output phase should not be phi_s.
+        """Return ``"SET_SYNC_PHASE"``.
 
         .. note::
-           We keep old implementation for now. But this method returns nothing
-           because the ``to_line`` method of |FM| already handles adding a
-           ``SET_SYNC_PHASE`` when necessary.
+            We return a commented line when ``which_phase`` is not ``"phi_s``,
+            to keep output ``DAT`` as close as possible to the original one.
+
+        .. warning::
+           :meth:`.ListOfElements.store_settings_in_dat` can manually add a
+           ``SET_SYNC_PHASE`` command. It happens when a ``FIELD_MAP`` has a
+           reference phase different from ``"phi_s"`` but this changed during
+           the simulation.
 
         """
-        return []
         line = super().to_line(*args, **kwargs)
+        if line is None:
+            raise ValueError("line should not be empty")
         if which_phase == "phi_s":
             return line
         line.insert(0, ";")

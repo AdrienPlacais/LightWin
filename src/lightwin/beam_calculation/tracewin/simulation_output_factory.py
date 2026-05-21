@@ -352,7 +352,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         accelerator_id: str,
         elts: ListOfElements,
         path_cal: Path,
-        exception: bool,
+        command_failed: bool,
         set_of_cavity_settings: SetOfCavitySettings,
     ) -> SimulationOutput:
         """Create an object holding all relatable simulation results.
@@ -366,7 +366,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             Contains all elements or only a fraction or all the elements.
         path_cal :
             Path to results folder.
-        exception :
+        failed :
             Indicates if the run was unsuccessful or not.
 
         Returns
@@ -375,8 +375,12 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             |BC| objects.
 
         """
-        if exception:
+        if command_failed:
             filepath = Path(path_cal, self._filename)
+            if not filepath.is_file():
+                return self._dummy_simulation_output(
+                    accelerator_id, elts, set_of_cavity_settings
+                )
             _remove_incomplete_line(filepath)
             _add_dummy_data(filepath, elts)
 
@@ -384,7 +388,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             path_cal, elts.input_particle
         )
 
-        if exception:
+        if command_failed:
             results = _remove_invalid_values(results)
 
         self._save_tracewin_meshing_in_elements(
@@ -490,3 +494,60 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         parameters = _load_parameters_of_cavities(path_cal, filename)
         parameters = _uniformize_parameters_of_cavities(parameters, n_elts)
         return parameters
+
+    def _dummy_simulation_output(
+        self,
+        accelerator_id: str,
+        elts: ListOfElements,
+        set_of_cavity_settings: SetOfCavitySettings,
+    ) -> SimulationOutput:
+        """Create a NaN-filled SimulationOutput when TraceWin left no file."""
+        logging.warning(
+            "TraceWin produced no output file. Returning a NaN-filled "
+            "SimulationOutput."
+        )
+        n = len(elts) + 1
+        nan_arr = np.full(n, np.nan)
+        for s, elt in enumerate(elts):
+            elt.beam_calc_param[self._beam_calculator_id] = (
+                self.beam_calc_parameters_factory.run(
+                    elt, np.array([0.0]), s_in=s, s_out=s
+                )
+            )
+        element_to_index = elts.generate_element_to_index_func(
+            self._beam_calculator_id
+        )
+        synch_trajectory = ParticleFullTrajectory(
+            w_kin=nan_arr,
+            phi_abs=nan_arr,
+            synchronous=True,
+            beam=self._beam_kwargs,
+        )
+        cav_params: CavParams = {
+            "acceptance_energy": [0.0] * len(elts),
+            "acceptance_phi": [0.0] * len(elts),
+            "phi_0": [0.0] * len(elts),
+            "phi_s": [0.0] * len(elts),
+            "v_cav_mv": [0.0] * len(elts),
+        }
+        transfer_matrix = self.transfer_matrix_factory.run_dummy(
+            elts.tm_cumul_in, len(elts), element_to_index
+        )
+        beam_parameters = self.beam_parameters_factory.factory_method_dummy(
+            nan_arr, nan_arr, element_to_index
+        )
+        return SimulationOutput(
+            accelerator_id=accelerator_id,
+            beam_calculator_id=self._beam_calculator_id,
+            elts=elts,
+            is_multiparticle=self._is_multipart,
+            is_3d=True,
+            z_abs=np.zeros(n),
+            synch_trajectory=synch_trajectory,
+            cav_params=cav_params,
+            beam_parameters=beam_parameters,
+            element_to_index=element_to_index,
+            transfer_matrix=transfer_matrix,
+            set_of_cavity_settings=set_of_cavity_settings,
+            pow_lost=nan_arr,
+        )

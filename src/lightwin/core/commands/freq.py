@@ -55,6 +55,7 @@ class Freq(Command):
             superposed yet.
 
         """
+        instructions = super().apply(instructions, **kwargs)
         if freq_bunch is None:
             logging.warning(
                 "The bunch frequency was not provided. Setting it to RF frequency..."

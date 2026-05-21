@@ -21,7 +21,7 @@ from lightwin.experimental.new_evaluator.simulation_output.factory import (
 )
 from lightwin.failures.fault_scenario import FaultScenario
 from lightwin.ui.workflow_setup import run_simulation_new
-from lightwin.util.pass_beauty import insert_pass_beauty_instructions
+from lightwin.util.pass_beauty import insert_field_map_pass_beauty_instructions
 
 
 def add_beauty_instructions(
@@ -33,7 +33,9 @@ def add_beauty_instructions(
 
     """
     for fault_scenario in fault_scenarios:
-        insert_pass_beauty_instructions(fault_scenario, beam_calculator)
+        insert_field_map_pass_beauty_instructions(
+            fault_scenario, beam_calculator
+        )
 
 
 def _perform_evaluations(

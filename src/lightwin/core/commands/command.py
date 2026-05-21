@@ -1,8 +1,7 @@
 """Define the base class from which all commands will inherit."""
 
-from abc import abstractmethod
 from collections.abc import Iterable, Sequence
-from typing import override
+from typing import Any, override
 
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
@@ -32,7 +31,8 @@ class Command(Instruction):
     ) -> None:
         """Instantiate mandatory attributes."""
         super().__init__(line, dat_idx, **kwargs)
-        self.influenced = slice(0, 1)
+        #: Indexes of instructions influenced by this object
+        self.influenced: slice[int, int, Any] = slice(0, 1)
 
     def set_influenced_elements(
         self, instructions: list[Instruction], **kwargs: float
@@ -43,13 +43,15 @@ class Command(Instruction):
             instructions[start:], type(self)
         )
         self.influenced = influenced
+
         return
 
-    @abstractmethod
     def apply(
         self, instructions: list[Instruction], **kwargs: float
     ) -> list[Instruction]:
         """Apply the command."""
+        for instr in instructions[self.influenced]:
+            instr.influencing_instructions.append(self)
         return instructions
 
     def concerns_one_of(self, dat_indexes: Iterable[int]) -> bool:
@@ -111,6 +113,7 @@ class Command(Instruction):
     def increment_dat_position(self, increment: int = 1) -> None:
         """Increment dat_index and indexes of elements concerned by command."""
         self.influenced = slice(
-            self.influenced.start + increment, self.influenced.stop + increment
+            self.influenced.start + increment,
+            self.influenced.stop + increment,
         )
         return super().increment_dat_position(increment)

@@ -1,9 +1,9 @@
 """Define a class to hold solver parameters for :class:`.Envelope3D`.
 
-This module holds :class:`ElementEnvelope3DParameters`, that inherits
-from the Abstract Base Class :class:`.ElementBeamCalculatorParameters`.
-It holds the transfer matrix function that is used, as well as the meshing in
-accelerating elements.
+This module holds :class:`ElementEnvelope3DParameters`, that inherits from the
+Abstract Base Class :class:`.ElementBeamCalculatorParameters`. It holds the
+transfer matrix function that is used, as well as the meshing in accelerating
+elements.
 
 In a first time, only Runge-Kutta (no leapfrog) and only Python (no Cython).
 

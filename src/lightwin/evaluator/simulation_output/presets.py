@@ -37,7 +37,7 @@ SIMULATION_OUTPUT_EVALUATOR_PRESETS = {
         ),
         "tester": partial(testers.value_is, objective_value=0.0, to_plot=True),
         "markdown": markdown["pow_lost"],
-        "descriptor": """Lost power shall be null.""",
+        "descriptor": "Lost power shall be null.",
         "plt_kwargs": {"fignum": 101, "savefig": True},
     },
     "transverse eps_x shall not grow too much": {
@@ -52,8 +52,10 @@ SIMULATION_OUTPUT_EVALUATOR_PRESETS = {
             testers.value_is_below, upper_limit=20.0, to_plot=True
         ),
         "markdown": r"$\Delta\epsilon_{xx'} / \epsilon_{xx'}$ (ref $z=0$) [%]",
-        "descriptor": """Transverse emittance should not grow by more than
-                         20% along the linac.""",
+        "descriptor": (
+            "Transverse emittance should not grow by more than 20% along the "
+            "linac."
+        ),
         "plt_kwargs": {"fignum": 110, "savefig": True},
     },
     "transverse eps_y shall not grow too much": {
@@ -68,8 +70,10 @@ SIMULATION_OUTPUT_EVALUATOR_PRESETS = {
             testers.value_is_below, upper_limit=20.0, to_plot=True
         ),
         "markdown": r"$\Delta\epsilon_{yy'} / \epsilon_{yy'}$ (ref $z=0$) [%]",
-        "descriptor": """Transverse emittance should not grow by more than
-                         20% along the linac.""",
+        "descriptor": (
+            "Transverse emittance should not grow by more than 20% along the "
+            "linac."
+        ),
         "plt_kwargs": {"fignum": 111, "savefig": True},
     },
     "longitudinal eps shall not grow too much": {
@@ -87,8 +91,10 @@ SIMULATION_OUTPUT_EVALUATOR_PRESETS = {
         ),
         "markdown": r"$\Delta\epsilon_{\phi W} / \epsilon_{\phi W}$ "
         + r"(ref $z=0$) [%]",
-        "descriptor": """Longitudinal emittance should not grow by more than
-                         20% along the linac.""",
+        "descriptor": (
+            "Longitudinal emittance should not grow by more than 20% along the"
+            "linac."
+        ),
         "plt_kwargs": {"fignum": 112, "savefig": True},
     },
     "max of 99percent transverse eps_x shall not be too high": {
@@ -108,9 +114,10 @@ SIMULATION_OUTPUT_EVALUATOR_PRESETS = {
         "markdown": r"$\frac{max(\epsilon_{xx'}) - "
         + r"max(\epsilon_{xx'}^{ref}))}"
         + r"{max(\epsilon_{xx'}^{ref})}$ @ 99%",
-        "descriptor": """The maximum of 99% transverse x emittance should not
-                         exceed the nominal maximum of 99% transverse x
-                         emittance by more than 30%.""",
+        "descriptor": (
+            "The maximum of 99% transverse x emittance should not exceed the"
+            "nominal maximum of 99% transverse x emittance by more than 30%."
+        ),
         "plt_kwargs": {"fignum": 120, "savefig": True},
     },
     "max of 99percent transverse eps_y shall not be too high": {
@@ -130,9 +137,10 @@ SIMULATION_OUTPUT_EVALUATOR_PRESETS = {
         "markdown": r"$\frac{max(\epsilon_{yy'}) - "
         + r"max(\epsilon_{yy'}^{ref}))}"
         + r"{max(\epsilon_{xx'}^{ref})}$ @ 99%",
-        "descriptor": """The maximum of 99% transverse y emittance should not
-                         exceed the nominal maximum of 99% transverse y
-                         emittance by more than 30%.""",
+        "descriptor": (
+            "The maximum of 99% transverse y emittance should not exceed the"
+            "nominal maximum of 99% transverse y emittance by more than 30%."
+        ),
         "plt_kwargs": {"fignum": 121, "savefig": True},
     },
     "max of 99percent longitudinal eps shall not be too high": {
@@ -152,9 +160,10 @@ SIMULATION_OUTPUT_EVALUATOR_PRESETS = {
         "markdown": r"$\frac{max(\epsilon_{\phi W}) - "
         + r"max(\epsilon_{\phi W}^{ref}))}"
         + r"{max(\epsilon_{\phi W}^{ref})}$ @ 99%",
-        "descriptor": """The maximum of 99% longitudinal emittance should not
-                         exceed the nominal maximum of 99% longitudinal
-                         emittance by more than 30%.""",
+        "descriptor": (
+            "The maximum of 99% longitudinal emittance should not exceed the"
+            "nominal maximum of 99% longitudinal emittance by more than 30%."
+        ),
         "plt_kwargs": {"fignum": 122, "savefig": True},
     },
     # Legacy "Bruce tests"
@@ -165,8 +174,10 @@ SIMULATION_OUTPUT_EVALUATOR_PRESETS = {
         ),
         "post_treaters": (post_treaters.relative_difference,),
         "markdown": markdown["eps_zdelta"],
-        "descriptor": """Relative difference of emittance in longitudinal plane
-                         between fixed and reference linacs.""",
+        "descriptor": (
+            "Relative difference of emittance in longitudinal plane between"
+            "fixed and reference linacs."
+        ),
     },
     "transverse eps at end": {
         "value_getter": lambda s: s.get("eps_t", elt="last", pos="out"),
@@ -175,26 +186,28 @@ SIMULATION_OUTPUT_EVALUATOR_PRESETS = {
         ),
         "post_treaters": (post_treaters.relative_difference,),
         "markdown": markdown["eps_t"],
-        "descriptor": """Relative difference of emittance in transverse plane
-                         between fixed and reference linacs. Transverse
-                         emittance defined as average of two transverse
-                         planes.""",
+        "descriptor": (
+            "Relative difference of emittance in transverse plane between"
+            "fixed and reference linacs. Transverse emittance defined as"
+            "average of two transverse planes. "
+        ),
     },
     "mismatch factor at end": {
         "value_getter": lambda s: s.get(
             "mismatch_factor", phase_space="zdelta", elt="last", pos="out"
         ),
         "markdown": markdown["mismatch_factor"],
-        "descriptor": """Mismatch factor at the end of the linac.""",
+        "descriptor": "Mismatch factor at the end of the linac.",
     },
     "transverse mismatch factor at end": {
         "value_getter": lambda s: s.get(
             "mismatch_factor_t", elt="last", pos="out"
         ),
         "markdown": markdown["mismatch_factor"],
-        "descriptor": """Transverse mismatch factor at the end of the linac.
-                         Defined as average of two transverse mismatch
-                         factors.""",
+        "descriptor": (
+            "Transverse mismatch factor at the end of the linac. Defined as"
+            "average of two transverse mismatch factors. "
+        ),
     },
 }
 
@@ -221,8 +234,10 @@ def presets_for_fault_scenario_rel_diff_at_some_element(
             partial(post_treaters.scale_by, scale=100.0),
         ),
         "markdown": markdown[quantity].replace("deg", "rad"),
-        "descriptor": f"""Relative difference of {quantity} ({elt}) between
-                          fixed and reference linacs.""",
+        "descriptor": (
+            f"Relative difference of {quantity} ({elt}) between fixed and"
+            "reference linacs."
+        ),
     }
 
     if "mismatch" in quantity:
@@ -251,8 +266,9 @@ def presets_for_fault_scenario_rms_over_full_linac(
         "ref_simulation_output": ref_simulation_output,
         "post_treaters": (post_treaters.rms_error,),
         "markdown": markdown[quantity].replace("deg", "rad"),
-        "descriptor": f"""RMS error of {quantity} between fixed and reference
-                          linacs.""",
+        "descriptor": (
+            f"RMS error of {quantity} between fixed and reference linacs."
+        ),
     }
 
     if "mismatch" in quantity:

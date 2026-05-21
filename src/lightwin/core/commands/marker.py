@@ -31,6 +31,7 @@ class Marker(Command):
         self, instructions: list[Instruction], **kwargs: float
     ) -> list[Instruction]:
         """Do nothing."""
+        instructions = super().apply(instructions, **kwargs)
         logging.error("DummyElement not implemented.")
         return instructions
 

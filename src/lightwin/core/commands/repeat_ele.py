@@ -67,6 +67,7 @@ class RepeatEle(Command):
         self, instructions: list[Instruction], **kwargs: float
     ) -> list[Instruction]:
         """Copy the ``n`` elements ``k`` times."""
+        instructions = super().apply(instructions, **kwargs)
         repeated_instructions = instructions[self.influenced]
         period_length = len(repeated_instructions)
         for _ in range(self.k_times - 1):
