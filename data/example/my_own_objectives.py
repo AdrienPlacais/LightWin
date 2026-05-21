@@ -153,11 +153,10 @@ class MyObjectiveFactory(ObjectiveFactory):
             get_key="beta_zdelta",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
             reference=self._reference_simulation_output,
-            descriptor=\
-                       """Minimize diff. of envelope between ref and fix at the
-            exit of provided element.
-            """
-               ,
+            descriptor=(
+                "Minimize diff. of envelope between ref and fix at the exit of"
+                " provided element."
+            ),
         )
         return objective
 
