@@ -13,6 +13,10 @@
     Different plot according to dimension of FieldMap, or according to if it
     accelerates or not (ex when quadrupole defined by a field map)
 
+.. todo::
+    When elements were introduced during optimization (ie Diagnostic for beauty
+    pass), plots with ``x_axis="elt_idx"`` are offset.
+
 """
 
 import logging
@@ -454,13 +458,17 @@ def _make_a_subplot(
         User-defined ``kwargs``, passed to the |axplot| method.
 
     """
+    if len(accelerators) == 0:
+        logging.warning("No accelerator to plot, returning.")
+        return
     if plot_section:
         structure.outline_sections(accelerators[0].elts, axe, x_axis=x_axis)
 
     if y_axis == "struct":
-        return structure.plot_structure(
-            accelerators[-1].elts, axe, x_axis=x_axis
+        to_plot = (
+            accelerators[-1] if len(accelerators) < 2 else accelerators[1]
         )
+        return structure.plot_structure(to_plot.elts, axe, x_axis=x_axis)
 
     x_data, y_data, plt_kwargs = all_accelerators_data(
         x_axis,
