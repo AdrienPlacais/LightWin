@@ -353,8 +353,9 @@ class ListOfElements(list):
            reference phase different from ``"phi_s"`` but this changed during
            the simulation.
         .. todo::
+           The manual addition of "SET_SYNC_PHASE" is very patchy. In
+           particular, it allows several consecutive ``SET_SYNC_PHASE``.
 
-           The manual addition of "SET_SYNC_PHASE" is very patchy.
         Raises
         ------
         NotImplementedError
@@ -379,10 +380,16 @@ class ListOfElements(list):
             if (
                 isinstance((field_map := instruction), FieldMap)
                 and field_map.cavity_settings.reference == "phi_s"
-                and "SET_SYNC_PHASE" not in " ".join(dat_filecontent[-1])
             ):
-                dat_filecontent.append(["SET_SYNC_PHASE"])
-                continue
+                # Look for first uncommented line before the current FIELD_MAP
+                for line_before in dat_filecontent[::-1]:
+                    line_before = " ".join(line_before)
+                    if line_before.startswith(";"):
+                        continue
+                    # If SET_SYNC_PHASE is absent, add it
+                    if "SET_SYNC_PHASE" not in line_before:
+                        dat_filecontent.append(["SET_SYNC_PHASE"])
+                    break
 
             dat_filecontent.append(line)
 
