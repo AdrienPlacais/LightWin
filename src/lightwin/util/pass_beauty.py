@@ -424,17 +424,19 @@ def _spiral2_transverse_matching_instructions(
     altered_lattices_idx = set(sorted([elt.idx["lattice"] for elt in altered]))
     altered_lattices = [fix_elts.by_lattice[i] for i in altered_lattices_idx]
 
-    steerers_diags, steerers_adjusts = (), ()
+    first_altered_lattice_idx = min(altered_lattices_idx)
+    diag_pos_for_steerers, adjusts_steerer = (), ()
     if retune_steerers:
-        steerers_quadrupoles = _get_steerers_and_qps(
-            fix_elts, altered_lattices_idx
+        steerers_quadrupoles = _map_qps_to_steerers(
+            fix_elts, first_altered_lattice_idx
         )
-        steerers_adjusts = _steerer_adjust_commands(
+
+        adjusts_steerer = _create_adjust_steerer_commands(
             steerers_quadrupoles, number=number + 100
         )
-        steerers_diags = _steerer_diag_commands(
+        diag_pos_for_steerers = _create_bpms(
             by_lattice=fix_elts.by_lattice,
-            adjust_steerers=steerers_adjusts,
+            adjust_steerers=adjusts_steerer,
             number=number + 100,
         )
 
@@ -453,7 +455,12 @@ def _spiral2_transverse_matching_instructions(
             return []
 
     instructions = sorted(
-        [*steerers_adjusts, *steerers_diags, *qp_diagnostics, *qp_adjusts],
+        [
+            *adjusts_steerer,
+            *diag_pos_for_steerers,
+            *qp_diagnostics,
+            *qp_adjusts,
+        ],
         key=lambda x: x.idx["dat_idx"],
     )
     return instructions
@@ -486,20 +493,16 @@ def _spiral2_quadrupoles(lattices: list[list[Element]]) -> list[Quad]:
     return quadrupoles
 
 
-def _get_steerers_and_qps(
-    elts: ListOfElements, altered_lattices_idx: Collection[int]
+def _map_qps_to_steerers(
+    elts: ListOfElements, first_lattice_idx: int
 ) -> dict[Steerer, Quad]:
-    """Get all steerers after first alteration, as well as associated qps."""
+    """Map quadrupoles to their steerer from ``first_lattice_idx`` and
+    onwards."""
     steerers_quadrupoles: dict[Steerer, Quad] = {}
-    first_altered = min(altered_lattices_idx)
-    # We remove two lattices:
-    # - exit of linac
-    # - last "real" lattice because the DIAG must be one lattice after
-    lattices_after_first_alteration = elts.by_lattice[first_altered:-2]
+    lattices_after_first_alteration = elts.by_lattice[first_lattice_idx:]
 
     for lattice in lattices_after_first_alteration:
         quadrupoles = filter_elts(lattice, Quad)
-
         for qp in quadrupoles:
             steerers = filter_elts(qp.influencing_instructions, Steerer)
             for steerer in steerers:
@@ -507,7 +510,7 @@ def _get_steerers_and_qps(
     return steerers_quadrupoles
 
 
-def _steerer_adjust_commands(
+def _create_adjust_steerer_commands(
     steerers_quadrupoles: Mapping[Steerer, Quad], number: int
 ) -> list[AdjustSteerer]:
     """Create adjust steerer commands."""
@@ -530,7 +533,7 @@ def _steerer_adjust_commands(
     return adjust_steerers
 
 
-def _steerer_diag_commands(
+def _create_bpms(
     by_lattice: list[list[Element]],
     adjust_steerers: list[AdjustSteerer],
     number: int,
@@ -542,13 +545,13 @@ def _steerer_diag_commands(
     for adjust in adjust_steerers:
         if isinstance(adjust, AdjustSteererBy):
             continue
+
         next_lattice_idx = adjust.number - number + 1
-        if next_lattice_idx + 1 >= len(by_lattice):
+        if next_lattice_idx >= len(by_lattice):
             continue
+
         next_lattice = by_lattice[next_lattice_idx]
         qps = filter_elts(next_lattice, Quad)
-        if len(qps) != 3:
-            continue
 
         if next_lattice_idx <= 12:
             name = "LINA-BPM"
