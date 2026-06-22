@@ -115,9 +115,6 @@ def insert_field_map_pass_beauty_instructions(
         which_phase="phi_0_rel",
     )
     logging.info("Overwriting a ListOfElements by its beauty counterpart.")
-    logging.warning(
-        "Expected bug: all cavities will be shown as green in plots."
-    )
     accelerator.elts = elts
     return
 
@@ -183,9 +180,6 @@ def insert_transverse_matching_instructions(
         append_stem="qp_retuning",
     )
     logging.info("Overwriting a ListOfElements by its beauty counterpart.")
-    logging.warning(
-        "Expected bug: all cavities will be shown as green in plots."
-    )
     accelerator.elts = elts
     return
 

@@ -29,7 +29,7 @@ import shutil
 from abc import ABCMeta
 from collections.abc import Collection
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 from numpy.typing import NDArray
@@ -39,6 +39,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.beam_parameters.factory import InitialBeamParametersFactory
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.instruction import Instruction
 from lightwin.core.instructions_factory import InstructionsFactory
 from lightwin.core.list_of_elements.list_of_elements import (
@@ -366,6 +367,17 @@ class ListOfElementsFactory:
             instructions_to_insert=instructions_to_insert,
             **kwargs,
         )
+
+        status_by_name = {
+            elt.name: elt.status for elt in elts if hasattr(elt, "status")
+        }
+        for elt in new_elts:
+            status = status_by_name.get(elt.name)
+            if status is None:
+                continue
+            elt: FieldMap
+            elt.update_status(status, update_phases=False)
+
         export_dat_filecontent(
             new_elts.files["dat_filecontent"], beauty_dat_path
         )

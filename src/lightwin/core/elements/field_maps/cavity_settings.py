@@ -492,12 +492,7 @@ class CavitySettings:
     # =============================================================================
     @property
     def status(self) -> STATUS_T:
-        """Give the status of the cavity under study.
-
-        - :data:`.STATUS_T`
-        - :obj:`.STATUS_T`
-
-        """
+        """Give the status of the cavity under study."""
         return self._status
 
     @status.setter
@@ -514,9 +509,10 @@ class CavitySettings:
             Check that beam_calc_param is still updated. As in
             FieldMap.update_status
 
-        .. todo::
-            As for now: do not update the status directly, prefer calling the
-            :meth:`.FieldMap.update_status`
+        .. note::
+           This method is not used with :meth:`.FieldMap.update_status` when
+           ``update_phases`` is set to ``False``. This should happen only
+           during beauty pass.
 
         """
         assert value in ALLOWED_STATUS

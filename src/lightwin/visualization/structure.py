@@ -23,7 +23,7 @@ from lightwin.core.elements.field_maps.field_map_1100 import FieldMap1100
 from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
 from lightwin.core.elements.quad import Quad
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
-from lightwin.util.typing import POS_T
+from lightwin.util.typing import POS_T, STATUS_T
 from lightwin.visualization.helper import X_AXIS_T
 
 
@@ -137,14 +137,14 @@ def _plot_field_map(
     """Add an ellipse to show a field_map."""
     height = 1.0
     y_0 = 0.0
-    colors = {
+    colors: dict[STATUS_T, str] = {
+        "compensate (in progress)": "orange",
+        "compensate (not ok)": "orange",
+        "compensate (ok)": "orange",
+        "failed": "red",
         "nominal": "green",
         "rephased (in progress)": "olive",
         "rephased (ok)": "olive",
-        "failed": "red",
-        "compensate (in progress)": "green",
-        "compensate (ok)": "orange",
-        "compensate (not ok)": "orange",
     }
     color = colors[elt.get("status", to_numpy=False)]
     patch = pat.Ellipse(
