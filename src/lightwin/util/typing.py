@@ -237,6 +237,7 @@ CONCATENABLE_CAVITY_SETTINGS = (
 
 #: Attributes that can be extracted with :meth:`.Element.get` method.
 GETTABLE_ELT = (
+    "cav_number",
     "dat_idx",
     "elt_idx",
     "idx",
@@ -249,6 +250,7 @@ GETTABLE_ELT = (
 ) + GETTABLE_BEAM_CALC_PARAMETERS
 GETTABLE_ELT_T = (
     Literal[
+        "cav_number",
         "dat_idx",
         "elt_idx",
         "idx",

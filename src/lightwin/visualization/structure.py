@@ -70,6 +70,10 @@ def patch_kwargs(
     if x_axis == "z_abs":
         kwargs["x_0"] = elt.get("abs_mesh")[0 if pos == "in" else -1]
         kwargs["width"] = elt.length_m if pos == "in" else -elt.length_m
+    elif x_axis == "cav_number":
+        cav_number = elt.get("cav_number")
+        # Move the element outside the plot if it has default cav_number value
+        kwargs["x_0"] = cav_number - 0.5 if cav_number > 0 else -1
     return kwargs
 
 
@@ -80,7 +84,7 @@ def _limits(elts: ListOfElements, x_axis: X_AXIS_T) -> tuple[float, float]:
     if x_axis == "z_abs":
         return (elts[0].get("abs_mesh")[0], elts[-1].get("abs_mesh")[-1])
     if x_axis == "cav_number":
-        return (0, len(elts.cavities()))
+        return (0.5, len(elts.cavities()) + 0.5)
     raise ValueError(f"{x_axis = } is not supported.")
 
 

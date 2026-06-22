@@ -17,10 +17,11 @@ from lightwin.core.elements.field_maps.field_map_1100 import FieldMap1100
 from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
 from lightwin.core.elements.quad import Quad
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
+from lightwin.visualization.helper import X_AXIS_T
 
 
 def plot_structure(
-    axes: Axes, elts: ListOfElements, x_axis: str = "z_abs"
+    axes: Axes, elts: ListOfElements, x_axis: X_AXIS_T = "z_abs"
 ) -> None:
     """Plot structure of the linac under study."""
     type_to_plot_func = {
@@ -41,10 +42,15 @@ def plot_structure(
             "width": elt.length_m,
         },
         "elt_idx": lambda _, idx: {"x_0": idx, "width": 1},
+        "cav_number": lambda cav, idx: {
+            "x_0": cav.get("cav_number"),
+            "width": 1,
+        },
     }
     x_limits = {
         "z_abs": [elts[0].get("abs_mesh")[0], elts[-1].get("abs_mesh")[-1]],
         "elt_idx": [0, len(elts)],
+        "cav_number": [0, len(elts.l_cav)],
     }
 
     for i, elt in enumerate(elts):

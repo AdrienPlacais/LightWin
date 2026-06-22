@@ -60,7 +60,7 @@ PLOT_PRESETS = {
     },
     "cav": {
         "x_axis": "cav_number",
-        "all_y_axis": ("v_cav_mv", "phi_s"),
+        "all_y_axis": ("v_cav_mv", "phi_s", "struct"),
         "num": 23,
     },
     "emittance": {
