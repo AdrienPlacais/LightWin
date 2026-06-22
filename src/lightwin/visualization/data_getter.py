@@ -52,13 +52,6 @@ class _SimData:
         return self
 
 
-ERROR_REFERENCE_T = Literal[
-    "ref accelerator (1st solv w/ 1st solv, 2nd w/ 2nd)",
-    "ref accelerator (1st solver)",
-    "ref accelerator (2nd solver)",
-]
-
-
 @dataclass
 class _SimData:
     """Bundle of parallel x/y/kwargs lists for one accelerator's
@@ -257,9 +250,9 @@ def _single_simulation_data(
     axis: GETTABLE_SIMULATION_OUTPUT_T,
     simulation_output: SimulationOutput,
     to_deg: bool = True,
-    to_numpy=True,
-    none_to_nan=True,
-    warn_structure_dependent=False,
+    to_numpy: bool = True,
+    none_to_nan: bool = True,
+    warn_structure_dependent: bool = False,
     **get_kwargs,
 ) -> NDArray[np.float64] | None:
     """Get single data array from single SimulationOutput."""
