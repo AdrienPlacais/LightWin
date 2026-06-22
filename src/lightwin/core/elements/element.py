@@ -76,10 +76,9 @@ class Element(Instruction):
         }
         self.length_m = 1e-3 * float(line.splitted[1])
 
-        # TODO: init the indexes to -1 or something, to help type hinting
-        # dict with pure type: int
         new_idx = {
             "elt_idx": -1,
+            "cav_number": 0,
             "lattice": lattice,
             "idx_in_lattice": idx_in_lattice,
             "section": section,

@@ -135,6 +135,9 @@ class SimulationOutput:
         self.elt_idx = [
             i for i, _ in enumerate(self.cav_params["v_cav_mv"], start=1)
         ]
+        self.cav_number: list[int] = [
+            elt.idx["cav_number"] for elt in self.elts
+        ]
         self.out_path: Path
 
     def __str__(self) -> str:

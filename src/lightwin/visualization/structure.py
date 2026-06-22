@@ -75,10 +75,13 @@ def patch_kwargs(
 
 def _limits(elts: ListOfElements, x_axis: X_AXIS_T) -> tuple[float, float]:
     """Give the limits of the plot."""
-    x_limits = (0, len(elts))
+    if x_axis == "elt_idx":
+        return (0, len(elts))
     if x_axis == "z_abs":
-        x_limits = (elts[0].get("abs_mesh")[0], elts[-1].get("abs_mesh")[-1])
-    return x_limits
+        return (elts[0].get("abs_mesh")[0], elts[-1].get("abs_mesh")[-1])
+    if x_axis == "cav_number":
+        return (0, len(elts.cavities()))
+    raise ValueError(f"{x_axis = } is not supported.")
 
 
 def plot_structure(
@@ -191,6 +194,7 @@ def outline_sections(
         "last_elt_of_sec": lambda sec: sec[-1][-1],
         "z_abs": lambda elt: elts.get("z_abs", elt=elt, pos="out"),
         "elt_idx": lambda elt: elt.get("elt_idx") + 1,
+        "cav_number": lambda elt: elt.get("cav_number"),
     }
     x_ax = [0]
     sorted = elts.by_section_and_lattice

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure, SubFigure
 
-X_AXIS_T = Literal["z_abs", "elt_idx"]
+X_AXIS_T = Literal["z_abs", "elt_idx", "cav_number"]
 
 
 def create_fig_if_not_exists(

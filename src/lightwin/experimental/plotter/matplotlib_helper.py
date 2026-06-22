@@ -151,6 +151,7 @@ def plot_section(
         "last_elt_of_sec": lambda sec: sec[-1][-1],
         "z_abs": lambda elt: elts.get("z_abs", elt=elt, pos="out"),
         "elt_idx": lambda elt: elt.get("elt_idx") + 1,
+        "cav_number": lambda elt: elt.get("cav_number"),
     }
     x_ax = [0]
     by_section_and_lattice = elts.by_section_and_lattice

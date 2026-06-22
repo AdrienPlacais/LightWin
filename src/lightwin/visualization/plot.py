@@ -59,8 +59,8 @@ PLOT_PRESETS = {
         "symmetric_plot": True,
     },
     "cav": {
-        "x_axis": "elt_idx",
-        "all_y_axis": ("v_cav_mv", "phi_s", "struct"),
+        "x_axis": "cav_number",
+        "all_y_axis": ("v_cav_mv", "phi_s"),
         "num": 23,
     },
     "emittance": {
