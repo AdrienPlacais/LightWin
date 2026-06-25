@@ -160,9 +160,7 @@ def insert_transverse_matching_instructions(
         return
 
     if len(fault_scenario) > 1:
-        raise NotImplementedError(
-            "Not sure how multiple faults would interact."
-        )
+        logging.warning("Not sure how multiple faults will interact.")
     assert _is_adapted_to_pass_beauty(beam_calculator)
     assert isinstance(fault_scenario, FaultScenario)
 
@@ -376,9 +374,7 @@ def _field_map_pass_beauty_instructions(
 
     """
     if len(fault_scenario) > 1:
-        raise NotImplementedError(
-            "Not sure how multiple faults would interact."
-        )
+        logging.warning("Not sure how multiple faults will interact.")
     fault = fault_scenario[0]
     fix_elts = fault_scenario.fix_acc.elts
     compensating = fault.compensating_elements
