@@ -1,5 +1,6 @@
 """Create a base class for :class:`.Variable` and :class:`.Constraint`."""
 
+import logging
 import math
 from abc import ABC
 from dataclasses import dataclass
@@ -76,6 +77,20 @@ class DesignSpaceParameter(ABC):
         """Convert values in deg for output if it is angle."""
         self._to_deg = False
         self._to_numpy = False
+        if self.x_min > self.x_max:
+            logging.warning(
+                f"{type(self).__name__} {self.element_name} {self.name} lower "
+                f"limit {self.x_min} > {self.x_max} upper limit. Inverting "
+                "them."
+            )
+            self.change_limits(self.x_max, self.x_min)
+        if self.x_min == self.x_max:
+            logging.warning(
+                f"{type(self).__name__} {self.element_name} {self.name} lower "
+                f"limit {self.x_min} == {self.x_max} upper limit. Shifting "
+                "them by 1e-8."
+            )
+            self.change_limits(self.x_min - 1e-8, self.x_max + 1e-8)
 
     @property
     def x_min(self) -> float:
