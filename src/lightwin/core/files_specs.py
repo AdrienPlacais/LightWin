@@ -22,7 +22,7 @@ FILES_CONFIG = (
         types=(str, Path),
         description="Path to the `DAT` file",
         default_value=example_dat,
-        is_a_path_that_must_exists=True,
+        is_a_path_that_must_exist=True,
     ),
     KeyValConfSpec(
         key="logfile_console_level",
@@ -57,8 +57,10 @@ FILES_CONFIG = (
     KeyValConfSpec(
         key="pickle_paths",
         types=(dict,),
-        description="Associates accelerator names with pickle files. Check "
-        "`dedicated notebook<notebooks-pickling>`.",
+        description=(
+            "Associates accelerator names with pickle files. Check "
+            "`dedicated notebook<notebooks-pickling>`."
+        ),
         default_value={},
         is_mandatory=False,
     ),

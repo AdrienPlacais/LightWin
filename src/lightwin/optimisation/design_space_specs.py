@@ -20,26 +20,30 @@ _DESIGN_SPACE_BASE = (
     KeyValConfSpec(
         key="variable_names",
         types=(list, tuple),
-        description="""What to use as variables if ``design_space_preset`` is
-set to ``"UserDefined"``. In this case, this key is mandatory."""
-                                                                 ,
+        description=(
+            "What to use as variables if ``design_space_preset`` is set to "
+            "``UserDefined``. In this case, this key is mandatory."
+        ),
         default_value=("k_e", "phi_s"),
         is_mandatory=False,
-        warning_message="""variable_names was given but is ignored as
-design_space_preset is not 'UserDefined'."""
-                                            ,
+        warning_message=(
+            "variable_names was given but is ignored as design_space_preset is "
+            "not 'UserDefined'."
+        ),
     ),
     KeyValConfSpec(
         key="constraint_names",
         types=(list, tuple),
-        description="""What to use as constraints if ``design_space_preset`` is
-set to ``"UserDefined"``."""
-                            ,
+        description=(
+            "What to use as constraints if ``design_space_preset`` is set to "
+            "``UserDefined``."
+        ),
         default_value=(),
         is_mandatory=False,
-        warning_message="""constraint_names was given but is ignored as
-design_space_preset is not 'UserDefined'."""
-                                            ,
+        warning_message=(
+            "constraint_names was given but is ignored as design_space_preset "
+            "is not 'UserDefined'."
+        ),
     ),
     KeyValConfSpec(
         key="from_file",
@@ -108,21 +112,23 @@ DESIGN_SPACE_FROM_FILE = _DESIGN_SPACE_BASE + (
         key="constraints_filepath",
         types=(str, Path),
         description=(
-            "Path to the `CSV` holding constraints. Mandatory if `from_file` is `True`."
+            "Path to the `CSV` holding constraints. Mandatory if `from_file` "
+            "is `True`."
         ),
         default_value=example_constraints,
         is_mandatory=False,
-        is_a_path_that_must_exists=True,
+        is_a_path_that_must_exist=True,
     ),
     KeyValConfSpec(
         key="variables_filepath",
         types=(str, Path),
         description=(
-            "Path to the `CSV` holding variables. Mandatory if `from_file` is `True`."
+            "Path to the `CSV` holding variables. Mandatory if `from_file` is "
+            "`True`."
         ),
         default_value=example_variables,
         is_mandatory=True,
-        is_a_path_that_must_exists=True,
+        is_a_path_that_must_exist=True,
     ),
 )
 
