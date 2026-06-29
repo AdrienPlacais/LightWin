@@ -25,7 +25,6 @@ from lightwin.config.helper import find_file
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
 from lightwin.config.table_spec import TableConfSpec
 from lightwin.constants import example_ini, example_machine_config
-from lightwin.util.typing import EXPORT_PHASES
 
 _PURE_TRACEWIN_CONFIG = (
     KeyValConfSpec(
@@ -607,6 +606,18 @@ TRACEWIN_CONFIG = (
             derived=True,
         ),
         KeyValConfSpec(
+            key="cal_file",
+            types=(str, Path),
+            description=(
+                "Path to a `CAL` file holding TraceWin optimization results. "
+                "If provided, the file must exist and will be copied so that "
+                "TraceWin picks it up."
+            ),
+            default_value=None,
+            is_mandatory=False,
+            is_a_path_that_must_exists=True,
+        ),
+        KeyValConfSpec(
             key="executable",
             types=(str, Path),
             description=(
@@ -617,7 +628,8 @@ TRACEWIN_CONFIG = (
             is_a_path_that_must_exists=True,
             is_mandatory=False,
             warning_message=(
-                "Providing `executable` will override `machine_config_file` settings."
+                "Providing `executable` will override `machine_config_file` "
+                "settings."
             ),
         ),
         KeyValConfSpec(
