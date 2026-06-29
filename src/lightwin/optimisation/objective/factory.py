@@ -33,6 +33,7 @@ from lightwin.optimisation.objective.objective import (
     MinimizeVariation,
     Objective,
     QuantityIsBetween,
+    RetrieveArbitrary,
 )
 from lightwin.optimisation.objective.position import (
     POSITION_TO_INDEX_T,
@@ -231,9 +232,10 @@ class CorrectorAtExit(ObjectiveFactory):
                 "phase_space_name": "zdelta",
             },
             reference=self._reference_simulation_output,
-            descriptor="""Minimize mismatch factor in the [z-delta] plane at
-            exit of compensation zone."""
-                                         ,
+            descriptor=(
+                "Minimize mismatch factor in the [z-delta] plane at exit of "
+                "compensation zone."
+            ),
         )
         return objective
 
@@ -282,10 +284,10 @@ class EnergyMismatch(ObjectiveFactory):
             get_key="w_kin",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
             reference=self._reference_simulation_output,
-            descriptor="""Minimize diff. of w_kin between ref and fix at the
-            end of the compensation zone.
-            """
-               ,
+            descriptor=(
+                "Minimize diff. of w_kin between ref and fix at the end of the"
+                "compensation zone."
+            ),
         )
         return objective
 
@@ -302,8 +304,7 @@ class EnergyMismatch(ObjectiveFactory):
                 "phase_space_name": "zdelta",
             },
             reference=self._reference_simulation_output,
-            descriptor="""Minimize mismatch factor in the [z-delta] plane."""
-                                                                             ,
+            descriptor="Minimize mismatch factor in the [z-delta] plane.",
         )
         return objective
 
@@ -341,11 +342,10 @@ class EnergyPhaseMismatch(ObjectiveFactory):
             get_key="w_kin",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
             reference=self._reference_simulation_output,
-            descriptor=\
-                       """Minimize diff. of w_kin between ref and fix at the
-            end of the compensation zone.
-            """
-               ,
+            descriptor=(
+                "Minimize diff. of w_kin between ref and fix at the end of the"
+                " compensation zone."
+            ),
         )
         return objective
 
@@ -362,11 +362,10 @@ class EnergyPhaseMismatch(ObjectiveFactory):
                 "to_deg": False,
             },
             reference=self._reference_simulation_output,
-            descriptor=\
-                       """Minimize diff. of phi_abs between ref and fix at the
-            end of the compensation zone.
-            """
-               ,
+            descriptor=(
+                "Minimize diff. of phi_abs between ref and fix at the end of"
+                " the compensation zone."
+            ),
         )
         return objective
 
@@ -383,9 +382,7 @@ class EnergyPhaseMismatch(ObjectiveFactory):
                 "phase_space_name": "zdelta",
             },
             reference=self._reference_simulation_output,
-            descriptor=\
-                       """Minimize mismatch factor in the [z-delta] plane."""
-                                                                             ,
+            descriptor="Minimize mismatch factor in the [z-delta] plane.",
         )
         return objective
 
@@ -447,11 +444,10 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
             get_key="w_kin",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
             reference=self._reference_simulation_output,
-            descriptor=\
-                       """Minimize diff. of w_kin between ref and fix at the
-            end of the compensation zone.
-            """
-               ,
+            descriptor=(
+                "Minimize diff. of w_kin between ref and fix at the end of the"
+                " compensation zone."
+            ),
         )
         return objective
 
@@ -468,11 +464,10 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
                 "to_deg": False,
             },
             reference=self._reference_simulation_output,
-            descriptor=\
-                       """Minimize diff. of phi_abs between ref and fix at the
-            end of the compensation zone.
-            """
-               ,
+            descriptor=(
+                "Minimize diff. of phi_abs between ref and fix at the end of "
+                "the compensation zone."
+            ),
         )
         return objective
 
@@ -489,9 +484,7 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
                 "phase_space_name": "zdelta",
             },
             reference=self._reference_simulation_output,
-            descriptor=\
-                       """Minimize mismatch factor in the [z-delta] plane."""
-                                                                             ,
+            descriptor="Minimize mismatch factor in the [z-delta] plane.",
         )
         return objective
 
@@ -524,11 +517,11 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
                 "to_deg": False,
             },
             limits=limits,
-            descriptor=\
-                       """Synchronous phase should be between limits."""
-                                                                        ,
+            descriptor="Synchronous phase should be between limits.",
         )
         return objective
+
+
 class EnergySeveralMismatches(ObjectiveFactory):
     """Match energy and mismatch (the latter on several periods).
 
@@ -560,11 +553,10 @@ class EnergySeveralMismatches(ObjectiveFactory):
             get_key="w_kin",
             get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
             reference=self._reference_simulation_output,
-            descriptor=\
-                       """Minimize diff. of w_kin between ref and fix at the
-            end of the compensation zone.
-            """
-               ,
+            descriptor=(
+                "Minimize diff. of w_kin between ref and fix at the "
+                "end of the compensation zone."
+            ),
         )
         return objective
 
@@ -584,6 +576,7 @@ class EnergySeveralMismatches(ObjectiveFactory):
             descriptor="Minimize mismatch factor in the [z-delta] plane.",
         )
         return objective
+
 
 class RegularEnvelope(ObjectiveFactory):
     r"""Showcase how :class:`.MinimizeVariation` can be used.
@@ -654,6 +647,7 @@ class RegularEnvelope(ObjectiveFactory):
     def get_objectives(self) -> list[Objective]:
         """Return twiss and energy at end of lattices after failure."""
         return [self._get_std_twiss_beta()]
+
     def _get_std_twiss_beta(self) -> Objective:
         """Return object to match envelope."""
         objective = MinimizeVariation(
@@ -665,10 +659,9 @@ class RegularEnvelope(ObjectiveFactory):
                 "pos": "out",
                 "to_numpy": False,
             },
-            descriptor=\
-                       """Minimize variation of envelope between end of every
-            lattice."""
-                       ,
+            descriptor=(
+                "Minimize variation of envelope between end of every lattice."
+            ),
         )
         return objective
 
@@ -682,6 +675,104 @@ class Spiral2(CorrectorAtExit):
     """
 
 
+class Experimental(ObjectiveFactory):
+    objective_position_preset = ["end of last altered lattice"]
+
+    def get_objectives(self) -> list[Objective]:
+        """Give adapted objectives.
+
+        We start by looking at the :attr:`._failed_elements`
+        list:
+
+        - If it has elements, we are around a failure and we will try to keep
+          a kinetic energy not too far from the nominal energy. More
+          importantly, we try to minimize the mismatch factor at the exit of
+          the compensation zone.
+        - If it is empty, it means that there is no nearby failed cavity. We
+          are at the exit of the linac and will try to retrieve nominal energy
+          at the end of the linac.
+
+        """
+        if len(self._failed_elements) > 0:
+            last_element_of_zone = self._objective_elements[-1]
+            return [
+                self._preaccelerate(elt=last_element_of_zone),
+                self._preshape(elt=last_element_of_zone),
+                self._minimize_eps(elt=last_element_of_zone),
+            ]
+
+        last_element_of_linac = self._compensating_elements[-1]
+        return [
+            self._retrieve_energy(last_element_of_linac),
+            # self._minimize_eps(elt=last_element_of_linac),
+        ]
+
+    def _minimize_eps(self, elt: Element) -> Objective:
+        """Return object to keep longitudinal emittance as low as possible."""
+        objective = RetrieveArbitrary(
+            name=r"$\eps_{zz'}$",
+            weight=1.0,
+            get_key="eps_normalized",
+            get_kwargs={
+                "elt": elt,
+                "pos": "out",
+                "to_numpy": True,
+                "phase_space_name": "z",
+            },
+            ideal_value=0.0,
+            descriptor="Minimize norm. emittance in the [z-z'] plane.",
+        )
+        return objective
+
+    def _preaccelerate(self, elt: Element) -> Objective:
+        """Get reasonable energy at exit of compensation zone."""
+        get_key = "w_kin"
+        get_kwargs = {"elt": elt, "pos": "out", "to_numpy": False}
+        ref = self._reference_simulation_output.get(get_key, **get_kwargs)
+        objective = QuantityIsBetween.relative_to_reference(
+            name=markdown["w_kin"],
+            weight=1.0,
+            get_key=get_key,
+            get_kwargs=get_kwargs,
+            relative_limits=(90.0, 101.0),
+            reference_value=ref,
+            descriptor="Energy stays within (-10%, +1%) wrt nominal tuning.",
+        )
+        return objective
+
+    def _preshape(self, elt: Element) -> Objective:
+        """Minimize mismatch factor at exit of compensation zone."""
+        objective = MinimizeMismatch(
+            name=r"$M_{z\delta}$",
+            weight=1.0,
+            get_key="twiss",
+            get_kwargs={
+                "elt": elt,
+                "pos": "out",
+                "to_numpy": True,
+                "phase_space_name": "zdelta",
+            },
+            reference=self._reference_simulation_output,
+            descriptor=(
+                "Minimize mismatch factor in the [z-delta] plane at exit of "
+                "compensation zone."
+            ),
+        )
+        return objective
+
+    def _retrieve_energy(self, elt: Element) -> Objective:
+        """Retrieve energy at the end of the linac."""
+        objective = MinimizeDifferenceWithRef(
+            name=markdown["w_kin"],
+            weight=1.0,
+            get_key="w_kin",
+            get_kwargs={"elt": elt, "pos": "out", "to_numpy": False},
+            reference=self._reference_simulation_output,
+            descriptor="Retrieve nominal energy at the exit of the linac.",
+        )
+        return objective
+
+
 #: Maps the ``objective_preset`` key in ``TOML`` ``wtf`` subsection with actual
 #: objects in LightWin
 OBJECTIVE_PRESETS = {
@@ -691,7 +782,8 @@ OBJECTIVE_PRESETS = {
     "EnergySeveralMismatches": EnergySeveralMismatches,
     "EnergySyncPhaseMismatch": EnergySyncPhaseMismatch,
     "RegularEnvelope": RegularEnvelope,
-    "experimental": CorrectorAtExit,
+    "Experimental": Experimental,
+    "experimental": Experimental,
     "rephased_ADS": EnergyMismatch,
     "simple_ADS": EnergyPhaseMismatch,
     "sync_phase_as_objective_ADS": EnergySyncPhaseMismatch,
@@ -703,10 +795,13 @@ OBJECTIVE_PRESETS_T = Literal[
     "EnergySeveralMismatches",
     "EnergySyncPhaseMismatch",
     "RegularEnvelope",
+    "Experimental",
     "experimental",
     "rephased_ADS",
     "simple_ADS",
 ]
+
+
 @dataclass(frozen=True)
 class PackedElements:
     """Pack |E| info to instantiate :class:`.ObjectiveFactory`.
