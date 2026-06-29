@@ -360,14 +360,7 @@ class Accelerator:
         for cavity, settings in set_of_cavity_settings.items():
             cavity.cavity_settings = settings
 
-        original_dat_file = self.elts.files_info["dat_file"]
-        assert isinstance(original_dat_file, Path)
-        filename = original_dat_file.name
-        dat_file = (
-            self.accelerator_path
-            / simulation_output.beam_calculator_id
-            / filename
-        )
+        dat_file = self.dat_filepath(simulation_output.beam_calculator_id)
 
         self.elts.store_settings_in_dat(
             dat_file, exported_phase=exported_phase, save=True
@@ -381,6 +374,20 @@ class Accelerator:
         if self._pickle_path and not skip_pickle:
             my_pickler = MyCloudPickler()
             self.pickle(my_pickler, self._pickle_path)
+
+    def dat_filepath(self, beam_calculator_id: str) -> Path:
+        """Resolve path to the ``DAT``.
+
+        ``beam_calculator_id`` can be taken from :attr:`.BeamCalculator.id` or
+        from :attr:`.SimulationOutput.beam_calculator_id`.
+
+        """
+        original_dat_file = self.elts.files_info["dat_file"]
+        assert isinstance(
+            original_dat_file, Path
+        ), f"{original_dat_file = } should exist."
+        filename = original_dat_file.name
+        return self.accelerator_path / beam_calculator_id / filename
 
     def elt_at_this_s_idx(
         self, s_idx: int, show_info: bool = False
