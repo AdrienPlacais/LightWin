@@ -174,10 +174,7 @@ class TraceWin(BeamCalculator):
             path_cal.mkdir()
 
         _tracewin_command = beam_calculator_to_command(
-            self.executable,
-            self.ini_path,
-            path_cal,
-            **kwargs,
+            self.executable, self.ini_path, path_cal, **kwargs
         )
         return _tracewin_command, path_cal
 
@@ -436,13 +433,20 @@ class TraceWin(BeamCalculator):
             return
 
         shutil.copy(self.cal_file, tracewin_cal)
-        logging.critical(f"Copied {self.cal_file = } to {tracewin_cal}.")
+        logging.info(
+            f"Copied\n{self.cal_file = }\nto\n{tracewin_cal}\nIt should be "
+            "picked up by TraceWin."
+        )
 
     def cal_filepath_picked_up_by_tw(self, accelerator: Accelerator) -> Path:
-        """Infer the ``CAL`` that will be used by TraceWin."""
-        return accelerator.dat_filepath(
-            beam_calculator_id=self.id
-        ).with_suffix(".cal")
+        """Infer the ``CAL`` that will/would be used by TraceWin.
+
+        This is a ``CAL`` file with the same name as the input ``DAT``, in the
+        same folder.
+
+        """
+        dat_file = accelerator.dat_filepath(beam_calculator_id=None)
+        return dat_file.with_suffix(".cal")
 
     def force_new_optimization(self) -> None:
         """Forbid TraceWin from using a pre-existing ``CAL`` file.
@@ -452,6 +456,11 @@ class TraceWin(BeamCalculator):
         """
         if self.cal_file is None:
             logging.info("TraceWin will already create a new ``CAL``.")
+            return
+        logging.info(
+            "TraceWin will perform an optimization if DIAG/ADJUST commands are"
+            " present."
+        )
         self.cal_file = None
 
     @property
