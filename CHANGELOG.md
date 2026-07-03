@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.16.4
+## [0.16.4]
+
+### Added
+
+- New `TraceWin` `BeamCalculator` `TOML` argument: `cal_file`. It allows you to
+  specify the TraceWin optimization `CAL` file to use. If given, this file must
+  exist.
+  - Under the hood, it will set `TraceWin.cal_file` attribute.
+  - When `TraceWin.cal_file` is set, it is copied in the directory holding the
+    `DAT`, with the same stem as the `DAT` file.
+  - When `TraceWin.cal_file` is `None` (the default) and a `CAL` file with the
+    same stem and directory as the `DAT` is present, we rename the `CAL` to avoid
+    it from being silently used.
 
 ### Fixed
 
