@@ -86,21 +86,27 @@ class TraceWin(BeamCalculator):
             TraceWin optional arguments. Override what is defined in ``INI``,
             but overriden by arguments from |LOE| and |SO|.
         cal_file :
-            Name of the results folder. Updated at every call of the
-            :func:`init_solver_parameters` method, using
-            ``Accelerator.accelerator_path`` and ``self.id`` attributes.
+            ``CAL`` file holding TraceWin optimization results. If provided,
+            the file will be copied in the directory of the ``DAT``, and be
+            renamed so that TraceWin uses it.
 
         """
         self.executable = executable
         self.ini_path = ini_path.resolve().absolute()
         self.base_kwargs = base_kwargs
+        #: ``CAL`` file holding TraceWin optimization results.
+        #: - If set, the file will be copied in the directory of the ``DAT``,
+        #:   and be renamed so that TraceWin uses it.
+        #: - If set to ``None``, we ensure that TraceWin will not pick-up any
+        #:   ``CAL``.
         self.cal_file = cal_file
         self._beam_kwargs = beam_kwargs
 
-        filename = Path("tracewin.out")
-        if self.is_a_multiparticle_simulation:
-            filename = Path("partran1.out")
-        self._filename = filename
+        self._filename = (
+            Path("partran1.out")
+            if self.is_a_multiparticle_simulation
+            else Path("tracewin.out")
+        )
         super().__init__(
             reference_phase_policy=reference_phase_policy,
             default_field_map_folder=default_field_map_folder,
@@ -110,20 +116,19 @@ class TraceWin(BeamCalculator):
         )
 
         self.path_cal: Path
-        self.dat_file: Path
         self._tracewin_command: list[str] | None = None
 
         if reference_phase_policy != "phi_0_rel":
             logging.warning(
                 f"{reference_phase_policy = } on TraceWin may be bugged. "
-                "Prefer 'phi_0_rel'."
+                "Prefer 'phi_0_abs'."
             )
 
     def _set_up_specific_factories(self) -> None:
         """Set up the factories specific to the |BC|.
 
         This method is called in the :meth:`.BeamCalculator.__init__`, hence it
-        appears only in the base |BC|.
+        is called only in the base |BC|.
 
         """
         self.beam_calc_parameters_factory = ElementTraceWinParametersFactory()
@@ -387,10 +392,14 @@ class TraceWin(BeamCalculator):
         return simulation_output
 
     def init_solver_parameters(self, accelerator: Accelerator) -> None:
-        """Set the ``path_cal`` variable.
+        """Prepare TraceWin bash arguments.
 
-        We also set the ``_tracewin_command`` attribute to None, as it must be
-        updated when ``path_cal`` changes.
+        In particular:
+        1. Set the ``path_cal`` variable, defining where to store results.
+        2. Set the ``_tracewin_command`` attribute to None, as it must be
+           updated when ``path_cal`` changes.
+        3. If :attr:`cal_file` is set, copy this file in the same directory as
+           the ``DAT`` so that TraceWin can pick it up.
 
         .. note::
             In contrary to :class:`.Envelope1D` and :class:`.Envelope3D`, this
@@ -408,11 +417,42 @@ class TraceWin(BeamCalculator):
 
         self._tracewin_command = None
 
+        tracewin_cal = self.cal_filepath_picked_up_by_tw(accelerator)
+
         if self.cal_file is None:
+            if not tracewin_cal.is_file():
+                return
+
+            backup_cal = tracewin_cal.with_suffix(".cal.bak")
+            logging.warning(
+                "TraceWin would pick-up a `CAL` file, but this solver's "
+                "`cal_file` attribute is `None`, suggesting that no `CAL` "
+                f"should be used. We rename it.\n{tracewin_cal = }\n "
+                f"renamed: {backup_cal = }\nYou can set `self.cal_file` to "
+                "`self.cal_filepath_picked_up_by_tw(accelerator)` if you want "
+                "to use the pre-existing `CAL`."
+            )
+            shutil.move(tracewin_cal, backup_cal)
             return
-        assert self.cal_file.is_file()
-        shutil.copy(self.cal_file, self.path_cal)
-        logging.debug(f"Copied {self.cal_file = } in {self.path_cal = }.")
+
+        shutil.copy(self.cal_file, tracewin_cal)
+        logging.critical(f"Copied {self.cal_file = } to {tracewin_cal}.")
+
+    def cal_filepath_picked_up_by_tw(self, accelerator: Accelerator) -> Path:
+        """Infer the ``CAL`` that will be used by TraceWin."""
+        return accelerator.dat_filepath(
+            beam_calculator_id=self.id
+        ).with_suffix(".cal")
+
+    def force_new_optimization(self) -> None:
+        """Forbid TraceWin from using a pre-existing ``CAL`` file.
+
+        Concretely, set :attr:`.cal_file` to ``None``.
+
+        """
+        if self.cal_file is None:
+            logging.info("TraceWin will already create a new ``CAL``.")
+        self.cal_file = None
 
     @property
     def is_a_multiparticle_simulation(self) -> bool:

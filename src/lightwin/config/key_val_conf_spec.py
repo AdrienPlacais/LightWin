@@ -39,7 +39,7 @@ class KeyValConfSpec:
         None, in which case no checking is performed.
     is_mandatory :
         If the property must be given.
-    is_a_path_that_must_exists :
+    is_a_path_that_must_exist :
         If the property is a string/path and its existence must be checked
         before running the code.
     action :
@@ -67,7 +67,7 @@ class KeyValConfSpec:
 
     allowed_values: Collection[Any] | None = None
     is_mandatory: bool = True
-    is_a_path_that_must_exists: bool = False
+    is_a_path_that_must_exist: bool = False
     action: Literal["store_true", "store_false"] | None = None
     warning_message: str | None = None
     error_message: str | None = None
@@ -122,7 +122,7 @@ class KeyValConfSpec:
         self, toml_value: Any, toml_folder: Path | None = None, **kwargs
     ) -> bool:
         """Check that the given path exists if necessary."""
-        if not self.is_a_path_that_must_exists:
+        if not self.is_a_path_that_must_exist:
             return True
         try:
             _ = find_path(toml_folder, toml_value)

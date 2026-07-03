@@ -79,6 +79,7 @@ markdown = {
     "beta_y": r"$\beta_{xx'}$ [mm/$\pi$.mrad]",
     "beta_z": r"$\beta_{zz'}$ [mm/$\pi$.mrad]",
     "beta_zdelta": r"$\beta_{z\delta}$ [mm/$\pi$.%]",
+    "cav_number": "Cavity number",
     "elt number": "Element number",
     "elt_idx": "Element index",
     "envelope_energy_phiw": r"Norm. $\sigma_\phi$ @ $1\sigma$ [MeV]",
@@ -156,6 +157,7 @@ plot_kwargs = {
     "acceptance_phi": {"marker": "s"},
     # Element
     "elt_idx": {"marker": None},
+    "cav_number": {"marker": None},
     # RfField
     "v_cav_mv": {"marker": "o"},
     "phi_s": {"marker": "o"},

@@ -23,7 +23,7 @@ from lightwin.core.elements.field_maps.field_map_1100 import FieldMap1100
 from lightwin.core.elements.field_maps.field_map_7700 import FieldMap7700
 from lightwin.core.elements.quad import Quad
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
-from lightwin.util.typing import POS_T
+from lightwin.util.typing import POS_T, STATUS_T
 from lightwin.visualization.helper import X_AXIS_T
 
 
@@ -70,15 +70,22 @@ def patch_kwargs(
     if x_axis == "z_abs":
         kwargs["x_0"] = elt.get("abs_mesh")[0 if pos == "in" else -1]
         kwargs["width"] = elt.length_m if pos == "in" else -elt.length_m
+    elif x_axis == "cav_number":
+        cav_number = elt.get("cav_number")
+        # Move the element outside the plot if it has default cav_number value
+        kwargs["x_0"] = cav_number - 0.5 if cav_number > 0 else -1
     return kwargs
 
 
 def _limits(elts: ListOfElements, x_axis: X_AXIS_T) -> tuple[float, float]:
     """Give the limits of the plot."""
-    x_limits = (0, len(elts))
+    if x_axis == "elt_idx":
+        return (0, len(elts))
     if x_axis == "z_abs":
-        x_limits = (elts[0].get("abs_mesh")[0], elts[-1].get("abs_mesh")[-1])
-    return x_limits
+        return (elts[0].get("abs_mesh")[0], elts[-1].get("abs_mesh")[-1])
+    if x_axis == "cav_number":
+        return (0.5, len(elts.cavities()) + 0.5)
+    raise ValueError(f"{x_axis = } is not supported.")
 
 
 def plot_structure(
@@ -130,14 +137,14 @@ def _plot_field_map(
     """Add an ellipse to show a field_map."""
     height = 1.0
     y_0 = 0.0
-    colors = {
+    colors: dict[STATUS_T, str] = {
+        "compensate (in progress)": "orange",
+        "compensate (not ok)": "orange",
+        "compensate (ok)": "orange",
+        "failed": "red",
         "nominal": "green",
         "rephased (in progress)": "olive",
         "rephased (ok)": "olive",
-        "failed": "red",
-        "compensate (in progress)": "green",
-        "compensate (ok)": "orange",
-        "compensate (not ok)": "orange",
     }
     color = colors[elt.get("status", to_numpy=False)]
     patch = pat.Ellipse(
@@ -191,6 +198,7 @@ def outline_sections(
         "last_elt_of_sec": lambda sec: sec[-1][-1],
         "z_abs": lambda elt: elts.get("z_abs", elt=elt, pos="out"),
         "elt_idx": lambda elt: elt.get("elt_idx") + 1,
+        "cav_number": lambda elt: elt.get("cav_number"),
     }
     x_ax = [0]
     sorted = elts.by_section_and_lattice

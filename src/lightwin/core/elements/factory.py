@@ -119,6 +119,10 @@ class ElementFactory:
         )
         self.field_map_factory = field_map_factory
         IMPLEMENTED_ELEMENTS["FIELD_MAP"] = field_map_factory.run
+        #: Maps cavity names to their index. Useful when the same
+        #: :class:`ElementFactory` is used several times.
+        self._numbered_cavities: dict[str, int] = {}
+        self._cavity_counter = 0
 
     def run(
         self, line: DatLine, dat_idx: int | None = None, **kwargs
@@ -128,6 +132,15 @@ class ElementFactory:
             dat_idx = line.idx
         element_constructor = _get_constructor(line.instruction, dat_idx)
         element = element_constructor(line, dat_idx, **kwargs)
+
+        if isinstance(element, FieldMap):
+            number = self._numbered_cavities.get(element.name)
+            if number is None:
+                self._cavity_counter += 1
+                number = self._cavity_counter
+                self._numbered_cavities[element.name] = number
+            element.idx["cav_number"] = number
+
         return element
 
 

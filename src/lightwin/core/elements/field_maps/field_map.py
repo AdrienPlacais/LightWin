@@ -96,7 +96,9 @@ class FieldMap(Element):
         """Forbid this cavity from being retuned (or re-allow it)."""
         self._can_be_retuned = value
 
-    def update_status(self, new_status: STATUS_T) -> None:
+    def update_status(
+        self, new_status: STATUS_T, update_phases: bool = True
+    ) -> None:
         """Change the status of the cavity.
 
         We use
@@ -105,8 +107,21 @@ class FieldMap(Element):
         If ``k_e``, ``phi_s``, ``v_cav_mv`` are altered, this is performed in
         :meth:`.CavitySettings.status` ``setter``.
 
+        Parameters
+        ----------
+        new_status :
+            New cavity status.
+        update_phases :
+            Ensure proper reference phase is kept with every solver. Set it
+            to ``False`` only for beauty pass.
+
         """
         assert new_status in ALLOWED_STATUS
+
+        if not update_phases:
+            self.cavity_settings._status = new_status
+            return
+
         self.cavity_settings.status = new_status
         if new_status != "failed":
             return
@@ -114,8 +129,7 @@ class FieldMap(Element):
         for solver_id, beam_calc_param in self.beam_calc_param.items():
             new_transf_mat_func = beam_calc_param.re_set_for_broken_cavity()
             self.cavity_settings.set_cavity_parameters_methods(
-                solver_id,
-                new_transf_mat_func,
+                solver_id, new_transf_mat_func
             )
         return
 

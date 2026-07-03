@@ -12,7 +12,7 @@ from typing import Any, final
 
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.util.dicts_output import markdown
-from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
+from lightwin.visualization.helper import X_AXIS_T
 
 
 class IPlotter(ABC):
@@ -39,7 +39,7 @@ class IPlotter(ABC):
         fignum: int = 1,
         axes_index: int = 0,
         title: str = "",
-        x_axis: GETTABLE_SIMULATION_OUTPUT_T = "z_abs",
+        x_axis: X_AXIS_T = "z_abs",
         style: Sequence[str] | None = None,
         **plot_kwargs: Any,
     ) -> Any:
@@ -118,7 +118,7 @@ class IPlotter(ABC):
         self,
         axes: Any,
         elts: ListOfElements | None = None,
-        x_axis: GETTABLE_SIMULATION_OUTPUT_T = "z_abs",
+        x_axis: X_AXIS_T = "z_abs",
     ) -> None:
         """Add a plot to show the structure of the linac."""
         if elts is None:
@@ -131,7 +131,7 @@ class IPlotter(ABC):
 
     @abstractmethod
     def _plot_sections(
-        self, axes: Any, elts: ListOfElements, x_axis: str
+        self, axes: Any, elts: ListOfElements, x_axis: X_AXIS_T
     ) -> None:
         """Add the sections on the structure plot."""
 

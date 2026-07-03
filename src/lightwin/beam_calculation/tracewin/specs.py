@@ -25,7 +25,6 @@ from lightwin.config.helper import find_file
 from lightwin.config.key_val_conf_spec import KeyValConfSpec
 from lightwin.config.table_spec import TableConfSpec
 from lightwin.constants import example_ini, example_machine_config
-from lightwin.util.typing import EXPORT_PHASES
 
 _PURE_TRACEWIN_CONFIG = (
     KeyValConfSpec(
@@ -169,7 +168,7 @@ _PURE_TRACEWIN_CONFIG = (
         description="Full name Input dst of main beam (*)",
         default_value="",
         is_mandatory=False,
-        is_a_path_that_must_exists=True,
+        is_a_path_that_must_exist=True,
     ),
     KeyValConfSpec(
         key="dst_file2",
@@ -177,7 +176,7 @@ _PURE_TRACEWIN_CONFIG = (
         description="Full name Input dst of second beam (*)",
         default_value="",
         is_mandatory=False,
-        is_a_path_that_must_exists=True,
+        is_a_path_that_must_exist=True,
     ),
     KeyValConfSpec(
         key="duty1",
@@ -450,7 +449,7 @@ _PURE_TRACEWIN_CONFIG = (
             "(=3) of elements. (See “Synoptic” tools for file name)."
         ),
         default_value=example_ini.with_stem(".syn"),
-        is_a_path_that_must_exists=False,
+        is_a_path_that_must_exist=False,
         is_mandatory=False,
         warning_message="Not sure of this argument meaning.",
     ),
@@ -462,7 +461,7 @@ _PURE_TRACEWIN_CONFIG = (
             "calculation directory)."
         ),
         default_value=example_ini.with_stem(".tab"),
-        is_a_path_that_must_exists=False,
+        is_a_path_that_must_exist=False,
         is_mandatory=False,
         warning_message="Not sure of this argument meaning.",
     ),
@@ -607,6 +606,18 @@ TRACEWIN_CONFIG = (
             derived=True,
         ),
         KeyValConfSpec(
+            key="cal_file",
+            types=(str, Path),
+            description=(
+                "Path to a `CAL` file holding TraceWin optimization results. "
+                "If provided, the file must exist and will be copied so that "
+                "TraceWin picks it up."
+            ),
+            default_value=None,
+            is_mandatory=False,
+            is_a_path_that_must_exist=True,
+        ),
+        KeyValConfSpec(
             key="executable",
             types=(str, Path),
             description=(
@@ -614,10 +625,11 @@ TRACEWIN_CONFIG = (
                 "the definition in the machine_config_file."
             ),
             default_value="",
-            is_a_path_that_must_exists=True,
+            is_a_path_that_must_exist=True,
             is_mandatory=False,
             warning_message=(
-                "Providing `executable` will override `machine_config_file` settings."
+                "Providing `executable` will override `machine_config_file` "
+                "settings."
             ),
         ),
         KeyValConfSpec(
@@ -625,14 +637,14 @@ TRACEWIN_CONFIG = (
             types=(str, Path),
             description="Path to the `INI` TraceWin file.",
             default_value=example_ini,
-            is_a_path_that_must_exists=True,
+            is_a_path_that_must_exist=True,
         ),
         KeyValConfSpec(
             key="machine_config_file",
             types=(str, Path),
             description="Path to a file holding the paths to TW executables",
             default_value=example_machine_config,
-            is_a_path_that_must_exists=True,
+            is_a_path_that_must_exist=True,
         ),
         KeyValConfSpec(
             key="machine_name",
@@ -681,7 +693,7 @@ def tracewin_declare_that_machine_config_is_not_mandatory_anymore(
         if keyval is None:
             continue
         keyval.is_mandatory = False
-        keyval.is_a_path_that_must_exists = False
+        keyval.is_a_path_that_must_exist = False
 
     keyval = self._get_proper_spec("executable")
     if keyval is None:

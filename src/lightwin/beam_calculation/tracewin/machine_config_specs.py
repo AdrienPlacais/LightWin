@@ -18,7 +18,7 @@ MACHINE_CONFIG_CONFIG = (
         ),
         default_value="",
         is_mandatory=False,
-        is_a_path_that_must_exists=True,
+        is_a_path_that_must_exist=True,
     ),
     KeyValConfSpec(
         key="noX11_minimal",
@@ -26,7 +26,7 @@ MACHINE_CONFIG_CONFIG = (
         description="Path to the ``tracelx`` executable.",
         default_value="",
         is_mandatory=False,
-        is_a_path_that_must_exists=True,
+        is_a_path_that_must_exist=True,
     ),
     KeyValConfSpec(
         key="X11_full",
@@ -34,7 +34,7 @@ MACHINE_CONFIG_CONFIG = (
         description="Path to the ``TraceWin`` executable.",
         default_value="",
         is_mandatory=False,
-        is_a_path_that_must_exists=True,
+        is_a_path_that_must_exist=True,
     ),
     KeyValConfSpec(
         key="no_run",

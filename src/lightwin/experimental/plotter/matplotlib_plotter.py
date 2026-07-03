@@ -18,6 +18,7 @@ from lightwin.experimental.plotter.matplotlib_helper import (
     plot_structure,
 )
 from lightwin.util.dicts_output import markdown
+from lightwin.visualization.helper import X_AXIS_T
 
 
 class MatplotlibPlotter(IPlotter):
@@ -99,7 +100,7 @@ class MatplotlibPlotter(IPlotter):
         self,
         axes: Sequence[Axes],
         elts: ListOfElements | None = None,
-        x_axis: str = "z_abs",
+        x_axis: X_AXIS_T = "z_abs",
     ) -> None:
         """Add a plot to show the structure of the linac."""
         if elts is None:

@@ -237,6 +237,7 @@ CONCATENABLE_CAVITY_SETTINGS = (
 
 #: Attributes that can be extracted with :meth:`.Element.get` method.
 GETTABLE_ELT = (
+    "cav_number",
     "dat_idx",
     "elt_idx",
     "idx",
@@ -249,6 +250,7 @@ GETTABLE_ELT = (
 ) + GETTABLE_BEAM_CALC_PARAMETERS
 GETTABLE_ELT_T = (
     Literal[
+        "cav_number",
         "dat_idx",
         "elt_idx",
         "idx",
@@ -315,6 +317,7 @@ CONCATENABLE_ELTS_T = (
 GETTABLE_ELTS = (
     (
         "accelerator_path",
+        "cav_number",
         "dat_file",
         "dat_filecontent",
         "elts_n_cmds",
@@ -330,6 +333,7 @@ GETTABLE_ELTS = (
 GETTABLE_ELTS_T = (
     Literal[
         "accelerator_path",
+        "cav_number",
         "dat_file",
         "dat_filecontent",
         "elts_n_cmds",
@@ -347,6 +351,7 @@ GETTABLE_ELTS_T = (
 #: to simulation
 GETTABLE_STRUCTURE_DEPENDENT = GETTABLE_ELT + (
     "aperture_flag",
+    "cav_number",
     "field_map_filename",
     "field_map_folder",
     "geometry",
@@ -423,6 +428,7 @@ GETTABLE_SIMULATION_OUTPUT = (
         "acceptance_energy",
         "acceptance_phi",
         "beam_parameters",
+        "cav_number",
         "element_to_index",
         "elt_idx",
         "mismatch_factor_zdelta",
@@ -443,6 +449,7 @@ GETTABLE_SIMULATION_OUTPUT_T = (
         "acceptance_energy",
         "acceptance_phi",
         "beam_parameters",
+        "cav_number",
         "element_to_index",
         "elt_idx",
         "mismatch_factor_zdelta",

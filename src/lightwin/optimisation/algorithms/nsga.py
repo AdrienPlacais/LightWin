@@ -1,6 +1,5 @@
 """Define the NSGA-III many-objective optimisation algorithm."""
 
-import logging
 import os
 import threading
 from collections.abc import Callable
@@ -150,9 +149,12 @@ class NSGA3Algorithm(OptimisationAlgorithm):
         """
         _MIN_REF_DIRS = max(50, 10 * self.n_obj)
         n_partitions = next(
-            p
-            for p in range(1, 500)
-            if comb(self.n_obj + p - 1, p) >= _MIN_REF_DIRS
+            (
+                p
+                for p in range(1, 500)
+                if comb(self.n_obj + p - 1, p) >= _MIN_REF_DIRS
+            ),
+            _MIN_REF_DIRS,
         )
         n_ref_dirs = comb(self.n_obj + n_partitions - 1, n_partitions)
 

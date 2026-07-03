@@ -8,7 +8,7 @@
 """
 
 from collections.abc import Collection, Mapping, Sequence
-from typing import Literal, Self, TypeVar
+from typing import Self, TypeVar
 
 from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
