@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: If you use this software, please cite it as below.
 title: LightWin
 abstract: A tool dedicated to finding cavity failure compensation settings in linacs.
-version: 0.16.3
-date-released: '2026-05-21'
+version: 0.16.4
+date-released: '2026-07-03'
 authors:
 - family-names: Plaçais
   given-names: Adrien
