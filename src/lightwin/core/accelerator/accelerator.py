@@ -375,17 +375,23 @@ class Accelerator:
             my_pickler = MyCloudPickler()
             self.pickle(my_pickler, self._pickle_path)
 
-    def dat_filepath(self, beam_calculator_id: str) -> Path:
+    def dat_filepath(self, beam_calculator_id: str | None = None) -> Path:
         """Resolve path to the ``DAT``.
 
-        ``beam_calculator_id`` can be taken from :attr:`.BeamCalculator.id` or
-        from :attr:`.SimulationOutput.beam_calculator_id`.
+        Parameters
+        ----------
+        beam_calculator_id :
+            Name of the solver, if you want to pick-up path to the
+            post-optimization file that may be altered. Set this argument to
+            ``None`` if you want the input ``DAT`` file.
 
         """
-        original_dat_file = self.elts.files_info["dat_file"]
+        original_dat_file = self.elts.files["dat_file"]
         assert isinstance(
             original_dat_file, Path
         ), f"{original_dat_file = } should exist."
+        if beam_calculator_id is None:
+            return original_dat_file
         filename = original_dat_file.name
         return self.accelerator_path / beam_calculator_id / filename
 
