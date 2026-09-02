@@ -36,7 +36,8 @@ repos:
     rev: v0.16.4
     hooks:
       - id: ruff-check
-        args: [--fix, --show-fixes] #, --select, "PT006"]
+        args: [--fix, --show-fixes, --select, "F841"]
+        # args: [--fix, --show-fixes]
       - id: ruff-format
   # Also have options in pyproject.toml.
   - repo: https://github.com/PyCQA/docformatter

@@ -59,7 +59,6 @@ class Explorator(OptimisationAlgorithm):
         _, variables_values = self._generate_combinations(**kwargs)
         results = [self._wrapper_residuals(var) for var in variables_values]
         objectives_values = np.array([res[0] for res in results])
-        constraints_values = np.array([res[1] for res in results])
 
         # objectives_as_mesh = self._array_of_values_to_mesh(
         #     objectives_values, **kwargs

@@ -131,7 +131,7 @@ class TestMyPickler:
     ) -> None:
         """Check that :class:`.Accelerator` pickling works."""
         path = accelerator.pickle(pickler, pickled_dir / "accelerator.pkl")
-        pickled = Accelerator.from_pickle(pickler, path)
+        _ = Accelerator.from_pickle(pickler, path)
         assert True
 
     def test_list_of_elements(
@@ -144,7 +144,7 @@ class TestMyPickler:
         path = list_of_elements.pickle(
             pickler, pickled_dir / "list_of_elements.pkl"
         )
-        pickled = ListOfElements.from_pickle(pickler, path)
+        _ = ListOfElements.from_pickle(pickler, path)
         assert True
 
     def test_fault_scenario(
@@ -157,7 +157,7 @@ class TestMyPickler:
         path = fault_scenario.pickle(
             pickler, pickled_dir / "fault_scenario.pkl"
         )
-        pickled = FaultScenario.from_pickle(pickler, path)
+        _ = FaultScenario.from_pickle(pickler, path)
         assert True
 
     def test_simulation_output(
@@ -170,5 +170,5 @@ class TestMyPickler:
         path = simulation_output.pickle(
             pickler, pickled_dir / "simulation_output.pkl"
         )
-        pickled = SimulationOutput.from_pickle(pickler, path)
+        _ = SimulationOutput.from_pickle(pickler, path)
         assert True

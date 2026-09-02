@@ -247,7 +247,6 @@ def output_fit(fault_scenario, out_detail=False, out_compact=True):
 
 def output_fit_progress(count, obj, l_label, final=False):
     """Output the evolution of the objectives."""
-    single_width = 30
     precision = 3
     str_iter = " iter."
     width_separation = 3

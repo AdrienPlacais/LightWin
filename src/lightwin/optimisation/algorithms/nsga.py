@@ -354,12 +354,6 @@ class NSGA3AlgorithmMulti(NSGA3Algorithm):
         simulation_output = self.compute_beam_propagation(cav_settings)
 
         residuals = self._compute_residuals(simulation_output)
-        objectives = {
-            str(objective): value
-            for objective, value in zip(
-                self.objectives, residuals, strict=True
-            )
-        }
 
         constraints = None
         constraints_arr = None

@@ -113,7 +113,7 @@ class Lattice(Command):
         reversed_instructions_before_self = instructions_before_self[::-1]
 
         for instruction in reversed_instructions_before_self:
-            if isinstance(element := instruction, Element):
+            if isinstance(instruction, Element):
                 previous_lattice_number = instruction.idx["lattice"]
 
                 if previous_lattice_number >= 0:
