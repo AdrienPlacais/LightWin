@@ -161,7 +161,8 @@ def _extract_changelog_section(
 
     """
     pattern = (
-        rf"^## \[{re.escape(version)}\]" r"(?: -- (unreleased|\d{4}-\d{2}-\d{2}))?$"
+        rf"^## \[{re.escape(version)}\]"
+        r"(?: -- (unreleased|\d{4}-\d{2}-\d{2}))?$"
     )
 
     lines = content.splitlines()
