@@ -55,12 +55,12 @@ class Steerer(Command):
         self, instructions: list[Instruction], **kwargs: float
     ) -> None:
         """Determine the index of the elements concerned by :func:`apply`."""
-        next_element = list(
+        next_element = next(
             filter(
                 lambda elt: isinstance(elt, Element),
                 instructions[self.idx["dat_idx"] :],
             )
-        )[0]
+        )
         start = next_element.idx["dat_idx"]
         stop = start + 1
         self.influenced = slice(start, stop)

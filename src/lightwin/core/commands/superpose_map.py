@@ -65,14 +65,14 @@ class SuperposeMap(Command):
 
         """
         start = self.idx["dat_idx"]
-        next_element_but_not_field_map = list(
+        next_element_but_not_field_map = next(
             filter(
                 lambda elt: (
                     isinstance(elt, Element) and not isinstance(elt, FieldMap)
                 ),
                 instructions[self.idx["dat_idx"] :],
             )
-        )[0]
+        )
         stop = next_element_but_not_field_map.idx["dat_idx"]
         self.influenced = slice(start, stop)
 

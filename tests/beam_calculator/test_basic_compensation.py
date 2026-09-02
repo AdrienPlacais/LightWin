@@ -124,9 +124,9 @@ def simulation_outputs(
     fault_scenario: FaultScenario,
 ) -> tuple[SimulationOutput, SimulationOutput]:
     """Get ref simulation output, fix fault, compute fix simulation output."""
-    ref_simulation_output = list(accelerators[0].simulation_outputs.values())[
-        0
-    ]
+    ref_simulation_output = next(
+        iter(accelerators[0].simulation_outputs.values())
+    )
     fault_scenario.fix_all()
     fix_simulation_output = solver.compute(accelerators[1])
     return fix_simulation_output, ref_simulation_output

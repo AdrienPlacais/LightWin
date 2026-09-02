@@ -395,7 +395,7 @@ class FaultScenario(list[Fault]):
     ) -> tuple[SimulationOutput, SimulationOutput]:
         """Get proper |SO| for comparison."""
         if id_solver_ref is None:
-            id_solver_ref = list(self.ref_acc.simulation_outputs.keys())[0]
+            id_solver_ref = next(iter(self.ref_acc.simulation_outputs.keys()))
 
         if id_solver_fix is None:
             id_solver_fix = id_solver_ref

@@ -111,9 +111,9 @@ def simulation_output(
     fault_scenario: FaultScenario,
 ) -> SimulationOutput:
     """Get simulation output."""
-    ref_simulation_output = list(accelerators[0].simulation_outputs.values())[
-        0
-    ]
+    ref_simulation_output = next(
+        iter(accelerators[0].simulation_outputs.values())
+    )
     return ref_simulation_output
 
 
