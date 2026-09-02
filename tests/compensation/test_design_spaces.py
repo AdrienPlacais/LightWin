@@ -12,14 +12,12 @@ under study.
 from typing import Any
 
 import pytest
-from tests.pytest_helpers.simulation_output import wrap_approx
 
-import lightwin.config.config_manager as config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
-from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.config import config_manager
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.failures.fault_scenario import (
@@ -27,6 +25,7 @@ from lightwin.failures.fault_scenario import (
     fault_scenario_factory,
 )
 from lightwin.ui.workflow_setup import set_up_accelerators, set_up_solvers
+from tests.pytest_helpers.simulation_output import wrap_approx
 
 params = [
     pytest.param(
@@ -59,8 +58,7 @@ params = [
 
 @pytest.fixture(scope="class", params=params)
 def config(
-    request: pytest.FixtureRequest,
-    tmp_path_factory: pytest.TempPathFactory,
+    request: pytest.FixtureRequest, tmp_path_factory: pytest.TempPathFactory
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration."""
     out_folder = tmp_path_factory.mktemp("tmp")
@@ -74,18 +72,11 @@ def config(
         "design_space": "tiny_design_space",
     }
     override = {
-        "files": {
-            "project_folder": out_folder,
-        },
-        "design_space": {
-            "design_space_preset": design_space_preset,
-        },
+        "files": {"project_folder": out_folder},
+        "design_space": {"design_space_preset": design_space_preset},
     }
     my_config = config_manager.process_config(
-        example_config,
-        config_keys,
-        warn_mismatch=True,
-        override=override,
+        example_config, config_keys, warn_mismatch=True, override=override
     )
     return my_config
 

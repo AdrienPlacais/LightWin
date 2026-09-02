@@ -303,9 +303,12 @@ class SimulationOutput:
                     key,
                     to_numpy=False,  # type: ignore[arg-type]
                 )
-            elif key in NEEDS_3D and not self.is_3d:
-                val = None
-            elif key in NEEDS_MULTIPART and not self.is_multiparticle:
+            elif (
+                key in NEEDS_3D
+                and not self.is_3d
+                or key in NEEDS_MULTIPART
+                and not self.is_multiparticle
+            ):
                 val = None
             else:
                 val = recursive_getter(
@@ -472,8 +475,9 @@ class SimulationOutput:
         df = pd.DataFrame(
             {
                 x_axis: self.get(x, **kwargs),
-                legend_entry
-                or self.accelerator_id: self.get(key, to_deg=to_deg, **kwargs),
+                legend_entry or self.accelerator_id: self.get(
+                    key, to_deg=to_deg, **kwargs
+                ),
             }
         )
         return df.plot(

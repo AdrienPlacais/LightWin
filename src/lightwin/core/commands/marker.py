@@ -13,10 +13,7 @@ class Marker(Command):
     is_implemented = False
 
     def __init__(
-        self,
-        line: DatLine,
-        dat_idx: int | None = None,
-        **kwargs: str,
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Instantiate the dummy command."""
         super().__init__(line, dat_idx)

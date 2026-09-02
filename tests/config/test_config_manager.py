@@ -73,12 +73,12 @@ class TestLoadToml:
         with (
             patch("builtins.open", mock_open(read_data=bad_content)),
             patch("pathlib.Path.is_file", return_value=True),
-        ):
-            with pytest.raises(
+            pytest.raises(
                 InvalidTomlSyntaxError,
                 match="Invalid TOML syntax in file mock_path",
-            ):
-                _load_toml("mock_path")
+            ),
+        ):
+            _load_toml("mock_path")
 
     def test_valid_toml_file(self, mock_toml_content: bytes) -> None:
         """Ensure valid TOML content is correctly loaded."""
@@ -222,7 +222,7 @@ class TestProcessConfig:
 
 
 class TestOverrideSomeTomlEntries:
-    """Provide methods to validate :func:`._override_some_toml_entries.`"""
+    """Provide methods to validate :func:`._override_some_toml_entries."""
 
     def test_success(self) -> None:
         """Test that overrides are correctly applied."""
@@ -297,8 +297,7 @@ class TestDictToToml:
     def test_no_overwrite(
         self, mock_conf_spec: MagicMock, tmp_path: Path
     ) -> None:
-        """Test that dict_to_toml does not overwrite an existing file by
-        default."""
+        """Test dict_to_toml does not overwrite an existing file by default."""
         toml_path = tmp_path / "test.toml"
         toml_path.touch()  # Create the file to simulate pre-existence
         toml_fulldict = {"beam": {"key1": "value1"}}
@@ -324,10 +323,7 @@ class TestDictToToml:
             patch("shutil.copy") as mock_copy,
         ):
             dict_to_toml(
-                toml_fulldict,
-                toml_path,
-                mock_conf_spec,
-                allow_overwrite=True,
+                toml_fulldict, toml_path, mock_conf_spec, allow_overwrite=True
             )
 
             mock_copy.assert_called_once_with(
@@ -347,8 +343,7 @@ class TestDictToToml:
     def test_calls_to_toml_strings(
         self, mock_conf_spec: MagicMock, tmp_path: Path
     ) -> None:
-        """Test that dict_to_toml calls ConfSpec.to_toml_strings with the
-        correct arguments."""
+        """Test calls ConfSpec.to_toml_strings with correct arguments."""
         toml_path = tmp_path / "test.toml"
         toml_fulldict = {"beam": {"key1": "value1"}}
 
@@ -359,9 +354,7 @@ class TestDictToToml:
         )
 
     def test_round_trip(
-        self,
-        mock_conf_spec: MagicMock,
-        tmp_path: Path,
+        self, mock_conf_spec: MagicMock, tmp_path: Path
     ) -> None:
         """Ensure configuration saved with `dict_to_toml` can be reloaded."""
         toml_path = tmp_path / "config.toml"

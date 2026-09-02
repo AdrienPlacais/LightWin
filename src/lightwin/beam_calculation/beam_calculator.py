@@ -140,7 +140,6 @@ class BeamCalculator(ABC):
             whatever.
 
         """
-        pass
 
     @abstractmethod
     def _set_up_specific_factories(self) -> None:
@@ -268,22 +267,20 @@ class BeamCalculator(ABC):
             Handle ``"as_in_original_dat"``.
 
         """
-        assert (
-            self.reference_phase_policy in REFERENCE_PHASES
-        ), "Different reference phase for each cavity not handled yet."
+        assert self.reference_phase_policy in REFERENCE_PHASES, (
+            "Different reference phase for each cavity not handled yet."
+        )
         return self.reference_phase_policy
 
     @property
     @abstractmethod
     def is_a_multiparticle_simulation(self) -> bool:
         """Tell if the simulation is a multiparticle simulation."""
-        pass
 
     @property
     @abstractmethod
     def is_a_3d_simulation(self) -> bool:
         """Tell if the simulation is in 3D."""
-        pass
 
     def compute(
         self,

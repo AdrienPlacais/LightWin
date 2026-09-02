@@ -95,7 +95,7 @@ class NSGA3Algorithm(OptimisationAlgorithm):
     All attributes but ``solution`` are inherited from
     :class:`.OptimisationAlgorithm`.
 
-    See also
+    See Also
     --------
     pymoo.algorithms.moo.nsga3.NSGA3
 
@@ -308,7 +308,7 @@ class NSGA3AlgorithmMulti(NSGA3Algorithm):
     All attributes but ``solution`` are inherited from
     :class:`.OptimisationAlgorithm`.
 
-    See also
+    See Also
     --------
     pymoo.algorithms.moo.nsga3.NSGA3
 

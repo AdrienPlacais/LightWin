@@ -141,7 +141,9 @@ def set_up_faults(
     return factory.create(**wtf)
 
 
-def set_up(config: ConfigKw, **kwargs) -> tuple[
+def set_up(
+    config: ConfigKw, **kwargs
+) -> tuple[
     tuple[BeamCalculator, ...],
     dict[int, list[Accelerator]],
     list[FaultScenario] | None,
@@ -280,11 +282,7 @@ def run_simulation(
         return accelerators
 
     fix(fault_scenarios)
-    recompute(
-        beam_calculators[1:],
-        ref_simulation_output[1:],
-        accelerators,
-    )
+    recompute(beam_calculators[1:], ref_simulation_output[1:], accelerators)
     plot.factory(accelerators, fault_scenarios=fault_scenarios, **config)
 
     return fault_scenarios
@@ -318,11 +316,7 @@ def run_simulation_new(
         return accelerators, None
 
     fix(fault_scenarios)
-    recompute(
-        beam_calculators[1:],
-        ref_simulation_output[1:],
-        accelerators,
-    )
+    recompute(beam_calculators[1:], ref_simulation_output[1:], accelerators)
     plot.factory(accelerators, fault_scenarios=fault_scenarios, **config)
 
     return accelerators, fault_scenarios

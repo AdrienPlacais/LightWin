@@ -59,8 +59,9 @@ class TableConfSpec:
         """Set a table of properties.
 
         Correspond to a [table] in the ``TOML``.
-                Parameters
-                ----------
+
+        Parameters
+        ----------
                 configured_object :
                     Name of the object that will receive associated parameters.
                 table_entry :

@@ -100,7 +100,6 @@ class Adjust(Command):
         )
         idx_element = indexes_between_this_cmd_and_element.stop
         self.influenced = slice(idx_element, idx_element + 1)
-        return
 
     def apply(self, *args, **kwargs) -> list[Instruction]:
         """Do not apply anything."""
@@ -172,7 +171,6 @@ class AdjustSteerer(Command):
         )
         idx_element = indexes_between_this_cmd_and_element.stop
         self.influenced = slice(idx_element, idx_element + 1)
-        return
 
 
 class AdjustSteererBx(AdjustSteerer):

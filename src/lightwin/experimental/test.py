@@ -1,7 +1,8 @@
 """Define simple tests for functionality under implementation."""
 
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Self, Sequence
+from typing import Self
 
 import numpy as np
 

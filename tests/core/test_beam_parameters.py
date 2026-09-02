@@ -13,11 +13,7 @@ from lightwin.core.elements.element import POS_T, Element
 @pytest.fixture
 def dummy_phase_space() -> PhaseSpaceBeamParameters:
     twiss = np.array(
-        [
-            [10.0, 20.0, 30.0],
-            [11.0, 21.0, 31.0],
-            [12.0, 22.0, 32.0],
-        ]
+        [[10.0, 20.0, 30.0], [11.0, 21.0, 31.0], [12.0, 22.0, 32.0]]
     )
     ps = PhaseSpaceBeamParameters(
         phase_space_name="zdelta",

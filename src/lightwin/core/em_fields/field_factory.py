@@ -118,7 +118,6 @@ class FieldFactory:
             for field_map in corresp_maps:
                 field_map.cavity_settings.field = field
         self._create_superposed(field_maps)
-        return
 
     def _create_superposed(self, field_maps: Collection[FieldMap]) -> None:
         """Create :class:`.SuperposedFieldMap` from |FM|.

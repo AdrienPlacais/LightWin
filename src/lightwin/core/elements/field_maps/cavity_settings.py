@@ -155,7 +155,7 @@ class CavitySettings:
         #: current field map
         self._transf_mat_func_wrappers: dict[
             str, TRANSF_MAT_FUNC_WRAPPER_T
-        ] = (transf_mat_func_wrappers or {})
+        ] = transf_mat_func_wrappers or {}
         #: All functions that can be used to compute synchronous phase and
         #: accelerating field in current field map
         self._phi_s_funcs: dict[str, PHI_S_FUNC_T] = phi_s_funcs or {}
@@ -181,11 +181,7 @@ class CavitySettings:
         self._transf_mat_kwargs: dict[str, Any]
 
     @classmethod
-    def copy(
-        cls,
-        base: Self,
-        cavity_vars: CavityVars | None = None,
-    ) -> Self:
+    def copy(cls, base: Self, cavity_vars: CavityVars | None = None) -> Self:
         """Create cavity settings, based on ``base``.
 
         Parameters
@@ -911,9 +907,9 @@ class CavitySettings:
         self.phi_bunch = self._phi_bunch - delta_phi_bunch
         if not check_positive:
             return
-        assert (
-            self.phi_bunch >= 0.0
-        ), "The phase of the synchronous particle should never be negative."
+        assert self.phi_bunch >= 0.0, (
+            "The phase of the synchronous particle should never be negative."
+        )
 
     # =============================================================================
     # Acceptances

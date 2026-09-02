@@ -135,8 +135,7 @@ def k_e_limits(
 
 
 def _get_maximum_k_e_of_section(
-    section_idx: int,
-    reference_elements: list[Element],
+    section_idx: int, reference_elements: list[Element]
 ) -> float:
     """Get the maximum ``k_e`` of section."""
     elements_in_current_section = list(

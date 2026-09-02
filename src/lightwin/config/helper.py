@@ -6,11 +6,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 
-def check_type(
-    instance: type | tuple[type],
-    name: str,
-    *args: Any,
-) -> None:
+def check_type(instance: type | tuple[type], name: str, *args: Any) -> None:
     """Raise a warning if ``args`` are not all of type ``instance``.
 
     Not matching the provided type does not stop the program from running.

@@ -6,12 +6,11 @@ from typing import Any
 
 import pytest
 
-import lightwin.config.config_manager as config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
-from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.config import config_manager
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
@@ -47,11 +46,7 @@ def config(
         "wtf": "generic_wtf",
         "design_space": "generic_design_space",
     }
-    override = {
-        "files": {
-            "project_folder": out_folder,
-        },
-    }
+    override = {"files": {"project_folder": out_folder}}
     my_config = config_manager.process_config(
         example_config, config_keys, warn_mismatch=True, override=override
     )

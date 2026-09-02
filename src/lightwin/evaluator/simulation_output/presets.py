@@ -13,8 +13,8 @@ If you want to add your preset to this file, you must also add its key in the
 
 """
 
+from collections.abc import Callable
 from functools import partial
-from typing import Callable
 
 import numpy as np
 

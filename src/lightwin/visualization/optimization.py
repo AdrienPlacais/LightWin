@@ -130,10 +130,7 @@ def plot_fit_progress(hist_f, l_label, nature="Relative"):
     _, axx = create_fig_if_not_exists(1, num=32)
     axx = axx[0]
 
-    scales = {
-        "Relative": lambda x: x / x[0],
-        "Absolute": lambda x: x,
-    }
+    scales = {"Relative": lambda x: x / x[0], "Absolute": lambda x: x}
 
     # Number of objectives, number of evaluations
     n_f = len(l_label)

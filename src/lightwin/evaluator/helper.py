@@ -1,9 +1,8 @@
 """Provide evaluator helpers."""
 
 import logging
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from functools import partial
-from typing import Callable
 
 import numpy as np
 

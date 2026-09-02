@@ -5,7 +5,7 @@ For now, used only in acceptance computations.
 """
 
 import logging
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
 from scipy.optimize import brentq

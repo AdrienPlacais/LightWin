@@ -129,7 +129,7 @@ class Field(ABC):
         if not self.is_implemented:
             logging.info(
                 "Initializing a non-implemented Field. Not loading anything.\n"
-                f"{repr(self)}"
+                f"{self!r}"
             )
             return
 
@@ -156,9 +156,7 @@ class Field(ABC):
 
     @abstractmethod
     def _load_fieldmap(
-        self,
-        path: Path,
-        **validity_check_kwargs,
+        self, path: Path, **validity_check_kwargs
     ) -> tuple[Callable[..., float], Any, int]:
         """Generate field function corresponding to a single field file.
 

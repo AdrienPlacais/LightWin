@@ -48,8 +48,7 @@ def generate_design_space_files(
         **configuration["design_space"]
     )
     design_space = design_space_factory.create(
-        compensating_elements=cavities,
-        reference_elements=cavities,
+        compensating_elements=cavities, reference_elements=cavities
     )
 
     project_folder = toml_filepath.parent

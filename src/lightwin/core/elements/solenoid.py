@@ -11,10 +11,7 @@ class Solenoid(Element):
     n_attributes = 3
 
     def __init__(
-        self,
-        line: DatLine,
-        dat_idx: int | None = None,
-        **kwargs: str,
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Check number of attributes."""
         super().__init__(line, dat_idx, **kwargs)

@@ -7,7 +7,7 @@ function the name of the field map.
 """
 
 import logging
-from typing import Callable
+from collections.abc import Callable
 
 from lightwin.beam_calculation.cy_envelope_1d.util import (
     CY_ENVELOPE1D_METHODS_T,
@@ -127,7 +127,8 @@ class SuperposedFieldMapCyEnvelope1DParameters(
     SuperposedFieldMapEnvelope1DParameters, ElementCyEnvelope1DParameters
 ):
     """Hold properties to compute transfer matrix of
-    :class:`.SuperposedFieldMap`."""
+    :class:`.SuperposedFieldMap`.
+    """
 
     def __init__(self, *args, **kwargs) -> None:
         """Create the specific parameters for a superposed field map."""

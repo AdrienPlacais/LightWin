@@ -27,7 +27,7 @@ Some objects have built-in `pickle` and `unpickle` methods, namely:
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Type, TypeVar, overload
+from typing import TypeVar, overload
 
 T = TypeVar("T")
 
@@ -45,20 +45,16 @@ class MyPickler(ABC):
         title: str | None = None,
     ) -> Path | None:
         """Pickle ("save") the object to a binary file."""
-        pass
 
     @overload
     def unpickle(
-        self,
-        path: Path | str | None,
-        expected: None,
-        title: str | None = None,
+        self, path: Path | str | None, expected: None, title: str | None = None
     ) -> object | None: ...
     @overload
     def unpickle(
         self,
         path: Path | str | None,
-        expected: Type[T],
+        expected: type[T],
         title: str | None = None,
     ) -> T | None: ...
 
@@ -70,7 +66,6 @@ class MyPickler(ABC):
         title: str | None = None,
     ) -> object | None:
         """Unpickle ("load") the given path to recreate original object."""
-        pass
 
 
 class MyCloudPickler(MyPickler):
@@ -185,7 +180,7 @@ class MyCloudPickler(MyPickler):
                 info = str(expected)
             path = ask_pickle_filename(
                 title=title
-                or f"Choose which {info} should be unpickled (loaded).",
+                or f"Choose which {info} should be unpickled (loaded)."
             )
         if path is None:
             logging.error(

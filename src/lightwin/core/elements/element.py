@@ -71,9 +71,7 @@ class Element(Instruction):
         """
         super().__init__(line, dat_idx, **kwargs)
 
-        self.elt_info = {
-            "nature": line.splitted[0],
-        }
+        self.elt_info = {"nature": line.splitted[0]}
         self.length_m = 1e-3 * float(line.splitted[1])
 
         new_idx = {
@@ -150,10 +148,7 @@ class Element(Instruction):
 
         return values[0] if len(values) == 1 else tuple(values)
 
-    def keep_cavity_settings(
-        self,
-        cavity_settings: CavitySettings,
-    ) -> None:
+    def keep_cavity_settings(self, cavity_settings: CavitySettings) -> None:
         """Save data calculated by :meth:`.BeamCalculator.run_with_this`."""
         raise NotImplementedError("Please override this method.")
 

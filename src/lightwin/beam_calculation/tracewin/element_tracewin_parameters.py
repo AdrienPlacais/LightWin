@@ -64,7 +64,6 @@ class ElementTraceWinParameters(ElementBeamCalculatorParameters):
 
     def re_set_for_broken_cavity(self) -> None:
         """Do nothing."""
-        pass
 
     def transf_mat_function_wrapper(self, *args, **kwargs) -> dict:
         """Do nothing."""

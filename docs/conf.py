@@ -112,7 +112,7 @@ intersphinx_mapping = {
 
 autodoc_type_aliases = {
     # "np.float64": "numpy.float64",
-    "NDArray": "numpy.typing.NDArray",
+    "NDArray": "numpy.typing.NDArray"
 }
 autodoc_typehints = "description"
 # Parameters for sphinx-autodoc-typehints
@@ -124,11 +124,7 @@ typehints_defaults = "comma"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
-html_sidebars = {
-    "**": [
-        "versions.html",
-    ],
-}
+html_sidebars = {"**": ["versions.html"]}
 
 # -- Options for IPYNB --------------------------------------------------------
 # In particular: options for automatic re-execution

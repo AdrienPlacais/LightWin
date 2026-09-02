@@ -6,9 +6,9 @@
 """
 
 import logging
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Sequence
 from functools import partial
-from typing import Any, Literal, Sequence, Type, TypeGuard, TypeVar, overload
+from typing import Any, Literal, TypeGuard, TypeVar, overload
 
 import numpy as np
 
@@ -20,7 +20,7 @@ ListOfElements = TypeVar("ListOfElements")
 T = TypeVar("T")
 
 
-def is_list_of(elts: Sequence, type_to_check: Type) -> TypeGuard[Type]:
+def is_list_of(elts: Sequence, type_to_check: type) -> TypeGuard[type]:
     """Check that all items of ``elts`` are of type ``type_to_check``."""
     if not hasattr(elts, "__iter__"):
         return False
@@ -133,7 +133,7 @@ def equivalent_elt_idx(
         this list of elements. In the contrary, it was meant to find equivalent
         cavities between different lists of elements.
 
-    See also
+    See Also
     --------
     :func:`equivalent_elt`
     :meth:`.Accelerator.equivalent_elt`
@@ -192,7 +192,7 @@ def equivalent_elt(
         this list of elements. In the contrary, it was meant to find equivalent
         cavities between different lists of elements.
 
-    See also
+    See Also
     --------
     :func:`equivalent_elt_idx`
     :meth:`.Accelerator.equivalent_elt`

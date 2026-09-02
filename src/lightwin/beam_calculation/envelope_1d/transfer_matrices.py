@@ -16,7 +16,7 @@ line is ``dp/p``.
 """
 
 import math
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
 from numpy.typing import NDArray
@@ -43,10 +43,7 @@ def _drift_matrix(gamma: float, half_dz: float) -> NDArray[np.float64]:
 
 
 def z_drift(
-    gamma_in: float,
-    delta_s: float,
-    omega_0_bunch: float,
-    n_steps: int = 1,
+    gamma_in: float, delta_s: float, omega_0_bunch: float, n_steps: int = 1
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], None]:
     """Calculate the transfer matrix of a drift."""
     gamma_in_min2 = gamma_in**-2

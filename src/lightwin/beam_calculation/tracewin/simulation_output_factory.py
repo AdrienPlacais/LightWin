@@ -41,9 +41,7 @@ def _0_to_NaN(data: NDArray) -> NDArray:
     return data
 
 
-def _remove_invalid_values(
-    results: dict[str, NDArray],
-) -> dict[str, NDArray]:
+def _remove_invalid_values(results: dict[str, NDArray]) -> dict[str, NDArray]:
     """Remove invalid values that appear when ``exception`` is True."""
     results["SizeX"] = _0_to_NaN(results["SizeX"])
     results["SizeY"] = _0_to_NaN(results["SizeY"])
@@ -123,9 +121,7 @@ def _set_energy_related_results(
 
 
 def _set_phase_related_results(
-    results: dict[str, NDArray],
-    z_in: float,
-    phi_in: float,
+    results: dict[str, NDArray], z_in: float, phi_in: float
 ) -> dict[str, NDArray]:
     """Compute the phases, pos, frequencies.
 
@@ -255,6 +251,7 @@ def _load_parameters_of_cavities(
     filename :
         The name of the cavity parameters file produced by TraceWin, generally
         ``Cav_set_point_res.dat``.
+
     Returns
     -------
         Contains the cavity parameters. The keys should be:

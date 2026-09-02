@@ -214,7 +214,9 @@ class FieldMap(Element):
                 (
                     np.array(np.nan)
                     if v is None and none_to_nan
-                    else np.array(v) if isinstance(v, list) else v
+                    else np.array(v)
+                    if isinstance(v, list)
+                    else v
                 )
                 for v in values
             ]
@@ -223,7 +225,9 @@ class FieldMap(Element):
                 (
                     [np.nan]
                     if v is None and none_to_nan
-                    else v.tolist() if isinstance(v, np.ndarray) else v
+                    else v.tolist()
+                    if isinstance(v, np.ndarray)
+                    else v
                 )
                 for v in values
             ]

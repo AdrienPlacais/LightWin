@@ -146,70 +146,58 @@ class IPhaseSpaceBeamParameters(ABC):
     @abstractmethod
     def alpha(self) -> NDArray[np.float64] | float | None:
         """Get first element/column of ``self.twiss``."""
-        pass
 
     @alpha.setter
     @abstractmethod
     def alpha(self, value: NDArray[np.float64] | float) -> None:
         """Set first element/column of ``self.twiss``."""
-        pass
 
     @property
     @abstractmethod
     def beta(self) -> NDArray[np.float64] | float | None:
         """Get second element/column of ``self.twiss``."""
-        pass
 
     @beta.setter
     @abstractmethod
     def beta(self, value: NDArray[np.float64] | float) -> None:
         """Set second element/column of ``self.twiss``."""
-        pass
 
     @property
     @abstractmethod
     def gamma(self) -> NDArray[np.float64] | float | None:
         """Get third element/column of ``self.twiss``."""
-        pass
 
     @gamma.setter
     @abstractmethod
     def gamma(self, value: NDArray[np.float64] | float) -> None:
         """Set third element/column of ``self.twiss``."""
-        pass
 
     @property
     @abstractmethod
     def envelope_pos(self) -> NDArray[np.float64] | float | None:
         """Get first element/column of ``self.envelopes``."""
-        pass
 
     @envelope_pos.setter
     @abstractmethod
     def envelope_pos(self, value: NDArray[np.float64] | float) -> None:
         """Set first element/column of ``self.envelopes``."""
-        pass
 
     @property
     @abstractmethod
     def envelope_energy(self) -> NDArray[np.float64] | float | None:
         """Get second element/column of ``self.envelopes``."""
-        pass
 
     @envelope_energy.setter
     @abstractmethod
     def envelope_energy(self, value: NDArray[np.float64] | float) -> None:
         """Set second element/column of ``self.envelopes``."""
-        pass
 
     @property
     @abstractmethod
     def eps(self) -> NDArray[np.float64] | float:
         """Return the normalized emittance."""
-        pass
 
     @property
     @abstractmethod
     def non_norm_eps(self) -> NDArray[np.float64] | float:
         """Return the non-normalized emittance."""
-        pass

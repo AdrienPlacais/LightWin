@@ -22,9 +22,9 @@ list of implemented algorithms in the :mod:`.algorithm` module.
 
 import logging
 from abc import ABC, abstractmethod
-from collections.abc import Collection, Mapping
+from collections.abc import Callable, Collection, Mapping
 from pathlib import Path
-from typing import Any, Callable, NotRequired, TypedDict, final
+from typing import Any, NotRequired, TypedDict, final
 
 import numpy as np
 from numpy.typing import NDArray
@@ -128,12 +128,12 @@ class OptimisationAlgorithm(ABC):
         _reference_phase = tuple(
             {x.name for x in self._variables if "phi" in x.name}
         )
-        assert (
-            len(_reference_phase) == 1
-        ), "Only one phase variable should be set"
-        assert (
-            _reference_phase[0] in REFERENCE_PHASES
-        ), f"{_reference_phase} is an invalid phase variable"
+        assert len(_reference_phase) == 1, (
+            "Only one phase variable should be set"
+        )
+        assert _reference_phase[0] in REFERENCE_PHASES, (
+            f"{_reference_phase} is an invalid phase variable"
+        )
         self._reference_phase: REFERENCE_PHASES_T = _reference_phase[0]
 
         self._constraints = self._design_space.constraints
@@ -158,10 +158,7 @@ class OptimisationAlgorithm(ABC):
     def __str__(self) -> str:
         """Concatenate ``_str__`` of variables, constraints, objectives."""
         return "\n\n".join(
-            (
-                str(self._design_space),
-                str_objectives(list(self.objectives)),
-            )
+            (str(self._design_space), str_objectives(list(self.objectives)))
         )
 
     @property
@@ -207,7 +204,6 @@ class OptimisationAlgorithm(ABC):
     @abstractmethod
     def _generate_opti_sol(self, *args, **kwargs) -> OptiSol:
         """Takes the results of the optimization in any form, returns dict."""
-        pass
 
     def _format_variables(self) -> Any:
         """Adapt all :class:`.Variable` to this optimisation algorithm."""

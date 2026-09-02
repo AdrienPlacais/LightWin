@@ -13,7 +13,8 @@ The |E| objects with a transfer matrix are ``DRIFT``, ``SOLENOID``, ``QUAD``,
 
 import math
 from abc import abstractmethod
-from typing import Any, Callable, Literal
+from collections.abc import Callable
+from typing import Any, Literal
 
 import numpy as np
 from numpy.typing import NDArray
@@ -123,10 +124,7 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         return results
 
     def _transfer_matrix_results_to_dict(
-        self,
-        r_zz: NDArray,
-        gamma_phi: NDArray,
-        integrated_field: float | None,
+        self, r_zz: NDArray, gamma_phi: NDArray, integrated_field: float | None
     ) -> dict:
         """Convert the results given by the transf_mat function to dict."""
         if integrated_field is not None:
@@ -144,9 +142,7 @@ class ElementEnvelope1DParameters(ElementBeamCalculatorParameters):
         return results
 
     def _proper_transfer_matrix_func(
-        self,
-        element_nature: str,
-        method: ENVELOPE1D_METHODS_T | None = None,
+        self, element_nature: str, method: ENVELOPE1D_METHODS_T | None = None
     ) -> Callable:
         """Get the proper transfer matrix function."""
         match method, element_nature:
@@ -318,10 +314,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         return tm_kwargs
 
     def _transfer_matrix_results_to_dict(
-        self,
-        r_zz: NDArray,
-        gamma_phi: NDArray,
-        integrated_field: float | None,
+        self, r_zz: NDArray, gamma_phi: NDArray, integrated_field: float | None
     ) -> dict:
         """Convert the results given by the transf_mat function to a dict.
 
@@ -354,10 +347,7 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         return self.transf_mat_function
 
     def _broken_transfer_matrix_results_to_dict(
-        self,
-        r_zz: NDArray,
-        gamma_phi: NDArray,
-        integrated_field: float | None,
+        self, r_zz: NDArray, gamma_phi: NDArray, integrated_field: float | None
     ) -> dict:
         """Convert the results given by the transf_mat function to a dict."""
         assert integrated_field is None
@@ -392,7 +382,8 @@ def _get_phi_0_rel(cavity_settings: CavitySettings) -> float:
 
 class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
     """Hold properties to compute transfer matrix of
-    :class:`.SuperposedFieldMap`."""
+    :class:`.SuperposedFieldMap`.
+    """
 
     def __init__(
         self,
@@ -474,10 +465,7 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
         return self.field.partial_e_z(k_es, phi_0_rels)
 
     def _transfer_matrix_results_to_dict(
-        self,
-        r_zz: NDArray,
-        gamma_phi: NDArray,
-        integrated_field: float | None,
+        self, r_zz: NDArray, gamma_phi: NDArray, integrated_field: float | None
     ) -> dict:
         """Convert the results given by the transf_mat function to a dict.
 
@@ -544,10 +532,7 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
         )
 
         factors = self._pre_compute_factors_for_transfer_matrix(
-            elt.length_m,
-            elt.h_squared,
-            elt.k_x,
-            elt.field_grad_index <= 1.0,
+            elt.length_m, elt.h_squared, elt.k_x, elt.field_grad_index <= 1.0
         )
         self.factor_1, self.factor_2, self.factor_3 = factors
 

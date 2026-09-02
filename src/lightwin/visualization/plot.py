@@ -20,9 +20,9 @@
 """
 
 import logging
-from collections.abc import Collection
+from collections.abc import Collection, Sequence
 from pathlib import Path
-from typing import Any, Literal, Sequence
+from typing import Any, Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -75,11 +75,7 @@ PLOT_PRESETS = {
     },
     "envelopes": {
         "x_axis": "z_abs",
-        "all_y_axis": (
-            "envelope_pos_phiw",
-            "envelope_energy_phiw",
-            "struct",
-        ),
+        "all_y_axis": ("envelope_pos_phiw", "envelope_energy_phiw", "struct"),
         "num": 26,
         "symmetric_plot": True,
     },

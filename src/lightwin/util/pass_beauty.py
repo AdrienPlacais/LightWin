@@ -88,9 +88,9 @@ def insert_field_map_pass_beauty_instructions(
 
     """
     if not isinstance(fault_scenarios := fault_scenario, FaultScenario):
-        for fault_scenario in fault_scenarios:
+        for fs in fault_scenarios:
             insert_field_map_pass_beauty_instructions(
-                fault_scenario,
+                fs,
                 beam_calculator,
                 number_of_dsize=number_of_dsize,
                 number=number,
@@ -149,9 +149,9 @@ def insert_transverse_matching_instructions(
 
     """
     if not isinstance(fault_scenarios := fault_scenario, FaultScenario):
-        for fault_scenario in fault_scenarios:
+        for fs in fault_scenarios:
             insert_transverse_matching_instructions(
-                fault_scenario,
+                fs,
                 beam_calculator,
                 number=number,
                 retune_steerers=retune_steerers,
@@ -220,9 +220,9 @@ def _cavity_settings_to_adjust(
     """
     if not phase_nature:
         phase_nature = cavity_settings.reference
-    assert (
-        phase_nature != "phi_s"
-    ), "Adjusting synchronous phase won't do with TraceWin."
+    assert phase_nature != "phi_s", (
+        "Adjusting synchronous phase won't do with TraceWin."
+    )
 
     phase = getattr(cavity_settings, phase_nature)
     assert isinstance(phase, float)
@@ -380,10 +380,7 @@ def _field_map_pass_beauty_instructions(
     compensating = fault.compensating_elements
 
     diagnostics = _dsize3_diagnostics(
-        fix_elts,
-        compensating,
-        number=number,
-        number_of_dsize=number_of_dsize,
+        fix_elts, compensating, number=number, number_of_dsize=number_of_dsize
     )
 
     adjusts = _set_of_cavity_settings_to_adjust(
@@ -486,8 +483,7 @@ def _spiral2_quadrupoles(lattices: list[list[Element]]) -> list[Quad]:
 def _map_qps_to_steerers(
     elts: ListOfElements, first_lattice_idx: int
 ) -> dict[Steerer, Quad]:
-    """Map quadrupoles to their steerer from ``first_lattice_idx`` and
-    onwards."""
+    """Map QPs to their steerer from ``first_lattice_idx`` and onwards."""
     steerers_quadrupoles: dict[Steerer, Quad] = {}
     lattices_after_first_alteration = elts.by_lattice[first_lattice_idx:]
 
@@ -528,8 +524,18 @@ def _create_bpms(
     adjust_steerers: list[AdjustSteerer],
     number: int,
 ) -> list[DiagPosition]:
-    """Add a diag in the middle of first QP, in the lattice following
-    steerers."""
+    """Add a diag in the middle of first QP, in the lattice following steerers.
+
+    Parameters
+    ----------
+    by_lattice :
+        Elements sorted by lattice.
+    adjust_steerers :
+        Commands adjusting steerers.
+    number :
+        Identifying index of steerer/adjust pair.
+
+    """
     diagnostics: list[DiagPosition] = []
 
     for adjust in adjust_steerers:
@@ -548,7 +554,7 @@ def _create_bpms(
         else:
             name = "LINB-BPM"
             next_lattice_idx -= 12
-        name = f"{name}{next_lattice_idx+1:02}1"
+        name = f"{name}{next_lattice_idx + 1:02}1"
         diag = DiagPosition.from_args(
             dat_idx=qps[1].idx["dat_idx"],
             number=adjust.number,
@@ -623,9 +629,7 @@ def _quadrupole_adjust_commands(
 # =============================================================================
 # Generic
 # =============================================================================
-def _is_adapted_to_pass_beauty(
-    beam_calculator: BeamCalculator,
-) -> bool:
+def _is_adapted_to_pass_beauty(beam_calculator: BeamCalculator) -> bool:
     """Check if the provided beam calculator can perform beauty pass."""
     if not isinstance(beam_calculator, TraceWin):
         logging.error("Beauty pass will only work with TraceWin.")

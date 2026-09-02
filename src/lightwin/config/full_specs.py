@@ -261,11 +261,7 @@ class SimplestConfSpec(ConfSpec):
 
     """
 
-    MANDATORY_CONFIG_ENTRIES = (
-        "beam",
-        "files",
-        "beam_calculator",
-    )  #:
+    MANDATORY_CONFIG_ENTRIES = ("beam", "files", "beam_calculator")  #:
 
     def __init__(
         self,
@@ -281,7 +277,5 @@ class SimplestConfSpec(ConfSpec):
 
         """
         super().__init__(
-            beam=beam,
-            files=files,
-            beam_calculator=beam_calculator,
+            beam=beam, files=files, beam_calculator=beam_calculator
         )

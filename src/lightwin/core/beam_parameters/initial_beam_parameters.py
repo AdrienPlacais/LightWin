@@ -192,7 +192,9 @@ class InitialBeamParameters:
                 (
                     np.array(np.nan)
                     if v is None and none_to_nan
-                    else np.array(v) if isinstance(v, list) else v
+                    else np.array(v)
+                    if isinstance(v, list)
+                    else v
                 )
                 for v in values
             ]

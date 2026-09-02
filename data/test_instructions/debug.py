@@ -14,9 +14,7 @@ from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import NoFault
 
 
-def _set_up_solvers(
-    config: dict[str, Any],
-) -> BeamCalculator:
+def _set_up_solvers(config: dict[str, Any]) -> BeamCalculator:
     """Create the beam calculators."""
     factory = BeamCalculatorsFactory(**config)
     beam_calculators = factory.run_all()
@@ -24,8 +22,7 @@ def _set_up_solvers(
 
 
 def _set_up_accelerators(
-    config: dict[str, Any],
-    beam_calculator: BeamCalculator,
+    config: dict[str, Any], beam_calculator: BeamCalculator
 ) -> Accelerator:
     """Create the accelerators."""
     factory = NoFault(beam_calculators=beam_calculator, **config)
@@ -33,12 +30,7 @@ def _set_up_accelerators(
     return accelerator
 
 
-def set_up(
-    config: dict[str, Any],
-) -> tuple[
-    BeamCalculator,
-    Accelerator,
-]:
+def set_up(config: dict[str, Any]) -> tuple[BeamCalculator, Accelerator]:
     """Set up everything."""
     beam_calculator = _set_up_solvers(config)
     accelerator = _set_up_accelerators(config, beam_calculator)
@@ -63,9 +55,7 @@ if __name__ == "__main__":
         "beam": "beam",
     }
     override = {
-        "files": {
-            "dat_file": "superpose_map.dat",
-        },
+        "files": {"dat_file": "superpose_map.dat"}
         # "beam_calculator": {"n_steps_per_cell": 40},
     }
     config = config_manager.process_config(

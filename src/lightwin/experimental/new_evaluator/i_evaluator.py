@@ -67,7 +67,6 @@ class IEvaluator(ABC):
     @abstractmethod
     def _get(self, *args: Any, **kwargs: Any) -> pd.DataFrame:
         """Get the base data."""
-        pass
 
     def post_treat(self, raw_df: pd.DataFrame) -> pd.DataFrame:
         """Perform operations on data.
@@ -86,7 +85,6 @@ class IEvaluator(ABC):
         **kwargs: Any,
     ) -> Any:
         """Plot evaluated data from all the given objects."""
-        pass
 
     def _plot_single(
         self,
@@ -159,4 +157,3 @@ class IEvaluator(ABC):
             Holds data used for the testing.
 
         """
-        pass

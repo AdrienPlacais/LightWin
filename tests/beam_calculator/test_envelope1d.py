@@ -10,18 +10,18 @@ from unittest.mock import call, patch
 
 import numpy as np
 import pytest
-from tests.pytest_helpers.simulation_output import wrap_approx
 
-import lightwin.config.config_manager as config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.config import config_manager
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import AcceleratorFactory
 from lightwin.ui.workflow_setup import set_up_solvers
 from lightwin.util.solvers import solve_scalar_equation_brent
+from tests.pytest_helpers.simulation_output import wrap_approx
 
 leapfrog_marker = pytest.mark.xfail(
     condition=True,
@@ -92,8 +92,7 @@ def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
 
 @pytest.fixture(scope="class", params=params)
 def config(
-    request: pytest.FixtureRequest,
-    tmp_path_factory: pytest.TempPathFactory,
+    request: pytest.FixtureRequest, tmp_path_factory: pytest.TempPathFactory
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration, common to all solvers."""
     out_folder = tmp_path_factory.mktemp("tmp")
@@ -107,9 +106,7 @@ def config(
         "beam": "beam",
     }
     override = {
-        "files": {
-            "project_folder": out_folder,
-        },
+        "files": {"project_folder": out_folder},
         "beam_calculator": {
             "tool": "Envelope1D",
             "method": method,
@@ -126,8 +123,7 @@ def config(
 
 @pytest.fixture(scope="class")
 def accelerator(
-    solver: BeamCalculator,
-    config: dict[str, dict[str, Any]],
+    solver: BeamCalculator, config: dict[str, dict[str, Any]]
 ) -> Accelerator:
     """Create an example linac."""
     accelerator_factory = AcceleratorFactory(beam_calculators=solver, **config)
@@ -137,8 +133,7 @@ def accelerator(
 
 @pytest.fixture(scope="class")
 def simulation_output(
-    solver: BeamCalculator,
-    accelerator: Accelerator,
+    solver: BeamCalculator, accelerator: Accelerator
 ) -> SimulationOutput:
     """Init and use a solver to propagate beam in an example accelerator."""
     my_simulation_output = solver.compute(accelerator)
@@ -194,8 +189,7 @@ class TestSolver1D:
 
 
 def test_inverted_bounds_warning() -> None:
-    """Tests that the method accepts inverted bounds with a warning and still
-    finds the roots."""
+    """Tests inverted bounds raises a warning and still finds the roots."""
 
     def example_func(x: float, a: float) -> float:
         return x - a
@@ -210,8 +204,7 @@ def test_inverted_bounds_warning() -> None:
 
 
 def test_no_sign_change_warning() -> None:
-    """Tests that lack of sign change in Brent's method triggers a warning and
-    returns NaN."""
+    """Tests that lack of sign change method triggers warning and NaN."""
 
     def example_func(x: float, a: float) -> float:
         return x**2 + a

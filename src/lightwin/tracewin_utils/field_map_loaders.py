@@ -70,7 +70,7 @@ def load_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
                 if i == 1:
                     try:
                         norm = float(line)
-                    except ValueError as e:
+                    except ValueError:
                         logging.error(f"Error reading {line = } in {path}.")
                     continue
 

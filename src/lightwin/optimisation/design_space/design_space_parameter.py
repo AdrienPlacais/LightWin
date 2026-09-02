@@ -132,7 +132,7 @@ class DesignSpaceParameter(ABC):
             "This design space parameter has no "
             "attribute x_0. Maybe you took a Contraint for a Variable?"
         )
-        x_0 = getattr(self, "x_0")
+        x_0 = self.x_0
         if "phi" in self.name:
             return math.degrees(x_0)
         return x_0

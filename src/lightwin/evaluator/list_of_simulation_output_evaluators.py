@@ -70,12 +70,11 @@ class ListOfSimulationOutputEvaluators(list):
         if project_folder is not None:
             csv_path = Path(project_folder, "evaluations.csv")
             evaluations.to_csv(csv_path)
-            logging.info(f"Saved all evaluations in {str(csv_path)}.")
+            logging.info(f"Saved all evaluations in {csv_path!s}.")
         return evaluations
 
     def _unpack_other_evals(
-        self,
-        other_evals: dict[str, list[Any]] | None,
+        self, other_evals: dict[str, list[Any]] | None
     ) -> tuple[list[str], list[list[Any]]]:
         """Extract column names and data."""
         if other_evals is None:
@@ -95,10 +94,7 @@ class ListOfSimulationOutputEvaluators(list):
         other_data = [list(data) for data in other_data]
         return other_columns, other_data
 
-    def _set_indexes(
-        self,
-        *simulation_outputs: SimulationOutput,
-    ) -> list[str]:
+    def _set_indexes(self, *simulation_outputs: SimulationOutput) -> list[str]:
         """Set the indexes of the pandas dataframe."""
         index = [
             simulation_output.beam_calculator_id
@@ -106,10 +102,7 @@ class ListOfSimulationOutputEvaluators(list):
         ]
         return index
 
-    def _set_columns(
-        self,
-        other_columns: list[str],
-    ) -> list[str]:
+    def _set_columns(self, other_columns: list[str]) -> list[str]:
         """Set the columns of the pandas dataframe."""
         columns = [evaluator.descriptor for evaluator in self]
         if other_columns is None:

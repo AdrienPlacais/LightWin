@@ -55,7 +55,6 @@ def force_a_section_for_every_element(elts: Sequence[Element]) -> None:
             elt.idx["section"] = idx_section
             continue
         idx_section = idx
-    return
 
 
 def force_a_lattice_for_every_element(elts: Sequence[Element]) -> None:
@@ -66,7 +65,7 @@ def force_a_lattice_for_every_element(elts: Sequence[Element]) -> None:
 
     Elements after the first LATTICE command will be in the previous lattice.
 
-    Example
+    Example:
     -------
     .. list-table ::
         :widths: 10 10 10

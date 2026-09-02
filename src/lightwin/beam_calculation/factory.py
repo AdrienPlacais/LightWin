@@ -16,11 +16,7 @@ from lightwin.util.typing import (
     BeamKwargs,
 )
 
-BEAM_CALCULATORS = (
-    "Envelope1D",
-    "TraceWin",
-    "Envelope3D",
-)  #:
+BEAM_CALCULATORS = ("Envelope1D", "TraceWin", "Envelope3D")  #:
 BEAM_CALCULATORS_T = Literal["Envelope1D", "TraceWin", "Envelope3D"]
 
 
@@ -123,8 +119,7 @@ class BeamCalculatorsFactory:
                     fixme
 
         """
-        if "simulation type" in beam_calculator_kw:
-            del beam_calculator_kw["simulation type"]
+        beam_calculator_kw.pop("simulation type", None)
 
     def run(
         self,

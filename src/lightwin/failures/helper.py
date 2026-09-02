@@ -129,7 +129,8 @@ def remove_lists_with_less_than_n_elements[T](
     elements: Sequence[Sequence[T]], minimum_size: int = 1
 ) -> list[list[T]]:
     """Return a list where objects have a minimum length of
-    ``minimum_size``."""
+    ``minimum_size``.
+    """
     out = [list(x) for x in elements if len(x) >= minimum_size]
     return out
 
@@ -209,12 +210,11 @@ def gather[T](
 
 
 def nested_containing_desired[T](
-    nested: Collection[Sequence[T]],
-    desired_elements: Collection[T],
+    nested: Collection[Sequence[T]], desired_elements: Collection[T]
 ) -> list[list[T]]:
     """Return collections of ``nested`` containing some ``desired_elements``.
 
-    Example
+    Example:
     -------
     ``nested_containing_desired(ListOfElements.by_lattice, failed_elements)``
     will return ``lattices_with_a_failure``

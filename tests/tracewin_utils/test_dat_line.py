@@ -8,9 +8,9 @@ def are_equal(
 ) -> None:
     """Test that all arguments are the same."""
     for key, val in expected.items():
-        assert val == (
-            got := getattr(returned, key)
-        ), f"{key} error: expected {val} but {got = }"
+        assert val == (got := getattr(returned, key)), (
+            f"{key} error: expected {val} but {got = }"
+        )
 
 
 def check(line: str, expected: dict[str, str | float | list[str]]) -> None:

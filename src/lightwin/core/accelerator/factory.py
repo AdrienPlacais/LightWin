@@ -1,8 +1,9 @@
 """Define a factory to easily create |A|."""
 
 import logging
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 from warnings import warn
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator

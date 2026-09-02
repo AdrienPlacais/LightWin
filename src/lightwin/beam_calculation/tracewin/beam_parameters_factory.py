@@ -53,11 +53,7 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
             )
         )
         self._set_from_sigma(
-            beam_parameters,
-            phase_space_names,
-            sigmas,
-            gamma_kin,
-            beta_kin,
+            beam_parameters, phase_space_names, sigmas, gamma_kin, beta_kin
         )
 
         other_phase_space_names = ("x", "y")

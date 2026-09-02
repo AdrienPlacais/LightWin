@@ -9,11 +9,7 @@
 from pathlib import Path
 
 from lightwin.config.config_manager import process_config
-from lightwin.optimisation.design_space.design_space import DesignSpace
-from lightwin.optimisation.design_space.factory import (
-    DesignSpaceFactory,
-    get_design_space_factory,
-)
+from lightwin.optimisation.design_space.factory import get_design_space_factory
 from lightwin.ui.workflow_setup import set_up
 
 

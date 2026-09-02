@@ -24,7 +24,6 @@ from lightwin.beam_calculation.integrators.rk4 import rk4
 from lightwin.constants import c
 from lightwin.core.em_fields.types import (
     FieldFuncComplexTimedComponent,
-    FieldFuncComponent,
     FieldFuncTimedComponent,
 )
 
@@ -37,10 +36,7 @@ def dummy(
 
 
 def drift(
-    gamma_in: float,
-    delta_s: float,
-    omega_0_bunch: float,
-    n_steps: int = 1,
+    gamma_in: float, delta_s: float, omega_0_bunch: float, n_steps: int = 1
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], None]:
     """Calculate the transfer matrix of a drift.
 

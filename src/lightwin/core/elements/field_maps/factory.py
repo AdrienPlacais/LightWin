@@ -78,8 +78,7 @@ class FieldMapFactory:
         )
 
         cavity_settings = self.cavity_settings_factory.from_line_in_dat_file(
-            line,
-            set_sync_phase=False,
+            line, set_sync_phase=False
         )
 
         field_map = field_map_class(

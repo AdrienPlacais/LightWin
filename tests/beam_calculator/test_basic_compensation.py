@@ -8,7 +8,6 @@ to work.
 from typing import Any
 
 import pytest
-from tests.pytest_helpers.simulation_output import wrap_approx
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.simulation_output.simulation_output import (
@@ -22,6 +21,7 @@ from lightwin.failures.fault_scenario import (
     fault_scenario_factory,
 )
 from lightwin.ui.workflow_setup import set_up_accelerators, set_up_solvers
+from tests.pytest_helpers.simulation_output import wrap_approx
 
 # Arguments are:
 # ``beam_calculator``, ``reference_phase_policy``, ``flag_cython``, ``export_phase``
@@ -67,9 +67,7 @@ def config(
         "design_space": "tiny_design_space",
     }
     override = {
-        "files": {
-            "project_folder": out_folder,
-        },
+        "files": {"project_folder": out_folder},
         # Trick to not set the flags when they are None (for TW)
         "beam_calculator": {
             k: v
@@ -82,10 +80,7 @@ def config(
         },
     }
     my_config = process_config(
-        example_config,
-        config_keys,
-        warn_mismatch=True,
-        override=override,
+        example_config, config_keys, warn_mismatch=True, override=override
     )
     return my_config
 

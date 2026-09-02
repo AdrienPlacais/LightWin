@@ -45,8 +45,6 @@ from lightwin.util.typing import (
 class TraceWinException(subprocess.SubprocessError):
     """Specific exception for TraceWin subprocess error."""
 
-    pass
-
 
 class TraceWin(BeamCalculator):
     """Hold a TraceWin beam calculator."""
@@ -214,8 +212,7 @@ class TraceWin(BeamCalculator):
         )
         command.extend(
             failed_cavities_to_command(
-                elts.l_cav,
-                idx_first_element=elts[0].idx["elt_idx"],
+                elts.l_cav, idx_first_element=elts[0].idx["elt_idx"]
             )
         )
         return command, path_cal
@@ -519,7 +516,6 @@ class TraceWin(BeamCalculator):
             settings.phi_bunch = phi_bunch
             settings.phi_s = phi_s
             settings.v_cav_mv = v_cav_mv
-        return
 
 
 # =============================================================================
@@ -544,7 +540,7 @@ def _run_in_bash(command: Sequence[str], output_command: bool = True) -> None:
     """
     if output_command:
         logging.info(
-            f"Running command with arguments:\n\t{"\n\t".join(command)}\n"
+            f"Running command with arguments:\n\t{'\n\t'.join(command)}\n"
             f"In case of error, copy-paste the command:\n{' '.join(command)}"
         )
 

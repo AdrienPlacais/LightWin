@@ -78,6 +78,8 @@ class PredefinedSolution(OptimisationAlgorithm):
             If provided, residuals are computed from this output rather than
             re-running beam propagation. Useful when you already have the
             associated simulation results.
+        kwargs :
+            Other keyword arguments passed to mother class.
 
         """
         super().__init__(
@@ -101,8 +103,7 @@ class PredefinedSolution(OptimisationAlgorithm):
         return self.opti_sol
 
     def _generate_opti_sol(self) -> OptiSol:
-        """Build sol from predefined settings, computing beam only if
-        needed."""
+        """Build sol from predefined settings, compute beam only if needed."""
         simulation_output = (
             self._preset_simulation_output
             or self.compute_beam_propagation(self._preset_cavity_settings)

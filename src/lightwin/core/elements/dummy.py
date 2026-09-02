@@ -14,10 +14,7 @@ class DummyElement(Element):
     is_implemented = False
 
     def __init__(
-        self,
-        line: DatLine,
-        dat_idx: int | None = None,
-        **kwargs,
+        self, line: DatLine, dat_idx: int | None = None, **kwargs
     ) -> None:
         """Force an element with null-length, with no index."""
         super().__init__(line, dat_idx, **kwargs)

@@ -1,6 +1,6 @@
 """Define some types to lighten the typing."""
 
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
 

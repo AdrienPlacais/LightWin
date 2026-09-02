@@ -144,9 +144,7 @@ class TransferMatrix:
 
             if elt is not None:
                 idx = self._element_to_index(
-                    elt=elt,
-                    pos=pos,
-                    handle_missing_elt=handle_missing_elt,
+                    elt=elt, pos=pos, handle_missing_elt=handle_missing_elt
                 )
                 val = val[idx] if val is not None else None
 

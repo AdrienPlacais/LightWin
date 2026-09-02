@@ -15,13 +15,9 @@ from lightwin.util.typing import ConfigKw
 class ConfigFileNotFoundError(FileNotFoundError):
     """Custom exception raised when the configuration file is not found."""
 
-    pass
-
 
 class InvalidTomlSyntaxError(ValueError):
     """Custom exception raised for invalid TOML syntax."""
-
-    pass
 
 
 def process_config(
@@ -231,8 +227,7 @@ def dict_to_toml(
 
 
 def _indue_overwritting(
-    toml_path: Path,
-    allow_overwrite: bool = False,
+    toml_path: Path, allow_overwrite: bool = False
 ) -> bool:
     """Ensure that ``TOML`` will not be overwritten if not wanted."""
     if not toml_path.exists():

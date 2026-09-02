@@ -42,7 +42,6 @@ from lightwin.optimisation.algorithms.simulated_annealing import (
 )
 from lightwin.optimisation.design_space.design_space import DesignSpace
 from lightwin.optimisation.objective.factory import ObjectiveFactory
-from lightwin.util.typing import OPTIMIZATION_STATUS
 
 #: Maps the ``optimisation_algorithm`` key in the ``TOML`` file to the actual
 #: :class:`.OptimisationAlgorithm` we use.
@@ -171,8 +170,7 @@ class OptimisationAlgorithmFactory:
         """
 
         def compute_beam_propagation(
-            cavity_settings: Mapping[FieldMap, CavitySettings] | None,
-            **kwargs,
+            cavity_settings: Mapping[FieldMap, CavitySettings] | None, **kwargs
         ):
             """Wrap propagation of the beam.
 

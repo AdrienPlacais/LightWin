@@ -387,9 +387,9 @@ class Accelerator:
 
         """
         original_dat_file = self.elts.files["dat_file"]
-        assert isinstance(
-            original_dat_file, Path
-        ), f"{original_dat_file = } should exist."
+        assert isinstance(original_dat_file, Path), (
+            f"{original_dat_file = } should exist."
+        )
         if beam_calculator_id is None:
             return original_dat_file
         filename = original_dat_file.name

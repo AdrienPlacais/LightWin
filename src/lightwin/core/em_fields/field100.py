@@ -56,9 +56,9 @@ class Field100(Field):
         """
         n_z, zmax, norm, f_z, n_cell = load_field_1d(path)
 
-        assert is_a_valid_1d_electric_field(
-            n_z, zmax, f_z, self._length_m
-        ), f"Error loading {path}'s field map."
+        assert is_a_valid_1d_electric_field(n_z, zmax, f_z, self._length_m), (
+            f"Error loading {path}'s field map."
+        )
 
         f_z = rescale_array(f_z, norm)
         e_z = create_1d_field_func(f_z, zmax, n_z)
@@ -72,9 +72,9 @@ class Field100(Field):
             electric field is null. Interpolation can lead to funny results!
 
         """
-        assert hasattr(
-            self, "z_0"
-        ), "You need to set the starting_position attribute of the Field."
+        assert hasattr(self, "z_0"), (
+            "You need to set the starting_position attribute of the Field."
+        )
         shifted = shifted_e_spat(self._e_z_spat_rf, z_shift=self.z_0)
         self._e_z_spat_rf = shifted
 

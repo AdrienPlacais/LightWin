@@ -37,7 +37,5 @@ class DifferentialEvolution(DownhillSimplex):
 
     def _algorithm_parameters(self) -> dict:
         """Create the ``kwargs`` for the optimisation."""
-        kwargs = {
-            "disp": True,
-        }
+        kwargs = {"disp": True}
         return kwargs

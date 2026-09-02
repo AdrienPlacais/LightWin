@@ -24,7 +24,6 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
-from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
 )

@@ -23,7 +23,6 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
-from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 from lightwin.failures.set_of_cavity_settings import SetOfCavitySettings

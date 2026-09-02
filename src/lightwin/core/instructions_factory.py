@@ -231,7 +231,7 @@ class InstructionsFactory:
                 continue
             joined = "\n".join(
                 (
-                    f"{str(x):>20}\t{str(y):<20}"
+                    f"{x!s:>20}\t{y!s:<20}"
                     for x, y in zip_longest(
                         lattices[-2], lattices[-1], fillvalue="-"
                     )

@@ -29,7 +29,7 @@ import shutil
 from abc import ABCMeta
 from collections.abc import Collection
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -271,8 +271,7 @@ class ListOfElementsFactory:
 
         dat_filecontent, instructions = (
             dat_filecontent_from_smaller_list_of_elements(
-                files_from_full_list_of_elements["elts_n_cmds"],
-                elts,
+                files_from_full_list_of_elements["elts_n_cmds"], elts
             )
         )
 

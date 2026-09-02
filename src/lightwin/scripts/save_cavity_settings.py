@@ -34,8 +34,7 @@ def save_cavity_settings(
 
 
 def _settings_as_df(
-    elts: ListOfElements,
-    nominal_cavities: Iterable[FieldMap],
+    elts: ListOfElements, nominal_cavities: Iterable[FieldMap]
 ) -> pd.DataFrame:
     """Give the settings of a single scenario as a pd df."""
     cavities = elts.l_cav

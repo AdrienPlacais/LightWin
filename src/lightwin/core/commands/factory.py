@@ -101,7 +101,6 @@ class CommandFactory:
 
         """
         self.default_field_map_folder = default_field_map_folder
-        return
 
     def run(
         self, line: DatLine, dat_idx: int | None = None, **command_kw

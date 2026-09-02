@@ -152,9 +152,9 @@ def eps_from_sigma(
 
     """
     allowed = ("zdelta", "x", "y", "x99", "y99")
-    assert (
-        phase_space_name in allowed
-    ), f"Phase-space {phase_space_name} not in {allowed = }."
+    assert phase_space_name in allowed, (
+        f"Phase-space {phase_space_name} not in {allowed = }."
+    )
 
     is_initials = False
     if isinstance(gamma_kin, float):

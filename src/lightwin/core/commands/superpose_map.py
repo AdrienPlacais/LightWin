@@ -51,7 +51,7 @@ class SuperposeMap(Command):
         element that is not a field map. It allows to consider situations where
         we field_map is not directly after the ``SUPERPOSE_MAP`` command.
 
-        Example
+        Example:
         -------
         ```
         SUPERPOSE_MAP
@@ -130,8 +130,7 @@ class SuperposeMap(Command):
                 field_map.z_0 = z_0
 
                 z_1 = z_0 + field_map.length_m
-                if z_1 > z_max:
-                    z_max = z_1
+                z_max = max(z_max, z_1)
                 z_0 = None
         return z_max
 
@@ -176,9 +175,7 @@ class SuperposeMap(Command):
         return new_instructions
 
     def _re_set_indexes(
-        self,
-        elts_after_self: Sequence[Element],
-        number_of_superposed: int,
+        self, elts_after_self: Sequence[Element], number_of_superposed: int
     ) -> None:
         """Decrement lattice numbers to take merged elements into account.
 

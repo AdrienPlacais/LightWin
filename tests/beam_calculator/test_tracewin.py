@@ -13,18 +13,17 @@ from typing import Any
 from unittest.mock import call, patch
 
 import pytest
-from tests.pytest_helpers.simulation_output import wrap_approx
 
-import lightwin.config.config_manager as config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
-from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.config import config_manager
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import AcceleratorFactory
 from lightwin.ui.workflow_setup import set_up_solvers
+from tests.pytest_helpers.simulation_output import wrap_approx
 
 params = [
     pytest.param((0,), id="TraceWin envelope"),
@@ -34,8 +33,7 @@ params = [
 
 @pytest.fixture(scope="class", params=params)
 def config(
-    request: pytest.FixtureRequest,
-    tmp_path_factory: pytest.TempPathFactory,
+    request: pytest.FixtureRequest, tmp_path_factory: pytest.TempPathFactory
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration, common to all solvers."""
     out_folder = tmp_path_factory.mktemp("tmp")
@@ -47,12 +45,8 @@ def config(
         "beam": "beam",
     }
     override = {
-        "files": {
-            "project_folder": out_folder,
-        },
-        "beam_calculator": {
-            "partran": partran,
-        },
+        "files": {"project_folder": out_folder},
+        "beam_calculator": {"partran": partran},
     }
     my_config = config_manager.process_config(
         example_config, config_keys, warn_mismatch=True, override=override
@@ -68,8 +62,7 @@ def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
 
 @pytest.fixture(scope="class")
 def accelerator(
-    solver: BeamCalculator,
-    config: dict[str, dict[str, Any]],
+    solver: BeamCalculator, config: dict[str, dict[str, Any]]
 ) -> Accelerator:
     """Create an example linac."""
     accelerator_factory = AcceleratorFactory(beam_calculators=solver, **config)
@@ -79,8 +72,7 @@ def accelerator(
 
 @pytest.fixture(scope="class")
 def simulation_output(
-    solver: BeamCalculator,
-    accelerator: Accelerator,
+    solver: BeamCalculator, accelerator: Accelerator
 ) -> SimulationOutput:
     """Init and use a solver to propagate beam in an example accelerator."""
     my_simulation_output = solver.compute(accelerator)

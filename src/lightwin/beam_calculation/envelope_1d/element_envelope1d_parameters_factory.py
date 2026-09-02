@@ -92,7 +92,7 @@ class ElementEnvelope1DParametersFactory(
             Proper instantiated subclass of
             :class:`.ElementEnvelope1DParameters`.
 
-        See also
+        See Also
         --------
         _parameters_constructor
 
@@ -105,9 +105,7 @@ class ElementEnvelope1DParametersFactory(
             "phi_s_definition": self.phi_s_definition,
         }
         single_element_envelope_1d_parameters = subclass(
-            elt=elt,
-            beam_kwargs=self.beam_kwargs,
-            **kwargs,
+            elt=elt, beam_kwargs=self.beam_kwargs, **kwargs
         )
 
         return single_element_envelope_1d_parameters

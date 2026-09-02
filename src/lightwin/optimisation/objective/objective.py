@@ -2,8 +2,8 @@
 
 import logging
 from abc import ABC, abstractmethod
-from collections.abc import Collection
-from typing import Any, Literal, Self, Sequence
+from collections.abc import Collection, Sequence
+from typing import Any, Literal, Self
 
 import numpy as np
 from numpy.typing import NDArray
@@ -144,7 +144,7 @@ class Objective(ABC):
         message += f" @elt {formatted:>5}"
 
         pos = self.get_kwargs.get("pos")
-        message += f" ({str(pos):>3}) |" if pos else "       |"
+        message += f" ({pos!s:>3}) |" if pos else "       |"
         message += f" {self.weight:>5} | "
         return message
 
@@ -175,9 +175,7 @@ class Objective(ABC):
         )
 
     def _check_get_arguments(
-        self,
-        get_key: GETTABLE_SIMULATION_OUTPUT_T,
-        get_kwargs: dict[str, Any],
+        self, get_key: GETTABLE_SIMULATION_OUTPUT_T, get_kwargs: dict[str, Any]
     ) -> tuple[GETTABLE_SIMULATION_OUTPUT_T, dict[str, Any]]:
         """Check validity of ``get_args``, ``get_kwargs``.
 
@@ -197,7 +195,7 @@ class Objective(ABC):
                 continue
             logging.warning(
                 f"{key = } is recommended to avoid undetermined behavior but "
-                f"was not found.\n{repr(self)}"
+                f"was not found.\n{self!r}"
             )
         return get_key, get_kwargs
 
@@ -830,7 +828,7 @@ def str_objectives_solved(objectives: Sequence[Objective]) -> str:
     """Return a string describing objectives results."""
     try:
         info = [
-            f"{str(objective)} | {objective.residual:+.14e}"
+            f"{objective!s} | {objective.residual:+.14e}"
             for objective in objectives
         ]
     except AttributeError as e:

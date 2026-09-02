@@ -247,7 +247,7 @@ def _update_changelog(version: str, today: str) -> None:
     if matched_date_or_flag is None:
         print(f"No date yet, appending today's date to version {version}.")
     elif matched_date_or_flag.lower() == "unreleased":
-        print(f"'unreleased' found, replacing it with today's date.")
+        print("'unreleased' found, replacing it with today's date.")
     elif matched_date_or_flag != today:
         print(
             f"Version {version} already has date {matched_date_or_flag}, but "

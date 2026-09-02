@@ -6,12 +6,11 @@ from typing import Any
 import numpy as np
 import pytest
 
-import lightwin.config.config_manager as config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
-from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.config import config_manager
 from lightwin.constants import instructions_tests_folder
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import AcceleratorFactory
@@ -258,12 +257,7 @@ def config(
         "beam_calculator": beam_calculator_key,
         "beam": "beam",
     }
-    override = {
-        "files": {
-            "project_folder": out_folder,
-            "dat_file": dat_file,
-        },
-    }
+    override = {"files": {"project_folder": out_folder, "dat_file": dat_file}}
     my_config = config_manager.process_config(
         config_path, config_keys, warn_mismatch=True, override=override
     )
@@ -339,6 +333,6 @@ def test_transfer_matrix(
         returned = returned[4:, 4:]
         expected = expected[4:, 4:]
 
-    assert np.allclose(
-        expected, returned, atol=1e-2
-    ), f"expected = \n{expected}\nbut returned =\n{returned}"
+    assert np.allclose(expected, returned, atol=1e-2), (
+        f"expected = \n{expected}\nbut returned =\n{returned}"
+    )

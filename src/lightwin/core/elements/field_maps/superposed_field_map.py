@@ -35,7 +35,7 @@ class SuperposedFieldMap(Element):
 
     """
 
-    n_attributes = range(0, 100)
+    n_attributes = range(100)
 
     def __init__(
         self,

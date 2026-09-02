@@ -5,7 +5,8 @@
 
 """
 
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -27,13 +28,11 @@ class SimulationOutputEvaluatorFactory:
     def __init__(self, ref_simulation_output: SimulationOutput) -> None:
         """Instantiate the factory."""
         self.ref_simulation_output = ref_simulation_output
-        return
 
     def run_from_kw(self, **evaluator_kw: Any) -> SimulationOutputEvaluator:
         """Create an evaluator."""
         evaluator = SimulationOutputEvaluator(
-            ref_simulation_output=self.ref_simulation_output,
-            **evaluator_kw,
+            ref_simulation_output=self.ref_simulation_output, **evaluator_kw
         )
         return evaluator
 

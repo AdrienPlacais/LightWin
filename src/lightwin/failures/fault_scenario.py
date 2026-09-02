@@ -686,8 +686,7 @@ def fault_scenario_factory(
 
 
 def _force_element_to_index_method_creation(
-    accelerator: Accelerator,
-    beam_calculator: BeamCalculator,
+    accelerator: Accelerator, beam_calculator: BeamCalculator
 ) -> None:
     """Run a first simulation to link |E| with their index.
 

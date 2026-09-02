@@ -81,9 +81,9 @@ def failed_and_compensating(
     tunable_cavities = elts.tunable_cavities
 
     if strategy == "manual":
-        assert (
-            compensating_manual is not None
-        ), f"With {strategy = } you must provide the compensating cavities."
+        assert compensating_manual is not None, (
+            f"With {strategy = } you must provide the compensating cavities."
+        )
         compensating_cavities = elts.take(
             compensating_manual, id_nature=id_nature
         )
@@ -172,10 +172,7 @@ def k_out_of_n[T](
             "Compensation without compensating cavities will raise errors."
         )
     sorted_by_position = sort_by_position(
-        elements,
-        failed_elements,
-        tie_politics,
-        shift,
+        elements, failed_elements, tie_politics, shift
     )
     n = len(failed_elements)
     altered = sorted_by_position[: n + k * n]
@@ -276,12 +273,12 @@ def manual(
     compensating_cavities: list[list[FieldMap]] | Any,
 ) -> tuple[list[list[FieldMap]], list[list[FieldMap]]]:
     """Associate failed with compensating cavities."""
-    assert is_list_of_list_of_field_maps(
-        failed_cavities
-    ), f"{failed_cavities = } is not a nested list of cavities."
-    assert is_list_of_list_of_field_maps(
-        compensating_cavities
-    ), f"{compensating_cavities = } is not a nested list of cavities."
+    assert is_list_of_list_of_field_maps(failed_cavities), (
+        f"{failed_cavities = } is not a nested list of cavities."
+    )
+    assert is_list_of_list_of_field_maps(compensating_cavities), (
+        f"{compensating_cavities = } is not a nested list of cavities."
+    )
     assert len(failed_cavities) == len(compensating_cavities), (
         f"Mismatch between {len(failed_cavities) = } and "
         f"{len(compensating_cavities) = }"

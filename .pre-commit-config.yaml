@@ -7,7 +7,6 @@ repos:
     rev: "v6.0.0"
     hooks:
       - id: check-added-large-files
-        exclude: "docs/manual/notebooks/example.ipynb"
       - id: check-case-conflict
       - id: check-docstring-first
       - id: check-executables-have-shebangs
@@ -33,18 +32,12 @@ repos:
     rev: v3.21.2
     hooks:
       - id: pyupgrade
-  - repo: https://github.com/pycqa/isort # args set in pyproject.toml
-    rev: 9.0.1
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.4
     hooks:
-      - id: isort
-        name: isort (python)
-      - id: isort
-        name: isort (cython)
-        types: [cython]
-  - repo: https://github.com/psf/black-pre-commit-mirror # args set in pyproject.toml
-    rev: 26.5.1
-    hooks:
-      - id: black
+      - id: ruff-check
+        args: [--fix, --show-fixes] #, --select, "PT006"]
+      - id: ruff-format
   # Also have options in pyproject.toml.
   - repo: https://github.com/PyCQA/docformatter
     rev: v1.7.8

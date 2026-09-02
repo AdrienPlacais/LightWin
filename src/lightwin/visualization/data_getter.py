@@ -6,9 +6,9 @@
 """
 
 import logging
-from collections.abc import Collection
+from collections.abc import Callable, Collection
 from dataclasses import dataclass
-from typing import Any, Callable, Literal, Self
+from typing import Any, Literal, Self
 
 import numpy as np
 from numpy.typing import NDArray
@@ -31,31 +31,7 @@ ERROR_REFERENCE_T = Literal[
 
 @dataclass
 class _SimData:
-    """Bundle of parallel x/y/kwargs lists for one accelerator's
-    simulations."""
-
-    x: list[NDArray[np.float64]]
-    y: list[NDArray[np.float64]]
-    kw: list[dict[str, Any]]
-
-    def __len__(self) -> int:
-        return len(self.x)
-
-    def __bool__(self) -> bool:
-        return len(self) > 0
-
-    def __iadd__(self, other: Self) -> Self:
-        """Define ``sim_data += other_simdata`` operations."""
-        self.x += other.x
-        self.y += other.y
-        self.kw += other.kw
-        return self
-
-
-@dataclass
-class _SimData:
-    """Bundle of parallel x/y/kwargs lists for one accelerator's
-    simulations."""
+    """Bundle parallel x/y/kwargs lists for one accelerator's simulations."""
 
     x: list[NDArray[np.float64]]
     y: list[NDArray[np.float64]]
@@ -109,6 +85,8 @@ def all_accelerators_data(
         :attr:`.BeamCalculator.id` (or, equivalently, a key(s) in
         :attr:`.Accelerator.simulation_outputs`). Typical values:
         ``"0_Envelope1D"`` or ``"1_TraceWin"``.
+    get_kwargs :
+        Keyword arguments passed down to :meth:`.SimulationOutput.get`.
 
     Returns
     -------
@@ -292,8 +270,7 @@ def _avoid_similar_labels(plt_kwargs: list[dict]) -> list[dict]:
 
 # Error related
 def _error_calculation_function(
-    y_axis: str,
-    error_presets: dict[str, dict[str, Any]],
+    y_axis: str, error_presets: dict[str, dict[str, Any]]
 ) -> tuple[
     Callable[[NDArray[np.float64], NDArray[np.float64]], NDArray[np.float64]],
     str,

@@ -190,7 +190,9 @@ class BeamParameters(InitialBeamParameters):
                 (
                     np.array(np.nan)
                     if v is None and none_to_nan
-                    else np.array(v) if isinstance(v, list) else v
+                    else np.array(v)
+                    if isinstance(v, list)
+                    else v
                 )
                 for v in out
             ]
@@ -218,8 +220,7 @@ class BeamParameters(InitialBeamParameters):
         return sigma
 
     def sub_sigma_in(
-        self,
-        phase_space_name: Literal["x", "y", "zdelta"],
+        self, phase_space_name: Literal["x", "y", "zdelta"]
     ) -> np.ndarray:
         r"""Give the entry :math:`\sigma` beam matrix in a single phase space.
 
@@ -354,7 +355,7 @@ class BeamParameters(InitialBeamParameters):
                     "Phase space x not defined in fixed linac. Cannot compute "
                     "transverse mismatch."
                 )
-            return None
+            return
 
         if not hasattr(self, "y"):
             if raise_missing_phase_space_error:
@@ -362,7 +363,7 @@ class BeamParameters(InitialBeamParameters):
                     "Phase space y not defined in fixed linac. Cannot compute "
                     "transverse mismatch."
                 )
-            return None
+            return
 
         if not hasattr(self.x, "mismatch_factor"):
             if raise_missing_mismatch_error:
@@ -370,7 +371,7 @@ class BeamParameters(InitialBeamParameters):
                     "Phase space x has no calculated mismatch. Cannot compute "
                     "transverse mismatch."
                 )
-            return None
+            return
 
         if not hasattr(self.y, "mismatch_factor"):
             if raise_missing_mismatch_error:
@@ -378,7 +379,7 @@ class BeamParameters(InitialBeamParameters):
                     "Phase space y has no calculated mismatch. Cannot compute "
                     "transverse mismatch."
                 )
-            return None
+            return
 
         self.t.mismatch_factor = 0.5 * (
             self.x.mismatch_factor + self.y.mismatch_factor

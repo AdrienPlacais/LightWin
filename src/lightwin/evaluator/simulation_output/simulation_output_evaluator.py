@@ -11,10 +11,10 @@
 
 import logging
 from abc import ABC
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -51,7 +51,7 @@ from lightwin.visualization.structure import plot_structure
 class SimulationOutputEvaluator(ABC):
     """A base class for all the possible types of tests.
 
-    Arguments
+    Arguments:
     ---------
     value_getter :
         A function that takes the simulation output under study as argument,
@@ -228,10 +228,7 @@ class SimulationOutputEvaluator(ABC):
         return y_data
 
     def _apply_test(
-        self,
-        x_data: NDArray,
-        y_data: NDArray | float,
-        **plot_kw: str,
+        self, x_data: NDArray, y_data: NDArray | float, **plot_kw: str
     ) -> bool | float | None:
         """Apply da testing functions.
 
@@ -267,10 +264,7 @@ class SimulationOutputEvaluator(ABC):
         plot_structure(simulation_output.elts, self._struct_ax)
 
     def _add_a_value_plot(
-        self,
-        z_data: NDArray,
-        value: NDArray | float,
-        **plot_kw: str,
+        self, z_data: NDArray, value: NDArray | float, **plot_kw: str
     ) -> None:
         """Add (treated) data to the plot."""
         assert self.main_ax is not None
@@ -360,9 +354,5 @@ def kwargs(plt_kwargs: dict[str, Any] | None) -> dict[str, Any]:
     if plt_kwargs is None:
         plt_kwargs = {}
 
-    default_kwargs = {
-        "axnum": 2,
-        "clean_fig": True,
-        "sharex": True,
-    }
+    default_kwargs = {"axnum": 2, "clean_fig": True, "sharex": True}
     return plt_kwargs | default_kwargs

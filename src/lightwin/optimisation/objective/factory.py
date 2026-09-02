@@ -703,7 +703,7 @@ class Experimental(ObjectiveFactory):
 
         last_element_of_linac = self._compensating_elements[-1]
         return [
-            self._retrieve_energy(last_element_of_linac),
+            self._retrieve_energy(last_element_of_linac)
             # self._minimize_eps(elt=last_element_of_linac),
         ]
 

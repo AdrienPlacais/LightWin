@@ -16,7 +16,6 @@ class Error(DummyCommand):
             "commands will influence the design of the linac, you should set "
             f"the design and comment this commands out.\n{self.line}"
         )
-        return
 
 
 class ErrorBeamDyn(Error):

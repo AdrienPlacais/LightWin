@@ -108,9 +108,7 @@ def _treat_single(
 
 
 def _add_linear_losses(
-    df: pd.DataFrame,
-    definition: definitions_t,
-    **kwargs: Any,
+    df: pd.DataFrame, definition: definitions_t, **kwargs: Any
 ) -> None:
     """Add a column holding linear losses in W/m."""
     match definition:
@@ -158,7 +156,6 @@ def _filter_in_range_only(
         df.where(df[COL_Z] >= z_min, inplace=True)
     if z_max is not None:
         df.where(df[COL_Z] <= z_max, inplace=True)
-    return
 
 
 def _running_mean(
@@ -291,11 +288,11 @@ def get_partran1_paths(
         folder_name = folder.name
         if not reg_compile.match(folder_name):
             if verbose:
-                print(f"\tSkipping it as it does not matches pattern.")
+                print("\tSkipping it as it does not matches pattern.")
             continue
 
         if verbose:
-            print(f"\tGot one matching pattern!")
+            print("\tGot one matching pattern!")
         filepath = _get_partran1_filepath(folder)
         folders[folder_name] = filepath
         if verbose:

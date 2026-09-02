@@ -88,22 +88,13 @@ def wrap_approx(
 
     """
     value = fix_so.get(
-        key,
-        to_numpy=to_numpy,
-        to_deg=to_deg,
-        elt=elt,
-        pos=pos,
-        **get_kwargs,
+        key, to_numpy=to_numpy, to_deg=to_deg, elt=elt, pos=pos, **get_kwargs
     )
     if ref_so is None:
         reference_value = _REFERENCE_RESULTS.get(key)
         try:
             np.testing.assert_allclose(
-                value,
-                reference_value,
-                rtol=rel,
-                atol=abs,
-                err_msg=key,
+                value, reference_value, rtol=rel, atol=abs, err_msg=key
             )
         except AssertionError as e:
             logging.critical(e)

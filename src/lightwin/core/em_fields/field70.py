@@ -33,9 +33,7 @@ class Field70(Field):
             logging.error("Cython not implemented for Field70.")
 
     def _load_fieldmap(
-        self,
-        path: Path,
-        **validity_check_kwargs,
+        self, path: Path, **validity_check_kwargs
     ) -> tuple[Callable[..., float], Any, int]:
         """Return dummy fields."""
         return null_field_1d, 60, 1

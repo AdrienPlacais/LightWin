@@ -11,10 +11,7 @@ class Drift(Element):
     n_attributes = (2, 3, 5)
 
     def __init__(
-        self,
-        line: DatLine,
-        dat_idx: int | None = None,
-        **kwargs: str,
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Check that number of attributes is valid."""
         super().__init__(line, dat_idx, **kwargs)
