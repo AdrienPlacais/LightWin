@@ -160,7 +160,10 @@ def _extract_changelog_section(
         if not found.
 
     """
-    pattern = rf"^## \[{re.escape(version)}\](?: -- (unreleased|\d{ 4}}-\d{ 2}}-\d{ 2}}))?$"
+    pattern = (
+        rf"^## \[{re.escape(version)}\]" r"(?: -- (unreleased|\d{4}-\d{2}-\d{2}))?$"
+    )
+
     lines = content.splitlines()
     for i, line in enumerate(lines):
         if match := re.match(pattern, line, re.IGNORECASE):
