@@ -126,7 +126,9 @@ def _set_project_path(
         exist_ok = True
         return project_path, exist_ok
 
-    time = datetime.datetime.now().strftime("%Y.%m.%d_%Hh%M_%Ss_%fms")
+    time = datetime.datetime.now(tz=datetime.UTC).strftime(
+        "%Y.%m.%d_%Hh%M_%Ss_%fms"
+    )
     project_path = toml_folder / time
     exist_ok = False
     return project_path, exist_ok
