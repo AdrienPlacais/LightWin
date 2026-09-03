@@ -81,11 +81,11 @@ class MatplotlibPlotter(IPlotter):
                 **plot_kwargs,
             )
             return axes
-        except TypeError as err:
+        except TypeError as e:
             if dump_no_numerical_data_to_plot:
-                logging.info(f"Dumped a Matplotlib.plot error: {err}.")
+                logging.info(f"Dumped a Matplotlib.plot error: {e}.")
                 return axes
-            raise err
+            raise
 
     def save_figure(
         self, axes: Axes | Sequence[Axes], save_path: Path

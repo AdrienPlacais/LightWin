@@ -361,7 +361,7 @@ def _plot_preset(
                 f"{x_axis}. This likely an error caused by inconsistent "
                 f"x and y data.\n{e}"
             )
-            raise e
+            raise
 
         if i == 0:
             colors = _used_colors(ax)
