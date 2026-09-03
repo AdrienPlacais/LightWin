@@ -287,29 +287,19 @@ _UNCONCATENABLE = (
 CONCATENABLE_ELTS = tuple(
     [key for key in GETTABLE_FIELD_MAP if key not in _UNCONCATENABLE]
 )
+# fmt: off
+# GETTABLE_CAVITY_SETTINGS_T without w_kin
 CONCATENABLE_ELTS_T = (
     Literal[
-        "aperture_flag", "field_map_filename", "field_map_folder", "geometry"
+        "aperture_flag", "field_map_filename", "field_map_folder", "geometry",
+        "acceptance_energy", "field", "freq_cavity_mhz", "k_e", "omega_0_rf",
+        "acceptance_phi", "phi_ref", "phi_rf", "phi_s_func", "reference",
+        "rf_field", "status", "v_cav_mv",
     ]
     | GETTABLE_ELT_T
-    # GETTABLE_CAVITY_SETTINGS_T without w_kin
-    | Literal[
-        "acceptance_energy",
-        "field",
-        "freq_cavity_mhz",
-        "k_e",
-        "omega_0_rf",
-        "acceptance_phi",
-        "phi_ref",
-        "phi_rf",
-        "phi_s_func",
-        "reference",
-        "rf_field",
-        "status",
-        "v_cav_mv",
-    ]
     | REFERENCE_PHASES_T
 )
+# fmt: on
 
 #: Attributes that can be extracted with :meth:`.ListOfElements.get` method.
 GETTABLE_ELTS = (
