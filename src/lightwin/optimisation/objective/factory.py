@@ -13,7 +13,7 @@ import logging
 from abc import ABC, abstractmethod
 from collections.abc import Collection
 from dataclasses import dataclass
-from typing import Any, Literal
+from typing import Any, ClassVar, Literal
 
 import numpy as np
 from numpy.typing import NDArray
@@ -62,8 +62,8 @@ class ObjectiveFactory(ABC):
     """
 
     #: List of positions telling where objectives should be evaluated.
-    objective_position_preset: list[POSITION_TO_INDEX_T]
-    compensation_zone_override_settings = {
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]]
+    compensation_zone_override_settings: ClassVar[dict[str, bool]] = {
         "full_lattices": False,
         "full_linac": False,
         "start_at_beginning_of_linac": False,
@@ -176,7 +176,9 @@ class CorrectorAtExit(ObjectiveFactory):
 
     """
 
-    objective_position_preset = ["end of last altered lattice"]
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
+        "end of last altered lattice"
+    ]
 
     def get_objectives(self) -> list[Objective]:
         """Give adapted objectives.
@@ -265,7 +267,9 @@ class EnergyMismatch(ObjectiveFactory):
 
     """
 
-    objective_position_preset = ["end of last altered lattice"]
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
+        "end of last altered lattice"
+    ]
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
@@ -322,7 +326,9 @@ class EnergyPhaseMismatch(ObjectiveFactory):
 
     """
 
-    objective_position_preset = ["end of last altered lattice"]
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
+        "end of last altered lattice"
+    ]
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
@@ -402,7 +408,9 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
 
     """
 
-    objective_position_preset = ["end of last altered lattice"]
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
+        "end of last altered lattice"
+    ]
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
@@ -529,7 +537,7 @@ class EnergySeveralMismatches(ObjectiveFactory):
 
     """
 
-    objective_position_preset = [
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
         "end of last altered lattice",
         "one lattice after last altered lattice",
     ]
@@ -587,7 +595,7 @@ class RegularEnvelope(ObjectiveFactory):
 
     """
 
-    compensation_zone_override_settings = {
+    compensation_zone_override_settings: ClassVar[dict[str, bool]] = {
         "full_lattices": True,
         "full_linac": False,
         "start_at_beginning_of_linac": False,
@@ -676,7 +684,9 @@ class Spiral2(CorrectorAtExit):
 
 
 class Experimental(ObjectiveFactory):
-    objective_position_preset = ["end of last altered lattice"]
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
+        "end of last altered lattice"
+    ]
 
     def get_objectives(self) -> list[Objective]:
         """Give adapted objectives.

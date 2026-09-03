@@ -1,6 +1,6 @@
 """Create some generic evaluators for :class:`.SimulationOutput.`"""
 
-from typing import Any
+from typing import Any, ClassVar
 
 import numpy as np
 import pandas as pd
@@ -22,7 +22,7 @@ class AcceptanceEnergy(ISimulationOutputEvaluator):
 
     _x_quantity = "elt_idx"
     _y_quantity = "acceptance_energy"
-    _plot_kwargs = {"marker": "o"}
+    _plot_kwargs: ClassVar[dict[str, Any]] = {"marker": "o"}
     _nan_in_data_is_allowed = True
 
     def __init__(
@@ -248,7 +248,7 @@ class SynchronousPhases(ISimulationOutputEvaluator):
 
     _x_quantity = "elt_idx"
     _y_quantity = "phi_s"
-    _plot_kwargs = {"marker": "o"}
+    _plot_kwargs: ClassVar[dict[str, Any]] = {"marker": "o"}
     _nan_in_data_is_allowed = True
 
     def __init__(

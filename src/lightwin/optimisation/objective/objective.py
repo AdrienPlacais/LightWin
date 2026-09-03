@@ -3,7 +3,7 @@
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Collection, Sequence
-from typing import Any, Literal, Self
+from typing import Any, ClassVar, Literal, Self
 
 import numpy as np
 from numpy.typing import NDArray
@@ -38,7 +38,11 @@ class Objective(ABC):
     _gettable: Collection[str] = GETTABLE_SIMULATION_OUTPUT
 
     #: get_kwargs that should raise a warning if they are not present.
-    _advised_get_kwargs: set[str] = {"elt", "pos", "to_numpy"}
+    _default_advised_get_kwargs: ClassVar[set[str]] = {
+        "elt",
+        "pos",
+        "to_numpy",
+    }
 
     def __init__(
         self,
@@ -77,6 +81,7 @@ class Objective(ABC):
             A longer string to explain the objective.
 
         """
+        self._advised_get_kwargs = set(self._default_advised_get_kwargs)
         if "phi" in get_key:
             self._advised_get_kwargs.add("to_deg")
         #: Short string describing the objective.
@@ -460,10 +465,7 @@ class MinimizeVariation(Objective):
         return self.position_nature() + f"{'Minimize std': ^21}"
 
     def _check_get_arguments(
-        self,
-        get_key: GETTABLE_SIMULATION_OUTPUT_T,
-        get_kwargs: dict[str, Any],
-        advised_keys: list[str] = ["to_numpy"],
+        self, get_key: GETTABLE_SIMULATION_OUTPUT_T, get_kwargs: dict[str, Any]
     ) -> tuple[GETTABLE_SIMULATION_OUTPUT_T, dict[str, Any]]:
         """Check validity of ``get_args``, ``get_kwargs``.
 
@@ -486,9 +488,7 @@ class MinimizeVariation(Objective):
                 "You must provide 'pos' to indicate, in each element, where "
                 "the quantity should be taken."
             )
-        return super()._check_get_arguments(
-            get_key, get_kwargs, advised_keys=advised_keys
-        )
+        return super()._check_get_arguments(get_key, get_kwargs)
 
     def _compute_residuals(
         self, objective_value: list[float] | NDArray[np.float64]
@@ -652,7 +652,7 @@ class QuantityIsBetween(Objective):
 class RemainBelow(Objective):
     """Maximum of quantity must remain below some value."""
 
-    _advised_get_kwargs: set[str] = {"elt", "to_numpy"}
+    _default_advised_get_kwargs: ClassVar[set[str]] = {"elt", "to_numpy"}
 
     def __init__(
         self,

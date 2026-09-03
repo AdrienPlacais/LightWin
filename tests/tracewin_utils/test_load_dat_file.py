@@ -19,7 +19,7 @@ from lightwin.tracewin_utils.line import DatLine
 class TestLoadDatFile:
     """Ensure that the ``.dat`` file will be correctly loaded."""
 
-    lines = [
+    lines = (
         "FIELD_MAP_PATH field_maps_1D",
         "LATTICE 10 0",
         "FREQ 352.2",
@@ -35,7 +35,7 @@ class TestLoadDatFile:
         "DRIFT 150 100 0 0 0",
         "QUAD 200 5.77341 100 0 0 0 0 0 0",
         "DRIFT 150 100 0 0 0",
-    ]
+    )
     idx_fm1 = 8
     idx_fm2 = 10
     line_adj_phase = "ADJUST 42 3 1 -180 180"

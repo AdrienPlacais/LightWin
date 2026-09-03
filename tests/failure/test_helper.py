@@ -18,8 +18,13 @@ from lightwin.util.helper import chunks
 class TestStrategy:
     """Test the different strategies."""
 
-    my_list = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-    my_nested_list = [x for x in chunks(my_list, n_size=2)]
+    @property
+    def my_list(self) -> list[str]:
+        return ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+
+    @property
+    def my_nested_list(self) -> list[list[str]]:
+        return [x for x in chunks(self.my_list, n_size=2)]
 
     def test_k_out_of_n_down_single_fail(self) -> None:
         """Check that our sorting works."""

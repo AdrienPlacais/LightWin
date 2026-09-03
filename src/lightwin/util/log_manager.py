@@ -17,7 +17,7 @@ import subprocess
 import sys
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
-from typing import Literal
+from typing import ClassVar, Literal
 
 LOG_LEVEL_T = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 LOG_LEVEL = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
@@ -85,7 +85,7 @@ def _file_handler(
 class LogFormatter(logging.Formatter):
     """Logging formatter supporting colorized output."""
 
-    COLOR_CODES = {
+    COLOR_CODES: ClassVar[dict[int, str]] = {
         # bright/bold magenta
         logging.CRITICAL: "\033[1;35m",
         # bright/bold red

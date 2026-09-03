@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from importlib import import_module
-from typing import Any
+from typing import Any, ClassVar
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
@@ -33,7 +33,7 @@ class ConfigMapDirective(Directive):
     """A directive to display key-value pairs, value beeing a class role."""
 
     required_arguments = 1
-    option_spec = {
+    option_spec: ClassVar = {
         "value-header": directives.unchanged,
         "keys-header": directives.unchanged,
     }
@@ -101,7 +101,7 @@ class ConfigKeysDirective(Directive):
     """Render dictionary keys as a one-column table."""
 
     required_arguments = 1
-    option_spec = {
+    option_spec: ClassVar = {
         "header": directives.unchanged,
         "n_cols": directives.unchanged,
     }
