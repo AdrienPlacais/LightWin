@@ -169,8 +169,6 @@ def gather[T](
             fun_sort(failed_elements=failed) for failed in failed_gathered
         ]
 
-        # Set a counter to exit the 'for' loop when all faults are gathered
-        i = 0
         n_combinations = len(altered_gathered)
         if n_combinations <= 1:
             flag_gathered = True
@@ -185,10 +183,10 @@ def gather[T](
 
         # Now we look every list of required compensating cavities, and
         # look for faults that require the same compensating cavities
-        for (idx1, altered1), (idx2, altered2) in itertools.combinations(
-            enumerate(altered_gathered), r_comb
+        for i, ((idx1, altered1), (idx2, altered2)) in enumerate(
+            itertools.combinations(enumerate(altered_gathered), r_comb),
+            start=1,
         ):
-            i += 1
             common = list(set(altered1) & set(altered2))
             # If at least one cavity on common, gather the two
             # corresponding fault and restart the whole process
