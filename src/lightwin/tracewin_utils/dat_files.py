@@ -158,9 +158,7 @@ def _is_needed_element(
     """Tell if the instruction is an element that we must keep."""
     if not isinstance(instruction, Element | Dummy):
         return False
-    if instruction.idx["dat_idx"] in indexes_to_keep:
-        return True
-    return False
+    return instruction.idx["dat_idx"] in indexes_to_keep
 
 
 def _is_useful_command(
@@ -169,9 +167,7 @@ def _is_useful_command(
     """Tell if the current command has an influence on our elements."""
     if not isinstance(instruction, Command):
         return False
-    if instruction.concerns_one_of(indexes_to_keep):
-        return True
-    return False
+    return bool(instruction.concerns_one_of(indexes_to_keep))
 
 
 def export_dat_filecontent(

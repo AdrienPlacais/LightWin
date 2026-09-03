@@ -546,9 +546,7 @@ def phase_space_name_hidden_in_key(key: str) -> bool:
         return False
 
     to_test = key.split("_")
-    if to_test[-1] in PHASE_SPACES:
-        return True
-    return False
+    return to_test[-1] in PHASE_SPACES
 
 
 def separate_var_from_phase_space(key: str) -> tuple[str, PHASE_SPACE_T]:

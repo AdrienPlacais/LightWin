@@ -36,7 +36,7 @@ repos:
     rev: v0.16.4
     hooks:
       - id: ruff-check
-        args: [--fix, --show-fixes, --select, "C414"]
+        args: [--fix, --show-fixes, --select, "SIM103"]
         # args: [--fix, --show-fixes]
       - id: ruff-format
   # Also have options in pyproject.toml.

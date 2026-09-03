@@ -77,9 +77,7 @@ class FieldMap(Element):
     @property
     def is_accelerating(self) -> bool:
         """Tell if the cavity is working."""
-        if self.status == "failed":
-            return False
-        return True
+        return self.status != "failed"
 
     @property
     def is_altered(self) -> bool:

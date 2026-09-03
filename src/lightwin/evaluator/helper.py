@@ -19,9 +19,7 @@ def need_to_resample(value: value_t, ref_value: ref_value_t) -> bool:
     assert isinstance(value, np.ndarray) and isinstance(ref_value, np.ndarray)
     if value.shape == () or ref_value.shape == ():
         return False
-    if value.shape == ref_value.shape:
-        return False
-    return True
+    return value.shape != ref_value.shape
 
 
 def return_value_should_be_plotted(partial_function: Callable) -> bool:

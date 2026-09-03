@@ -172,9 +172,7 @@ def _needs_space_between(prev: str, token: str) -> bool:
         return False
     if token and token[0] in CLOSE_PUNCT:
         return False
-    if prev and prev[-1] in OPEN_PUNCT:
-        return False
-    return True
+    return not (prev and prev[-1] in OPEN_PUNCT)
 
 
 def _split_normal_word(word: str, max_width: int) -> list[str]:
