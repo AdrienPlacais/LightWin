@@ -341,7 +341,7 @@ class FieldMap(Element):
             current object.
 
         """
-        phase, abs_phase_flag, reference = self._phase_for_line(which_phase)
+        phase, abs_phase_flag, _reference = self._phase_for_line(which_phase)
         k_e = self.cavity_settings.k_e
         k_b = k_e
         for value, position in zip(

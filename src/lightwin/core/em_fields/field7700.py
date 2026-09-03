@@ -52,7 +52,7 @@ class Field7700(Field100):
             Number of cell for cavities.
 
         """
-        n_z, zmax, n_x, xmin, xmax, n_y, ymin, ymax, norm, field_values = (
+        n_z, zmax, n_x, _xmin, _xmax, n_y, _ymin, _ymax, norm, field_values = (
             load_field_3d(path)
         )
 
