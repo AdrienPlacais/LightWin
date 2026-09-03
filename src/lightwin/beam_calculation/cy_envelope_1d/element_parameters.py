@@ -51,7 +51,7 @@ class ElementCyEnvelope1DParameters(ElementEnvelope1DParameters):
         """Set the actually useful parameters."""
         if transf_mat_function is None:
             transf_mat_function = self._proper_transfer_matrix_func("Drift")
-        return super().__init__(
+        super().__init__(
             length_m=length_m,
             n_steps=n_steps,
             beam_kwargs=beam_kwargs,
@@ -112,7 +112,7 @@ class FieldMapCyEnvelope1DParameters(
         **kwargs: str | int,
     ) -> None:
         """Set the name of the field map and init base class."""
-        return super().__init__(
+        super().__init__(
             elt=elt,
             method=method,
             n_steps_per_cell=n_steps_per_cell,

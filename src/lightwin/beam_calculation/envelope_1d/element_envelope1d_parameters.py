@@ -178,7 +178,7 @@ class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
         **kwargs: str | int,
     ) -> None:
         """Create the specific parameters for a drift."""
-        return super().__init__(
+        super().__init__(
             length_m=elt.length_m,
             n_steps=n_steps,
             beam_kwargs=beam_kwargs,
@@ -598,7 +598,7 @@ class DummyEnvelope1DParameters(ElementEnvelope1DParameters):
         **kwargs: str | int,
     ) -> None:
         """Create no specific parameters."""
-        return super().__init__(
+        super().__init__(
             length_m=elt.length_m,
             n_steps=n_steps,
             beam_kwargs=beam_kwargs,

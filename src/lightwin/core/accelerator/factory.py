@@ -645,7 +645,7 @@ class NoFault(AcceleratorFactory):
             DeprecationWarning,
             stacklevel=2,
         )
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def run(self, *args, **kwargs) -> Accelerator:
         return self.create_reference()
@@ -666,7 +666,7 @@ class WithFaults(AcceleratorFactory):
             stacklevel=2,
         )
         self._wtf = wtf
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def run_all(self, *args, **kwargs) -> list[Accelerator]:
         reference = self.create_reference()

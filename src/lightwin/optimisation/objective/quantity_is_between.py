@@ -18,4 +18,4 @@ class QuantityIsBetween(_QuantityIsBetween):
             "QuantityIsBetween has moved to "
             "lightwin.optimisation.objective, please update your import."
         )
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)

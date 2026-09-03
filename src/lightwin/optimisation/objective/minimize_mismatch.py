@@ -17,4 +17,4 @@ class MinimizeMismatch(_MinimizeMismatch):
             "MinimizeMismatch has moved to "
             "lightwin.optimisation.objective, please update your import."
         )
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)

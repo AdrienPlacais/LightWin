@@ -25,7 +25,7 @@ class SetSyncPhase(Command):
         self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Instantiate command."""
-        return super().__init__(line, dat_idx)
+        super().__init__(line, dat_idx)
 
     def set_influenced_elements(
         self, instructions: Sequence[Instruction], **kwargs: float

@@ -18,4 +18,4 @@ class MinimizeDifferenceWithRef(_MinimizeDifferenceWithRef):
             "MinimizeDifferenceWithRef has moved to "
             "lightwin.optimisation.objective, please update your import."
         )
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)

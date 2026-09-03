@@ -283,7 +283,7 @@ class _Preset(DesignSpaceFactory):
                 "`constraints_names` was given but will be disregarded."
             )
 
-        return super().__init__(
+        super().__init__(
             variables_names=self._preset_variables,
             constraints_names=self._preset_constraints,
             **design_space_kw,
