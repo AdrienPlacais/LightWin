@@ -408,8 +408,10 @@ def _spiral2_transverse_matching_instructions(
     fault = fault_scenario[0]
     fix_elts = fault_scenario.fix_acc.elts
     altered = fault.compensating_elements + fault.failed_elements
-    altered_lattices_idx = set(sorted([elt.idx["lattice"] for elt in altered]))
-    altered_lattices = [fix_elts.by_lattice[i] for i in altered_lattices_idx]
+    altered_lattices_idx = {elt.idx["lattice"] for elt in altered}
+    altered_lattices = sorted(
+        [fix_elts.by_lattice[i] for i in altered_lattices_idx]
+    )
 
     first_altered_lattice_idx = min(altered_lattices_idx)
     diag_pos_for_steerers, adjusts_steerer = (), ()
