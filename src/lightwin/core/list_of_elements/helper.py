@@ -50,7 +50,7 @@ def is_list_of_list_of_field_maps(
     return all(is_list_of(sub_elts, FieldMap) for sub_elts in elts)
 
 
-def filter_out(
+def filter_out[ListOfElements](
     elts: ListOfElements | Sequence[Element] | Sequence[Sequence[Element]],
     to_exclude: tuple[type],
 ) -> Any:
@@ -73,7 +73,7 @@ def filter_out(
     return out
 
 
-def filter_elts(
+def filter_elts[ListOfElements, T](
     elts: ListOfElements | Sequence[Element], type_to_check: type[T]
 ) -> list[T]:
     """Filter elements according to their type.
@@ -88,7 +88,7 @@ def filter_elts(
 filter_cav = partial(filter_elts, type_to_check=FieldMap)
 
 
-def elt_at_this_s_idx(
+def elt_at_this_s_idx[ListOfElements](
     elts: ListOfElements | Sequence[Element],
     s_idx: int,
     show_info: bool = False,
@@ -122,7 +122,7 @@ def elt_at_this_s_idx(
     return None
 
 
-def equivalent_elt_idx(
+def equivalent_elt_idx(  # noqa: UP047
     elts: ListOfElements | list[Element], elt: Element | str | GET_ELT_ARG_T
 ) -> int:
     """Return the index of element from ``elts`` corresponding to ``elt``.
@@ -170,17 +170,17 @@ def equivalent_elt_idx(
 
 
 @overload
-def equivalent_elt(
+def equivalent_elt[ListOfElements](
     elts: ListOfElements | list[Element] | list[FieldMap], elt: FieldMap
 ) -> FieldMap: ...
 @overload
-def equivalent_elt(
+def equivalent_elt[ListOfElements](
     elts: ListOfElements | list[Element] | list[FieldMap],
     elt: Element | str | GET_ELT_ARG_T,
 ) -> Element: ...
 
 
-def equivalent_elt(
+def equivalent_elt[ListOfElements](
     elts: ListOfElements | list[Element] | list[FieldMap],
     elt: Element | str | FieldMap | GET_ELT_ARG_T,
 ) -> Element | FieldMap:

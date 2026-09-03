@@ -130,7 +130,7 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
         return ordered_cav, ordered_settings
 
 
-def _get_settings(
+def _get_settings[FieldMap](
     cavity: FieldMap,
     compensating_cavity_settings: Mapping[FieldMap, CavitySettings],
     optimization_status: OPTIMIZATION_STATUS,
