@@ -56,7 +56,7 @@ def limits_given_in_functoolspartial_args(
 
     limits = [
         keywords[key]
-        for key in keywords.keys()
+        for key in keywords
         if key in ["lower_limit", "upper_limit", "objective_value"]
     ]
     assert len(limits) in (1, 2)
