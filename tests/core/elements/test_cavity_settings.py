@@ -56,7 +56,7 @@ def test_abs_to_rel_missing_phi_rf():
     """Test calculation of phi abs -> rel, but phi_rf misses."""
     settings = MockCavitySettings(phi=3, reference="phi_0_abs")
     with pytest.raises(MissingAttributeError):
-        settings.phi_0_rel
+        _ = settings.phi_0_rel
 
 
 def test_rel_to_abs():
@@ -70,7 +70,7 @@ def test_rel_to_abs_missing_phi_rf():
     """Test calculation of phi rel -> abs, but phi_rf misses."""
     settings = MockCavitySettings(phi=3, reference="phi_0_rel")
     with pytest.raises(MissingAttributeError):
-        settings.phi_0_abs
+        _ = settings.phi_0_abs
 
 
 def test_rel_to_synch():

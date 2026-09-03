@@ -8,6 +8,11 @@
     Similar to synchronous phase, allow for V_cav to be "master" instead of
     k_e.
 
+.. todo::
+   ``phi_ref`` property does several things. Maybe we could refactor and create
+   a method like ``_ensure_phi_ref_computable`` that would raise the
+   ``MissingAttributeError``?
+
 See Also
 --------
 :class:`.Field`
@@ -441,7 +446,7 @@ class CavitySettings:
             return
 
         try:
-            self.phi_ref
+            _ = self.phi_ref
         except MissingAttributeError as e:
             raise MissingAttributeError(
                 f"The new reference phase ({reference}) cannot be calculated."
@@ -811,7 +816,7 @@ class CavitySettings:
         if hasattr(self, "_v_cav_mv"):
             return self._v_cav_mv
         try:
-            self.phi_s
+            _ = self.phi_s
             return self._v_cav_mv
         except MissingAttributeError as e:
             raise MissingAttributeError(
