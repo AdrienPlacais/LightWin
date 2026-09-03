@@ -95,7 +95,7 @@ class DesignSpace:
 
     def __str__(self) -> str:
         """Give nice output of the variables and constraints."""
-        return "\n\n".join((self._str_variables(), self._str_constraints()))
+        return f"{self._str_variables()}\n\n{self._str_constraints()}"
 
     def _str_variables(self) -> str:
         """Generate information on the variables that were created."""

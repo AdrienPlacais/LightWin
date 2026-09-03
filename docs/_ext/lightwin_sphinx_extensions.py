@@ -24,7 +24,7 @@ class UnitRole(SphinxRole):
     """
 
     def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
-        text = "".join((r"\mathrm{", self.text, r"}"))
+        text = f"\\mathrm{{{self.text}}}"
         node = nodes.math(text=text)
         return [node], []
 
