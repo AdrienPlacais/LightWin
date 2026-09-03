@@ -24,7 +24,7 @@ def is_list_of(elts: Sequence, type_to_check: type) -> TypeGuard[type]:
     """Check that all items of ``elts`` are of type ``type_to_check``."""
     if not hasattr(elts, "__iter__"):
         return False
-    return all([isinstance(elt, type_to_check) for elt in elts])
+    return all(isinstance(elt, type_to_check) for elt in elts)
 
 
 def is_list_of_elements(elts: Sequence) -> TypeGuard[list[Element]]:
@@ -40,14 +40,14 @@ def is_list_of_list_of_elements(
     elts: Sequence,
 ) -> TypeGuard[list[list[Element]]]:
     """Check that input is a nested list of |E|."""
-    return all([is_list_of_elements(sub_elts) for sub_elts in elts])
+    return all(is_list_of_elements(sub_elts) for sub_elts in elts)
 
 
 def is_list_of_list_of_field_maps(
     elts: Sequence,
 ) -> TypeGuard[list[list[FieldMap]]]:
     """Check that input is a nested list of |E|."""
-    return all([is_list_of(sub_elts, FieldMap) for sub_elts in elts])
+    return all(is_list_of(sub_elts, FieldMap) for sub_elts in elts)
 
 
 def filter_out(

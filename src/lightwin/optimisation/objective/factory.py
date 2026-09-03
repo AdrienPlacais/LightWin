@@ -107,7 +107,7 @@ class ObjectiveFactory(ABC):
 
         self._limits_from_design_space_kw = limits_from_design_space_kw
 
-        assert all([elt.can_be_retuned for elt in self._compensating_elements])
+        assert all(elt.can_be_retuned for elt in self._compensating_elements)
         #: List of elements were an objective is evaluated
         self._objective_elements: list[Element]
         self.elts_of_compensation_zone, self._objective_elements = (

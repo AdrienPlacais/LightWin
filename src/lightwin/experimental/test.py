@@ -30,7 +30,7 @@ def assert_are_field_maps(elements: Sequence[Element], detail: str) -> None:
         maps.
 
     """
-    are_all = all([isinstance(element, FieldMap) for element in elements])
+    are_all = all(isinstance(element, FieldMap) for element in elements)
     if not are_all:
         msg = "At least one element here is not a FieldMap. While this "
         msg += "should be possible, implementation is not realized yet. More "

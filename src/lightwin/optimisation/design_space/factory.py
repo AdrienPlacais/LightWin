@@ -78,7 +78,7 @@ class DesignSpaceFactory(ABC):
         self, compensating_elements: Collection[Element]
     ) -> None:
         """Check that given elements can be retuned."""
-        assert all([elt.can_be_retuned for elt in compensating_elements])
+        assert all(elt.can_be_retuned for elt in compensating_elements)
 
     def _instantiate_variables(
         self,

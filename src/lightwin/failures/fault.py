@@ -68,11 +68,9 @@ class Fault:
 
         """
         self.broken_elts = broken_elts
-        assert all([element.can_be_retuned for element in failed_elements])
+        assert all(element.can_be_retuned for element in failed_elements)
         self.failed_elements = tuple(failed_elements)
-        assert all(
-            [element.can_be_retuned for element in compensating_elements]
-        )
+        assert all(element.can_be_retuned for element in compensating_elements)
         self.compensating_elements = tuple(compensating_elements)
 
         self.reference_elements = tuple(
