@@ -40,8 +40,8 @@ repos:
             --fix,
             --show-fixes,
             # --unsafe-fixes,
-            # --select, # lla
-            # "ANN001",
+            --select, # lla
+            "D102",
           ]
       - id: ruff-format
   # Also have options in pyproject.toml.

@@ -183,6 +183,8 @@ class FieldMap(Element):
             Name of the desired attributes.
         to_numpy :
             If you want the list output to be converted to a np.ndarray.
+        none_to_nan :
+            Whether None should be converted to NaN.
         **kwargs :
             Other arguments passed to recursive getter.
 
@@ -332,8 +334,12 @@ class FieldMap(Element):
         ----------
         which_phase :
             Which phase should be put in the output ``DAT``.
+        args :
+            Additional arguments passed to :meth:`.Element.to_line`.
         round :
             Rounding numbers in exported line.
+        kwargs :
+            Additional arguments passed to :meth:`.Element.to_line`.
 
         Returns
         -------

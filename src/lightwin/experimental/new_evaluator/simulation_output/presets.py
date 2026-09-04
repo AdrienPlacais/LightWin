@@ -1,4 +1,4 @@
-"""Create some generic evaluators for :class:`.SimulationOutput.`"""
+"""Create some generic evaluators for :class:`.SimulationOutput`."""
 
 from typing import Any, ClassVar
 
@@ -104,6 +104,7 @@ class EnvelopePhiW(ISimulationOutputEvaluator):
         fignum: int,
         plotter: MatplotlibPlotter | None = None,
     ) -> None:
+        """Instantiate object."""
         super().__init__(reference, fignum, plotter)
         self._max = max_envelope
 
@@ -224,10 +225,6 @@ class PowerLoss(ISimulationOutputEvaluator):
     def _markdown(self) -> str:
         return f"Accumulated {super().markdown}"
 
-    @property
-    def ref_xdata(self) -> NDArray[np.float64]:
-        return super().ref_xdata
-
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
         return f"{self._markdown} < {self._max:.2f}W"
@@ -282,6 +279,7 @@ class TransverseEnvelopeX(ISimulationOutputEvaluator):
         fignum: int,
         plotter: MatplotlibPlotter | None = None,
     ) -> None:
+        """Instantiate object."""
         super().__init__(reference, fignum, plotter)
         self._max = max_envelope
 
@@ -302,6 +300,7 @@ class TransverseEnvelopeY(ISimulationOutputEvaluator):
         fignum: int,
         plotter: MatplotlibPlotter | None = None,
     ) -> None:
+        """Instantiate object."""
         super().__init__(reference, fignum, plotter)
         self._max = max_envelope
 

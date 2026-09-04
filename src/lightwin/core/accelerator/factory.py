@@ -89,6 +89,7 @@ class AcceleratorFactory:
 
     @property
     def pickler(self) -> MyPickler:
+        """Get the pickler."""
         if self._pickler is None:
             self._pickler = MyCloudPickler()
         return self._pickler
@@ -642,6 +643,7 @@ class NoFault(AcceleratorFactory):
     """
 
     def __init__(self, *args, **kwargs) -> None:
+        """Instantiate object."""
         warn(
             "The class NoFault is deprecated. Prefer using AcceleratorFactory.",
             DeprecationWarning,
@@ -650,6 +652,7 @@ class NoFault(AcceleratorFactory):
         super().__init__(*args, **kwargs)
 
     def run(self, *args, **kwargs) -> Accelerator:
+        """Create accelerator."""
         return self.create_reference()
 
 
@@ -662,6 +665,7 @@ class WithFaults(AcceleratorFactory):
     """
 
     def __init__(self, *args, wtf: dict[str, Any], **kwargs) -> None:
+        """Instantiate object."""
         warn(
             "The class WithFaults is deprecated. Prefer using AcceleratorFactory.",
             DeprecationWarning,
@@ -671,6 +675,7 @@ class WithFaults(AcceleratorFactory):
         super().__init__(*args, **kwargs)
 
     def run_all(self, *args, **kwargs) -> list[Accelerator]:
+        """Create all the accelerators."""
         reference = self.create_reference()
         n_objects = len(self._wtf["failed"])
         return [reference] + self.create_failed(n_objects)

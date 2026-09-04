@@ -20,10 +20,12 @@ class TestStrategy:
 
     @property
     def my_list(self) -> list[str]:
+        """Set a dummy list."""
         return ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 
     @property
     def my_nested_list(self) -> list[list[str]]:
+        """Dummy nested list."""
         return [x for x in chunks(self.my_list, n_size=2)]
 
     def test_k_out_of_n_down_single_fail(self) -> None:

@@ -264,8 +264,7 @@ class MinimizeDifferenceWithRef(Objective):
         reference: SimulationOutput,
         descriptor: str | None = None,
     ) -> None:
-        """Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        """Set complementary :meth:`.SimulationOutput.get` flags.
 
         Parameters
         ----------
@@ -327,8 +326,7 @@ class MinimizeMismatch(Objective):
         reference: SimulationOutput,
         descriptor: str | None = None,
     ) -> None:
-        """Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        """Set complementary :meth:`.SimulationOutput.get` flags.
 
         Parameters
         ----------
@@ -383,6 +381,7 @@ class MinimizeMismatch(Objective):
         )
 
     def evaluate(self, simulation_output: SimulationOutput) -> float:
+        """Compute objective value."""
         twiss_fix = self._twiss_getter(simulation_output)
         return self._compute_residuals(twiss_fix)
 
@@ -418,8 +417,7 @@ class MinimizeVariation(Objective):
         descriptor: str | None = None,
         **kwargs,
     ) -> None:
-        """Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        """Set complementary :meth:`.SimulationOutput.get` flags.
 
         Note
         ----
@@ -510,8 +508,7 @@ class QuantityIsBetween(Objective):
         descriptor: str | None = None,
         loss_function: str | None = None,
     ) -> None:
-        """Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        """Set complementary :meth:`.SimulationOutput.get` flags.
 
         Parameters
         ----------
@@ -532,6 +529,8 @@ class QuantityIsBetween(Objective):
         loss_function :
             Indicates how the residuals are handled when the quantity is
             outside the limits. Currently not implemented.
+        descriptor :
+            A longer string to explain the objective.
 
         """
         self.ideal_value: tuple[float, float]
@@ -558,8 +557,7 @@ class QuantityIsBetween(Objective):
         descriptor: str | None = None,
         loss_function: str | None = None,
     ) -> Self:
-        r"""Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        r"""Set complementary :meth:`.SimulationOutput.get` flags.
 
         Parameters
         ----------
@@ -584,6 +582,8 @@ class QuantityIsBetween(Objective):
         loss_function :
             Indicates how the residuals are handled when the quantity is
             outside the limits. Currently not implemented.
+        descriptor :
+            A longer string to explain the objective.
 
         """
         assert relative_limits[0] <= 100.0 and relative_limits[1] >= 100.0, (
@@ -664,8 +664,7 @@ class RemainBelow(Objective):
         descriptor: str | None = None,
         loss_function: str | None = None,
     ) -> None:
-        """Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        """Set complementary :meth:`.SimulationOutput.get` flags.
 
         Parameters
         ----------
@@ -686,6 +685,8 @@ class RemainBelow(Objective):
         loss_function :
             Indicates how the residuals are handled when the quantity is
             outside the limits. Currently not implemented.
+        descriptor :
+            A longer string to explain the objective.
 
         """
         self.ideal_value: float
@@ -777,8 +778,7 @@ class RetrieveArbitrary(Objective):
         ideal_value: float,
         descriptor: str | None = None,
     ) -> None:
-        """Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        """Set complementary :meth:`.SimulationOutput.get` flags.
 
         Parameters
         ----------

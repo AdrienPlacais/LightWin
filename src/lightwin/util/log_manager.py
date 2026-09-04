@@ -101,10 +101,12 @@ class LogFormatter(logging.Formatter):
     RESET_CODE = "\033[0m"
 
     def __init__(self, color: bool, *args, **kwargs) -> None:
+        """Init the object."""
         super().__init__(*args, **kwargs)
         self.color = color
 
     def format(self, record: logging.LogRecord, *args, **kwargs) -> str:
+        """Format a log entry."""
         if self.color and record.levelno in self.COLOR_CODES:
             record.color_on = self.COLOR_CODES[record.levelno]
             record.color_off = self.RESET_CODE
@@ -157,8 +159,8 @@ def set_up_logging(
     return True
 
 
-def main():
-    """Main function."""
+def main() -> Literal[0, 1]:
+    """Set up logging."""
     if not set_up_logging(
         package_name="LightWin",
         console_log_output="stdout",

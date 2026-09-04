@@ -273,6 +273,7 @@ class Fault:
 
     @property
     def opti_sol(self) -> OptiSol | None:
+        """Give the optimal solution, if optimisation algo was set."""
         if self.optimisation_algorithm is None:
             return
         return self.optimisation_algorithm.opti_sol

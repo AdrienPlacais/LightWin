@@ -31,7 +31,7 @@ class MatplotlibPlotter(IPlotter):
         plt.rcParams["figure.figsize"] = (16, 9)
 
     def _setup_fig(self, fignum: int, title: str, **kwargs) -> list[Axes]:
-        """Setup the figure and axes."""
+        """Set up the figure and axes."""
         axnum = 2
         if not self._structure:
             axnum = 1
@@ -90,6 +90,7 @@ class MatplotlibPlotter(IPlotter):
     def save_figure(
         self, axes: Axes | Sequence[Axes], save_path: Path
     ) -> None:
+        """Save the figure."""
         if isinstance(axes, Sequence):
             axes = axes[0]
         figure = axes.get_figure()

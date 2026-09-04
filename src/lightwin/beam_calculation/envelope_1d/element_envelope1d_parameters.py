@@ -187,6 +187,7 @@ class DriftEnvelope1DParameters(ElementEnvelope1DParameters):
         )
 
     def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
+        """Set keyword arguments for the transfer matrix function."""
         return {
             "delta_s": self.d_z,
             "omega_0_bunch": self._beam_kwargs["omega_0_bunch"],
@@ -258,10 +259,14 @@ class FieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
             Kinetic energy at the entrance of cavity in :unit:`MeV`.
         cavity_settings :
             Object holding the cavity parameters that can be changed.
+        args :
+            Unused.
         phi_0_rel :
             Relative entry phase of the cavity. When provided, it means that we
             are trying to find the :math:`\phi_{0,\,\mathrm{rel}}` matching a
             given :math:`\phi_s`.
+        kwargs :
+            Unused.
 
         Returns
         -------
@@ -381,9 +386,7 @@ def _get_phi_0_rel(cavity_settings: CavitySettings) -> float:
 
 
 class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
-    """Hold properties to compute transfer matrix of
-    :class:`.SuperposedFieldMap`.
-    """
+    """Hold properties to compute TM of :class:`.SuperposedFieldMap`."""
 
     def __init__(
         self,
@@ -435,6 +438,7 @@ class SuperposedFieldMapEnvelope1DParameters(ElementEnvelope1DParameters):
     def transfer_matrix_kw(
         self, w_kin: float, *args, **kwargs
     ) -> dict[str, Any]:
+        """Set keyword arguments for the transfer matrix function."""
         complex_e_func, real_e_func = self._set_field_functions()
         tm_kwargs = {
             "d_z": self.d_z,
@@ -519,6 +523,9 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
             Configuration dict holding all initial beam properties.
         n_steps :
             Number of integration steps.
+        kwargs :
+            Additional keyword arguments passed to
+            :meth:`.ElementEnvelope1DParameters.__init__`.
 
         """
         transf_mat_function = self._proper_transfer_matrix_func("Bend")
@@ -578,6 +585,7 @@ class BendEnvelope1DParameters(ElementEnvelope1DParameters):
         return factor_1, factor_2, factor_3
 
     def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
+        """Set keyword arguments for the transfer matrix function."""
         return self._beam_kwargs | {
             "delta_s": self.d_z,
             "factor_1": self.factor_1,
@@ -607,6 +615,7 @@ class DummyEnvelope1DParameters(ElementEnvelope1DParameters):
         )
 
     def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
+        """Set keyword arguments for the transfer matrix function."""
         return {
             "delta_s": self.d_z,
             "omega_0_bunch": self._beam_kwargs["omega_0_bunch"],

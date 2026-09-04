@@ -17,7 +17,7 @@ from sphinx.util.typing import ExtensionMetadata
 
 
 class UnitRole(SphinxRole):
-    """A role to display units in math's mathrm format.
+    r"""A role to display units in math's mathrm format.
 
     Note that in order to show units such as Ohm, the omega must be escaped
     twice: :unit:`\\Omega`.
@@ -25,6 +25,7 @@ class UnitRole(SphinxRole):
     """
 
     def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
+        """Process the string."""
         text = f"\\mathrm{{{self.text}}}"
         node = nodes.math(text=text)
         return [node], []
@@ -40,6 +41,7 @@ class ConfigMapDirective(Directive):
     }
 
     def run(self) -> list[nodes.Node]:
+        """Process the string."""
         mapping = _load_mapping(self.arguments[0])
         grouped = self._invert_mapping(mapping)
 
@@ -108,6 +110,7 @@ class ConfigKeysDirective(Directive):
     }
 
     def run(self) -> list[nodes.Node]:
+        """Process the dictionary."""
         mapping = _load_mapping(self.arguments[0])
         keys = list(mapping.keys())
         return [self._make_table(keys, self.options.get("header"))]

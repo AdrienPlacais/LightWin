@@ -121,9 +121,10 @@ class CavitySettings:
         freq_cavity_mhz :
             Frequency of the cavity in :unit:`MHz`. The default is None, which
             happens when the |LOE| is under creation and we did not process the
-            ``FREQ`` commands yet. transf_mat_func_wrappers : A dictionary
-            which keys are the different |BC| ids, and values are corresponding
-            functions to compute propagation of the beam.
+            ``FREQ`` commands yet.
+        transf_mat_func_wrappers :
+            A dictionary which keys are the different |BC| ids, and values are
+            corresponding functions to compute propagation of the beam.
         phi_s_funcs :
             A dictionary which keys are the different |BC| ids, and values are
             corresponding functions to compute synchronous phase and
@@ -232,6 +233,7 @@ class CavitySettings:
 
     @property
     def w_kin(self) -> float:
+        """Access energy at the entrance of the element."""
         return self._w_kin
 
     @w_kin.setter
@@ -337,8 +339,7 @@ class CavitySettings:
     def set_bunch_to_rf_freq_func(
         self, freq_cavity_mhz: float | None = None
     ) -> None:
-        """Set the rf frequency, and methods to switch between freq
-        definitions.
+        """Set rf frequency, and methods to switch between freq definitions.
 
         This method is called a first time at the instantiation of ``self``;
         it will be called once again if a :class:`.Freq` command is found.
@@ -850,6 +851,7 @@ class CavitySettings:
 
         Parameters
         ----------
+        value :
             New rf phase of the synchronous particle at the entrance of the
             cavity.
 
@@ -898,6 +900,8 @@ class CavitySettings:
         delta_phi_bunch :
             Phase difference between the new first element of the linac and the
             previous first element of the linac.
+        check_positive :
+            Whether we should verify that resulting phase is positive.
 
         Examples
         --------
@@ -930,7 +934,7 @@ class CavitySettings:
         self._acceptance_phi = value
 
     @acceptance_phi.deleter
-    def acceptance_phi(self):
+    def acceptance_phi(self) -> None:
         """Delete the phase acceptance."""
         if hasattr(self, "_acceptance_phi"):
             del self._acceptance_phi
@@ -946,7 +950,7 @@ class CavitySettings:
         self._acceptance_energy = value
 
     @acceptance_energy.deleter
-    def acceptance_energy(self):
+    def acceptance_energy(self) -> None:
         """Delete the energy acceptance."""
         if hasattr(self, "_acceptance_energy"):
             del self._acceptance_energy
