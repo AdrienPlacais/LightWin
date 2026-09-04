@@ -152,7 +152,7 @@ class BeamParametersFactory(ABC):
     def _set_from_transfer_matrix(
         self,
         beam_parameters: BeamParameters,
-        phase_space_names: Sequence[str],
+        phase_space_names: Sequence[Literal["x", "y", "zdelta"]],
         transfer_matrices: Sequence[NDArray],
         gamma_kin: NDArray,
         beta_kin: NDArray,
@@ -436,8 +436,8 @@ class InitialBeamParametersFactory(ABC):
         )
 
         initial_phase_spaces_kw = {}
-        for phase_space_name, to_skip in zip(phase_space_names, to_skip):
-            if to_skip:
+        for phase_space_name, skip in zip(phase_space_names, to_skip):
+            if skip:
                 continue
 
             initial_phase_space_kw = {
