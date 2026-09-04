@@ -67,10 +67,11 @@ class Lattice(Command):
 
             if isinstance(instruction, (Command, Comment)):
                 continue
-            assert isinstance(element := instruction, Element), (
+            assert isinstance(instruction, Element), (
                 f"Expected an Element but got a {type(instruction)}\n"
                 f"{instruction}"
             )
+            element = instruction
             if not element.increment_lattice_idx:
                 continue
 
