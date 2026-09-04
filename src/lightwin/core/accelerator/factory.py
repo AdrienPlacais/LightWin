@@ -136,11 +136,11 @@ class AcceleratorFactory:
                 "particular if there are several FaultScenario."
             )
 
-        for index in accelerators:
+        for index, accelerator in accelerators.items():
             to_add = additional.get(index)
             if to_add is None:
                 continue
-            accelerators[index].extend(to_add)
+            accelerator.extend(to_add)
 
         return accelerators, updated_wtf
 

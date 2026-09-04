@@ -41,7 +41,7 @@ repos:
             --show-fixes,
             # --unsafe-fixes,
             --select, # lla
-            "TRY004",
+            "PLC0206",
           ]
       - id: ruff-format
   # Also have options in pyproject.toml.
