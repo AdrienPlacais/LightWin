@@ -545,7 +545,7 @@ class AcceleratorFactory:
         )
 
     def _load_additional_pickles(
-        self, reserved_names: set[str] = {"Reference", "Solution"}
+        self, reserved_names: set[str] | None = None
     ) -> dict[int, list[Accelerator]]:
         """Unpickle additional |A|.
 
@@ -561,6 +561,8 @@ class AcceleratorFactory:
             their |FS| index.
 
         """
+        if reserved_names is None:
+            reserved_names = {"Reference", "Solution"}
         additional: dict[int, list[Accelerator]] = {}
         for index, names_paths in self._pickle_paths.items():
             if index == 0 or isinstance(names_paths, str):
