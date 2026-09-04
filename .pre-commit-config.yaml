@@ -39,9 +39,9 @@ repos:
         args: [
             --fix,
             --show-fixes,
-            --unsafe-fixes,
+            # --unsafe-fixes,
             --select, # lla
-            "RUF059",
+            "B026",
           ]
       - id: ruff-format
   # Also have options in pyproject.toml.

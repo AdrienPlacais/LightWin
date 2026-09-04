@@ -33,14 +33,14 @@ class DatLine:
 
         Parameters
         ----------
-        line : str
-            The corresponding line in the DAT file.
-        idx : int
-            The corresponding position in the DAT file.
-        original_line : str | None
-            The corresponding line in the DAT file. Should be provided only
-            when creating a fake element. CUrrently, this is used only for the
-            :class:`.SuperposeMap`. The default is None
+        line :
+            The corresponding line in the ``DAT`` file.
+        idx :
+            The corresponding position in the ``DAT`` file.
+        original_line :
+            The corresponding line in the ``DAT`` file. Should be provided only
+            when creating a fake element. Currently, this is used only for the
+            :class:`.SuperposeMap`.
 
         """
         self.original_line = line
