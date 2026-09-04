@@ -43,6 +43,7 @@ class TestLoadDatFile:
 
     @property
     def expected_dat_filecontent(self) -> list[DatLine]:
+        """Set expected content of all lines."""
         expected_dat_filecontent = [
             DatLine(line, i) for i, line in enumerate(self.lines)
         ]

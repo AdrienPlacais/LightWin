@@ -27,6 +27,7 @@ params = [pytest.param((MyCloudPickler,), id="cloudpickle")]
 
 @pytest.fixture(scope="class", params=params)
 def pickler(request: pytest.FixtureRequest) -> MyPickler:
+    """Fixture a pickler."""
     (my_pickler_class,) = request.param
     my_pickler = my_pickler_class()
     return my_pickler

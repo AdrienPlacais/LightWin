@@ -33,6 +33,7 @@ class TestDatLine:
         return check(line, expected)
 
     def test_line_with_more_arguments(self) -> None:
+        """Test that a line with more args is properly sliced."""
         line = "FIELD_MAP 100 5 0.9 0.7 54e4 3 65.6e10"
         expected = {
             "personalized_name": None,
