@@ -506,7 +506,7 @@ class AcceleratorFactory:
         if scenario is None:
             return
         if isinstance(scenario, str):
-            raise ValueError(
+            raise TypeError(
                 f"The value associated to fault scenario #{index} in "
                 f"the AcceleratorFactory._pickle_paths attribute is {scenario}"
                 " but should be a 'dict[str, str]'."
