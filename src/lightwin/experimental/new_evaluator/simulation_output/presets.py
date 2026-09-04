@@ -80,7 +80,7 @@ class Energy(ISimulationOutputEvaluator):
         self,
         *simulation_outputs,
         fallback_dummy: bool = True,
-        use_last_row_only=True,
+        use_last_row_only: bool = True,
         **user_overrides: Any,
     ) -> tuple[list[bool], pd.DataFrame]:
         """Check that final energy difference is within limit."""

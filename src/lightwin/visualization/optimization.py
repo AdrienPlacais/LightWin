@@ -6,8 +6,9 @@
 """
 
 import logging
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 from functools import lru_cache
+from typing import Literal
 
 import matplotlib.patches as pat
 import numpy as np
@@ -39,7 +40,7 @@ def _get_objectives(fault_scenario: list[Fault] | None) -> list[Objective]:
 
 
 @lru_cache(100)
-def warn_once():
+def warn_once() -> None:
     """Raise this warning only once.
 
     https://stackoverflow.com/questions/31953272/logging-print-message-only-once
@@ -125,7 +126,11 @@ def _patch_objective(
     return patch
 
 
-def plot_fit_progress(hist_f, l_label, nature="Relative"):
+def plot_fit_progress(
+    hist_f: Collection[float],
+    l_label: Collection[str],
+    nature: Literal["Relative", "Absolute"] = "Relative",
+) -> None:
     """Plot the evolution of the objective functions w/ each iteration."""
     _, axx = create_fig_if_not_exists(1, num=32)
     axx = axx[0]

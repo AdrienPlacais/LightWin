@@ -8,6 +8,7 @@ from typing import Any, ClassVar
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
+from docutils.parsers.rst.states import RSTState
 from docutils.statemachine import StringList
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxRole
@@ -156,7 +157,9 @@ class ConfigKeysDirective(Directive):
         return row
 
 
-def _parse_inline_rst(text: str, state, source: str) -> list[nodes.Node]:
+def _parse_inline_rst(
+    text: str, state: RSTState, source: str
+) -> list[nodes.Node]:
     """Parse a small ``RST`` fragment into inline nodes."""
     vl = StringList([text], source=source)
     container = nodes.paragraph()

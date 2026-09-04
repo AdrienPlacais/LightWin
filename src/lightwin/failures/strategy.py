@@ -112,7 +112,7 @@ def failed_and_compensating(
         # factory
         failed_gathered.append([])
 
-    def dat_idx_key(fm):
+    def dat_idx_key(fm: FieldMap) -> int:
         return fm.idx["dat_idx"]
 
     failed_gathered = [

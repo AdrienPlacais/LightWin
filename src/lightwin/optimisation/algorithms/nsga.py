@@ -268,7 +268,7 @@ class NSGA3Algorithm(OptimisationAlgorithm):
 class _LightWinProblemMulti(_LightWinProblem):
     """Wrap LightWin's residual evaluation into a pymoo Problem."""
 
-    def __init__(self, *args, n_workers=1, **kwargs) -> None:
+    def __init__(self, *args, n_workers: int = 1, **kwargs) -> None:
         """Set a number of CPU cores."""
         super().__init__(*args, **kwargs)
         self._n_workers = n_workers

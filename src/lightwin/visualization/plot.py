@@ -30,6 +30,7 @@ from cycler import cycler
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.typing import ColorType
+from numpy.typing import NDArray
 from palettable.colorbrewer.qualitative import Dark2_8  # type: ignore
 
 import lightwin.util.dicts_output as dic
@@ -501,7 +502,13 @@ def _make_a_subplot(
     axe.set_ylabel(_y_label(y_axis))
 
 
-def plot_pty_with_data_tags(ax, x, y, idx_list, tags=True):
+def plot_pty_with_data_tags(
+    ax: Axes,
+    x: NDArray[np.float64],
+    y: NDArray[np.float64],
+    idx_list: Sequence[int],
+    tags: bool = True,
+) -> None:
     """Plot y vs x.
 
     Data at idx_list are magnified with bigger points and data tags.

@@ -295,11 +295,11 @@ def _targeted_split_backtick(
     prefix_len = len(prefix)
 
     if "_" in inner:
-        parts = inner.split("_")
+        parts: list[str] = inner.split("_")
         if any(len(p) > max_width for p in parts):
             return None
 
-        def join_parts(a, b):
+        def join_parts(a: int, b: int) -> str:
             seg = "_".join(parts[a:b])
             return seg + ("_" if b < len(parts) else "")
 
@@ -308,7 +308,7 @@ def _targeted_split_backtick(
         if any(len(p) > max_width for p in parts):
             return None
 
-        def join_parts(a, b):
+        def join_parts(a: int, b: int) -> str:
             return " ".join(parts[a:b])
 
     n = len(parts)

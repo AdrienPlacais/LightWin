@@ -70,7 +70,7 @@ skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
 extend-select = [
-  # "ANN", # flake8
+  "ANN", # flake8
   # "D",   # pydocstyle
   # "PT",  # pytest
   # "UP",  # pyupgrade
