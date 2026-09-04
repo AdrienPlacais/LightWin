@@ -9,11 +9,11 @@ Usage:
 
 """
 
+import datetime
 import re
 import subprocess
 import sys
 from collections.abc import Sequence
-from datetime import date
 from pathlib import Path
 
 import yaml
@@ -109,7 +109,7 @@ def update_files(version: str) -> None:
         The version string to set in the files.
 
     """
-    today = date.today().isoformat()
+    today = datetime.datetime.now(tz=datetime.UTC).date().isoformat()
     _update_citation(version, today)
     _update_changelog(version, today)
 
