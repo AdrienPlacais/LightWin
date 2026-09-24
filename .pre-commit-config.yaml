@@ -40,8 +40,8 @@ repos:
             --fix,
             --show-fixes,
             # --unsafe-fixes,
-            --select, # lla
-            "D100",
+            # --select, # lla
+            # "D100",
           ]
       - id: ruff-format
   # Also have options in pyproject.toml.
