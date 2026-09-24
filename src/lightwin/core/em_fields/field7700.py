@@ -38,17 +38,19 @@ class Field7700(Field100):
 
         Parameters
         ----------
-        path : pathlib.Path
+        path :
             The path to the file to load.
+        validity_check_kwargs :
+            Additional unused kwargs.
 
         Returns
         -------
-        field : Callable[[Pos3D], float]
+        FieldFuncComponent1D
             Function that takes in position and returns corresponding field, at
             null phase, for amplitude of :math:`1\,\mathrm{MV/m}`.
-        n_xyz : tuple[int, int, int]
+        tuple[int]
             Number of interpolation points in the three directions.
-        n_cell : int
+        int
             Number of cell for cavities.
 
         """

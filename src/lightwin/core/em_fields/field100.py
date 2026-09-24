@@ -42,15 +42,17 @@ class Field100(Field):
         ----------
         path :
             The path to the ``EDZ`` file to load.
+        validity_check_kwargs :
+            Additional unused keyword arguments.
 
         Returns
         -------
-        e_z :
+        FieldFuncComponent1D
             Function that takes in ``z`` position and returns corresponding
             field, at null phase, for amplitude of :math:`1\,\mathrm{MV/m}`.
-        n_z :
+        tuple[int]
             Number of interpolation points.
-        n_cell :
+        int
             Number of cell for cavities.
 
         """

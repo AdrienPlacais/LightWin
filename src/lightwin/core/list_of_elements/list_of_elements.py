@@ -97,8 +97,9 @@ class ListOfElements(list):
         input_beam :
             An object to hold emittances, Twiss, sigma beam matrix, etc at the
             entry of the first element.
-        first_init :
-            To indicate if this a full linac or only a portion (fit process).
+        tm_cumul_in :
+            (6, 6) array holding transfer matrix at the entrance of the first
+            element.
         files :
             A dictionary to hold information on the source and output
             files/folders of the object.
@@ -109,6 +110,9 @@ class ListOfElements(list):
                will be stored.
             * ``dat_filecontent``: list of list of str, holding content of the
               ``DAT``.
+
+        first_init :
+            To indicate if this a full linac or only a portion (fit process).
 
         """
         self.input_particle = input_particle
@@ -142,12 +146,12 @@ class ListOfElements(list):
         )
 
     @property
-    def w_kin_in(self):
+    def w_kin_in(self) -> float:
         """Get kinetic energy at entry of first element of self."""
         return self.input_particle.w_kin
 
     @property
-    def phi_abs_in(self):
+    def phi_abs_in(self) -> float:
         """Get absolute phase at entry of first element of self."""
         return self.input_particle.phi_abs
 
@@ -335,7 +339,7 @@ class ListOfElements(list):
         ----------
         dat_file :
             Where the output ``DAT`` should be saved.
-        export_phase :
+        exported_phase :
             Which phase should be put in the output DAT file.
         save :
             If the output file should be created.

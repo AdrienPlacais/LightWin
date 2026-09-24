@@ -147,6 +147,8 @@ class KeyValConfSpec:
         original_toml_folder :
             Where the original ``TOML`` was; this is used to resolve paths
             relative to this location.
+        kwargs :
+            Unused keyword arguments.
 
         Returns
         -------

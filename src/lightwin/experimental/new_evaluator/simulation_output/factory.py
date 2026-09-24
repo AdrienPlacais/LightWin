@@ -68,7 +68,7 @@ class SimulationOutputEvaluatorsFactory:
         ----------
         accelerators :
             Objects holding all the different |SO|.
-        solver_ids :
+        solvers_ids :
             Name of the reference solver(s). If several are provided, we use
             the first one by default; we use the following if necessary data
             was not available.
@@ -132,6 +132,9 @@ class SimulationOutputEvaluatorsFactory:
             Keyword arguments passed to :meth:`.SimulationOutput.get`,
             overriding defaults. For example, if you want your evaluators to
             run on a smaller portion of the linac.
+        kwargs :
+            Keyword arguments passed down to
+            :meth:`.ISimulationOutputEvaluator.plot`.
 
         """
         tests = {}

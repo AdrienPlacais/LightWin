@@ -10,7 +10,7 @@ import numpy as np
 
 
 @lru_cache(100)
-def warn_norm(path: Path, norm: float):
+def warn_norm(path: Path, norm: float) -> None:
     """Raise this warning only once.
 
     https://stackoverflow.com/questions/31953272/logging-print-message-only-once
@@ -209,16 +209,18 @@ def is_a_valid_3d_field(
 
     Parameters
     ----------
-    n_x, n_y, n_z :
-        Number of steps along the three axis.
     zmax :
         Maximum z position.
+    n_x, n_y, n_z :
+        Number of steps along the three axis.
     field :
         3D array holding field values.
     cavity_length :
         Expected length along the z-axis.
     tol :
         Tolerance for length comparisons, by default 1e-6.
+    validity_check_kwargs :
+        Unused remaining arguments.
 
     Returns
     -------

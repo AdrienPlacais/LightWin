@@ -28,6 +28,14 @@ def run(
     ----------
     cmd :
         The command and its arguments to run.
+    check :
+        Whether a ``CalledProcessError`` should be raised when the process
+        returned code is different from 0.
+    text :
+        Whether ``stdout`` should capture output as text.
+    kwargs :
+        Additional kwargs passsed to ``subprocess.run``.
+
 
     Returns
     -------

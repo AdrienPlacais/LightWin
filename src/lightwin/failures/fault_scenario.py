@@ -94,6 +94,8 @@ class FaultScenario(list[Fault]):
             If provided, will override the ``objective_preset``. Used to let
             user define it's own :class:`.ObjectiveFactory` without altering
             the source code.
+        kwargs :
+            Unused keyword arguments.
 
         """
         self.ref_acc = ref_acc
@@ -515,7 +517,7 @@ class FaultScenario(list[Fault]):
 
 
 class FaultScenarioFactory:
-    """This objects consistently create |FS|."""
+    """Create |FS| consistently."""
 
     def __init__(
         self,
@@ -534,8 +536,8 @@ class FaultScenarioFactory:
             (no failure).
         beam_calc :
             The solver that will be called during the optimisation process.
-        design_space_kw :
-            The design space table from the TOML configuration file.
+        design_space :
+            The design space arguments from the TOML configuration file.
         objective_factory_class :
             If provided, will override the ``objective_preset``. Used to let
             user define it's own :class:`.ObjectiveFactory` without altering
@@ -632,7 +634,7 @@ def fault_scenario_factory(
     accelerators: list[Accelerator],
     beam_calc: BeamCalculator,
     wtf: dict[str, Any],
-    design_space: dict[str, Any],
+    design_space: DesignSpaceKw,
     objective_factory_class: type[ObjectiveFactory] | None = None,
     **kwargs,
 ) -> list[FaultScenario]:
@@ -660,12 +662,14 @@ def fault_scenario_factory(
         The solver that will be called during the optimisation process.
     wtf :
         The WhatToFit table of the TOML configuration file.
-    design_space_kw :
+    design_space :
         The design space table from the TOML configuration file.
     objective_factory_class :
         If provided, will override the ``objective_preset``. Used to let user
         define it's own :class:`.ObjectiveFactory` without altering the source
         code.
+    kwargs :
+        Unused keyword arguments.
 
     Returns
     -------

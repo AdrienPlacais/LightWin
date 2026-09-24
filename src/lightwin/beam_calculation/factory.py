@@ -1,4 +1,4 @@
-"""This module holds a factory to create the |BC|."""
+"""Define factory to create the |BC|."""
 
 import logging
 from collections.abc import Sequence
@@ -152,6 +152,9 @@ class BeamCalculatorsFactory:
             If the beam calculator involves loading cython field maps.
         force_new :
             To force creation of a new |BC|.
+        beam_calculator_kw :
+            Additional arguments from the beam calculator table in the
+            ``TOML``.
 
         Returns
         -------

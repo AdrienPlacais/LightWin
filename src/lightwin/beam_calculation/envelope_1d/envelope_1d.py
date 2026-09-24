@@ -137,6 +137,8 @@ class Envelope1D(BeamCalculator):
             objects.
         elts :
             List of elements in which the beam must be propagated.
+        kwargs :
+            Unused keyword arguments.
 
         Returns
         -------

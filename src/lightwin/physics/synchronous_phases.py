@@ -16,16 +16,20 @@ def phi_s_legacy(
 
     Parameters
     ----------
-    integrated_field
+    integrated_field :
         Complex electric field felt by the synchronous particle. It is None
         if the cavity is failed.
+    args :
+        Unused arguments.
+    kwargs :
+        Unused keyword arguments.
 
     Returns
     -------
-    v_cav_mv
+    float
         Accelerating voltage in :unit:`MV`. It is ``np.nan`` if
         ``integrated_field`` is None.
-    phi_s
+    float
         Synchronous phase of the cavity in :unit:`rad`. It is ``np.nan`` if
         ``integrated_field`` is None.
 
@@ -41,10 +45,18 @@ def phi_s_lagniel(
 ) -> tuple[float, float]:
     """Compute cavity parameters with new phi_s model :cite:`Lagniel2021`.
 
+    Raises
+    ------
+    NotImplementedError
+
     Parameters
     ----------
-    simulation_output
+    simulation_output :
         Holds results of a simulation.
+    args :
+        Unused arguments.
+    kwargs :
+        Unused keyword arguments.
 
     Returns
     -------

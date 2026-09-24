@@ -156,6 +156,8 @@ class DiagDSize2(Diagnostic):
             Wanted y RMS beam delta size in :unit:`mm`.
         accuracy :
             Size accuracy in :unit:`mm`.
+        personalized_name :
+            Name of the element.
 
         Returns
         -------
@@ -222,7 +224,7 @@ class DiagDSize3(Diagnostic):
 
 
 class DiagDSize4(Diagnostic):
-    """Measure something?"""
+    """Measure something."""
 
 
 class DiagDPSize2(Diagnostic):

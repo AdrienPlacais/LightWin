@@ -164,16 +164,19 @@ class Field(ABC):
         ----------
         path :
             Path to a field map file.
+        validity_check_kwargs :
+            Keyword arguments for function checking validity of loaded field
+            map.
 
         Returns
         -------
-        func :
+        Callable[..., float]
             Give field at a given position, position being a tuple of 1, 2 or 3
             floats.
-        n_interp :
+        Any
             Number of interpolation points in the various directions (tuple of
             1, 2 or 3 integers).
-        n_cell :
+        int
             Number of cells (makes sense only for ``EDZ`` as for now).
 
         """

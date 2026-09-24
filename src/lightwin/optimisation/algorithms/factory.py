@@ -106,6 +106,8 @@ class OptimisationAlgorithmFactory:
         kwargs :
             Other keyword arguments that will be passed to the
             :class:`.OptimisationAlgorithm`.
+        wtf :
+            What To Fit arguments.
 
         """
         self._class = ALGORITHM_SELECTOR[opti_method]
@@ -171,13 +173,16 @@ class OptimisationAlgorithmFactory:
 
         def compute_beam_propagation(
             cavity_settings: Mapping[FieldMap, CavitySettings] | None, **kwargs
-        ):
+        ) -> SimulationOutput:
             """Wrap propagation of the beam.
 
             Parameters
             ----------
             cavity_settings :
                 Maps compensating cavities with the settings to be tried.
+            kwargs :
+                Additional keyword arguments passed down to the
+                :meth:`.BeamCalculator.run_with_this` of current solver.
 
             """
             set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(

@@ -204,6 +204,10 @@ class BeamParametersFactory(ABC):
         beam_parameters :
             Object already holding the beam parameters in the ``x`` and ``y``
             phase spaces.
+        other_phase_space_names :
+            Original ``x`` and ``y`` phase space names.
+        phase_space_name :
+            New phase space name.
 
         """
         x_space = getattr(beam_parameters, other_phase_space_names[0])
@@ -236,7 +240,7 @@ class BeamParametersFactory(ABC):
 # Subclassed by ListOfElements
 # (for now, ListOfElements is common to every BeamCalculator)
 class InitialBeamParametersFactory(ABC):
-    """This is used when creating new |LOE|.
+    """Beam parameters at the entrance of a new |LOE|.
 
     This factory is not subclassed. Only one instance should be created.
 
@@ -405,6 +409,8 @@ class InitialBeamParametersFactory(ABC):
         ----------
         original_beam_parameters :
             Object holding original beam parameters.
+        phase_space_names :
+            Names of the phase spaces to create.
         get_kw :
             dict that can be passed to the `get` method and that will return
             the data at the beginning of the linac portion.

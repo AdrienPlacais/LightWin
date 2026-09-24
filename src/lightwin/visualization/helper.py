@@ -32,6 +32,8 @@ def create_fig_if_not_exists(
         Fig number.
     clean_fig :
         If the previous plot should be erased from Figure.
+    kwargs :
+        Unused keyword arguments.
 
     """
     if isinstance(axnum, int):

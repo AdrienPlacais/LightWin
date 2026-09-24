@@ -63,10 +63,14 @@ class Element(Instruction):
             element of the list must be in :data:`.PARAMETERS_1D`.
         dat_idx :
             Position in the ``DAT`` file.
-        name :
-            Non-default name of the element, as given in the ``DAT`` file. The
-            default is None, in which case an automatic name will be given
-            later.
+        idx_in_lattice :
+            Position of the element in its lattice.
+        lattice :
+            Index of the element's lattice.
+        section :
+            Index of the element's section.
+        kwargs :
+            Additional kwargs passed to :class:`.Instruction`.
 
         """
         super().__init__(line, dat_idx, **kwargs)

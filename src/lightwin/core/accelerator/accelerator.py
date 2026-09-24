@@ -21,6 +21,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.helper import (
     elt_at_this_s_idx,
@@ -80,6 +81,8 @@ class Accelerator:
         index :
             Corresponding |FS| index. A null index is reserved for reference
             accelerator.
+        kwargs :
+            Unused keyword arguments.
 
         """
         #: Name for the object. The default will be ``"Reference"`` or
@@ -98,6 +101,11 @@ class Accelerator:
         #: this is a `000001/`-like folder.
         self.accelerator_path = accelerator_path
 
+        if kwargs:
+            logging.warning(
+                f"You provided {kwargs = }, but they will be discarded with "
+                "current design."
+            )
         kwargs = {
             "w_kin": e_mev,
             "phi_abs": 0.0,
@@ -126,6 +134,7 @@ class Accelerator:
         self._pickle_path: Path | None = pickle_path
 
     def __str__(self) -> str:
+        """Identify current object."""
         return self.id
 
     @property
@@ -142,7 +151,7 @@ class Accelerator:
         return f"{self.index:06d}_{self.name}"
 
     @property
-    def l_cav(self):
+    def l_cav(self) -> list[FieldMap]:
         """Shortcut to easily get list of cavities."""
         return self.elts.l_cav
 

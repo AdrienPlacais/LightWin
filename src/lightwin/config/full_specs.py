@@ -164,6 +164,8 @@ class ConfSpec:
         original_toml_folder :
             Where the original ``TOML`` was; this is used to resolve paths
             relative to this location.
+        kwargs :
+            Keyword passed down to :meth:`.TableConfSpec.to_toml_strings`.
 
         Returns
         -------
@@ -197,10 +199,14 @@ class ConfSpec:
         ----------
         toml_fulldict :
             Holds the full configuration.
+        toml_folder :
+            Where the ``TOML`` file is located.
         id_type :
             If ``toml_fulldict`` keys are name of the object (eg ``'beam'``) or
             of the table entry in the ``TOML`` (eg ``'my_proton_beam'``). Do
             not put the brackets present in the ``TOML`` file.
+        kwargs :
+            Keyword passed down to :meth:`.TableConfSpec.prepare`.
 
         Returns
         -------

@@ -73,12 +73,14 @@ class BeamCalculator(ABC):
             How reference phase of |CS| will be initialized.
         default_field_map_folder :
             Where to look for field map files by default.
-        flag_cython :
-            If the beam calculator involves loading cython field maps.
         beam_kwargs :
             The config dictionary holding all the initial beam properties.
         export_phase :
             The type of phase you want to export for your ``FIELD_MAP``.
+        flag_cython :
+            If the beam calculator involves loading cython field maps.
+        kwargs :
+            Unused keyword arguments.
 
         """
         #: How reference phase of |CS| will be initialized.
@@ -224,6 +226,8 @@ class BeamCalculator(ABC):
         optimization_status :
             Only used by :class:`.TraceWin`, to prevent errors during
             optimization phase.
+        kwargs :
+            Additional kwargs.
 
         Returns
         -------

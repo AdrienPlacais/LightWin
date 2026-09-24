@@ -156,15 +156,11 @@ class InstructionsFactory:
 
         Parameters
         ----------
-        line :
+        dat_line :
             A single line of the ``DAT`` file.
         dat_idx :
             Line number of the line (starts at 0). If not provided, taken from
             ``line``.
-        command_fac :
-            A factory to create :class:`.Command`.
-        element_fac :
-            A factory to create |E|.
         instruction_kw :
             Keywords given to the ``run`` method of the proper factory.
 

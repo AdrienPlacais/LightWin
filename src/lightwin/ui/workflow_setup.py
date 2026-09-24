@@ -119,6 +119,8 @@ def set_up_faults(
         If provided, will override the ``objective_preset``. Used to let user
         define its own :class:`.ObjectiveFactory` without altering the source
         code.
+    kwargs :
+        Unused keyword arguments.
 
     Returns
     -------
@@ -155,6 +157,8 @@ def set_up(
     ----------
     config :
         The full ``TOML`` configuration dictionary.
+    kwargs :
+        Keyword arguments passed to :func:`.set_up_faults`.
 
     Returns
     -------
@@ -165,10 +169,10 @@ def set_up(
         Dictionary where keys are |FS| indexes, and values are lists of
         corresponding |A|. First index corresponds to reference accelerator (no
         failure).
-     fault_scenarios :
+    fault_scenarios :
         The created failures. Will be None if no ``"wtf"`` entry was given in
         ``config``.
-     ref_simulations_outputs :
+    ref_simulations_outputs :
         A reference |SO| corresponding to the nominal linac per |BC|.
 
     """
@@ -198,7 +202,7 @@ def fix(fault_scenarios: Collection[FaultScenario] | None) -> None:
 
     Parameters
     ----------
-     fault_scenarios :
+    fault_scenarios :
         The created failures. Will be None if no ``"wtf"`` entry was given in
         ``config``.
 
@@ -265,6 +269,8 @@ def run_simulation(
     ----------
     config :
         The full TOML configuration dict.
+    kwargs :
+        Keyword arguments passed down to :func:`set_up`.
 
     Returns
     -------
@@ -297,6 +303,8 @@ def run_simulation_new(
     ----------
     config :
         The full TOML configuration dict.
+    kwargs :
+        Keyword arguments passed down to :func:`set_up`.
 
     Returns
     -------

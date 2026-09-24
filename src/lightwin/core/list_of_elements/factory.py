@@ -69,7 +69,7 @@ class ListOfElementsFactory:
         field_maps_in_3d: bool = False,
         load_cython_field_maps: bool = False,
         elements_to_dump: ABCMeta | tuple[ABCMeta, ...] = (),
-    ):
+    ) -> None:
         """Declare and create some mandatory factories.
 
         .. note::
@@ -90,11 +90,11 @@ class ListOfElementsFactory:
             we always generate multiparticle :class:`.InitialBeamParameters`.
         default_field_map_folder :
             Where to look for field map files.
-        beam_kwargs :
-            Arguments to instantiate :class:`.InitialBeamParameters`.
-        load_field_maps :
+        load_fields :
             If field maps should be loaded; this is not necessary with
             :class:`.TraceWin`.
+        beam_kwargs :
+            Arguments to instantiate :class:`.InitialBeamParameters`.
         field_maps_in_3d :
             If the given field map files are 3D.
         load_cython_field_maps :

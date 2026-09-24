@@ -56,6 +56,8 @@ class DesignSpaceParameter(ABC):
             Lower limit. ``np.nan`` to deactivate lower bound.
         x_max :
             Upper limit. ``np.nan`` to deactivate lower bound.
+        x_0 :
+            Initial value; unused.
 
         Returns
         -------
@@ -73,7 +75,7 @@ class DesignSpaceParameter(ABC):
         x_max = pd_series.loc[f"{name}: x_max"]
         return cls.from_floats(name, element_name, x_min, x_max)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Convert values in deg for output if it is angle."""
         self._to_deg = False
         self._to_numpy = False

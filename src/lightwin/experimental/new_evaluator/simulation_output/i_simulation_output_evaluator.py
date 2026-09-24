@@ -46,7 +46,8 @@ class GetKwargs(dict):
     #: be updated after object creation.
     to_deg: bool = False
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Instantiate object."""
         super().update(
             elt=self.elt,
             keep_nan=self.keep_nan,
@@ -245,12 +246,21 @@ class ISimulationOutputEvaluator(IEvaluator):
 
         Parameters
         ----------
+        post_treated :
+            Actual data to plot.
+        elts :
+            List of elements in the accelerator.
+        png_folder :
+            Where the figures will be saved. The default is None, in which case
+            figures are not saved.
         lower_limits :
             List of lower limits, one per column in ``post_treated``.
             Individual lower limits can be ``float`` (constant) or arrays.
         upper_limits :
             List of upper limits, one per column in ``post_treated``.
             Individual upper limits can be ``float`` (constant) or arrays.
+        kwargs :
+            Additional kwargs passed down to :meth:`._plot_single`.
 
         """
         if not self._get_kwargs["keep_nan"]:

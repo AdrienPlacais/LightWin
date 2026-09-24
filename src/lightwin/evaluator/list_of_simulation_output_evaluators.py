@@ -54,6 +54,8 @@ class ListOfSimulationOutputEvaluators(list):
             lists. The default is None, in which case nothing is added.
         project_folder :
             Where to save the output file.
+        files_kw :
+            Additional unused keyword arguments.
 
         Returns
         -------
@@ -70,7 +72,7 @@ class ListOfSimulationOutputEvaluators(list):
         if project_folder is not None:
             csv_path = Path(project_folder, "evaluations.csv")
             evaluations.to_csv(csv_path)
-            logging.info(f"Saved all evaluations in {csv_path!s}.")
+            logging.info(f"Saved all evaluations in {csv_path}.")
         return evaluations
 
     def _unpack_other_evals(
@@ -148,6 +150,7 @@ class FaultScenarioSimulationOutputEvaluators:
         simulation_outputs: tuple[SimulationOutputEvaluator],
         additional_elts: tuple[Element | str] | None = None,
     ) -> None:
+        """Instantiate object."""
         self.quantities = quantities
 
         self.elts, self.columns = self._set_evaluation_elements(

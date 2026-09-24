@@ -207,11 +207,13 @@ def ask_pickle_filename(
         The directory that the dialog starts in.
     initialfile :
         The file selected upon opening the dialog.
+    title :
+        GUI window title.
 
     Returns
     -------
-    Absolute filepath of pickle file to load/save. If None is returned, the
-    pickling operation will simply be skipped.
+        Absolute filepath of pickle file to load/save. If None is returned, the
+        pickling operation will simply be skipped.
 
     """
     try:

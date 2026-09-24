@@ -119,10 +119,14 @@ class IEvaluator(ABC):
         ----------
         limits :
             Must have a ``"Lower limit"`` and a ``"Upper limit"`` column.
+        axes :
+            Objects to draw on.
         style :
             Linestyles for lower and upper limits.
-        colors :
+        color :
             Color for the limits.
+        kwargs :
+            Keyword arguments passed to :meth:`IPlotter.plot`.
 
         """
         return self._plotter.plot(

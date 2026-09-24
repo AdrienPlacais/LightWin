@@ -209,6 +209,8 @@ def dict_to_toml(
     original_toml_folder :
         Where the original ``TOML`` was; this is used to resolve paths
         relative to this location.
+    kwargs :
+        Keyword arguments passed down to :meth:`.ConfSpec.to_toml_strings`.
 
     """
     if _indue_overwritting(toml_path, allow_overwrite):

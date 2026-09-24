@@ -57,7 +57,7 @@ def failed_and_compensating(
         Nature of information stored in ``failed``.
     strategy :
         Compensation strategy.
-    compensating_gathered :
+    compensating_manual :
         Associates every group of failed cavities in ``failed`` with a group
         of compensating cavities; both must hold a list of list of cavity
         identifier.
@@ -66,10 +66,10 @@ def failed_and_compensating(
 
     Returns
     -------
-    failed_gathered :
+    list[list[FieldMap]]
         Failed cavities; cavities that will be compensated together are
         gathered.
-    compensating_gathered :
+    list[list[FieldMap]]
         Same size as ``failed_gathered``. Associates every group of failed
         cavities to a group of compensating cavities.
 
@@ -160,11 +160,17 @@ def k_out_of_n[T](
         Distance increase for downstream elements (``shift < 0``) or upstream
         elements (``shift > 0``). Used to have a window of compensating
         cavities which is not centered around the failed elements.
+    remove_failed :
+        Whether failed elements should be removed from the returned list.
+    kwargs :
+        Unused remaining arguments.
 
     Returns
     -------
         Contains all the altered elements/lattices. The :math:`n` first are
-        failed, the :math:`k \times n` following are compensating.
+        failed, the :math:`k \times n` following are compensating. If
+        ``remove_failed`` is set to True, the list contains only the
+        compensating elements.
 
     """
     if k <= 0:
@@ -200,7 +206,7 @@ def l_neighboring_lattices[T](
 
     Parameters
     ----------
-    elements_by_lattice :
+    elements_gathered_by_lattice :
         Tunable elements sorted by lattice.
     failed_elements :
         Failed cavities/lattice.
@@ -214,12 +220,14 @@ def l_neighboring_lattices[T](
         elements (``shift > 0``). Used to have a window of compensating
         cavities which is not centered around the failed elements.
     remove_failed :
-        To remove the failed lattices from the output.
+        Whether failed elements should be removed from the returned list.
     min_number_of_cavities_in_lattice :
         If a lattice has less than this number of functional cavities, we
         look for another lattice. This is designed to removed lattices which
         have no cavities. Note that lattices that have some functional cavities
         but not enough will be used for compensation anyway.
+    kwargs :
+        Unused remaining arguments.
 
     Returns
     -------
@@ -301,6 +309,10 @@ def global_compensation[T](
         All the tunable elements.
     failed_elements :
         Failed cavities.
+    remove_failed :
+        Whether failed elements should be removed from the returned list.
+    kwargs :
+        Unused remaining arguments.
 
     Returns
     -------
@@ -328,6 +340,10 @@ def global_downstream[T](
         All tunable the elements.
     failed_elements :
         Failed cavities.
+    remove_failed :
+        Whether failed elements should be removed from the returned list.
+    kwargs :
+        Unused remaining arguments.
 
     Returns
     -------
@@ -395,6 +411,8 @@ def corrector_at_exit(
         Distance increase for downstream elements (``shift < 0``) or upstream
         elements (``shift > 0``). Used to have a window of compensating
         cavities which is not centered around the failed elements.
+    remove_failed :
+        Whether failed elements should be removed from the returned list.
     include_correctors :
         If corrector cavities should be included in returned list. If this
         function is called within :func:`.gather`, set it to ``False``. As all
@@ -402,6 +420,8 @@ def corrector_at_exit(
         it would mess up with the failures gathering. Current workaround is to
         add correctors manually after the :func:`.gather` call, in
         :func:`.failed_and_compensating`.
+    kwargs :
+        Additional arguments passed down to :func:`k_out_of_n`.
 
     Returns
     -------

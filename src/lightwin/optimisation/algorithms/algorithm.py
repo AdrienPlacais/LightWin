@@ -112,6 +112,8 @@ class OptimisationAlgorithm(ABC):
         history_kwargs :
             If given, records in a file the different evaluations of residuals
             during optimization.
+        kwargs :
+            Unused additional keyword arguments.
 
         """
         self.compensating_elements = tuple(compensating_elements)
@@ -203,7 +205,7 @@ class OptimisationAlgorithm(ABC):
 
     @abstractmethod
     def _generate_opti_sol(self, *args, **kwargs) -> OptiSol:
-        """Takes the results of the optimization in any form, returns dict."""
+        """Take the results of the optimization in any form, returns dict."""
 
     def _format_variables(self) -> Any:
         """Adapt all :class:`.Variable` to this optimisation algorithm."""
@@ -389,6 +391,10 @@ class OptimizationHistory:
 
         Parameters
         ----------
+        reference_simulation_output :
+            Reference simulation.
+        objectives_names :
+            Names of objectives.
         get_args, get_kwargs :
             args and kwargs passed to the ``SimulationOutput.get`` method. Used
             to add some values to the output files.
@@ -400,6 +406,8 @@ class OptimizationHistory:
             wil be overriden with dummy methods.
         save_interval :
             Files will be saved every ``save_interval`` iteration.
+        kwargs :
+            Unused additional keyword arguments.
 
         """
         if folder is None:

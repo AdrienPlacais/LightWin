@@ -25,6 +25,8 @@ class TransferMatrixFactoryTraceWin(TransferMatrixFactory):
 
         Parameters
         ----------
+        path_cal :
+            Path to the ``CAL`` file holding optimization results.
         filename :
             The name of the transfer matrix file produced by TraceWin. The
             default is ``"Transfer_matrix1.dat"``.

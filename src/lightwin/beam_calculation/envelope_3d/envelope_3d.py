@@ -140,6 +140,8 @@ class Envelope3D(BeamCalculator):
             settings are taken from the FieldMap objects.
         elts :
             List of elements in which the beam must be propagated.
+        kwargs :
+            Unused keyword arguments.
 
         Returns
         -------

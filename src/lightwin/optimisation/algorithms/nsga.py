@@ -50,6 +50,8 @@ class _LightWinProblem(Problem):
             ``(n_var, )`` array of upper limits for variables.
         eval_fn :
             Residue function.
+        kwargs :
+            Additional keyword arguments passed to :class:`.Problem`.
 
         """
         super().__init__(
@@ -77,6 +79,10 @@ class _LightWinProblem(Problem):
             ``(n_var, )`` array of variables.
         out :
             Dictionary keeping track of objectives, constraint violation, etc.
+        args :
+            Unused arguments.
+        kwargs :
+            Unused arguments.
 
         """
         results = [self._eval_fn(xi) for xi in x]

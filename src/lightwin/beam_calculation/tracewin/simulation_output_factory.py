@@ -322,6 +322,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         filename: Path,
         beam_calc_parameters_factory: ElementTraceWinParametersFactory,
     ) -> None:
+        """Instantiate object."""
         super().__init__(
             is_multipart=is_multipart,
             beam_calculator_id=beam_calculator_id,
@@ -363,8 +364,10 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             Contains all elements or only a fraction or all the elements.
         path_cal :
             Path to results folder.
-        failed :
+        command_failed :
             Indicates if the run was unsuccessful or not.
+        set_of_cavity_settings :
+            Cavity settings used to produce this simulation.
 
         Returns
         -------

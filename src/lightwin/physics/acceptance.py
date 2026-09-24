@@ -138,6 +138,8 @@ def _compute_acceptance_energy(
         Beam adimensionned charge.
     e_rest_mev
         Beam rest energy in :unit:`MeV`.
+    beam_kwargs :
+        Remaining unused beam parameters.
 
     Returns
     -------

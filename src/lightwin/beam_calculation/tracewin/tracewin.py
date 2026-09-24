@@ -87,6 +87,8 @@ class TraceWin(BeamCalculator):
             ``CAL`` file holding TraceWin optimization results. If provided,
             the file will be copied in the directory of the ``DAT``, and be
             renamed so that TraceWin uses it.
+        kwargs :
+            Keyword arguments passed to :class:`.BeamCalculator`.
 
         """
         self.executable = executable
@@ -241,6 +243,8 @@ class TraceWin(BeamCalculator):
             the one asked in the ``TOML``. To use after the first calculation,
             if :attr:`.BeamCalculator.reference_phase_policy` does not align
             with :attr:`.CavitySettings.reference`.
+        optimization_status :
+            Describe the current status of optimization.
         specific_kwargs :
             ``TraceWin`` optional arguments. Overrides what is defined in
             ``base_kwargs`` and ``INI``.
@@ -285,6 +289,8 @@ class TraceWin(BeamCalculator):
         optimization_status :
             To prevent errors interrupting simulation during optimization
             phases.
+        kwargs :
+            Keyword arguments passed down to :meth:`_tracewin_full_command`.
 
         Returns
         -------
@@ -297,11 +303,8 @@ class TraceWin(BeamCalculator):
         if kwargs not in (None, {}):
             logging.critical(f"{kwargs = }: deprecated.")
 
-        if kwargs is None:
-            kwargs = {}
-
         command, path_cal = self._tracewin_full_command(
-            elts, set_of_cavity_settings, **kwargs
+            elts, set_of_cavity_settings, **(kwargs or {})
         )
         is_not_a_fit = optimization_status != "in progress"
 
@@ -358,10 +361,12 @@ class TraceWin(BeamCalculator):
             Optimized parameters.
         full_elts :
             Contains the full linac.
+        specific_kwargs :
+            Keyword arguments passed to :meth:`.run_with_this`.
 
         Returns
         -------
-            Necessary information on the run.
+            Object holding simulation results.
 
         """
         optimized_cavity_settings.re_set_elements_index_to_absolute_value()
