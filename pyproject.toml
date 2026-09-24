@@ -72,8 +72,8 @@ skip-magic-trailing-comma = true
 extend-select = [
   "ANN", # flake8
   "D",   # pydocstyle
-  # "PT",  # pytest
-  "UP", # pyupgrade
+  "PT",  # pytest
+  "UP",  # pyupgrade
 ]
 ignore = [
   "ANN002", # Missing type annotation for `*args`

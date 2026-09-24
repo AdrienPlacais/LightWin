@@ -16,7 +16,8 @@ def need_to_resample(value: value_t, ref_value: ref_value_t) -> bool:
     """Determine if we need to resample ``value`` or ``ref_value``."""
     if isinstance(value, float) or isinstance(ref_value, float):
         return False
-    assert isinstance(value, np.ndarray) and isinstance(ref_value, np.ndarray)
+    assert isinstance(value, np.ndarray)
+    assert isinstance(ref_value, np.ndarray)
     if value.shape == () or ref_value.shape == ():
         return False
     return value.shape != ref_value.shape

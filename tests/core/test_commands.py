@@ -121,7 +121,7 @@ def simulation_output(
 
 
 @pytest.mark.parametrize(
-    "dat_file, beam_calculator_key",
+    ("dat_file", "beam_calculator_key"),
     [
         pytest.param(
             "repeat_ele.dat",

@@ -586,7 +586,11 @@ class QuantityIsBetween(Objective):
             A longer string to explain the objective.
 
         """
-        assert relative_limits[0] <= 100.0 and relative_limits[1] >= 100.0, (
+        assert relative_limits[0] <= 100.0, (
+            f"{relative_limits = } but should look like `(80, 135)` (which "
+            "means: objective must be 80% and 135% of reference value."
+        )
+        assert relative_limits[1] >= 100.0, (
             f"{relative_limits = } but should look like `(80, 135)` (which "
             "means: objective must be 80% and 135% of reference value."
         )

@@ -264,7 +264,8 @@ class PhaseSpaceBeamParameters(IPhaseSpaceBeamParameters):
                 f"{self.phase_space_name}. Cannot compute mismatch."
             )
 
-        assert reference_twiss is not None and self.twiss is not None
+        assert reference_twiss is not None
+        assert self.twiss is not None
 
         if reference_twiss.shape != self.twiss.shape:
             reference_twiss = resample_twiss_on_fix(
