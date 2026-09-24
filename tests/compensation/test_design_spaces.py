@@ -130,6 +130,8 @@ def simulation_outputs(
 
 @pytest.mark.envelope1d
 class TestDesignSpaceImplementation:
+    """Implement methods to test design space objects."""
+
     def test_w_kin(
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
     ) -> None:

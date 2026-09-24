@@ -126,6 +126,8 @@ def simulation_outputs(
 
 @pytest.mark.envelope1d
 class TestOptimisationAlgorithms:
+    """Implement methods to test optimization algorithm objects."""
+
     def test_w_kin(
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
     ) -> None:

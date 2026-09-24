@@ -13,7 +13,16 @@ from lightwin.optimisation.objective.objective import (
 
 
 class MinimizeDifferenceWithRef(_MinimizeDifferenceWithRef):
-    def __init__(self, *args, **kwargs):
+    """A simple difference at a given point between ref and fix.
+
+    .. deprecated::
+        Prefer ``from lightwin.optimisation.objective.objective import ...``
+        path.
+
+    """
+
+    def __init__(self, *args, **kwargs) -> None:
+        """Instantiate object, log deprecation warning."""
         logging.warning(
             "MinimizeDifferenceWithRef has moved to "
             "lightwin.optimisation.objective, please update your import."

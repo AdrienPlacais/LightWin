@@ -89,7 +89,7 @@ class ObjectiveFactory(ABC):
             Cavities that failed.
         compensating_elements :
             Cavities that will be used for the compensation.
-        design_space_kw :
+        limits_from_design_space_kw :
             Holds information on variables/constraints limits/initial values.
             Used to compute the limits that ``phi_s`` must respect when the
             synchronous phase is defined as an objective.
@@ -684,6 +684,8 @@ class Spiral2(CorrectorAtExit):
 
 
 class Experimental(ObjectiveFactory):
+    """Subclass to test different objective definitions."""
+
     objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
         "end of last altered lattice"
     ]
@@ -834,6 +836,7 @@ class ObjectiveMetaFactory:
     """An object creating :class:`.ObjectiveFactory` for every |F|."""
 
     def __init__(self, reference_simulation_output: SimulationOutput) -> None:
+        """Instantiate object."""
         self._reference_simulation_output = reference_simulation_output
 
     def create(

@@ -116,6 +116,7 @@ class AdjustSteerer(Command):
     def __init__(
         self, line: DatLine, dat_idx: int | None = None, **kwargs
     ) -> None:
+        """Instantiate object."""
         super().__init__(line, dat_idx, **kwargs)
         self.number = int(line.splitted[1])
         self.min = float(line.splitted[2]) if len(line.splitted) > 5 else None
@@ -144,7 +145,8 @@ class AdjustSteerer(Command):
             Minimum variable value.
         maxi :
             Maximum variable value.
-        start_step :
+        first_step :
+            Starting value for the variable.
         personalized_name :
             Name.
 
@@ -174,8 +176,12 @@ class AdjustSteerer(Command):
 
 
 class AdjustSteererBx(AdjustSteerer):
+    """Subclass for ``ADJUST_STEERER_BX`` object."""
+
     _command_in_tw = "ADJUST_STEERER_BX"
 
 
 class AdjustSteererBy(AdjustSteerer):
+    """Subclass for ``ADJUST_STEERER_BY`` object."""
+
     _command_in_tw = "ADJUST_STEERER_BY"

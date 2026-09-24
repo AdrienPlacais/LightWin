@@ -13,7 +13,16 @@ from lightwin.optimisation.objective.objective import (
 
 
 class QuantityIsBetween(_QuantityIsBetween):
-    def __init__(self, *args, **kwargs):
+    """Quantity must be within some bounds.
+
+    .. deprecated::
+        Prefer ``from lightwin.optimisation.objective.objective import ...``
+        path.
+
+    """
+
+    def __init__(self, *args, **kwargs) -> None:
+        """Instantiate object, log deprecation warning."""
         logging.warning(
             "QuantityIsBetween has moved to "
             "lightwin.optimisation.objective, please update your import."

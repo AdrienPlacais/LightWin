@@ -13,6 +13,8 @@ from lightwin.util.typing import REFERENCE_PHASES_T, STATUS_T
 
 
 class MockCavitySettings(CavitySettings):
+    """Create a fake cavity settings."""
+
     def __init__(
         self,
         phi: float,

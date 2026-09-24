@@ -12,7 +12,16 @@ from lightwin.optimisation.objective.objective import (
 
 
 class MinimizeMismatch(_MinimizeMismatch):
-    def __init__(self, *args, **kwargs):
+    """Minimize a mismatch factor.
+
+    .. deprecated::
+        Prefer ``from lightwin.optimisation.objective.objective import ...``
+        path.
+
+    """
+
+    def __init__(self, *args, **kwargs) -> None:
+        """Instantiate object, log deprecation warning."""
         logging.warning(
             "MinimizeMismatch has moved to "
             "lightwin.optimisation.objective, please update your import."
