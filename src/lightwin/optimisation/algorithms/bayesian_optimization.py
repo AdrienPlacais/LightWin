@@ -58,7 +58,7 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
         return self.opti_sol
 
     def _to_maximise(self, **kwargs) -> float:
-        """The function to maximize by BO.
+        """Get the function to maximize by BO.
 
         This is the classic
         :meth:`.OptimisationAlgorithm._norm_wrapper_residuals`, with two

@@ -26,7 +26,7 @@ def dict_for_pretty_output(some_kw: dict) -> str:
 def _find_according_to_nature(
     path: Path, nature: Literal["file", "folder"] | None
 ) -> bool:
-    """Helper function to check if the path matches the desired nature."""
+    """Check if the path matches the desired nature."""
     match nature:
         case "file":
             return path.is_file()
