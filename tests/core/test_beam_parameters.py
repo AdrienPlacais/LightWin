@@ -85,8 +85,7 @@ def test_get_single_key_elt(beam: BeamParameters) -> None:
 
 
 def test_get_inferred_key(beam: BeamParameters) -> None:
-    """``get`` infers the phase space from a suffixed key like
-    ``alpha_zdelta``."""
+    """``get`` infers phase space from a suffixed key like ``alpha_zdelta``."""
     val = beam.get("alpha_zdelta")
     np.testing.assert_array_equal(val, np.array([10.0, 11.0, 12.0]))
 
@@ -97,8 +96,7 @@ def test_get_missing_key(beam: BeamParameters) -> None:
 
 
 def test_get_none_to_nan(beam: BeamParameters) -> None:
-    """``get`` converts a missing-key result to NaN when
-    ``none_to_nan=True``."""
+    """``get`` converts missing-key result to NaN when ``none_to_nan=True``."""
     val = beam.get("nonexistent", none_to_nan=True)  # pyright: ignore
     assert np.isnan(val)
 
@@ -139,8 +137,7 @@ def test_get_to_numpy(beam: BeamParameters) -> None:
 
 
 def test_sigma(beam: BeamParameters) -> None:
-    """``sigma`` assembles a (n, 6, 6) array with zdelta in the bottom-
-    right."""
+    """``sigma`` assembles (n, 6, 6) array with zdelta in the bottom- right."""
     sigma = beam.sigma
     assert sigma.shape == (3, 6, 6)
     np.testing.assert_array_equal(sigma[:, 4:, 4:], beam.zdelta.sigma)

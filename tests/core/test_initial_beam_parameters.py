@@ -51,14 +51,12 @@ def test_has_nested(beam: InitialBeamParameters) -> None:
 
 
 def test_get_single_key(beam: InitialBeamParameters) -> None:
-    """``get`` retrieves a Twiss parameter with explicit
-    ``phase_space_name``."""
+    """``get`` retrieves Twiss parameter with explicit ``phase_space_name``."""
     assert beam.get("alpha", phase_space_name="zdelta") == 10.0
 
 
 def test_get_inferred_key(beam: InitialBeamParameters) -> None:
-    """``get`` infers the phase space from a suffixed key like
-    ``alpha_zdelta``."""
+    """``get`` infers phase space from a suffixed key like ``alpha_zdelta``."""
     assert beam.get("alpha_zdelta") == 10.0
 
 
@@ -68,8 +66,7 @@ def test_get_missing_key(beam: InitialBeamParameters) -> None:
 
 
 def test_get_none_to_nan(beam: InitialBeamParameters) -> None:
-    """``get`` converts a missing-key result to NaN when
-    ``none_to_nan=True``."""
+    """``get`` converts missing-key result to NaN when ``none_to_nan=True``."""
     assert np.isnan(
         beam.get("nonexistent", none_to_nan=True)  # pyright: ignore
     )

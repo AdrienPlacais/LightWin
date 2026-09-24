@@ -102,8 +102,7 @@ def test_get_missing_key(field_map: FieldMap) -> None:
 
 
 def test_get_none_to_nan(field_map: FieldMap) -> None:
-    """``get`` converts a missing-key result to NaN when
-    ``none_to_nan=True``."""
+    """``get`` converts missing-key result to NaN when ``none_to_nan=True``."""
     val = field_map.get("nonexistent", none_to_nan=True)  # pyright: ignore
     assert np.isnan(val)
 

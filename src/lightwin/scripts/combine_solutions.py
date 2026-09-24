@@ -107,8 +107,7 @@ def _infer_an_output_folder(
 def _select_best_simulations(
     paths: Sequence[Path], criterion_to_minimize: str
 ) -> tuple[pd.Series, pd.DataFrame]:
-    """Give the name of the best solution according to
-    ``criterion_to_minimize``
+    """Give name of the best solution according to ``criterion_to_minimize``.
 
     Parameters
     ----------

@@ -126,9 +126,7 @@ class FieldMapCyEnvelope1DParameters(
 class SuperposedFieldMapCyEnvelope1DParameters(
     SuperposedFieldMapEnvelope1DParameters, ElementCyEnvelope1DParameters
 ):
-    """Hold properties to compute transfer matrix of
-    :class:`.SuperposedFieldMap`.
-    """
+    """Properties to compute :class:`.SuperposedFieldMap` transfer matrix."""
 
     def __init__(self, *args, **kwargs) -> None:
         """Create the specific parameters for a superposed field map."""

@@ -255,8 +255,7 @@ class BeamParameters(InitialBeamParameters):
     def _create_tracewin_command(
         self, warn_missing_phase_space: bool = True
     ) -> list[str]:
-        """Turn emittance, alpha, beta from the proper phase-spaces into
-        command.
+        """Turn emittance, alpha, beta from proper phase-spaces into command.
 
         When phase-spaces were not created, we return np.nan which will
         ultimately lead TraceWin to take this data from its ``INI`` file.

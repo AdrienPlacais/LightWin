@@ -342,8 +342,7 @@ def thin_lense(
     half_dz: float,
     omega0_rf: float,
 ) -> NDArray[np.float64]:
-    r"""Compute propagation in a slice of field map using thin lense
-    approximation.
+    r"""Compute propagation in field map slice using thin lense approximation.
 
     Thin lense approximation: drift-acceleration-drift. The transfer matrix of
     the thin accelerating gap is:

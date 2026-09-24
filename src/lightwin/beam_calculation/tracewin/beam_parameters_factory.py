@@ -90,8 +90,7 @@ class BeamParametersFactoryTraceWin(BeamParametersFactory):
         phase_space_name: Literal["x", "y", "zdelta"],
         results: dict[str, NDArray[np.float64]],
     ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
-        r"""Retrieve the data necessary to reconstruct :math:`\sigma` beam
-        matrix.
+        r"""Retrieve data necessary to reconstruct :math:`\sigma` beam matrix.
 
         Parameters
         ----------

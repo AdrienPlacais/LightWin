@@ -159,6 +159,11 @@ def factory(
     fault_scenarios :
         If provided, the position of the :class:`.Objective` will also appear
         on plots.
+    only_solver_id :
+        If set, we plot only data obtained with this solver(s). Must be
+        :attr:`.BeamCalculator.id` (or, equivalently, a key(s) in
+        :attr:`.Accelerator.simulation_outputs`). Typical values:
+        ``"0_Envelope1D"`` or ``"1_TraceWin"``.
     kwargs :
         Other tables from the ``TOML`` configuration file.
 
@@ -301,8 +306,7 @@ def _plot_preset(
     only_solver_id: Collection[str] | str | None = None,
     **kwargs,
 ) -> Figure:
-    """Plot a preset showing reference and all fixed alternatives for one
-    scenario.
+    """Plot preset showing reference and all fixed alternatives for 1 scenario.
 
     Parameters
     ----------
@@ -318,6 +322,8 @@ def _plot_preset(
         Name of the x axis.
     save_fig :
         To save Figures or not. Figure is saved to the path of ``fix_accs[0]``.
+    clean_fig :
+        Whether pre-existing figure should be cleaned.
     add_objectives :
         To add the position of objectives to the plots; if True, the
         ``fault_scenarios`` must be provided.

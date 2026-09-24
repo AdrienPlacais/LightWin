@@ -34,8 +34,7 @@ from lightwin.util.typing import (
 
 
 class DesignSpaceFactory(ABC):
-    """Base class to handle :class:`.Variable` and :class:`.Constraint`
-    creation.
+    """Base class handling :class:`.Variable`, :class:`.Constraint` creation.
 
     Parameters
     ----------
@@ -222,10 +221,10 @@ class DesignSpaceFactory(ABC):
 
         Parameters
         ----------
-        variables_names :
-            Name of the variables to create.
-        constraints_names :
-            Name of the constraints to create. The default is None.
+        compensating_elements :
+            Elements participating to the cavity fialure compensation.
+        reference_elements :
+            Equivalent of ``compensating_elements`` in the reference linac.
 
         """
         self._check_can_be_retuned(compensating_elements)
@@ -250,6 +249,7 @@ class UserDefinedDesignSpaceFactory(DesignSpaceFactory):
     """Let user choose variables and constraints from ``TOML``."""
 
     def __init__(self, **design_space_kw) -> None:
+        """Create object."""
         super().__init__(**design_space_kw)
 
 
@@ -363,7 +363,7 @@ class RelPhaseAmplitudeWithConstrainedSyncPhase(_Preset):
 # To create ``variables.csv`` and ``constraints.csv``
 # =============================================================================
 class Everything(_Preset):
-    """This class creates all possible variables and constraints.
+    """Create all possible variables and constraints.
 
     This is not to be used in an optimisation problem, but rather to save in a
     ``CSV`` all the limits and initial values for every variable/constraint.

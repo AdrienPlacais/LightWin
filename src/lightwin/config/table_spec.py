@@ -62,27 +62,27 @@ class TableConfSpec:
 
         Parameters
         ----------
-                configured_object :
-                    Name of the object that will receive associated parameters.
-                table_entry :
-                    Name of the table in the ``TOML`` file, without brackets.
-                specs :
-                    The :class:`.KeyValConfSpec` objects in the current table. When the
-                    format of the table depends on the value of a key, provide a
-                    dictionary linking every possible table with the corresponding
-                    value.
-                is_mandatory :
-                    If the current table must be provided.
-                can_have_untested_keys :
-                    If LightWin should remain calm when some keys are provided in the
-                    ``TOML`` but do not correspond to any :class:`.KeyValConfSpec`.
-                selectkey_n_default :
-                    Must be given if ``specs`` is a dict. First value is name of the
-                    spec, second value is default value. We will look for this spec in
-                    the configuration file and select the proper ``Collection`` of
-                    ``KeyValConfSpec`` accordingly.
-                monkey_patches :
-                    Same keys as ``specs``, to override some default methods.
+        configured_object :
+            Name of the object that will receive associated parameters.
+        table_entry :
+            Name of the table in the ``TOML`` file, without brackets.
+        specs :
+            The :class:`.KeyValConfSpec` objects in the current table. When the
+            format of the table depends on the value of a key, provide a
+            dictionary linking every possible table with the corresponding
+            value.
+        is_mandatory :
+            If the current table must be provided.
+        can_have_untested_keys :
+            If LightWin should remain calm when some keys are provided in the
+            ``TOML`` but do not correspond to any :class:`.KeyValConfSpec`.
+        selectkey_n_default :
+            Must be given if ``specs`` is a dict. First value is name of the
+            spec, second value is default value. We will look for this spec in
+            the configuration file and select the proper ``Collection`` of
+            ``KeyValConfSpec`` accordingly.
+        monkey_patches :
+            Same keys as ``specs``, to override some default methods.
 
         """
         self.configured_object = configured_object
@@ -184,8 +184,7 @@ class TableConfSpec:
     def _set_specs_as_dict(
         self, toml_table: dict[str, Any] | None = None
     ) -> dict[str, KeyValConfSpec]:
-        """Select and prepare :class:`.KeyValConfSpec` used to validate this
-        table.
+        """Select and prepare :class:`.KeyValConfSpec` used to validate table.
 
         This method is responsible for determining which specification set
         applies to the current table, especially when the available specs
@@ -259,6 +258,8 @@ class TableConfSpec:
         original_toml_folder :
             Where the original ``TOML`` was; this is used to resolve paths
             relative to this location.
+        kwargs :
+            Other keyword arguments passed down to :meth:`.to_toml_string`.
 
         Returns
         -------

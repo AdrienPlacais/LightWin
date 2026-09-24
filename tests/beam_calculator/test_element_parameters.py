@@ -30,8 +30,7 @@ class DummyElementBeamCalculatorParameters(ElementBeamCalculatorParameters):
 
 @pytest.fixture
 def calc_param() -> DummyElementBeamCalculatorParameters:
-    """Return a fresh :class:`DummyElementBeamCalculatorParameters`
-    instance."""
+    """Return fresh :class:`DummyElementBeamCalculatorParameters` instance."""
     return DummyElementBeamCalculatorParameters()
 
 
@@ -76,8 +75,7 @@ def test_get_list_value_no_numpy(
 def test_get_array_value_to_numpy(
     calc_param: DummyElementBeamCalculatorParameters,
 ) -> None:
-    """``get`` returns a numpy array attribute unchanged when
-    ``to_numpy=True``."""
+    """``get`` returns np array attribute unchanged when ``to_numpy=True``."""
     result = calc_param.get("array_value")
     assert isinstance(result, np.ndarray)
     np.testing.assert_array_equal(result, np.array([4.0, 5.0, 6.0]))

@@ -128,9 +128,7 @@ def sort_by_position[T](
 def remove_lists_with_less_than_n_elements[T](
     elements: Sequence[Sequence[T]], minimum_size: int = 1
 ) -> list[list[T]]:
-    """Return a list where objects have a minimum length of
-    ``minimum_size``.
-    """
+    """Return list where objects have a minimum length of ``minimum_size``."""
     out = [list(x) for x in elements if len(x) >= minimum_size]
     return out
 
