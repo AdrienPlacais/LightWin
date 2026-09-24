@@ -73,7 +73,7 @@ extend-select = [
   "ANN", # flake8
   "D",   # pydocstyle
   # "PT",  # pytest
-  # "UP",  # pyupgrade
+  "UP", # pyupgrade
 ]
 ignore = [
   "ANN002", # Missing type annotation for `*args`
