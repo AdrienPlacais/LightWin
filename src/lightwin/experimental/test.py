@@ -45,7 +45,7 @@ class Generic:
     preset: str
     property_1: np.ndarray
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Write a doc."""
         print(f"initialized generic {self} of type {type(self)}")
 
@@ -68,7 +68,7 @@ class Initial(Generic):
 
     property_1: tuple[float, float]
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Write a doc."""
         print(f"initialized initial {self} of type {type(self)}")
         super().__post_init__()

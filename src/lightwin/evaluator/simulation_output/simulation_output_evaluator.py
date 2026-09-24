@@ -102,7 +102,7 @@ class SimulationOutputEvaluator(ABC):
     plt_kwargs: dict[str, Any] | None = None
     raise_error_if_value_getter_returns_none: bool = True
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Check inputs, create plot if a ``fignum`` was provided."""
         self.descriptor = _descriptor(self.descriptor)
         self.post_treaters = _post_treaters(self.post_treaters)

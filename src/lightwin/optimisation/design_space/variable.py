@@ -84,7 +84,7 @@ class Variable(DesignSpaceParameter):
         x_0 = pd_series.loc[f"{name}: x_0"]
         return cls.from_floats(name, element_name, x_min, x_max, x_0)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Convert values in deg for output if it is angle."""
         if self.name not in VARIABLES:
             logging.warning(f"Variable {self.name} not tested.")

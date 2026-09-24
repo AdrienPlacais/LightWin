@@ -28,7 +28,7 @@ class Constraint(DesignSpaceParameter):
 
     """
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Convert values in deg for output if it is angle."""
         logging.critical("Dirty patch, phi_s is hard-coded")
         if self.name not in CONSTRAINTS:
