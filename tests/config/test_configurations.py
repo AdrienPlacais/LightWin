@@ -11,13 +11,12 @@ with the corresponding :class:`.TableSpec`.
 
 """
 
-from typing import Any
-
 import pytest
 
-from lightwin.config.config_manager import _load_toml
+from lightwin.config.config_manager import process_config
 from lightwin.config.full_specs import ConfSpec
 from lightwin.constants import example_config
+from lightwin.util.typing import ConfigKw
 
 CONFIG_KEYS = (
     pytest.param(({"beam": "beam"},), id="Beam configuration"),
@@ -77,11 +76,11 @@ def config_key(request: pytest.FixtureRequest) -> dict[str, str]:
     return config_key
 
 
-@pytest.fixture(scope="function")
-def toml_dict(config_key: dict[str, str]) -> dict[str, dict[str, Any]]:
+@pytest.fixture
+def toml_dict(config_keys: dict[str, str]) -> ConfigKw:
     """Check that loading the table does not raise any error."""
-    toml_dict = _load_toml(
-        example_config, config_key, warn_mismatch=True, override=None
+    toml_dict = process_config(
+        example_config, config_keys, warn_mismatch=True, override=None
     )
     return toml_dict
 
