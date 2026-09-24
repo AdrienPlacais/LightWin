@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Create function converting configuration specs to a ``CSV`` for doc."""
+
 import csv
 from collections.abc import Sequence
 from pathlib import Path
