@@ -5,6 +5,7 @@ from typing import Any
 
 import numpy as np
 import pytest
+from numpy.typing import NDArray
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.simulation_output.simulation_output import (
@@ -65,7 +66,8 @@ DATA_DIR = instructions_tests_folder
 
 
 @pytest.fixture
-def expected(request):
+def expected(request: pytest.FixtureRequest) -> NDArray[np.float64] | None:
+    """Catch the expected content transfer matrix."""
     dat_file = request.node.funcargs["dat_file"]
     beam_calculator_key = request.node.funcargs["beam_calculator_key"]
     return all_expected.get((dat_file, beam_calculator_key), None)

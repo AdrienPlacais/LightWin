@@ -14,6 +14,7 @@ from lightwin.ui.workflow_setup import set_up
 
 
 def main() -> None:
+    """Generate design space files."""
     # =========================================================================
     # Set up the accelerator
     # =========================================================================

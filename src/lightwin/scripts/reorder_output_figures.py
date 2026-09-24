@@ -58,7 +58,8 @@ def reorder_output_figures(
         )
 
 
-def main():
+def main() -> None:
+    """Parse CLI arguments and call :func:`reorder_output_figures`."""
     parser = argparse.ArgumentParser("reorder_output_figures")
     parser.add_argument(
         "-f",

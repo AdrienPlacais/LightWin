@@ -61,6 +61,7 @@ def _perform_evaluations(
 def study(
     new_evaluations: bool = False,
 ) -> tuple[dict[int, list[Accelerator]], list[FaultScenario]]:
+    """Perform the complete study."""
     toml_filepath = Path("lightwin.toml")
     toml_keys = {
         "files": "files",

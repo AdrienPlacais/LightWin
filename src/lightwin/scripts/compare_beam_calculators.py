@@ -18,6 +18,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.elements.element import Element
 from lightwin.scripts.scripts_shorthands import compute_beams
+from lightwin.util.typing import GETTABLE_SIMULATION_OUTPUT_T
 from lightwin.visualization import plot
 
 
@@ -25,7 +26,7 @@ def output_comparison(
     sim_1: SimulationOutput,
     sim_2: SimulationOutput,
     element: Element | str,
-    qty: str,
+    qty: GETTABLE_SIMULATION_OUTPUT_T,
     single_value: bool,
     **kwargs,
 ) -> str:
@@ -33,7 +34,7 @@ def output_comparison(
 
     Parameters
     ----------
-    sim1, sim2 :
+    sim_1, sim_2 :
         Objects to compate.
     element :
         Element at which look for ``qty``.
@@ -41,6 +42,8 @@ def output_comparison(
         Quantity that will be compared.
     single_value :
         True if a single value is expected, False if it is an array.
+    kwargs :
+        Additional keyword aguments passed to :meth:`.SimulationOutput.get`.
 
     Returns
     -------

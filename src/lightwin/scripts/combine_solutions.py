@@ -270,7 +270,7 @@ def _load_evaluation(
         evaluation_folder / "evaluations.csv"
         # usecols=evaluation_namecol  # type: ignore
     )
-    df.columns = df.columns.str.trip()
+    df.columns = df.columns.str.strip()
     df = df[[evaluation_namecol]]
 
     if new_name is not None:
@@ -286,7 +286,8 @@ def _load_evaluation(
     return df
 
 
-def main():
+def main() -> None:
+    """Provide CLI interface for solution combining."""
     parser = argparse.ArgumentParser("combine_solutions")
 
     parser.add_argument(

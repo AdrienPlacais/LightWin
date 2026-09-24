@@ -44,6 +44,7 @@ ENVELOPE1D_CONFIG = BEAM_CALCULATOR_BASE_CONFIG + (
 def envelope_1d_pre_treat(
     self: TableConfSpec, toml_table: dict[str, Any], **kwargs
 ) -> None:
+    """Add the deprecated flag check."""
     self._insert_defaults(toml_table, **kwargs)
     apply_deprecated_flag_phi_abs(self, toml_table, **kwargs)
 

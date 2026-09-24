@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Convert lost power of one or several ``patran1.out`` into lost power per
-meter.
+"""Convert lost power frome 1+ ``patran1.out`` files to lost power per meter.
 
 .. todo::
     Sometimes the lost power in first row is 1e-10 or something? Check this out
@@ -51,7 +50,7 @@ def compute(
 
     Parameters
     ----------
-    path :
+    folderpath :
         Path to a single ``partran1.out`` file, or to a full LightWin project.
     full_project :
         Indicate if the given path is a full project. If True, we take all the
@@ -63,8 +62,10 @@ def compute(
     z_min, z_max :
         If provided, points outside of this range will be filtered out. The
         default is None, in which case all points are kept.
-    definitions :
+    definition :
         How the lost power should be calculated.
+    kwargs :
+        Additional arguments passed to :func:`_treat_single`.
 
     """
     if not isinstance(folderpath, Path):
@@ -344,7 +345,8 @@ def _plot_several(df: pd.DataFrame, path: Path | None = None) -> Figure:
     return fig
 
 
-def main():
+def main() -> None:
+    """Parse CLI arguments and call :func:`compute`."""
     parser = argparse.ArgumentParser(
         "compute_lost_power_per_meter",
         formatter_class=argparse.RawTextHelpFormatter,
