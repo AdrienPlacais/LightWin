@@ -28,6 +28,7 @@ class Field70(Field):
         z_0: float = 0,
         flag_cython: bool = False,
     ) -> None:
+        """Instantiate object."""
         super().__init__(folder, filename, length_m, z_0, flag_cython)
         if self.flag_cython:
             logging.error("Cython not implemented for Field70.")
