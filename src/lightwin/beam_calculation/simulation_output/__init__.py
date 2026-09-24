@@ -1,1 +1,1 @@
-"""This subpacakge holds a class to store outputs of beam calculators."""
+"""Define :class:`.SimulationOutput` and helpers, storing beam calculations."""
