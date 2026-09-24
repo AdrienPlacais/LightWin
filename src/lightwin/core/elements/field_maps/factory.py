@@ -37,7 +37,7 @@ IMPLEMENTED_FIELD_MAPS = {
 
 
 @lru_cache(100)
-def warn_once(geometry: int):
+def warn_once(geometry: int) -> None:
     """Raise this warning only once.
 
     https://stackoverflow.com/questions/31953272/logging-print-message-only-once

@@ -49,7 +49,7 @@ class EllipseParams(TypedDict):
     theta: float
 
 
-def _compute_ellipse_parameters(ell_eq: EllipseEqParams):
+def _compute_ellipse_parameters(ell_eq: EllipseEqParams) -> EllipseParams:
     """Compute the ellipse parameters so as to plot the ellipse.
 
     Parameters
@@ -91,7 +91,7 @@ def _compute_ellipse_parameters(ell_eq: EllipseEqParams):
     return ell_param
 
 
-def plot_ellipse(ax: Axes, ell_eq: EllipseEqParams, **plot_kwargs):
+def plot_ellipse(ax: Axes, ell_eq: EllipseEqParams, **plot_kwargs) -> None:
     """Plot the ellipse defined by ``ell_eq`` on ``ax``."""
     ell_param = _compute_ellipse_parameters(ell_eq)
     n_points = 10001
@@ -122,7 +122,7 @@ def plot_ellipse(ax: Axes, ell_eq: EllipseEqParams, **plot_kwargs):
 
 def plot_ellipse_emittance(
     ax: Axes, accelerator: Accelerator, idx: int, phase_space: PHASE_SPACE_T
-):
+) -> None:
     """Plot the emittance ellipse and highlight interesting data."""
     twiss = accelerator.get("twiss", phase_space=phase_space)[idx]
     eps = accelerator.get("eps", phase_space=phase_space)[idx]
