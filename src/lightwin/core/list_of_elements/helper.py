@@ -5,10 +5,12 @@
 
 """
 
+from __future__ import annotations
+
 import logging
 from collections.abc import Callable, Iterable, Sequence
 from functools import partial
-from typing import Any, Literal, TypeGuard, TypeVar, overload
+from typing import TYPE_CHECKING, Any, Literal, TypeGuard, TypeVar, overload
 
 import numpy as np
 
@@ -16,7 +18,8 @@ from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.util.typing import GET_ELT_ARG_T
 
-ListOfElements = TypeVar("ListOfElements")
+if TYPE_CHECKING:
+    from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 T = TypeVar("T")
 
 
@@ -50,7 +53,7 @@ def is_list_of_list_of_field_maps(
     return all(is_list_of(sub_elts, FieldMap) for sub_elts in elts)
 
 
-def filter_out[ListOfElements](
+def filter_out(
     elts: ListOfElements | Sequence[Element] | Sequence[Sequence[Element]],
     to_exclude: tuple[type],
 ) -> Any:
@@ -73,7 +76,7 @@ def filter_out[ListOfElements](
     return out
 
 
-def filter_elts[ListOfElements, T](
+def filter_elts(  # noqa: UP047
     elts: ListOfElements | Sequence[Element], type_to_check: type[T]
 ) -> list[T]:
     """Filter elements according to their type.
@@ -88,7 +91,7 @@ def filter_elts[ListOfElements, T](
 filter_cav = partial(filter_elts, type_to_check=FieldMap)
 
 
-def elt_at_this_s_idx[ListOfElements](
+def elt_at_this_s_idx(
     elts: ListOfElements | Sequence[Element],
     s_idx: int,
     show_info: bool = False,
@@ -122,7 +125,7 @@ def elt_at_this_s_idx[ListOfElements](
     return None
 
 
-def equivalent_elt_idx(  # noqa: UP047
+def equivalent_elt_idx(
     elts: ListOfElements | list[Element], elt: Element | str | GET_ELT_ARG_T
 ) -> int:
     """Return the index of element from ``elts`` corresponding to ``elt``.
@@ -170,17 +173,17 @@ def equivalent_elt_idx(  # noqa: UP047
 
 
 @overload
-def equivalent_elt[ListOfElements](
+def equivalent_elt(
     elts: ListOfElements | list[Element] | list[FieldMap], elt: FieldMap
 ) -> FieldMap: ...
 @overload
-def equivalent_elt[ListOfElements](
+def equivalent_elt(
     elts: ListOfElements | list[Element] | list[FieldMap],
     elt: Element | str | GET_ELT_ARG_T,
 ) -> Element: ...
 
 
-def equivalent_elt[ListOfElements](
+def equivalent_elt(
     elts: ListOfElements | list[Element] | list[FieldMap],
     elt: Element | str | FieldMap | GET_ELT_ARG_T,
 ) -> Element | FieldMap:
@@ -361,7 +364,7 @@ def _get_first_key_of_idx_dict_higher_than(
     return -1
 
 
-def first[T](
+def first(  # noqa: UP047
     iterable: Iterable[T],
     default: T | None = None,
     condition: Callable[[T], bool] = lambda _: True,
