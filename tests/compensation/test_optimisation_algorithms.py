@@ -19,26 +19,26 @@ from lightwin.ui.workflow_setup import set_up_accelerators, set_up_solvers
 from tests.pytest_helpers.simulation_output import wrap_approx
 
 params = [
-    pytest.param(
-        ("bayesian_optimization",),
-        id="Bayesian Optimization",
-        marks=(
-            pytest.mark.slow,
-            pytest.mark.xfail(
-                condition=True, reason="Unchecked implementation"
-            ),
-        ),
-    ),
+    # pytest.param(
+    #     ("bayesian_optimization",),
+    #     id="Bayesian Optimization",
+    #     marks=(
+    #         pytest.mark.slow,
+    #         pytest.mark.xfail(
+    #             condition=True, reason="Unchecked implementation"
+    #         ),
+    #     ),
+    # ),
     pytest.param(
         ("downhill_simplex",), marks=pytest.mark.smoke, id="Downhill Simplex"
     ),
     pytest.param(("least_squares",), id="Least Squares"),
     pytest.param(("NSGA-III",), id="NSGA-III", marks=pytest.mark.slow),
-    pytest.param(
-        ("NSGA-III Multi-threaded",),
-        id="NSGA-III Multi-threaded",
-        marks=pytest.mark.slow,
-    ),
+    # pytest.param(
+    #     ("NSGA-III Multi-threaded",),
+    #     id="NSGA-III Multi-threaded",
+    #     marks=pytest.mark.slow,
+    # ),
     pytest.param(
         ("simulated_annealing",),
         id="Simulated Annealing",

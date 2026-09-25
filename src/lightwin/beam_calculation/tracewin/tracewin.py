@@ -287,8 +287,8 @@ class TraceWin(BeamCalculator):
         elts :
             List of elements in which the beam should be propagated.
         optimization_status :
-            To prevent errors interrupting simulation during optimization
-            phases.
+            Current optimization state, to prevent errors interrupting
+            simulation during optimization phases.
         kwargs :
             Keyword arguments passed down to :meth:`_tracewin_full_command`.
 
@@ -386,6 +386,7 @@ class TraceWin(BeamCalculator):
             accelerator_id=accelerator_id,
             set_of_cavity_settings=optimized_cavity_settings,
             elts=full_elts,
+            optimization_status="finished",
             **specific_kwargs,
         )
         return simulation_output

@@ -37,6 +37,7 @@ from lightwin.physics.synchronous_phases import (
 )
 from lightwin.util.typing import (
     EXPORT_PHASES_T,
+    OPTIMIZATION_STATUS,
     REFERENCE_PHASE_POLICY_T,
     BeamKwargs,
 )
@@ -122,6 +123,7 @@ class Envelope1D(BeamCalculator):
         accelerator_id: str,
         set_of_cavity_settings: SetOfCavitySettings,
         elts: ListOfElements,
+        optimization_status: OPTIMIZATION_STATUS,
         **kwargs,
     ) -> SimulationOutput:
         """Use solver on ``elts``, including the ``set_of_cavity_settings``.
@@ -137,6 +139,9 @@ class Envelope1D(BeamCalculator):
             objects.
         elts :
             List of elements in which the beam must be propagated.
+        optimization_status :
+            Current optimization state. Only used by :class:`.TraceWin`, to
+            prevent errors during optimization phase.
         kwargs :
             Unused keyword arguments.
 

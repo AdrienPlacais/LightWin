@@ -160,6 +160,9 @@ class OptimisationAlgorithmFactory:
     ) -> dict[str, Any]:
         """Build default arguments for :class:`.OptimisationAlgorithm`.
 
+        .. todo::
+            Make it a TypeDict.
+
         The kwargs for :class:`.OptimisationAlgorithm` that are defined in
         :attr:`.Fault.optimisation_algorithm` will override the ones defined
         here.
@@ -194,6 +197,7 @@ class OptimisationAlgorithmFactory:
                 accelerator_id=self._accelerator_id,
                 set_of_cavity_settings=set_of_cavity_settings,
                 elts=subset_elts,
+                optimization_status="in progress",
                 **kwargs,
             )
 

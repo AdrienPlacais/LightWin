@@ -152,6 +152,7 @@ class BeamCalculator(ABC):
         accelerator_id: str,
         elts: ListOfElements,
         update_reference_phase: bool = False,
+        optimization_status: OPTIMIZATION_STATUS = "not started",
         **kwargs,
     ) -> SimulationOutput:
         """Perform a simulation with default settings.
@@ -175,6 +176,9 @@ class BeamCalculator(ABC):
             the one asked in the ``TOML``. To use after the first calculation,
             if :attr:`.BeamCalculator.reference_phase_policy` does not align
             with :attr:`.CavitySettings.reference`.
+        optimization_status :
+            Current optimization state. Only used by :class:`.TraceWin`, to
+            prevent errors during optimization phase.
         kwargs
             Other keyword arguments passed to :meth:`run_with_this`. As for
             now, only used by :class:`.TraceWin`.
@@ -189,6 +193,7 @@ class BeamCalculator(ABC):
             accelerator_id=accelerator_id,
             set_of_cavity_settings=SetOfCavitySettings.nominal(elts),
             elts=elts,
+            optimization_status=optimization_status,
             **kwargs,
         )
         if update_reference_phase:
@@ -224,8 +229,8 @@ class BeamCalculator(ABC):
         elts :
             List of elements in which the beam should be propagated.
         optimization_status :
-            Only used by :class:`.TraceWin`, to prevent errors during
-            optimization phase.
+            Current optimization state. Only used by :class:`.TraceWin`, to
+            prevent errors during optimization phase.
         kwargs :
             Additional kwargs.
 
@@ -256,6 +261,7 @@ class BeamCalculator(ABC):
             accelerator_id=accelerator_id,
             set_of_cavity_settings=optimized_cavity_settings,
             elts=full_elts,
+            optimization_status="finished",
             **kwargs,
         )
 
