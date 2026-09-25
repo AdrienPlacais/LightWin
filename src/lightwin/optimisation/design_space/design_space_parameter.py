@@ -20,8 +20,8 @@ class DesignSpaceParameter(ABC):
     ----------
     name :
         Name of the parameter. Must be compatible with the
-        :meth:`.SimulationOutput.get` method, and be in
-        :data:`.IMPLEMENTED_VARIABLES` or :data:`.IMPLEMENTED_CONSTRAINTS`.
+        :meth:`.SimulationOutput.get` method, and be in :data:`.VARIABLES` or
+        :data:`.CONSTRAINTS`.
     element_name :
         Name of the element concerned by the parameter.
     limits :
@@ -48,8 +48,8 @@ class DesignSpaceParameter(ABC):
         ----------
         name :
             Name of the parameter. Must be compatible with the
-            :meth:`.SimulationOutput.get` method, and be in
-            :data:`.IMPLEMENTED_VARIABLES` or :data:`.IMPLEMENTED_CONSTRAINTS`.
+            :meth:`.SimulationOutput.get` method, and be in :data:`.VARIABLES`
+            or :data:`.CONSTRAINTS`.
         element_name :
             Name of the element concerned by the parameter.
         x_min :

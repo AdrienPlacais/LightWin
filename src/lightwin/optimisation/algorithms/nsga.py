@@ -22,7 +22,7 @@ from lightwin.optimisation.algorithms.algorithm import (
 
 
 class _LightWinProblem(Problem):
-    """Wrap LightWin's residual evaluation into a pymoo :class:`.Problem`."""
+    """Wrap LightWin's residual evaluation into a pymoo ``Problem`` object."""
 
     def __init__(
         self,
@@ -51,7 +51,8 @@ class _LightWinProblem(Problem):
         eval_fn :
             Residue function.
         kwargs :
-            Additional keyword arguments passed to :class:`.Problem`.
+            Additional keyword arguments passed to
+            :class:`~pymoo.core.problem.Problem`.
 
         """
         super().__init__(
@@ -100,10 +101,6 @@ class NSGA3Algorithm(OptimisationAlgorithm):
 
     All attributes but ``solution`` are inherited from
     :class:`.OptimisationAlgorithm`.
-
-    See Also
-    --------
-    pymoo.algorithms.moo.nsga3.NSGA3
 
     """
 
@@ -313,10 +310,6 @@ class NSGA3AlgorithmMulti(NSGA3Algorithm):
 
     All attributes but ``solution`` are inherited from
     :class:`.OptimisationAlgorithm`.
-
-    See Also
-    --------
-    pymoo.algorithms.moo.nsga3.NSGA3
 
     """
 

@@ -8,18 +8,16 @@ constraints.",✅,"('AbsPhaseAmplitude', 'AbsPhaseAmplitudeWithConstrainedSyncPh
 
 design_space_preset `` is set
 
-to `` ""UserDefined"" ``. In
+to `` UserDefined ``. In this
 
-this case, this key is
-
-mandatory.",❌,
+case, this key is mandatory.",❌,
 `constraint_names`,"`list` or
 
 `tuple`","What to use as constraints if
 
 `` design_space_preset `` is
 
-set to `` ""UserDefined"" ``.",❌,
+set to `` UserDefined ``.",❌,
 `from_file`,`bool`,"If variable limits/constraints
 
 should be taken from a file.",✅,

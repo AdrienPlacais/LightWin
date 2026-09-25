@@ -28,8 +28,7 @@ class Variable(DesignSpaceParameter):
     ----------
     name :
         Name of the parameter. Must be compatible with the
-        :meth:`.SimulationOutput.get` method, and be in
-        :data:`.IMPLEMENTED_VARIABLES`.
+        :meth:`.SimulationOutput.get` method, and be in :data:`.VARIABLES`.
     element_name :
         Name of the element concerned by the parameter.
     limits :
@@ -56,8 +55,7 @@ class Variable(DesignSpaceParameter):
         ----------
         name :
             Name of the parameter. Must be compatible with the
-            :meth:`.SimulationOutput.get` method, and be in
-            :data:`.IMPLEMENTED_VARIABLES`.
+            :meth:`.SimulationOutput.get` method, and be in :data:`.VARIABLES`.
         element_name :
             Name of the element concerned by the parameter.
         x_min :

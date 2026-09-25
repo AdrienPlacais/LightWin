@@ -100,6 +100,8 @@ nitpick_ignore = [
 ]
 
 # Link to other libraries
+# To verify that an URL will work, append "objects.inv" and check if the file
+# exists
 intersphinx_mapping = {
     "bayes_opt": (
         "https://bayesian-optimization.github.io/BayesianOptimization/master/",
@@ -109,6 +111,7 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
     "pandas": ("https://pandas.pydata.org/pandas-docs/version/2.2", None),
     "python": ("https://docs.python.org/3", None),
+    "pymoo": ("https://pymoo.org/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 

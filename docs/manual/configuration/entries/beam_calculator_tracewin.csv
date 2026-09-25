@@ -264,6 +264,17 @@ beam",❌,
 beam",❌,
 `zp1`,`float`,Input Z angle of main beam,❌,
 `zp2`,`float`,Input Z angle of second beam,❌,
+`cal_file`,"`str` or
+
+`Path`","Path to a `CAL` file holding
+
+TraceWin optimization results.
+
+If provided, the file must
+
+exist and will be copied so
+
+that TraceWin picks it up.",❌,
 `executable`,"`str` or
 
 `Path`","Direct path to the TraceWin

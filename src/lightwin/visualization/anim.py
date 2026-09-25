@@ -55,6 +55,9 @@ class AnimatedScatterDesign:
         self.n_cav = n_cav
         frames = len(hist) - 1
 
+        #: History of algorithm states. Each entry must expose a ``.pop``
+        #: attribute with a ``get("X")`` method returning a 2-D array of
+        #: shape ``(n_individuals, 2 * n_cav)``.
         self.hist = hist
         self.stream = self.data_stream()
 
