@@ -1,8 +1,8 @@
 Entry,Type,Description,Mandatory?,Allowed values
-`export_phase`,`str`,"The type of phases that should be exported in the final `DAT` file. Note that `'as_in_original_dat'` is not implemented yet, but `'as_in_settings'` should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.",✅,"('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_original_dat', 'as_in_settings')"
-`reference_phase_policy`,`str`,"Controls cavities reference phase. More details in :ref:`dedicated notebook<notebooks-cavities-reference-phase>`. With TraceWin solver, prefer sticking with `'phi_0_rel'`.",✅,"('phi_0_abs', 'phi_0_rel', 'phi_s', 'as_in_original_dat')"
+`export_phase`,`str`,"The type of phases that should be exported in the final `DAT` file. Note that `'as_in_original_dat'` is not implemented yet, but `'as_in_settings'` should behave the same way, provided that you alter no FieldMap.CavitySettings.reference attribute.",✅,"`phi_0_abs`, `phi_0_rel`, `phi_s`, `as_in_original_dat`, `as_in_settings`"
+`reference_phase_policy`,`str`,"Controls cavities reference phase. More details in :ref:`dedicated notebook<notebooks-cavities-reference-phase>`. With TraceWin solver, prefer sticking with `'phi_0_rel'`.",✅,"`phi_0_abs`, `phi_0_rel`, `phi_s`, `as_in_original_dat`"
 `flag_phi_abs`,`bool` or `NoneType`,"DEPRECATED, prefer use of `reference_phase_policy`. If the field maps phases should be absolute (no implicit rephasing after a failure).",❌,
-`tool`,`str`,Name of the tool.,✅,"('Envelope1D', 'Envelope3D', 'Envelope_1D', 'Envelope_3D', 'TraceWin', 'envelope1d', 'envelope3d', 'envelope_1d', 'envelope_3d', 'tracewin')"
+`tool`,`str`,Name of the tool.,✅,"`Envelope1D`, `Envelope3D`, `Envelope_1D`, `Envelope_3D`, `TraceWin`, `envelope1d`, `envelope3d`, `envelope_1d`, `envelope_3d`, `tracewin`"
 `algo`,`int`,"Optimization using algorithm (0: Owner, 1: Simplex, 2: Diff. evo.)",❌,
 `alpx1`,`float`,Input twiss parameter alpXX’ of main beam,❌,
 `alpx2`,`float`,Input twiss parameter alpXX’ of second beam,❌,
@@ -41,8 +41,8 @@ Entry,Type,Description,Mandatory?,Allowed values
 `freq1`,`float`,Input beam frequency (MHz) of main beam,❌,
 `freq2`,`float`,Input beam frequency (MHz) of second beam,❌,
 `hide`,`bool`,"Hide the GUI, or cancel console output (no parameter).",✅,
-`input_dist_type`,`int`,"Input distribution type from 1 to 5, see GUI menu",❌,"range(1, 6)"
-`long_dist_mask`,`int`,"Mask of the longitudinal input distribution from 1 to 7, see GUI menu",❌,"range(1, 8)"
+`input_dist_type`,`int`,"Input distribution type from 1 to 5, see GUI menu",❌,"`1`, `2`, `3`, `4`, `5`"
+`long_dist_mask`,`int`,"Mask of the longitudinal input distribution from 1 to 7, see GUI menu",❌,"`1`, `2`, `3`, `4`, `5`, `6`, `7`"
 `lost_e_limit`,`float`,Particle is lost if \|W-Ws\| > lost_e_limit,❌,
 `lost_p_limit`,`float`,Particle is lost if \|Ф- Ф s\| > lost_p_limit,❌,
 `mass1`,`float`,Input beam mass (eV) of main beam,❌,
@@ -50,7 +50,7 @@ Entry,Type,Description,Mandatory?,Allowed values
 `nbr_part1`,`int`,Number of particle of main beam,❌,
 `nbr_part2`,`int`,Number of particle of second beam,❌,
 `nbr_thread`,`int`,Set the max. number of core/thread used,❌,
-`partran`,`int` or `bool`,To activate/deactivate partran tracking.,❌,"(0, 1, True, False)"
+`partran`,`int` or `bool`,To activate/deactivate partran tracking.,❌,"`0`, `1`, `True`, `False`"
 `part_step`,`int`,Partran calculation step per meter (per beta.lambda if < 0),❌,
 `picnic_2d`,`bool`,Space-charge routine is defined as picnic2D,❌,
 `picnic_3d`,`bool`,Space-charge routine is defined as picnic3D,❌,
@@ -63,8 +63,8 @@ Entry,Type,Description,Mandatory?,Allowed values
 `spreadw2`,`float`,Input spread energy for CW beam of second beam,❌,
 `synoptic_file`,`str` or `Path`,"Save the geometric layout at (entance (=1), middle (=2), exit (=3) of elements. (See “Synoptic” tools for file name).",❌,
 `tab_file`,`str` or `Path`,Save to file the data sheet at the end of calcul (by default in calculation directory).,❌,
-`toutatis`,`float` or `bool`,Force or avoid Toutatis simulation (1 / 0),❌,"(0, 1, True, False)"
-`trans_dist_mask`,`int`,"Mask of the transverse input distribution from 1 to 7, see GUI menu",❌,"range(1, 8)"
+`toutatis`,`float` or `bool`,Force or avoid Toutatis simulation (1 / 0),❌,"`0`, `1`, `True`, `False`"
+`trans_dist_mask`,`int`,"Mask of the transverse input distribution from 1 to 7, see GUI menu",❌,"`1`, `2`, `3`, `4`, `5`, `6`, `7`"
 `upgrade`,`str`,To update LightWin,❌,
 `use_dst_file`,`bool`,dst file is used as input beam distribution,❌,
 `vfac`,`float`,"Change RFQ Ucav (ex : “vfac 0.5”, half reduce of Ucav)",❌,

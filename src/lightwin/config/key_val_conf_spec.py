@@ -174,9 +174,6 @@ class KeyValConfSpec:
     def to_csv_line(self) -> list[str] | None:
         """Convert object to a line for the documentation ``CSV``.
 
-        .. todo::
-           Better display of allowed values
-
         Returns
         -------
         key :
@@ -198,8 +195,8 @@ class KeyValConfSpec:
         fmt_types = " or ".join(type_names)
 
         fmt_mandatory = "✅" if self.is_mandatory else "❌"
-        fmt_allowed = (
-            f"{self.allowed_values}" if self.allowed_values is not None else ""
+        fmt_allowed = ", ".join(
+            f"`{value}`" for value in self.allowed_values or ()
         )
         return [
             f"`{self.key}`",
