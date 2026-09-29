@@ -20,6 +20,7 @@ This approach is easier to use for initial runs.
 .. csv-table::
    :file: entries/design_space_calculated.csv
    :header-rows: 1
+   :class: config-table
 
 
 .. important::
@@ -54,6 +55,7 @@ You can also re-use following files in `data/example`:
 .. csv-table::
    :file: entries/design_space_from_file.csv
    :header-rows: 1
+   :class: config-table
 
 
 Under implementation

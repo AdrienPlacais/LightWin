@@ -11,6 +11,7 @@ The units must be consistent with LightWin's system of units, see also :ref:`uni
 .. csv-table::
    :file: entries/beam.csv
    :header-rows: 1
+   :class: config-table
 
 
 Format for the ``sigma`` entry:

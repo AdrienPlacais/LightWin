@@ -9,6 +9,7 @@ Below are listed the configuration keys commonly used in the the `[wtf]` section
 .. csv-table::
    :file: entries/wtf_common.csv
    :header-rows: 1
+   :class: config-table
 
 Choice of failed cavities
 -------------------------

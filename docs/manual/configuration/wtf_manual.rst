@@ -11,6 +11,7 @@ If you want to manually associate each failed cavity with its compensating cavit
 .. csv-table::
    :file: entries/wtf_manual.csv
    :header-rows: 1
+   :class: config-table
 
 In order to tell LightWin which cavities should compensate which failures, both `failed` and `compensating_manual` must be 3D lists.
 The dimensions represent:

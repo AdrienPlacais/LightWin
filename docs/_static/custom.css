@@ -3,3 +3,15 @@
 .wy-table-responsive table th {
   white-space: normal;
 }
+/* Allow breaking long words */
+.rst-content table.docutils td code.literal {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+table.config-table td:nth-child(1) {
+  min-width: 16em;
+}
+
+table.config-table td:nth-child(2) {
+  min-width: 7em;
+}

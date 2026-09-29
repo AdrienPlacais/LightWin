@@ -11,3 +11,4 @@ Non-failed cavities in the same lattice as the failure are also used.
 .. csv-table::
    :file: entries/wtf_l_neighboring_lattices.csv
    :header-rows: 1
+   :class: config-table

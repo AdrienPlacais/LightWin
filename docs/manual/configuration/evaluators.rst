@@ -10,6 +10,7 @@ They are used to evaluate the absolute or relative *quality* of compensation set
 .. csv-table::
    :file: entries/evaluator.csv
    :header-rows: 1
+   :class: config-table
 
 .. note::
    These objects will be refactored in updates to come, to provide more robust implementation and user experience.
