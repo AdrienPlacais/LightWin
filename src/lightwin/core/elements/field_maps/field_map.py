@@ -335,11 +335,11 @@ class FieldMap(Element):
         which_phase :
             Which phase should be put in the output ``DAT``.
         args :
-            Additional arguments passed to :meth:`.Element.to_line`.
+            Additional arguments passed to :meth:`.Instruction.to_line`.
         round :
             Rounding numbers in exported line.
         kwargs :
-            Additional arguments passed to :meth:`.Element.to_line`.
+            Additional arguments passed to :meth:`.Instruction.to_line`.
 
         Returns
         -------

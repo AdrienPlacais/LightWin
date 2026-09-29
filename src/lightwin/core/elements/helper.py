@@ -65,8 +65,8 @@ def force_a_lattice_for_every_element(elts: Sequence[Element]) -> None:
 
     Elements after the first LATTICE command will be in the previous lattice.
 
-    Example:
-    -------
+    Examples
+    --------
     .. list-table ::
         :widths: 10 10 10
         :header-rows: 1

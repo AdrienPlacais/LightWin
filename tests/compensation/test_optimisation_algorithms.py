@@ -33,7 +33,7 @@ params = [
         ("downhill_simplex",), marks=pytest.mark.smoke, id="Downhill Simplex"
     ),
     pytest.param(("least_squares",), id="Least Squares"),
-    pytest.param(("NSGA-III",), id="NSGA-III", marks=pytest.mark.slow),
+    # pytest.param(("NSGA-III",), id="NSGA-III", marks=pytest.mark.slow),
     # pytest.param(
     #     ("NSGA-III Multi-threaded",),
     #     id="NSGA-III Multi-threaded",

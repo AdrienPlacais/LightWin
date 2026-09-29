@@ -478,8 +478,8 @@ class CavitySettings:
 
         .. note::
            When the cavity is broken, we skip these deletions as changing the
-           :property:`.status` already set ``phi_s`` to ``nan`` and
-           ``phi_0_abs`` and ``phi_0_rel`` to ``0.0``.
+           :attr:`.status` already set ``phi_s`` to ``nan`` and ``phi_0_abs``
+           and ``phi_0_rel`` to ``0.0``.
 
         """
         if self.is_broken:

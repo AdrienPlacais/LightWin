@@ -54,7 +54,7 @@ class Steerer(Command):
     def set_influenced_elements(
         self, instructions: list[Instruction], **kwargs: float
     ) -> None:
-        """Determine the index of the elements concerned by :func:`apply`."""
+        """Determine index of elements concerned by :meth:`.Command.apply`."""
         next_element = next(
             filter(
                 lambda elt: isinstance(elt, Element),

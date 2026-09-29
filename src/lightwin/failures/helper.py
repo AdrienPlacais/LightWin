@@ -210,8 +210,8 @@ def nested_containing_desired[T](
 ) -> list[list[T]]:
     """Return collections of ``nested`` containing some ``desired_elements``.
 
-    Example:
-    -------
+    Examples
+    --------
     ``nested_containing_desired(ListOfElements.by_lattice, failed_elements)``
     will return ``lattices_with_a_failure``
 

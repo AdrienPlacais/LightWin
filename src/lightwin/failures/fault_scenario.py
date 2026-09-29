@@ -265,11 +265,15 @@ class FaultScenario(list[Fault]):
         """Create objects to instantiate the :class:`.OptimisationAlgorithm`.
 
         In particular:
+
         - build :class:`.DesignSpace`
         - build :class:`.ObjectiveFactory`
         - extract |LOE| corresponding to zone to recompute
+
           - this ``subset_elts`` is kept as a |F| attribute.
+
         - create :class:`.OptimisationAlgorithm`.
+
           - if :attr:`.skip_optimization` is ``True``, we rather
             instantiate the special :class:`.PredefinedSolution`.
 

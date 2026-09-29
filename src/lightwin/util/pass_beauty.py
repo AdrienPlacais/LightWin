@@ -196,7 +196,7 @@ def _cavity_settings_to_adjust(
 ) -> tuple[Adjust, Adjust] | tuple[Adjust, Adjust, Adjust]:
     """Create ``ADJUST`` commands with small bounds around current values.
 
-    Adjust phase, ``k_e``, and ``k_g``1 if ``link_index`` is different from 0.
+    Adjust phase, ``k_e``, and ``k_g`` if ``link_index`` is different from 0.
 
     Parameters
     ----------
@@ -262,7 +262,7 @@ def _set_of_cavity_settings_to_adjust(
     tol_k_e: float = 0.05,
     phase_nature: REFERENCE_PHASES_T = "phi_0_rel",
 ) -> list[Adjust]:
-    """Create adjust commands for every compensating cavity.
+    r"""Create adjust commands for every compensating cavity.
 
     Parameters
     ----------
@@ -270,7 +270,7 @@ def _set_of_cavity_settings_to_adjust(
         Maps cavities to their compensated settings.
     number :
         ID number of the diagnostics that should be associated with the
-        ``ADJUST``s.
+        ``ADJUST``\s.
     tol_phi_deg :
         Tolerance over original phase in degrees.
     link_k_g :
@@ -459,9 +459,11 @@ def _spiral2_quadrupoles(lattices: list[list[Element]]) -> list[Quad]:
     """Get QP from SPIRAL2 linac, check structure.
 
     We expect, in each lattice:
+
     - two identical defocusing quadrupoles of length 65mm, directly after each
       other
     - one focusing quadrupole of length 130mm
+
     We insert the diags between the two identical defoc.
 
     """

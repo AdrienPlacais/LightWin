@@ -93,6 +93,7 @@ nitpick_ignore = [
     ("py:class", "np.float64"),
     ("py:class", "NDArray"),
     ("py:class", "numpy._typing._array_like._ScalarT"),
+    ("py:class", "T"),
     # Due to bad design
     ("py:class", "lightwin.failures.set_of_cavity_settings.FieldMap"),
     ("py:obj", "lightwin.failures.set_of_cavity_settings.FieldMap"),

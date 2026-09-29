@@ -51,8 +51,8 @@ class SuperposeMap(Command):
         element that is not a field map. It allows to consider situations where
         we field_map is not directly after the ``SUPERPOSE_MAP`` command.
 
-        Example:
-        -------
+        Examples
+        --------
         ```
         SUPERPOSE_MAP
         STEERER

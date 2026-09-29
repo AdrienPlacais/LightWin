@@ -95,6 +95,7 @@ class TraceWin(BeamCalculator):
         self.ini_path = ini_path.resolve().absolute()
         self.base_kwargs = base_kwargs
         #: ``CAL`` file holding TraceWin optimization results.
+        #:
         #: - If set, the file will be copied in the directory of the ``DAT``,
         #:   and be renamed so that TraceWin uses it.
         #: - If set to ``None``, we ensure that TraceWin will not pick-up any
@@ -395,6 +396,7 @@ class TraceWin(BeamCalculator):
         """Prepare TraceWin bash arguments.
 
         In particular:
+
         1. Set the ``path_cal`` variable, defining where to store results.
         2. Set the ``_tracewin_command`` attribute to None, as it must be
            updated when ``path_cal`` changes.

@@ -21,6 +21,7 @@ This approach is easier to use for initial runs.
    :file: entries/design_space_calculated.csv
    :header-rows: 1
 
+
 .. important::
    The design space defines which variables the optimizer explores.
    If your `design_space_preset` key is set to, for example, `"abs_phase_amplitude"`, the optimization variables are the amplitude :math:`k_e` and the absolute phase :math:`\phi_{0,\,\mathrm{abs}}` of each compensating cavity.
@@ -53,6 +54,7 @@ You can also re-use following files in `data/example`:
 .. csv-table::
    :file: entries/design_space_from_file.csv
    :header-rows: 1
+
 
 Under implementation
 --------------------
