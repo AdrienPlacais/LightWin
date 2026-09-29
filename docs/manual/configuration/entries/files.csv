@@ -1,27 +1,7 @@
 Entry,Type,Description,Mandatory?,Allowed values
-`dat_file`,"`str` or
-
-`Path`",Path to the `DAT` file,✅,
-"`logfile_console_`
-
-`level`",`str`,"Level of messages written in
-
-console",❌,"('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')"
-`logfile_file`,`str`,"Name of the file where the
-
-logging output will be written",❌,
-`logfile_log_level`,`str`,"Level of messages written in
-
-logfile",❌,"('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')"
-`project_folder`,"`str` or
-
-`Path`","Where output results will be
-
-stored",❌,
-`pickle_paths`,`dict`,"Associates accelerator names
-
-with pickle files. Check
-
-`dedicated`
-
-`notebook<notebooks-pickling>`.",❌,
+`dat_file`,`str` or `Path`,Path to the `DAT` file,✅,
+`logfile_console_level`,`str`,Level of messages written in console,❌,"('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')"
+`logfile_file`,`str`,Name of the file where the logging output will be written,❌,
+`logfile_log_level`,`str`,Level of messages written in logfile,❌,"('DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')"
+`project_folder`,`str` or `Path`,Where output results will be stored,❌,
+`pickle_paths`,`dict`,Associates accelerator names with pickle files. Check `dedicated notebook<notebooks-pickling>`.,❌,
