@@ -6,12 +6,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
-from lightwin.config.csv_formatter import format_long_columns
 from lightwin.config.helper import find_path
 from lightwin.config.toml_formatter import format_for_toml
 
 CSV_HEADER = ["Entry", "Type", "Description", "Mandatory?", "Allowed values"]
-CSV_WIDTHS = (20, 10, 30, 1000, 1000)
 
 
 @dataclass
@@ -190,7 +188,7 @@ class KeyValConfSpec:
         allowed_values :
             list of allowed values if relatable.
         is_mandatory :
-            If the variable is mandatory or not.
+            Whether the variable is mandatory.
 
         """
         if self.derived:
@@ -203,15 +201,10 @@ class KeyValConfSpec:
         fmt_allowed = (
             f"{self.allowed_values}" if self.allowed_values is not None else ""
         )
-        long = (
+        return [
             f"`{self.key}`",
             fmt_types,
             self.description,
             fmt_mandatory,
             fmt_allowed,
-        )
-        shortened = [
-            format_long_columns(text, width)
-            for text, width in zip(long, CSV_WIDTHS)
         ]
-        return shortened
