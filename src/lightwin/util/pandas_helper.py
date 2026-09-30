@@ -1,6 +1,8 @@
 """Define helper functions for consistency accross code."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from pathlib import Path
 from typing import Any
 
@@ -18,4 +20,4 @@ def to_csv(
     if path is None:
         return
     df.to_csv(path_or_buf=path, sep=sep, **kwargs)
-    logging.info(f"Saved df to {path}")
+    logger.info(f"Saved df to {path}")

@@ -1,6 +1,8 @@
 """Define the base objects constraining values/types of config parameters."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable, Collection
 from pathlib import Path
 from typing import Any, Literal
@@ -128,7 +130,7 @@ class TableConfSpec:
 
         self.is_mandatory = is_mandatory
         self.can_have_untested_keys = can_have_untested_keys
-        logging.info(f".toml table [{table_entry}] loaded!")
+        logger.info(f".toml table [{table_entry}] loaded!")
 
     def __repr__(self) -> str:
         """Print how the object was created."""
@@ -240,7 +242,7 @@ class TableConfSpec:
         if self.can_have_untested_keys:
             return
         msg = f"The table {self.table_entry} has no specs for property {spec_name}"
-        logging.error(msg)
+        logger.error(msg)
         raise OSError(msg)
 
     def to_toml_strings(
@@ -296,7 +298,7 @@ class TableConfSpec:
             if not spec.is_mandatory:
                 continue
             if spec.default_value is not None:
-                logging.warning(
+                logger.warning(
                     f"The key {key} is missing in [{self.table_entry}]. "
                     f"Using default value: {spec.default_value}."
                 )
@@ -327,7 +329,7 @@ class TableConfSpec:
 
         all_is_validated = all(validations)
         if not all_is_validated:
-            logging.error(
+            logger.error(
                 f"At least one error was raised treating {self.table_entry}"
             )
 
@@ -374,7 +376,7 @@ class TableConfSpec:
             if key in toml_keys:
                 continue
             if (default := spec.default_value) is not None:
-                logging.warning(
+                logger.warning(
                     f"The key {key} should be given but was not found. Will "
                     f"use default value: {default}. You may want to set this "
                     f"key explicitly; allowed values:\n{spec.allowed_values}"
@@ -382,7 +384,7 @@ class TableConfSpec:
                 continue
 
             they_are_all_present = False
-            logging.error(f"The key {key} should be given but was not found.")
+            logger.error(f"The key {key} should be given but was not found.")
 
         return they_are_all_present
 

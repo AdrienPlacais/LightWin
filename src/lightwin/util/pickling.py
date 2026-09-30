@@ -25,6 +25,8 @@ Some objects have built-in `pickle` and `unpickle` methods, namely:
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import TypeVar, overload
@@ -134,7 +136,7 @@ class MyCloudPickler(MyPickler):
         else:
             path = Path(path).resolve().absolute()
         if path is None:
-            logging.error(
+            logger.error(
                 "You provided `path = None`, so I will skip the pickling of "
                 f"{my_object = }."
             )
@@ -143,7 +145,7 @@ class MyCloudPickler(MyPickler):
         with open(path, "wb") as f:
             self._cloudpickle.dump(my_object, f)
 
-        logging.info(f"Pickled {my_object} to {path}.")
+        logger.info(f"Pickled {my_object} to {path}.")
         return path
 
     def unpickle(
@@ -183,7 +185,7 @@ class MyCloudPickler(MyPickler):
                 or f"Choose which {info} should be unpickled (loaded)."
             )
         if path is None:
-            logging.error(
+            logger.error(
                 "You provided `path = None`, so I do not have anything to unpickle."
             )
             return
@@ -220,7 +222,7 @@ def ask_pickle_filename(
         from tkinter import Tk
         from tkinter.filedialog import asksaveasfilename
     except ModuleNotFoundError:
-        logging.error(
+        logger.error(
             "tkinter module is mandatory for the GUI file explorer to work, "
             "but it was not found. Skipping the associated pickling operation."
         )
@@ -242,6 +244,6 @@ def ask_pickle_filename(
     root.destroy()
 
     if not filepath:
-        logging.info("No filepath was set, will skip pickling.")
+        logger.info("No filepath was set, will skip pickling.")
         return
     return Path(filepath).resolve().absolute()

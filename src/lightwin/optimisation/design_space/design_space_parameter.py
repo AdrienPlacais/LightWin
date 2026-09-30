@@ -1,6 +1,8 @@
 """Create a base class for :class:`.Variable` and :class:`.Constraint`."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from abc import ABC
 from dataclasses import dataclass
@@ -80,14 +82,14 @@ class DesignSpaceParameter(ABC):
         self._to_deg = False
         self._to_numpy = False
         if self.x_min > self.x_max:
-            logging.warning(
+            logger.warning(
                 f"{type(self).__name__} {self.element_name} {self.name} lower "
                 f"limit {self.x_min} > {self.x_max} upper limit. Inverting "
                 "them."
             )
             self.change_limits(self.x_max, self.x_min)
         if self.x_min == self.x_max:
-            logging.warning(
+            logger.warning(
                 f"{type(self).__name__} {self.element_name} {self.name} lower "
                 f"limit {self.x_min} == {self.x_max} upper limit. Shifting "
                 "them by 1e-8."

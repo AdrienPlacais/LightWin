@@ -8,6 +8,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC
 from collections.abc import Collection, MutableSequence
 from typing import Self
@@ -182,7 +184,7 @@ class Dummy(Instruction):
         """
         super().__init__(line, **kwargs)
         if warning:
-            logging.warning(
+            logger.warning(
                 "A dummy element was added as the corresponding element or "
                 "command is not implemented. If the BeamCalculator is not "
                 "TraceWin, this may be a problem. In particular if the missing"

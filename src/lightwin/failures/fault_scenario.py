@@ -7,6 +7,8 @@ the required |FS| objects.
 
 import datetime
 import logging
+
+logger = logging.getLogger(__name__)
 import time
 from collections.abc import Sequence
 from pathlib import Path
@@ -191,7 +193,7 @@ class FaultScenario(list[Fault]):
             simulation_output = self._wrap_fix(fault, simulation_output)
 
         delta_t = datetime.timedelta(seconds=time.monotonic() - start_time)
-        logging.info(f"Solving all the optimization problems took {delta_t}")
+        logger.info(f"Solving all the optimization problems took {delta_t}")
         self.optimisation_time = delta_t
         self.fix_acc.status = "fix"
 
@@ -251,7 +253,7 @@ class FaultScenario(list[Fault]):
         df_altered = sumup_cavities(
             fault.subset_elts, filter=lambda cav: cav.is_altered
         )
-        logging.info(f"Retuned cavities:\n{pd_output(df_altered)}")
+        logger.info(f"Retuned cavities:\n{pd_output(df_altered)}")
         fault.subset_elts.store_settings_in_dat(
             fault.subset_elts.files_info["dat_file"],
             exported_phase=self.beam_calculator.reference_phase_policy,
@@ -307,7 +309,7 @@ class FaultScenario(list[Fault]):
             self.fix_acc.elts.files_info,
         )
         fault.subset_elts = subset_elts
-        logging.info(
+        logger.info(
             "Created a ListOfElements ecompassing a linac subset.\n"
             f"Encompasses: {subset_elts[0]} to {subset_elts[-1]}\nw_kin_in = "
             f"{subset_elts.w_kin_in:.2f} MeV\nphi_abs_in = "
@@ -407,7 +409,7 @@ class FaultScenario(list[Fault]):
             id_solver_fix = id_solver_ref
 
         if id_solver_ref != id_solver_fix:
-            logging.warning(
+            logger.warning(
                 "You are trying to compare two SimulationOutputs created by "
                 "two different solvers. This may lead to errors, as "
                 "interpolations in this case are not implemented yet."
@@ -463,7 +465,7 @@ class FaultScenario(list[Fault]):
             for c in cavities_after_first_failure
             if c.cavity_settings.reference != "phi_0_abs"
         ]
-        logging.info(
+        logger.info(
             f"Marking {len(cavities_to_rephase)} cavities as 'to be rephased',"
             " because they are after a failed cavity and their reference phase "
             "is phi_s or phi_0_rel."

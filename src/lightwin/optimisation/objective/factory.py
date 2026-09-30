@@ -10,6 +10,8 @@ implemented presets in :data:`.OBJECTIVE_PRESETS` and
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC, abstractmethod
 from collections.abc import Collection
 from dataclasses import dataclass
@@ -871,7 +873,7 @@ class ObjectiveMetaFactory:
 
         """
         if objective_factory_class:
-            logging.info(
+            logger.info(
                 "A user-defined ObjectiveFactory was provided, so the key "
                 f"{objective_preset = } will be disregarded.\n"
                 f"{objective_factory_class = }"

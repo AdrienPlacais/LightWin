@@ -2,6 +2,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
     BendEnvelope1DParameters,
     DriftEnvelope1DParameters,
@@ -149,7 +151,7 @@ class ElementEnvelope1DParametersFactory(
         if constructor is not None:
             return constructor
 
-        logging.error(
+        logger.error(
             f"Element {elt} of {element_class = } not added to the Envelope1D "
             "dict linking every Element class to its specific parameters "
             "(transfer matrix in particular). Neither was found its "

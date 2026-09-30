@@ -1,6 +1,8 @@
 """Define a useless command to serve as place holder."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from pathlib import Path
 
 from lightwin.core.commands.command import Command
@@ -39,7 +41,7 @@ class FieldMapPath(Command):
         if self.path.is_dir():
             return
 
-        logging.critical(
+        logger.critical(
             f"The {path = } given in FIELD_MAP_PATH was not found."
         )
 

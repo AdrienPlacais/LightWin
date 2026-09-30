@@ -1,6 +1,8 @@
 """Define a plotter that rely on the matplotlib library."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
@@ -83,7 +85,7 @@ class MatplotlibPlotter(IPlotter):
             return axes
         except TypeError as e:
             if dump_no_numerical_data_to_plot:
-                logging.info(f"Dumped a Matplotlib.plot error: {e}.")
+                logger.info(f"Dumped a Matplotlib.plot error: {e}.")
                 return axes
             raise
 
@@ -130,7 +132,7 @@ class MatplotlibPlotter(IPlotter):
         **kwargs,
     ) -> None:
         """Add one constant plot."""
-        logging.critical(f"{color = }, {ls = }")
+        logger.critical(f"{color = }, {ls = }")
         if not isinstance(axes, Sequence):
             axes = (axes,)
         for axe in axes:

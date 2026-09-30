@@ -5,6 +5,8 @@ For now, used only in acceptance computations.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable
 
 import numpy as np
@@ -42,7 +44,7 @@ def solve_scalar_equation_brent(
     if x_left > x_right:
         x_left, x_right = x_right, x_left
         if warning:
-            logging.warning(
+            logger.warning(
                 f"The range ({x_bounds[0]}, {x_bounds[1]}) is inverted. "
                 f"It has been corrected to ({x_left}, {x_right})."
             )
@@ -51,7 +53,7 @@ def solve_scalar_equation_brent(
     if f(x_left) * f(x_right) > 0:
         solution = np.nan
         if warning:
-            logging.warning(
+            logger.warning(
                 f"{f(x_left)} and {f(x_right)} have the same sign in solve_scalar_equation_brent(). "
                 "There is no root in this range"
             )
@@ -62,7 +64,7 @@ def solve_scalar_equation_brent(
     except (ValueError, RuntimeError) as e:
         solution = np.nan
         if warning:
-            logging.warning(
+            logger.warning(
                 f"Root finding failed in solve_scalar_equation_brent() with param={param_value}: {e}"
             )
 

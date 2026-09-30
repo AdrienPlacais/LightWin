@@ -16,6 +16,8 @@ a "brute-force" optimisation algorithm.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Literal
 
 import numpy as np
@@ -53,7 +55,7 @@ class Explorator(OptimisationAlgorithm):
 
         """
         if self.n_var != 2:
-            logging.warning("I think this algo only works with 2 vars")
+            logger.warning("I think this algo only works with 2 vars")
         kwargs = self._algorithm_parameters()
 
         _, variables_values = self._generate_combinations(**kwargs)

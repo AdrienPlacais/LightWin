@@ -11,6 +11,8 @@ It should return a |SO|.
 
 import datetime
 import logging
+
+logger = logging.getLogger(__name__)
 import time
 from abc import ABC, abstractmethod
 from itertools import count
@@ -198,7 +200,7 @@ class BeamCalculator(ABC):
         )
         if update_reference_phase:
             if self.reference_phase == "phi_s":
-                logging.warning(
+                logger.warning(
                     "Did not check how elts.force_reference_phases_to handles "
                     "synch phase"
                 )
@@ -341,7 +343,7 @@ class BeamCalculator(ABC):
         end_time = time.monotonic()
         delta_t = datetime.timedelta(seconds=end_time - start_time)
         if output_time:
-            logging.info(f"Elapsed time in beam calculation: {delta_t}")
+            logger.info(f"Elapsed time in beam calculation: {delta_t}")
 
         if not recompute_reference:
             raise NotImplementedError(
@@ -386,13 +388,13 @@ class BeamCalculator(ABC):
         """
         simulation_output = accelerator.simulation_outputs.get(self.id, None)
         if simulation_output is not None:
-            logging.info(
+            logger.info(
                 "Skipped calculation of unpickled Accelerator: "
                 f"{accelerator.id}"
             )
             return simulation_output
 
-        logging.error(
+        logger.error(
             f"Pickled Accelerator {accelerator.name} has no SimulationOutput "
             f"calculated with current solver {self.id}. Note that it can "
             "happen if the order of the BeamCalculator is changed, which is a"

@@ -7,6 +7,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection, Sequence
 
 from lightwin.core.commands.command import Command
@@ -122,7 +124,7 @@ class SuperposeMap(Command):
 
             if isinstance(field_map := instruction, FieldMap):
                 if z_0 is None:
-                    logging.error(
+                    logger.error(
                         "There is no SUPERPOSE_MAP for current FIELD_MAP.\n"
                         f"{instruction.line}"
                     )

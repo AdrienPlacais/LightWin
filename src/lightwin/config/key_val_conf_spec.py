@@ -1,6 +1,8 @@
 """Define the base objects constraining values/types of config parameters."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
@@ -80,9 +82,9 @@ class KeyValConfSpec:
     def validate(self, toml_value: Any, **kwargs) -> bool:
         """Check that the given ``toml`` line is valid."""
         if self.warning_message:
-            logging.warning(f"{self.key}: {self.warning_message}")
+            logger.warning(f"{self.key}: {self.warning_message}")
         if self.error_message:
-            logging.critical(f"{self.key}: {self.error_message}")
+            logger.critical(f"{self.key}: {self.error_message}")
             raise OSError(f"{self.key}: {self.error_message}")
         if self.action is not None:
             return True
@@ -93,14 +95,14 @@ class KeyValConfSpec:
             and self.path_exists(toml_value, **kwargs)
         )
         if not valid:
-            logging.error(f"An error was detected while treating {self.key}")
+            logger.error(f"An error was detected while treating {self.key}")
         return valid
 
     def is_valid_type(self, toml_value: Any, **kwargs) -> bool:
         """Check that the value has the proper typing."""
         if isinstance(toml_value, self.types):
             return True
-        logging.warning(
+        logger.warning(
             f"Type error in {self.key}. {toml_value = } type not in {self.types = }"
         )
         return False
@@ -111,7 +113,7 @@ class KeyValConfSpec:
             return True
         if toml_value in self.allowed_values:
             return True
-        logging.error(
+        logger.error(
             f"{self.key}: {toml_value = } is not in {self.allowed_values = }"
         )
         return False
@@ -126,7 +128,7 @@ class KeyValConfSpec:
             _ = find_path(toml_folder, toml_value)
             return True
         except FileNotFoundError:
-            logging.error(f"{toml_value} should exist but was not found.")
+            logger.error(f"{toml_value} should exist but was not found.")
             return False
 
     def to_toml_string(
@@ -156,7 +158,7 @@ class KeyValConfSpec:
         if self.derived:
             return ""
         if toml_value is None:
-            logging.error(
+            logger.error(
                 f"You must provide a value for {self.key = }. Trying to "
                 f"continue with {self.default_value = }..."
             )

@@ -6,6 +6,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection, Sequence
 from functools import lru_cache
 from typing import Literal
@@ -46,7 +48,7 @@ def warn_once() -> None:
     https://stackoverflow.com/questions/31953272/logging-print-message-only-once
 
     """
-    logging.warning(
+    logger.warning(
         "When several fault scenarios are plotted after each other, they all "
         "keep the same objective position marker. This is not intended "
         "behavior."
@@ -68,7 +70,7 @@ def mark_objectives_position(
 
     """
     if fault_scenarios is None:
-        logging.info(
+        logger.info(
             "The ``fault_scenarios`` must be given to plot.factory for the "
             "objectives to be displayed."
         )
@@ -82,7 +84,7 @@ def mark_objectives_position(
     objectives_by_element = by_element(_get_objectives(fault_scenarios[0]))
     for elt in objectives_by_element:
         if elt == DEFAULT_ELT_KEY:
-            logging.info(
+            logger.info(
                 "Skipped plotting of an objective spanning a complete "
                 "compensation zone."
             )

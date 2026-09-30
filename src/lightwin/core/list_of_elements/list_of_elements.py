@@ -14,6 +14,8 @@ Two objects can have a |LOE| as attribute:
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, Literal, Self, TypedDict, overload
@@ -375,7 +377,7 @@ class ListOfElements(list):
                 which_phase=exported_phase, inplace=False
             )
             if line is None:
-                logging.info(
+                logger.info(
                     f"Did not insert a line corresponding to {instruction = } "
                     "because it's 'to_line' method returned 'None'."
                 )
@@ -471,7 +473,7 @@ class ListOfElements(list):
                 try:
                     output = self.l_cav[ids]
                 except IndexError:
-                    logging.error(
+                    logger.error(
                         f"{ids = } is outside of list of elements of length {len(self)}"
                     )
                     raise IndexError
@@ -481,7 +483,7 @@ class ListOfElements(list):
                 try:
                     output = self[ids]
                 except IndexError:
-                    logging.error(
+                    logger.error(
                         f"{ids = } is outside of list of cavities of length "
                         f"{len(self.l_cav)}"
                     )
@@ -494,9 +496,7 @@ class ListOfElements(list):
                         self, condition=lambda elt: elt.name == name
                     )
                 except StopIteration:
-                    logging.error(
-                        f"No element named {name} was found in self."
-                    )
+                    logger.error(f"No element named {name} was found in self.")
                     raise StopIteration
             case "lattice":
                 assert isinstance(ids, int)
@@ -507,7 +507,7 @@ class ListOfElements(list):
                         f"{ids = } is outside of list of lattices of length "
                         f"{len(self.by_lattice)}\n{e}"
                     )
-                    logging.error(msg)
+                    logger.error(msg)
                     raise IndexError(msg)
             case "section":
                 assert isinstance(ids, int)
@@ -518,7 +518,7 @@ class ListOfElements(list):
                         f"{ids = } is outside of list of sections of length "
                         f"{len(self.by_section)}\n{e}"
                     )
-                    logging.error(msg)
+                    logger.error(msg)
                     raise IndexError(msg)
             case _:
                 raise OSError(f"{id_nature = } not understood.")
@@ -612,7 +612,7 @@ class ListOfElements(list):
             if isinstance(elt, str):
                 elt = equivalent_elt(elts=self, elt=elt)
             elif elt not in self and handle_missing_elt:
-                logging.debug(
+                logger.debug(
                     f"{elt = } is not in self. Trying to take an element in "
                     "self with the same name..."
                 )

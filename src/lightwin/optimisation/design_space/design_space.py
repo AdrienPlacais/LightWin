@@ -1,6 +1,8 @@
 """Define an object to hold variables and constraints."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections import defaultdict
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -156,18 +158,18 @@ class DesignSpace:
             filepath = Path(basepath, filename.with_suffix(".csv"))
 
             if filepath.is_file() and not overwrite:
-                logging.warning(f"{filepath = } already exists. Skipping...")
+                logger.warning(f"{filepath = } already exists. Skipping...")
                 continue
 
             parameter = getattr(self, parameter_name)
             if len(parameter) == 0:
-                logging.info(
+                logger.info(
                     f"{parameter_name} not defined for this DesignSpace. Skipping... "
                 )
                 continue
 
             self._to_file(parameter, filepath, **to_csv_kw)
-            logging.info(f"{parameter_name} saved in {filepath}")
+            logger.info(f"{parameter_name} saved in {filepath}")
 
     def _to_file(
         self,

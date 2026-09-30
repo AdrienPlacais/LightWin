@@ -7,6 +7,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC
 from collections.abc import Callable, Collection, Sequence
 from pathlib import Path
@@ -275,11 +277,9 @@ class _Preset(DesignSpaceFactory):
         **design_space_kw,
     ) -> None:
         if variables_names is not None:
-            logging.info(
-                "`variables_names` was given but will be disregarded."
-            )
+            logger.info("`variables_names` was given but will be disregarded.")
         if constraints_names is not None:
-            logging.info(
+            logger.info(
                 "`constraints_names` was given but will be disregarded."
             )
 
@@ -375,7 +375,7 @@ class Everything(_Preset):
 
     def run(self, *args, **kwargs) -> DesignSpace:
         """Launch normal run but with an info message."""
-        logging.info(
+        logger.info(
             "Creating DesignSpace with all implemented variables and "
             f"constraints, i.e. {self.variables_names = } and "
             f"{self.constraints_names = }."

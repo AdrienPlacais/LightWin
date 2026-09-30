@@ -20,6 +20,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection, Sequence
 from pathlib import Path
 from typing import Any, Literal
@@ -179,7 +181,7 @@ def factory(
             "Reference scenario (key 0) must hold exactly one accelerator."
         )
     if clean_fig and not save_fig and len(accelerators) > 2:
-        logging.warning(
+        logger.warning(
             "You will only see the plots of the last scenario; previous "
             "figures will be erased without saving."
         )
@@ -272,12 +274,12 @@ def _build_plot_groups(
         n_skipped = len(scenario_accs) - len(computed)
 
         if n_skipped > 0:
-            logging.info(
+            logger.info(
                 f"Scenario {scenario_idx}: skipping {n_skipped} uncomputed "
                 f"accelerator(s) out of {len(scenario_accs)}."
             )
         if len(computed) == 0:
-            logging.info(
+            logger.info(
                 f"Scenario {scenario_idx}: no computed accelerators, skipping "
                 "all presets for this scenario."
             )
@@ -363,7 +365,7 @@ def _plot_preset(
                 **(usr_kwargs or {}),
             )
         except ValueError as e:
-            logging.error(
+            logger.error(
                 f"A ValueError was raised when trying to plot {y_axis} vs "
                 f"{x_axis}. This likely an error caused by inconsistent "
                 f"x and y data.\n{e}"
@@ -462,7 +464,7 @@ def _make_a_subplot(
 
     """
     if len(accelerators) == 0:
-        logging.warning("No accelerator to plot, returning.")
+        logger.warning("No accelerator to plot, returning.")
         return
     if plot_section:
         structure.outline_sections(accelerators[0].elts, axe, x_axis=x_axis)

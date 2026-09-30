@@ -1,6 +1,8 @@
 """Define a factory function to create :class:`.OptimisationAlgorithm`."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABCMeta
 from collections.abc import Collection, Mapping
 from typing import Any, Literal
@@ -230,7 +232,7 @@ class OptimisationAlgorithmFactory:
         overlap = user_kwargs.keys() & default_kwargs.keys()
         if not overlap:
             return
-        logging.info(
+        logger.info(
             "Overlapping OptimisationAlgorithm kwargs detected:\n"
             f"{', '.join(overlap)}. User-provided values (from FaultScenario) "
             "will override defaults."

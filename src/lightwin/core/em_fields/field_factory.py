@@ -6,6 +6,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
@@ -43,7 +45,7 @@ class FieldFactory:
     def __post_init__(self) -> None:
         """Raise an error if Cython is asked."""
         if self.load_cython_field_maps:
-            logging.warning(
+            logger.warning(
                 "Field objects do not handle Cython yet. Will disregard cythonloading."
             )
 

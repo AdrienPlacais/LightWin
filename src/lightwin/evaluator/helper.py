@@ -1,6 +1,8 @@
 """Provide evaluator helpers."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable, Sequence
 from functools import partial
 
@@ -48,7 +50,7 @@ def limits_given_in_functoolspartial_args(
 ) -> Sequence[np.ndarray | float]:
     """Extract the limits given to a test function."""
     if not isinstance(partial_function, partial):
-        logging.error("Given function must be a functools.partial func.")
+        logger.error("Given function must be a functools.partial func.")
         return (np.nan, np.nan)
 
     keywords = partial_function.keywords

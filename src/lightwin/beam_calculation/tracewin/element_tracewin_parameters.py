@@ -9,6 +9,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 import numpy as np
 
 from lightwin.beam_calculation.parameters.element_parameters import (
@@ -52,7 +54,7 @@ class ElementTraceWinParameters(ElementBeamCalculatorParameters):
         self.rel_mesh = self.abs_mesh - self.abs_mesh[0]
 
         if np.abs(length_m - self.rel_mesh[-1]) > 1e-2:
-            logging.debug(
+            logger.debug(
                 "Mismatch between length of the linac in the .out file and "
                 "what is expected. Maybe an error was raised during execution "
                 "of TraceWin and the .out file is incomplete? In this case, "

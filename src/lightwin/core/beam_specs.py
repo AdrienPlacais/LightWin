@@ -8,6 +8,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Any
 
 import numpy as np
@@ -149,7 +151,7 @@ class BeamTableConfSpec(TableConfSpec):
         default_tests = super()._validate(toml_subdict, **kwargs)
 
         if i_milli_a := toml_subdict["i_milli_a"] > 1e-10:
-            logging.warning(
+            logger.warning(
                 f"You asked a non-null beam current {i_milli_a = }mA. You "
                 "should ensure that the desired BeamCalculator supports "
                 "space-charge."
@@ -159,7 +161,7 @@ class BeamTableConfSpec(TableConfSpec):
         sigma_shape = toml_subdict["sigma"].shape
         if sigma_shape != (6, 6):
             sigma_shape_is_ok = False
-            logging.error(
+            logger.error(
                 f"The sigma matrix should have shape (6, 6), but has {sigma_shape}"
             )
 

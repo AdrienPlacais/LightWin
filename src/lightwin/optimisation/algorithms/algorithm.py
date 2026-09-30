@@ -21,6 +21,8 @@ list of implemented algorithms in the :mod:`.algorithm` module.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Collection, Mapping
 from pathlib import Path
@@ -351,11 +353,11 @@ class OptimisationAlgorithm(ABC):
         fresh = np.array(list(fresh_objectives.values()))
 
         if np.allclose(stored, fresh, rtol=1e-3):
-            logging.debug("Consistency check passed.")
+            logger.debug("Consistency check passed.")
             return
 
         rel_diff = np.abs(fresh - stored) / (np.abs(stored) + 1e-12)
-        logging.warning(
+        logger.warning(
             f"Consistency check FAILED for {self.__class__.__name__}:\n"
             + "\n".join(
                 f"  {name}: stored={s:.6g}, fresh={f:.6g}, rel_diff={d:.2e}"
@@ -522,7 +524,7 @@ class OptimizationHistory:
         delta_i = len(self._settings)
         self._start_idx += delta_i
         self._empty_histories()
-        logging.debug(
+        logger.debug(
             f"Saved optimization hist at iteration {self._start_idx}."
         )
 

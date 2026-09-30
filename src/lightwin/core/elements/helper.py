@@ -1,6 +1,8 @@
 """Define helper functions applying on elements."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Sequence
 from pprint import pformat
 
@@ -20,7 +22,7 @@ def give_name_to_elements(
                 continue
             nth = civil_register[name] + 1
             elt._personalized_name = f"{name}_{nth}"
-            logging.debug(
+            logger.debug(
                 f"Duplicate personalized name found: {name}. Renaming to "
                 f"{elt._personalized_name}."
             )
@@ -38,7 +40,7 @@ def give_name_to_elements(
 
     if (fallback_name := Element.base_name) not in civil_register:
         return
-    logging.warning(
+    logger.warning(
         f"Used a fallback name for {civil_register[fallback_name]} elements. "
         "Check that every subclass of Element that you use overrides the "
         f"default Element.base_name = {fallback_name}. Faulty elements:\n"

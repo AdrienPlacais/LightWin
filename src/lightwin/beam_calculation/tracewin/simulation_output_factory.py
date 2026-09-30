@@ -1,6 +1,8 @@
 """Define a class to easily generate the |SO|."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from abc import ABCMeta
 from functools import partial
@@ -89,7 +91,7 @@ def _load_results_generic(
     out = np.loadtxt(f_p, skiprows=n_lines_header)
     for i, key in enumerate(headers):
         results[key] = out[:, i]
-        logging.debug(f"successfully loaded {f_p}")
+        logger.debug(f"successfully loaded {f_p}")
     return results
 
 
@@ -194,7 +196,7 @@ def _remove_incomplete_line(filepath: Path) -> None:
 
     if i_last_valid == -1:
         return
-    logging.warning(
+    logger.warning(
         f"Not enough columns in `OUT` after line {i_last_valid}. "
         "Removing all lines after this one..."
     )
@@ -222,7 +224,7 @@ def _add_dummy_data(filepath: Path, elts: ListOfElements) -> None:
         last_element_in_file = elts[last_idx_in_file - 1]
 
         if last_element_in_file is not elts[-1]:
-            logging.warning(
+            logger.warning(
                 "Incomplete `OUT` file. Trying to complete with dummy data..."
             )
             elts_to_add = elts[last_idx_in_file:]
@@ -280,7 +282,7 @@ def _load_parameters_of_cavities(
 
     out = np.loadtxt(f_p, skiprows=n_lines_header)
     parameters = {key: out[:, i] for i, key in enumerate(headers)}
-    logging.debug(f"successfully loaded {f_p}")
+    logger.debug(f"successfully loaded {f_p}")
     return parameters
 
 
@@ -502,7 +504,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         set_of_cavity_settings: SetOfCavitySettings,
     ) -> SimulationOutput:
         """Create a NaN-filled SimulationOutput when TraceWin left no file."""
-        logging.warning(
+        logger.warning(
             "TraceWin produced no output file. Returning a NaN-filled "
             "SimulationOutput."
         )

@@ -1,6 +1,8 @@
 """Define a factory for the :class:`.BeamParameters`."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence
 from typing import Literal
@@ -80,7 +82,7 @@ class BeamParametersFactory(ABC):
                 "(2, 2) shape is only for 1D simulation and is to avoid."
             )
 
-            logging.warning(
+            logger.warning(
                 "Would be better to feed in a (6, 6) array with NaN."
             )
             return sigma_in

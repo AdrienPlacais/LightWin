@@ -6,6 +6,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable, Collection
 from dataclasses import dataclass
 from typing import Any, Literal, Self
@@ -197,12 +199,12 @@ def _single_simulation_all_data(
 
     if x_data is None or y_data is None:
         if x_data is None:
-            logging.error(
+            logger.error(
                 f"{x_axis} not found in {label}. Setting it to dummy data. "
                 f"Complete SimulationOutput is:\n{simulation_output}"
             )
         if y_data is None:
-            logging.error(
+            logger.error(
                 f"{y_axis} not found in {label}. Setting it to dummy data. "
                 f"Complete SimulationOutput is:\n{simulation_output}"
             )
@@ -210,7 +212,7 @@ def _single_simulation_all_data(
         return dummy, dummy, {}
 
     if x_data.shape != y_data.shape:
-        logging.error(
+        logger.error(
             f"Shape mismatch in {label}: {x_axis} has shape {x_data.shape} "
             f"while {y_axis} has shape {y_data.shape}. If this is a "
             "TransferMatrix plot with TraceWin solver, it is because TraceWin "
@@ -315,7 +317,7 @@ def _compute_error(
 
     """
     if not ref or not fix:
-        logging.error("Empty data passed to _compute_error, returning empty.")
+        logger.error("Empty data passed to _compute_error, returning empty.")
         return _SimData([], [], [])
 
     pairs = _build_solver_pairs(len(ref), len(fix), error_reference)
@@ -360,13 +362,11 @@ def _build_solver_pairs(
         return [(0, i) for i in range(n_fix)]
     if error_reference == "ref accelerator (2nd solver)":
         if n_ref < 2:
-            logging.error(
+            logger.error(
                 f"{error_reference = } not supported: reference has only "
                 f"{n_ref} simulation output(s)."
             )
             return None
         return [(1, i) for i in range(n_fix)]
-    logging.error(
-        f"{error_reference = } is not allowed. Check allowed values."
-    )
+    logger.error(f"{error_reference = } is not allowed. Check allowed values.")
     return None

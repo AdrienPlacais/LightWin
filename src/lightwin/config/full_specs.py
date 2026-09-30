@@ -1,6 +1,8 @@
 """Gather in a single object all the parameters for LW to run."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from pathlib import Path
 from typing import Any, Literal
 
@@ -222,7 +224,7 @@ class ConfSpec:
 
         all_is_validated = all(validations)
         if not all_is_validated:
-            logging.error(
+            logger.error(
                 "At least one error was raised treating configuration"
             )
 
@@ -240,7 +242,7 @@ class ConfSpec:
                 )
 
             except ValueError:
-                logging.error(
+                logger.error(
                     f"The table entry {table_id} should be given but was not found."
                 )
                 they_are_all_present = False

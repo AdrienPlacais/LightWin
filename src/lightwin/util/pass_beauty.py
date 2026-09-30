@@ -24,6 +24,8 @@ for now, two different beauty passes:
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from collections.abc import Collection, Mapping
 from pprint import pformat
@@ -114,7 +116,7 @@ def insert_field_map_pass_beauty_instructions(
         append_stem="beauty",
         which_phase="phi_0_rel",
     )
-    logging.info("Overwriting a ListOfElements by its beauty counterpart.")
+    logger.info("Overwriting a ListOfElements by its beauty counterpart.")
     accelerator.elts = elts
     return
 
@@ -160,7 +162,7 @@ def insert_transverse_matching_instructions(
         return
 
     if len(fault_scenario) > 1:
-        logging.warning("Not sure how multiple faults will interact.")
+        logger.warning("Not sure how multiple faults will interact.")
     assert _is_adapted_to_pass_beauty(beam_calculator)
     assert isinstance(fault_scenario, FaultScenario)
 
@@ -177,7 +179,7 @@ def insert_transverse_matching_instructions(
         instructions_to_insert=instructions,
         append_stem="qp_retuning",
     )
-    logging.info("Overwriting a ListOfElements by its beauty counterpart.")
+    logger.info("Overwriting a ListOfElements by its beauty counterpart.")
     accelerator.elts = elts
     return
 
@@ -374,7 +376,7 @@ def _field_map_pass_beauty_instructions(
 
     """
     if len(fault_scenario) > 1:
-        logging.warning("Not sure how multiple faults will interact.")
+        logger.warning("Not sure how multiple faults will interact.")
     fault = fault_scenario[0]
     fix_elts = fault_scenario.fix_acc.elts
     compensating = fault.compensating_elements
@@ -387,7 +389,7 @@ def _field_map_pass_beauty_instructions(
         fault.compensation_settings, number=number, link_k_g=link_k_g
     )
     if len(adjusts) < 2:
-        logging.error(
+        logger.error(
             f"Not enough DIAG_DSIZE3 in {compensating = } for pass beauty."
         )
         return []
@@ -440,7 +442,7 @@ def _spiral2_transverse_matching_instructions(
             compensating_quadrupoles=compensating_quadrupoles, number=number
         )
         if len(qp_adjusts) < 2:
-            logging.error("Not enough DIAG_DSIZE2 for pass beauty.")
+            logger.error("Not enough DIAG_DSIZE2 for pass beauty.")
             return []
 
     instructions = sorted(
@@ -568,7 +570,7 @@ def _create_bpms(
             personalized_name=name,
         )
         diagnostics.append(diag)
-    logging.critical(pformat(diagnostics))
+    logger.critical(pformat(diagnostics))
     return diagnostics
 
 
@@ -636,15 +638,15 @@ def _quadrupole_adjust_commands(
 def _is_adapted_to_pass_beauty(beam_calculator: BeamCalculator) -> bool:
     """Check if the provided beam calculator can perform beauty pass."""
     if not isinstance(beam_calculator, TraceWin):
-        logging.error("Beauty pass will only work with TraceWin.")
+        logger.error("Beauty pass will only work with TraceWin.")
         return False
 
     if beam_calculator.base_kwargs.get("cancel_matching", False):
-        logging.error("You shall specify `cancel_matching = False` in config.")
+        logger.error("You shall specify `cancel_matching = False` in config.")
         return False
 
     if not beam_calculator.base_kwargs.get("cancel_matchingP", False):
-        logging.warning(
+        logger.warning(
             "Doing a Partran optimisation may take a very long time. Doing it anyway."
         )
         return True

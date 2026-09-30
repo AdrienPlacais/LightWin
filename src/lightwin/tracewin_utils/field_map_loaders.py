@@ -2,6 +2,8 @@
 
 import itertools
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection
 from functools import lru_cache
 from pathlib import Path
@@ -16,7 +18,7 @@ def warn_norm(path: Path, norm: float) -> None:
     https://stackoverflow.com/questions/31953272/logging-print-message-only-once
 
     """
-    logging.info(
+    logger.info(
         f"The field in {path} has a normalization factor of {norm}, different "
         "from unity."
     )
@@ -71,12 +73,12 @@ def load_field_1d(path: Path) -> tuple[int, float, float, np.ndarray, int]:
                     try:
                         norm = float(line)
                     except ValueError:
-                        logging.error(f"Error reading {line = } in {path}.")
+                        logger.error(f"Error reading {line = } in {path}.")
                     continue
 
                 f_z.append(float(line))
     except UnicodeDecodeError as e:
-        logging.error(
+        logger.error(
             f"File {path} could not be loaded. Check that it is non-binary."
             "Returning nothing and trying to continue without it."
         )
@@ -101,14 +103,14 @@ def is_a_valid_1d_electric_field(
 ) -> bool:
     """Assert that the electric field that we loaded is valid."""
     if f_z.shape[0] != n_z + 1:
-        logging.error(
+        logger.error(
             f"The electric field file should have {n_z + 1} lines, but it is "
             f"{f_z.shape[0]} lines long. "
         )
         return False
 
     if abs(zmax - cavity_length) > tol:
-        logging.error(
+        logger.error(
             f"Mismatch between the length of the field map {zmax = } and "
             f"{cavity_length = }."
         )
@@ -176,13 +178,13 @@ def load_field_3d(
                         field_values[k, j, i] = float(line)
 
     except UnicodeDecodeError as e:
-        logging.error(
+        logger.error(
             f"File {path} could not be loaded. Ensure it is a valid text file."
         )
         raise RuntimeError(e)
 
     except ValueError as e:
-        logging.error(
+        logger.error(
             f"Error parsing field data from file {path}. Ensure format consistency."
         )
         raise RuntimeError(e)
@@ -228,14 +230,14 @@ def is_a_valid_3d_field(
 
     """
     if field.shape != (n_z + 1, n_y + 1, n_x + 1):
-        logging.error(
+        logger.error(
             f"Field array shape {field.shape} does not match expected shape "
             f"({n_z + 1}, {n_y + 1}, {n_x + 1})."
         )
         return False
 
     if abs(zmax - cavity_length) > tol:
-        logging.error(
+        logger.error(
             f"Mismatch between the z length of the field map {zmax = } and "
             f"{cavity_length = }."
         )

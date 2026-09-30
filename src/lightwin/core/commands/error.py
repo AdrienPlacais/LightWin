@@ -2,6 +2,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.core.commands.dummy_command import DummyCommand
 
 
@@ -11,7 +13,7 @@ class Error(DummyCommand):
     def __init__(self, *args, **kwargs) -> None:
         """Raise an error."""
         super().__init__(*args, **kwargs)
-        logging.error(
+        logger.error(
             "The ERROR commands are not implemented in LightWin. As this "
             "commands will influence the design of the linac, you should set "
             f"the design and comment this commands out.\n{self.line}"

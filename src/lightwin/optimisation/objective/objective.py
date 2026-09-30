@@ -1,6 +1,8 @@
 """Define a class to hold optimisation objective with its ideal value."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC, abstractmethod
 from collections.abc import Collection, Sequence
 from typing import Any, ClassVar, Literal, Self
@@ -190,7 +192,7 @@ class Objective(ABC):
 
         """
         if get_key not in self._gettable:
-            logging.warning(
+            logger.warning(
                 f"{get_key = } may not be gettable by SimulationOutput.get "
                 f"method. Authorized values are:\n{self._gettable = }"
             )
@@ -198,7 +200,7 @@ class Objective(ABC):
         for key in self._advised_get_kwargs:
             if key in get_kwargs:
                 continue
-            logging.warning(
+            logger.warning(
                 f"{key = } is recommended to avoid undetermined behavior but "
                 f"was not found.\n{self!r}"
             )
@@ -303,7 +305,7 @@ class MinimizeDifferenceWithRef(Objective):
     def _check_ideal_value(self) -> None:
         """Assert the the reference value is a float."""
         if not isinstance(self.ideal_value, float):
-            logging.warning(
+            logger.warning(
                 f"Tried to get {self.get_key} with {self.get_kwargs}, which "
                 f"returned {self.ideal_value} instead of a float."
             )
@@ -366,7 +368,7 @@ class MinimizeMismatch(Objective):
     ) -> tuple[GETTABLE_SIMULATION_OUTPUT_T, dict[str, Any]]:
         """Add default values if necessary."""
         if "twiss" not in get_key:
-            logging.warning(
+            logger.warning(
                 "The get_key should contain 'twiss'. Taking 'twiss' and "
                 "setting phase space to zdelta."
             )
@@ -476,12 +478,12 @@ class MinimizeVariation(Objective):
 
         """
         if "elt" not in get_kwargs:
-            logging.error(
+            logger.error(
                 "You should provide an 'elt' key in `get_kwargs` to indicate "
                 "where objective should be evaluated."
             )
         if "pos" not in get_kwargs:
-            logging.error(
+            logger.error(
                 "Regularity checking is not yet implemented for arrays. "
                 "You must provide 'pos' to indicate, in each element, where "
                 "the quantity should be taken."
@@ -543,7 +545,7 @@ class QuantityIsBetween(Objective):
             descriptor=descriptor,
         )
         if loss_function is not None:
-            logging.warning("Loss functions not implemented.")
+            logger.warning("Loss functions not implemented.")
 
     @classmethod
     def relative_to_reference(
@@ -600,7 +602,7 @@ class QuantityIsBetween(Objective):
             reference_value * 1e-2 * relative_limits[1],
         )
         if reference_value <= 0.0:
-            logging.info(
+            logger.info(
                 f"{reference_value = } is negative. Inverting bounds to keep "
                 "limits[0] < limits[1]."
             )
@@ -703,7 +705,7 @@ class RemainBelow(Objective):
             descriptor=descriptor,
         )
         if loss_function is not None:
-            logging.warning("Loss functions not implemented.")
+            logger.warning("Loss functions not implemented.")
 
     def __str__(self) -> str:
         """Give objective information value."""
@@ -836,7 +838,7 @@ def str_objectives_solved(objectives: Sequence[Objective]) -> str:
             for objective in objectives
         ]
     except AttributeError as e:
-        logging.error(
+        logger.error(
             "Something went wrong when trying to access the residuals of "
             f"objectives.\n{e}"
         )

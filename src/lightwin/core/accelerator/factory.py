@@ -1,6 +1,8 @@
 """Define a factory to easily create |A|."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
@@ -132,7 +134,7 @@ class AcceleratorFactory:
             reserved_names={"Reference", "Solution"}
         )
         if len(additional) > 0:
-            logging.warning(
+            logger.warning(
                 "Behavior of additional Accelerator is not well defined. In "
                 "particular if there are several FaultScenario."
             )
@@ -221,7 +223,7 @@ class AcceleratorFactory:
                 name, index=index, pickle_path=pickle_path
             )
             if accelerator is not None:
-                logging.info(
+                logger.info(
                     f"Created {accelerator.id} Accelerator by unpickling "
                     f"'{pickle_path}'."
                 )
@@ -237,7 +239,7 @@ class AcceleratorFactory:
         info = f"Created {accelerator.id} Accelerator"
         if pickle_path:
             info += f" (will be pickled to '{pickle_path}')"
-        logging.info(info + ".")
+        logger.info(info + ".")
         return accelerator
 
     # =========================================================================
@@ -352,7 +354,7 @@ class AcceleratorFactory:
 
         n_unique = len(set(policies.values()))
         if n_unique > 1:
-            logging.warning(
+            logger.warning(
                 "The different BeamCalculator objects have different "
                 "reference phase policies. This may lead to inconsistencies "
                 f"when cavities fail.\n{policies = }"
@@ -361,7 +363,7 @@ class AcceleratorFactory:
 
         references = {x.cavity_settings.reference for x in cavities}
         if len(references) > 1:
-            logging.info(
+            logger.info(
                 "The cavities do not all have the same reference phase."
             )
 
@@ -441,7 +443,7 @@ class AcceleratorFactory:
 
         ref = pickle_config.pop("Reference", None)
         if not isinstance(ref, (str, Path)) and ref is not None:
-            logging.error(
+            logger.error(
                 f"[files.pickle_paths] 'Reference' value is {ref}, but a "
                 "string is expected."
             )
@@ -454,14 +456,14 @@ class AcceleratorFactory:
             try:
                 index = int(scenario_key)
             except (ValueError, TypeError):
-                logging.error(
+                logger.error(
                     f"Invalid scenario '{scenario_key = }' in pickle_paths. "
                     "Expected format: '000001', '000002', etc."
                 )
                 continue
 
             if isinstance(scenario_data, str):
-                logging.error(
+                logger.error(
                     f"The key '{scenario_data}' in [files.pickle_paths."
                     f"scenarios.{scenario_key} was associated to the "
                     f"string '{scenario_data}', but only 'Reference' can "
@@ -540,7 +542,7 @@ class AcceleratorFactory:
         if not pickle_path.is_file():
             return None
 
-        logging.info(f"Loading {name} from pickle: {pickle_path}")
+        logger.info(f"Loading {name} from pickle: {pickle_path}")
         return Accelerator.from_pickle(
             self.pickler, pickle_path, name=name, index=index
         )
@@ -578,14 +580,14 @@ class AcceleratorFactory:
                     pickle_name, index=index, pickle_path=pickle_path
                 )
                 if accelerator is None:
-                    logging.debug(
+                    logger.debug(
                         f"Not unpickling '{pickle_name}' key in [files."
                         f"pickle_paths.{index}] because"
                         f" '{pickle_path}' does not exist."
                     )
                     continue
 
-                logging.info(
+                logger.info(
                     f"Loading additional accelerator '{accelerator.id}' from pickle."
                 )
                 accelerators.append(accelerator)

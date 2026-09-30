@@ -2,6 +2,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.core.commands.command import Command
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
@@ -57,7 +59,7 @@ class Freq(Command):
         """
         instructions = super().apply(instructions, **kwargs)
         if freq_bunch is None:
-            logging.warning(
+            logger.warning(
                 "The bunch frequency was not provided. Setting it to RF frequency..."
             )
             freq_bunch = self.f_rf_mhz

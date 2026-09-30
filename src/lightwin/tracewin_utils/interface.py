@@ -1,6 +1,8 @@
 """Define functions for TraceWin command-line interface."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from collections.abc import Sequence
 from pathlib import Path
@@ -99,7 +101,7 @@ def variables_to_command(
 
         if isinstance(val, float) and np.isnan(val):
             if warn_skipped:
-                logging.warning(
+                logger.warning(
                     f"For {key=}, I had a np.nan value. I ignore this key."
                 )
             continue
@@ -315,7 +317,7 @@ def _proper_type(
 
     if key not in TYPES:
         if not_in_dict_warning:
-            logging.warning(
+            logger.warning(
                 f"The {key = } is not understood by TraceWin, or it is not "
                 "implemented yet."
             )
@@ -328,16 +330,16 @@ def _proper_type(
     if isinstance(value, my_type):
         return value
 
-    logging.warning(
+    logger.warning(
         f"Input value {value} is a {type(value)} while it should be a {my_type}."
     )
     try:
         value = my_type(value)
-        logging.info(f"Successful type conversion: {value = }")
+        logger.info(f"Successful type conversion: {value = }")
         return value
 
     except ValueError:
-        logging.error(
+        logger.error(
             "Unsuccessful type conversion. Returning np.nan to completely ignore key."
         )
         return np.nan

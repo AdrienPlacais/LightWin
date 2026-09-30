@@ -1,6 +1,8 @@
 """Load, validate and post-process the configuration."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 import shutil
 import tomllib
 from importlib import resources
@@ -176,7 +178,7 @@ def _user_override_toml_entries(
 
         for key, val in over_subdict.items():
             if warn_mismatch and key not in conf_subdict:
-                logging.warning(
+                logger.warning(
                     f"You want to override {key = }, which was not found in "
                     f"{conf_subdict.keys() = }. Setting it anyway..."
                 )
@@ -224,7 +226,7 @@ def dict_to_toml(
             f.write(dict_entry_string)
             f.write("\n")
 
-    logging.info(f"New ``TOML`` written in {toml_path}")
+    logger.info(f"New ``TOML`` written in {toml_path}")
     return
 
 
@@ -235,14 +237,14 @@ def _indue_overwritting(
     if not toml_path.exists():
         return False
 
-    logging.info(
+    logger.info(
         f"A .toml already exists at {toml_path = } and may be overwritten."
     )
     if not allow_overwrite:
-        logging.error("Overwritting not permitted. Skipping action...")
+        logger.error("Overwritting not permitted. Skipping action...")
         return True
 
     old = toml_path.with_suffix(".toml.old")
-    logging.info(f"Copying the old one to {old}, just in case...")
+    logger.info(f"Copying the old one to {old}, just in case...")
     shutil.copy(toml_path, old)
     return False

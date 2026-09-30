@@ -7,6 +7,8 @@ the linac under tuning.
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.optimisation.objective.objective import (
     MinimizeDifferenceWithRef as _MinimizeDifferenceWithRef,
 )
@@ -23,7 +25,7 @@ class MinimizeDifferenceWithRef(_MinimizeDifferenceWithRef):
 
     def __init__(self, *args, **kwargs) -> None:
         """Instantiate object, log deprecation warning."""
-        logging.warning(
+        logger.warning(
             "MinimizeDifferenceWithRef has moved to "
             "lightwin.optimisation.objective, please update your import."
         )

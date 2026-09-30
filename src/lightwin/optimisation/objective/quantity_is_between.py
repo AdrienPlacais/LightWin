@@ -7,6 +7,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.optimisation.objective.objective import (
     QuantityIsBetween as _QuantityIsBetween,
 )
@@ -23,7 +25,7 @@ class QuantityIsBetween(_QuantityIsBetween):
 
     def __init__(self, *args, **kwargs) -> None:
         """Instantiate object, log deprecation warning."""
-        logging.warning(
+        logger.warning(
             "QuantityIsBetween has moved to "
             "lightwin.optimisation.objective, please update your import."
         )

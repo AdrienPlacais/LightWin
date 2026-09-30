@@ -6,6 +6,8 @@ residuals grow when the constraints are not respected.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Any
 
 import numpy as np
@@ -28,14 +30,14 @@ class DownhillSimplexPenalty(DownhillSimplex):
     ) -> None:
         """Set additional information."""
         if history_kwargs is not None:
-            logging.warning(
+            logger.warning(
                 "History recording not implemented for DownhillSimplexPenalty."
             )
         super().__init__(*args, history_kwargs=history_kwargs, **kwargs)
         self.compute_constraints: ComputeConstraintsT
 
         if "phi_s" in self.variable_names:
-            logging.error(
+            logger.error(
                 "This algorithm is not intended to work with synch phase as "
                 "variables, but rather as constraint."
             )

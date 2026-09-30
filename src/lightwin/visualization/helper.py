@@ -1,6 +1,8 @@
 """Define types and helpers for the visualization library."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Literal
@@ -81,4 +83,4 @@ def savefig(fig: Figure, filepath: Path) -> None:
     fig.set_size_inches(25.6, 13.64)
     fig.tight_layout()
     fig.savefig(filepath)
-    logging.debug(f"Fig. saved in {filepath}")
+    logger.debug(f"Fig. saved in {filepath}")

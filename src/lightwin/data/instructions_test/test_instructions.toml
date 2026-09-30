@@ -3,6 +3,7 @@ dat_file = "placeholder.dat"
 project_folder = "lw_results/"
 
 [generic_envelope1d]
+export_phase = "phi_0_abs"
 flag_cython = false
 # flag_phi_abs = true  # Deprecated! Use ``reference_phase_policy``.
 method = "RK4"
@@ -11,6 +12,7 @@ reference_phase_policy = "phi_0_abs"
 tool = "Envelope1D"
 
 [generic_envelope3d]
+export_phase = "phi_0_abs"
 reference_phase_policy = "phi_0_abs"
 # flag_phi_abs = true  # Deprecated! Use ``reference_phase_policy``.
 n_steps_per_cell = 40

@@ -14,6 +14,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from pathlib import Path
 from typing import Any
@@ -362,7 +364,7 @@ class FieldMap(Element):
         line = super().to_line(*args, **kwargs)
 
         if line is None:
-            logging.error("``FieldMap.to_line`` should not produce None")
+            logger.error("``FieldMap.to_line`` should not produce None")
             return None
         return line
 

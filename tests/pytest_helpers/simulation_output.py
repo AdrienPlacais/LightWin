@@ -1,6 +1,8 @@
 """Set a function to check validity of :class:`.SimulationOutput`."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Literal
 
 import numpy as np
@@ -96,7 +98,7 @@ def wrap_approx(
                 value, reference_value, rtol=rel, atol=abs, err_msg=key
             )
         except AssertionError as e:
-            logging.critical(e)
+            logger.critical(e)
             return False
         return True
 
@@ -108,6 +110,6 @@ def wrap_approx(
             value, reference_value, rtol=rel, atol=abs, err_msg=key
         )
     except AssertionError as e:
-        logging.critical(e)
+        logger.critical(e)
         return False
     return True

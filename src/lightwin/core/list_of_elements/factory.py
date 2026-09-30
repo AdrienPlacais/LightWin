@@ -25,6 +25,8 @@ contains only a fraction of the linac.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 import shutil
 from abc import ABCMeta
 from collections.abc import Collection
@@ -309,7 +311,7 @@ class ListOfElementsFactory:
         try:
             _ = simulation_output.get("w_kin", elt=input_elt)
         except AttributeError:
-            logging.warning(
+            logger.warning(
                 f"First element of new ListOfElements ({input_elt}) is not in "
                 "the given SimulationOutput. I will consider that the last "
                 "element of the SimulationOutput is the first of the new "

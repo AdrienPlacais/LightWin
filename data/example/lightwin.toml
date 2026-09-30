@@ -18,6 +18,7 @@ reference_phase_policy = "phi_0_abs"
 tool = "Envelope3D"
 
 [tracewin]
+export_phase = "phi_0_abs"
 hide = true
 ini_path = "example.ini"
 machine_config_file = "machine_config.toml"

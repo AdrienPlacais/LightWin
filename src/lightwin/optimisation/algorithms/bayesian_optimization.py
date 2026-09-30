@@ -1,6 +1,8 @@
 """Define bayesian optimization algorithms."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Any
 
 import numpy as np
@@ -138,7 +140,7 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
             "acquisition", None
         )
         if acquisition_kwargs is None:
-            logging.info(
+            logger.info(
                 "No `acquisition` key in `optimisation_algorithm_kwargs`. "
                 "Using default acquisition function."
             )
@@ -146,7 +148,7 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
 
         acquisition_name = acquisition_kwargs.get("acquisition_function", None)
         if not hasattr(acquisition, acquisition_name):
-            logging.error(
+            logger.error(
                 "`acquisition` package from `bayes_opt` module does not have "
                 f"an `acquisition_function` named {acquisition_name}. Using "
                 "default instead."

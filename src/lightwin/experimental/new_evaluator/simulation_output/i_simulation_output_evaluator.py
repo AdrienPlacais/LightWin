@@ -1,6 +1,8 @@
 """Define the base object for |SO| evaluators."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -120,7 +122,7 @@ class ISimulationOutputEvaluator(IEvaluator):
                 fallback_dummy=not self._missing_reference_data_is_worrying,
             )
             if np.isnan(self._ref_ydata).any():
-                logging.error(
+                logger.error(
                     f"Invalid {self._y_quantity} was found in reference "
                     "simulation output, obtained with "
                     f"{self._ref.beam_calculator_id} solver. This will cause "
@@ -160,7 +162,7 @@ class ISimulationOutputEvaluator(IEvaluator):
         """
         self._dump_no_numerical_data_to_plot = True
         if warn:
-            logging.error(
+            logger.error(
                 f"{quantity = } was not found in the simulation output. "
                 "Maybe the simulation was interrupted? Returning dummy data."
             )
@@ -194,7 +196,7 @@ class ISimulationOutputEvaluator(IEvaluator):
         data = simulation_output.get(quantity, **self._get_kwargs)
 
         if fallback_dummy and (data is None or data.ndim == 0):
-            logging.error(f"{simulation_output.beam_calculator_id} error:")
+            logger.error(f"{simulation_output.beam_calculator_id} error:")
             return self._default_dummy(quantity, warn=True)
         return data
 

@@ -1,6 +1,8 @@
 """Provide an easy way to generate :class:`.TransferMatrix`."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Any
 
 import numpy as np
@@ -48,7 +50,7 @@ class TransferMatrixFactoryEnvelope3D(TransferMatrixFactory):
 
         """
         if first_cumulated_transfer_matrix.shape != (6, 6):
-            logging.warning(
+            logger.warning(
                 "Here I should initialize TransferMatrix with an initial "
                 "transfer matrix, but I have a shape mismatch. It is ok for "
                 "now."

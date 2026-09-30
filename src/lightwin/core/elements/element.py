@@ -7,6 +7,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Any, Protocol
 
 import numpy as np
@@ -181,14 +183,14 @@ class Element(Instruction):
 
         """
         if not self.can_be_retuned:
-            logging.error(
+            logger.error(
                 f"You want to give {new_status = } to the element f{self.name},"
                 " which can't be retuned. Status of elements has meaning only "
                 "if they can be retuned."
             )
             return
 
-        logging.error(
+        logger.error(
             f"You want to give {new_status = } to the element f{self.name}, "
             "which update_status method is not defined."
         )
@@ -265,7 +267,7 @@ def default_element_to_index(
         this default function.
 
     """
-    logging.warning(
+    logger.warning(
         "Actual ``element_to_index`` was not set, you are calling a default. "
         f"{elt = }; {pos = }, {return_elt_idx = }, {handle_missing_elt = }"
         "."

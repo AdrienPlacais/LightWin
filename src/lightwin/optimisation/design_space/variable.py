@@ -5,6 +5,8 @@ It keeps it's name, bounds, initial value, etc.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from dataclasses import dataclass
 from typing import Self
 
@@ -85,5 +87,5 @@ class Variable(DesignSpaceParameter):
     def __post_init__(self) -> None:
         """Convert values in deg for output if it is angle."""
         if self.name not in VARIABLES:
-            logging.warning(f"Variable {self.name} not tested.")
+            logger.warning(f"Variable {self.name} not tested.")
         super().__post_init__()

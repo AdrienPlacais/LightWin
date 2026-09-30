@@ -16,6 +16,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Any
 
 import numpy as np
@@ -226,7 +228,7 @@ class TransferMatrix:
 
         """
         if cumulated is None:
-            logging.error(
+            logger.error(
                 "You must provide at least one of the two arrays: individual "
                 "transfer matrices or cumulated transfer matrices."
             )

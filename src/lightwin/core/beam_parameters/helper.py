@@ -5,6 +5,8 @@ For more information on the units that are used in this module, see |units|.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Literal, overload
 
 import numpy as np
@@ -70,7 +72,7 @@ def reconstruct_sigma(
 
     """
     if phase_space_name not in ("zdelta", "x", "y", "x99", "y99"):
-        logging.warning(
+        logger.warning(
             "sigma reconstruction in this phase space not tested. "
             "You'd better check the units of the output."
         )
@@ -526,7 +528,7 @@ def resample_twiss_on_fix(
     out = np.empty(out_shape)
 
     if reference_z_abs.shape[0] != reference_twiss.shape[0]:
-        logging.critical(
+        logger.critical(
             f"Mismatch between the shapes of the reference arrays, returnin "
             f"NaN.\n{reference_z_abs.shape = }\n{reference_twiss.shape = }\n"
             f"{z_abs.shape = }"

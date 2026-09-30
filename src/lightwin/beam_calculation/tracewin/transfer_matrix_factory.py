@@ -1,6 +1,8 @@
 """Provide an easy way to generate :class:`.TransferMatrix`."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from pathlib import Path
 
 import numpy as np
@@ -46,7 +48,7 @@ class TransferMatrixFactoryTraceWin(TransferMatrixFactory):
 
         """
         if high_def:
-            logging.error(
+            logger.error(
                 "High definition not implemented. Can only import transfer "
                 "matrices @ element positions."
             )
@@ -58,7 +60,7 @@ class TransferMatrixFactoryTraceWin(TransferMatrixFactory):
         elements_numbers, position_in_m, transfer_matrices = (
             load.transfer_matrices(path)
         )
-        logging.debug(f"Successfully loaded {path}")
+        logger.debug(f"Successfully loaded {path}")
         return elements_numbers, position_in_m, transfer_matrices
 
     def run(

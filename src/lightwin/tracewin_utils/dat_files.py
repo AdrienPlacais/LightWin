@@ -6,6 +6,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable, Collection, Container, Iterable, Sequence
 from pathlib import Path
 from pprint import pformat
@@ -112,7 +114,7 @@ def _insert_instructions(
         Instructions to insert.
 
     """
-    logging.info(
+    logger.info(
         "Will insert following instructions:\n"
         f"{pformat(instructions_to_insert, width=120)}"
     )
@@ -189,4 +191,4 @@ def export_dat_filecontent(
                 file.write(line.line + "\n")
                 continue
             file.write(" ".join(line) + "\n")
-    logging.debug(f"New dat saved in {dat_path}.")
+    logger.debug(f"New dat saved in {dat_path}.")

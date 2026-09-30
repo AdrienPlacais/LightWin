@@ -12,6 +12,8 @@ In particular, it answers the question:
 from __future__ import annotations
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Sequence
 from functools import partial
 from pprint import pformat
@@ -174,7 +176,7 @@ def k_out_of_n[T](
 
     """
     if k <= 0:
-        logging.error(
+        logger.error(
             "Compensation without compensating cavities will raise errors."
         )
     sorted_by_position = sort_by_position(
@@ -524,7 +526,7 @@ def determine_cavities(
         return len(failed), new_wtf
 
     if id_nature not in ("section", "lattice"):
-        logging.error(
+        logger.error(
             f"{id_nature = }, but only 'lattice' or 'section' are valid for "
             f"{automatic_study = }."
         )
@@ -553,7 +555,7 @@ def determine_cavities(
             f"Unsupported {automatic_study = }. Only {AUTOMATIC_STUDY} are supported."
         )
 
-    logging.info(
+    logger.info(
         f"Automatic study enabled. Studying all {automatic_study} in "
         f"{id_nature} index(es) {failed}. "
         f"List of failed cavities:\n{pformat(new_failed)}"

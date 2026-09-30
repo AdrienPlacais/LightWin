@@ -9,6 +9,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 import os
 
 import numpy as np
@@ -77,7 +79,7 @@ def compute_error_transfer_matrix(
             Tot error:
             {np.linalg.norm(err)}
             """
-        logging.info(helper.pd_output(message, header=header))
+        logger.info(helper.pd_output(message, header=header))
     return err, z_err
 
 

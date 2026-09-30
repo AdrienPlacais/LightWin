@@ -6,6 +6,8 @@ implemented, but can serve as a place holder for non-accelerating fields.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -31,7 +33,7 @@ class Field70(Field):
         """Instantiate object."""
         super().__init__(folder, filename, length_m, z_0, flag_cython)
         if self.flag_cython:
-            logging.error("Cython not implemented for Field70.")
+            logger.error("Cython not implemented for Field70.")
 
     def _load_fieldmap(
         self, path: Path, **validity_check_kwargs

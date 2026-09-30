@@ -8,6 +8,8 @@ phase, etc of the beam at the entry of its |LOE|.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, Literal, Self
@@ -102,7 +104,7 @@ class Accelerator:
         self.accelerator_path = accelerator_path
 
         if kwargs:
-            logging.warning(
+            logger.warning(
                 f"You provided {kwargs = }, but they will be discarded with "
                 "current design."
             )
@@ -117,7 +119,7 @@ class Accelerator:
         self.elts = list_of_elements_factory.whole_list_run(
             dat_file, accelerator_path, **kwargs
         )
-        logging.info(
+        logger.info(
             "Created a ListOfElements ecompassing all linac. Created with:\n"
             f"{dat_file = }\nw_kin_in = {self.elts.w_kin_in:.2f} MeV\n"
             f"phi_abs_in = {self.elts.phi_abs_in:.2f} rad"
@@ -173,7 +175,7 @@ class Accelerator:
     @is_unpickled.setter
     def is_unpickled(self, value: bool) -> None:
         """Update internal value, and also raise a warning."""
-        logging.warning(
+        logger.warning(
             "You have no reason to modify the value of this attribute. I'll do"
             " what you ask nonetheless."
         )
@@ -237,15 +239,15 @@ class Accelerator:
                     " ambiguous when multiple outputs exist."
                 )
                 log = (
-                    logging.error
+                    logger.error
                     if len(self.simulation_outputs) > 1
-                    else logging.warning
+                    else logger.warning
                 )
                 log(msg)
 
             if key in self._special_getters:
                 if elt is not None:
-                    logging.error(
+                    logger.error(
                         f"Cannot resolve special getter with {elt = }."
                     )
                 value = self._special_getters[key](self)

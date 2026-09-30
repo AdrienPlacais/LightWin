@@ -8,6 +8,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection
 from pathlib import Path
 
@@ -101,7 +103,7 @@ def compare_beam_calculators(
         msg = output_comparison(
             simulation_outputs[0], simulation_outputs[1], **test
         )
-        logging.info(msg)
+        logger.info(msg)
 
 
 if __name__ == "__main__":

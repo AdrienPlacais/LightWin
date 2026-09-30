@@ -201,9 +201,10 @@ def main() -> int:
         return 1
 
     # Sample log messages
-    logging.debug("Debug message")
-    logging.info("Info message")
-    logging.warning("Warning message")
-    logging.error("Error message")
-    logging.critical("Critical message")
+    logger = logging.getLogger(__name__)
+    logger.debug("Debug message")
+    logger.info("Info message")
+    logger.warning("Warning message")
+    logger.error("Error message")
+    logger.critical("Critical message")
     return 0

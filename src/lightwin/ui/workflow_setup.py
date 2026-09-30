@@ -1,6 +1,8 @@
 """Define helper functions to set up LightWin workflow."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection
 from typing import Any
 
@@ -208,7 +210,7 @@ def fix(fault_scenarios: Collection[FaultScenario] | None) -> None:
 
     """
     if fault_scenarios is None:
-        logging.info("No fault was set!")
+        logger.info("No fault was set!")
         return
     for fault_scenario in fault_scenarios:
         fault_scenario.fix_all()

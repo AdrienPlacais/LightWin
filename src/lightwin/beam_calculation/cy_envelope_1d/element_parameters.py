@@ -7,6 +7,8 @@ function the name of the field map.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable
 
 from lightwin.beam_calculation.cy_envelope_1d.util import (
@@ -28,7 +30,7 @@ try:
         transfer_matrices,  # type: ignore
     )
 except ModuleNotFoundError as e:
-    logging.error("Is CyEnvelope1D compiled? Check setup.py.")
+    logger.error("Is CyEnvelope1D compiled? Check setup.py.")
     raise ModuleNotFoundError(e)
 
 

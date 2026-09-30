@@ -7,6 +7,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from types import NoneType
 from typing import Any
 
@@ -225,7 +227,7 @@ def apply_index_offset(
     id_nature = toml_table.get("id_nature")
     valid_id_nature = ("cavity", "element", "lattice", "section")
     if id_nature not in valid_id_nature:
-        logging.warning(
+        logger.warning(
             f"The configuration key {index_offset = } was disregarded because "
             f"it makes no sense with {id_nature = }. Index offsetting is "
             f"implemented for {valid_id_nature}."

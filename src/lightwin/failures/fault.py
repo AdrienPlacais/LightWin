@@ -13,6 +13,8 @@ Its purpose is to hold information on a failure and to fix it.
 
 import datetime
 import logging
+
+logger = logging.getLogger(__name__)
 import time
 from collections.abc import Sequence
 
@@ -104,7 +106,7 @@ class Fault:
             of all |F| upstream of ``self``.
 
         """
-        logging.info(
+        logger.info(
             "Starting resolution of optimization problem defined by:\n"
             f"{optimisation_algorithm}"
         )
@@ -127,7 +129,7 @@ class Fault:
             str_objectives_solved(optimisation_algorithm.objectives),
             f"Additional info: {'\n'.join(self.opti_sol['info'])}",
         )
-        logging.info("\n".join(info))
+        logger.info("\n".join(info))
 
     def postprocess_fix(
         self,
@@ -207,7 +209,7 @@ class Fault:
         if status_are_valid:
             return
 
-        logging.error(
+        logger.error(
             "At least one compensating or failed element is already "
             "compensating or faulty, probably in another Fault object. Updated"
             " its status anyway..."

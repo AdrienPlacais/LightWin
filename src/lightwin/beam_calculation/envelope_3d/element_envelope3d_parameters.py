@@ -12,6 +12,8 @@ The list of implemented transfer matrices is :data:`.PARAMETERS_3D`.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable
 from typing import Any
 
@@ -110,7 +112,7 @@ class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
     ) -> Callable:
         """Get the proper transfer matrix function."""
         if method is not None and method != "RK4":
-            logging.warning(
+            logger.warning(
                 "Only RK4 integration method is implemented for Envelope3D."
             )
         match element_nature:

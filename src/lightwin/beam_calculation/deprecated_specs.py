@@ -5,6 +5,8 @@ They are common to all |BC|.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Any
 
 from lightwin.config.table_spec import TableConfSpec
@@ -25,7 +27,7 @@ def apply_deprecated_flag_phi_abs(
     overriden = toml_table.get("reference_phase_policy", None)
     new = "phi_0_abs" if flag_phi_abs else "phi_0_rel"
 
-    logging.warning(
+    logger.warning(
         "Overriding ``reference_phase_policy`` following (deprecated) "
         f"{flag_phi_abs = }. reference_phase_policy {overriden} -> {new}"
     )

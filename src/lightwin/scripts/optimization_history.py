@@ -2,6 +2,8 @@
 """Provide functions to study optimization history."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Literal
@@ -195,7 +197,7 @@ def plot_solutions_3d(
 ) -> None:
     """Represent the solutions in 3d."""
     if len(objective_names) != 3:
-        logging.warning(f"Cannot 3D plot non-3D {objective_names = }")
+        logger.warning(f"Cannot 3D plot non-3D {objective_names = }")
         return
     w_kin = objective_names[0]
     phi_abs = objective_names[1]

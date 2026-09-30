@@ -2,6 +2,8 @@
 
 import functools
 import logging
+
+logger = logging.getLogger(__name__)
 from pathlib import Path
 from typing import Any, Literal
 
@@ -14,7 +16,7 @@ def check_type(instance: type | tuple[type], name: str, *args: Any) -> None:
     """
     for arg in args:
         if not isinstance(arg, instance):
-            logging.warning(f"{name} testing: {arg} should be a {instance}")
+            logger.warning(f"{name} testing: {arg} should be a {instance}")
 
 
 def dict_for_pretty_output(some_kw: dict) -> str:
@@ -35,7 +37,7 @@ def _find_according_to_nature(
         case None:
             return path.exists()
         case _:
-            logging.error(
+            logger.error(
                 "f{nature = } not recognized. Considering it's None..."
             )
             return _find_according_to_nature(path, nature=None)
@@ -87,7 +89,7 @@ def find_path(
             "You must provide the location of the toml file to allow for a "
             "more complete path search."
         )
-        logging.critical(msg)
+        logger.critical(msg)
         raise FileNotFoundError(msg)
 
     updated_path = (toml_folder / path).resolve().absolute()
@@ -103,7 +105,7 @@ def find_path(
         "(recommended), absolute, or relative to the execution dir of the "
         f"script (not recommended). Provided {toml_folder = }"
     )
-    logging.critical(msg)
+    logger.critical(msg)
     raise FileNotFoundError(msg)
 
 

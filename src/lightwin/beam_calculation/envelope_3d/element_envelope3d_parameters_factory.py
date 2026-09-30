@@ -2,6 +2,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.beam_calculation.envelope_3d.element_envelope3d_parameters import (
     BendEnvelope3DParameters,
     DriftEnvelope3DParameters,
@@ -115,7 +117,7 @@ class ElementEnvelope3DParametersFactory(
         """
         element_class = type(elt)
         if isinstance(elt, (FieldMap70, FieldMap7700)):
-            logging.error(
+            logger.error(
                 f"{elt = } of type {element_class} transverse dynamics not "
                 "implemented yet."
             )
@@ -131,7 +133,7 @@ class ElementEnvelope3DParametersFactory(
         if constructor is not None:
             return constructor
 
-        logging.error(
+        logger.error(
             f"Element {elt} of {element_class = } not added to the Envelope3D "
             "dict linking every Element class to its specific parameters"
             "(transfer matrix in particular). Neither was found its "

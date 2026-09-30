@@ -8,6 +8,8 @@ These files hold the initial value and bounds for every cavity :math:`k_e`,
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from pathlib import Path
 
 import lightwin.config.config_manager as con
@@ -31,7 +33,7 @@ def generate_design_space_files(
     """
     configuration = con.process_config(toml_filepath, toml_keys)
     if configuration["design_space"]["design_space_preset"] != "everything":
-        logging.warning(
+        logger.warning(
             "Modifying the design_space_preset entry to have all the possible "
             "variables and constraints in the output file."
         )

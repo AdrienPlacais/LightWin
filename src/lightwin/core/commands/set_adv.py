@@ -2,6 +2,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.core.commands.dummy_command import DummyCommand
 
 
@@ -11,7 +13,7 @@ class SetAdv(DummyCommand):
     def __init__(self, *args, **kwargs) -> None:
         """Raise an error."""
         super().__init__(*args, **kwargs)
-        logging.info(
+        logger.info(
             "The SET_ADV is not implemented in LightWin. As this command will "
             "influence the design of the linac, you should set the design and "
             f"comment this command out.\n{self}"

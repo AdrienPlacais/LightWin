@@ -8,6 +8,8 @@
 from __future__ import annotations
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable, Iterable, Sequence
 from functools import partial
 from typing import TYPE_CHECKING, Any, Literal, TypeGuard, TypeVar, overload
@@ -115,13 +117,13 @@ def elt_at_this_s_idx(
     for elt in elts:
         if s_idx in range(elt.idx["s_in"], elt.idx["s_out"]):
             if show_info:
-                logging.info(
+                logger.info(
                     f"Mesh index {s_idx} is in {elt.get('elt_info')}.\n"
                     f"Indexes of this elt: {elt.get('idx')}."
                 )
             return elt
 
-    logging.warning(f"Mesh index {s_idx} not found.")
+    logger.warning(f"Mesh index {s_idx} not found.")
     return None
 
 
@@ -167,8 +169,8 @@ def equivalent_elt_idx(
     if elt in magic_keywords:
         return magic_keywords[elt]
 
-    logging.error(f"Element {elt} not found in this list of elements.")
-    logging.debug(f"List of elements is:\n{elts}")
+    logger.error(f"Element {elt} not found in this list of elements.")
+    logger.debug(f"List of elements is:\n{elts}")
     raise OSError(f"Element {elt} not found in this list of elements.")
 
 
@@ -348,7 +350,7 @@ def _get_first_key_of_idx_dict_higher_than(
     for elt in elts_to_check:
         index = elt.idx.get(index_name, None)
         if index is None:
-            logging.warning(
+            logger.warning(
                 f"Could not find key {index_name} in {elt} idx dictionary "
                 f"because it does not exist. {elt.idx = }."
             )
@@ -356,7 +358,7 @@ def _get_first_key_of_idx_dict_higher_than(
         if index > higher_than:
             return index
 
-    logging.warning(
+    logger.warning(
         f"There is no element with an attribute idx['{index_name}'] higher "
         f"than {higher_than} in the {n_to_check} {first_or_last} elements of "
         "provided list of elements."

@@ -22,6 +22,8 @@ See Also
 from __future__ import annotations
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from collections.abc import Callable
 from functools import partial
@@ -403,7 +405,7 @@ class CavitySettings:
            Prefer using :meth:`.CavitySettings.set_reference`.
 
         """
-        logging.warning(
+        logger.warning(
             "Deprecated method, prefer using CavitySettings.set_reference"
         )
         return self.set_reference(value)
@@ -798,7 +800,7 @@ class CavitySettings:
             self._residual_func, bounds=(0.0, 2.0 * math.pi), args=(phi_s,)
         )
         if not out.success:
-            logging.error("Synch phase not found")
+            logger.error("Synch phase not found")
         return out.x
 
     @property

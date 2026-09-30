@@ -17,6 +17,8 @@ See Also
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Collection
 from pathlib import Path
@@ -127,7 +129,7 @@ class Field(ABC):
         self._b_z_dc: Callable[[Any], float] = null_field_1d
 
         if not self.is_implemented:
-            logging.info(
+            logger.info(
                 "Initializing a non-implemented Field. Not loading anything.\n"
                 f"{self!r}"
             )

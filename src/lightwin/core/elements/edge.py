@@ -8,6 +8,8 @@ It does nothing.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from functools import lru_cache
 
 from lightwin.core.elements.element import Element
@@ -21,7 +23,7 @@ def warn_edge() -> None:
     https://stackoverflow.com/questions/31953272/logging-print-message-only-once
 
     """
-    logging.warning(
+    logger.warning(
         "Documentation does not mention that EDGE element should be ignored by"
         " LATTICE. So why did I set increment_lattice_idx to False?"
     )

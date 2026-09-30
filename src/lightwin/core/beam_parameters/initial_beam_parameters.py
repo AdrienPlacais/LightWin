@@ -5,6 +5,8 @@ For a list of the units associated with every parameter, see |units|.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from dataclasses import dataclass
 from typing import Any
 
@@ -244,7 +246,7 @@ class InitialBeamParameters:
                 eps, alpha, beta = np.nan, np.nan, np.nan
                 phase_spaces_are_needed = self.z_abs > 1e-10
                 if warn_missing_phase_space and phase_spaces_are_needed:
-                    logging.warning(
+                    logger.warning(
                         f"{phase_space_name} phase space not defined, keeping "
                         "default inputs from the `INI`."
                     )

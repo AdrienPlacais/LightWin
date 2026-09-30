@@ -6,6 +6,8 @@ We also define some factory functions to facilitate their creation.
 
 import datetime
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection
 from pathlib import Path
 from typing import Any
@@ -72,7 +74,7 @@ class ListOfSimulationOutputEvaluators(list):
         if project_folder is not None:
             csv_path = Path(project_folder, "evaluations.csv")
             evaluations.to_csv(csv_path)
-            logging.info(f"Saved all evaluations in {csv_path}.")
+            logger.info(f"Saved all evaluations in {csv_path}.")
         return evaluations
 
     def _unpack_other_evals(
@@ -274,4 +276,4 @@ class FaultScenarioSimulationOutputEvaluators:
         title = "Fit quality:"
         # FIXME
         title += "(FIXME: settings in FaultScenario, not config_manager)"
-        logging.info(pd_output(evaluations, header=title))
+        logger.info(pd_output(evaluations, header=title))

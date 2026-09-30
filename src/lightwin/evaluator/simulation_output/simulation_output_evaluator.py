@@ -10,6 +10,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
@@ -136,14 +138,14 @@ class SimulationOutputEvaluator(ABC):
         x_data, y_data = self._get_data(simulation_output)
         if y_data is None:
             if self.raise_error_if_value_getter_returns_none:
-                logging.error(f"A value misses in test: {self}. Skipping...")
+                logger.error(f"A value misses in test: {self}. Skipping...")
             return np.nan
 
         y_ref_data = self._get_ref_data(simulation_output)
         if y_ref_data is None:
             # this happens with mismatch
             # return y_data
-            # logging.critical(self.descriptor)
+            # logger.critical(self.descriptor)
             y_ref_data = y_data
 
         if need_to_resample(y_data, y_ref_data):
@@ -170,7 +172,7 @@ class SimulationOutputEvaluator(ABC):
         try:
             y_data = self.value_getter(simulation_output)
         except IndexError:
-            logging.error(
+            logger.error(
                 "Mismatch between x_data and y_data shapes. Current "
                 "quantity is probably a mismatch_factor, which "
                 "was interpolated. Returning None."
@@ -316,7 +318,7 @@ class SimulationOutputEvaluator(ABC):
             return
 
         if out_path is None:
-            logging.error(
+            logger.error(
                 "The attribute `out_path` from `SimulationOutput` is"
                 " not defined, hence I cannot save the Figure. Did "
                 "you call the method "
@@ -332,7 +334,7 @@ class SimulationOutputEvaluator(ABC):
 def _descriptor(descriptor: str) -> str:
     """Clean the given string, raise warning if it is empty."""
     if not descriptor:
-        logging.warning(
+        logger.warning(
             "No descriptor was given for this evaluator, which may be "
             "confusing in the long run."
         )

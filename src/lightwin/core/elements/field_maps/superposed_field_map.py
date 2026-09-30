@@ -10,6 +10,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection, Sequence
 from typing import Self, override
 
@@ -214,7 +216,7 @@ class SuperposedFieldMap(Element):
     def can_be_retuned(self, value: bool) -> None:
         """Forbid this cavity from being retuned (or re-allow it)."""
         if value:
-            logging.critical(
+            logger.critical(
                 "Trying to allow a SuperposedFieldMap to be retuned."
             )
         self._can_be_retuned = value
@@ -226,7 +228,7 @@ class SuperposedFieldMap(Element):
     def to_line(self, *args, **kwargs) -> list[str] | None:
         """Convert the object back into a line in the ``DAT`` file."""
         # return self.line.original_line.split()
-        logging.warning("Calling the to_line for superpose")
+        logger.warning("Calling the to_line for superpose")
         return super().to_line(*args, **kwargs)
 
 

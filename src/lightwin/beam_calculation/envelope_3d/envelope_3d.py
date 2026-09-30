@@ -1,6 +1,8 @@
 """Define :class:`Envelope3D`, an envelope solver."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection
 from pathlib import Path
 
@@ -200,7 +202,7 @@ class Envelope3D(BeamCalculator):
         index = 0
         for elt in elts:
             if self.id in elt.beam_calc_param:
-                logging.debug(
+                logger.debug(
                     f"Solver already initialized for {elt = }. I will skip "
                     f"solver param initialisation {elts[0]} to {elts[-1]}"
                 )
@@ -208,7 +210,7 @@ class Envelope3D(BeamCalculator):
             solver_param = self.beam_calc_parameters_factory.run(elt)
             elt.beam_calc_param[self.id] = solver_param
             position, index = solver_param.set_absolute_meshes(position, index)
-        logging.debug(f"Initialized solver param for {elts[0]} to {elts[-1]}")
+        logger.debug(f"Initialized solver param for {elts[0]} to {elts[-1]}")
         return
 
     @property

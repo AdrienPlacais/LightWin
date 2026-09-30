@@ -82,7 +82,6 @@ ignore = [
   "BLE001", # Do not catch blind exception: `Exception`
   "D203",   # No blank line before docstring
   "D213",   # Do not necessarily keep first line with just `###`
-  "LOG015", # TODO: fix LOG015 (use own logger)
 ]
 
 [tool.ruff.lint.isort]

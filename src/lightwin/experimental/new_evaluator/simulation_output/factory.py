@@ -6,6 +6,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection, Sequence
 from pathlib import Path
 from typing import Any
@@ -95,7 +97,7 @@ class SimulationOutputEvaluatorsFactory:
                     evaluators.append(evaluator)
                     break
             else:
-                logging.warning(
+                logger.warning(
                     f"None of the provided beam calculators ({solvers_ids}) "
                     f"calculates the data necesary for {constructor.__name__},"
                     " so it was skipped."
@@ -228,7 +230,7 @@ def _out_folders(
     paths = []
     for x in simulation_outputs:
         if not hasattr(x, "out_path"):
-            logging.error(
+            logger.error(
                 "You must set the out_path attribute of SimulationOutput "
                 "object. Look at Accelerator.keep_simulation_output."
             )
