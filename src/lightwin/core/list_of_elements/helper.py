@@ -5,10 +5,14 @@
 
 """
 
+from __future__ import annotations
+
 import logging
-from collections.abc import Callable, Iterable
+
+logger = logging.getLogger(__name__)
+from collections.abc import Callable, Iterable, Sequence
 from functools import partial
-from typing import Any, Literal, Sequence, Type, TypeGuard, TypeVar, overload
+from typing import TYPE_CHECKING, Any, Literal, TypeGuard, TypeVar, overload
 
 import numpy as np
 
@@ -16,15 +20,16 @@ from lightwin.core.elements.element import Element
 from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.util.typing import GET_ELT_ARG_T
 
-ListOfElements = TypeVar("ListOfElements")
+if TYPE_CHECKING:
+    from lightwin.core.list_of_elements.list_of_elements import ListOfElements
 T = TypeVar("T")
 
 
-def is_list_of(elts: Sequence, type_to_check: Type) -> TypeGuard[Type]:
+def is_list_of(elts: Sequence, type_to_check: type) -> TypeGuard[type]:
     """Check that all items of ``elts`` are of type ``type_to_check``."""
     if not hasattr(elts, "__iter__"):
         return False
-    return all([isinstance(elt, type_to_check) for elt in elts])
+    return all(isinstance(elt, type_to_check) for elt in elts)
 
 
 def is_list_of_elements(elts: Sequence) -> TypeGuard[list[Element]]:
@@ -40,14 +45,14 @@ def is_list_of_list_of_elements(
     elts: Sequence,
 ) -> TypeGuard[list[list[Element]]]:
     """Check that input is a nested list of |E|."""
-    return all([is_list_of_elements(sub_elts) for sub_elts in elts])
+    return all(is_list_of_elements(sub_elts) for sub_elts in elts)
 
 
 def is_list_of_list_of_field_maps(
     elts: Sequence,
 ) -> TypeGuard[list[list[FieldMap]]]:
     """Check that input is a nested list of |E|."""
-    return all([is_list_of(sub_elts, FieldMap) for sub_elts in elts])
+    return all(is_list_of(sub_elts, FieldMap) for sub_elts in elts)
 
 
 def filter_out(
@@ -73,7 +78,7 @@ def filter_out(
     return out
 
 
-def filter_elts(
+def filter_elts(  # noqa: UP047
     elts: ListOfElements | Sequence[Element], type_to_check: type[T]
 ) -> list[T]:
     """Filter elements according to their type.
@@ -112,13 +117,13 @@ def elt_at_this_s_idx(
     for elt in elts:
         if s_idx in range(elt.idx["s_in"], elt.idx["s_out"]):
             if show_info:
-                logging.info(
+                logger.info(
                     f"Mesh index {s_idx} is in {elt.get('elt_info')}.\n"
                     f"Indexes of this elt: {elt.get('idx')}."
                 )
             return elt
 
-    logging.warning(f"Mesh index {s_idx} not found.")
+    logger.warning(f"Mesh index {s_idx} not found.")
     return None
 
 
@@ -133,7 +138,7 @@ def equivalent_elt_idx(
         this list of elements. In the contrary, it was meant to find equivalent
         cavities between different lists of elements.
 
-    See also
+    See Also
     --------
     :func:`equivalent_elt`
     :meth:`.Accelerator.equivalent_elt`
@@ -164,8 +169,8 @@ def equivalent_elt_idx(
     if elt in magic_keywords:
         return magic_keywords[elt]
 
-    logging.error(f"Element {elt} not found in this list of elements.")
-    logging.debug(f"List of elements is:\n{elts}")
+    logger.error(f"Element {elt} not found in this list of elements.")
+    logger.debug(f"List of elements is:\n{elts}")
     raise OSError(f"Element {elt} not found in this list of elements.")
 
 
@@ -192,7 +197,7 @@ def equivalent_elt(
         this list of elements. In the contrary, it was meant to find equivalent
         cavities between different lists of elements.
 
-    See also
+    See Also
     --------
     :func:`equivalent_elt_idx`
     :meth:`.Accelerator.equivalent_elt`
@@ -345,7 +350,7 @@ def _get_first_key_of_idx_dict_higher_than(
     for elt in elts_to_check:
         index = elt.idx.get(index_name, None)
         if index is None:
-            logging.warning(
+            logger.warning(
                 f"Could not find key {index_name} in {elt} idx dictionary "
                 f"because it does not exist. {elt.idx = }."
             )
@@ -353,7 +358,7 @@ def _get_first_key_of_idx_dict_higher_than(
         if index > higher_than:
             return index
 
-    logging.warning(
+    logger.warning(
         f"There is no element with an attribute idx['{index_name}'] higher "
         f"than {higher_than} in the {n_to_check} {first_or_last} elements of "
         "provided list of elements."
@@ -361,7 +366,7 @@ def _get_first_key_of_idx_dict_higher_than(
     return -1
 
 
-def first[T](
+def first(  # noqa: UP047
     iterable: Iterable[T],
     default: T | None = None,
     condition: Callable[[T], bool] = lambda _: True,

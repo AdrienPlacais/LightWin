@@ -7,7 +7,9 @@ function the name of the field map.
 """
 
 import logging
-from typing import Callable
+
+logger = logging.getLogger(__name__)
+from collections.abc import Callable
 
 from lightwin.beam_calculation.cy_envelope_1d.util import (
     CY_ENVELOPE1D_METHODS_T,
@@ -28,7 +30,7 @@ try:
         transfer_matrices,  # type: ignore
     )
 except ModuleNotFoundError as e:
-    logging.error("Is CyEnvelope1D compiled? Check setup.py.")
+    logger.error("Is CyEnvelope1D compiled? Check setup.py.")
     raise ModuleNotFoundError(e)
 
 
@@ -51,7 +53,7 @@ class ElementCyEnvelope1DParameters(ElementEnvelope1DParameters):
         """Set the actually useful parameters."""
         if transf_mat_function is None:
             transf_mat_function = self._proper_transfer_matrix_func("Drift")
-        return super().__init__(
+        super().__init__(
             length_m=length_m,
             n_steps=n_steps,
             beam_kwargs=beam_kwargs,
@@ -112,7 +114,7 @@ class FieldMapCyEnvelope1DParameters(
         **kwargs: str | int,
     ) -> None:
         """Set the name of the field map and init base class."""
-        return super().__init__(
+        super().__init__(
             elt=elt,
             method=method,
             n_steps_per_cell=n_steps_per_cell,
@@ -126,8 +128,7 @@ class FieldMapCyEnvelope1DParameters(
 class SuperposedFieldMapCyEnvelope1DParameters(
     SuperposedFieldMapEnvelope1DParameters, ElementCyEnvelope1DParameters
 ):
-    """Hold properties to compute transfer matrix of
-    :class:`.SuperposedFieldMap`."""
+    """Properties to compute :class:`.SuperposedFieldMap` transfer matrix."""
 
     def __init__(self, *args, **kwargs) -> None:
         """Create the specific parameters for a superposed field map."""

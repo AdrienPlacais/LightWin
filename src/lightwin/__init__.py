@@ -1,5 +1,6 @@
 """Automatically compensate cavity failures in linacs."""
 
-import importlib.metadata
-
-__version__ = importlib.metadata.version("lightwin")
+try:
+    from ._version import version as __version__
+except ModuleNotFoundError:
+    __version__ = "Unkown version"

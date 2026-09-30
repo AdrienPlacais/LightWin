@@ -5,6 +5,8 @@ It keeps it's name, bounds, initial value, etc.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from dataclasses import dataclass
 from typing import Self
 
@@ -28,8 +30,7 @@ class Variable(DesignSpaceParameter):
     ----------
     name :
         Name of the parameter. Must be compatible with the
-        :meth:`.SimulationOutput.get` method, and be in
-        :data:`.IMPLEMENTED_VARIABLES`.
+        :meth:`.SimulationOutput.get` method, and be in :data:`.VARIABLES`.
     element_name :
         Name of the element concerned by the parameter.
     limits :
@@ -56,8 +57,7 @@ class Variable(DesignSpaceParameter):
         ----------
         name :
             Name of the parameter. Must be compatible with the
-            :meth:`.SimulationOutput.get` method, and be in
-            :data:`.IMPLEMENTED_VARIABLES`.
+            :meth:`.SimulationOutput.get` method, and be in :data:`.VARIABLES`.
         element_name :
             Name of the element concerned by the parameter.
         x_min :
@@ -84,8 +84,8 @@ class Variable(DesignSpaceParameter):
         x_0 = pd_series.loc[f"{name}: x_0"]
         return cls.from_floats(name, element_name, x_min, x_max, x_0)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Convert values in deg for output if it is angle."""
         if self.name not in VARIABLES:
-            logging.warning(f"Variable {self.name} not tested.")
+            logger.warning(f"Variable {self.name} not tested.")
         super().__post_init__()

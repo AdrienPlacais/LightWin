@@ -1,1 +1,1 @@
-"""This folder holds all the optimisation related modules."""
+"""Hold all the optimisation related modules."""

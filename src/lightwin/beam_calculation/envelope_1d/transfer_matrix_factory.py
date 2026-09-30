@@ -37,6 +37,9 @@ class TransferMatrixFactoryEnvelope1D(TransferMatrixFactory):
             Cumulated transfer matrix at beginning of |LOE| under study.
         single_elts_results :
             Results of the solver.
+        element_to_index :
+            Function taking in an element -- or its name -- and returning its
+            resolved index.
 
         Returns
         -------

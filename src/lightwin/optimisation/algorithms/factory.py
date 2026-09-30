@@ -1,6 +1,8 @@
 """Define a factory function to create :class:`.OptimisationAlgorithm`."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABCMeta
 from collections.abc import Collection, Mapping
 from typing import Any, Literal
@@ -42,7 +44,6 @@ from lightwin.optimisation.algorithms.simulated_annealing import (
 )
 from lightwin.optimisation.design_space.design_space import DesignSpace
 from lightwin.optimisation.objective.factory import ObjectiveFactory
-from lightwin.util.typing import OPTIMIZATION_STATUS
 
 #: Maps the ``optimisation_algorithm`` key in the ``TOML`` file to the actual
 #: :class:`.OptimisationAlgorithm` we use.
@@ -107,6 +108,8 @@ class OptimisationAlgorithmFactory:
         kwargs :
             Other keyword arguments that will be passed to the
             :class:`.OptimisationAlgorithm`.
+        wtf :
+            What To Fit arguments.
 
         """
         self._class = ALGORITHM_SELECTOR[opti_method]
@@ -159,6 +162,9 @@ class OptimisationAlgorithmFactory:
     ) -> dict[str, Any]:
         """Build default arguments for :class:`.OptimisationAlgorithm`.
 
+        .. todo::
+            Make it a TypeDict.
+
         The kwargs for :class:`.OptimisationAlgorithm` that are defined in
         :attr:`.Fault.optimisation_algorithm` will override the ones defined
         here.
@@ -171,15 +177,17 @@ class OptimisationAlgorithmFactory:
         """
 
         def compute_beam_propagation(
-            cavity_settings: Mapping[FieldMap, CavitySettings] | None,
-            **kwargs,
-        ):
+            cavity_settings: Mapping[FieldMap, CavitySettings] | None, **kwargs
+        ) -> SimulationOutput:
             """Wrap propagation of the beam.
 
             Parameters
             ----------
             cavity_settings :
                 Maps compensating cavities with the settings to be tried.
+            kwargs :
+                Additional keyword arguments passed down to the
+                :meth:`.BeamCalculator.run_with_this` of current solver.
 
             """
             set_of_cavity_settings = SetOfCavitySettings.from_incomplete_set(
@@ -191,6 +199,7 @@ class OptimisationAlgorithmFactory:
                 accelerator_id=self._accelerator_id,
                 set_of_cavity_settings=set_of_cavity_settings,
                 elts=subset_elts,
+                optimization_status="in progress",
                 **kwargs,
             )
 
@@ -223,7 +232,7 @@ class OptimisationAlgorithmFactory:
         overlap = user_kwargs.keys() & default_kwargs.keys()
         if not overlap:
             return
-        logging.info(
+        logger.info(
             "Overlapping OptimisationAlgorithm kwargs detected:\n"
             f"{', '.join(overlap)}. User-provided values (from FaultScenario) "
             "will override defaults."

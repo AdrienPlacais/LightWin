@@ -1,6 +1,8 @@
 """Create a base class for :class:`.Variable` and :class:`.Constraint`."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from abc import ABC
 from dataclasses import dataclass
@@ -20,8 +22,8 @@ class DesignSpaceParameter(ABC):
     ----------
     name :
         Name of the parameter. Must be compatible with the
-        :meth:`.SimulationOutput.get` method, and be in
-        :data:`.IMPLEMENTED_VARIABLES` or :data:`.IMPLEMENTED_CONSTRAINTS`.
+        :meth:`.SimulationOutput.get` method, and be in :data:`.VARIABLES` or
+        :data:`.CONSTRAINTS`.
     element_name :
         Name of the element concerned by the parameter.
     limits :
@@ -48,14 +50,16 @@ class DesignSpaceParameter(ABC):
         ----------
         name :
             Name of the parameter. Must be compatible with the
-            :meth:`.SimulationOutput.get` method, and be in
-            :data:`.IMPLEMENTED_VARIABLES` or :data:`.IMPLEMENTED_CONSTRAINTS`.
+            :meth:`.SimulationOutput.get` method, and be in :data:`.VARIABLES`
+            or :data:`.CONSTRAINTS`.
         element_name :
             Name of the element concerned by the parameter.
         x_min :
             Lower limit. ``np.nan`` to deactivate lower bound.
         x_max :
             Upper limit. ``np.nan`` to deactivate lower bound.
+        x_0 :
+            Initial value; unused.
 
         Returns
         -------
@@ -73,19 +77,19 @@ class DesignSpaceParameter(ABC):
         x_max = pd_series.loc[f"{name}: x_max"]
         return cls.from_floats(name, element_name, x_min, x_max)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Convert values in deg for output if it is angle."""
         self._to_deg = False
         self._to_numpy = False
         if self.x_min > self.x_max:
-            logging.warning(
+            logger.warning(
                 f"{type(self).__name__} {self.element_name} {self.name} lower "
                 f"limit {self.x_min} > {self.x_max} upper limit. Inverting "
                 "them."
             )
             self.change_limits(self.x_max, self.x_min)
         if self.x_min == self.x_max:
-            logging.warning(
+            logger.warning(
                 f"{type(self).__name__} {self.element_name} {self.name} lower "
                 f"limit {self.x_min} == {self.x_max} upper limit. Shifting "
                 "them by 1e-8."
@@ -132,7 +136,7 @@ class DesignSpaceParameter(ABC):
             "This design space parameter has no "
             "attribute x_0. Maybe you took a Contraint for a Variable?"
         )
-        x_0 = getattr(self, "x_0")
+        x_0 = self.x_0
         if "phi" in self.name:
             return math.degrees(x_0)
         return x_0

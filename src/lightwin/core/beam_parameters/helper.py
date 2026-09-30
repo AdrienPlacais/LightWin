@@ -5,6 +5,8 @@ For more information on the units that are used in this module, see |units|.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Literal, overload
 
 import numpy as np
@@ -70,7 +72,7 @@ def reconstruct_sigma(
 
     """
     if phase_space_name not in ("zdelta", "x", "y", "x99", "y99"):
-        logging.warning(
+        logger.warning(
             "sigma reconstruction in this phase space not tested. "
             "You'd better check the units of the output."
         )
@@ -152,9 +154,9 @@ def eps_from_sigma(
 
     """
     allowed = ("zdelta", "x", "y", "x99", "y99")
-    assert (
-        phase_space_name in allowed
-    ), f"Phase-space {phase_space_name} not in {allowed = }."
+    assert phase_space_name in allowed, (
+        f"Phase-space {phase_space_name} not in {allowed = }."
+    )
 
     is_initials = False
     if isinstance(gamma_kin, float):
@@ -526,7 +528,7 @@ def resample_twiss_on_fix(
     out = np.empty(out_shape)
 
     if reference_z_abs.shape[0] != reference_twiss.shape[0]:
-        logging.critical(
+        logger.critical(
             f"Mismatch between the shapes of the reference arrays, returnin "
             f"NaN.\n{reference_z_abs.shape = }\n{reference_twiss.shape = }\n"
             f"{z_abs.shape = }"
@@ -546,9 +548,7 @@ def phase_space_name_hidden_in_key(key: str) -> bool:
         return False
 
     to_test = key.split("_")
-    if to_test[-1] in PHASE_SPACES:
-        return True
-    return False
+    return to_test[-1] in PHASE_SPACES
 
 
 def separate_var_from_phase_space(key: str) -> tuple[str, PHASE_SPACE_T]:

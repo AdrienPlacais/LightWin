@@ -6,12 +6,11 @@ from typing import Any
 
 import pytest
 
-import lightwin.config.config_manager as config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
-from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.config import config_manager
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.list_of_elements.list_of_elements import ListOfElements
@@ -28,6 +27,7 @@ params = [pytest.param((MyCloudPickler,), id="cloudpickle")]
 
 @pytest.fixture(scope="class", params=params)
 def pickler(request: pytest.FixtureRequest) -> MyPickler:
+    """Fixture a pickler."""
     (my_pickler_class,) = request.param
     my_pickler = my_pickler_class()
     return my_pickler
@@ -47,11 +47,7 @@ def config(
         "wtf": "generic_wtf",
         "design_space": "generic_design_space",
     }
-    override = {
-        "files": {
-            "project_folder": out_folder,
-        },
-    }
+    override = {"files": {"project_folder": out_folder}}
     my_config = config_manager.process_config(
         example_config, config_keys, warn_mismatch=True, override=override
     )
@@ -116,9 +112,9 @@ def simulation_output(
     fault_scenario: FaultScenario,
 ) -> SimulationOutput:
     """Get simulation output."""
-    ref_simulation_output = list(accelerators[0].simulation_outputs.values())[
-        0
-    ]
+    ref_simulation_output = next(
+        iter(accelerators[0].simulation_outputs.values())
+    )
     return ref_simulation_output
 
 
@@ -136,7 +132,7 @@ class TestMyPickler:
     ) -> None:
         """Check that :class:`.Accelerator` pickling works."""
         path = accelerator.pickle(pickler, pickled_dir / "accelerator.pkl")
-        pickled = Accelerator.from_pickle(pickler, path)
+        _ = Accelerator.from_pickle(pickler, path)
         assert True
 
     def test_list_of_elements(
@@ -149,7 +145,7 @@ class TestMyPickler:
         path = list_of_elements.pickle(
             pickler, pickled_dir / "list_of_elements.pkl"
         )
-        pickled = ListOfElements.from_pickle(pickler, path)
+        _ = ListOfElements.from_pickle(pickler, path)
         assert True
 
     def test_fault_scenario(
@@ -162,7 +158,7 @@ class TestMyPickler:
         path = fault_scenario.pickle(
             pickler, pickled_dir / "fault_scenario.pkl"
         )
-        pickled = FaultScenario.from_pickle(pickler, path)
+        _ = FaultScenario.from_pickle(pickler, path)
         assert True
 
     def test_simulation_output(
@@ -175,5 +171,5 @@ class TestMyPickler:
         path = simulation_output.pickle(
             pickler, pickled_dir / "simulation_output.pkl"
         )
-        pickled = SimulationOutput.from_pickle(pickler, path)
+        _ = SimulationOutput.from_pickle(pickler, path)
         assert True

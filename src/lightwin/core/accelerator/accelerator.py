@@ -8,6 +8,8 @@ phase, etc of the beam at the entry of its |LOE|.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, Literal, Self
@@ -21,6 +23,7 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
 from lightwin.core.elements.element import Element
+from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.list_of_elements.factory import ListOfElementsFactory
 from lightwin.core.list_of_elements.helper import (
     elt_at_this_s_idx,
@@ -80,6 +83,8 @@ class Accelerator:
         index :
             Corresponding |FS| index. A null index is reserved for reference
             accelerator.
+        kwargs :
+            Unused keyword arguments.
 
         """
         #: Name for the object. The default will be ``"Reference"`` or
@@ -98,6 +103,11 @@ class Accelerator:
         #: this is a `000001/`-like folder.
         self.accelerator_path = accelerator_path
 
+        if kwargs:
+            logger.warning(
+                f"You provided {kwargs = }, but they will be discarded with "
+                "current design."
+            )
         kwargs = {
             "w_kin": e_mev,
             "phi_abs": 0.0,
@@ -109,7 +119,7 @@ class Accelerator:
         self.elts = list_of_elements_factory.whole_list_run(
             dat_file, accelerator_path, **kwargs
         )
-        logging.info(
+        logger.info(
             "Created a ListOfElements ecompassing all linac. Created with:\n"
             f"{dat_file = }\nw_kin_in = {self.elts.w_kin_in:.2f} MeV\n"
             f"phi_abs_in = {self.elts.phi_abs_in:.2f} rad"
@@ -126,6 +136,7 @@ class Accelerator:
         self._pickle_path: Path | None = pickle_path
 
     def __str__(self) -> str:
+        """Identify current object."""
         return self.id
 
     @property
@@ -142,7 +153,7 @@ class Accelerator:
         return f"{self.index:06d}_{self.name}"
 
     @property
-    def l_cav(self):
+    def l_cav(self) -> list[FieldMap]:
         """Shortcut to easily get list of cavities."""
         return self.elts.l_cav
 
@@ -164,7 +175,7 @@ class Accelerator:
     @is_unpickled.setter
     def is_unpickled(self, value: bool) -> None:
         """Update internal value, and also raise a warning."""
-        logging.warning(
+        logger.warning(
             "You have no reason to modify the value of this attribute. I'll do"
             " what you ask nonetheless."
         )
@@ -228,15 +239,15 @@ class Accelerator:
                     " ambiguous when multiple outputs exist."
                 )
                 log = (
-                    logging.error
+                    logger.error
                     if len(self.simulation_outputs) > 1
-                    else logging.warning
+                    else logger.warning
                 )
                 log(msg)
 
             if key in self._special_getters:
                 if elt is not None:
-                    logging.error(
+                    logger.error(
                         f"Cannot resolve special getter with {elt = }."
                     )
                 value = self._special_getters[key](self)
@@ -387,9 +398,9 @@ class Accelerator:
 
         """
         original_dat_file = self.elts.files["dat_file"]
-        assert isinstance(
-            original_dat_file, Path
-        ), f"{original_dat_file = } should exist."
+        assert isinstance(original_dat_file, Path), (
+            f"{original_dat_file = } should exist."
+        )
         if beam_calculator_id is None:
             return original_dat_file
         filename = original_dat_file.name

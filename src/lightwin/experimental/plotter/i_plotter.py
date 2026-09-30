@@ -50,9 +50,11 @@ class IPlotter(ABC):
         data :
             Data to be plotted. According to the subclass, it can be a numpy
             array, a pandas dataframe...
+        axes :
+            Axes to draw on.
         png_path :
             Where the figure will be saved. The default is None, in which case
-            figure is not plotted.
+            figure is not saved.
         elts :
             Elements to plot if :attr:`_structure` is True. If not provided, we
             take default :attr:`_elts` instead. Note that the colour of the
@@ -65,6 +67,10 @@ class IPlotter(ABC):
             sub-axes.
         title :
             Title of the figure.
+        x_axis :
+            Type of x axis.
+        style :
+            Style to be used.
         plot_kwargs :
             Other keyword arguments passed to the :meth:`_actual_plotting`.
 
@@ -122,9 +128,9 @@ class IPlotter(ABC):
     ) -> None:
         """Add a plot to show the structure of the linac."""
         if elts is None:
-            assert hasattr(
-                self, "_elts"
-            ), "Please provide at least a defaut ListOfElements for structure plots."
+            assert hasattr(self, "_elts"), (
+                "Please provide at least a defaut ListOfElements for structure plots."
+            )
             elts = self._elts
         if self._sections:
             self._plot_sections(axes, elts, x_axis)

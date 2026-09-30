@@ -16,6 +16,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from collections.abc import Collection
 from dataclasses import dataclass
@@ -260,7 +262,7 @@ class SimulationOutput:
                 out = [np.array(x) for x in out]
             if none_to_nan:
                 if not to_numpy:
-                    logging.error(
+                    logger.error(
                         f"{none_to_nan = } while {to_numpy = }, which is not "
                         "supported. Forcing to_numpy = True and hoping for the "
                         "best."
@@ -287,7 +289,7 @@ class SimulationOutput:
                 warn_structure_dependent
                 and key in GETTABLE_STRUCTURE_DEPENDENT
             ):
-                logging.warning(
+                logger.warning(
                     f"{key = } is structure-dependent and does not vary from "
                     "simulation to simulation. You may be better of calling "
                     "`Accelerator.get` or `ListOfElements.get`."
@@ -303,9 +305,12 @@ class SimulationOutput:
                     key,
                     to_numpy=False,  # type: ignore[arg-type]
                 )
-            elif key in NEEDS_3D and not self.is_3d:
-                val = None
-            elif key in NEEDS_MULTIPART and not self.is_multiparticle:
+            elif (
+                key in NEEDS_3D
+                and not self.is_3d
+                or key in NEEDS_MULTIPART
+                and not self.is_multiparticle
+            ):
                 val = None
             else:
                 val = recursive_getter(
@@ -342,7 +347,7 @@ class SimulationOutput:
 
         if none_to_nan:
             if not to_numpy:
-                logging.error(
+                logger.error(
                     f"{none_to_nan = } while {to_numpy = }, which is not "
                     "supported. Forcing to_numpy = True and hoping for the "
                     "best."
@@ -448,7 +453,7 @@ class SimulationOutput:
                 "Unpickled object is not a SimulationOutput instance."
             )
 
-        logging.info(f"Created an SimulationOutput by unpickling {path}.")
+        logger.info(f"Created an SimulationOutput by unpickling {path}.")
         return simulation_output
 
     def plot(
@@ -472,8 +477,9 @@ class SimulationOutput:
         df = pd.DataFrame(
             {
                 x_axis: self.get(x, **kwargs),
-                legend_entry
-                or self.accelerator_id: self.get(key, to_deg=to_deg, **kwargs),
+                legend_entry or self.accelerator_id: self.get(
+                    key, to_deg=to_deg, **kwargs
+                ),
             }
         )
         return df.plot(

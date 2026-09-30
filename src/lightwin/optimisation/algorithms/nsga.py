@@ -22,7 +22,7 @@ from lightwin.optimisation.algorithms.algorithm import (
 
 
 class _LightWinProblem(Problem):
-    """Wrap LightWin's residual evaluation into a pymoo :class:`.Problem`."""
+    """Wrap LightWin's residual evaluation into a pymoo ``Problem`` object."""
 
     def __init__(
         self,
@@ -50,6 +50,9 @@ class _LightWinProblem(Problem):
             ``(n_var, )`` array of upper limits for variables.
         eval_fn :
             Residue function.
+        kwargs :
+            Additional keyword arguments passed to
+            :class:`~pymoo.core.problem.Problem`.
 
         """
         super().__init__(
@@ -77,6 +80,10 @@ class _LightWinProblem(Problem):
             ``(n_var, )`` array of variables.
         out :
             Dictionary keeping track of objectives, constraint violation, etc.
+        args :
+            Unused arguments.
+        kwargs :
+            Unused arguments.
 
         """
         results = [self._eval_fn(xi) for xi in x]
@@ -94,10 +101,6 @@ class NSGA3Algorithm(OptimisationAlgorithm):
 
     All attributes but ``solution`` are inherited from
     :class:`.OptimisationAlgorithm`.
-
-    See also
-    --------
-    pymoo.algorithms.moo.nsga3.NSGA3
 
     """
 
@@ -268,7 +271,7 @@ class NSGA3Algorithm(OptimisationAlgorithm):
 class _LightWinProblemMulti(_LightWinProblem):
     """Wrap LightWin's residual evaluation into a pymoo Problem."""
 
-    def __init__(self, *args, n_workers=1, **kwargs) -> None:
+    def __init__(self, *args, n_workers: int = 1, **kwargs) -> None:
         """Set a number of CPU cores."""
         super().__init__(*args, **kwargs)
         self._n_workers = n_workers
@@ -307,10 +310,6 @@ class NSGA3AlgorithmMulti(NSGA3Algorithm):
 
     All attributes but ``solution`` are inherited from
     :class:`.OptimisationAlgorithm`.
-
-    See also
-    --------
-    pymoo.algorithms.moo.nsga3.NSGA3
 
     """
 
@@ -354,12 +353,6 @@ class NSGA3AlgorithmMulti(NSGA3Algorithm):
         simulation_output = self.compute_beam_propagation(cav_settings)
 
         residuals = self._compute_residuals(simulation_output)
-        objectives = {
-            str(objective): value
-            for objective, value in zip(
-                self.objectives, residuals, strict=True
-            )
-        }
 
         constraints = None
         constraints_arr = None

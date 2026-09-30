@@ -12,6 +12,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABCMeta
 from collections.abc import Collection, Sequence
 from itertools import zip_longest
@@ -156,15 +158,11 @@ class InstructionsFactory:
 
         Parameters
         ----------
-        line :
+        dat_line :
             A single line of the ``DAT`` file.
         dat_idx :
             Line number of the line (starts at 0). If not provided, taken from
             ``line``.
-        command_fac :
-            A factory to create :class:`.Command`.
-        element_fac :
-            A factory to create |E|.
         instruction_kw :
             Keywords given to the ``run`` method of the proper factory.
 
@@ -203,7 +201,7 @@ class InstructionsFactory:
         """Check that every element has a lattice and section index."""
         for elt in elts:
             if elt.idx["lattice"] == -1:
-                logging.error(
+                logger.error(
                     "At least one Element is outside of any lattice. This may "
                     "cause problems..."
                 )
@@ -211,7 +209,7 @@ class InstructionsFactory:
 
         for elt in elts:
             if elt.idx["section"] == -1:
-                logging.error(
+                logger.error(
                     "At least one Element is outside of any section. This may "
                     "cause problems..."
                 )
@@ -231,20 +229,20 @@ class InstructionsFactory:
                 continue
             joined = "\n".join(
                 (
-                    f"{str(x):>20}\t{str(y):<20}"
+                    f"{x!s:>20}\t{y!s:<20}"
                     for x, y in zip_longest(
                         lattices[-2], lattices[-1], fillvalue="-"
                     )
                 )
             )
             joined = f"{'Penultimate:':>20}\t{'Ultimate:':<20}\n" + joined
-            logging.warning(
+            logger.warning(
                 f"Lattice length mismatch in the {sec}th section. The last "
                 f"lattice of this section has {ultim} elements, while "
                 f"penultimate has {penult} elements. This may create problems "
                 "if you rely on lattices identification to compensate faults. "
             )
-            logging.debug(f"{joined}")
+            logger.debug(f"{joined}")
 
     def _filter_out_elements_to_dump(self, elts: list[Element]) -> None:
         """Remove the desired elements."""
@@ -256,7 +254,7 @@ class InstructionsFactory:
         n_removed = len(removed_elts)
         if n_removed > 0:
             types = {elt.__class__.__name__ for elt in removed_elts}
-            logging.warning(
+            logger.warning(
                 f"Removed {n_removed} elements, according to the "
                 "InstructionsFactory._elements_to_dump key. The removed "
                 f"elements have types: {types}.\nNote that with TraceWin, "

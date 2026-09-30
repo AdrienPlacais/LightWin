@@ -1,6 +1,6 @@
-"""Create some generic evaluators for :class:`.SimulationOutput.`"""
+"""Create some generic evaluators for :class:`.SimulationOutput`."""
 
-from typing import Any
+from typing import Any, ClassVar
 
 import numpy as np
 import pandas as pd
@@ -22,7 +22,7 @@ class AcceptanceEnergy(ISimulationOutputEvaluator):
 
     _x_quantity = "elt_idx"
     _y_quantity = "acceptance_energy"
-    _plot_kwargs = {"marker": "o"}
+    _plot_kwargs: ClassVar[dict[str, Any]] = {"marker": "o"}
     _nan_in_data_is_allowed = True
 
     def __init__(
@@ -80,7 +80,7 @@ class Energy(ISimulationOutputEvaluator):
         self,
         *simulation_outputs,
         fallback_dummy: bool = True,
-        use_last_row_only=True,
+        use_last_row_only: bool = True,
         **user_overrides: Any,
     ) -> tuple[list[bool], pd.DataFrame]:
         """Check that final energy difference is within limit."""
@@ -104,6 +104,7 @@ class EnvelopePhiW(ISimulationOutputEvaluator):
         fignum: int,
         plotter: MatplotlibPlotter | None = None,
     ) -> None:
+        """Instantiate object."""
         super().__init__(reference, fignum, plotter)
         self._max = max_envelope
 
@@ -224,10 +225,6 @@ class PowerLoss(ISimulationOutputEvaluator):
     def _markdown(self) -> str:
         return f"Accumulated {super().markdown}"
 
-    @property
-    def ref_xdata(self) -> NDArray[np.float64]:
-        return super().ref_xdata
-
     def __repr__(self) -> str:
         """Give a short description of what this class does."""
         return f"{self._markdown} < {self._max:.2f}W"
@@ -248,7 +245,7 @@ class SynchronousPhases(ISimulationOutputEvaluator):
 
     _x_quantity = "elt_idx"
     _y_quantity = "phi_s"
-    _plot_kwargs = {"marker": "o"}
+    _plot_kwargs: ClassVar[dict[str, Any]] = {"marker": "o"}
     _nan_in_data_is_allowed = True
 
     def __init__(
@@ -282,6 +279,7 @@ class TransverseEnvelopeX(ISimulationOutputEvaluator):
         fignum: int,
         plotter: MatplotlibPlotter | None = None,
     ) -> None:
+        """Instantiate object."""
         super().__init__(reference, fignum, plotter)
         self._max = max_envelope
 
@@ -302,6 +300,7 @@ class TransverseEnvelopeY(ISimulationOutputEvaluator):
         fignum: int,
         plotter: MatplotlibPlotter | None = None,
     ) -> None:
+        """Instantiate object."""
         super().__init__(reference, fignum, plotter)
         self._max = max_envelope
 

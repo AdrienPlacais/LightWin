@@ -5,6 +5,8 @@ This solver is fast, but should not be used at low energies.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection
 from pathlib import Path
 
@@ -24,7 +26,6 @@ from lightwin.beam_calculation.simulation_output.simulation_output import (
 )
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.elements.field_maps.cavity_settings import CavitySettings
-from lightwin.core.elements.field_maps.field_map import FieldMap
 from lightwin.core.elements.field_maps.superposed_field_map import (
     SuperposedFieldMap,
 )
@@ -38,6 +39,7 @@ from lightwin.physics.synchronous_phases import (
 )
 from lightwin.util.typing import (
     EXPORT_PHASES_T,
+    OPTIMIZATION_STATUS,
     REFERENCE_PHASE_POLICY_T,
     BeamKwargs,
 )
@@ -123,6 +125,7 @@ class Envelope1D(BeamCalculator):
         accelerator_id: str,
         set_of_cavity_settings: SetOfCavitySettings,
         elts: ListOfElements,
+        optimization_status: OPTIMIZATION_STATUS,
         **kwargs,
     ) -> SimulationOutput:
         """Use solver on ``elts``, including the ``set_of_cavity_settings``.
@@ -138,6 +141,11 @@ class Envelope1D(BeamCalculator):
             objects.
         elts :
             List of elements in which the beam must be propagated.
+        optimization_status :
+            Current optimization state. Only used by :class:`.TraceWin`, to
+            prevent errors during optimization phase.
+        kwargs :
+            Unused keyword arguments.
 
         Returns
         -------
@@ -194,7 +202,7 @@ class Envelope1D(BeamCalculator):
         index = 0
         for elt in elts:
             if self.id in elt.beam_calc_param:
-                logging.debug(
+                logger.debug(
                     f"Solver already initialized for {elt = }. I will skip "
                     f"solver param initialisation {elts[0]} to {elts[-1]}"
                 )
@@ -203,7 +211,7 @@ class Envelope1D(BeamCalculator):
             elt.beam_calc_param[self.id] = solver_param
             assert isinstance(solver_param, ElementEnvelope1DParameters)
             position, index = solver_param.set_absolute_meshes(position, index)
-        logging.debug(f"Initialized solver param for {elts[0]} to {elts[-1]}")
+        logger.debug(f"Initialized solver param for {elts[0]} to {elts[-1]}")
         return
 
     @property

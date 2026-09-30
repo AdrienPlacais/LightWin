@@ -8,6 +8,8 @@
 
 import datetime
 import logging
+
+logger = logging.getLogger(__name__)
 from pathlib import Path
 from typing import Any
 
@@ -92,15 +94,16 @@ def _set_up_logging(
     console_log_level: LOG_LEVEL_T = "INFO",
     **toml_subdict,
 ) -> None:
-    """Set up the logging."""
+    """Set up the logger."""
     logfile_file = project_path / log_file
     set_up_logging(
-        package_name="LightWin",
+        package_name="lightwin",
+        fancy_name="LightWin",
         logfile_file=logfile_file,
         logfile_log_level=logfile_log_level,
         console_log_level=console_log_level,
     )
-    logging.info(f"Setting {project_path = }\nSetting {log_file = }")
+    logger.info(f"Setting {project_path = }\nSetting {log_file = }")
 
 
 def _create_project_folders(
@@ -126,7 +129,9 @@ def _set_project_path(
         exist_ok = True
         return project_path, exist_ok
 
-    time = datetime.datetime.now().strftime("%Y.%m.%d_%Hh%M_%Ss_%fms")
+    time = datetime.datetime.now(tz=datetime.UTC).strftime(
+        "%Y.%m.%d_%Hh%M_%Ss_%fms"
+    )
     project_path = toml_folder / time
     exist_ok = False
     return project_path, exist_ok

@@ -6,9 +6,11 @@
 """
 
 import logging
-from collections.abc import Collection
+
+logger = logging.getLogger(__name__)
+from collections.abc import Callable, Collection
 from dataclasses import dataclass
-from typing import Any, Callable, Literal, Self
+from typing import Any, Literal, Self
 
 import numpy as np
 from numpy.typing import NDArray
@@ -31,31 +33,7 @@ ERROR_REFERENCE_T = Literal[
 
 @dataclass
 class _SimData:
-    """Bundle of parallel x/y/kwargs lists for one accelerator's
-    simulations."""
-
-    x: list[NDArray[np.float64]]
-    y: list[NDArray[np.float64]]
-    kw: list[dict[str, Any]]
-
-    def __len__(self) -> int:
-        return len(self.x)
-
-    def __bool__(self) -> bool:
-        return len(self) > 0
-
-    def __iadd__(self, other: Self) -> Self:
-        """Define ``sim_data += other_simdata`` operations."""
-        self.x += other.x
-        self.y += other.y
-        self.kw += other.kw
-        return self
-
-
-@dataclass
-class _SimData:
-    """Bundle of parallel x/y/kwargs lists for one accelerator's
-    simulations."""
+    """Bundle parallel x/y/kwargs lists for one accelerator's simulations."""
 
     x: list[NDArray[np.float64]]
     y: list[NDArray[np.float64]]
@@ -109,6 +87,8 @@ def all_accelerators_data(
         :attr:`.BeamCalculator.id` (or, equivalently, a key(s) in
         :attr:`.Accelerator.simulation_outputs`). Typical values:
         ``"0_Envelope1D"`` or ``"1_TraceWin"``.
+    get_kwargs :
+        Keyword arguments passed down to :meth:`.SimulationOutput.get`.
 
     Returns
     -------
@@ -219,12 +199,12 @@ def _single_simulation_all_data(
 
     if x_data is None or y_data is None:
         if x_data is None:
-            logging.error(
+            logger.error(
                 f"{x_axis} not found in {label}. Setting it to dummy data. "
                 f"Complete SimulationOutput is:\n{simulation_output}"
             )
         if y_data is None:
-            logging.error(
+            logger.error(
                 f"{y_axis} not found in {label}. Setting it to dummy data. "
                 f"Complete SimulationOutput is:\n{simulation_output}"
             )
@@ -232,7 +212,7 @@ def _single_simulation_all_data(
         return dummy, dummy, {}
 
     if x_data.shape != y_data.shape:
-        logging.error(
+        logger.error(
             f"Shape mismatch in {label}: {x_axis} has shape {x_data.shape} "
             f"while {y_axis} has shape {y_data.shape}. If this is a "
             "TransferMatrix plot with TraceWin solver, it is because TraceWin "
@@ -292,8 +272,7 @@ def _avoid_similar_labels(plt_kwargs: list[dict]) -> list[dict]:
 
 # Error related
 def _error_calculation_function(
-    y_axis: str,
-    error_presets: dict[str, dict[str, Any]],
+    y_axis: str, error_presets: dict[str, dict[str, Any]]
 ) -> tuple[
     Callable[[NDArray[np.float64], NDArray[np.float64]], NDArray[np.float64]],
     str,
@@ -338,7 +317,7 @@ def _compute_error(
 
     """
     if not ref or not fix:
-        logging.error("Empty data passed to _compute_error, returning empty.")
+        logger.error("Empty data passed to _compute_error, returning empty.")
         return _SimData([], [], [])
 
     pairs = _build_solver_pairs(len(ref), len(fix), error_reference)
@@ -383,13 +362,11 @@ def _build_solver_pairs(
         return [(0, i) for i in range(n_fix)]
     if error_reference == "ref accelerator (2nd solver)":
         if n_ref < 2:
-            logging.error(
+            logger.error(
                 f"{error_reference = } not supported: reference has only "
                 f"{n_ref} simulation output(s)."
             )
             return None
         return [(1, i) for i in range(n_fix)]
-    logging.error(
-        f"{error_reference = } is not allowed. Check allowed values."
-    )
+    logger.error(f"{error_reference = } is not allowed. Check allowed values.")
     return None

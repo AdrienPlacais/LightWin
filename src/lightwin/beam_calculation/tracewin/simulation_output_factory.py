@@ -1,6 +1,8 @@
 """Define a class to easily generate the |SO|."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from abc import ABCMeta
 from functools import partial
@@ -41,9 +43,7 @@ def _0_to_NaN(data: NDArray) -> NDArray:
     return data
 
 
-def _remove_invalid_values(
-    results: dict[str, NDArray],
-) -> dict[str, NDArray]:
+def _remove_invalid_values(results: dict[str, NDArray]) -> dict[str, NDArray]:
     """Remove invalid values that appear when ``exception`` is True."""
     results["SizeX"] = _0_to_NaN(results["SizeX"])
     results["SizeY"] = _0_to_NaN(results["SizeY"])
@@ -91,7 +91,7 @@ def _load_results_generic(
     out = np.loadtxt(f_p, skiprows=n_lines_header)
     for i, key in enumerate(headers):
         results[key] = out[:, i]
-        logging.debug(f"successfully loaded {f_p}")
+        logger.debug(f"successfully loaded {f_p}")
     return results
 
 
@@ -123,9 +123,7 @@ def _set_energy_related_results(
 
 
 def _set_phase_related_results(
-    results: dict[str, NDArray],
-    z_in: float,
-    phi_in: float,
+    results: dict[str, NDArray], z_in: float, phi_in: float
 ) -> dict[str, NDArray]:
     """Compute the phases, pos, frequencies.
 
@@ -198,7 +196,7 @@ def _remove_incomplete_line(filepath: Path) -> None:
 
     if i_last_valid == -1:
         return
-    logging.warning(
+    logger.warning(
         f"Not enough columns in `OUT` after line {i_last_valid}. "
         "Removing all lines after this one..."
     )
@@ -226,7 +224,7 @@ def _add_dummy_data(filepath: Path, elts: ListOfElements) -> None:
         last_element_in_file = elts[last_idx_in_file - 1]
 
         if last_element_in_file is not elts[-1]:
-            logging.warning(
+            logger.warning(
                 "Incomplete `OUT` file. Trying to complete with dummy data..."
             )
             elts_to_add = elts[last_idx_in_file:]
@@ -255,6 +253,7 @@ def _load_parameters_of_cavities(
     filename :
         The name of the cavity parameters file produced by TraceWin, generally
         ``Cav_set_point_res.dat``.
+
     Returns
     -------
         Contains the cavity parameters. The keys should be:
@@ -283,7 +282,7 @@ def _load_parameters_of_cavities(
 
     out = np.loadtxt(f_p, skiprows=n_lines_header)
     parameters = {key: out[:, i] for i, key in enumerate(headers)}
-    logging.debug(f"successfully loaded {f_p}")
+    logger.debug(f"successfully loaded {f_p}")
     return parameters
 
 
@@ -325,6 +324,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         filename: Path,
         beam_calc_parameters_factory: ElementTraceWinParametersFactory,
     ) -> None:
+        """Instantiate object."""
         super().__init__(
             is_multipart=is_multipart,
             beam_calculator_id=beam_calculator_id,
@@ -366,8 +366,10 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
             Contains all elements or only a fraction or all the elements.
         path_cal :
             Path to results folder.
-        failed :
+        command_failed :
             Indicates if the run was unsuccessful or not.
+        set_of_cavity_settings :
+            Cavity settings used to produce this simulation.
 
         Returns
         -------
@@ -502,7 +504,7 @@ class SimulationOutputFactoryTraceWin(SimulationOutputFactory):
         set_of_cavity_settings: SetOfCavitySettings,
     ) -> SimulationOutput:
         """Create a NaN-filled SimulationOutput when TraceWin left no file."""
-        logging.warning(
+        logger.warning(
             "TraceWin produced no output file. Returning a NaN-filled "
             "SimulationOutput."
         )

@@ -18,7 +18,7 @@ class DownhillSimplex(OptimisationAlgorithm):
     All the attributes but ``solution`` are inherited from the Abstract Base
     Class :class:`.OptimisationAlgorithm`.
 
-    See also
+    See Also
     --------
     :class:`.DownhillSimplexPenalty`
 
@@ -51,10 +51,7 @@ class DownhillSimplex(OptimisationAlgorithm):
         """Create the ``kwargs`` for the optimisation."""
         kwargs = {
             "method": "Nelder-Mead",
-            "options": {
-                "adaptive": True,
-                "disp": True,
-            },
+            "options": {"adaptive": True, "disp": True},
         }
         return kwargs
 

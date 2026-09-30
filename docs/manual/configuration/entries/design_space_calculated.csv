@@ -1,57 +1,11 @@
 Entry,Type,Description,Mandatory?,Allowed values
-`design_space_preset`,`str`,"What are the variables and
-
-constraints.",✅,"('AbsPhaseAmplitude', 'AbsPhaseAmplitudeWithConstrainedSyncPhase', 'Everything', 'RelPhaseAmplitude', 'RelPhaseAmplitudeWithConstrainedSyncPhase', 'SyncPhaseAmplitude', 'UserDefined', 'abs_phase_amplitude', 'abs_phase_amplitude_with_constrained_sync_phase', 'everything', 'rel_phase_amplitude', 'rel_phase_amplitude_with_constrained_sync_phase', 'sync_phase_amplitude', 'user_defined', 'unconstrained', 'unconstrained_rel', 'constrained_sync_phase', 'sync_phase_as_variable')"
-`variable_names`,"`list` or
-
-`tuple`","What to use as variables if ``
-
-design_space_preset `` is set
-
-to `` ""UserDefined"" ``. In
-
-this case, this key is
-
-mandatory.",❌,
-`constraint_names`,"`list` or
-
-`tuple`","What to use as constraints if
-
-`` design_space_preset `` is
-
-set to `` ""UserDefined"" ``.",❌,
-`from_file`,`bool`,"If variable limits/constraints
-
-should be taken from a file.",✅,
-"`max_increase_sync_`
-
-`phase_in_percent`",`float`,"Max relative increase of:math:`\phi_s`
-
-wrt nominal in:unit:`\\%`",✅,
-"`max_absolute_sync_`
-
-`phase_in_deg`",`float`,Max absolute:math:`\phi_s` in:unit:`deg`,❌,
-"`min_absolute_sync_`
-
-`phase_in_deg`",`float`,Min absolute:math:`\phi_s` in:unit:`deg`,❌,
-"`max_decrease_k_e_in_`
-
-`percent`",`float`,"Max decrease of:math:`k_e` wrt nominal
-
-in:unit:`\\%`",✅,
-"`max_increase_k_e_in_`
-
-`percent`",`float`,"Max increase of:math:`k_e` wrt nominal
-
-in:unit:`\\%`",✅,
-"`maximum_k_e_is_`
-
-`calculated_wrt_`
-
-`maximum_k_e_of_`
-
-`section`",`bool`,"If max:math:`k_e` should be the same
-
-for all the cavities of the
-
-section",❌,
+`design_space_preset`,`str`,What are the variables and constraints.,✅,"`AbsPhaseAmplitude`, `AbsPhaseAmplitudeWithConstrainedSyncPhase`, `Everything`, `RelPhaseAmplitude`, `RelPhaseAmplitudeWithConstrainedSyncPhase`, `SyncPhaseAmplitude`, `UserDefined`, `abs_phase_amplitude`, `abs_phase_amplitude_with_constrained_sync_phase`, `everything`, `rel_phase_amplitude`, `rel_phase_amplitude_with_constrained_sync_phase`, `sync_phase_amplitude`, `user_defined`, `unconstrained`, `unconstrained_rel`, `constrained_sync_phase`, `sync_phase_as_variable`"
+`variable_names`,`list` or `tuple`,"What to use as variables if ``design_space_preset`` is set to ``UserDefined``. In this case, this key is mandatory.",❌,
+`constraint_names`,`list` or `tuple`,What to use as constraints if ``design_space_preset`` is set to ``UserDefined``.,❌,
+`from_file`,`bool`,If variable limits/constraints should be taken from a file.,✅,
+`max_increase_sync_phase_in_percent`,`float`,Max relative increase of :math:`\phi_s` wrt nominal in :unit:`\\%`,✅,
+`max_absolute_sync_phase_in_deg`,`float`,Max absolute :math:`\phi_s` in :unit:`deg`,❌,
+`min_absolute_sync_phase_in_deg`,`float`,Min absolute :math:`\phi_s` in :unit:`deg`,❌,
+`max_decrease_k_e_in_percent`,`float`,Max decrease of :math:`k_e` wrt nominal in :unit:`\\%`,✅,
+`max_increase_k_e_in_percent`,`float`,Max increase of :math:`k_e` wrt nominal in :unit:`\\%`,✅,
+`maximum_k_e_is_calculated_wrt_maximum_k_e_of_section`,`bool`,If max :math:`k_e` should be the same for all the cavities of the section,❌,

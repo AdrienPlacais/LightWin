@@ -674,9 +674,7 @@ def tracewin_pre_treat(
     self._insert_defaults(toml_table, **kwargs)
     apply_deprecated_flag_phi_abs(self, toml_table, **kwargs)
     if "executable" in toml_table:
-        declare = getattr(
-            self, "_declare_that_machine_config_is_not_mandatory_anymore"
-        )
+        declare = self._declare_that_machine_config_is_not_mandatory_anymore
         declare()
         return
 
@@ -755,14 +753,14 @@ def _get_tracewin_executable(
     if not machine_name:
         machine_name = socket.gethostname()
 
-    assert (
-        machine_name in config
-    ), f"{machine_name = } should be in {config.keys() = }"
+    assert machine_name in config, (
+        f"{machine_name = } should be in {config.keys() = }"
+    )
     this_machine_config = config[machine_name]
 
-    assert (
-        simulation_type in this_machine_config
-    ), f"{simulation_type = } was not found in {this_machine_config = }"
+    assert simulation_type in this_machine_config, (
+        f"{simulation_type = } was not found in {this_machine_config = }"
+    )
     executable = Path(this_machine_config[simulation_type])
     assert executable.is_file, f"{executable = } was not found"
     return executable

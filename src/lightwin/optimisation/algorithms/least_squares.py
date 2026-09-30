@@ -9,7 +9,7 @@ from lightwin.optimisation.algorithms.downhill_simplex import DownhillSimplex
 class LeastSquares(DownhillSimplex):
     """Plain least-squares method, efficient for small problems.
 
-    See also
+    See Also
     --------
     :class:`.LeastSquaresPenalty`
 

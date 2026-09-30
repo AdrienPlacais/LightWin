@@ -7,6 +7,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection, Sequence
 
 from lightwin.core.commands.command import Command
@@ -51,8 +53,8 @@ class SuperposeMap(Command):
         element that is not a field map. It allows to consider situations where
         we field_map is not directly after the ``SUPERPOSE_MAP`` command.
 
-        Example
-        -------
+        Examples
+        --------
         ```
         SUPERPOSE_MAP
         STEERER
@@ -65,14 +67,14 @@ class SuperposeMap(Command):
 
         """
         start = self.idx["dat_idx"]
-        next_element_but_not_field_map = list(
+        next_element_but_not_field_map = next(
             filter(
                 lambda elt: (
                     isinstance(elt, Element) and not isinstance(elt, FieldMap)
                 ),
                 instructions[self.idx["dat_idx"] :],
             )
-        )[0]
+        )
         stop = next_element_but_not_field_map.idx["dat_idx"]
         self.influenced = slice(start, stop)
 
@@ -122,7 +124,7 @@ class SuperposeMap(Command):
 
             if isinstance(field_map := instruction, FieldMap):
                 if z_0 is None:
-                    logging.error(
+                    logger.error(
                         "There is no SUPERPOSE_MAP for current FIELD_MAP.\n"
                         f"{instruction.line}"
                     )
@@ -130,8 +132,7 @@ class SuperposeMap(Command):
                 field_map.z_0 = z_0
 
                 z_1 = z_0 + field_map.length_m
-                if z_1 > z_max:
-                    z_max = z_1
+                z_max = max(z_max, z_1)
                 z_0 = None
         return z_max
 
@@ -176,9 +177,7 @@ class SuperposeMap(Command):
         return new_instructions
 
     def _re_set_indexes(
-        self,
-        elts_after_self: Sequence[Element],
-        number_of_superposed: int,
+        self, elts_after_self: Sequence[Element], number_of_superposed: int
     ) -> None:
         """Decrement lattice numbers to take merged elements into account.
 

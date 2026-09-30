@@ -7,6 +7,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC
 from collections.abc import Callable, Collection, Sequence
 from pathlib import Path
@@ -34,8 +36,7 @@ from lightwin.util.typing import (
 
 
 class DesignSpaceFactory(ABC):
-    """Base class to handle :class:`.Variable` and :class:`.Constraint`
-    creation.
+    """Base class handling :class:`.Variable`, :class:`.Constraint` creation.
 
     Parameters
     ----------
@@ -78,7 +79,7 @@ class DesignSpaceFactory(ABC):
         self, compensating_elements: Collection[Element]
     ) -> None:
         """Check that given elements can be retuned."""
-        assert all([elt.can_be_retuned for elt in compensating_elements])
+        assert all(elt.can_be_retuned for elt in compensating_elements)
 
     def _instantiate_variables(
         self,
@@ -222,10 +223,10 @@ class DesignSpaceFactory(ABC):
 
         Parameters
         ----------
-        variables_names :
-            Name of the variables to create.
-        constraints_names :
-            Name of the constraints to create. The default is None.
+        compensating_elements :
+            Elements participating to the cavity fialure compensation.
+        reference_elements :
+            Equivalent of ``compensating_elements`` in the reference linac.
 
         """
         self._check_can_be_retuned(compensating_elements)
@@ -250,6 +251,7 @@ class UserDefinedDesignSpaceFactory(DesignSpaceFactory):
     """Let user choose variables and constraints from ``TOML``."""
 
     def __init__(self, **design_space_kw) -> None:
+        """Create object."""
         super().__init__(**design_space_kw)
 
 
@@ -275,15 +277,13 @@ class _Preset(DesignSpaceFactory):
         **design_space_kw,
     ) -> None:
         if variables_names is not None:
-            logging.info(
-                "`variables_names` was given but will be disregarded."
-            )
+            logger.info("`variables_names` was given but will be disregarded.")
         if constraints_names is not None:
-            logging.info(
+            logger.info(
                 "`constraints_names` was given but will be disregarded."
             )
 
-        return super().__init__(
+        super().__init__(
             variables_names=self._preset_variables,
             constraints_names=self._preset_constraints,
             **design_space_kw,
@@ -363,7 +363,7 @@ class RelPhaseAmplitudeWithConstrainedSyncPhase(_Preset):
 # To create ``variables.csv`` and ``constraints.csv``
 # =============================================================================
 class Everything(_Preset):
-    """This class creates all possible variables and constraints.
+    """Create all possible variables and constraints.
 
     This is not to be used in an optimisation problem, but rather to save in a
     ``CSV`` all the limits and initial values for every variable/constraint.
@@ -375,7 +375,7 @@ class Everything(_Preset):
 
     def run(self, *args, **kwargs) -> DesignSpace:
         """Launch normal run but with an info message."""
-        logging.info(
+        logger.info(
             "Creating DesignSpace with all implemented variables and "
             f"constraints, i.e. {self.variables_names = } and "
             f"{self.constraints_names = }."

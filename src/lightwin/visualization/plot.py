@@ -20,9 +20,11 @@
 """
 
 import logging
-from collections.abc import Collection
+
+logger = logging.getLogger(__name__)
+from collections.abc import Collection, Sequence
 from pathlib import Path
-from typing import Any, Literal, Sequence
+from typing import Any, Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -30,6 +32,7 @@ from cycler import cycler
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.typing import ColorType
+from numpy.typing import NDArray
 from palettable.colorbrewer.qualitative import Dark2_8  # type: ignore
 
 import lightwin.util.dicts_output as dic
@@ -75,11 +78,7 @@ PLOT_PRESETS = {
     },
     "envelopes": {
         "x_axis": "z_abs",
-        "all_y_axis": (
-            "envelope_pos_phiw",
-            "envelope_energy_phiw",
-            "struct",
-        ),
+        "all_y_axis": ("envelope_pos_phiw", "envelope_energy_phiw", "struct"),
         "num": 26,
         "symmetric_plot": True,
     },
@@ -162,6 +161,11 @@ def factory(
     fault_scenarios :
         If provided, the position of the :class:`.Objective` will also appear
         on plots.
+    only_solver_id :
+        If set, we plot only data obtained with this solver(s). Must be
+        :attr:`.BeamCalculator.id` (or, equivalently, a key(s) in
+        :attr:`.Accelerator.simulation_outputs`). Typical values:
+        ``"0_Envelope1D"`` or ``"1_TraceWin"``.
     kwargs :
         Other tables from the ``TOML`` configuration file.
 
@@ -177,7 +181,7 @@ def factory(
             "Reference scenario (key 0) must hold exactly one accelerator."
         )
     if clean_fig and not save_fig and len(accelerators) > 2:
-        logging.warning(
+        logger.warning(
             "You will only see the plots of the last scenario; previous "
             "figures will be erased without saving."
         )
@@ -270,12 +274,12 @@ def _build_plot_groups(
         n_skipped = len(scenario_accs) - len(computed)
 
         if n_skipped > 0:
-            logging.info(
+            logger.info(
                 f"Scenario {scenario_idx}: skipping {n_skipped} uncomputed "
                 f"accelerator(s) out of {len(scenario_accs)}."
             )
         if len(computed) == 0:
-            logging.info(
+            logger.info(
                 f"Scenario {scenario_idx}: no computed accelerators, skipping "
                 "all presets for this scenario."
             )
@@ -304,8 +308,7 @@ def _plot_preset(
     only_solver_id: Collection[str] | str | None = None,
     **kwargs,
 ) -> Figure:
-    """Plot a preset showing reference and all fixed alternatives for one
-    scenario.
+    """Plot preset showing reference and all fixed alternatives for 1 scenario.
 
     Parameters
     ----------
@@ -321,6 +324,8 @@ def _plot_preset(
         Name of the x axis.
     save_fig :
         To save Figures or not. Figure is saved to the path of ``fix_accs[0]``.
+    clean_fig :
+        Whether pre-existing figure should be cleaned.
     add_objectives :
         To add the position of objectives to the plots; if True, the
         ``fault_scenarios`` must be provided.
@@ -360,12 +365,12 @@ def _plot_preset(
                 **(usr_kwargs or {}),
             )
         except ValueError as e:
-            logging.error(
+            logger.error(
                 f"A ValueError was raised when trying to plot {y_axis} vs "
                 f"{x_axis}. This likely an error caused by inconsistent "
                 f"x and y data.\n{e}"
             )
-            raise e
+            raise
 
         if i == 0:
             colors = _used_colors(ax)
@@ -459,7 +464,7 @@ def _make_a_subplot(
 
     """
     if len(accelerators) == 0:
-        logging.warning("No accelerator to plot, returning.")
+        logger.warning("No accelerator to plot, returning.")
         return
     if plot_section:
         structure.outline_sections(accelerators[0].elts, axe, x_axis=x_axis)
@@ -505,7 +510,13 @@ def _make_a_subplot(
     axe.set_ylabel(_y_label(y_axis))
 
 
-def plot_pty_with_data_tags(ax, x, y, idx_list, tags=True):
+def plot_pty_with_data_tags(
+    ax: Axes,
+    x: NDArray[np.float64],
+    y: NDArray[np.float64],
+    idx_list: Sequence[int],
+    tags: bool = True,
+) -> None:
     """Plot y vs x.
 
     Data at idx_list are magnified with bigger points and data tags.

@@ -12,6 +12,8 @@ The list of implemented transfer matrices is :data:`.PARAMETERS_3D`.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable
 from typing import Any
 
@@ -67,6 +69,8 @@ class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
         transf_mat_function :
             Function to compute transfer matrix of element. The default is
             None, in which case we fall back on Drift transfer matrix.
+        kwargs :
+            Not used.
 
         """
         if transf_mat_function is None:
@@ -79,6 +83,7 @@ class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
         )
 
     def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
+        """Set keyword arguments for the transfer matrix function."""
         return super().transfer_matrix_kw(*args, **kwargs)
 
     def _transfer_matrix_results_to_dict(
@@ -107,7 +112,7 @@ class ElementEnvelope3DParameters(ElementEnvelope1DParameters):
     ) -> Callable:
         """Get the proper transfer matrix function."""
         if method is not None and method != "RK4":
-            logging.warning(
+            logger.warning(
                 "Only RK4 integration method is implemented for Envelope3D."
             )
         match element_nature:
@@ -153,6 +158,7 @@ class DriftEnvelope3DParameters(ElementEnvelope3DParameters):
         )
 
     def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
+        """Set keyword arguments for the transfer matrix function."""
         return {
             "delta_s": self.d_z,
             "omega_0_bunch": self._beam_kwargs["omega_0_bunch"],
@@ -181,6 +187,7 @@ class QuadEnvelope3DParameters(ElementEnvelope3DParameters):
         self.gradient = elt.grad
 
     def transfer_matrix_kw(self, *args, **kwargs) -> dict[str, Any]:
+        """Set keyword arguments for the transfer matrix function."""
         return {
             "delta_s": self.d_z,
             "gradient": self.gradient,
@@ -268,10 +275,14 @@ class FieldMapEnvelope3DParameters(ElementEnvelope3DParameters):
             Kinetic energy at the entrance of cavity in :unit:`MeV`.
         cavity_settings :
             Object holding the cavity parameters that can be changed.
+        args :
+            Unused.
         phi_0_rel :
             Relative entry phase of the cavity. When provided, it means that we
             are trying to find the :math:`\phi_{0,\,\mathrm{rel}}` matching a
             given :math:`\phi_s`. The default is None.
+        kwargs :
+            Unused.
 
         Returns
         -------
@@ -406,15 +417,17 @@ class BendEnvelope3DParameters(ElementEnvelope3DParameters):
         beam_kwargs: BeamKwargs,
         n_steps: int = 1,
         **kwargs: str,
-    ):
+    ) -> None:
         """Instantiate object and pre-compute some parameters for speed.
 
         Parameters
         ----------
-        transf_mat_module :
-            Module where the transfer matrix function is defined.
         elt :
             ``BEND`` element.
+        beam_kwargs :
+            Configuration dict holding initial beam parameters.
+        n_steps :
+            Number of solver steps.
         kwargs :
             kwargs
 

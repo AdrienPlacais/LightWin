@@ -195,3 +195,5 @@ tests/data/optimization_history/
 tests/data/results/
 tests/data/results_tests/
 **/tmp/*
+
+src/lightwin/_version.py

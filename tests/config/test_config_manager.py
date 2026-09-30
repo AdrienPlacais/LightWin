@@ -1,5 +1,6 @@
 """Ensure that loading and validating ``TOML`` works as expected."""
 
+import logging
 from importlib.resources.abc import Traversable
 from pathlib import Path
 from unittest.mock import MagicMock, call, mock_open, patch
@@ -73,12 +74,12 @@ class TestLoadToml:
         with (
             patch("builtins.open", mock_open(read_data=bad_content)),
             patch("pathlib.Path.is_file", return_value=True),
-        ):
-            with pytest.raises(
+            pytest.raises(
                 InvalidTomlSyntaxError,
                 match="Invalid TOML syntax in file mock_path",
-            ):
-                _load_toml("mock_path")
+            ),
+        ):
+            _load_toml("mock_path")
 
     def test_valid_toml_file(self, mock_toml_content: bytes) -> None:
         """Ensure valid TOML content is correctly loaded."""
@@ -171,13 +172,8 @@ class TestProcessToml:
         )
         assert result == {"beam": {"key1": "new_value", "key2": "value2"}}
 
-    def test_warn_mismatch(self) -> None:
+    def test_warn_mismatch(self, caplog: pytest.LogCaptureFixture) -> None:
         """Test for warnings on mismatched overrides.
-
-        Parameters
-        ----------
-        mock_toml_content : bytes
-            Mocked TOML content fixture.
 
         Ensures
         -------
@@ -186,17 +182,23 @@ class TestProcessToml:
         """
         raw_toml = {"proton_beam": {"key1": "value1"}}
         override = {"beam": {"nonexistent_key": "new_value"}}
-        with patch("logging.warning") as mock_warning:
-            result = _process_toml(
-                raw_toml,
-                {"beam": "proton_beam"},
-                warn_mismatch=True,
-                override=override,
-            )
-            assert result == {
-                "beam": {"key1": "value1", "nonexistent_key": "new_value"}
-            }
-            mock_warning.assert_called_once()
+
+        caplog.set_level(logging.WARNING)
+        result = _process_toml(
+            raw_toml,
+            {"beam": "proton_beam"},
+            warn_mismatch=True,
+            override=override,
+        )
+        assert result == {
+            "beam": {"key1": "value1", "nonexistent_key": "new_value"}
+        }
+        warnings = [
+            record.getMessage()
+            for record in caplog.records
+            if record.levelno == logging.WARNING
+        ]
+        assert len(warnings) == 1
 
     def test_nested_overrides(self):
         """Ensure `_process_toml` applies nested overrides correctly."""
@@ -222,7 +224,7 @@ class TestProcessConfig:
 
 
 class TestOverrideSomeTomlEntries:
-    """Provide methods to validate :func:`._override_some_toml_entries.`"""
+    """Provide methods to validate :func:`._override_some_toml_entries."""
 
     def test_success(self) -> None:
         """Test that overrides are correctly applied."""
@@ -253,24 +255,31 @@ class TestOverrideSomeTomlEntries:
                 toml_fulldict, warn_mismatch=False, **override
             )
 
-    def test_warn_mismatch(self) -> None:
+    def test_warn_mismatch(self, caplog: pytest.LogCaptureFixture) -> None:
         """Test that warnings are logged for missing keys."""
         toml_fulldict = {"beam": {"key1": "value1"}}
         override = {"beam": {"nonexistent_key": "new_value"}}
 
-        with patch("logging.warning") as mock_warning:
-            _user_override_toml_entries(
-                toml_fulldict, warn_mismatch=True, **override
-            )
-
-            mock_warning.assert_called_once_with(
+        caplog.set_level(logging.WARNING)
+        _user_override_toml_entries(
+            toml_fulldict, warn_mismatch=True, **override
+        )
+        expected = [
+            (
                 "You want to override key = 'nonexistent_key', which was not "
                 "found in conf_subdict.keys() = dict_keys(['key1']). Setting "
                 "it anyway..."
             )
-            assert toml_fulldict == {
-                "beam": {"key1": "value1", "nonexistent_key": "new_value"}
-            }
+        ]
+        warnings = [
+            record.getMessage()
+            for record in caplog.records
+            if record.levelno == logging.WARNING
+        ]
+        assert warnings == expected
+        assert toml_fulldict == {
+            "beam": {"key1": "value1", "nonexistent_key": "new_value"}
+        }
 
 
 class TestDictToToml:
@@ -295,21 +304,25 @@ class TestDictToToml:
             )
 
     def test_no_overwrite(
-        self, mock_conf_spec: MagicMock, tmp_path: Path
+        self,
+        mock_conf_spec: MagicMock,
+        tmp_path: Path,
+        caplog: pytest.LogCaptureFixture,
     ) -> None:
-        """Test that dict_to_toml does not overwrite an existing file by
-        default."""
+        """Test dict_to_toml does not overwrite an existing file by default."""
         toml_path = tmp_path / "test.toml"
         toml_path.touch()  # Create the file to simulate pre-existence
         toml_fulldict = {"beam": {"key1": "value1"}}
 
-        with patch("logging.error") as mock_error:
-            dict_to_toml(toml_fulldict, toml_path, mock_conf_spec)
-
-            # Ensure an error is logged
-            mock_error.assert_called_once_with(
-                "Overwritting not permitted. Skipping action..."
-            )
+        caplog.set_level(logging.ERROR)
+        dict_to_toml(toml_fulldict, toml_path, mock_conf_spec)
+        expected = ["Overwritting not permitted. Skipping action..."]
+        warnings = [
+            record.getMessage()
+            for record in caplog.records
+            if record.levelno == logging.ERROR
+        ]
+        assert expected == warnings
 
     def test_allow_overwrite(
         self, mock_conf_spec: MagicMock, tmp_path: Path
@@ -324,10 +337,7 @@ class TestDictToToml:
             patch("shutil.copy") as mock_copy,
         ):
             dict_to_toml(
-                toml_fulldict,
-                toml_path,
-                mock_conf_spec,
-                allow_overwrite=True,
+                toml_fulldict, toml_path, mock_conf_spec, allow_overwrite=True
             )
 
             mock_copy.assert_called_once_with(
@@ -347,8 +357,7 @@ class TestDictToToml:
     def test_calls_to_toml_strings(
         self, mock_conf_spec: MagicMock, tmp_path: Path
     ) -> None:
-        """Test that dict_to_toml calls ConfSpec.to_toml_strings with the
-        correct arguments."""
+        """Test calls ConfSpec.to_toml_strings with correct arguments."""
         toml_path = tmp_path / "test.toml"
         toml_fulldict = {"beam": {"key1": "value1"}}
 
@@ -359,9 +368,7 @@ class TestDictToToml:
         )
 
     def test_round_trip(
-        self,
-        mock_conf_spec: MagicMock,
-        tmp_path: Path,
+        self, mock_conf_spec: MagicMock, tmp_path: Path
     ) -> None:
         """Ensure configuration saved with `dict_to_toml` can be reloaded."""
         toml_path = tmp_path / "config.toml"

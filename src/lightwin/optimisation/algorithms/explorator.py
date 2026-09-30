@@ -16,6 +16,8 @@ a "brute-force" optimisation algorithm.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Literal
 
 import numpy as np
@@ -53,13 +55,12 @@ class Explorator(OptimisationAlgorithm):
 
         """
         if self.n_var != 2:
-            logging.warning("I think this algo only works with 2 vars")
+            logger.warning("I think this algo only works with 2 vars")
         kwargs = self._algorithm_parameters()
 
         _, variables_values = self._generate_combinations(**kwargs)
         results = [self._wrapper_residuals(var) for var in variables_values]
         objectives_values = np.array([res[0] for res in results])
-        constraints_values = np.array([res[1] for res in results])
 
         # objectives_as_mesh = self._array_of_values_to_mesh(
         #     objectives_values, **kwargs

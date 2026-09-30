@@ -6,6 +6,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from math import cos, pi, sin, sqrt
 
 import numpy as np
@@ -56,7 +58,7 @@ def compute_acceptances(
     if not (-0.5 * pi <= phi_s <= 0.0):
         return np.nan, np.nan
     if w_kin is None:
-        logging.error(
+        logger.error(
             "The kinetic energy of current cavity was not set. Is it a failed "
             "cavity? Returning ``np.nan`` acceptances."
         )
@@ -138,6 +140,8 @@ def _compute_acceptance_energy(
         Beam adimensionned charge.
     e_rest_mev
         Beam rest energy in :unit:`MeV`.
+    beam_kwargs :
+        Remaining unused beam parameters.
 
     Returns
     -------

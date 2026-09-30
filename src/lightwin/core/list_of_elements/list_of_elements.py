@@ -14,6 +14,8 @@ Two objects can have a |LOE| as attribute:
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, Literal, Self, TypedDict, overload
@@ -97,8 +99,9 @@ class ListOfElements(list):
         input_beam :
             An object to hold emittances, Twiss, sigma beam matrix, etc at the
             entry of the first element.
-        first_init :
-            To indicate if this a full linac or only a portion (fit process).
+        tm_cumul_in :
+            (6, 6) array holding transfer matrix at the entrance of the first
+            element.
         files :
             A dictionary to hold information on the source and output
             files/folders of the object.
@@ -109,6 +112,9 @@ class ListOfElements(list):
                will be stored.
             * ``dat_filecontent``: list of list of str, holding content of the
               ``DAT``.
+
+        first_init :
+            To indicate if this a full linac or only a portion (fit process).
 
         """
         self.input_particle = input_particle
@@ -142,12 +148,12 @@ class ListOfElements(list):
         )
 
     @property
-    def w_kin_in(self):
+    def w_kin_in(self) -> float:
         """Get kinetic energy at entry of first element of self."""
         return self.input_particle.w_kin
 
     @property
-    def phi_abs_in(self):
+    def phi_abs_in(self) -> float:
         """Get absolute phase at entry of first element of self."""
         return self.input_particle.phi_abs
 
@@ -335,7 +341,7 @@ class ListOfElements(list):
         ----------
         dat_file :
             Where the output ``DAT`` should be saved.
-        export_phase :
+        exported_phase :
             Which phase should be put in the output DAT file.
         save :
             If the output file should be created.
@@ -371,7 +377,7 @@ class ListOfElements(list):
                 which_phase=exported_phase, inplace=False
             )
             if line is None:
-                logging.info(
+                logger.info(
                     f"Did not insert a line corresponding to {instruction = } "
                     "because it's 'to_line' method returned 'None'."
                 )
@@ -467,7 +473,7 @@ class ListOfElements(list):
                 try:
                     output = self.l_cav[ids]
                 except IndexError:
-                    logging.error(
+                    logger.error(
                         f"{ids = } is outside of list of elements of length {len(self)}"
                     )
                     raise IndexError
@@ -477,7 +483,7 @@ class ListOfElements(list):
                 try:
                     output = self[ids]
                 except IndexError:
-                    logging.error(
+                    logger.error(
                         f"{ids = } is outside of list of cavities of length "
                         f"{len(self.l_cav)}"
                     )
@@ -490,9 +496,7 @@ class ListOfElements(list):
                         self, condition=lambda elt: elt.name == name
                     )
                 except StopIteration:
-                    logging.error(
-                        f"No element named {name} was found in self."
-                    )
+                    logger.error(f"No element named {name} was found in self.")
                     raise StopIteration
             case "lattice":
                 assert isinstance(ids, int)
@@ -503,7 +507,7 @@ class ListOfElements(list):
                         f"{ids = } is outside of list of lattices of length "
                         f"{len(self.by_lattice)}\n{e}"
                     )
-                    logging.error(msg)
+                    logger.error(msg)
                     raise IndexError(msg)
             case "section":
                 assert isinstance(ids, int)
@@ -514,7 +518,7 @@ class ListOfElements(list):
                         f"{ids = } is outside of list of sections of length "
                         f"{len(self.by_section)}\n{e}"
                     )
-                    logging.error(msg)
+                    logger.error(msg)
                     raise IndexError(msg)
             case _:
                 raise OSError(f"{id_nature = } not understood.")
@@ -608,7 +612,7 @@ class ListOfElements(list):
             if isinstance(elt, str):
                 elt = equivalent_elt(elts=self, elt=elt)
             elif elt not in self and handle_missing_elt:
-                logging.debug(
+                logger.debug(
                     f"{elt = } is not in self. Trying to take an element in "
                     "self with the same name..."
                 )

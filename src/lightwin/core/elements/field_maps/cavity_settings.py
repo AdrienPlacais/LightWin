@@ -8,6 +8,11 @@
     Similar to synchronous phase, allow for V_cav to be "master" instead of
     k_e.
 
+.. todo::
+   ``phi_ref`` property does several things. Maybe we could refactor and create
+   a method like ``_ensure_phi_ref_computable`` that would raise the
+   ``MissingAttributeError``?
+
 See Also
 --------
 :class:`.Field`
@@ -17,6 +22,8 @@ See Also
 from __future__ import annotations
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from collections.abc import Callable
 from functools import partial
@@ -116,9 +123,10 @@ class CavitySettings:
         freq_cavity_mhz :
             Frequency of the cavity in :unit:`MHz`. The default is None, which
             happens when the |LOE| is under creation and we did not process the
-            ``FREQ`` commands yet. transf_mat_func_wrappers : A dictionary
-            which keys are the different |BC| ids, and values are corresponding
-            functions to compute propagation of the beam.
+            ``FREQ`` commands yet.
+        transf_mat_func_wrappers :
+            A dictionary which keys are the different |BC| ids, and values are
+            corresponding functions to compute propagation of the beam.
         phi_s_funcs :
             A dictionary which keys are the different |BC| ids, and values are
             corresponding functions to compute synchronous phase and
@@ -155,7 +163,7 @@ class CavitySettings:
         #: current field map
         self._transf_mat_func_wrappers: dict[
             str, TRANSF_MAT_FUNC_WRAPPER_T
-        ] = (transf_mat_func_wrappers or {})
+        ] = transf_mat_func_wrappers or {}
         #: All functions that can be used to compute synchronous phase and
         #: accelerating field in current field map
         self._phi_s_funcs: dict[str, PHI_S_FUNC_T] = phi_s_funcs or {}
@@ -181,11 +189,7 @@ class CavitySettings:
         self._transf_mat_kwargs: dict[str, Any]
 
     @classmethod
-    def copy(
-        cls,
-        base: Self,
-        cavity_vars: CavityVars | None = None,
-    ) -> Self:
+    def copy(cls, base: Self, cavity_vars: CavityVars | None = None) -> Self:
         """Create cavity settings, based on ``base``.
 
         Parameters
@@ -231,6 +235,7 @@ class CavitySettings:
 
     @property
     def w_kin(self) -> float:
+        """Access energy at the entrance of the element."""
         return self._w_kin
 
     @w_kin.setter
@@ -336,8 +341,7 @@ class CavitySettings:
     def set_bunch_to_rf_freq_func(
         self, freq_cavity_mhz: float | None = None
     ) -> None:
-        """Set the rf frequency, and methods to switch between freq
-        definitions.
+        """Set rf frequency, and methods to switch between freq definitions.
 
         This method is called a first time at the instantiation of ``self``;
         it will be called once again if a :class:`.Freq` command is found.
@@ -401,7 +405,7 @@ class CavitySettings:
            Prefer using :meth:`.CavitySettings.set_reference`.
 
         """
-        logging.warning(
+        logger.warning(
             "Deprecated method, prefer using CavitySettings.set_reference"
         )
         return self.set_reference(value)
@@ -445,7 +449,7 @@ class CavitySettings:
             return
 
         try:
-            self.phi_ref
+            _ = self.phi_ref
         except MissingAttributeError as e:
             raise MissingAttributeError(
                 f"The new reference phase ({reference}) cannot be calculated."
@@ -476,8 +480,8 @@ class CavitySettings:
 
         .. note::
            When the cavity is broken, we skip these deletions as changing the
-           :property:`.status` already set ``phi_s`` to ``nan`` and
-           ``phi_0_abs`` and ``phi_0_rel`` to ``0.0``.
+           :attr:`.status` already set ``phi_s`` to ``nan`` and ``phi_0_abs``
+           and ``phi_0_rel`` to ``0.0``.
 
         """
         if self.is_broken:
@@ -796,7 +800,7 @@ class CavitySettings:
             self._residual_func, bounds=(0.0, 2.0 * math.pi), args=(phi_s,)
         )
         if not out.success:
-            logging.error("Synch phase not found")
+            logger.error("Synch phase not found")
         return out.x
 
     @property
@@ -815,7 +819,7 @@ class CavitySettings:
         if hasattr(self, "_v_cav_mv"):
             return self._v_cav_mv
         try:
-            self.phi_s
+            _ = self.phi_s
             return self._v_cav_mv
         except MissingAttributeError as e:
             raise MissingAttributeError(
@@ -849,6 +853,7 @@ class CavitySettings:
 
         Parameters
         ----------
+        value :
             New rf phase of the synchronous particle at the entrance of the
             cavity.
 
@@ -897,6 +902,8 @@ class CavitySettings:
         delta_phi_bunch :
             Phase difference between the new first element of the linac and the
             previous first element of the linac.
+        check_positive :
+            Whether we should verify that resulting phase is positive.
 
         Examples
         --------
@@ -911,9 +918,9 @@ class CavitySettings:
         self.phi_bunch = self._phi_bunch - delta_phi_bunch
         if not check_positive:
             return
-        assert (
-            self.phi_bunch >= 0.0
-        ), "The phase of the synchronous particle should never be negative."
+        assert self.phi_bunch >= 0.0, (
+            "The phase of the synchronous particle should never be negative."
+        )
 
     # =============================================================================
     # Acceptances
@@ -929,7 +936,7 @@ class CavitySettings:
         self._acceptance_phi = value
 
     @acceptance_phi.deleter
-    def acceptance_phi(self):
+    def acceptance_phi(self) -> None:
         """Delete the phase acceptance."""
         if hasattr(self, "_acceptance_phi"):
             del self._acceptance_phi
@@ -945,7 +952,7 @@ class CavitySettings:
         self._acceptance_energy = value
 
     @acceptance_energy.deleter
-    def acceptance_energy(self):
+    def acceptance_energy(self) -> None:
         """Delete the energy acceptance."""
         if hasattr(self, "_acceptance_energy"):
             del self._acceptance_energy

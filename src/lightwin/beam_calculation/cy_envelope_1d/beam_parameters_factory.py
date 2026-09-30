@@ -1,5 +1,4 @@
-"""Define class generating :class:`.BeamParameters` for
-:class:`.CyEnvelope1D`."""
+"""Object creating :class:`.BeamParameters` for :class:`.CyEnvelope1D`."""
 
 from lightwin.beam_calculation.envelope_1d.beam_parameters_factory import (
     BeamParametersFactoryEnvelope1D,

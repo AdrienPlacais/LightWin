@@ -24,7 +24,6 @@ from lightwin.beam_calculation.integrators.rk4 import rk4
 from lightwin.constants import c
 from lightwin.core.em_fields.types import (
     FieldFuncComplexTimedComponent,
-    FieldFuncComponent,
     FieldFuncTimedComponent,
 )
 
@@ -37,10 +36,7 @@ def dummy(
 
 
 def drift(
-    gamma_in: float,
-    delta_s: float,
-    omega_0_bunch: float,
-    n_steps: int = 1,
+    gamma_in: float, delta_s: float, omega_0_bunch: float, n_steps: int = 1
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], None]:
     """Calculate the transfer matrix of a drift.
 
@@ -346,8 +342,7 @@ def thin_lense(
     half_dz: float,
     omega0_rf: float,
 ) -> NDArray[np.float64]:
-    r"""Compute propagation in a slice of field map using thin lense
-    approximation.
+    r"""Compute propagation in field map slice using thin lense approximation.
 
     Thin lense approximation: drift-acceleration-drift. The transfer matrix of
     the thin accelerating gap is:

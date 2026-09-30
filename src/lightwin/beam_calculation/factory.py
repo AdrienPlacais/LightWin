@@ -1,6 +1,8 @@
-"""This module holds a factory to create the |BC|."""
+"""Define factory to create the |BC|."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Literal, Self
@@ -16,11 +18,7 @@ from lightwin.util.typing import (
     BeamKwargs,
 )
 
-BEAM_CALCULATORS = (
-    "Envelope1D",
-    "TraceWin",
-    "Envelope3D",
-)  #:
+BEAM_CALCULATORS = ("Envelope1D", "TraceWin", "Envelope3D")  #:
 BEAM_CALCULATORS_T = Literal["Envelope1D", "TraceWin", "Envelope3D"]
 
 
@@ -36,7 +34,7 @@ def _get_beam_calculator(
         case "Envelope3D", False:
             return Envelope3D
         case "Envelope3D", True:
-            logging.warning(
+            logger.warning(
                 "No Cython implementation for Envelope3D. Using Python implementation."
             )
             return Envelope3D
@@ -60,10 +58,10 @@ class BeamCalculatorsFactory:
     def __new__(cls, *args, **kwargs) -> Self:
         """Ensure that only one instance of object exists."""
         if cls._instance is None:
-            logging.info("Creating new BeamCalculatorsFactory instance.")
+            logger.info("Creating new BeamCalculatorsFactory instance.")
             cls._instance = super().__new__(cls)
         else:
-            logging.info("Re-using previous BeamCalculatorsFactory instance.")
+            logger.info("Re-using previous BeamCalculatorsFactory instance.")
         return cls._instance
 
     @classmethod
@@ -123,8 +121,7 @@ class BeamCalculatorsFactory:
                     fixme
 
         """
-        if "simulation type" in beam_calculator_kw:
-            del beam_calculator_kw["simulation type"]
+        beam_calculator_kw.pop("simulation type", None)
 
     def run(
         self,
@@ -157,6 +154,9 @@ class BeamCalculatorsFactory:
             If the beam calculator involves loading cython field maps.
         force_new :
             To force creation of a new |BC|.
+        beam_calculator_kw :
+            Additional arguments from the beam calculator table in the
+            ``TOML``.
 
         Returns
         -------
@@ -173,7 +173,7 @@ class BeamCalculatorsFactory:
         )
         if cache_key in self._cache and not force_new:
             beam_calculator = self._cache[cache_key]
-            logging.info(
+            logger.info(
                 f"Re-using existing BeamCalculator: {beam_calculator.id}"
             )
             return beam_calculator
@@ -189,7 +189,7 @@ class BeamCalculatorsFactory:
             export_phase=export_phase,
             **beam_calculator_kw,
         )
-        logging.info(f"Creating new BeamCalculator: {beam_calculator.id}")
+        logger.info(f"Creating new BeamCalculator: {beam_calculator.id}")
         self._cache[cache_key] = beam_calculator
         return beam_calculator
 

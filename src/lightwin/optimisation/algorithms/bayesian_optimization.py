@@ -1,6 +1,8 @@
 """Define bayesian optimization algorithms."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Any
 
 import numpy as np
@@ -58,7 +60,7 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
         return self.opti_sol
 
     def _to_maximise(self, **kwargs) -> float:
-        """The function to maximize by BO.
+        """Get the function to maximize by BO.
 
         This is the classic
         :meth:`.OptimisationAlgorithm._norm_wrapper_residuals`, with two
@@ -74,10 +76,7 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
     @property
     def _default_kwargs(self) -> dict[str, Any]:
         """Create the ``kwargs`` for the optimisation."""
-        kwargs = {
-            "init_points": 10,
-            "n_iter": 500,
-        }
+        kwargs = {"init_points": 10, "n_iter": 500}
         return kwargs
 
     def _generate_opti_sol(self, result: dict[str, Any] | None) -> OptiSol:
@@ -141,7 +140,7 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
             "acquisition", None
         )
         if acquisition_kwargs is None:
-            logging.info(
+            logger.info(
                 "No `acquisition` key in `optimisation_algorithm_kwargs`. "
                 "Using default acquisition function."
             )
@@ -149,7 +148,7 @@ class BayesianOptimizationLW(OptimisationAlgorithm):
 
         acquisition_name = acquisition_kwargs.get("acquisition_function", None)
         if not hasattr(acquisition, acquisition_name):
-            logging.error(
+            logger.error(
                 "`acquisition` package from `bayes_opt` module does not have "
                 f"an `acquisition_function` named {acquisition_name}. Using "
                 "default instead."

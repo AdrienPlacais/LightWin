@@ -2,6 +2,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.beam_calculation.envelope_1d.element_envelope1d_parameters import (
     BendEnvelope1DParameters,
     DriftEnvelope1DParameters,
@@ -92,7 +94,7 @@ class ElementEnvelope1DParametersFactory(
             Proper instantiated subclass of
             :class:`.ElementEnvelope1DParameters`.
 
-        See also
+        See Also
         --------
         _parameters_constructor
 
@@ -105,9 +107,7 @@ class ElementEnvelope1DParametersFactory(
             "phi_s_definition": self.phi_s_definition,
         }
         single_element_envelope_1d_parameters = subclass(
-            elt=elt,
-            beam_kwargs=self.beam_kwargs,
-            **kwargs,
+            elt=elt, beam_kwargs=self.beam_kwargs, **kwargs
         )
 
         return single_element_envelope_1d_parameters
@@ -151,7 +151,7 @@ class ElementEnvelope1DParametersFactory(
         if constructor is not None:
             return constructor
 
-        logging.error(
+        logger.error(
             f"Element {elt} of {element_class = } not added to the Envelope1D "
             "dict linking every Element class to its specific parameters "
             "(transfer matrix in particular). Neither was found its "

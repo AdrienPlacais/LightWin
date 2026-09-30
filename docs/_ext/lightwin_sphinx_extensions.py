@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from collections import defaultdict
 from importlib import import_module
-from typing import Any
+from typing import Any, ClassVar
 
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
+from docutils.parsers.rst.states import RSTState
 from docutils.statemachine import StringList
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxRole
@@ -16,7 +17,7 @@ from sphinx.util.typing import ExtensionMetadata
 
 
 class UnitRole(SphinxRole):
-    """A role to display units in math's mathrm format.
+    r"""A role to display units in math's mathrm format.
 
     Note that in order to show units such as Ohm, the omega must be escaped
     twice: :unit:`\\Omega`.
@@ -24,7 +25,8 @@ class UnitRole(SphinxRole):
     """
 
     def run(self) -> tuple[list[nodes.Node], list[nodes.system_message]]:
-        text = "".join((r"\mathrm{", self.text, r"}"))
+        """Process the string."""
+        text = f"\\mathrm{{{self.text}}}"
         node = nodes.math(text=text)
         return [node], []
 
@@ -33,12 +35,13 @@ class ConfigMapDirective(Directive):
     """A directive to display key-value pairs, value beeing a class role."""
 
     required_arguments = 1
-    option_spec = {
+    option_spec: ClassVar = {
         "value-header": directives.unchanged,
         "keys-header": directives.unchanged,
     }
 
     def run(self) -> list[nodes.Node]:
+        """Process the string."""
         mapping = _load_mapping(self.arguments[0])
         grouped = self._invert_mapping(mapping)
 
@@ -101,12 +104,13 @@ class ConfigKeysDirective(Directive):
     """Render dictionary keys as a one-column table."""
 
     required_arguments = 1
-    option_spec = {
+    option_spec: ClassVar = {
         "header": directives.unchanged,
         "n_cols": directives.unchanged,
     }
 
     def run(self) -> list[nodes.Node]:
+        """Process the dictionary."""
         mapping = _load_mapping(self.arguments[0])
         keys = list(mapping.keys())
         return [self._make_table(keys, self.options.get("header"))]
@@ -156,7 +160,9 @@ class ConfigKeysDirective(Directive):
         return row
 
 
-def _parse_inline_rst(text: str, state, source: str) -> list[nodes.Node]:
+def _parse_inline_rst(
+    text: str, state: RSTState, source: str
+) -> list[nodes.Node]:
     """Parse a small ``RST`` fragment into inline nodes."""
     vl = StringList([text], source=source)
     container = nodes.paragraph()

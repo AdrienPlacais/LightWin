@@ -1,9 +1,11 @@
 """Define a class to hold optimisation objective with its ideal value."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC, abstractmethod
-from collections.abc import Collection
-from typing import Any, Literal, Self, Sequence
+from collections.abc import Collection, Sequence
+from typing import Any, ClassVar, Literal, Self
 
 import numpy as np
 from numpy.typing import NDArray
@@ -38,7 +40,11 @@ class Objective(ABC):
     _gettable: Collection[str] = GETTABLE_SIMULATION_OUTPUT
 
     #: get_kwargs that should raise a warning if they are not present.
-    _advised_get_kwargs: set[str] = {"elt", "pos", "to_numpy"}
+    _default_advised_get_kwargs: ClassVar[set[str]] = {
+        "elt",
+        "pos",
+        "to_numpy",
+    }
 
     def __init__(
         self,
@@ -77,6 +83,7 @@ class Objective(ABC):
             A longer string to explain the objective.
 
         """
+        self._advised_get_kwargs = set(self._default_advised_get_kwargs)
         if "phi" in get_key:
             self._advised_get_kwargs.add("to_deg")
         #: Short string describing the objective.
@@ -144,7 +151,7 @@ class Objective(ABC):
         message += f" @elt {formatted:>5}"
 
         pos = self.get_kwargs.get("pos")
-        message += f" ({str(pos):>3}) |" if pos else "       |"
+        message += f" ({pos!s:>3}) |" if pos else "       |"
         message += f" {self.weight:>5} | "
         return message
 
@@ -175,9 +182,7 @@ class Objective(ABC):
         )
 
     def _check_get_arguments(
-        self,
-        get_key: GETTABLE_SIMULATION_OUTPUT_T,
-        get_kwargs: dict[str, Any],
+        self, get_key: GETTABLE_SIMULATION_OUTPUT_T, get_kwargs: dict[str, Any]
     ) -> tuple[GETTABLE_SIMULATION_OUTPUT_T, dict[str, Any]]:
         """Check validity of ``get_args``, ``get_kwargs``.
 
@@ -187,7 +192,7 @@ class Objective(ABC):
 
         """
         if get_key not in self._gettable:
-            logging.warning(
+            logger.warning(
                 f"{get_key = } may not be gettable by SimulationOutput.get "
                 f"method. Authorized values are:\n{self._gettable = }"
             )
@@ -195,9 +200,9 @@ class Objective(ABC):
         for key in self._advised_get_kwargs:
             if key in get_kwargs:
                 continue
-            logging.warning(
+            logger.warning(
                 f"{key = } is recommended to avoid undetermined behavior but "
-                f"was not found.\n{repr(self)}"
+                f"was not found.\n{self!r}"
             )
         return get_key, get_kwargs
 
@@ -261,8 +266,7 @@ class MinimizeDifferenceWithRef(Objective):
         reference: SimulationOutput,
         descriptor: str | None = None,
     ) -> None:
-        """Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        """Set complementary :meth:`.SimulationOutput.get` flags.
 
         Parameters
         ----------
@@ -301,7 +305,7 @@ class MinimizeDifferenceWithRef(Objective):
     def _check_ideal_value(self) -> None:
         """Assert the the reference value is a float."""
         if not isinstance(self.ideal_value, float):
-            logging.warning(
+            logger.warning(
                 f"Tried to get {self.get_key} with {self.get_kwargs}, which "
                 f"returned {self.ideal_value} instead of a float."
             )
@@ -324,8 +328,7 @@ class MinimizeMismatch(Objective):
         reference: SimulationOutput,
         descriptor: str | None = None,
     ) -> None:
-        """Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        """Set complementary :meth:`.SimulationOutput.get` flags.
 
         Parameters
         ----------
@@ -365,7 +368,7 @@ class MinimizeMismatch(Objective):
     ) -> tuple[GETTABLE_SIMULATION_OUTPUT_T, dict[str, Any]]:
         """Add default values if necessary."""
         if "twiss" not in get_key:
-            logging.warning(
+            logger.warning(
                 "The get_key should contain 'twiss'. Taking 'twiss' and "
                 "setting phase space to zdelta."
             )
@@ -380,6 +383,7 @@ class MinimizeMismatch(Objective):
         )
 
     def evaluate(self, simulation_output: SimulationOutput) -> float:
+        """Compute objective value."""
         twiss_fix = self._twiss_getter(simulation_output)
         return self._compute_residuals(twiss_fix)
 
@@ -415,8 +419,7 @@ class MinimizeVariation(Objective):
         descriptor: str | None = None,
         **kwargs,
     ) -> None:
-        """Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        """Set complementary :meth:`.SimulationOutput.get` flags.
 
         Note
         ----
@@ -462,10 +465,7 @@ class MinimizeVariation(Objective):
         return self.position_nature() + f"{'Minimize std': ^21}"
 
     def _check_get_arguments(
-        self,
-        get_key: GETTABLE_SIMULATION_OUTPUT_T,
-        get_kwargs: dict[str, Any],
-        advised_keys: list[str] = ["to_numpy"],
+        self, get_key: GETTABLE_SIMULATION_OUTPUT_T, get_kwargs: dict[str, Any]
     ) -> tuple[GETTABLE_SIMULATION_OUTPUT_T, dict[str, Any]]:
         """Check validity of ``get_args``, ``get_kwargs``.
 
@@ -478,19 +478,17 @@ class MinimizeVariation(Objective):
 
         """
         if "elt" not in get_kwargs:
-            logging.error(
+            logger.error(
                 "You should provide an 'elt' key in `get_kwargs` to indicate "
                 "where objective should be evaluated."
             )
         if "pos" not in get_kwargs:
-            logging.error(
+            logger.error(
                 "Regularity checking is not yet implemented for arrays. "
                 "You must provide 'pos' to indicate, in each element, where "
                 "the quantity should be taken."
             )
-        return super()._check_get_arguments(
-            get_key, get_kwargs, advised_keys=advised_keys
-        )
+        return super()._check_get_arguments(get_key, get_kwargs)
 
     def _compute_residuals(
         self, objective_value: list[float] | NDArray[np.float64]
@@ -512,8 +510,7 @@ class QuantityIsBetween(Objective):
         descriptor: str | None = None,
         loss_function: str | None = None,
     ) -> None:
-        """Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        """Set complementary :meth:`.SimulationOutput.get` flags.
 
         Parameters
         ----------
@@ -534,6 +531,8 @@ class QuantityIsBetween(Objective):
         loss_function :
             Indicates how the residuals are handled when the quantity is
             outside the limits. Currently not implemented.
+        descriptor :
+            A longer string to explain the objective.
 
         """
         self.ideal_value: tuple[float, float]
@@ -546,7 +545,7 @@ class QuantityIsBetween(Objective):
             descriptor=descriptor,
         )
         if loss_function is not None:
-            logging.warning("Loss functions not implemented.")
+            logger.warning("Loss functions not implemented.")
 
     @classmethod
     def relative_to_reference(
@@ -560,8 +559,7 @@ class QuantityIsBetween(Objective):
         descriptor: str | None = None,
         loss_function: str | None = None,
     ) -> Self:
-        r"""Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        r"""Set complementary :meth:`.SimulationOutput.get` flags.
 
         Parameters
         ----------
@@ -586,9 +584,15 @@ class QuantityIsBetween(Objective):
         loss_function :
             Indicates how the residuals are handled when the quantity is
             outside the limits. Currently not implemented.
+        descriptor :
+            A longer string to explain the objective.
 
         """
-        assert relative_limits[0] <= 100.0 and relative_limits[1] >= 100.0, (
+        assert relative_limits[0] <= 100.0, (
+            f"{relative_limits = } but should look like `(80, 135)` (which "
+            "means: objective must be 80% and 135% of reference value."
+        )
+        assert relative_limits[1] >= 100.0, (
             f"{relative_limits = } but should look like `(80, 135)` (which "
             "means: objective must be 80% and 135% of reference value."
         )
@@ -598,7 +602,7 @@ class QuantityIsBetween(Objective):
             reference_value * 1e-2 * relative_limits[1],
         )
         if reference_value <= 0.0:
-            logging.info(
+            logger.info(
                 f"{reference_value = } is negative. Inverting bounds to keep "
                 "limits[0] < limits[1]."
             )
@@ -654,7 +658,7 @@ class QuantityIsBetween(Objective):
 class RemainBelow(Objective):
     """Maximum of quantity must remain below some value."""
 
-    _advised_get_kwargs: set[str] = {"elt", "to_numpy"}
+    _default_advised_get_kwargs: ClassVar[set[str]] = {"elt", "to_numpy"}
 
     def __init__(
         self,
@@ -666,8 +670,7 @@ class RemainBelow(Objective):
         descriptor: str | None = None,
         loss_function: str | None = None,
     ) -> None:
-        """Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        """Set complementary :meth:`.SimulationOutput.get` flags.
 
         Parameters
         ----------
@@ -688,6 +691,8 @@ class RemainBelow(Objective):
         loss_function :
             Indicates how the residuals are handled when the quantity is
             outside the limits. Currently not implemented.
+        descriptor :
+            A longer string to explain the objective.
 
         """
         self.ideal_value: float
@@ -700,7 +705,7 @@ class RemainBelow(Objective):
             descriptor=descriptor,
         )
         if loss_function is not None:
-            logging.warning("Loss functions not implemented.")
+            logger.warning("Loss functions not implemented.")
 
     def __str__(self) -> str:
         """Give objective information value."""
@@ -779,8 +784,7 @@ class RetrieveArbitrary(Objective):
         ideal_value: float,
         descriptor: str | None = None,
     ) -> None:
-        """Set complementary :meth:`.SimulationOutput.get` flags, reference
-        value.
+        """Set complementary :meth:`.SimulationOutput.get` flags.
 
         Parameters
         ----------
@@ -830,11 +834,11 @@ def str_objectives_solved(objectives: Sequence[Objective]) -> str:
     """Return a string describing objectives results."""
     try:
         info = [
-            f"{str(objective)} | {objective.residual:+.14e}"
+            f"{objective!s} | {objective.residual:+.14e}"
             for objective in objectives
         ]
     except AttributeError as e:
-        logging.error(
+        logger.error(
             "Something went wrong when trying to access the residuals of "
             f"objectives.\n{e}"
         )

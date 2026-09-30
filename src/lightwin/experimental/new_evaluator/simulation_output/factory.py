@@ -6,13 +6,14 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection, Sequence
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
-import lightwin.util.pandas_helper as pandas_helper
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
@@ -25,6 +26,7 @@ from lightwin.experimental.new_evaluator.simulation_output.presets import (
 )
 from lightwin.experimental.plotter.i_plotter import IPlotter
 from lightwin.experimental.plotter.matplotlib_plotter import MatplotlibPlotter
+from lightwin.util import pandas_helper
 from lightwin.util.helper import get_constructors
 
 
@@ -68,7 +70,7 @@ class SimulationOutputEvaluatorsFactory:
         ----------
         accelerators :
             Objects holding all the different |SO|.
-        solver_ids :
+        solvers_ids :
             Name of the reference solver(s). If several are provided, we use
             the first one by default; we use the following if necessary data
             was not available.
@@ -84,7 +86,6 @@ class SimulationOutputEvaluatorsFactory:
         for i, (constructor, kwargs) in enumerate(
             self._constructors_n_kwargs.items()
         ):
-
             for id in solvers_ids:
                 evaluator = constructor(
                     reference=accelerators[0][0].simulation_outputs[id],
@@ -96,7 +97,7 @@ class SimulationOutputEvaluatorsFactory:
                     evaluators.append(evaluator)
                     break
             else:
-                logging.warning(
+                logger.warning(
                     f"None of the provided beam calculators ({solvers_ids}) "
                     f"calculates the data necesary for {constructor.__name__},"
                     " so it was skipped."
@@ -133,6 +134,9 @@ class SimulationOutputEvaluatorsFactory:
             Keyword arguments passed to :meth:`.SimulationOutput.get`,
             overriding defaults. For example, if you want your evaluators to
             run on a smaller portion of the linac.
+        kwargs :
+            Keyword arguments passed down to
+            :meth:`.ISimulationOutputEvaluator.plot`.
 
         """
         tests = {}
@@ -158,7 +162,7 @@ class SimulationOutputEvaluatorsFactory:
                 )
                 evaluator.plot(data, elts=elts, png_folder=folder, **kwargs)
 
-                tests[f"{fs}_{repr(evaluator)}"] = test
+                tests[f"{fs}_{evaluator!r}"] = test
                 data_used_for_tests[f"{fs}_{evaluator}"] = data
 
         tests_as_pd = pd.DataFrame(tests)
@@ -169,9 +173,7 @@ class SimulationOutputEvaluatorsFactory:
         )
         for key, val in data_used_for_tests.items():
             pandas_helper.to_csv(
-                val,
-                folder.parent / f"{key}.csv",
-                **(csv_kwargs or {}),
+                val, folder.parent / f"{key}.csv", **(csv_kwargs or {})
             )
 
         return tests_as_pd
@@ -228,7 +230,7 @@ def _out_folders(
     paths = []
     for x in simulation_outputs:
         if not hasattr(x, "out_path"):
-            logging.error(
+            logger.error(
                 "You must set the out_path attribute of SimulationOutput "
                 "object. Look at Accelerator.keep_simulation_output."
             )

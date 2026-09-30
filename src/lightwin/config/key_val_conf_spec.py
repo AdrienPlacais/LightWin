@@ -1,17 +1,17 @@
 """Define the base objects constraining values/types of config parameters."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
-from lightwin.config.csv_formatter import format_long_columns
 from lightwin.config.helper import find_path
 from lightwin.config.toml_formatter import format_for_toml
 
 CSV_HEADER = ["Entry", "Type", "Description", "Mandatory?", "Allowed values"]
-CSV_WIDTHS = (20, 10, 30, 1000, 1000)
 
 
 @dataclass
@@ -82,9 +82,9 @@ class KeyValConfSpec:
     def validate(self, toml_value: Any, **kwargs) -> bool:
         """Check that the given ``toml`` line is valid."""
         if self.warning_message:
-            logging.warning(f"{self.key}: {self.warning_message}")
+            logger.warning(f"{self.key}: {self.warning_message}")
         if self.error_message:
-            logging.critical(f"{self.key}: {self.error_message}")
+            logger.critical(f"{self.key}: {self.error_message}")
             raise OSError(f"{self.key}: {self.error_message}")
         if self.action is not None:
             return True
@@ -95,14 +95,14 @@ class KeyValConfSpec:
             and self.path_exists(toml_value, **kwargs)
         )
         if not valid:
-            logging.error(f"An error was detected while treating {self.key}")
+            logger.error(f"An error was detected while treating {self.key}")
         return valid
 
     def is_valid_type(self, toml_value: Any, **kwargs) -> bool:
         """Check that the value has the proper typing."""
         if isinstance(toml_value, self.types):
             return True
-        logging.warning(
+        logger.warning(
             f"Type error in {self.key}. {toml_value = } type not in {self.types = }"
         )
         return False
@@ -113,7 +113,7 @@ class KeyValConfSpec:
             return True
         if toml_value in self.allowed_values:
             return True
-        logging.error(
+        logger.error(
             f"{self.key}: {toml_value = } is not in {self.allowed_values = }"
         )
         return False
@@ -128,7 +128,7 @@ class KeyValConfSpec:
             _ = find_path(toml_folder, toml_value)
             return True
         except FileNotFoundError:
-            logging.error(f"{toml_value} should exist but was not found.")
+            logger.error(f"{toml_value} should exist but was not found.")
             return False
 
     def to_toml_string(
@@ -147,6 +147,8 @@ class KeyValConfSpec:
         original_toml_folder :
             Where the original ``TOML`` was; this is used to resolve paths
             relative to this location.
+        kwargs :
+            Unused keyword arguments.
 
         Returns
         -------
@@ -156,7 +158,7 @@ class KeyValConfSpec:
         if self.derived:
             return ""
         if toml_value is None:
-            logging.error(
+            logger.error(
                 f"You must provide a value for {self.key = }. Trying to "
                 f"continue with {self.default_value = }..."
             )
@@ -174,9 +176,6 @@ class KeyValConfSpec:
     def to_csv_line(self) -> list[str] | None:
         """Convert object to a line for the documentation ``CSV``.
 
-        .. todo::
-           Better display of allowed values
-
         Returns
         -------
         key :
@@ -188,7 +187,7 @@ class KeyValConfSpec:
         allowed_values :
             list of allowed values if relatable.
         is_mandatory :
-            If the variable is mandatory or not.
+            Whether the variable is mandatory.
 
         """
         if self.derived:
@@ -198,18 +197,13 @@ class KeyValConfSpec:
         fmt_types = " or ".join(type_names)
 
         fmt_mandatory = "✅" if self.is_mandatory else "❌"
-        fmt_allowed = (
-            f"{self.allowed_values}" if self.allowed_values is not None else ""
+        fmt_allowed = ", ".join(
+            f"`{value}`" for value in self.allowed_values or ()
         )
-        long = (
+        return [
             f"`{self.key}`",
             fmt_types,
             self.description,
             fmt_mandatory,
             fmt_allowed,
-        )
-        shortened = [
-            format_long_columns(text, width)
-            for text, width in zip(long, CSV_WIDTHS)
         ]
-        return shortened

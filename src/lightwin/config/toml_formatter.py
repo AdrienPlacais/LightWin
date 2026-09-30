@@ -1,6 +1,8 @@
 """Define several helper functions for proper ``TOML`` formatting."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Any
 
 import numpy as np
@@ -57,7 +59,7 @@ def _str_toml(key: str, value: Any) -> str:
                 f"You gave to {key = } the {value = }, which is not "
                 "broadcastable to a string."
             )
-            logging.error(msg)
+            logger.error(msg)
             raise TypeError(msg)
     return '"' + value + '"'
 
@@ -72,7 +74,7 @@ def _bool_toml(key: str, value: Any) -> str:
                 f"You gave to {key = } the {value = }, which is not "
                 "broadcastable to a bool."
             )
-            logging.error(msg)
+            logger.error(msg)
             raise TypeError(msg)
 
     if value:

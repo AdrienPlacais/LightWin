@@ -1,6 +1,8 @@
 """Define functions for TraceWin command-line interface."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from collections.abc import Sequence
 from pathlib import Path
@@ -80,7 +82,7 @@ TYPES = {
 
 
 def variables_to_command(
-    warn_skipped: bool = False, **kwargs: str | float | int
+    warn_skipped: bool = False, **kwargs: str | float
 ) -> list[str]:
     """Generate a TraceWin command from the input dictionary.
 
@@ -99,7 +101,7 @@ def variables_to_command(
 
         if isinstance(val, float) and np.isnan(val):
             if warn_skipped:
-                logging.warning(
+                logger.warning(
                     f"For {key=}, I had a np.nan value. I ignore this key."
                 )
             continue
@@ -108,7 +110,7 @@ def variables_to_command(
             command.append(key)
             continue
 
-        command.append(f"{key}={str(val)}")
+        command.append(f"{key}={val!s}")
     return command
 
 
@@ -116,12 +118,10 @@ def beam_calculator_to_command(
     executable: Path,
     ini_path: Path,
     path_cal: Path,
-    **kwargs: str | int | float | bool | None,
+    **kwargs: str | float | bool | None,
 ) -> list[str]:
     """Give command calling TraceWin according to `BeamCalculator` attribs."""
-    kwargs = {
-        "path_cal": str(path_cal),
-    } | kwargs
+    kwargs = {"path_cal": str(path_cal)} | kwargs
     command = variables_to_command(**kwargs)
     command.insert(0, str(executable))
     command.insert(1, str(ini_path))
@@ -135,9 +135,7 @@ def list_of_elements_to_command(dat_filepath: Path) -> list[str]:
     method, they are not called from here.
 
     """
-    kwargs = {
-        "dat_file": str(dat_filepath),
-    }
+    kwargs = {"dat_file": str(dat_filepath)}
     return variables_to_command(**kwargs)
 
 
@@ -217,8 +215,7 @@ def set_of_cavity_settings_to_command(
 
 
 def failed_cavities_to_command(
-    cavities: Sequence[FieldMap],
-    idx_first_element: int,
+    cavities: Sequence[FieldMap], idx_first_element: int
 ) -> list[str]:
     """Return the ``ele`` commands to desactivate some cavities."""
     command = [
@@ -277,10 +274,7 @@ def _cavity_settings_to_command(
     return list(tracewin_command)
 
 
-ARGS_POSITIONS = {
-    "phi_0": 3,
-    "k_e": 6,
-}  #:
+ARGS_POSITIONS = {"phi_0": 3, "k_e": 6}  #:
 
 
 def _alter_element(
@@ -314,9 +308,7 @@ def _alter_element(
 
 
 def _proper_type(
-    key: str,
-    value: str | int | float,
-    not_in_dict_warning: bool = True,
+    key: str, value: str | float, not_in_dict_warning: bool = True
 ) -> str | int | float | None:
     """Check if type of `value` is consistent and try to correct otherwise."""
     if "ele" in key:
@@ -325,7 +317,7 @@ def _proper_type(
 
     if key not in TYPES:
         if not_in_dict_warning:
-            logging.warning(
+            logger.warning(
                 f"The {key = } is not understood by TraceWin, or it is not "
                 "implemented yet."
             )
@@ -338,16 +330,16 @@ def _proper_type(
     if isinstance(value, my_type):
         return value
 
-    logging.warning(
+    logger.warning(
         f"Input value {value} is a {type(value)} while it should be a {my_type}."
     )
     try:
         value = my_type(value)
-        logging.info(f"Successful type conversion: {value = }")
+        logger.info(f"Successful type conversion: {value = }")
         return value
 
     except ValueError:
-        logging.error(
+        logger.error(
             "Unsuccessful type conversion. Returning np.nan to completely ignore key."
         )
         return np.nan

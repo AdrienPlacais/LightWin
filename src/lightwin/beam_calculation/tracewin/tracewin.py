@@ -8,6 +8,8 @@ your machine.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 import shutil
 import subprocess
 from collections.abc import Sequence
@@ -44,8 +46,6 @@ from lightwin.util.typing import (
 
 class TraceWinException(subprocess.SubprocessError):
     """Specific exception for TraceWin subprocess error."""
-
-    pass
 
 
 class TraceWin(BeamCalculator):
@@ -89,12 +89,15 @@ class TraceWin(BeamCalculator):
             ``CAL`` file holding TraceWin optimization results. If provided,
             the file will be copied in the directory of the ``DAT``, and be
             renamed so that TraceWin uses it.
+        kwargs :
+            Keyword arguments passed to :class:`.BeamCalculator`.
 
         """
         self.executable = executable
         self.ini_path = ini_path.resolve().absolute()
         self.base_kwargs = base_kwargs
         #: ``CAL`` file holding TraceWin optimization results.
+        #:
         #: - If set, the file will be copied in the directory of the ``DAT``,
         #:   and be renamed so that TraceWin uses it.
         #: - If set to ``None``, we ensure that TraceWin will not pick-up any
@@ -119,7 +122,7 @@ class TraceWin(BeamCalculator):
         self._tracewin_command: list[str] | None = None
 
         if reference_phase_policy != "phi_0_rel":
-            logging.warning(
+            logger.warning(
                 f"{reference_phase_policy = } on TraceWin may be bugged. "
                 "Prefer 'phi_0_abs'."
             )
@@ -214,8 +217,7 @@ class TraceWin(BeamCalculator):
         )
         command.extend(
             failed_cavities_to_command(
-                elts.l_cav,
-                idx_first_element=elts[0].idx["elt_idx"],
+                elts.l_cav, idx_first_element=elts[0].idx["elt_idx"]
             )
         )
         return command, path_cal
@@ -244,6 +246,8 @@ class TraceWin(BeamCalculator):
             the one asked in the ``TOML``. To use after the first calculation,
             if :attr:`.BeamCalculator.reference_phase_policy` does not align
             with :attr:`.CavitySettings.reference`.
+        optimization_status :
+            Describe the current status of optimization.
         specific_kwargs :
             ``TraceWin`` optional arguments. Overrides what is defined in
             ``base_kwargs`` and ``INI``.
@@ -286,8 +290,10 @@ class TraceWin(BeamCalculator):
         elts :
             List of elements in which the beam should be propagated.
         optimization_status :
-            To prevent errors interrupting simulation during optimization
-            phases.
+            Current optimization state, to prevent errors interrupting
+            simulation during optimization phases.
+        kwargs :
+            Keyword arguments passed down to :meth:`_tracewin_full_command`.
 
         Returns
         -------
@@ -298,13 +304,10 @@ class TraceWin(BeamCalculator):
         if set_of_cavity_settings is None:
             set_of_cavity_settings = SetOfCavitySettings({})
         if kwargs not in (None, {}):
-            logging.critical(f"{kwargs = }: deprecated.")
-
-        if kwargs is None:
-            kwargs = {}
+            logger.critical(f"{kwargs = }: deprecated.")
 
         command, path_cal = self._tracewin_full_command(
-            elts, set_of_cavity_settings, **kwargs
+            elts, set_of_cavity_settings, **(kwargs or {})
         )
         is_not_a_fit = optimization_status != "in progress"
 
@@ -312,7 +315,7 @@ class TraceWin(BeamCalculator):
         try:
             _run_in_bash(command, output_command=is_not_a_fit)
         except subprocess.CalledProcessError as e:
-            logging.warning(
+            logger.warning(
                 f"TraceWin exited with return code {e.returncode}.\n"
                 f"stderr:\n{e.stderr.decode()}\n"
                 f"stdout:\n{e.stdout.decode()}"
@@ -361,10 +364,12 @@ class TraceWin(BeamCalculator):
             Optimized parameters.
         full_elts :
             Contains the full linac.
+        specific_kwargs :
+            Keyword arguments passed to :meth:`.run_with_this`.
 
         Returns
         -------
-            Necessary information on the run.
+            Object holding simulation results.
 
         """
         optimized_cavity_settings.re_set_elements_index_to_absolute_value()
@@ -384,6 +389,7 @@ class TraceWin(BeamCalculator):
             accelerator_id=accelerator_id,
             set_of_cavity_settings=optimized_cavity_settings,
             elts=full_elts,
+            optimization_status="finished",
             **specific_kwargs,
         )
         return simulation_output
@@ -392,6 +398,7 @@ class TraceWin(BeamCalculator):
         """Prepare TraceWin bash arguments.
 
         In particular:
+
         1. Set the ``path_cal`` variable, defining where to store results.
         2. Set the ``_tracewin_command`` attribute to None, as it must be
            updated when ``path_cal`` changes.
@@ -421,7 +428,7 @@ class TraceWin(BeamCalculator):
                 return
 
             backup_cal = tracewin_cal.with_suffix(".cal.bak")
-            logging.warning(
+            logger.warning(
                 "TraceWin would pick-up a `CAL` file, but this solver's "
                 "`cal_file` attribute is `None`, suggesting that no `CAL` "
                 f"should be used. We rename it.\n{tracewin_cal = }\n "
@@ -433,7 +440,7 @@ class TraceWin(BeamCalculator):
             return
 
         shutil.copy(self.cal_file, tracewin_cal)
-        logging.info(
+        logger.info(
             f"Copied\n{self.cal_file = }\nto\n{tracewin_cal}\nIt should be "
             "picked up by TraceWin."
         )
@@ -455,9 +462,9 @@ class TraceWin(BeamCalculator):
 
         """
         if self.cal_file is None:
-            logging.info("TraceWin will already create a new ``CAL``.")
+            logger.info("TraceWin will already create a new ``CAL``.")
             return
-        logging.info(
+        logger.info(
             "TraceWin will perform an optimization if DIAG/ADJUST commands are"
             " present."
         )
@@ -519,7 +526,6 @@ class TraceWin(BeamCalculator):
             settings.phi_bunch = phi_bunch
             settings.phi_s = phi_s
             settings.v_cav_mv = v_cav_mv
-        return
 
 
 # =============================================================================
@@ -543,8 +549,8 @@ def _run_in_bash(command: Sequence[str], output_command: bool = True) -> None:
 
     """
     if output_command:
-        logging.info(
-            f"Running command with arguments:\n\t{"\n\t".join(command)}\n"
+        logger.info(
+            f"Running command with arguments:\n\t{'\n\t'.join(command)}\n"
             f"In case of error, copy-paste the command:\n{' '.join(command)}"
         )
 

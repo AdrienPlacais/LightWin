@@ -13,6 +13,8 @@ become very complex in the future: 3D, superposed fields...
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABCMeta
 from functools import lru_cache
 from pathlib import Path
@@ -37,13 +39,13 @@ IMPLEMENTED_FIELD_MAPS = {
 
 
 @lru_cache(100)
-def warn_once(geometry: int):
+def warn_once(geometry: int) -> None:
     """Raise this warning only once.
 
     https://stackoverflow.com/questions/31953272/logging-print-message-only-once
 
     """
-    logging.warning(
+    logger.warning(
         f"3D field maps ({geometry = }) not implemented yet. If solver is "
         "Envelope1D or Envelope3D, only the longitudinal rf electric field "
         "will be used (equivalent of 'FIELD_MAP 100')."
@@ -78,8 +80,7 @@ class FieldMapFactory:
         )
 
         cavity_settings = self.cavity_settings_factory.from_line_in_dat_file(
-            line,
-            set_sync_phase=False,
+            line, set_sync_phase=False
         )
 
         field_map = field_map_class(

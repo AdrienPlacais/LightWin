@@ -22,6 +22,8 @@ cavities, as well as the place where objectives are evaluated.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection, Iterable
 from typing import Any, Literal
 
@@ -91,12 +93,12 @@ def zone_to_recompute(
     idx_start_compensation_zone = min([*fault_idx, *comp_idx])
 
     if start_at_beginning_of_linac:
-        logging.info(
+        logger.info(
             "Force start of compensation zone @ first element of the linac."
         )
         idx_start_compensation_zone = 0
     if full_lattices:
-        logging.info("Force compensation zone span over full lattices.")
+        logger.info("Force compensation zone span over full lattices.")
         idx_start_compensation_zone = (
             _reduce_idx_start_to_include_full_lattice(
                 idx_start_compensation_zone, broken_elts
@@ -105,7 +107,7 @@ def zone_to_recompute(
 
     idx_end_compensation_zone = max(objectives_positions_idx)
     if full_linac:
-        logging.info("Force compensation zone span over full linac.")
+        logger.info("Force compensation zone span over full linac.")
         idx_start_compensation_zone = 0
         idx_end_compensation_zone = len(broken_elts) - 2
 
@@ -118,7 +120,7 @@ def zone_to_recompute(
 def _zone(preset: POSITION_TO_INDEX_T, *args) -> list[int]:
     """Give compensation zone, and position where objectives are checked."""
     if preset not in POSITION_TO_INDEX:
-        logging.error(f"Position {preset} not recognized.")
+        logger.error(f"Position {preset} not recognized.")
         raise OSError(f"Position {preset} not recognized.")
     index = POSITION_TO_INDEX[preset](*args)
     if isinstance(index, int):
@@ -145,7 +147,7 @@ def _one_lattice_after_last_altered_lattice(
     idx_last = max([*fault_idx, *comp_idx])
     idx_lattice_last = elts[idx_last].get("lattice") + 1
     if idx_lattice_last > len(elts.by_lattice):
-        logging.warning(
+        logger.warning(
             "You asked for a lattice after the end of the linac. Revert back "
             "to previous lattice, i.e. end of linac."
         )

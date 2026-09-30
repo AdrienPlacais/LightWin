@@ -48,10 +48,10 @@ GETTABLE_BEAM_PARAMETERS_PHASE_SPACE_T = (
     | PHASE_SPACE_T
 )
 
+# fmt: off
 #: Attributes that are stored in :class:`.InitialBeamParameters` and
 #: :class:`.BeamParameters`.
 GETTABLE_BEAM_PARAMETERS = (
-    # fmt: off
     (
         "alpha_phiw", "alpha_phiw99", "alpha_t", "alpha_x", "alpha_x99", "alpha_y", "alpha_y99", "alpha_z", "alpha_zdelta",
         "beta_phiw", "beta_phiw99", "beta_t", "beta_x", "beta_x99", "beta_y", "beta_y99", "beta_z", "beta_zdelta",
@@ -65,10 +65,8 @@ GETTABLE_BEAM_PARAMETERS = (
         "twiss_phiw", "twiss_phiw99", "twiss_t", "twiss_x", "twiss_x99", "twiss_y", "twiss_y99", "twiss_z", "twiss_zdelta",
     )
     + GETTABLE_BEAM_PARAMETERS_PHASE_SPACE
-    # fmt: on
 )
 GETTABLE_BEAM_PARAMETERS_T = (
-    # fmt: off
     Literal[
         "alpha_phiw", "alpha_phiw99", "alpha_t", "alpha_x", "alpha_x99", "alpha_y", "alpha_y99", "alpha_z", "alpha_zdelta",
         "beta_phiw", "beta_phiw99", "beta_t", "beta_x", "beta_x99", "beta_y", "beta_y99", "beta_z", "beta_zdelta",
@@ -82,8 +80,8 @@ GETTABLE_BEAM_PARAMETERS_T = (
         "twiss_phiw", "twiss_phiw99", "twiss_t", "twiss_x", "twiss_x99", "twiss_y", "twiss_y99", "twiss_z", "twiss_zdelta",
     ]
     | GETTABLE_BEAM_PARAMETERS_PHASE_SPACE_T
-    # fmt: on
 )
+# fmt: on
 
 #: Attributes stored in the :attr:`.ParticleFullTrajectory.beam` dictionary.
 BEAM_KEYS = (
@@ -289,29 +287,19 @@ _UNCONCATENABLE = (
 CONCATENABLE_ELTS = tuple(
     [key for key in GETTABLE_FIELD_MAP if key not in _UNCONCATENABLE]
 )
+# fmt: off
+# GETTABLE_CAVITY_SETTINGS_T without w_kin
 CONCATENABLE_ELTS_T = (
     Literal[
-        "aperture_flag", "field_map_filename", "field_map_folder", "geometry"
+        "aperture_flag", "field_map_filename", "field_map_folder", "geometry",
+        "acceptance_energy", "field", "freq_cavity_mhz", "k_e", "omega_0_rf",
+        "acceptance_phi", "phi_ref", "phi_rf", "phi_s_func", "reference",
+        "rf_field", "status", "v_cav_mv",
     ]
     | GETTABLE_ELT_T
-    # GETTABLE_CAVITY_SETTINGS_T without w_kin
-    | Literal[
-        "acceptance_energy",
-        "field",
-        "freq_cavity_mhz",
-        "k_e",
-        "omega_0_rf",
-        "acceptance_phi",
-        "phi_ref",
-        "phi_rf",
-        "phi_s_func",
-        "reference",
-        "rf_field",
-        "status",
-        "v_cav_mv",
-    ]
     | REFERENCE_PHASES_T
 )
+# fmt: on
 
 #: Attributes that can be extracted with :meth:`.ListOfElements.get` method.
 GETTABLE_ELTS = (
@@ -388,9 +376,9 @@ GETTABLE_TRANSFER_MATRIX_T = Literal[
     "r_zdelta_22",
 ]
 
+# fmt: off
 #: Attributes that you can get from 3D |SO|.
 NEEDS_3D = (
-    # fmt: off
     "alpha_t", "alpha_x", "alpha_y",
     "beta_t", "beta_x", "beta_y",
     "envelope_energy_t", "envelope_energy_x", "envelope_energy_y",
@@ -402,10 +390,8 @@ NEEDS_3D = (
     "mismatch_factor_t", "mismatch_factor_x", "mismatch_factor_y",
     "sigma_t", "sigma_x", "sigma_y",
     "twiss_t", "twiss_x", "twiss_y",
-    # fmt: on
 )
 NEEDS_3D_T = Literal[
-    # fmt: off
     "alpha_t", "alpha_x", "alpha_y",
     "beta_t", "beta_x", "beta_y",
     "envelope_energy_t", "envelope_energy_x", "envelope_energy_y",
@@ -417,8 +403,8 @@ NEEDS_3D_T = Literal[
     "mismatch_factor_t", "mismatch_factor_x", "mismatch_factor_y",
     "sigma_t", "sigma_x", "sigma_y",
     "twiss_t", "twiss_x", "twiss_y",
-    # fmt: on
 ]
+# fmt: on
 #: Attributes that you can get from multipart |SO|.
 NEEDS_MULTIPART = ("eps_phiw99", "eps_x99", "eps_y99", "pow_lost")
 NEEDS_MULTIPART_T = Literal["eps_phiw99", "eps_x99", "eps_y99", "pow_lost"]

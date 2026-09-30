@@ -10,5 +10,6 @@ It must contain the key ``dat_file``, which is the path to the linac structure f
 .. csv-table::
    :file: entries/files.csv
    :header-rows: 1
+   :class: config-table
 
 See also the :ref:`TraceWin compatibility note<TraceWin-compatibility-note>`.

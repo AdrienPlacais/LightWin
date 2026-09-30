@@ -105,11 +105,9 @@ def _infer_an_output_folder(
 
 
 def _select_best_simulations(
-    paths: Sequence[Path],
-    criterion_to_minimize: str,
+    paths: Sequence[Path], criterion_to_minimize: str
 ) -> tuple[pd.Series, pd.DataFrame]:
-    """Give the name of the best solution according to
-    ``criterion_to_minimize``
+    """Give name of the best solution according to ``criterion_to_minimize``.
 
     Parameters
     ----------
@@ -167,8 +165,7 @@ def _reconstruct_folder_names(n_simulations: int) -> pd.Series:
 
 
 def _concat_evaluations_files(
-    evaluations: dict[str, pd.DataFrame],
-    best_solutions: Sequence[Path],
+    evaluations: dict[str, pd.DataFrame], best_solutions: Sequence[Path]
 ) -> pd.DataFrame:
     """Concatenate the evaluations, taking only the best.
 
@@ -269,10 +266,10 @@ def _load_evaluation(
 
     """
     df = pd.read_csv(
-        evaluation_folder / "evaluations.csv",
+        evaluation_folder / "evaluations.csv"
         # usecols=evaluation_namecol  # type: ignore
     )
-    df.columns = df.columns.str.trip()
+    df.columns = df.columns.str.strip()
     df = df[[evaluation_namecol]]
 
     if new_name is not None:
@@ -288,7 +285,8 @@ def _load_evaluation(
     return df
 
 
-def main():
+def main() -> None:
+    """Provide CLI interface for solution combining."""
     parser = argparse.ArgumentParser("combine_solutions")
 
     parser.add_argument(

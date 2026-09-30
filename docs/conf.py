@@ -1,3 +1,5 @@
+"""Configure building Sphinx documentation."""
+
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
@@ -91,6 +93,7 @@ nitpick_ignore = [
     ("py:class", "np.float64"),
     ("py:class", "NDArray"),
     ("py:class", "numpy._typing._array_like._ScalarT"),
+    ("py:class", "T"),
     # Due to bad design
     ("py:class", "lightwin.failures.set_of_cavity_settings.FieldMap"),
     ("py:obj", "lightwin.failures.set_of_cavity_settings.FieldMap"),
@@ -98,6 +101,8 @@ nitpick_ignore = [
 ]
 
 # Link to other libraries
+# To verify that an URL will work, append "objects.inv" and check if the file
+# exists
 intersphinx_mapping = {
     "bayes_opt": (
         "https://bayesian-optimization.github.io/BayesianOptimization/master/",
@@ -107,12 +112,13 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
     "pandas": ("https://pandas.pydata.org/pandas-docs/version/2.2", None),
     "python": ("https://docs.python.org/3", None),
+    "pymoo": ("https://pymoo.org/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 
 autodoc_type_aliases = {
     # "np.float64": "numpy.float64",
-    "NDArray": "numpy.typing.NDArray",
+    "NDArray": "numpy.typing.NDArray"
 }
 autodoc_typehints = "description"
 # Parameters for sphinx-autodoc-typehints
@@ -124,11 +130,9 @@ typehints_defaults = "comma"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
-html_sidebars = {
-    "**": [
-        "versions.html",
-    ],
-}
+html_css_files = ["custom.css"]
+html_js_files = ["config_table.js"]
+html_sidebars = {"**": ["versions.html"]}
 
 # -- Options for IPYNB --------------------------------------------------------
 # In particular: options for automatic re-execution

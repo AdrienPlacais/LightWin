@@ -25,11 +25,13 @@ contains only a fraction of the linac.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 import shutil
 from abc import ABCMeta
 from collections.abc import Collection
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -69,7 +71,7 @@ class ListOfElementsFactory:
         field_maps_in_3d: bool = False,
         load_cython_field_maps: bool = False,
         elements_to_dump: ABCMeta | tuple[ABCMeta, ...] = (),
-    ):
+    ) -> None:
         """Declare and create some mandatory factories.
 
         .. note::
@@ -90,11 +92,11 @@ class ListOfElementsFactory:
             we always generate multiparticle :class:`.InitialBeamParameters`.
         default_field_map_folder :
             Where to look for field map files.
-        beam_kwargs :
-            Arguments to instantiate :class:`.InitialBeamParameters`.
-        load_field_maps :
+        load_fields :
             If field maps should be loaded; this is not necessary with
             :class:`.TraceWin`.
+        beam_kwargs :
+            Arguments to instantiate :class:`.InitialBeamParameters`.
         field_maps_in_3d :
             If the given field map files are 3D.
         load_cython_field_maps :
@@ -271,8 +273,7 @@ class ListOfElementsFactory:
 
         dat_filecontent, instructions = (
             dat_filecontent_from_smaller_list_of_elements(
-                files_from_full_list_of_elements["elts_n_cmds"],
-                elts,
+                files_from_full_list_of_elements["elts_n_cmds"], elts
             )
         )
 
@@ -310,7 +311,7 @@ class ListOfElementsFactory:
         try:
             _ = simulation_output.get("w_kin", elt=input_elt)
         except AttributeError:
-            logging.warning(
+            logger.warning(
                 f"First element of new ListOfElements ({input_elt}) is not in "
                 "the given SimulationOutput. I will consider that the last "
                 "element of the SimulationOutput is the first of the new "

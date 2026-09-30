@@ -14,6 +14,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from pathlib import Path
 from typing import Any
@@ -77,9 +79,7 @@ class FieldMap(Element):
     @property
     def is_accelerating(self) -> bool:
         """Tell if the cavity is working."""
-        if self.status == "failed":
-            return False
-        return True
+        return self.status != "failed"
 
     @property
     def is_altered(self) -> bool:
@@ -185,6 +185,8 @@ class FieldMap(Element):
             Name of the desired attributes.
         to_numpy :
             If you want the list output to be converted to a np.ndarray.
+        none_to_nan :
+            Whether None should be converted to NaN.
         **kwargs :
             Other arguments passed to recursive getter.
 
@@ -214,7 +216,9 @@ class FieldMap(Element):
                 (
                     np.array(np.nan)
                     if v is None and none_to_nan
-                    else np.array(v) if isinstance(v, list) else v
+                    else np.array(v)
+                    if isinstance(v, list)
+                    else v
                 )
                 for v in values
             ]
@@ -223,7 +227,9 @@ class FieldMap(Element):
                 (
                     [np.nan]
                     if v is None and none_to_nan
-                    else v.tolist() if isinstance(v, np.ndarray) else v
+                    else v.tolist()
+                    if isinstance(v, np.ndarray)
+                    else v
                 )
                 for v in values
             ]
@@ -330,8 +336,12 @@ class FieldMap(Element):
         ----------
         which_phase :
             Which phase should be put in the output ``DAT``.
+        args :
+            Additional arguments passed to :meth:`.Instruction.to_line`.
         round :
             Rounding numbers in exported line.
+        kwargs :
+            Additional arguments passed to :meth:`.Instruction.to_line`.
 
         Returns
         -------
@@ -339,7 +349,7 @@ class FieldMap(Element):
             current object.
 
         """
-        phase, abs_phase_flag, reference = self._phase_for_line(which_phase)
+        phase, abs_phase_flag, _reference = self._phase_for_line(which_phase)
         k_e = self.cavity_settings.k_e
         k_b = k_e
         for value, position in zip(
@@ -354,7 +364,7 @@ class FieldMap(Element):
         line = super().to_line(*args, **kwargs)
 
         if line is None:
-            logging.error("``FieldMap.to_line`` should not produce None")
+            logger.error("``FieldMap.to_line`` should not produce None")
             return None
         return line
 

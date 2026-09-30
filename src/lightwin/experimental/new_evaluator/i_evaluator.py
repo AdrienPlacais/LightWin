@@ -4,7 +4,7 @@ import re
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 import numpy as np
 import pandas as pd
@@ -28,7 +28,7 @@ class IEvaluator(ABC):
     #: of emittance rather than its absolute value.
     _y_quantity: GETTABLE_SIMULATION_OUTPUT_T
     #: kwargs used for plotting.
-    _plot_kwargs: dict[str, Any]
+    _plot_kwargs: ClassVar[dict[str, Any]] = {}
 
     def __init__(
         self, fignum: int, plotter: IPlotter | None = None, **kwargs
@@ -36,8 +36,6 @@ class IEvaluator(ABC):
         """Instantiate the ``plotter`` object."""
         self._fignum = fignum
         self._plotter = plotter if plotter else MatplotlibPlotter()
-        if not hasattr(self, "_plot_kwargs"):
-            self._plot_kwargs = {}
         self._ref_xdata: NDArray[np.float64] | None
 
     def __str__(self) -> str:
@@ -67,7 +65,6 @@ class IEvaluator(ABC):
     @abstractmethod
     def _get(self, *args: Any, **kwargs: Any) -> pd.DataFrame:
         """Get the base data."""
-        pass
 
     def post_treat(self, raw_df: pd.DataFrame) -> pd.DataFrame:
         """Perform operations on data.
@@ -86,7 +83,6 @@ class IEvaluator(ABC):
         **kwargs: Any,
     ) -> Any:
         """Plot evaluated data from all the given objects."""
-        pass
 
     def _plot_single(
         self,
@@ -123,10 +119,14 @@ class IEvaluator(ABC):
         ----------
         limits :
             Must have a ``"Lower limit"`` and a ``"Upper limit"`` column.
+        axes :
+            Objects to draw on.
         style :
             Linestyles for lower and upper limits.
-        colors :
+        color :
             Color for the limits.
+        kwargs :
+            Keyword arguments passed to :meth:`IPlotter.plot`.
 
         """
         return self._plotter.plot(
@@ -159,4 +159,3 @@ class IEvaluator(ABC):
             Holds data used for the testing.
 
         """
-        pass

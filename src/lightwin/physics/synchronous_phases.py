@@ -2,6 +2,8 @@
 
 import cmath
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from collections.abc import Callable
 from typing import Any, Literal
@@ -16,16 +18,20 @@ def phi_s_legacy(
 
     Parameters
     ----------
-    integrated_field
+    integrated_field :
         Complex electric field felt by the synchronous particle. It is None
         if the cavity is failed.
+    args :
+        Unused arguments.
+    kwargs :
+        Unused keyword arguments.
 
     Returns
     -------
-    v_cav_mv
+    float
         Accelerating voltage in :unit:`MV`. It is ``np.nan`` if
         ``integrated_field`` is None.
-    phi_s
+    float
         Synchronous phase of the cavity in :unit:`rad`. It is ``np.nan`` if
         ``integrated_field`` is None.
 
@@ -41,10 +47,18 @@ def phi_s_lagniel(
 ) -> tuple[float, float]:
     """Compute cavity parameters with new phi_s model :cite:`Lagniel2021`.
 
+    Raises
+    ------
+    NotImplementedError
+
     Parameters
     ----------
-    simulation_output
+    simulation_output :
         Holds results of a simulation.
+    args :
+        Unused arguments.
+    kwargs :
+        Unused keyword arguments.
 
     Returns
     -------
@@ -52,7 +66,7 @@ def phi_s_lagniel(
 
     """
     raise NotImplementedError
-    logging.error("phi_s_lagniel not implemented")
+    logger.error("phi_s_lagniel not implemented")
     transf_mat_21 = simulation_output.transf_mat_21
     delta_w_kin = simulation_output.delta_w_kin
     return transf_mat_21 / delta_w_kin
@@ -68,7 +82,7 @@ def phi_s_from_tracewin_file(
 
     """
     raise NotImplementedError
-    logging.error("phi_s_tracewin not implemented")
+    logger.error("phi_s_tracewin not implemented")
     filepath = simulation_output.filepath
     del filepath
     return 14.0, -math.pi / 4.0

@@ -42,23 +42,25 @@ class Field100(Field):
         ----------
         path :
             The path to the ``EDZ`` file to load.
+        validity_check_kwargs :
+            Additional unused keyword arguments.
 
         Returns
         -------
-        e_z :
+        FieldFuncComponent1D
             Function that takes in ``z`` position and returns corresponding
             field, at null phase, for amplitude of :math:`1\,\mathrm{MV/m}`.
-        n_z :
+        tuple[int]
             Number of interpolation points.
-        n_cell :
+        int
             Number of cell for cavities.
 
         """
         n_z, zmax, norm, f_z, n_cell = load_field_1d(path)
 
-        assert is_a_valid_1d_electric_field(
-            n_z, zmax, f_z, self._length_m
-        ), f"Error loading {path}'s field map."
+        assert is_a_valid_1d_electric_field(n_z, zmax, f_z, self._length_m), (
+            f"Error loading {path}'s field map."
+        )
 
         f_z = rescale_array(f_z, norm)
         e_z = create_1d_field_func(f_z, zmax, n_z)
@@ -72,9 +74,9 @@ class Field100(Field):
             electric field is null. Interpolation can lead to funny results!
 
         """
-        assert hasattr(
-            self, "z_0"
-        ), "You need to set the starting_position attribute of the Field."
+        assert hasattr(self, "z_0"), (
+            "You need to set the starting_position attribute of the Field."
+        )
         shifted = shifted_e_spat(self._e_z_spat_rf, z_shift=self.z_0)
         self._e_z_spat_rf = shifted
 

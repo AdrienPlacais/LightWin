@@ -172,13 +172,11 @@ def _needs_space_between(prev: str, token: str) -> bool:
         return False
     if token and token[0] in CLOSE_PUNCT:
         return False
-    if prev and prev[-1] in OPEN_PUNCT:
-        return False
-    return True
+    return not (prev and prev[-1] in OPEN_PUNCT)
 
 
 def _split_normal_word(word: str, max_width: int) -> list[str]:
-    """Hyphenate word when needed (allowed to sit next to other words)"""
+    """Hyphenate word when needed (allowed to sit next to other words)."""
     if len(word) <= max_width:
         return [word]
     out: list[str] = []
@@ -272,7 +270,9 @@ def _split_backtick(token: str, max_width: int) -> list[str]:
 def _targeted_split_backtick(
     token: str, rem: int, max_width: int
 ) -> list[str] | None:
-    """Try to split the backtick token so that:
+    """Try to split the backtick token.
+
+    Token is splitted so that:
 
       - the first chunk (with prefix) fits within 'rem' (available room on
         current line),
@@ -297,11 +297,11 @@ def _targeted_split_backtick(
     prefix_len = len(prefix)
 
     if "_" in inner:
-        parts = inner.split("_")
+        parts: list[str] = inner.split("_")
         if any(len(p) > max_width for p in parts):
             return None
 
-        def join_parts(a, b):
+        def join_parts(a: int, b: int) -> str:
             seg = "_".join(parts[a:b])
             return seg + ("_" if b < len(parts) else "")
 
@@ -310,7 +310,7 @@ def _targeted_split_backtick(
         if any(len(p) > max_width for p in parts):
             return None
 
-        def join_parts(a, b):
+        def join_parts(a: int, b: int) -> str:
             return " ".join(parts[a:b])
 
     n = len(parts)

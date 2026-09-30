@@ -7,6 +7,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Any, Protocol
 
 import numpy as np
@@ -63,17 +65,19 @@ class Element(Instruction):
             element of the list must be in :data:`.PARAMETERS_1D`.
         dat_idx :
             Position in the ``DAT`` file.
-        name :
-            Non-default name of the element, as given in the ``DAT`` file. The
-            default is None, in which case an automatic name will be given
-            later.
+        idx_in_lattice :
+            Position of the element in its lattice.
+        lattice :
+            Index of the element's lattice.
+        section :
+            Index of the element's section.
+        kwargs :
+            Additional kwargs passed to :class:`.Instruction`.
 
         """
         super().__init__(line, dat_idx, **kwargs)
 
-        self.elt_info = {
-            "nature": line.splitted[0],
-        }
+        self.elt_info = {"nature": line.splitted[0]}
         self.length_m = 1e-3 * float(line.splitted[1])
 
         new_idx = {
@@ -150,10 +154,7 @@ class Element(Instruction):
 
         return values[0] if len(values) == 1 else tuple(values)
 
-    def keep_cavity_settings(
-        self,
-        cavity_settings: CavitySettings,
-    ) -> None:
+    def keep_cavity_settings(self, cavity_settings: CavitySettings) -> None:
         """Save data calculated by :meth:`.BeamCalculator.run_with_this`."""
         raise NotImplementedError("Please override this method.")
 
@@ -182,14 +183,14 @@ class Element(Instruction):
 
         """
         if not self.can_be_retuned:
-            logging.error(
+            logger.error(
                 f"You want to give {new_status = } to the element f{self.name},"
                 " which can't be retuned. Status of elements has meaning only "
                 "if they can be retuned."
             )
             return
 
-        logging.error(
+        logger.error(
             f"You want to give {new_status = } to the element f{self.name}, "
             "which update_status method is not defined."
         )
@@ -266,7 +267,7 @@ def default_element_to_index(
         this default function.
 
     """
-    logging.warning(
+    logger.warning(
         "Actual ``element_to_index`` was not set, you are calling a default. "
         f"{elt = }; {pos = }, {return_elt_idx = }, {handle_missing_elt = }"
         "."

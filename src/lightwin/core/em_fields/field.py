@@ -17,6 +17,8 @@ See Also
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Collection
 from pathlib import Path
@@ -127,9 +129,9 @@ class Field(ABC):
         self._b_z_dc: Callable[[Any], float] = null_field_1d
 
         if not self.is_implemented:
-            logging.info(
+            logger.info(
                 "Initializing a non-implemented Field. Not loading anything.\n"
-                f"{repr(self)}"
+                f"{self!r}"
             )
             return
 
@@ -156,9 +158,7 @@ class Field(ABC):
 
     @abstractmethod
     def _load_fieldmap(
-        self,
-        path: Path,
-        **validity_check_kwargs,
+        self, path: Path, **validity_check_kwargs
     ) -> tuple[Callable[..., float], Any, int]:
         """Generate field function corresponding to a single field file.
 
@@ -166,16 +166,19 @@ class Field(ABC):
         ----------
         path :
             Path to a field map file.
+        validity_check_kwargs :
+            Keyword arguments for function checking validity of loaded field
+            map.
 
         Returns
         -------
-        func :
+        Callable[..., float]
             Give field at a given position, position being a tuple of 1, 2 or 3
             floats.
-        n_interp :
+        Any
             Number of interpolation points in the various directions (tuple of
             1, 2 or 3 integers).
-        n_cell :
+        int
             Number of cells (makes sense only for ``EDZ`` as for now).
 
         """

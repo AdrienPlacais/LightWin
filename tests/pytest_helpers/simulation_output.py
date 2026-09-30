@@ -1,6 +1,8 @@
 """Set a function to check validity of :class:`.SimulationOutput`."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Literal
 
 import numpy as np
@@ -45,8 +47,7 @@ def wrap_approx(
     pos: Literal["in", "out"] | None = "out",
     **get_kwargs,
 ) -> bool:
-    """Compare ``key`` from 2 :class:`.SimulationOutput` using
-    ``pytest.approx``.
+    """Compare ``key`` from 2 :class:`.SimulationOutput`.
 
     By default, will compare ``key`` at the exit of the last element of the
     linac.
@@ -88,25 +89,16 @@ def wrap_approx(
 
     """
     value = fix_so.get(
-        key,
-        to_numpy=to_numpy,
-        to_deg=to_deg,
-        elt=elt,
-        pos=pos,
-        **get_kwargs,
+        key, to_numpy=to_numpy, to_deg=to_deg, elt=elt, pos=pos, **get_kwargs
     )
     if ref_so is None:
         reference_value = _REFERENCE_RESULTS.get(key)
         try:
             np.testing.assert_allclose(
-                value,
-                reference_value,
-                rtol=rel,
-                atol=abs,
-                err_msg=key,
+                value, reference_value, rtol=rel, atol=abs, err_msg=key
             )
         except AssertionError as e:
-            logging.critical(e)
+            logger.critical(e)
             return False
         return True
 
@@ -118,6 +110,6 @@ def wrap_approx(
             value, reference_value, rtol=rel, atol=abs, err_msg=key
         )
     except AssertionError as e:
-        logging.critical(e)
+        logger.critical(e)
         return False
     return True

@@ -2,16 +2,12 @@
 """Define a generic compensation workflow."""
 
 import tomllib
-from collections.abc import Collection, Sequence
+from collections.abc import Collection
 from pathlib import Path
 from typing import Any
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from my_own_objectives import (
-    EnergyPhaseMismatchMoreElements,
-    MyObjectiveFactory,
-)
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.config.config_manager import process_config
@@ -65,6 +61,7 @@ def _perform_evaluations(
 def study(
     new_evaluations: bool = False,
 ) -> tuple[dict[int, list[Accelerator]], list[FaultScenario]]:
+    """Perform the complete study."""
     toml_filepath = Path("lightwin.toml")
     toml_keys = {
         "files": "files",

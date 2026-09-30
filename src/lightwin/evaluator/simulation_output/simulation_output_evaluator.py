@@ -10,11 +10,13 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -51,7 +53,7 @@ from lightwin.visualization.structure import plot_structure
 class SimulationOutputEvaluator(ABC):
     """A base class for all the possible types of tests.
 
-    Arguments
+    Arguments:
     ---------
     value_getter :
         A function that takes the simulation output under study as argument,
@@ -102,7 +104,7 @@ class SimulationOutputEvaluator(ABC):
     plt_kwargs: dict[str, Any] | None = None
     raise_error_if_value_getter_returns_none: bool = True
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Check inputs, create plot if a ``fignum`` was provided."""
         self.descriptor = _descriptor(self.descriptor)
         self.post_treaters = _post_treaters(self.post_treaters)
@@ -136,14 +138,14 @@ class SimulationOutputEvaluator(ABC):
         x_data, y_data = self._get_data(simulation_output)
         if y_data is None:
             if self.raise_error_if_value_getter_returns_none:
-                logging.error(f"A value misses in test: {self}. Skipping...")
+                logger.error(f"A value misses in test: {self}. Skipping...")
             return np.nan
 
         y_ref_data = self._get_ref_data(simulation_output)
         if y_ref_data is None:
             # this happens with mismatch
             # return y_data
-            # logging.critical(self.descriptor)
+            # logger.critical(self.descriptor)
             y_ref_data = y_data
 
         if need_to_resample(y_data, y_ref_data):
@@ -170,7 +172,7 @@ class SimulationOutputEvaluator(ABC):
         try:
             y_data = self.value_getter(simulation_output)
         except IndexError:
-            logging.error(
+            logger.error(
                 "Mismatch between x_data and y_data shapes. Current "
                 "quantity is probably a mismatch_factor, which "
                 "was interpolated. Returning None."
@@ -228,10 +230,7 @@ class SimulationOutputEvaluator(ABC):
         return y_data
 
     def _apply_test(
-        self,
-        x_data: NDArray,
-        y_data: NDArray | float,
-        **plot_kw: str,
+        self, x_data: NDArray, y_data: NDArray | float, **plot_kw: str
     ) -> bool | float | None:
         """Apply da testing functions.
 
@@ -267,10 +266,7 @@ class SimulationOutputEvaluator(ABC):
         plot_structure(simulation_output.elts, self._struct_ax)
 
     def _add_a_value_plot(
-        self,
-        z_data: NDArray,
-        value: NDArray | float,
-        **plot_kw: str,
+        self, z_data: NDArray, value: NDArray | float, **plot_kw: str
     ) -> None:
         """Add (treated) data to the plot."""
         assert self.main_ax is not None
@@ -322,7 +318,7 @@ class SimulationOutputEvaluator(ABC):
             return
 
         if out_path is None:
-            logging.error(
+            logger.error(
                 "The attribute `out_path` from `SimulationOutput` is"
                 " not defined, hence I cannot save the Figure. Did "
                 "you call the method "
@@ -338,7 +334,7 @@ class SimulationOutputEvaluator(ABC):
 def _descriptor(descriptor: str) -> str:
     """Clean the given string, raise warning if it is empty."""
     if not descriptor:
-        logging.warning(
+        logger.warning(
             "No descriptor was given for this evaluator, which may be "
             "confusing in the long run."
         )
@@ -360,9 +356,5 @@ def kwargs(plt_kwargs: dict[str, Any] | None) -> dict[str, Any]:
     if plt_kwargs is None:
         plt_kwargs = {}
 
-    default_kwargs = {
-        "axnum": 2,
-        "clean_fig": True,
-        "sharex": True,
-    }
+    default_kwargs = {"axnum": 2, "clean_fig": True, "sharex": True}
     return plt_kwargs | default_kwargs

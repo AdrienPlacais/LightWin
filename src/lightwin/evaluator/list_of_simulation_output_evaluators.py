@@ -6,6 +6,8 @@ We also define some factory functions to facilitate their creation.
 
 import datetime
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection
 from pathlib import Path
 from typing import Any
@@ -54,6 +56,8 @@ class ListOfSimulationOutputEvaluators(list):
             lists. The default is None, in which case nothing is added.
         project_folder :
             Where to save the output file.
+        files_kw :
+            Additional unused keyword arguments.
 
         Returns
         -------
@@ -70,12 +74,11 @@ class ListOfSimulationOutputEvaluators(list):
         if project_folder is not None:
             csv_path = Path(project_folder, "evaluations.csv")
             evaluations.to_csv(csv_path)
-            logging.info(f"Saved all evaluations in {str(csv_path)}.")
+            logger.info(f"Saved all evaluations in {csv_path}.")
         return evaluations
 
     def _unpack_other_evals(
-        self,
-        other_evals: dict[str, list[Any]] | None,
+        self, other_evals: dict[str, list[Any]] | None
     ) -> tuple[list[str], list[list[Any]]]:
         """Extract column names and data."""
         if other_evals is None:
@@ -95,10 +98,7 @@ class ListOfSimulationOutputEvaluators(list):
         other_data = [list(data) for data in other_data]
         return other_columns, other_data
 
-    def _set_indexes(
-        self,
-        *simulation_outputs: SimulationOutput,
-    ) -> list[str]:
+    def _set_indexes(self, *simulation_outputs: SimulationOutput) -> list[str]:
         """Set the indexes of the pandas dataframe."""
         index = [
             simulation_output.beam_calculator_id
@@ -106,10 +106,7 @@ class ListOfSimulationOutputEvaluators(list):
         ]
         return index
 
-    def _set_columns(
-        self,
-        other_columns: list[str],
-    ) -> list[str]:
+    def _set_columns(self, other_columns: list[str]) -> list[str]:
         """Set the columns of the pandas dataframe."""
         columns = [evaluator.descriptor for evaluator in self]
         if other_columns is None:
@@ -155,6 +152,7 @@ class FaultScenarioSimulationOutputEvaluators:
         simulation_outputs: tuple[SimulationOutputEvaluator],
         additional_elts: tuple[Element | str] | None = None,
     ) -> None:
+        """Instantiate object."""
         self.quantities = quantities
 
         self.elts, self.columns = self._set_evaluation_elements(
@@ -278,4 +276,4 @@ class FaultScenarioSimulationOutputEvaluators:
         title = "Fit quality:"
         # FIXME
         title += "(FIXME: settings in FaultScenario, not config_manager)"
-        logging.info(pd_output(evaluations, header=title))
+        logger.info(pd_output(evaluations, header=title))

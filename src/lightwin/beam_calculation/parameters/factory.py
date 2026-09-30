@@ -14,9 +14,7 @@ class ElementBeamCalculatorParametersFactory(ABC):
     @abstractmethod
     def run(self, elt: Element) -> ElementBeamCalculatorParameters:
         """Create the proper subclass of solver parameters, instantiate it."""
-        pass
 
     @abstractmethod
     def _parameters_constructor(self, elt: Element, default: type) -> type:
         """Select the parameters adapted to ``elt``."""
-        pass

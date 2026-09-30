@@ -1,8 +1,11 @@
 """Define a factory to easily create |A|."""
 
 import logging
+
+logger = logging.getLogger(__name__)
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 from warnings import warn
 
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
@@ -88,6 +91,7 @@ class AcceleratorFactory:
 
     @property
     def pickler(self) -> MyPickler:
+        """Get the pickler."""
         if self._pickler is None:
             self._pickler = MyCloudPickler()
         return self._pickler
@@ -130,16 +134,16 @@ class AcceleratorFactory:
             reserved_names={"Reference", "Solution"}
         )
         if len(additional) > 0:
-            logging.warning(
+            logger.warning(
                 "Behavior of additional Accelerator is not well defined. In "
                 "particular if there are several FaultScenario."
             )
 
-        for index in accelerators:
+        for index, accelerator in accelerators.items():
             to_add = additional.get(index)
             if to_add is None:
                 continue
-            accelerators[index].extend(to_add)
+            accelerator.extend(to_add)
 
         return accelerators, updated_wtf
 
@@ -219,7 +223,7 @@ class AcceleratorFactory:
                 name, index=index, pickle_path=pickle_path
             )
             if accelerator is not None:
-                logging.info(
+                logger.info(
                     f"Created {accelerator.id} Accelerator by unpickling "
                     f"'{pickle_path}'."
                 )
@@ -235,7 +239,7 @@ class AcceleratorFactory:
         info = f"Created {accelerator.id} Accelerator"
         if pickle_path:
             info += f" (will be pickled to '{pickle_path}')"
-        logging.info(info + ".")
+        logger.info(info + ".")
         return accelerator
 
     # =========================================================================
@@ -350,7 +354,7 @@ class AcceleratorFactory:
 
         n_unique = len(set(policies.values()))
         if n_unique > 1:
-            logging.warning(
+            logger.warning(
                 "The different BeamCalculator objects have different "
                 "reference phase policies. This may lead to inconsistencies "
                 f"when cavities fail.\n{policies = }"
@@ -359,7 +363,7 @@ class AcceleratorFactory:
 
         references = {x.cavity_settings.reference for x in cavities}
         if len(references) > 1:
-            logging.info(
+            logger.info(
                 "The cavities do not all have the same reference phase."
             )
 
@@ -439,7 +443,7 @@ class AcceleratorFactory:
 
         ref = pickle_config.pop("Reference", None)
         if not isinstance(ref, (str, Path)) and ref is not None:
-            logging.error(
+            logger.error(
                 f"[files.pickle_paths] 'Reference' value is {ref}, but a "
                 "string is expected."
             )
@@ -452,14 +456,14 @@ class AcceleratorFactory:
             try:
                 index = int(scenario_key)
             except (ValueError, TypeError):
-                logging.error(
+                logger.error(
                     f"Invalid scenario '{scenario_key = }' in pickle_paths. "
                     "Expected format: '000001', '000002', etc."
                 )
                 continue
 
             if isinstance(scenario_data, str):
-                logging.error(
+                logger.error(
                     f"The key '{scenario_data}' in [files.pickle_paths."
                     f"scenarios.{scenario_key} was associated to the "
                     f"string '{scenario_data}', but only 'Reference' can "
@@ -505,7 +509,7 @@ class AcceleratorFactory:
         if scenario is None:
             return
         if isinstance(scenario, str):
-            raise ValueError(
+            raise TypeError(
                 f"The value associated to fault scenario #{index} in "
                 f"the AcceleratorFactory._pickle_paths attribute is {scenario}"
                 " but should be a 'dict[str, str]'."
@@ -538,13 +542,13 @@ class AcceleratorFactory:
         if not pickle_path.is_file():
             return None
 
-        logging.info(f"Loading {name} from pickle: {pickle_path}")
+        logger.info(f"Loading {name} from pickle: {pickle_path}")
         return Accelerator.from_pickle(
             self.pickler, pickle_path, name=name, index=index
         )
 
     def _load_additional_pickles(
-        self, reserved_names: set[str] = {"Reference", "Solution"}
+        self, reserved_names: set[str] | None = None
     ) -> dict[int, list[Accelerator]]:
         """Unpickle additional |A|.
 
@@ -560,6 +564,8 @@ class AcceleratorFactory:
             their |FS| index.
 
         """
+        if reserved_names is None:
+            reserved_names = {"Reference", "Solution"}
         additional: dict[int, list[Accelerator]] = {}
         for index, names_paths in self._pickle_paths.items():
             if index == 0 or isinstance(names_paths, str):
@@ -574,14 +580,14 @@ class AcceleratorFactory:
                     pickle_name, index=index, pickle_path=pickle_path
                 )
                 if accelerator is None:
-                    logging.debug(
+                    logger.debug(
                         f"Not unpickling '{pickle_name}' key in [files."
                         f"pickle_paths.{index}] because"
                         f" '{pickle_path}' does not exist."
                     )
                     continue
 
-                logging.info(
+                logger.info(
                     f"Loading additional accelerator '{accelerator.id}' from pickle."
                 )
                 accelerators.append(accelerator)
@@ -639,14 +645,16 @@ class NoFault(AcceleratorFactory):
     """
 
     def __init__(self, *args, **kwargs) -> None:
+        """Instantiate object."""
         warn(
             "The class NoFault is deprecated. Prefer using AcceleratorFactory.",
             DeprecationWarning,
             stacklevel=2,
         )
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def run(self, *args, **kwargs) -> Accelerator:
+        """Create accelerator."""
         return self.create_reference()
 
 
@@ -659,15 +667,17 @@ class WithFaults(AcceleratorFactory):
     """
 
     def __init__(self, *args, wtf: dict[str, Any], **kwargs) -> None:
+        """Instantiate object."""
         warn(
             "The class WithFaults is deprecated. Prefer using AcceleratorFactory.",
             DeprecationWarning,
             stacklevel=2,
         )
         self._wtf = wtf
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def run_all(self, *args, **kwargs) -> list[Accelerator]:
+        """Create all the accelerators."""
         reference = self.create_reference()
         n_objects = len(self._wtf["failed"])
         return [reference] + self.create_failed(n_objects)

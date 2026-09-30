@@ -1,6 +1,8 @@
 """Define helper functions to set up LightWin workflow."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection
 from typing import Any
 
@@ -119,6 +121,8 @@ def set_up_faults(
         If provided, will override the ``objective_preset``. Used to let user
         define its own :class:`.ObjectiveFactory` without altering the source
         code.
+    kwargs :
+        Unused keyword arguments.
 
     Returns
     -------
@@ -141,7 +145,9 @@ def set_up_faults(
     return factory.create(**wtf)
 
 
-def set_up(config: ConfigKw, **kwargs) -> tuple[
+def set_up(
+    config: ConfigKw, **kwargs
+) -> tuple[
     tuple[BeamCalculator, ...],
     dict[int, list[Accelerator]],
     list[FaultScenario] | None,
@@ -153,6 +159,8 @@ def set_up(config: ConfigKw, **kwargs) -> tuple[
     ----------
     config :
         The full ``TOML`` configuration dictionary.
+    kwargs :
+        Keyword arguments passed to :func:`.set_up_faults`.
 
     Returns
     -------
@@ -163,10 +171,10 @@ def set_up(config: ConfigKw, **kwargs) -> tuple[
         Dictionary where keys are |FS| indexes, and values are lists of
         corresponding |A|. First index corresponds to reference accelerator (no
         failure).
-     fault_scenarios :
+    fault_scenarios :
         The created failures. Will be None if no ``"wtf"`` entry was given in
         ``config``.
-     ref_simulations_outputs :
+    ref_simulations_outputs :
         A reference |SO| corresponding to the nominal linac per |BC|.
 
     """
@@ -196,13 +204,13 @@ def fix(fault_scenarios: Collection[FaultScenario] | None) -> None:
 
     Parameters
     ----------
-     fault_scenarios :
+    fault_scenarios :
         The created failures. Will be None if no ``"wtf"`` entry was given in
         ``config``.
 
     """
     if fault_scenarios is None:
-        logging.info("No fault was set!")
+        logger.info("No fault was set!")
         return
     for fault_scenario in fault_scenarios:
         fault_scenario.fix_all()
@@ -263,6 +271,8 @@ def run_simulation(
     ----------
     config :
         The full TOML configuration dict.
+    kwargs :
+        Keyword arguments passed down to :func:`set_up`.
 
     Returns
     -------
@@ -280,11 +290,7 @@ def run_simulation(
         return accelerators
 
     fix(fault_scenarios)
-    recompute(
-        beam_calculators[1:],
-        ref_simulation_output[1:],
-        accelerators,
-    )
+    recompute(beam_calculators[1:], ref_simulation_output[1:], accelerators)
     plot.factory(accelerators, fault_scenarios=fault_scenarios, **config)
 
     return fault_scenarios
@@ -299,6 +305,8 @@ def run_simulation_new(
     ----------
     config :
         The full TOML configuration dict.
+    kwargs :
+        Keyword arguments passed down to :func:`set_up`.
 
     Returns
     -------
@@ -318,11 +326,7 @@ def run_simulation_new(
         return accelerators, None
 
     fix(fault_scenarios)
-    recompute(
-        beam_calculators[1:],
-        ref_simulation_output[1:],
-        accelerators,
-    )
+    recompute(beam_calculators[1:], ref_simulation_output[1:], accelerators)
     plot.factory(accelerators, fault_scenarios=fault_scenarios, **config)
 
     return accelerators, fault_scenarios

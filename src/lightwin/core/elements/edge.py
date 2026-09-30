@@ -1,12 +1,15 @@
 """Define :class:`Edge`.
 
 It does nothing.
+
 .. todo::
     Check behavior w.r.t. LATTICE.
 
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from functools import lru_cache
 
 from lightwin.core.elements.element import Element
@@ -20,7 +23,7 @@ def warn_edge() -> None:
     https://stackoverflow.com/questions/31953272/logging-print-message-only-once
 
     """
-    logging.warning(
+    logger.warning(
         "Documentation does not mention that EDGE element should be ignored by"
         " LATTICE. So why did I set increment_lattice_idx to False?"
     )
@@ -34,10 +37,7 @@ class Edge(Element):
     is_implemented = False
 
     def __init__(
-        self,
-        line: DatLine,
-        dat_idx: int | None = None,
-        **kwargs: str,
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Force an element with null-length, with no index."""
         super().__init__(line, dat_idx, **kwargs)

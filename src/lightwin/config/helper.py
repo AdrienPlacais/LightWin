@@ -2,15 +2,13 @@
 
 import functools
 import logging
+
+logger = logging.getLogger(__name__)
 from pathlib import Path
 from typing import Any, Literal
 
 
-def check_type(
-    instance: type | tuple[type],
-    name: str,
-    *args: Any,
-) -> None:
+def check_type(instance: type | tuple[type], name: str, *args: Any) -> None:
     """Raise a warning if ``args`` are not all of type ``instance``.
 
     Not matching the provided type does not stop the program from running.
@@ -18,7 +16,7 @@ def check_type(
     """
     for arg in args:
         if not isinstance(arg, instance):
-            logging.warning(f"{name} testing: {arg} should be a {instance}")
+            logger.warning(f"{name} testing: {arg} should be a {instance}")
 
 
 def dict_for_pretty_output(some_kw: dict) -> str:
@@ -30,7 +28,7 @@ def dict_for_pretty_output(some_kw: dict) -> str:
 def _find_according_to_nature(
     path: Path, nature: Literal["file", "folder"] | None
 ) -> bool:
-    """Helper function to check if the path matches the desired nature."""
+    """Check if the path matches the desired nature."""
     match nature:
         case "file":
             return path.is_file()
@@ -39,7 +37,7 @@ def _find_according_to_nature(
         case None:
             return path.exists()
         case _:
-            logging.error(
+            logger.error(
                 "f{nature = } not recognized. Considering it's None..."
             )
             return _find_according_to_nature(path, nature=None)
@@ -91,7 +89,7 @@ def find_path(
             "You must provide the location of the toml file to allow for a "
             "more complete path search."
         )
-        logging.critical(msg)
+        logger.critical(msg)
         raise FileNotFoundError(msg)
 
     updated_path = (toml_folder / path).resolve().absolute()
@@ -107,7 +105,7 @@ def find_path(
         "(recommended), absolute, or relative to the execution dir of the "
         f"script (not recommended). Provided {toml_folder = }"
     )
-    logging.critical(msg)
+    logger.critical(msg)
     raise FileNotFoundError(msg)
 
 

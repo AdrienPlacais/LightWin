@@ -1,15 +1,3 @@
 Entry,Type,Description,Mandatory?,Allowed values
-`failed`,`list`,"Index/name of failed cavities.
-
-For manual strategy, it must
-
-be a 3D list.",✅,
-`compensating_manual`,`list`,"Index/name of compensating
-
-cavities cavities. Must be a
-
-3D list, which two first level
-
-lengths must match the ones of
-
-`failed`.",✅,
+`failed`,`list`,"Index/name of failed cavities. For manual strategy, it must be a 3D list.",✅,
+`compensating_manual`,`list`,"Index/name of compensating cavities cavities. Must be a 3D list, which two first level lengths must match the ones of `failed`.",✅,

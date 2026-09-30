@@ -2,6 +2,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.core.commands.command import Command
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
@@ -36,5 +38,5 @@ class Chopper(Command):
         self, instructions: list[Instruction], **kwargs: float
     ) -> list[Instruction]:
         """Do nothing."""
-        logging.error("Shift not implemented.")
+        logger.error("Shift not implemented.")
         return instructions

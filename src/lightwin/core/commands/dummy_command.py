@@ -2,6 +2,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.core.commands.command import Command
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
@@ -28,7 +30,7 @@ class DummyCommand(Command):
         self, instructions: list[Instruction], **kwargs: float
     ) -> list[Instruction]:
         """Do nothing."""
-        logging.error("DummyElement not implemented.")
+        logger.error("DummyElement not implemented.")
         return instructions
 
     def concerns_one_of(self, dat_indexes: list[int]) -> bool:

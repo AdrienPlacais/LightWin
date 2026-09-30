@@ -1,6 +1,8 @@
 """Load, validate and post-process the configuration."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 import shutil
 import tomllib
 from importlib import resources
@@ -15,13 +17,9 @@ from lightwin.util.typing import ConfigKw
 class ConfigFileNotFoundError(FileNotFoundError):
     """Custom exception raised when the configuration file is not found."""
 
-    pass
-
 
 class InvalidTomlSyntaxError(ValueError):
     """Custom exception raised for invalid TOML syntax."""
-
-    pass
 
 
 def process_config(
@@ -180,7 +178,7 @@ def _user_override_toml_entries(
 
         for key, val in over_subdict.items():
             if warn_mismatch and key not in conf_subdict:
-                logging.warning(
+                logger.warning(
                     f"You want to override {key = }, which was not found in "
                     f"{conf_subdict.keys() = }. Setting it anyway..."
                 )
@@ -213,6 +211,8 @@ def dict_to_toml(
     original_toml_folder :
         Where the original ``TOML`` was; this is used to resolve paths
         relative to this location.
+    kwargs :
+        Keyword arguments passed down to :meth:`.ConfSpec.to_toml_strings`.
 
     """
     if _indue_overwritting(toml_path, allow_overwrite):
@@ -226,26 +226,25 @@ def dict_to_toml(
             f.write(dict_entry_string)
             f.write("\n")
 
-    logging.info(f"New ``TOML`` written in {toml_path}")
+    logger.info(f"New ``TOML`` written in {toml_path}")
     return
 
 
 def _indue_overwritting(
-    toml_path: Path,
-    allow_overwrite: bool = False,
+    toml_path: Path, allow_overwrite: bool = False
 ) -> bool:
     """Ensure that ``TOML`` will not be overwritten if not wanted."""
     if not toml_path.exists():
         return False
 
-    logging.info(
+    logger.info(
         f"A .toml already exists at {toml_path = } and may be overwritten."
     )
     if not allow_overwrite:
-        logging.error("Overwritting not permitted. Skipping action...")
+        logger.error("Overwritting not permitted. Skipping action...")
         return True
 
     old = toml_path.with_suffix(".toml.old")
-    logging.info(f"Copying the old one to {old}, just in case...")
+    logger.info(f"Copying the old one to {old}, just in case...")
     shutil.copy(toml_path, old)
     return False

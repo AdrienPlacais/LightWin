@@ -203,6 +203,8 @@ def create_fig_if_not_exists(
         Fig number.
     clean_fig :
         If the previous plot should be erased from Figure.
+    kwargs :
+        Additional kwyword arguments, unused.
 
     """
     if isinstance(axnum, int):

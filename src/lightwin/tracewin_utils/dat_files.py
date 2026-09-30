@@ -6,6 +6,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable, Collection, Container, Iterable, Sequence
 from pathlib import Path
 from pprint import pformat
@@ -112,7 +114,7 @@ def _insert_instructions(
         Instructions to insert.
 
     """
-    logging.info(
+    logger.info(
         "Will insert following instructions:\n"
         f"{pformat(instructions_to_insert, width=120)}"
     )
@@ -123,11 +125,9 @@ def _insert_instructions(
 
 
 def dat_filecontent_from_smaller_list_of_elements(
-    original_instructions: Sequence[Instruction],
-    elts: Collection[Element],
+    original_instructions: Sequence[Instruction], elts: Collection[Element]
 ) -> tuple[list[DatLine], list[Instruction]]:
-    """Create a ``DAT`` with only elements of ``elts`` (and concerned
-    commands).
+    """Create ``DAT`` with only elements of ``elts`` (and concerned commands).
 
     Properties of the FIELD_MAP, i.e. amplitude and phase, remain untouched.
 
@@ -159,9 +159,7 @@ def _is_needed_element(
     """Tell if the instruction is an element that we must keep."""
     if not isinstance(instruction, Element | Dummy):
         return False
-    if instruction.idx["dat_idx"] in indexes_to_keep:
-        return True
-    return False
+    return instruction.idx["dat_idx"] in indexes_to_keep
 
 
 def _is_useful_command(
@@ -170,9 +168,7 @@ def _is_useful_command(
     """Tell if the current command has an influence on our elements."""
     if not isinstance(instruction, Command):
         return False
-    if instruction.concerns_one_of(indexes_to_keep):
-        return True
-    return False
+    return bool(instruction.concerns_one_of(indexes_to_keep))
 
 
 def export_dat_filecontent(
@@ -195,4 +191,4 @@ def export_dat_filecontent(
                 file.write(line.line + "\n")
                 continue
             file.write(" ".join(line) + "\n")
-    logging.debug(f"New dat saved in {dat_path}.")
+    logger.debug(f"New dat saved in {dat_path}.")

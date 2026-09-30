@@ -12,7 +12,7 @@ from lightwin.core.em_fields.types import (
 
 
 class SuperposedFields(Field):
-    """This object gathers several :class:`.Field` instances."""
+    """Gather several :class:`.Field` instances."""
 
     is_implemented = True
     extensions = ()
@@ -44,7 +44,6 @@ class SuperposedFields(Field):
 
     def _load_fieldmap(self, path: Path, **kwargs) -> tuple[Any, Any, int]:
         """Do not do anything."""
-        pass
 
     def _params(
         self, amplitudes: Collection[float], phi_0_rels: Collection[float]
@@ -59,8 +58,7 @@ class SuperposedFields(Field):
         amplitudes: Collection[float],
         phi_0_rels: Collection[float],
     ) -> complex:
-        """Sum the e_x components from all :class:`.Field` instances at
-        position ``pos``."""
+        """Sum e_x components from all :class:`.Field` instances at ``pos``."""
         return sum(
             field.e_x(pos, phi, amplitude, phi_0_rel)
             for field, amplitude, phi_0_rel in self._params(
@@ -75,8 +73,7 @@ class SuperposedFields(Field):
         amplitudes: Collection[float],
         phi_0_rels: Collection[float],
     ) -> complex:
-        """Sum the e_y components from all :class:`.Field` instances at
-        position ``pos``."""
+        """Sum e_y components from all :class:`.Field` instances at ``pos``."""
         return sum(
             field.e_y(pos, phi, amplitude, phi_0_rel)
             for field, amplitude, phi_0_rel in self._params(
@@ -92,15 +89,10 @@ class SuperposedFields(Field):
         phi_0_rels: Collection[float],
         complex_output: bool = True,
     ) -> complex | float:
-        """Sum the e_z components from all :class:`.Field` instances at
-        position ``pos``."""
+        """Sum e_z components from all :class:`.Field` instances at ``pos``."""
         return sum(
             field.e_z(
-                pos,
-                phi,
-                amplitude,
-                phi_0_rel,
-                complex_output=complex_output,
+                pos, phi, amplitude, phi_0_rel, complex_output=complex_output
             )
             for field, amplitude, phi_0_rel in self._params(
                 amplitudes, phi_0_rels
@@ -114,8 +106,7 @@ class SuperposedFields(Field):
         amplitudes: Collection[float],
         phi_0_rels: Collection[float],
     ) -> complex:
-        """Sum the b_x components from all :class:`.Field` instances at
-        position ``pos``."""
+        """Sum b_x components from all :class:`.Field` instances at ``pos``."""
         return sum(
             field.b_x(pos, phi, amplitude, phi_0_rel)
             for field, amplitude, phi_0_rel in self._params(
@@ -130,8 +121,7 @@ class SuperposedFields(Field):
         amplitudes: Collection[float],
         phi_0_rels: Collection[float],
     ) -> complex:
-        """Sum the b_y components from all :class:`.Field` instances at
-        position ``pos``."""
+        """Sum b_y components from all :class:`.Field` instances at ``pos``."""
         return sum(
             field.b_y(pos, phi, amplitude, phi_0_rel)
             for field, amplitude, phi_0_rel in self._params(
@@ -146,8 +136,7 @@ class SuperposedFields(Field):
         amplitudes: Collection[float],
         phi_0_rels: Collection[float],
     ) -> complex:
-        """Sum the b_z components from all :class:`.Field` instances at
-        position ``pos``."""
+        """Sum b_z components from all :class:`.Field` instances at ``pos``."""
         return sum(
             field.b_z(pos, phi, amplitude, phi_0_rel)
             for field, amplitude, phi_0_rel in self._params(
@@ -156,9 +145,7 @@ class SuperposedFields(Field):
         )
 
     def partial_e_z(  # type: ignore
-        self,
-        amplitudes: Collection[float],
-        phi_0_rels: Collection[float],
+        self, amplitudes: Collection[float], phi_0_rels: Collection[float]
     ) -> tuple[FieldFuncComplexTimedComponent, FieldFuncTimedComponent]:
         """Generate functions for longitudinal transfer matrix calculation."""
         compl_funcs = []
@@ -185,4 +172,3 @@ class SuperposedFields(Field):
         Not applicable for :class:`SuperposedFields`.
 
         """
-        pass

@@ -6,15 +6,26 @@ It has its own module as this quantity is pretty specific.
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.optimisation.objective.objective import (
     MinimizeMismatch as _MinimizeMismatch,
 )
 
 
 class MinimizeMismatch(_MinimizeMismatch):
-    def __init__(self, *args, **kwargs):
-        logging.warning(
+    """Minimize a mismatch factor.
+
+    .. deprecated::
+        Prefer ``from lightwin.optimisation.objective.objective import ...``
+        path.
+
+    """
+
+    def __init__(self, *args, **kwargs) -> None:
+        """Instantiate object, log deprecation warning."""
+        logger.warning(
             "MinimizeMismatch has moved to "
             "lightwin.optimisation.objective, please update your import."
         )
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)

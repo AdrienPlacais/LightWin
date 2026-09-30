@@ -16,6 +16,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import Any
 
 import numpy as np
@@ -144,9 +146,7 @@ class TransferMatrix:
 
             if elt is not None:
                 idx = self._element_to_index(
-                    elt=elt,
-                    pos=pos,
-                    handle_missing_elt=handle_missing_elt,
+                    elt=elt, pos=pos, handle_missing_elt=handle_missing_elt
                 )
                 val = val[idx] if val is not None else None
 
@@ -228,7 +228,7 @@ class TransferMatrix:
 
         """
         if cumulated is None:
-            logging.error(
+            logger.error(
                 "You must provide at least one of the two arrays: individual "
                 "transfer matrices or cumulated transfer matrices."
             )

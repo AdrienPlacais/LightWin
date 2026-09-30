@@ -12,12 +12,14 @@ reference_phase_policy = "phi_0_abs"
 tool = "Envelope1D"
 
 [generic_envelope3d]
+export_phase = "phi_0_abs"
 # flag_phi_abs = true  # Deprecated! Use ``reference_phase_policy``.
 n_steps_per_cell = 40
 reference_phase_policy = "phi_0_abs"
 tool = "Envelope3D"
 
 [generic_tracewin]
+export_phase = "phi_0_abs"
 hide = true
 ini_path = "ads.ini"
 machine_config_file = "machine_config.toml"

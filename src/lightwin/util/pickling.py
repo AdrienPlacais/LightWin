@@ -25,9 +25,11 @@ Some objects have built-in `pickle` and `unpickle` methods, namely:
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Type, TypeVar, overload
+from typing import TypeVar, overload
 
 T = TypeVar("T")
 
@@ -45,20 +47,16 @@ class MyPickler(ABC):
         title: str | None = None,
     ) -> Path | None:
         """Pickle ("save") the object to a binary file."""
-        pass
 
     @overload
     def unpickle(
-        self,
-        path: Path | str | None,
-        expected: None,
-        title: str | None = None,
+        self, path: Path | str | None, expected: None, title: str | None = None
     ) -> object | None: ...
     @overload
     def unpickle(
         self,
         path: Path | str | None,
-        expected: Type[T],
+        expected: type[T],
         title: str | None = None,
     ) -> T | None: ...
 
@@ -70,7 +68,6 @@ class MyPickler(ABC):
         title: str | None = None,
     ) -> object | None:
         """Unpickle ("load") the given path to recreate original object."""
-        pass
 
 
 class MyCloudPickler(MyPickler):
@@ -139,7 +136,7 @@ class MyCloudPickler(MyPickler):
         else:
             path = Path(path).resolve().absolute()
         if path is None:
-            logging.error(
+            logger.error(
                 "You provided `path = None`, so I will skip the pickling of "
                 f"{my_object = }."
             )
@@ -148,7 +145,7 @@ class MyCloudPickler(MyPickler):
         with open(path, "wb") as f:
             self._cloudpickle.dump(my_object, f)
 
-        logging.info(f"Pickled {my_object} to {path}.")
+        logger.info(f"Pickled {my_object} to {path}.")
         return path
 
     def unpickle(
@@ -185,10 +182,10 @@ class MyCloudPickler(MyPickler):
                 info = str(expected)
             path = ask_pickle_filename(
                 title=title
-                or f"Choose which {info} should be unpickled (loaded).",
+                or f"Choose which {info} should be unpickled (loaded)."
             )
         if path is None:
-            logging.error(
+            logger.error(
                 "You provided `path = None`, so I do not have anything to unpickle."
             )
             return
@@ -212,18 +209,20 @@ def ask_pickle_filename(
         The directory that the dialog starts in.
     initialfile :
         The file selected upon opening the dialog.
+    title :
+        GUI window title.
 
     Returns
     -------
-    Absolute filepath of pickle file to load/save. If None is returned, the
-    pickling operation will simply be skipped.
+        Absolute filepath of pickle file to load/save. If None is returned, the
+        pickling operation will simply be skipped.
 
     """
     try:
         from tkinter import Tk
         from tkinter.filedialog import asksaveasfilename
     except ModuleNotFoundError:
-        logging.error(
+        logger.error(
             "tkinter module is mandatory for the GUI file explorer to work, "
             "but it was not found. Skipping the associated pickling operation."
         )
@@ -245,6 +244,6 @@ def ask_pickle_filename(
     root.destroy()
 
     if not filepath:
-        logging.info("No filepath was set, will skip pickling.")
+        logger.info("No filepath was set, will skip pickling.")
         return
     return Path(filepath).resolve().absolute()

@@ -6,6 +6,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Sequence
 
 from lightwin.core.commands.command import Command
@@ -25,7 +27,7 @@ class SetSyncPhase(Command):
         self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Instantiate command."""
-        return super().__init__(line, dat_idx)
+        super().__init__(line, dat_idx)
 
     def set_influenced_elements(
         self, instructions: Sequence[Instruction], **kwargs: float
@@ -33,7 +35,7 @@ class SetSyncPhase(Command):
         """Capture first cavity after this command."""
         for instruction in instructions[self.idx["dat_idx"] + 1 :]:
             if isinstance(instruction, SetSyncPhase):
-                logging.error("Two consecutive SET_SYNC_PHASE.")
+                logger.error("Two consecutive SET_SYNC_PHASE.")
             if isinstance(instruction, FieldMap):
                 start = instruction.idx["dat_idx"]
                 stop = start + 1

@@ -5,6 +5,8 @@ It saves it's name, limits, and methods to evaluate if it is violated or not.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from dataclasses import dataclass
 
@@ -28,12 +30,12 @@ class Constraint(DesignSpaceParameter):
 
     """
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Convert values in deg for output if it is angle."""
-        logging.critical("Dirty patch, phi_s is hard-coded")
+        logger.critical("Dirty patch, phi_s is hard-coded")
         if self.name not in CONSTRAINTS:
             raise ValueError("phi_s constraint hard-coded!!")
-            logging.warning("Constraint not tested.")
+            logger.warning("Constraint not tested.")
         # in particular: phi_s is hard-coded in get_value!!
 
         super().__post_init__()
@@ -44,7 +46,7 @@ class Constraint(DesignSpaceParameter):
 
         for lim in self.limits:
             if lim < -math.pi or lim > math.pi:
-                logging.error(
+                logger.error(
                     f"Phase limits are expected to be in [-pi, +pi]. {lim = }"
                 )
 

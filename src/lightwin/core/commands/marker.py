@@ -2,6 +2,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.core.commands.command import Command
 from lightwin.core.instruction import Instruction
 from lightwin.tracewin_utils.line import DatLine
@@ -13,10 +15,7 @@ class Marker(Command):
     is_implemented = False
 
     def __init__(
-        self,
-        line: DatLine,
-        dat_idx: int | None = None,
-        **kwargs: str,
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Instantiate the dummy command."""
         super().__init__(line, dat_idx)
@@ -32,7 +31,7 @@ class Marker(Command):
     ) -> list[Instruction]:
         """Do nothing."""
         instructions = super().apply(instructions, **kwargs)
-        logging.error("DummyElement not implemented.")
+        logger.error("DummyElement not implemented.")
         return instructions
 
     def concerns_one_of(self, dat_indexes: list[int]) -> bool:

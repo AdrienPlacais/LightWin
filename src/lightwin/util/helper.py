@@ -6,9 +6,11 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 import re
-from collections.abc import Generator, Iterable
-from typing import Any, Iterator
+from collections.abc import Generator, Iterable, Iterator
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -126,7 +128,7 @@ def get_constructor(name: str, constructors: dict[str, type]) -> type:
         return constructors[pascal_name]
     if name in constructors:
         constructor = constructors[name]
-        logging.warning(
+        logger.warning(
             f"{constructor = } matches the provided {name = }, but consider "
             f"calling it {pascal_name} for consistency."
         )
@@ -155,7 +157,7 @@ def get_constructors(
 # # my_output = header + "\n" + "-" * tot + "\n" + message.to_string()
 # # my_output += "\n" + "-" * tot
 # my_output = pd_output(message, header)
-# logging.info(my_output)
+# logger.info(my_output)
 
 
 def resample(
@@ -225,4 +227,4 @@ def save_energy_phase_tm(lin: object) -> None:
         + "\t M_11 \t M_12 \t M_21 \t M_22"
     )
     np.savetxt(filepath, data, header=header)
-    logging.info(f"Energy, phase and TM saved in {filepath}")
+    logger.info(f"Energy, phase and TM saved in {filepath}")

@@ -19,6 +19,7 @@ It is adapted to high energy problems, such as ADS linacs.
 .. csv-table::
    :file: entries/beam_calculator_envelope_1d.csv
    :header-rows: 1
+   :class: config-table
 
 The following elements are explicitly supported.
 Note that, by default, an element that is implemented but not explicitly supported is replaced by a `DRIFT`.
@@ -35,6 +36,7 @@ Envelope solver in 3D, without space charge.
 .. csv-table::
    :file: entries/beam_calculator_envelope_3d.csv
    :header-rows: 1
+   :class: config-table
 
 .. note::
 
@@ -59,6 +61,7 @@ Generally, I use it to re-compute the propagation of the beam in the linac when 
 .. csv-table::
    :file: entries/beam_calculator_tracewin.csv
    :header-rows: 1
+   :class: config-table
 
 Check TraceWin's documentation for the list of command line arguments.
 Note that you also need to create a configuration file that will define the path to the ``TraceWin`` executables.

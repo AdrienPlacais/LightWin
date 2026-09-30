@@ -130,7 +130,7 @@ class SetOfCavitySettings(dict[FieldMap, CavitySettings]):
         return ordered_cav, ordered_settings
 
 
-def _get_settings(
+def _get_settings[FieldMap](
     cavity: FieldMap,
     compensating_cavity_settings: Mapping[FieldMap, CavitySettings],
     optimization_status: OPTIMIZATION_STATUS,
@@ -144,9 +144,8 @@ def _get_settings(
     ----------
     cavity :
         Cavity for which you want settings.
-    set_of_cavity_settings :
-        Different cavity settings (a priori given by an
-        :class:`.OptimisationAlgorithm`), or an empty dict.
+    compensating_cavity_settings :
+        Maps compensating cavities with their settings.
     optimization_status :
         Used when ``cavity`` is not in ``cavity_settings`` (*ie*, when the
         cavity is not a compensating cavity). During optimization, we return a

@@ -11,6 +11,8 @@ It should return a |SO|.
 
 import datetime
 import logging
+
+logger = logging.getLogger(__name__)
 import time
 from abc import ABC, abstractmethod
 from itertools import count
@@ -73,12 +75,14 @@ class BeamCalculator(ABC):
             How reference phase of |CS| will be initialized.
         default_field_map_folder :
             Where to look for field map files by default.
-        flag_cython :
-            If the beam calculator involves loading cython field maps.
         beam_kwargs :
             The config dictionary holding all the initial beam properties.
         export_phase :
             The type of phase you want to export for your ``FIELD_MAP``.
+        flag_cython :
+            If the beam calculator involves loading cython field maps.
+        kwargs :
+            Unused keyword arguments.
 
         """
         #: How reference phase of |CS| will be initialized.
@@ -140,7 +144,6 @@ class BeamCalculator(ABC):
             whatever.
 
         """
-        pass
 
     @abstractmethod
     def _set_up_specific_factories(self) -> None:
@@ -151,6 +154,7 @@ class BeamCalculator(ABC):
         accelerator_id: str,
         elts: ListOfElements,
         update_reference_phase: bool = False,
+        optimization_status: OPTIMIZATION_STATUS = "not started",
         **kwargs,
     ) -> SimulationOutput:
         """Perform a simulation with default settings.
@@ -174,6 +178,9 @@ class BeamCalculator(ABC):
             the one asked in the ``TOML``. To use after the first calculation,
             if :attr:`.BeamCalculator.reference_phase_policy` does not align
             with :attr:`.CavitySettings.reference`.
+        optimization_status :
+            Current optimization state. Only used by :class:`.TraceWin`, to
+            prevent errors during optimization phase.
         kwargs
             Other keyword arguments passed to :meth:`run_with_this`. As for
             now, only used by :class:`.TraceWin`.
@@ -188,11 +195,12 @@ class BeamCalculator(ABC):
             accelerator_id=accelerator_id,
             set_of_cavity_settings=SetOfCavitySettings.nominal(elts),
             elts=elts,
+            optimization_status=optimization_status,
             **kwargs,
         )
         if update_reference_phase:
             if self.reference_phase == "phi_s":
-                logging.warning(
+                logger.warning(
                     "Did not check how elts.force_reference_phases_to handles "
                     "synch phase"
                 )
@@ -223,8 +231,10 @@ class BeamCalculator(ABC):
         elts :
             List of elements in which the beam should be propagated.
         optimization_status :
-            Only used by :class:`.TraceWin`, to prevent errors during
-            optimization phase.
+            Current optimization state. Only used by :class:`.TraceWin`, to
+            prevent errors during optimization phase.
+        kwargs :
+            Additional kwargs.
 
         Returns
         -------
@@ -253,6 +263,7 @@ class BeamCalculator(ABC):
             accelerator_id=accelerator_id,
             set_of_cavity_settings=optimized_cavity_settings,
             elts=full_elts,
+            optimization_status="finished",
             **kwargs,
         )
 
@@ -268,22 +279,20 @@ class BeamCalculator(ABC):
             Handle ``"as_in_original_dat"``.
 
         """
-        assert (
-            self.reference_phase_policy in REFERENCE_PHASES
-        ), "Different reference phase for each cavity not handled yet."
+        assert self.reference_phase_policy in REFERENCE_PHASES, (
+            "Different reference phase for each cavity not handled yet."
+        )
         return self.reference_phase_policy
 
     @property
     @abstractmethod
     def is_a_multiparticle_simulation(self) -> bool:
         """Tell if the simulation is a multiparticle simulation."""
-        pass
 
     @property
     @abstractmethod
     def is_a_3d_simulation(self) -> bool:
         """Tell if the simulation is in 3D."""
-        pass
 
     def compute(
         self,
@@ -334,7 +343,7 @@ class BeamCalculator(ABC):
         end_time = time.monotonic()
         delta_t = datetime.timedelta(seconds=end_time - start_time)
         if output_time:
-            logging.info(f"Elapsed time in beam calculation: {delta_t}")
+            logger.info(f"Elapsed time in beam calculation: {delta_t}")
 
         if not recompute_reference:
             raise NotImplementedError(
@@ -379,13 +388,13 @@ class BeamCalculator(ABC):
         """
         simulation_output = accelerator.simulation_outputs.get(self.id, None)
         if simulation_output is not None:
-            logging.info(
+            logger.info(
                 "Skipped calculation of unpickled Accelerator: "
                 f"{accelerator.id}"
             )
             return simulation_output
 
-        logging.error(
+        logger.error(
             f"Pickled Accelerator {accelerator.name} has no SimulationOutput "
             f"calculated with current solver {self.id}. Note that it can "
             "happen if the order of the BeamCalculator is changed, which is a"

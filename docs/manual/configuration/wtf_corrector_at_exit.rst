@@ -36,4 +36,5 @@ In this paper however, there are no compensating cavities around the failure.
 .. csv-table::
    :file: entries/wtf_corrector_at_exit.csv
    :header-rows: 1
+   :class: config-table
 

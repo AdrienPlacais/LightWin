@@ -8,9 +8,9 @@ def are_equal(
 ) -> None:
     """Test that all arguments are the same."""
     for key, val in expected.items():
-        assert val == (
-            got := getattr(returned, key)
-        ), f"{key} error: expected {val} but {got = }"
+        assert val == (got := getattr(returned, key)), (
+            f"{key} error: expected {val} but {got = }"
+        )
 
 
 def check(line: str, expected: dict[str, str | float | list[str]]) -> None:
@@ -33,6 +33,7 @@ class TestDatLine:
         return check(line, expected)
 
     def test_line_with_more_arguments(self) -> None:
+        """Test that a line with more args is properly sliced."""
         line = "FIELD_MAP 100 5 0.9 0.7 54e4 3 65.6e10"
         expected = {
             "personalized_name": None,

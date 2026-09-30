@@ -128,8 +128,7 @@ def sort_by_position[T](
 def remove_lists_with_less_than_n_elements[T](
     elements: Sequence[Sequence[T]], minimum_size: int = 1
 ) -> list[list[T]]:
-    """Return a list where objects have a minimum length of
-    ``minimum_size``."""
+    """Return list where objects have a minimum length of ``minimum_size``."""
     out = [list(x) for x in elements if len(x) >= minimum_size]
     return out
 
@@ -168,8 +167,6 @@ def gather[T](
             fun_sort(failed_elements=failed) for failed in failed_gathered
         ]
 
-        # Set a counter to exit the 'for' loop when all faults are gathered
-        i = 0
         n_combinations = len(altered_gathered)
         if n_combinations <= 1:
             flag_gathered = True
@@ -184,10 +181,10 @@ def gather[T](
 
         # Now we look every list of required compensating cavities, and
         # look for faults that require the same compensating cavities
-        for (idx1, altered1), (idx2, altered2) in itertools.combinations(
-            enumerate(altered_gathered), r_comb
+        for i, ((idx1, altered1), (idx2, altered2)) in enumerate(
+            itertools.combinations(enumerate(altered_gathered), r_comb),
+            start=1,
         ):
-            i += 1
             common = list(set(altered1) & set(altered2))
             # If at least one cavity on common, gather the two
             # corresponding fault and restart the whole process
@@ -209,13 +206,12 @@ def gather[T](
 
 
 def nested_containing_desired[T](
-    nested: Collection[Sequence[T]],
-    desired_elements: Collection[T],
+    nested: Collection[Sequence[T]], desired_elements: Collection[T]
 ) -> list[list[T]]:
     """Return collections of ``nested`` containing some ``desired_elements``.
 
-    Example
-    -------
+    Examples
+    --------
     ``nested_containing_desired(ListOfElements.by_lattice, failed_elements)``
     will return ``lattices_with_a_failure``
 

@@ -1,9 +1,10 @@
 """Provide evaluator helpers."""
 
 import logging
-from collections.abc import Sequence
+
+logger = logging.getLogger(__name__)
+from collections.abc import Callable, Sequence
 from functools import partial
-from typing import Callable
 
 import numpy as np
 
@@ -17,12 +18,11 @@ def need_to_resample(value: value_t, ref_value: ref_value_t) -> bool:
     """Determine if we need to resample ``value`` or ``ref_value``."""
     if isinstance(value, float) or isinstance(ref_value, float):
         return False
-    assert isinstance(value, np.ndarray) and isinstance(ref_value, np.ndarray)
+    assert isinstance(value, np.ndarray)
+    assert isinstance(ref_value, np.ndarray)
     if value.shape == () or ref_value.shape == ():
         return False
-    if value.shape == ref_value.shape:
-        return False
-    return True
+    return value.shape != ref_value.shape
 
 
 def return_value_should_be_plotted(partial_function: Callable) -> bool:
@@ -50,7 +50,7 @@ def limits_given_in_functoolspartial_args(
 ) -> Sequence[np.ndarray | float]:
     """Extract the limits given to a test function."""
     if not isinstance(partial_function, partial):
-        logging.error("Given function must be a functools.partial func.")
+        logger.error("Given function must be a functools.partial func.")
         return (np.nan, np.nan)
 
     keywords = partial_function.keywords
@@ -59,7 +59,7 @@ def limits_given_in_functoolspartial_args(
 
     limits = [
         keywords[key]
-        for key in keywords.keys()
+        for key in keywords
         if key in ["lower_limit", "upper_limit", "objective_value"]
     ]
     assert len(limits) in (1, 2)

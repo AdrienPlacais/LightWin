@@ -6,6 +6,8 @@ as arguments and return the treated value (ref is unchanged).
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from typing import overload
 
 import numpy as np
@@ -96,7 +98,7 @@ def relative_difference(
     """Compute the relative difference."""
     if replace_zeros_by_nan_in_ref:
         if not isinstance(reference_value, np.ndarray):
-            logging.warning(
+            logger.warning(
                 "You asked the null values to be removed in "
                 "the `reference_value` array, but it is not an "
                 "array. I will set it to an array of size 1."

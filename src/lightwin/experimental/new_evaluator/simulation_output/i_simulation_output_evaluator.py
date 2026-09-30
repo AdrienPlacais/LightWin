@@ -1,6 +1,8 @@
 """Define the base object for |SO| evaluators."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -46,7 +48,8 @@ class GetKwargs(dict):
     #: be updated after object creation.
     to_deg: bool = False
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Instantiate object."""
         super().update(
             elt=self.elt,
             keep_nan=self.keep_nan,
@@ -119,7 +122,7 @@ class ISimulationOutputEvaluator(IEvaluator):
                 fallback_dummy=not self._missing_reference_data_is_worrying,
             )
             if np.isnan(self._ref_ydata).any():
-                logging.error(
+                logger.error(
                     f"Invalid {self._y_quantity} was found in reference "
                     "simulation output, obtained with "
                     f"{self._ref.beam_calculator_id} solver. This will cause "
@@ -159,7 +162,7 @@ class ISimulationOutputEvaluator(IEvaluator):
         """
         self._dump_no_numerical_data_to_plot = True
         if warn:
-            logging.error(
+            logger.error(
                 f"{quantity = } was not found in the simulation output. "
                 "Maybe the simulation was interrupted? Returning dummy data."
             )
@@ -193,7 +196,7 @@ class ISimulationOutputEvaluator(IEvaluator):
         data = simulation_output.get(quantity, **self._get_kwargs)
 
         if fallback_dummy and (data is None or data.ndim == 0):
-            logging.error(f"{simulation_output.beam_calculator_id} error:")
+            logger.error(f"{simulation_output.beam_calculator_id} error:")
             return self._default_dummy(quantity, warn=True)
         return data
 
@@ -245,12 +248,21 @@ class ISimulationOutputEvaluator(IEvaluator):
 
         Parameters
         ----------
+        post_treated :
+            Actual data to plot.
+        elts :
+            List of elements in the accelerator.
+        png_folder :
+            Where the figures will be saved. The default is None, in which case
+            figures are not saved.
         lower_limits :
             List of lower limits, one per column in ``post_treated``.
             Individual lower limits can be ``float`` (constant) or arrays.
         upper_limits :
             List of upper limits, one per column in ``post_treated``.
             Individual upper limits can be ``float`` (constant) or arrays.
+        kwargs :
+            Additional kwargs passed down to :meth:`._plot_single`.
 
         """
         if not self._get_kwargs["keep_nan"]:

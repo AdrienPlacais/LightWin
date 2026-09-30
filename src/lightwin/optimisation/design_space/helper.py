@@ -54,13 +54,15 @@ def phi_s_limits(
     ----------
     reference_element :
         Element in its nominal tuning.
-    max_increase_in_percent :
+    max_increase_sync_phase_in_percent :
         Maximum increase of the synchronous phase in percent.
     max_absolute_sync_phase_in_deg :
         Maximum absolute synchronous phase in radians. The default is 0.
     min_absolute_sync_phase_in_deg :
         Minimum absolute synchronous phase in radians. The default is
         :math:`-\pi / 2`.
+    kwargs :
+        Unused remaining kwargs.
 
     Returns
     -------
@@ -101,9 +103,9 @@ def k_e_limits(
     ----------
     reference_element :
         The nominal element.
-    max_decrease_in_percent :
+    max_decrease_k_e_in_percent :
         Allowed decrease in percent with respect to the nominal ``k_e``.
-    max_increase_in_percent :
+    max_increase_k_e_in_percent :
         Allowed increase in percent with respect to the nominal ``k_e``.
     maximum_k_e_is_calculated_wrt_maximum_k_e_of_section :
         Use this flag to compute allowed increase of ``k_e`` with respect to
@@ -112,6 +114,8 @@ def k_e_limits(
     reference_elements :
         List of the nominal elements. Must be provided if
         ``maximum_k_e_is_calculated_wrt_maximum_k_e_of_section`` is True.
+    kwargs :
+        Additional unused keyword arguments.
 
     Returns
     -------
@@ -135,8 +139,7 @@ def k_e_limits(
 
 
 def _get_maximum_k_e_of_section(
-    section_idx: int,
-    reference_elements: list[Element],
+    section_idx: int, reference_elements: list[Element]
 ) -> float:
     """Get the maximum ``k_e`` of section."""
     elements_in_current_section = list(

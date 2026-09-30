@@ -19,9 +19,7 @@ class CavitySettingsFactory:
         self.freq_bunch_mhz = freq_bunch_mhz
 
     def from_line_in_dat_file(
-        self,
-        line: DatLine,
-        set_sync_phase: bool = False,
+        self, line: DatLine, set_sync_phase: bool = False
     ) -> CavitySettings:
         """Create the cavity settings as read in the ``DAT`` file."""
         k_e = float(line.splitted[6])

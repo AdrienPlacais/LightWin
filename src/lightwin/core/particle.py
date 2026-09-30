@@ -71,7 +71,7 @@ class ParticleFullTrajectory:
     synchronous: bool
     beam: BeamKwargs
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Ensure that LightWin has everything it needs, with proper format."""
         if isinstance(self.phi_abs, list):
             self.phi_abs = np.array(self.phi_abs)

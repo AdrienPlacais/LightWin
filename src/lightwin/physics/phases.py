@@ -40,14 +40,12 @@ def phi_bunch_to_phi_rf(
 
 @overload
 def phi_bunch_to_phi_rf(
-    phi_bunch: float,
-    rf_over_bunch_frequencies: float,
+    phi_bunch: float, rf_over_bunch_frequencies: float
 ) -> float: ...
 
 
 def phi_bunch_to_phi_rf(
-    phi_bunch: float | NDArray[np.float64],
-    rf_over_bunch_frequencies: float,
+    phi_bunch: float | NDArray[np.float64], rf_over_bunch_frequencies: float
 ) -> float | NDArray[np.float64]:
     """Convert the bunch phase to a rf phase."""
     return phi_bunch * rf_over_bunch_frequencies
@@ -61,14 +59,12 @@ def phi_rf_to_phi_bunch(
 
 @overload
 def phi_rf_to_phi_bunch(
-    phi_rf: float,
-    bunch_over_rf_frequencies: float,
+    phi_rf: float, bunch_over_rf_frequencies: float
 ) -> float: ...
 
 
 def phi_rf_to_phi_bunch(
-    phi_rf: float | NDArray[np.float64],
-    bunch_over_rf_frequencies: float,
+    phi_rf: float | NDArray[np.float64], bunch_over_rf_frequencies: float
 ) -> float | NDArray[np.float64]:
     """Convert the bunch phase to rf phase."""
     return phi_rf * bunch_over_rf_frequencies

@@ -24,6 +24,8 @@ for now, two different beauty passes:
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 import math
 from collections.abc import Collection, Mapping
 from pprint import pformat
@@ -88,9 +90,9 @@ def insert_field_map_pass_beauty_instructions(
 
     """
     if not isinstance(fault_scenarios := fault_scenario, FaultScenario):
-        for fault_scenario in fault_scenarios:
+        for fs in fault_scenarios:
             insert_field_map_pass_beauty_instructions(
-                fault_scenario,
+                fs,
                 beam_calculator,
                 number_of_dsize=number_of_dsize,
                 number=number,
@@ -114,7 +116,7 @@ def insert_field_map_pass_beauty_instructions(
         append_stem="beauty",
         which_phase="phi_0_rel",
     )
-    logging.info("Overwriting a ListOfElements by its beauty counterpart.")
+    logger.info("Overwriting a ListOfElements by its beauty counterpart.")
     accelerator.elts = elts
     return
 
@@ -149,9 +151,9 @@ def insert_transverse_matching_instructions(
 
     """
     if not isinstance(fault_scenarios := fault_scenario, FaultScenario):
-        for fault_scenario in fault_scenarios:
+        for fs in fault_scenarios:
             insert_transverse_matching_instructions(
-                fault_scenario,
+                fs,
                 beam_calculator,
                 number=number,
                 retune_steerers=retune_steerers,
@@ -160,7 +162,7 @@ def insert_transverse_matching_instructions(
         return
 
     if len(fault_scenario) > 1:
-        logging.warning("Not sure how multiple faults will interact.")
+        logger.warning("Not sure how multiple faults will interact.")
     assert _is_adapted_to_pass_beauty(beam_calculator)
     assert isinstance(fault_scenario, FaultScenario)
 
@@ -177,7 +179,7 @@ def insert_transverse_matching_instructions(
         instructions_to_insert=instructions,
         append_stem="qp_retuning",
     )
-    logging.info("Overwriting a ListOfElements by its beauty counterpart.")
+    logger.info("Overwriting a ListOfElements by its beauty counterpart.")
     accelerator.elts = elts
     return
 
@@ -196,7 +198,7 @@ def _cavity_settings_to_adjust(
 ) -> tuple[Adjust, Adjust] | tuple[Adjust, Adjust, Adjust]:
     """Create ``ADJUST`` commands with small bounds around current values.
 
-    Adjust phase, ``k_e``, and ``k_g``1 if ``link_index`` is different from 0.
+    Adjust phase, ``k_e``, and ``k_g`` if ``link_index`` is different from 0.
 
     Parameters
     ----------
@@ -220,9 +222,9 @@ def _cavity_settings_to_adjust(
     """
     if not phase_nature:
         phase_nature = cavity_settings.reference
-    assert (
-        phase_nature != "phi_s"
-    ), "Adjusting synchronous phase won't do with TraceWin."
+    assert phase_nature != "phi_s", (
+        "Adjusting synchronous phase won't do with TraceWin."
+    )
 
     phase = getattr(cavity_settings, phase_nature)
     assert isinstance(phase, float)
@@ -262,7 +264,7 @@ def _set_of_cavity_settings_to_adjust(
     tol_k_e: float = 0.05,
     phase_nature: REFERENCE_PHASES_T = "phi_0_rel",
 ) -> list[Adjust]:
-    """Create adjust commands for every compensating cavity.
+    r"""Create adjust commands for every compensating cavity.
 
     Parameters
     ----------
@@ -270,7 +272,7 @@ def _set_of_cavity_settings_to_adjust(
         Maps cavities to their compensated settings.
     number :
         ID number of the diagnostics that should be associated with the
-        ``ADJUST``s.
+        ``ADJUST``\s.
     tol_phi_deg :
         Tolerance over original phase in degrees.
     link_k_g :
@@ -374,23 +376,20 @@ def _field_map_pass_beauty_instructions(
 
     """
     if len(fault_scenario) > 1:
-        logging.warning("Not sure how multiple faults will interact.")
+        logger.warning("Not sure how multiple faults will interact.")
     fault = fault_scenario[0]
     fix_elts = fault_scenario.fix_acc.elts
     compensating = fault.compensating_elements
 
     diagnostics = _dsize3_diagnostics(
-        fix_elts,
-        compensating,
-        number=number,
-        number_of_dsize=number_of_dsize,
+        fix_elts, compensating, number=number, number_of_dsize=number_of_dsize
     )
 
     adjusts = _set_of_cavity_settings_to_adjust(
         fault.compensation_settings, number=number, link_k_g=link_k_g
     )
     if len(adjusts) < 2:
-        logging.error(
+        logger.error(
             f"Not enough DIAG_DSIZE3 in {compensating = } for pass beauty."
         )
         return []
@@ -411,8 +410,10 @@ def _spiral2_transverse_matching_instructions(
     fault = fault_scenario[0]
     fix_elts = fault_scenario.fix_acc.elts
     altered = fault.compensating_elements + fault.failed_elements
-    altered_lattices_idx = set(sorted([elt.idx["lattice"] for elt in altered]))
-    altered_lattices = [fix_elts.by_lattice[i] for i in altered_lattices_idx]
+    altered_lattices_idx = {elt.idx["lattice"] for elt in altered}
+    altered_lattices = sorted(
+        [fix_elts.by_lattice[i] for i in altered_lattices_idx]
+    )
 
     first_altered_lattice_idx = min(altered_lattices_idx)
     diag_pos_for_steerers, adjusts_steerer = (), ()
@@ -441,7 +442,7 @@ def _spiral2_transverse_matching_instructions(
             compensating_quadrupoles=compensating_quadrupoles, number=number
         )
         if len(qp_adjusts) < 2:
-            logging.error("Not enough DIAG_DSIZE2 for pass beauty.")
+            logger.error("Not enough DIAG_DSIZE2 for pass beauty.")
             return []
 
     instructions = sorted(
@@ -460,9 +461,11 @@ def _spiral2_quadrupoles(lattices: list[list[Element]]) -> list[Quad]:
     """Get QP from SPIRAL2 linac, check structure.
 
     We expect, in each lattice:
+
     - two identical defocusing quadrupoles of length 65mm, directly after each
       other
     - one focusing quadrupole of length 130mm
+
     We insert the diags between the two identical defoc.
 
     """
@@ -486,8 +489,7 @@ def _spiral2_quadrupoles(lattices: list[list[Element]]) -> list[Quad]:
 def _map_qps_to_steerers(
     elts: ListOfElements, first_lattice_idx: int
 ) -> dict[Steerer, Quad]:
-    """Map quadrupoles to their steerer from ``first_lattice_idx`` and
-    onwards."""
+    """Map QPs to their steerer from ``first_lattice_idx`` and onwards."""
     steerers_quadrupoles: dict[Steerer, Quad] = {}
     lattices_after_first_alteration = elts.by_lattice[first_lattice_idx:]
 
@@ -528,8 +530,18 @@ def _create_bpms(
     adjust_steerers: list[AdjustSteerer],
     number: int,
 ) -> list[DiagPosition]:
-    """Add a diag in the middle of first QP, in the lattice following
-    steerers."""
+    """Add a diag in the middle of first QP, in the lattice following steerers.
+
+    Parameters
+    ----------
+    by_lattice :
+        Elements sorted by lattice.
+    adjust_steerers :
+        Commands adjusting steerers.
+    number :
+        Identifying index of steerer/adjust pair.
+
+    """
     diagnostics: list[DiagPosition] = []
 
     for adjust in adjust_steerers:
@@ -548,7 +560,7 @@ def _create_bpms(
         else:
             name = "LINB-BPM"
             next_lattice_idx -= 12
-        name = f"{name}{next_lattice_idx+1:02}1"
+        name = f"{name}{next_lattice_idx + 1:02}1"
         diag = DiagPosition.from_args(
             dat_idx=qps[1].idx["dat_idx"],
             number=adjust.number,
@@ -558,7 +570,7 @@ def _create_bpms(
             personalized_name=name,
         )
         diagnostics.append(diag)
-    logging.critical(pformat(diagnostics))
+    logger.critical(pformat(diagnostics))
     return diagnostics
 
 
@@ -623,20 +635,18 @@ def _quadrupole_adjust_commands(
 # =============================================================================
 # Generic
 # =============================================================================
-def _is_adapted_to_pass_beauty(
-    beam_calculator: BeamCalculator,
-) -> bool:
+def _is_adapted_to_pass_beauty(beam_calculator: BeamCalculator) -> bool:
     """Check if the provided beam calculator can perform beauty pass."""
     if not isinstance(beam_calculator, TraceWin):
-        logging.error("Beauty pass will only work with TraceWin.")
+        logger.error("Beauty pass will only work with TraceWin.")
         return False
 
     if beam_calculator.base_kwargs.get("cancel_matching", False):
-        logging.error("You shall specify `cancel_matching = False` in config.")
+        logger.error("You shall specify `cancel_matching = False` in config.")
         return False
 
     if not beam_calculator.base_kwargs.get("cancel_matchingP", False):
-        logging.warning(
+        logger.warning(
             "Doing a Partran optimisation may take a very long time. Doing it anyway."
         )
         return True

@@ -8,6 +8,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC
 from collections.abc import Collection, MutableSequence
 from typing import Self
@@ -24,10 +26,7 @@ class Instruction(ABC):
     is_implemented: bool
 
     def __init__(
-        self,
-        line: DatLine,
-        dat_idx: int | None = None,
-        **kwargs,
+        self, line: DatLine, dat_idx: int | None = None, **kwargs
     ) -> None:
         """Instantiate corresponding line and line number in ``DAT`` file.
 
@@ -39,6 +38,8 @@ class Instruction(ABC):
             Position in the ``DAT``. Note that this index will vary if some
             instructions (empty lines, comments in particular) are removed from
             the dat content.
+        kwargs :
+            Other unused keyword arguments.
 
         """
         self.line = line
@@ -90,8 +91,7 @@ class Instruction(ABC):
 
     @property
     def name(self) -> str:
-        """Give personalized name of instruction if exists, default
-        otherwise."""
+        """Give instruction personalized name if exists, default otherwise."""
         if hasattr(self, "_personalized_name") and self._personalized_name:
             return self._personalized_name
         if hasattr(self, "_default_name"):
@@ -129,6 +129,10 @@ class Instruction(ABC):
         previously_inserted :
             Number of :class:`.Instruction` that were already inserted in the
             given ``dat_filecontent``.
+        args :
+            Positional arguments passed to :meth:`to_line`.
+        kwargs :
+            Keyword arguments passed to :meth:`to_line`.
 
         """
         index = self.idx["dat_idx"] + previously_inserted
@@ -162,12 +166,7 @@ class Dummy(Instruction):
 
     is_implemented = False
 
-    def __init__(
-        self,
-        line: DatLine,
-        warning: bool = False,
-        **kwargs,
-    ) -> None:
+    def __init__(self, line: DatLine, warning: bool = False, **kwargs) -> None:
         """Create the dummy object, raise a warning if necessary.
 
         Parameters
@@ -179,11 +178,13 @@ class Dummy(Instruction):
         warning :
             To raise a warning when the element is not implemented. The default
             is False.
+        kwargs :
+            Keyword arguments passed to mother class.
 
         """
         super().__init__(line, **kwargs)
         if warning:
-            logging.warning(
+            logger.warning(
                 "A dummy element was added as the corresponding element or "
                 "command is not implemented. If the BeamCalculator is not "
                 "TraceWin, this may be a problem. In particular if the missing"
@@ -208,6 +209,8 @@ class Comment(Dummy):
             Arguments of the line in the ``DAT`` file.
         dat_idx :
             Line number in the ``DAT`` file.
+        kwargs :
+            Keyword arguments passed to mother class.
 
         """
         super().__init__(line, warning=False, **kwargs)

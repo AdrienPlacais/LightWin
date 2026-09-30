@@ -2,6 +2,8 @@
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 from lightwin.core.commands.command import Command
 from lightwin.core.commands.superpose_map import SuperposeMap
 from lightwin.core.elements.element import Element
@@ -27,7 +29,7 @@ class Lattice(Command):
             self.n_macro_lattice = int(line.splitted[2])
 
             if self.n_macro_lattice > 1:
-                logging.warning(
+                logger.warning(
                     "Macro-lattice not implemented. LightWin will consider "
                     "that number of macro-lattice per lattice is 1 or 0."
                 )
@@ -61,16 +63,17 @@ class Lattice(Command):
         index_in_current_lattice = 0
         for instruction in instructions[self.influenced]:
             if isinstance(instruction, SuperposeMap):
-                logging.info(
+                logger.info(
                     "SuperposeMap not checked. May mess mess with indexes..."
                 )
 
             if isinstance(instruction, (Command, Comment)):
                 continue
-            assert isinstance(element := instruction, Element), (
+            assert isinstance(instruction, Element), (
                 f"Expected an Element but got a {type(instruction)}\n"
                 f"{instruction}"
             )
+            element = instruction
             if not element.increment_lattice_idx:
                 continue
 
@@ -113,7 +116,7 @@ class Lattice(Command):
         reversed_instructions_before_self = instructions_before_self[::-1]
 
         for instruction in reversed_instructions_before_self:
-            if isinstance(element := instruction, Element):
+            if isinstance(instruction, Element):
                 previous_lattice_number = instruction.idx["lattice"]
 
                 if previous_lattice_number >= 0:

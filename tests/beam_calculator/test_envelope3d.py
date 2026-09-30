@@ -5,22 +5,22 @@
 
 """
 
+import logging
 from typing import Any
-from unittest.mock import call, patch
 
 import pytest
-from tests.pytest_helpers.simulation_output import wrap_approx
 
-import lightwin.config.config_manager as config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
-from lightwin.beam_calculation.factory import BeamCalculatorsFactory
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.config import config_manager
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.core.accelerator.factory import AcceleratorFactory
 from lightwin.ui.workflow_setup import set_up_solvers
+from lightwin.util.typing import ConfigKw
+from tests.pytest_helpers.simulation_output import wrap_approx
 
 # Arguments are: reference_phase_policy, n_steps_per_cell
 params = [
@@ -49,9 +49,8 @@ params = [
 
 @pytest.fixture(scope="class", params=params)
 def config(
-    request: pytest.FixtureRequest,
-    tmp_path_factory: pytest.TempPathFactory,
-) -> dict[str, dict[str, Any]]:
+    request: pytest.FixtureRequest, tmp_path_factory: pytest.TempPathFactory
+) -> ConfigKw:
     """Set the configuration, common to all solvers."""
     out_folder = tmp_path_factory.mktemp("tmp")
     reference_phase_policy, n_steps_per_cell = request.param
@@ -62,9 +61,7 @@ def config(
         "beam": "beam",
     }
     override = {
-        "files": {
-            "project_folder": out_folder,
-        },
+        "files": {"project_folder": out_folder},
         "beam_calculator": {
             "tool": "Envelope3D",
             "reference_phase_policy": reference_phase_policy,
@@ -85,8 +82,7 @@ def solver(config: dict[str, dict[str, Any]]) -> BeamCalculator:
 
 @pytest.fixture(scope="class")
 def accelerator(
-    solver: BeamCalculator,
-    config: dict[str, dict[str, Any]],
+    solver: BeamCalculator, config: dict[str, dict[str, Any]]
 ) -> Accelerator:
     """Create an example linac."""
     accelerator_factory = AcceleratorFactory(beam_calculators=solver, **config)
@@ -96,8 +92,7 @@ def accelerator(
 
 @pytest.fixture(scope="class")
 def simulation_output(
-    solver: BeamCalculator,
-    accelerator: Accelerator,
+    solver: BeamCalculator, accelerator: Accelerator
 ) -> SimulationOutput:
     """Init and use a solver to propagate beam in an example accelerator."""
     my_simulation_output = solver.compute(accelerator)
@@ -146,7 +141,7 @@ class TestSolver3D:
 
 @pytest.mark.envelope3d
 def test_deprecated_flag_phi_abs_false(
-    tmp_path_factory: pytest.TempPathFactory,
+    tmp_path_factory: pytest.TempPathFactory, caplog: pytest.LogCaptureFixture
 ) -> None:
     """Check that the ``flag_phi_abs`` is considered, but warning is raised."""
     out_folder = tmp_path_factory.mktemp("tmp")
@@ -162,33 +157,37 @@ def test_deprecated_flag_phi_abs_false(
             "flag_phi_abs": False,
         },
     }
-    calls = [
-        call(
+    expected = [
+        (
             "Overriding ``reference_phase_policy`` following (deprecated) "
             "flag_phi_abs = False. reference_phase_policy phi_0_abs -> "
             "phi_0_rel"
         ),
-        call(
-            "flag_phi_abs: The ``flag_phi_abs`` option is deprecated, prefer using the "
-            "``reference_phase_policy``.\nflag_phi_abs=False -> "
+        (
+            "flag_phi_abs: The ``flag_phi_abs`` option is deprecated, prefer "
+            "using the ``reference_phase_policy``.\nflag_phi_abs=False -> "
             "reference_phase_policy='phi_0_rel'\nflag_phi_abs=True -> "
             "reference_phase_policy='phi_0_abs'"
         ),
     ]
-    with patch("logging.warning") as mock_warning:
-        my_config = config_manager.process_config(
-            example_config, config_keys, override=override
-        )
-        mock_warning.assert_has_calls(calls)
-        assert (
-            my_config["beam_calculator"]["reference_phase_policy"]
-            == "phi_0_rel"
-        )
+    caplog.set_level(logging.WARNING)
+    my_config = config_manager.process_config(
+        example_config, config_keys, override=override
+    )
+    warnings = [
+        record.getMessage()
+        for record in caplog.records
+        if record.levelno == logging.WARNING
+    ]
+    assert warnings == expected
+    assert (
+        my_config["beam_calculator"]["reference_phase_policy"] == "phi_0_rel"
+    )
 
 
 @pytest.mark.envelope3d
 def test_deprecated_flag_phi_abs_true(
-    tmp_path_factory: pytest.TempPathFactory,
+    tmp_path_factory: pytest.TempPathFactory, caplog: pytest.LogCaptureFixture
 ) -> None:
     """Check that the ``flag_phi_abs`` is considered, but warning is raised."""
     out_folder = tmp_path_factory.mktemp("tmp")
@@ -204,25 +203,29 @@ def test_deprecated_flag_phi_abs_true(
             "flag_phi_abs": True,
         },
     }
-    calls = [
-        call(
+    expected = [
+        (
             "Overriding ``reference_phase_policy`` following (deprecated) "
             "flag_phi_abs = True. reference_phase_policy phi_s -> "
             "phi_0_abs"
         ),
-        call(
-            "flag_phi_abs: The ``flag_phi_abs`` option is deprecated, prefer using the "
-            "``reference_phase_policy``.\nflag_phi_abs=False -> "
+        (
+            "flag_phi_abs: The ``flag_phi_abs`` option is deprecated, prefer "
+            "using the ``reference_phase_policy``.\nflag_phi_abs=False -> "
             "reference_phase_policy='phi_0_rel'\nflag_phi_abs=True -> "
             "reference_phase_policy='phi_0_abs'"
         ),
     ]
-    with patch("logging.warning") as mock_warning:
-        my_config = config_manager.process_config(
-            example_config, config_keys, override=override
-        )
-        mock_warning.assert_has_calls(calls)
-        assert (
-            my_config["beam_calculator"]["reference_phase_policy"]
-            == "phi_0_abs"
-        )
+    caplog.set_level(logging.WARNING)
+    my_config = config_manager.process_config(
+        example_config, config_keys, override=override
+    )
+    warnings = [
+        record.getMessage()
+        for record in caplog.records
+        if record.levelno == logging.WARNING
+    ]
+    assert warnings == expected
+    assert (
+        my_config["beam_calculator"]["reference_phase_policy"] == "phi_0_abs"
+    )

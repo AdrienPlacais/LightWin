@@ -1,6 +1,8 @@
 """Define the base objects constraining values/types of config parameters."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Callable, Collection
 from pathlib import Path
 from typing import Any, Literal
@@ -59,29 +61,30 @@ class TableConfSpec:
         """Set a table of properties.
 
         Correspond to a [table] in the ``TOML``.
-                Parameters
-                ----------
-                configured_object :
-                    Name of the object that will receive associated parameters.
-                table_entry :
-                    Name of the table in the ``TOML`` file, without brackets.
-                specs :
-                    The :class:`.KeyValConfSpec` objects in the current table. When the
-                    format of the table depends on the value of a key, provide a
-                    dictionary linking every possible table with the corresponding
-                    value.
-                is_mandatory :
-                    If the current table must be provided.
-                can_have_untested_keys :
-                    If LightWin should remain calm when some keys are provided in the
-                    ``TOML`` but do not correspond to any :class:`.KeyValConfSpec`.
-                selectkey_n_default :
-                    Must be given if ``specs`` is a dict. First value is name of the
-                    spec, second value is default value. We will look for this spec in
-                    the configuration file and select the proper ``Collection`` of
-                    ``KeyValConfSpec`` accordingly.
-                monkey_patches :
-                    Same keys as ``specs``, to override some default methods.
+
+        Parameters
+        ----------
+        configured_object :
+            Name of the object that will receive associated parameters.
+        table_entry :
+            Name of the table in the ``TOML`` file, without brackets.
+        specs :
+            The :class:`.KeyValConfSpec` objects in the current table. When the
+            format of the table depends on the value of a key, provide a
+            dictionary linking every possible table with the corresponding
+            value.
+        is_mandatory :
+            If the current table must be provided.
+        can_have_untested_keys :
+            If LightWin should remain calm when some keys are provided in the
+            ``TOML`` but do not correspond to any :class:`.KeyValConfSpec`.
+        selectkey_n_default :
+            Must be given if ``specs`` is a dict. First value is name of the
+            spec, second value is default value. We will look for this spec in
+            the configuration file and select the proper ``Collection`` of
+            ``KeyValConfSpec`` accordingly.
+        monkey_patches :
+            Same keys as ``specs``, to override some default methods.
 
         """
         self.configured_object = configured_object
@@ -127,7 +130,7 @@ class TableConfSpec:
 
         self.is_mandatory = is_mandatory
         self.can_have_untested_keys = can_have_untested_keys
-        logging.info(f".toml table [{table_entry}] loaded!")
+        logger.info(f".toml table [{table_entry}] loaded!")
 
     def __repr__(self) -> str:
         """Print how the object was created."""
@@ -183,8 +186,7 @@ class TableConfSpec:
     def _set_specs_as_dict(
         self, toml_table: dict[str, Any] | None = None
     ) -> dict[str, KeyValConfSpec]:
-        """Select and prepare :class:`.KeyValConfSpec` used to validate this
-        table.
+        """Select and prepare :class:`.KeyValConfSpec` used to validate table.
 
         This method is responsible for determining which specification set
         applies to the current table, especially when the available specs
@@ -240,7 +242,7 @@ class TableConfSpec:
         if self.can_have_untested_keys:
             return
         msg = f"The table {self.table_entry} has no specs for property {spec_name}"
-        logging.error(msg)
+        logger.error(msg)
         raise OSError(msg)
 
     def to_toml_strings(
@@ -258,6 +260,8 @@ class TableConfSpec:
         original_toml_folder :
             Where the original ``TOML`` was; this is used to resolve paths
             relative to this location.
+        kwargs :
+            Other keyword arguments passed down to :meth:`.to_toml_string`.
 
         Returns
         -------
@@ -294,7 +298,7 @@ class TableConfSpec:
             if not spec.is_mandatory:
                 continue
             if spec.default_value is not None:
-                logging.warning(
+                logger.warning(
                     f"The key {key} is missing in [{self.table_entry}]. "
                     f"Using default value: {spec.default_value}."
                 )
@@ -325,7 +329,7 @@ class TableConfSpec:
 
         all_is_validated = all(validations)
         if not all_is_validated:
-            logging.error(
+            logger.error(
                 f"At least one error was raised treating {self.table_entry}"
             )
 
@@ -372,7 +376,7 @@ class TableConfSpec:
             if key in toml_keys:
                 continue
             if (default := spec.default_value) is not None:
-                logging.warning(
+                logger.warning(
                     f"The key {key} should be given but was not found. Will "
                     f"use default value: {default}. You may want to set this "
                     f"key explicitly; allowed values:\n{spec.allowed_values}"
@@ -380,7 +384,7 @@ class TableConfSpec:
                 continue
 
             they_are_all_present = False
-            logging.error(f"The key {key} should be given but was not found.")
+            logger.error(f"The key {key} should be given but was not found.")
 
         return they_are_all_present
 

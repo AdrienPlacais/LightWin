@@ -10,6 +10,8 @@
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Collection, Sequence
 from typing import Self, override
 
@@ -35,7 +37,7 @@ class SuperposedFieldMap(Element):
 
     """
 
-    n_attributes = range(0, 100)
+    n_attributes = range(100)
 
     def __init__(
         self,
@@ -111,36 +113,67 @@ class SuperposedFieldMap(Element):
         lattice = field_maps[0].idx["lattice"]
         section = field_maps[0].idx["section"]
 
-        return cls.from_args(
-            dat_idx=dat_idx,
-            total_length_m=total_length_m,
+        return cls._from_args(
             original_line=original_line,
             cavities_settings=cavities_settings,
             is_accelerating=is_accelerating,
+            dat_idx=dat_idx,
             idx_in_lattice=idx_in_lattice,
             lattice=lattice,
             section=section,
             field_maps=field_maps,
+            total_length_m=total_length_m,
         )
 
     @classmethod
-    def from_args(
+    def _from_args(
         cls,
-        dat_idx: int,
-        total_length_m: float,
         original_line: str,
-        *args,
-        **kwargs,
+        cavities_settings: Sequence[CavitySettings],
+        is_accelerating: bool,
+        dat_idx: int,
+        idx_in_lattice: int,
+        lattice: int,
+        section: int,
+        field_maps: Sequence[FieldMap],
+        total_length_m: float,
     ) -> Self:
-        """Insantiate object from his properties."""
+        """Instantiate object from his properties.
+
+        Parameters
+        ----------
+        original_line :
+            The corresponding line in the ``DAT`` file.
+        cavities_settings :
+            Settings of all the contained field maps.
+        is_accelerating :
+            If any of the contained field maps has a longitudinal effect.
+        dat_idx :
+            Position in the ``DAT`` file.
+        idx_in_lattice :
+            Index of object in its lattice.
+        lattice :
+            Index of the lattice.
+        section :
+            Index of the section.
+        field_maps :
+            List of contained field maps objects.
+        total_length_m :
+            Resulting length, from entry of earliest field map to exit of
+            latest.
+
+        """
         line = cls._args_to_line(total_length_m)
         dat_line = DatLine(line, dat_idx, original_line=original_line)
         return cls(
-            dat_line,
+            line=dat_line,
+            cavities_settings=cavities_settings,
+            is_accelerating=is_accelerating,
             dat_idx=dat_idx,
-            total_length_m=total_length_m,
-            *args,
-            **kwargs,
+            idx_in_lattice=idx_in_lattice,
+            lattice=lattice,
+            section=section,
+            field_maps=field_maps,
         )
 
     @classmethod
@@ -183,7 +216,7 @@ class SuperposedFieldMap(Element):
     def can_be_retuned(self, value: bool) -> None:
         """Forbid this cavity from being retuned (or re-allow it)."""
         if value:
-            logging.critical(
+            logger.critical(
                 "Trying to allow a SuperposedFieldMap to be retuned."
             )
         self._can_be_retuned = value
@@ -195,7 +228,7 @@ class SuperposedFieldMap(Element):
     def to_line(self, *args, **kwargs) -> list[str] | None:
         """Convert the object back into a line in the ``DAT`` file."""
         # return self.line.original_line.split()
-        logging.warning("Calling the to_line for superpose")
+        logger.warning("Calling the to_line for superpose")
         return super().to_line(*args, **kwargs)
 
 

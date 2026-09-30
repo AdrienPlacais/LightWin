@@ -1,6 +1,8 @@
 """Gather in a single object all the parameters for LW to run."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from pathlib import Path
 from typing import Any, Literal
 
@@ -164,6 +166,8 @@ class ConfSpec:
         original_toml_folder :
             Where the original ``TOML`` was; this is used to resolve paths
             relative to this location.
+        kwargs :
+            Keyword passed down to :meth:`.TableConfSpec.to_toml_strings`.
 
         Returns
         -------
@@ -197,10 +201,14 @@ class ConfSpec:
         ----------
         toml_fulldict :
             Holds the full configuration.
+        toml_folder :
+            Where the ``TOML`` file is located.
         id_type :
             If ``toml_fulldict`` keys are name of the object (eg ``'beam'``) or
             of the table entry in the ``TOML`` (eg ``'my_proton_beam'``). Do
             not put the brackets present in the ``TOML`` file.
+        kwargs :
+            Keyword passed down to :meth:`.TableConfSpec.prepare`.
 
         Returns
         -------
@@ -216,7 +224,7 @@ class ConfSpec:
 
         all_is_validated = all(validations)
         if not all_is_validated:
-            logging.error(
+            logger.error(
                 "At least one error was raised treating configuration"
             )
 
@@ -234,7 +242,7 @@ class ConfSpec:
                 )
 
             except ValueError:
-                logging.error(
+                logger.error(
                     f"The table entry {table_id} should be given but was not found."
                 )
                 they_are_all_present = False
@@ -261,11 +269,7 @@ class SimplestConfSpec(ConfSpec):
 
     """
 
-    MANDATORY_CONFIG_ENTRIES = (
-        "beam",
-        "files",
-        "beam_calculator",
-    )  #:
+    MANDATORY_CONFIG_ENTRIES = ("beam", "files", "beam_calculator")  #:
 
     def __init__(
         self,
@@ -281,7 +285,5 @@ class SimplestConfSpec(ConfSpec):
 
         """
         super().__init__(
-            beam=beam,
-            files=files,
-            beam_calculator=beam_calculator,
+            beam=beam, files=files, beam_calculator=beam_calculator
         )

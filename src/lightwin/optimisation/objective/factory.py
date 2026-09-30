@@ -10,10 +10,12 @@ implemented presets in :data:`.OBJECTIVE_PRESETS` and
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC, abstractmethod
 from collections.abc import Collection
 from dataclasses import dataclass
-from typing import Any, Literal
+from typing import Any, ClassVar, Literal
 
 import numpy as np
 from numpy.typing import NDArray
@@ -62,8 +64,8 @@ class ObjectiveFactory(ABC):
     """
 
     #: List of positions telling where objectives should be evaluated.
-    objective_position_preset: list[POSITION_TO_INDEX_T]
-    compensation_zone_override_settings = {
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]]
+    compensation_zone_override_settings: ClassVar[dict[str, bool]] = {
         "full_lattices": False,
         "full_linac": False,
         "start_at_beginning_of_linac": False,
@@ -89,7 +91,7 @@ class ObjectiveFactory(ABC):
             Cavities that failed.
         compensating_elements :
             Cavities that will be used for the compensation.
-        design_space_kw :
+        limits_from_design_space_kw :
             Holds information on variables/constraints limits/initial values.
             Used to compute the limits that ``phi_s`` must respect when the
             synchronous phase is defined as an objective.
@@ -107,7 +109,7 @@ class ObjectiveFactory(ABC):
 
         self._limits_from_design_space_kw = limits_from_design_space_kw
 
-        assert all([elt.can_be_retuned for elt in self._compensating_elements])
+        assert all(elt.can_be_retuned for elt in self._compensating_elements)
         #: List of elements were an objective is evaluated
         self._objective_elements: list[Element]
         self.elts_of_compensation_zone, self._objective_elements = (
@@ -176,7 +178,9 @@ class CorrectorAtExit(ObjectiveFactory):
 
     """
 
-    objective_position_preset = ["end of last altered lattice"]
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
+        "end of last altered lattice"
+    ]
 
     def get_objectives(self) -> list[Objective]:
         """Give adapted objectives.
@@ -265,7 +269,9 @@ class EnergyMismatch(ObjectiveFactory):
 
     """
 
-    objective_position_preset = ["end of last altered lattice"]
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
+        "end of last altered lattice"
+    ]
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
@@ -322,7 +328,9 @@ class EnergyPhaseMismatch(ObjectiveFactory):
 
     """
 
-    objective_position_preset = ["end of last altered lattice"]
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
+        "end of last altered lattice"
+    ]
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
@@ -402,7 +410,9 @@ class EnergySyncPhaseMismatch(ObjectiveFactory):
 
     """
 
-    objective_position_preset = ["end of last altered lattice"]
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
+        "end of last altered lattice"
+    ]
 
     def get_objectives(self) -> list[Objective]:
         """Give objects to match kinetic energy, phase and mismatch factor."""
@@ -529,7 +539,7 @@ class EnergySeveralMismatches(ObjectiveFactory):
 
     """
 
-    objective_position_preset = [
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
         "end of last altered lattice",
         "one lattice after last altered lattice",
     ]
@@ -587,7 +597,7 @@ class RegularEnvelope(ObjectiveFactory):
 
     """
 
-    compensation_zone_override_settings = {
+    compensation_zone_override_settings: ClassVar[dict[str, bool]] = {
         "full_lattices": True,
         "full_linac": False,
         "start_at_beginning_of_linac": False,
@@ -676,7 +686,11 @@ class Spiral2(CorrectorAtExit):
 
 
 class Experimental(ObjectiveFactory):
-    objective_position_preset = ["end of last altered lattice"]
+    """Subclass to test different objective definitions."""
+
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]] = [
+        "end of last altered lattice"
+    ]
 
     def get_objectives(self) -> list[Objective]:
         """Give adapted objectives.
@@ -703,7 +717,7 @@ class Experimental(ObjectiveFactory):
 
         last_element_of_linac = self._compensating_elements[-1]
         return [
-            self._retrieve_energy(last_element_of_linac),
+            self._retrieve_energy(last_element_of_linac)
             # self._minimize_eps(elt=last_element_of_linac),
         ]
 
@@ -824,6 +838,7 @@ class ObjectiveMetaFactory:
     """An object creating :class:`.ObjectiveFactory` for every |F|."""
 
     def __init__(self, reference_simulation_output: SimulationOutput) -> None:
+        """Instantiate object."""
         self._reference_simulation_output = reference_simulation_output
 
     def create(
@@ -858,7 +873,7 @@ class ObjectiveMetaFactory:
 
         """
         if objective_factory_class:
-            logging.info(
+            logger.info(
                 "A user-defined ObjectiveFactory was provided, so the key "
                 f"{objective_preset = } will be disregarded.\n"
                 f"{objective_factory_class = }"

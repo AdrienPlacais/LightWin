@@ -1,8 +1,11 @@
 """Define a factory for the :class:`.BeamParameters`."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC, abstractmethod
-from typing import Iterable, Literal, Sequence
+from collections.abc import Iterable, Sequence
+from typing import Literal
 
 import numpy as np
 from numpy.typing import NDArray
@@ -62,9 +65,9 @@ class BeamParametersFactory(ABC):
         """Ensure that inputs are arrays with proper shape, compute beta."""
         z_abs = np.atleast_1d(z_abs)
         gamma_kin = np.atleast_1d(gamma_kin)
-        assert (
-            gamma_kin.shape == z_abs.shape
-        ), f"Shape mismatch: {gamma_kin.shape = } different from {z_abs.shape = }."
+        assert gamma_kin.shape == z_abs.shape, (
+            f"Shape mismatch: {gamma_kin.shape = } different from {z_abs.shape = }."
+        )
 
         beta_kin = converters.energy(
             gamma_kin, "gamma to beta", **self._beam_kwargs
@@ -75,11 +78,11 @@ class BeamParametersFactory(ABC):
     def _check_sigma_in(self, sigma_in: NDArray) -> NDArray:
         """Change shape of ``sigma_in`` if necessary."""
         if sigma_in.shape == (2, 2):
-            assert (
-                self.is_3d
-            ), "(2, 2) shape is only for 1D simulation and is to avoid."
+            assert self.is_3d, (
+                "(2, 2) shape is only for 1D simulation and is to avoid."
+            )
 
-            logging.warning(
+            logger.warning(
                 "Would be better to feed in a (6, 6) array with NaN."
             )
             return sigma_in
@@ -115,16 +118,16 @@ class BeamParametersFactory(ABC):
 
         """
         implemented_in = ("zdelta",)
-        assert (
-            other_phase_space_name in implemented_in
-        ), f"{other_phase_space_name = } not in {implemented_in = }"
+        assert other_phase_space_name in implemented_in, (
+            f"{other_phase_space_name = } not in {implemented_in = }"
+        )
         other_phase_space = beam_parameters.get(other_phase_space_name)
 
         implemented_out = ("phiw", "z")
         for phase_space_name in phase_space_names:
-            assert (
-                phase_space_name in implemented_out
-            ), f"{phase_space_name = } not in {implemented_out = }"
+            assert phase_space_name in implemented_out, (
+                f"{phase_space_name = } not in {implemented_out = }"
+            )
 
             phase_space = PhaseSpaceBeamParameters.from_other_phase_space(
                 other_phase_space,
@@ -144,16 +147,14 @@ class BeamParametersFactory(ABC):
         """Set only the emittance."""
         for phase_space_name, eps in zip(phase_space_names, emittances):
             phase_space = PhaseSpaceBeamParameters(
-                phase_space_name,
-                eps_no_normalization=eps,
-                eps_normalized=eps,
+                phase_space_name, eps_no_normalization=eps, eps_normalized=eps
             )
             setattr(beam_parameters, phase_space_name, phase_space)
 
     def _set_from_transfer_matrix(
         self,
         beam_parameters: BeamParameters,
-        phase_space_names: Sequence[str],
+        phase_space_names: Sequence[Literal["x", "y", "zdelta"]],
         transfer_matrices: Sequence[NDArray],
         gamma_kin: NDArray,
         beta_kin: NDArray,
@@ -205,6 +206,10 @@ class BeamParametersFactory(ABC):
         beam_parameters :
             Object already holding the beam parameters in the ``x`` and ``y``
             phase spaces.
+        other_phase_space_names :
+            Original ``x`` and ``y`` phase space names.
+        phase_space_name :
+            New phase space name.
 
         """
         x_space = getattr(beam_parameters, other_phase_space_names[0])
@@ -212,7 +217,7 @@ class BeamParametersFactory(ABC):
         phase_space = PhaseSpaceBeamParameters.from_averaging_x_and_y(
             phase_space_name, x_space, y_space
         )
-        setattr(beam_parameters, "t", phase_space)
+        beam_parameters.t = phase_space
 
     def _set_from_sigma(
         self,
@@ -237,7 +242,7 @@ class BeamParametersFactory(ABC):
 # Subclassed by ListOfElements
 # (for now, ListOfElements is common to every BeamCalculator)
 class InitialBeamParametersFactory(ABC):
-    """This is used when creating new |LOE|.
+    """Beam parameters at the entrance of a new |LOE|.
 
     This factory is not subclassed. Only one instance should be created.
 
@@ -406,6 +411,8 @@ class InitialBeamParametersFactory(ABC):
         ----------
         original_beam_parameters :
             Object holding original beam parameters.
+        phase_space_names :
+            Names of the phase spaces to create.
         get_kw :
             dict that can be passed to the `get` method and that will return
             the data at the beginning of the linac portion.
@@ -437,8 +444,8 @@ class InitialBeamParametersFactory(ABC):
         )
 
         initial_phase_spaces_kw = {}
-        for phase_space_name, to_skip in zip(phase_space_names, to_skip):
-            if to_skip:
+        for phase_space_name, skip in zip(phase_space_names, to_skip):
+            if skip:
                 continue
 
             initial_phase_space_kw = {
@@ -492,16 +499,16 @@ class InitialBeamParametersFactory(ABC):
 
         """
         implemented_in = ("zdelta",)
-        assert (
-            other_phase_space_name in implemented_in
-        ), f"{other_phase_space_name = } not in {implemented_in = }"
+        assert other_phase_space_name in implemented_in, (
+            f"{other_phase_space_name = } not in {implemented_in = }"
+        )
         other_phase_space = initial_beam_parameters.get(other_phase_space_name)
 
         implemented_out = ("phiw", "z")
         for phase_space_name in phase_space_names:
-            assert (
-                phase_space_name in implemented_out
-            ), f"{phase_space_name = } not in {implemented_out = }"
+            assert phase_space_name in implemented_out, (
+                f"{phase_space_name = } not in {implemented_out = }"
+            )
 
             phase_space = (
                 InitialPhaseSpaceBeamParameters.from_other_phase_space(

@@ -1,6 +1,8 @@
 """Define a plotter that rely on the matplotlib library."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
@@ -31,7 +33,7 @@ class MatplotlibPlotter(IPlotter):
         plt.rcParams["figure.figsize"] = (16, 9)
 
     def _setup_fig(self, fignum: int, title: str, **kwargs) -> list[Axes]:
-        """Setup the figure and axes."""
+        """Set up the figure and axes."""
         axnum = 2
         if not self._structure:
             axnum = 1
@@ -81,15 +83,16 @@ class MatplotlibPlotter(IPlotter):
                 **plot_kwargs,
             )
             return axes
-        except TypeError as err:
+        except TypeError as e:
             if dump_no_numerical_data_to_plot:
-                logging.info(f"Dumped a Matplotlib.plot error: {err}.")
+                logger.info(f"Dumped a Matplotlib.plot error: {e}.")
                 return axes
-            raise err
+            raise
 
     def save_figure(
         self, axes: Axes | Sequence[Axes], save_path: Path
     ) -> None:
+        """Save the figure."""
         if isinstance(axes, Sequence):
             axes = axes[0]
         figure = axes.get_figure()
@@ -104,9 +107,9 @@ class MatplotlibPlotter(IPlotter):
     ) -> None:
         """Add a plot to show the structure of the linac."""
         if elts is None:
-            assert hasattr(
-                self, "_elts"
-            ), "Please provide at least a defaut ListOfElements for structure plots."
+            assert hasattr(self, "_elts"), (
+                "Please provide at least a defaut ListOfElements for structure plots."
+            )
             elts = self._elts
         plot_structure(axes[-1], elts, x_axis)
 
@@ -129,7 +132,7 @@ class MatplotlibPlotter(IPlotter):
         **kwargs,
     ) -> None:
         """Add one constant plot."""
-        logging.critical(f"{color = }, {ls = }")
+        logger.critical(f"{color = }, {ls = }")
         if not isinstance(axes, Sequence):
             axes = (axes,)
         for axe in axes:

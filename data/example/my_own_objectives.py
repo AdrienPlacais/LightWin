@@ -8,7 +8,7 @@
 
 """
 
-from typing import Any
+from typing import Any, ClassVar
 
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
@@ -47,8 +47,8 @@ class MyObjectiveFactory(ObjectiveFactory):
 
     """
 
-    objective_position_preset: list[POSITION_TO_INDEX_T]
-    compensation_zone_override_settings = {
+    objective_position_preset: ClassVar[list[POSITION_TO_INDEX_T]]
+    compensation_zone_override_settings: ClassVar[dict[str, bool]] = {
         "full_lattices": False,
         "full_linac": False,
         "start_at_beginning_of_linac": False,

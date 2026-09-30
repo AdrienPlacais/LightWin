@@ -1,6 +1,8 @@
 """Define the REPEAT_ELE command."""
 
 import logging
+
+logger = logging.getLogger(__name__)
 from collections.abc import Sequence
 from copy import deepcopy
 
@@ -21,7 +23,7 @@ class RepeatEle(Command):
         self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Instantiate object."""
-        logging.warning(
+        logger.warning(
             "REPEAT_ELE under implementation. Behavior not tested w.r.t lattice number."
         )
         super().__init__(line, dat_idx)
@@ -46,12 +48,12 @@ class RepeatEle(Command):
                 raise OSError("I think nested REPEAT_ELE are not allowed.")
 
             if isinstance(instruction, (Lattice, LatticeEnd)):
-                logging.info(
+                logger.info(
                     "Lattice indexes should be OK, but section number may bug."
                 )
 
             if isinstance(instruction, SetAdv):
-                logging.error(
+                logger.error(
                     "According to doc, SET_ADV commands should not be "
                     "duplicated. Still unsure about how I will treat that."
                 )

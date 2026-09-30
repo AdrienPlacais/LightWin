@@ -46,7 +46,7 @@ class CyEnvelope1D(Envelope1D):
         **kwargs,
     ) -> None:
         """Set the proper motion integration function, according to inputs."""
-        return super().__init__(
+        super().__init__(
             reference_phase_policy=reference_phase_policy,
             default_field_map_folder=default_field_map_folder,
             beam_kwargs=beam_kwargs,

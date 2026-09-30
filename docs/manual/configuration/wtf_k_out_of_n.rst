@@ -9,4 +9,5 @@ Compensate the :math:`n` failed cavities with :math:`k\times n` closest cavities
 .. csv-table::
    :file: entries/wtf_k_out_of_n.csv
    :header-rows: 1
+   :class: config-table
 

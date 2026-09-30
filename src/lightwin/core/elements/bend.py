@@ -27,10 +27,7 @@ class Bend(Element):
     n_attributes = 5
 
     def __init__(
-        self,
-        line: DatLine,
-        dat_idx: int | None = None,
-        **kwargs: str,
+        self, line: DatLine, dat_idx: int | None = None, **kwargs: str
     ) -> None:
         """Precompute the parameters used to compute transfer matrix."""
         super().__init__(line, dat_idx, **kwargs)

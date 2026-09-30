@@ -17,8 +17,7 @@ from lightwin.core.accelerator.factory import NoFault
 
 
 def compute_beam(
-    beam_calculator: BeamCalculator,
-    config: dict[str, dict[str, Any]],
+    beam_calculator: BeamCalculator, config: dict[str, dict[str, Any]]
 ) -> tuple[Accelerator, SimulationOutput]:
     """Create the |A| and compute beam in it.
 

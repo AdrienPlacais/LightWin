@@ -44,8 +44,6 @@ class Command(Instruction):
         )
         self.influenced = influenced
 
-        return
-
     def apply(
         self, instructions: list[Instruction], **kwargs: float
     ) -> list[Instruction]:
@@ -74,12 +72,9 @@ class Command(Instruction):
         return len(intersect) > 0
 
     def _indexes_between_this_command_and(
-        self,
-        instructions_after_self: Sequence[Instruction],
-        *stop_types: type,
+        self, instructions_after_self: Sequence[Instruction], *stop_types: type
     ) -> slice:
-        """Determine the indexes of the instructions affected by an
-        instruction.
+        """Determine indexes of the instructions affected by an instruction.
 
         We return the indexes of instructions between the first of
         ``instructions`` and the first instruction which type is in
@@ -113,7 +108,6 @@ class Command(Instruction):
     def increment_dat_position(self, increment: int = 1) -> None:
         """Increment dat_index and indexes of elements concerned by command."""
         self.influenced = slice(
-            self.influenced.start + increment,
-            self.influenced.stop + increment,
+            self.influenced.start + increment, self.influenced.stop + increment
         )
         return super().increment_dat_position(increment)

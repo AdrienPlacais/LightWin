@@ -21,10 +21,12 @@ list of implemented algorithms in the :mod:`.algorithm` module.
 """
 
 import logging
+
+logger = logging.getLogger(__name__)
 from abc import ABC, abstractmethod
-from collections.abc import Collection, Mapping
+from collections.abc import Callable, Collection, Mapping
 from pathlib import Path
-from typing import Any, Callable, NotRequired, TypedDict, final
+from typing import Any, NotRequired, TypedDict, final
 
 import numpy as np
 from numpy.typing import NDArray
@@ -112,6 +114,8 @@ class OptimisationAlgorithm(ABC):
         history_kwargs :
             If given, records in a file the different evaluations of residuals
             during optimization.
+        kwargs :
+            Unused additional keyword arguments.
 
         """
         self.compensating_elements = tuple(compensating_elements)
@@ -128,12 +132,12 @@ class OptimisationAlgorithm(ABC):
         _reference_phase = tuple(
             {x.name for x in self._variables if "phi" in x.name}
         )
-        assert (
-            len(_reference_phase) == 1
-        ), "Only one phase variable should be set"
-        assert (
-            _reference_phase[0] in REFERENCE_PHASES
-        ), f"{_reference_phase} is an invalid phase variable"
+        assert len(_reference_phase) == 1, (
+            "Only one phase variable should be set"
+        )
+        assert _reference_phase[0] in REFERENCE_PHASES, (
+            f"{_reference_phase} is an invalid phase variable"
+        )
         self._reference_phase: REFERENCE_PHASES_T = _reference_phase[0]
 
         self._constraints = self._design_space.constraints
@@ -158,10 +162,7 @@ class OptimisationAlgorithm(ABC):
     def __str__(self) -> str:
         """Concatenate ``_str__`` of variables, constraints, objectives."""
         return "\n\n".join(
-            (
-                str(self._design_space),
-                str_objectives(list(self.objectives)),
-            )
+            (str(self._design_space), str_objectives(list(self.objectives)))
         )
 
     @property
@@ -206,8 +207,7 @@ class OptimisationAlgorithm(ABC):
 
     @abstractmethod
     def _generate_opti_sol(self, *args, **kwargs) -> OptiSol:
-        """Takes the results of the optimization in any form, returns dict."""
-        pass
+        """Take the results of the optimization in any form, returns dict."""
 
     def _format_variables(self) -> Any:
         """Adapt all :class:`.Variable` to this optimisation algorithm."""
@@ -353,11 +353,11 @@ class OptimisationAlgorithm(ABC):
         fresh = np.array(list(fresh_objectives.values()))
 
         if np.allclose(stored, fresh, rtol=1e-3):
-            logging.debug("Consistency check passed.")
+            logger.debug("Consistency check passed.")
             return
 
         rel_diff = np.abs(fresh - stored) / (np.abs(stored) + 1e-12)
-        logging.warning(
+        logger.warning(
             f"Consistency check FAILED for {self.__class__.__name__}:\n"
             + "\n".join(
                 f"  {name}: stored={s:.6g}, fresh={f:.6g}, rel_diff={d:.2e}"
@@ -393,6 +393,10 @@ class OptimizationHistory:
 
         Parameters
         ----------
+        reference_simulation_output :
+            Reference simulation.
+        objectives_names :
+            Names of objectives.
         get_args, get_kwargs :
             args and kwargs passed to the ``SimulationOutput.get`` method. Used
             to add some values to the output files.
@@ -404,6 +408,8 @@ class OptimizationHistory:
             wil be overriden with dummy methods.
         save_interval :
             Files will be saved every ``save_interval`` iteration.
+        kwargs :
+            Unused additional keyword arguments.
 
         """
         if folder is None:
@@ -518,7 +524,7 @@ class OptimizationHistory:
         delta_i = len(self._settings)
         self._start_idx += delta_i
         self._empty_histories()
-        logging.debug(
+        logger.debug(
             f"Saved optimization hist at iteration {self._start_idx}."
         )
 

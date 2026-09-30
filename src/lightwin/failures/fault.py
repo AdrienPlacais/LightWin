@@ -13,6 +13,8 @@ Its purpose is to hold information on a failure and to fix it.
 
 import datetime
 import logging
+
+logger = logging.getLogger(__name__)
 import time
 from collections.abc import Sequence
 
@@ -68,11 +70,9 @@ class Fault:
 
         """
         self.broken_elts = broken_elts
-        assert all([element.can_be_retuned for element in failed_elements])
+        assert all(element.can_be_retuned for element in failed_elements)
         self.failed_elements = tuple(failed_elements)
-        assert all(
-            [element.can_be_retuned for element in compensating_elements]
-        )
+        assert all(element.can_be_retuned for element in compensating_elements)
         self.compensating_elements = tuple(compensating_elements)
 
         self.reference_elements = tuple(
@@ -106,7 +106,7 @@ class Fault:
             of all |F| upstream of ``self``.
 
         """
-        logging.info(
+        logger.info(
             "Starting resolution of optimization problem defined by:\n"
             f"{optimisation_algorithm}"
         )
@@ -129,7 +129,7 @@ class Fault:
             str_objectives_solved(optimisation_algorithm.objectives),
             f"Additional info: {'\n'.join(self.opti_sol['info'])}",
         )
-        logging.info("\n".join(info))
+        logger.info("\n".join(info))
 
     def postprocess_fix(
         self,
@@ -209,7 +209,7 @@ class Fault:
         if status_are_valid:
             return
 
-        logging.error(
+        logger.error(
             "At least one compensating or failed element is already "
             "compensating or faulty, probably in another Fault object. Updated"
             " its status anyway..."
@@ -275,6 +275,7 @@ class Fault:
 
     @property
     def opti_sol(self) -> OptiSol | None:
+        """Give the optimal solution, if optimisation algo was set."""
         if self.optimisation_algorithm is None:
             return
         return self.optimisation_algorithm.opti_sol

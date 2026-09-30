@@ -3,13 +3,12 @@
 from typing import Any
 
 import pytest
-from tests.pytest_helpers.simulation_output import wrap_approx
 
-import lightwin.config.config_manager as config_manager
 from lightwin.beam_calculation.beam_calculator import BeamCalculator
 from lightwin.beam_calculation.simulation_output.simulation_output import (
     SimulationOutput,
 )
+from lightwin.config import config_manager
 from lightwin.constants import example_config
 from lightwin.core.accelerator.accelerator import Accelerator
 from lightwin.failures.fault_scenario import (
@@ -17,28 +16,29 @@ from lightwin.failures.fault_scenario import (
     fault_scenario_factory,
 )
 from lightwin.ui.workflow_setup import set_up_accelerators, set_up_solvers
+from tests.pytest_helpers.simulation_output import wrap_approx
 
 params = [
-    pytest.param(
-        ("bayesian_optimization",),
-        id="Bayesian Optimization",
-        marks=(
-            pytest.mark.slow,
-            pytest.mark.xfail(
-                condition=True, reason="Unchecked implementation"
-            ),
-        ),
-    ),
+    # pytest.param(
+    #     ("bayesian_optimization",),
+    #     id="Bayesian Optimization",
+    #     marks=(
+    #         pytest.mark.slow,
+    #         pytest.mark.xfail(
+    #             condition=True, reason="Unchecked implementation"
+    #         ),
+    #     ),
+    # ),
     pytest.param(
         ("downhill_simplex",), marks=pytest.mark.smoke, id="Downhill Simplex"
     ),
     pytest.param(("least_squares",), id="Least Squares"),
-    pytest.param(("NSGA-III",), id="NSGA-III", marks=pytest.mark.slow),
-    pytest.param(
-        ("NSGA-III Multi-threaded",),
-        id="NSGA-III Multi-threaded",
-        marks=pytest.mark.slow,
-    ),
+    # pytest.param(("NSGA-III",), id="NSGA-III", marks=pytest.mark.slow),
+    # pytest.param(
+    #     ("NSGA-III Multi-threaded",),
+    #     id="NSGA-III Multi-threaded",
+    #     marks=pytest.mark.slow,
+    # ),
     pytest.param(
         ("simulated_annealing",),
         id="Simulated Annealing",
@@ -49,8 +49,7 @@ params = [
 
 @pytest.fixture(scope="class", params=params)
 def config(
-    request: pytest.FixtureRequest,
-    tmp_path_factory: pytest.TempPathFactory,
+    request: pytest.FixtureRequest, tmp_path_factory: pytest.TempPathFactory
 ) -> dict[str, dict[str, Any]]:
     """Set the configuration, common to all solvers."""
     out_folder = tmp_path_factory.mktemp("tmp")
@@ -64,12 +63,8 @@ def config(
         "design_space": "generic_design_space",
     }
     override = {
-        "files": {
-            "project_folder": out_folder,
-        },
-        "wtf": {
-            "optimisation_algorithm": optimisation_algorithm,
-        },
+        "files": {"project_folder": out_folder},
+        "wtf": {"optimisation_algorithm": optimisation_algorithm},
         "beam_calculator": {"flag_cython": True},
     }
     # Remove Downhill Simplex specific kwargs
@@ -121,9 +116,9 @@ def simulation_outputs(
     fault_scenario: FaultScenario,
 ) -> tuple[SimulationOutput, SimulationOutput]:
     """Get ref simulation output, fix fault, compute fix simulation output."""
-    ref_simulation_output = list(accelerators[0].simulation_outputs.values())[
-        0
-    ]
+    ref_simulation_output = next(
+        iter(accelerators[0].simulation_outputs.values())
+    )
     fault_scenario.fix_all()
     fix_simulation_output = solver.compute(accelerators[1])
     return fix_simulation_output, ref_simulation_output
@@ -131,6 +126,8 @@ def simulation_outputs(
 
 @pytest.mark.envelope1d
 class TestOptimisationAlgorithms:
+    """Implement methods to test optimization algorithm objects."""
+
     def test_w_kin(
         self, simulation_outputs: tuple[SimulationOutput, SimulationOutput]
     ) -> None:

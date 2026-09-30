@@ -8,6 +8,7 @@ This section defines what quantities will be plotted at the end of the simulatio
 .. csv-table::
    :file: entries/plots.csv
    :header-rows: 1
+   :class: config-table
 
 .. warning::
    Plot of transfer matrix currently not working.
