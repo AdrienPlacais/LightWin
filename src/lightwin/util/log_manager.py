@@ -16,8 +16,9 @@ import logging
 import subprocess
 import sys
 from importlib.metadata import PackageNotFoundError, version
+from importlib.util import find_spec
 from pathlib import Path
-from typing import ClassVar, Literal
+from typing import Literal
 
 LOG_LEVEL_T = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 LOG_LEVEL = ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
@@ -31,24 +32,49 @@ def _get_package_version(package_name: str) -> str:
         return "Unknown version"
 
 
-def _get_last_commit_hash() -> str:
-    """Get the last Git commit hash."""
+def _get_package_dir(package_name: str) -> Path | None:
+    """Find location of current package."""
     try:
+        spec = find_spec(package_name)
+    except (ImportError, ValueError):
+        return None
+    if spec is None or spec.origin is None:
+        return None
+
+    return Path(spec.origin).resolve().parent
+
+
+def _get_last_commit_hash(package_name: str) -> str:
+    """Get the last Git commit hash."""
+    package_dir = _get_package_dir(package_name)
+    if package_dir is None:
+        return "Unknown commit"
+    try:
+        subprocess.check_call(
+            ["git", "ls-files", "--error-unmatch", "."],
+            cwd=package_dir,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
         return (
-            subprocess.check_output(["git", "rev-parse", "HEAD"])
+            subprocess.check_output(
+                ["git", "rev-parse", "HEAD"],
+                cwd=package_dir,
+                stderr=subprocess.DEVNULL,
+            )
             .decode("utf-8")
             .strip()
         )
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
         return "Unknown commit"
 
 
-def _log_header(package_name: str) -> str:
+def _log_header(package_name: str, fancy_name: str) -> str:
     """Create a header for the log file."""
     package_version = _get_package_version(package_name)
-    commit_hash = _get_last_commit_hash()
+    commit_hash = _get_last_commit_hash(package_name)
     header_message = (
-        f"Starting log for {package_name} - Version: {package_version}, "
+        f"Starting log for {fancy_name} - Version: {package_version}, "
         f"Commit: {commit_hash}"
     )
     return header_message
@@ -85,28 +111,27 @@ def _file_handler(
 class LogFormatter(logging.Formatter):
     """Logging formatter supporting colorized output."""
 
-    COLOR_CODES: ClassVar[dict[int, str]] = {
-        # bright/bold magenta
-        logging.CRITICAL: "\033[1;35m",
-        # bright/bold red
-        logging.ERROR: "\033[1;31m",
-        # bright/bold yellow
-        logging.WARNING: "\033[1;33m",
-        # white / light gray
-        logging.INFO: "\033[0;37m",
-        # bright/bold black / dark gray
-        logging.DEBUG: "\033[1;30m",
-    }
-
     RESET_CODE = "\033[0m"
 
     def __init__(self, color: bool, *args, **kwargs) -> None:
-        """Init the object."""
+        """Init object."""
+        self.COLOR_CODES = {
+            # bright/bold magenta
+            logging.CRITICAL: "\033[1;35m",
+            # bright/bold red
+            logging.ERROR: "\033[1;31m",
+            # bright/bold yellow
+            logging.WARNING: "\033[1;33m",
+            # white / light gray
+            logging.INFO: "\033[0;37m",
+            # bright/bold black / dark gray
+            logging.DEBUG: "\033[1;30m",
+        }
         super().__init__(*args, **kwargs)
         self.color = color
 
     def format(self, record: logging.LogRecord, *args, **kwargs) -> str:
-        """Format a log entry."""
+        """Format record."""
         if self.color and record.levelno in self.COLOR_CODES:
             record.color_on = self.COLOR_CODES[record.levelno]
             record.color_off = self.RESET_CODE
@@ -118,10 +143,11 @@ class LogFormatter(logging.Formatter):
 
 def set_up_logging(
     package_name: str,
+    fancy_name: str,
     console_log_output: str = "stdout",
     console_log_level: LOG_LEVEL_T = "INFO",
     console_log_color: bool = True,
-    console_log_line_template: str = "%(color_on)s[%(levelname)-8s] [%(filename)-20s]%(color_off)s %(message)s",
+    console_log_line_template: str = "%(color_on)s[%(levelname)-8s] [%(filename)-35s]%(color_off)s %(message)s",
     logfile_file: Path = Path("lightwin.log"),
     logfile_log_level: LOG_LEVEL_T = "INFO",
     logfile_log_color: bool = False,
@@ -154,15 +180,16 @@ def set_up_logging(
     if not logfile_handler:
         return False
     logger.addHandler(logfile_handler)
-    logger.info(_log_header(package_name))
+    logger.info(_log_header(package_name, fancy_name))
 
     return True
 
 
-def main() -> Literal[0, 1]:
+def main() -> int:
     """Set up logging."""
     if not set_up_logging(
-        package_name="LightWin",
+        package_name="lightwin",
+        fancy_name="LightWin",
         console_log_output="stdout",
         console_log_level="WARNING",
         console_log_color=True,
@@ -180,7 +207,3 @@ def main() -> Literal[0, 1]:
     logging.error("Error message")
     logging.critical("Critical message")
     return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())

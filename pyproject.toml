@@ -121,6 +121,9 @@ package-dir = { "" = "src" }
 where = ["src"]
 
 [tool.setuptools_scm]
+local_scheme = "node-and-date"
+version_scheme = "post-release"
+write_to = "src/lightwin/_version.py"
 
 [tool.cibuildwheel]
 build-verbosity = 1
