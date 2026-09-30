@@ -196,4 +196,4 @@ tests/data/results/
 tests/data/results_tests/
 **/tmp/*
 
-.version.py
+src/lightwin/_version.py
