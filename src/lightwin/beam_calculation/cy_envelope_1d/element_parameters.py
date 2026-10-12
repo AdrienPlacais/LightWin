@@ -26,9 +26,7 @@ from lightwin.physics.synchronous_phases import PHI_S_MODELS
 from lightwin.util.typing import BeamKwargs
 
 try:
-    from lightwin.beam_calculation.cy_envelope_1d import (
-        transfer_matrices,  # type: ignore
-    )
+    from lightwin.beam_calculation.cy_envelope_1d import transfer_matrices  # type: ignore
 except ModuleNotFoundError as e:
     logger.error("Is CyEnvelope1D compiled? Check setup.py.")
     raise ModuleNotFoundError(e)

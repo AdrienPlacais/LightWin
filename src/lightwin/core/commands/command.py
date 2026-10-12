@@ -66,7 +66,7 @@ class Command(Instruction):
 
         """
         idx_influenced = range(self.influenced.start, self.influenced.stop)
-        idx_influenced = [i for i in idx_influenced]
+        idx_influenced = [*idx_influenced]
 
         intersect = list(set(idx_influenced).intersection(dat_indexes))
         return len(intersect) > 0

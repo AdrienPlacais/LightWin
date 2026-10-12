@@ -211,7 +211,7 @@ def set_of_cavity_settings_to_command(
         )
         for field_map, cavity_settings in set_of_cavity_settings.items()
     ]
-    return [x for x in flatten(command)]
+    return [*flatten(command)]
 
 
 def failed_cavities_to_command(
@@ -228,7 +228,7 @@ def failed_cavities_to_command(
         for field_map in cavities
         if field_map.status == "failed"
     ]
-    return [x for x in flatten(command)]
+    return [*flatten(command)]
 
 
 def _cavity_settings_to_command(

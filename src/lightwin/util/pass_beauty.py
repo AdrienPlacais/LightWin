@@ -299,7 +299,7 @@ def _set_of_cavity_settings_to_adjust(
         )
     ]
     flattened: list[Adjust]
-    flattened = [x for x in flatten(nested_commands)]
+    flattened = [*flatten(nested_commands)]
     return flattened
 
 

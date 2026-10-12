@@ -26,7 +26,7 @@ class TestStrategy:
     @property
     def my_nested_list(self) -> list[list[str]]:
         """Dummy nested list."""
-        return [x for x in chunks(self.my_list, n_size=2)]
+        return [*chunks(self.my_list, n_size=2)]
 
     def test_k_out_of_n_down_single_fail(self) -> None:
         """Check that our sorting works."""

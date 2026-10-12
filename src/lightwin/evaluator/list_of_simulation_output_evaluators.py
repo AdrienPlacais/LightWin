@@ -89,9 +89,7 @@ class ListOfSimulationOutputEvaluators(list):
             if other_column in markdown:
                 other_column = markdown[other_column]
 
-        other_data = [
-            [dat for dat in other_dat] for other_dat in other_evals.values()
-        ]
+        other_data = [[*other_dat] for other_dat in other_evals.values()]
 
         # Transpose array
         other_data = list(zip(*other_data))
