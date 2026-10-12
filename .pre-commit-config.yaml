@@ -29,11 +29,11 @@ repos:
       - id: trailing-whitespace
         types_or: [python, toml]
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.21.2
+    rev: v3.22.0
     hooks:
       - id: pyupgrade
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.4
+    rev: v0.17.0
     hooks:
       - id: ruff-check
         args: [
