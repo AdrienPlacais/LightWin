@@ -269,7 +269,7 @@ def l_neighboring_lattices[T](
         remove_failed=False,
     )
 
-    altered_cavities = [x for x in flatten(altered_lattices)]
+    altered_cavities = [*flatten(altered_lattices)]
     if remove_failed:
         altered_cavities = [
             x for x in altered_cavities if x not in failed_elements
